@@ -1,0 +1,46 @@
+# Publishes the playable single-file build to GitHub Pages so anyone can play from a link.
+#
+# Manual only: nothing is published until someone presses "Run workflow" on the Actions tab.
+# One-time setup: repository Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Publish playable build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: mkdir _site && cp dist/TUMULT.html _site/index.html
+      # Versions as documented in the two actions' READMEs (checked 2026-11); bump them together.
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
