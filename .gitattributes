@@ -1,0 +1,9 @@
+# Keep LF line endings everywhere (Windows, macOS and Linux contributors all get the same bytes).
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.woff2 binary
+*.pdf binary
