@@ -1,8 +1,10 @@
-## What changed
+## What and why
 
-<!-- One or two sentences. Link the ROADMAP milestone or issue if there is one. -->
+<!-- What the change delivers and why, in a few sentences. Link the ROADMAP milestone or issue if there is one. -->
 
-## How it was checked
+## Verification
+
+<!-- What actually ran, and what a person still has to check by hand. -->
 
 - [ ] `npm run check` passes (build + tests)
 - [ ] `npm run format` was run

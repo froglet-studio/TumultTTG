@@ -77,7 +77,8 @@ Litmus test for any new card, gear, enemy or mission: *can you describe it witho
 
 - Before finishing: `npm run check`, `npm run format`, and `npm run docs` if cards, enemies or missions changed. Commit the regenerated docs with the change.
 - A rules change needs a test. A balance change needs before/after numbers from `node tools/sim.js 40` in the commit or PR description.
-- Small, reviewable commits on a branch; open a PR; CI runs format check, build and tests.
+- Small, reviewable commits on a branch; open a PR into `main`; CI runs format check, build and tests.
+- Commit messages: `type(scope): summary` (`feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`), imperative, about 72 characters at most, one logical change each — Froglet's git rules, as in Cosmic Shore. Keep the `Co-Authored-By:` and `Claude-Session:` trailers: AI-written work is labelled.
 - The build stays one self-contained HTML file that makes no network requests.
 - Write for the table as well as the screen: anything the engine does should be explainable in a sentence a player could resolve by hand.
 - Design docs are part of the product. When an implementation settles a proposal, update the proposal's status line and move the settled description into `docs/reference/`.
@@ -85,6 +86,10 @@ Litmus test for any new card, gear, enemy or mission: *can you describe it witho
 
 ## This repository is public
 
+Run like Cosmic Shore (Garrett, 2026-11-11): open by default, with the same security rules.
+
+- No secrets: no keys, tokens, passwords, signing material or `.env` files. `.gitignore` blocks the common ones; never force-add past it.
+- Changes under `.github/` need a code owner's review (`.github/CODEOWNERS`). Keep workflow tokens read-only unless a job needs more, give extra permissions to that job alone, and pin third-party actions to a commit SHA with the version in a comment.
 - No internal material: no links to or text pasted from Froglet's internal notes, no unreleased story beats or named canon characters, no business or schedule details, no personal data. Summarise only what the game needs — `docs/LORE.md` is the working subset.
 - Terminology: **Ark**, never "Caddis". **Domains** (Jade, Ruby, Gold) are not factions. In the setting a **squad** is three pilots (the game fields two heroes today; three is proposed). People are human plus two **clades**.
 - All art must be original or explicitly licensed for this repo; no generated likenesses of real people, no third-party characters or logos.

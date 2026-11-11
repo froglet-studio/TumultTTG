@@ -21,11 +21,11 @@ npm run dev          # http://localhost:5173
 
 ## Making a change
 
-1. Create a branch.
+1. Create a branch from `main`, named `type/area-short-description` (`feature/`, `bugfix/`, `hotfix/`, `chore/`). Agent sessions name their own branches (Claude Code uses `claude/…`); keep those names, because the prefix shows who opened the branch.
 2. Make the change. Keep it small enough to review in one sitting.
 3. Run `npm run check` (build + tests) and `npm run format`.
 4. If you touched cards, enemies or missions, run `npm run docs` and include the regenerated files.
-5. Open a pull request and fill in the checklist.
+5. Open a pull request into `main` and fill in the template. Everything reaches `main` through a pull request; the default merge is squash and merge.
 
 Rules changes need a test. Balance changes need before/after numbers from `node tools/sim.js 40` in the pull request.
 
@@ -62,7 +62,7 @@ Did either pilot start to feel like a person? What did it?
 - The engine (`src/engine`, `src/data`) must stay deterministic and free of DOM access; use the seeded `rng`, never `Math.random()`.
 - No new runtime dependencies. The game is one self-contained HTML file that makes no network requests.
 - Player-facing text: plain, concrete, second person. The log narrates what the rules did; it never invents numbers.
-- Commit messages: imperative mood, say what changed and why (`Give reveal faces a second use on survey missions`).
+- Commit messages follow Froglet's git rules, the same as Cosmic Shore's: `type(scope): summary` in the imperative, under about 72 characters, no trailing period. Types: `feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf` — for example `feat(cards): give reveal faces a second use on survey missions`. One logical change per commit; add a body when the why is not obvious from the diff.
 
 ## Using Claude Code
 
@@ -70,4 +70,11 @@ Did either pilot start to feel like a person? What did it?
 
 ## This repository is public
 
-Do not commit internal documents, unreleased story material, personal data, or art you do not have the right to share. When unsure, ask Garrett first.
+Tumult is run in the open, the way Cosmic Shore is: the code, the rules, the design proposals and the decisions behind them are public. That makes a few rules firm.
+
+- **No secrets.** No API keys, passwords, tokens, signing keys or `.env` files; `.gitignore` blocks the usual ones, and credentials live in the team password manager. If one is ever committed, treat it as leaked: revoke it first, then remove it.
+- **No internal or personal material.** No internal documents or links into them, no unreleased story material, no personal data, and no art you do not have the right to share.
+- **Workflows get a second reviewer.** Anything under `.github/` can hand repository permissions to the code it runs, so a code owner reviews every change there (`.github/CODEOWNERS`).
+- **AI work is labelled.** Commits written by Claude are authored `Claude <noreply@anthropic.com>` and carry `Co-Authored-By:` and `Claude-Session:` trailers, as in Cosmic Shore. Keep them, and have a person review agent work before it reaches `main`.
+
+When unsure, ask Garrett first.

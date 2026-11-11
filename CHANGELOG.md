@@ -13,6 +13,7 @@ No rules changes. The v2.0 game was reorganised into `src/`, `tools/` and `test/
 - **Added:** zero-dependency build (`tools/build.mjs`) and dev server replacing the shell script; Prettier; GitHub Actions.
 - **Changed:** engine, UI and tools reformatted with Prettier. Simulation output is byte-identical before and after.
 - **Docs:** design pillars, roadmap, proposals for the next version, and the v1.0 design bundle (archived, unchanged).
+- **Repository:** run like Cosmic Shore. Changes under `.github/` need a code owner's review; workflow actions are pinned to commit SHAs; `.gitignore` blocks credentials; `AGENTS.md` points every agent at `CLAUDE.md`; the README states the licence as Cosmic Shore does; commit messages follow Froglet's `type(scope): summary` rules.
 
 ## 2.0.0 — 2026-11-06 — the playable game
 

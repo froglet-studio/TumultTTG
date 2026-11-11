@@ -10,3 +10,17 @@ Thumbs.db
 
 # personal Claude Code notes (not shared)
 CLAUDE.local.md
+
+# Signing material and credentials. None of these belong in a public repository; keep them in the
+# team password manager. (The same list as Cosmic Shore's .gitignore.)
+*.p12
+*.p8
+*.pfx
+*.mobileprovision
+*.cer
+*.csr
+*.pem
+*.keystore
+*.jks
+.env
+.env.*

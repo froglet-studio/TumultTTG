@@ -31,7 +31,16 @@ On Linux with Node 22, at the commit that added this file:
 - Reformatting the engine and UI with Prettier changed nothing: 16 narrated missions and a full simulation batch were byte-identical before and after.
 - Simulated balance is in line with the v2.0 tuning pass (`docs/reference/BALANCE.md`).
 
-**Not checked:** the tools and tests have not been run on Windows or macOS, and CI has never run because nothing has been pushed. The code avoids the usual Windows traps (paths, file URLs, line endings), but the first `npm run check` on a new machine and the first CI run are real tests — do them first. In PowerShell, call tools that take arguments as `node tools/…`; `npm run x -- args` loses its `--` there.
+**Not checked:** the tools and tests have not been run on Windows or macOS, and CI has not run yet: it runs on pull requests and on `main`. The code avoids the usual Windows traps (paths, file URLs, line endings), but the first `npm run check` on a new machine and the first CI run are real tests — do them first. In PowerShell, call tools that take arguments as `node tools/…`; `npm run x -- args` loses its `--` there.
+
+## How this repository was assembled
+
+The work was done in a Claude Cowork session and committed there, on Garrett's computer, as six commits that were never pushed. A Claude Code session on 11 November 2026 rebuilt them here from that session's transcript: it replayed every recorded file operation in order (files written, edits, formatting, generated docs) and checked the result two ways.
+
+- **Against the numbers Cowork recorded** from its own final clone: 75 files; a 343,303-byte build; 40 of 40 tests; the same audit summary; regenerating the docs changes nothing; the same simulated runs (4 of 20 won, 74% of missions) and the same scripted run through the interface.
+- **Against Cowork's commit ids.** From the rebuilt files, with Cowork's commit messages, author and timestamp, git produces exactly Cowork's ids, `1489bc2` through `f8ce148`. The content is byte-identical to the copy on Garrett's computer.
+
+The first six commits in this repository have the same trees as Cowork's six. They were re-made in Froglet's commit format, with the session trailers and a signature, so their ids differ; each one's message names the Cowork commit it reproduces. The copy on Garrett's computer is superseded: do not push it.
 
 ## What changed in the move
 
@@ -54,19 +63,27 @@ Full report: [`reference/ABILITY_AUDIT.md`](reference/ABILITY_AUDIT.md). Interpr
 - Squads with no cards win tier-1 Swarm and Cascade almost every time: those missions are too thin.
 - The autoplayer has no rule for 67 faces and under-plays Ethereal faces, so usage numbers are a floor. That is why the roadmap starts with the foundations for a better player (F1, then F2).
 
-## Decisions waiting for Garrett
+## Decisions
+
+**DECIDED (Garrett, 2026-11-11): run this repository like Cosmic Shore**, with the same security and transparency. That settled the three questions this handoff left open before the first push:
+
+- **The setting may be public.** `docs/LORE.md`, the design proposals and the setting nouns used as flavour in `src/data/world.js` stay in the open, as Cosmic Shore's design docs are; those already name Tumult. Internal notes, links into Froglet's workspace, unreleased story and personal data still stay out.
+- **Licence:** MIT, stated in the README the way Cosmic Shore states it.
+- **Authorship:** commits written by Claude are authored `Claude <noreply@anthropic.com>` and carry `Co-Authored-By:` and `Claude-Session:` trailers, as in Cosmic Shore.
+
+What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This repository is public"); the GitHub settings it needs are under [Repository settings](#repository-settings).
+
+**Waiting for Garrett:**
 
 1. The frame: is "a season as guides on Tumult, ending with a berth on the Cosmic Shore" right? ([design/01](design/01-frame-and-campaign.md) lists five specific questions.)
 2. Squad size: three by default, two supported — agreed?
 3. Basic actions, Channel and Overcast ([design/02](design/02-units-verbs-actions.md)): these add rules to the v1.0 core. Acceptable?
-4. Which setting terms may appear in a public repository and a public build. The v2.0 event and mission text (`src/data/world.js`) uses some setting nouns as flavour, and `docs/LORE.md` summarises more. Review both **before the first push** — after it, they are public.
-5. Licensing of non-code content. The MIT licence in this repository currently covers everything in it, including text and any future art.
-6. Ethereal faces at E 0. v1.0 says an Ethereal capability exists only at E ≥ 1; the v2.0 engine lets the face be played at E 0 with its E-0 numbers, and about a fifth of simulated Ethereal plays are exactly that. Which is the rule?
+4. Ethereal faces at E 0. v1.0 says an Ethereal capability exists only at E ≥ 1; the v2.0 engine lets the face be played at E 0 with its E-0 numbers, and about a fifth of simulated Ethereal plays are exactly that. Which is the rule?
 
 ## Known issues and debt
 
 **Text the engine does not honour** — found by an independent review at handoff; each should be fixed test-first, and several will move balance a little (roadmap S0):
-- Ethereal faces can be played at E 0: `T.canPlay` has no E check (see decision 6).
+- Ethereal faces can be played at E 0: `T.canPlay` has no E check (see decision 4).
 - Conditions on effects (`ifAnchored`, `ifOnHazard`, `ifAdjacent`, `ifE`) are honoured only by `strike`, `heal` and area `dot`; `ifHpBelow` is never read. So *Talon Strike — Pin* Weakens any foe, not only small prey, and *Radiotrophic Resilience — Thrive* mints its AP off-hazard too.
 - Weightless and climbing Morph forms cannot walk onto height nodes: `walkNeighbors` only follows climb edges once the ramp is down.
 - Anchoring a Harrier does not stop its blink; only a Counted Trap's hold does.
@@ -93,7 +110,7 @@ Full report: [`reference/ABILITY_AUDIT.md`](reference/ABILITY_AUDIT.md). Interpr
 - The interface tests wait in real time for end-of-mission animations, which is most of the test suite's 15 seconds.
 
 **Repository**
-- The Pages workflow (`.github/workflows/pages.yml`) is manual and has never run. It uses the action versions documented in those actions' READMEs; adjust if GitHub complains.
+- The Pages workflow (`.github/workflows/pages.yml`) is manual and has never run. It uses the action versions documented in those actions' READMEs, pinned to commit SHAs; adjust if GitHub complains, and bump each SHA with its version comment.
 
 ## Starting in Claude Code
 
@@ -113,12 +130,17 @@ Prompts that make good first sessions:
 
 Two optional helpers are included as project skills: `/ability` (add or change an ability in line with the ability rules) and `/playtest` (simulate and summarise).
 
-## Repository setup still to do
+## Repository settings
 
-- **Push.** The work is committed locally on `main` on top of the repository's initial commit.
-- **Watch the first CI run** (format check, build, tests on Node 22 and 24).
+Already in files, mirroring Cosmic Shore: `.github/CODEOWNERS` puts `.github/` under review by Shombith03, FenrysUnchained, gradies and YsKhan61, the same four who review Cosmic Shore's; workflows run with read-only tokens (only the Pages deploy job gets more) and pinned actions; `.gitignore` blocks signing material and `.env` files; `AGENTS.md` points every agent at `CLAUDE.md`.
+
+Only a repository admin can set the rest, on GitHub:
+
+- **A ruleset on `main`**, the counterpart of Cosmic Shore's "Protect trunks": require a pull request, require the CI checks (`build + test (Node 22)` and `build + test (Node 24)`), require review from Code Owners, and block force pushes and deletion. CODEOWNERS enforces nothing until this exists. Do it before inviting more people: dozens of accounts can already push here.
+- **Actions → Fork pull request workflows:** require approval for all external contributors, the setting Cosmic Shore's CI docs require for a public repository.
+- **Merging:** squash and merge as the default, as Cosmic Shore's git rules set for feature branches.
+- **Watch the first CI run** (format check, build, tests on Node 22 and 24). It runs when a pull request is opened.
 - **Optional — a public play link.** Settings → Pages → Source: *GitHub Actions*, then run the *Publish playable build* workflow by hand. Nothing is published until someone does.
-- **Optional — protect `main`** (require the CI check and a review) before inviting collaborators.
 - **Optional — fewer permission prompts in Claude Code.** A shared `.claude/settings.json` can pre-approve the project's own commands. It is deliberately not included: which commands an agent may run without asking is a decision for the repository's owner. A starting point, to be checked against the current Claude Code permissions documentation:
 
   ```json
@@ -131,4 +153,4 @@ Two optional helpers are included as project skills: `/ability` (add or change a
 
 ## Earlier copies
 
-The v1.0 hub and the v2.0 single-file build shared before this repository existed are in Froglet's internal workspace. This repository supersedes them; when they disagree, this is the current one.
+The v1.0 hub and the v2.0 single-file build shared before this repository existed are in Froglet's internal workspace. This repository supersedes them; when they disagree, this is the current one. The same goes for the unpushed copy of this repository on Garrett's computer (see [How this repository was assembled](#how-this-repository-was-assembled)).

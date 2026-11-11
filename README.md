@@ -61,6 +61,6 @@ npm run build      # → dist/TUMULT.html
 
 Designers, writers, artists and programmers are all welcome — see [`CONTRIBUTING.md`](CONTRIBUTING.md). If you use Claude Code, [`CLAUDE.md`](CLAUDE.md) is picked up automatically; start with [`docs/HANDOFF.md`](docs/HANDOFF.md).
 
-## License
+## Copyright and License
 
-[MIT](LICENSE) © 2026 Froglet
+Copyright 2026 Froglet Inc. Code released under the [MIT](LICENSE) license.
