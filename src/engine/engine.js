@@ -190,7 +190,28 @@
     });
     return faces;
   };
-  T.hasBoon = (h, id) => (h.boons || []).includes(id);
+  // Boons are wired by hook, never by id: the engine asks for the values a hero's boons
+  // hang on a hook and acts on those, so the table in src/data/world.js is the whole truth.
+  T.BOON_HOOKS = [
+    'face', // val: the die face one AP face becomes
+    'missionStart', // val: { bank: face } — one die already banked as that face
+    'roundStart', // val: { round, hasten } — the track slides extra columns as that round starts
+    'shieldBonus', // val: added to every Shield the holder gains
+    'keen', // val: added to the reach of the holder's reveals; Hidden foes beside them are seen at round start
+    'reward', // val: { crystals, up } — added to every mission's rewards
+    'autoRevive', // val: hp the holder rises with, once per run, instead of going down
+    'firstStrike', // val: added to the holder's first strike each round
+    'noPull', // the holder cannot be pulled
+    'vsElite', // val: added to the holder's damage against elites and the boss
+  ];
+  T.boonVals = function (h, hook) {
+    if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown boon hook ' + hook);
+    return (h.boons || [])
+      .map((id) => T.BOON_BY[id])
+      .filter((b) => b && b.hook === hook)
+      .map((b) => b.val);
+  };
+  const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
 
   T.makeEnemy = function (type, tier, pos) {
     const d = T.ENEMIES[type];
@@ -274,12 +295,12 @@
       h.pool = R().POOL;
       h.rested = false;
       h.gear.forEach((g) => (g.cds = [0, 0]));
-      h.missionFlags = { firstStrikeUsed: false };
-      // boons at mission start
-      if (T.hasBoon(h, 'tidetouched')) {
-        h.pool -= 1;
-        h.held.push('O');
-      }
+      h.roundFlags = { struck: false };
+      for (const v of T.boonVals(h, 'missionStart'))
+        if (v.bank) {
+          h.pool -= 1;
+          h.held.push(v.bank);
+        }
     });
     if (run.bossBonusHp && m.isBoss)
       m.enemies
@@ -432,9 +453,7 @@
   /* ───────────────────────────── STATE HELPERS ───────────────────────────── */
   const st = (ent) => ent.states;
   function addShield(m, ent, v, t, all) {
-    if (ent.kind === 'hero') {
-      v += (ent.boons || []).filter((b) => b === 'thickhide').length;
-    }
+    if (ent.kind === 'hero') v += boonSum(ent, 'shieldBonus');
     const s = st(ent).Shield;
     if (!s || v > s.v || (v === s.v && t > s.t))
       st(ent).Shield = { v, t: Math.max(t, s ? s.t : 0), all: !!(all || (s && s.all)) };
@@ -556,11 +575,12 @@
         }
       }
       if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
-      if (opts.strike && T.hasBoon(source, 'momentum') && !source.missionFlags.firstStrikeUsed) {
-        dmg += 2;
-        source.missionFlags.firstStrikeUsed = true;
+      if (opts.strike) {
+        const flags = source.roundFlags || (source.roundFlags = {});
+        if (!flags.struck) dmg += boonSum(source, 'firstStrike');
+        flags.struck = true;
       }
-      if (T.hasBoon(source, 'defiant') && (target.elite || target.boss)) dmg += 2;
+      if (target.elite || target.boss) dmg += boonSum(source, 'vsElite');
       if (ts.Studied) dmg += ts.Studied.n;
       if (ts.Marked) {
         dmg += 2;
@@ -689,10 +709,11 @@
       fx(m, { t: 'revive', ent: h.uid });
       return;
     }
-    if (T.hasBoon(h, 'secondwind') && !m.run.secondWindUsed) {
+    const [rise] = T.boonVals(h, 'autoRevive');
+    if (rise && !m.run.secondWindUsed) {
       m.run.secondWindUsed = true;
-      h.hp = 10;
-      say(m, `A second wind — ${h.name} rises again with 10.`, 'sys');
+      h.hp = rise;
+      say(m, `A second wind — ${h.name} rises again with ${rise}.`, 'sys');
       fx(m, { t: 'revive', ent: h.uid });
       return;
     }
@@ -712,7 +733,7 @@
     return !T.occupied(m, node);
   }
   function pushAway(m, source, target, n) {
-    if (forceImmune(target) || (target.kind === 'hero' && T.hasBoon(target, 'anchorsoul') && false)) {
+    if (forceImmune(target)) {
       say(m, `${target.name} holds fast.`);
       return 0;
     }
@@ -728,7 +749,7 @@
     return moved;
   }
   function pullToward(m, source, target, n) {
-    if (forceImmune(target) || (target.kind === 'hero' && T.hasBoon(target, 'anchorsoul'))) {
+    if (forceImmune(target) || (target.kind === 'hero' && T.boonVals(target, 'noPull').length)) {
       say(m, `${target.name} holds fast.`);
       return 0;
     }
@@ -822,7 +843,7 @@
   /* ───────────────────────────── REVEAL ───────────────────────────── */
   function revealArea(m, actor, center, radius, dur, opts) {
     opts = opts || {};
-    if (actor.kind === 'hero' && T.hasBoon(actor, 'keensense')) radius += 1;
+    if (actor.kind === 'hero') radius += boonSum(actor, 'keen');
     const nodes =
       radius >= 99 ? Object.keys(m.board.nodes).map(Number) : [center].concat(B.within(m.board, center, radius, true));
     const set = new Set(nodes);
@@ -2019,7 +2040,8 @@
   }
   T.heroTurnStart = function (m, h) {
     T.slideTrack(h, 1);
-    if (m.round === 1 && T.hasBoon(h, 'quickhands')) T.slideTrack(h, 1);
+    for (const v of T.boonVals(h, 'roundStart')) if (v.round === m.round && v.hasten) T.slideTrack(h, v.hasten);
+    h.roundFlags = { struck: false };
     // engines
     for (const en of h.states.Engines || []) {
       if (en.kind === 'regen') {
@@ -2044,7 +2066,7 @@
     for (const z of m.zones)
       if (z.hideHeroes && B.dist(m.board, z.node, h.pos, true) <= z.radius) setHidden(m, h, 1, false);
     // keen sense
-    if (T.hasBoon(h, 'keensense'))
+    if (T.boonVals(h, 'keen').length)
       for (const e of T.liveEnemies(m))
         if (isHidden(e) && B.adjacent(m.board, h.pos, e.pos)) breakHidden(m, e, 'keen sense');
     (h.states.Auras || []).forEach((a) => {
