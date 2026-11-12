@@ -31,6 +31,7 @@
       seenEvents: [],
       stats: { missions: 0, kills: 0, rounds: 0, lifelineUsed: false },
       lifeline: 1,
+      tide: 'rising', // difficulty: a key of T.TIDES
       won: false,
       over: false,
       lastReward: null,
@@ -274,7 +275,7 @@
     run.launched++;
     // The board has a stream to itself: the same seed is the same board, whoever plays it.
     const board = T.makeRng(T.subSeed(seed, 'board'));
-    const spec = gen.gen(board, tier);
+    const spec = gen.gen(board, tier, T.TIDES[run.tide] || T.TIDES.rising);
     spec.title = board.pick(gen.title);
     spec.blurb = gen.blurb;
     run.mission = T.startMission(run, spec, type, tier, seed);
@@ -533,7 +534,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 2;
+  T.SAVE_VERSION = 3;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -554,6 +555,11 @@
       const last = r.history[r.history.length - 1];
       if (r.lastReward && last) Object.assign(r.lastReward, { rounds: last.rounds, kills: last.kills });
       r.v = 2;
+    },
+    // 2.7 added the tide (difficulty); every earlier run was on the rising tide.
+    2(r) {
+      r.tide = 'rising';
+      r.v = 3;
     },
   };
   T.deserializeRun = function (json) {

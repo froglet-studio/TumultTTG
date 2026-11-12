@@ -100,6 +100,18 @@
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);
 
+  /* ───────────────────────────── TIDES (difficulty) ───────────────────────────── */
+  // How hard a run's missions press. Each list is indexed by tier (1, 2, 3); the boss is never changed.
+  // Rising is the game as it was tuned before 2.7. Flood is for careful players: bigger objectives on
+  // shorter clocks are what press a careful squad — more or tougher foes hardly do (BALANCE.md, v2.7.0).
+  T.TIDES = {
+    rising: { id:'rising', n:'Rising tide', need:[0,0,0], clock:[0,0,0], swarm:[0,0,0], escorts:[[],[],[]],
+      txt:'The tide as it has always run.' },
+    flood: { id:'flood', n:'Flood tide', need:[0,1,2], clock:[0,1,2], swarm:[0,1,2], escorts:[[],['kiter'],['binder','kiter']],
+      txt:'From tier 2, every objective needs 1 more (tier 3: 2 more), every clock but a hold’s starts 1 round shorter (2), swarms grow 1 larger (2), and elites bring 1 more escort (2).' },
+  };
+  T.TIDE_ORDER = ['rising', 'flood'];
+
   /* ───────────────────────────── BASIC ACTIONS ───────────────────────────── */
   // What every hero can always do, with no cards at all (design/02). Weak on purpose: they are the floor,
   // so that no mission needs an ability. Same verbs as cards; no track, no etherion. Move, Interact and
