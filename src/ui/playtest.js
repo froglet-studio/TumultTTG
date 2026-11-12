@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.1.0',
+    version: '2.2.0',
     items: [
+      {
+        text: 'Plan, in a mission’s top bar, shows what the look-ahead player would do with the turn — the player the balance tables are now measured with. It wins far more than the old autoplayer did. Where it plays badly, or far better than a person would, say so.',
+      },
       {
         text: 'Close the page in the middle of a mission, come back and press Continue: the same round, the same dice in hand, the same intents on the board.',
       },
@@ -269,8 +272,37 @@
       <details><summary>What to look at in this build</summary><ul class="pt-notes">${NOTES.items.map((n) => `<li>${esc(n.text)}${carriers(n.cards)}</li>`).join('')}</ul></details>
     </div>`;
   };
-  U.missionTopExtra = () =>
-    `<button class="ghost sm" data-act="pt-report" data-tip="Playtest report: seed, squad, the log so far">Report</button>`;
+  U.missionTopExtra = (m) =>
+    `<button class="ghost sm" data-act="pt-plan" data-tip="What the look-ahead player would do with this turn" ${m.over ? 'disabled' : ''}>Plan</button><button class="ghost sm" data-act="pt-report" data-tip="Playtest report: seed, squad, the log so far">Report</button>`;
+
+  /* ───────────── what the look-ahead player would do ───────────── */
+  let plan = [];
+  function openPlan() {
+    const m = U.run && U.run.mission;
+    if (!m || m.over) return;
+    plan = T.planHeroPhase(m);
+    // each step is described on the mission as it would stand by then
+    const copy = T.imagine(m);
+    const steps = plan.map((a) => {
+      const line = T.describeAction(copy, a);
+      T.applyAction(copy, a);
+      return line;
+    });
+    U.openModal(
+      `<div class="row"><h3>What the look-ahead player would do</h3><span class="right row">${plan.length ? '<button class="sm primary" data-act="pt-plan-play">Play these</button>' : ''}<button class="sm" data-act="closeModal">Close</button></span></div>
+      <p class="dim small">It knows no card by name. It tries every legal action on a copy of the mission, lets the enemies do what they have declared, and keeps the line that leaves the squad best off by one measure shared by every mission. It sees this round and no further, and never the dice to come. The balance tables are this player’s results.</p>
+      ${steps.length ? `<ol class="pt-notes">${steps.map((t) => `<li>${esc(t)}</li>`).join('')}</ol><p class="dim small">Then it would end the round.</p>` : '<p>It would end the round here: nothing it can do now leaves the squad better off.</p>'}`,
+    );
+  }
+  function playPlan() {
+    const m = U.run && U.run.mission;
+    U.closeModal();
+    if (!m || m.over) return;
+    for (const a of plan) if (!T.applyAction(m, a).ok || m.over) break;
+    plan = [];
+    U.updateMission();
+    T.saveRun(U.run);
+  }
 
   /* ───────────── actions ───────────── */
   U.extraAct = function (act, arg) {
@@ -312,6 +344,12 @@
         return true;
       case 'pt-report':
         openReport();
+        return true;
+      case 'pt-plan':
+        openPlan();
+        return true;
+      case 'pt-plan-play':
+        playPlan();
         return true;
       case 'pt-copy':
         copy(reportText(), 'Report copied.');

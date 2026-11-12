@@ -103,6 +103,20 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
   assert.equal(snap(carried.mission), snap(p.U.run.mission));
   assert.deepEqual(carried.mission.rngs, { ...p.U.run.mission.rngs });
 
+  // "Plan" shows the look-ahead player's turn and can play it; the mission is not touched until it does
+  const before = snap(p.U.run.mission);
+  p.act('closeModal');
+  p.act('pt-plan');
+  assert.match(p.d.querySelector('.modal').textContent, /What the look-ahead player would do/);
+  assert.equal(snap(p.U.run.mission), before);
+  const steps = p.d.querySelectorAll('.modal ol li').length;
+  assert.ok(steps > 0, 'it has something to do on the first turn');
+  const logged = p.U.run.mission.log.length;
+  p.act('pt-plan-play');
+  assert.equal(p.d.querySelector('.modal'), null);
+  assert.ok(p.U.run.mission.log.length > logged, 'the plan was played on the real mission');
+  assert.ok(JSON.parse(p.w.localStorage.getItem('tumult_v2_run')).mission.log.length > logged, 'and saved');
+
   // The Heart is always tier 3, and one hero cannot fill both seats
   const q = await boot((await builds())({ playtest: true }).html);
   q.act('pt-type', 'boss');
