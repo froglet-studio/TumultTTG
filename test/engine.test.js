@@ -283,3 +283,20 @@ test('a Warden’s shield stops area damage too; Pierce and true damage get thro
   assert.equal(T.damage(m, h, w, 5, { kind: 'melee', pierce: true }), 5);
   assert.equal(T.damage(m, h, w, 5, { kind: 'true', trueDmg: true }), 5);
 });
+
+test('Ethereal faces: playable from E 0 today; RULES.ETHEREAL_MIN_E is the switch for the stricter reading', () => {
+  const fresh = createHarness(); // its own copy of the rules, so the switch cannot leak into other tests
+  const playable = (E, min) => {
+    fresh.T.RULES.ETHEREAL_MIN_E = min;
+    const s = fresh.arena('oct_jet', { up: [0, E] });
+    return { P: fresh.T.canPlay(s.m, s.h, 'oct_jet', 'P').ok, E: fresh.T.canPlay(s.m, s.h, 'oct_jet', 'E').ok };
+  };
+  assert.equal(T.RULES.ETHEREAL_MIN_E, 0, 'the default has not changed without a decision');
+  assert.deepEqual(playable(0, 0), { P: true, E: true });
+  assert.deepEqual(
+    playable(0, 1),
+    { P: true, E: false },
+    'under the strict reading an untrained card has no Ethereal face',
+  );
+  assert.deepEqual(playable(1, 1), { P: true, E: true });
+});

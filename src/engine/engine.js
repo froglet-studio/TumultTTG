@@ -995,6 +995,7 @@
       E = T.heroE(h, cardId);
     const elt = face.elt || card.el;
     const eln = face.el || 0;
+    if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
     if (!T.canPay(h, face.ap, elt, eln)) return { ok: false, why: 'cannot pay' };
     const tg = T.targetsFor(m, h, face.tgt, face, P, E);
     if (tg.invalid) return { ok: false, why: tg.invalid };

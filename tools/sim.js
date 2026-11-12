@@ -3,11 +3,14 @@
 /**
  * Headless balance harness.
  *
- *   node tools/sim.js [N=40] [missions|runs|cards|all]
+ *   node tools/sim.js [N=40] [missions|runs|cards|all] [--rule NAME=VALUE ...]
  *
  *   missions  N auto-played missions per archetype × tier: win %, length, 8–14-round band, HP, kills
  *   runs      N full auto-played runs (map + missions + havens + events) with save round-trips
  *   cards     fire every face of every card once in a controlled arena (verb smoke test)
+ *
+ *   --rule    try a different value for a constant in T.RULES, for this run only:
+ *             node tools/sim.js 40 missions --rule VITALITY=28 --rule ETHEREAL_MIN_E=1
  *
  * The autoplayer is a heuristic FLOOR, not a ceiling: it does not kite, bait or
  * plan around intents the way a person does. Read the numbers accordingly.
@@ -16,7 +19,21 @@ const { createHarness, ARCHETYPES } = require('./harness');
 
 const H = createHarness();
 const { T } = H;
-const args = process.argv.slice(2);
+const argv = process.argv.slice(2);
+const args = [];
+for (let i = 0; i < argv.length; i++) {
+  if (argv[i] !== '--rule') {
+    args.push(argv[i]);
+    continue;
+  }
+  const [name, value] = String(argv[++i] || '').split('=');
+  if (!(name in T.RULES) || value === undefined || Number.isNaN(Number(value))) {
+    console.error(`--rule wants NAME=NUMBER with NAME one of: ${Object.keys(T.RULES).join(', ')}`);
+    process.exit(2);
+  }
+  T.RULES[name] = Number(value);
+  console.log(`rule ${name} = ${value}`);
+}
 const N = parseInt(args[0] || '40', 10);
 const mode = args[1] || 'all';
 
