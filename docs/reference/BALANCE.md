@@ -156,6 +156,40 @@ Full runs (40): heuristic 8 → 9 won, missions won 68% → 68%; look-ahead 20 �
 
 At 40 missions a cell, differences under about fifteen points are noise, and nothing moved that far. The rule makes the start of a run a little poorer — each hero has three or four of six faces asleep — and makes an E point worth more, since the first one on a card buys a whole face. It does not touch the bigger problem in this file: the game is still far too easy for the look-ahead player.
 
+## v2.5.0 — basic actions
+
+Every hero can Strike (2 damage to an adjacent foe, 2 AP), Brace (Shield 1 until their next turn, 1 AP) and Shove (push an adjacent foe 1, 2 AP), with or without cards (`T.BASIC`). Both simulated players use them. `node tools/sim.js 40`, 2.4.2 → 2.5.0, same seeds:
+
+| archetype | tier | heuristic win% | look-ahead win% | look-ahead rounds |
+|---|---|---|---|---|
+| swarm | 1 | 100 → 100 | 100 → 100 | 6.0 → 6.0 |
+| swarm | 2 | 80 → 83 | 100 → 100 | 6.0 → 6.0 |
+| swarm | 3 | 58 → 65 | 100 → 100 | 7.0 → 7.0 |
+| vault | 1 | 95 → 95 | 100 → 100 | 5.7 → 5.7 |
+| vault | 2 | 63 → 55 | 95 → 95 | 5.9 → 6.1 |
+| vault | 3 | 40 → 38 | 93 → 90 | 5.8 → 6.0 |
+| hidden | 1 | 98 → 98 | 100 → 100 | 3.6 → 3.8 |
+| hidden | 2 | 85 → 88 | 100 → 100 | 3.8 → 3.8 |
+| hidden | 3 | 68 → 65 | 95 → 95 | 4.1 → 4.2 |
+| cascade | 1 | 100 → 100 | 100 → 100 | 5.0 → 5.0 |
+| cascade | 2 | 85 → 85 | 100 → 100 | 4.5 → 4.7 |
+| cascade | 3 | 78 → 70 | 98 → 95 | 5.1 → 5.3 |
+| elite | 1 | 78 → 80 | 90 → 95 | 7.9 → 6.7 |
+| elite | 2 | 68 → 70 | 95 → 93 | 6.8 → 6.5 |
+| elite | 3 | 68 → 68 | 90 → 95 | 7.0 → 6.2 |
+| boss | 3 | 23 → 25 | 68 → 68 | 13.4 → 12.8 |
+
+Full runs (40): heuristic 9 → 9 won; look-ahead 17 → 19 won, missions won 83% → 86%.
+
+Nothing moves beyond the noise at 40 missions a cell: with cards in hand, a 2-damage blow for 2 AP is rarely the best play, which is what a floor should be. The change is in the audit's last row, squads with **no cards at all** (16 missions a cell, look-ahead player):
+
+| | swarm t1 | swarm t2 | vault t1 | vault t2 | hidden t1 | hidden t2 | cascade t1 | cascade t2 | elite t1 | elite t2 | boss t3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2.4.0 | 100% | 81% | 56% | 6% | 100% | 69% | 100% | 56% | 19% | 0% | 0% |
+| 2.5.0 | 100% | 88% | 81% | 31% | 94% | 69% | 100% | 69% | 63% | 44% | 0% |
+
+Every tier-1 mission type can now be won without cards at least 63% of the time, which meets roadmap S1's bar of a third. The Heart still cannot: Strike's 2 damage does not get through its shield.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.

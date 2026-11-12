@@ -426,6 +426,7 @@
       <div class="track">${trackCols.join('')}</div>
       <div class="hand">${hand}</div>
       <div class="actions">
+        ${T.BASIC.map((b) => `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${!m.over && T.canUseBasic(m, h, b.id).ok ? '' : 'disabled'} data-tip="${esc(b.n + ' (' + b.ap + ' AP): ' + b.txt + ' Anyone can do this, any number of times.')}">${b.icon} ${esc(b.n)} (${b.ap})</button>`).join('')}
         <button class="sm" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
         <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>
@@ -887,6 +888,23 @@
       U.updateMission();
     }
   }
+  function beginBasic(i, id) {
+    const m = M();
+    U.ms.heroIdx = i;
+    const h = hero();
+    const chk = T.canUseBasic(m, h, id);
+    if (!chk.ok) {
+      U.toast(chk.why || 'Cannot do that now.');
+      return;
+    }
+    const b = T.BASIC_BY[id];
+    U.ms.pending = { kind: 'basic', id, tg: chk.tg, label: b.n, needsChoice: false };
+    if (chk.tg.need === 'none') commitPending({});
+    else {
+      U.ms.mode = 'target';
+      U.updateMission();
+    }
+  }
   function commitPending(ctx) {
     const m = M();
     const ms = U.ms;
@@ -901,6 +919,7 @@
     let r;
     const fullCtx = Object.assign({}, ctx);
     if (p.kind === 'card') r = T.playFace(m, h, p.cardId, p.fk, fullCtx);
+    else if (p.kind === 'basic') r = T.useBasic(m, h, p.id, fullCtx);
     else r = T.useGear(m, h, p.gi, p.ai, fullCtx);
     ms.pending = null;
     ms.mode = 'idle';
@@ -986,6 +1005,15 @@
         const r = T.useConsumable(m, m.heroes[i], ci);
         if (!r.ok) U.toast('Cannot use that now.');
         afterAction();
+        return true;
+      }
+      case 'basic': {
+        const [i, id] = arg.split('|');
+        if (ms.mode !== 'idle') {
+          ms.mode = 'idle';
+          ms.pending = null;
+        }
+        beginBasic(+i, id);
         return true;
       }
       case 'interact': {

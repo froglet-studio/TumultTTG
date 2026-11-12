@@ -96,6 +96,7 @@ test('every recipe names a verb and a targeting flow the engine knows (a typo fa
   for (const c of T.CARDS) for (const fk of ['P', 'E']) recipes.push([`${c.id}.${fk}`, c[fk]]);
   for (const g of T.GEAR) for (const a of g.abilities) recipes.push([`${g.id} — ${a.n}`, a]);
   for (const item of T.CONSUMABLES) recipes.push([item.id, item]);
+  for (const b of T.BASIC) recipes.push([`basic ${b.id}`, b]);
 
   const wrong = [];
   for (const [where, r] of recipes) {

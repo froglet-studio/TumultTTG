@@ -120,6 +120,10 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
                 if (U.ms.mode === 'freeMove' && !clickNode()) act('cancelMode');
                 if (U.ms.mode !== 'idle') act('cancelMode');
               }
+              // a basic action, through its button and the target it asks for
+              if (click(`[data-act="basic"][data-arg^="${hi}|"]:not([disabled])`) && U.ms.mode === 'target') {
+                if (!click('#tokens .token.targetable')) act('cancelMode');
+              }
               act('interact', String(hi));
               act('rally', String(hi));
               if (U.ms.mode === 'idle') clickNode(); // walk somewhere legal

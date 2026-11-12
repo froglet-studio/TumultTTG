@@ -39,7 +39,9 @@ A review at handoff found places where card, boon or mission text promises somet
 
 **Outcome:** seven of the eight fixed, each with a test, plus as many again that the same tests turned up (`CHANGELOG.md`). The eighth — Ethereal faces at E 0 — became a switch in `T.RULES`; Garrett settled it in 2.4.0: an Ethereal face must be awakened with E 1, and every hero starts with a few awakened.
 
-### S1 · Units, target classes and basic actions
+### S1 · Units, target classes and basic actions — in progress
+
+*Started (2.5.0):* Strike, Brace and Shove for every hero, played by both simulated players. Card-less squads now win every tier-1 mission type at least 63% of the time in the audit; the Heart is still out of reach without cards. Channel, Carry and the unit model are next; Overcast and Debt move to C1 (Garrett, 2026-11-12).
 One unit model for pilots, actors and props; verbs target by class (harm, affect, help), not by side; Move, Interact, Rally, Strike, Brace, Carry and Shove for everyone; Channel; Overcast and Debt. ([02](design/02-units-verbs-actions.md))
 
 **Done when:** every existing test still passes; squads with no cards can finish every mission type at tier 1 at least a third of the time with the look-ahead player; no etherion die is ever unspendable; pool + banked + locked = 15 is a tested invariant.

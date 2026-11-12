@@ -190,6 +190,23 @@ test('no option on a card, gear or consumable recipe is ignored, and every formu
       ),
     );
 
+  for (const b of T.BASIC)
+    note(
+      `basic ${b.id}`,
+      unreadKeys(b, ({ arrange, choose }) => {
+        const scene = H.arena('hum_tool');
+        if (arrange) arrange(scene);
+        const chk = T.canUseBasic(scene.m, scene.h, b.id);
+        if (!chk.ok) return;
+        const ctx = {};
+        if (chk.tg.need === 'foe' || chk.tg.need === 'foeOrAlly') ctx.target = (chk.tg.options || [])[0];
+        if (chk.tg.need === 'node') ctx.node = (chk.tg.options || [])[0];
+        if (choose && chk.tg.options) Object.assign(ctx, choose(chk.tg, scene));
+        T.useBasic(scene.m, scene.h, b.id, ctx);
+        H.assertPlain(scene.m, `after basic ${b.id}`);
+      }),
+    );
+
   for (const item of T.CONSUMABLES)
     note(
       item.id,

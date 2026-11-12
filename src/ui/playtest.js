@@ -19,25 +19,19 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.4.2',
+    version: '2.5.0',
     items: [
       {
-        text: 'Ethereal faces are magic you awaken: a face cannot be played until its card has E 1. Every hero starts with at least two awakened. Do the starting two feel like toys worth having, and is the third and fourth worth saving UP for?',
+        text: 'Every hero has three basic actions under their hand, cards or no cards: Strike (2 damage to an adjacent foe, 2 AP), Brace (Shield 1 until your next turn, 1 AP) and Shove (push an adjacent foe 1, 2 AP). Do they rescue a bad roll without crowding out your cards?',
       },
       {
-        text: 'In the draft and in Train, an asleep Ethereal face is dashed and shows what it will do at E 1. In a mission its button says "needs E 1". Is it clear why a face cannot be played?',
+        text: 'Try an Elite with the hand you would rather not play: a squad can now win a kill mission on basic actions alone, slowly. Is that a fair floor, or too comfortable?',
       },
       {
-        text: 'Draft a hero by hand: after the sixth pick, two signature cards are already awakened from your six UP. Move the points if you like; Confirm tops you back up to two if you have UP left.',
+        text: 'Ethereal faces still need E 1 on their card (2.4.0). Do the starting two awakened faces feel like toys worth having?',
       },
       {
-        text: 'Pre-made heroes are unchanged: each already starts with two or three cards awakened. Which of them feels poorer for the cards it cannot use yet?',
-      },
-      {
-        text: 'The old rule is one switch away under "Rule". Play a mission both ways with the same seed and say which is more fun.',
-      },
-      {
-        text: 'Plan, in a mission’s top bar, shows what the look-ahead player would do with the turn. Where it plays badly, or far better than a person would, say so.',
+        text: 'Plan, in a mission’s top bar, shows what the look-ahead player would do with the turn, basic actions included. Where it plays badly, or far better than a person would, say so.',
       },
     ],
   };

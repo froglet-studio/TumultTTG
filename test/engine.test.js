@@ -330,3 +330,44 @@ test('Ethereal faces must be awakened: E 1 on the card (RULES.ETHEREAL_MIN_E; 0 
   assert.deepEqual(playable(0, 1), { P: true, E: false }, 'an untrained card has no Ethereal face');
   assert.deepEqual(playable(1, 1), { P: true, E: true });
 });
+
+test('basic actions: every hero can Strike, Brace and Shove with no cards, paying AP and nothing else', () => {
+  const s = H.arena('hum_tool');
+  const { m, h, adj } = s;
+  assert.ok(adj, 'a foe stands next to the tester');
+  h.cards = []; // no cards at all
+  h.held = ['AP', 'AP', 'AP', 'AP', 'AP'];
+  h.pool = T.RULES.POOL - h.held.length;
+  const ids = T.legalActions(m)
+    .filter((a) => a.t === 'basic' && a.hero === 0)
+    .map((a) => a.basic);
+  assert.deepEqual([...new Set(ids)].sort(), ['brace', 'shove', 'strike']);
+
+  adj.shield = 0;
+  if (adj.states.Shield) delete adj.states.Shield;
+  const hp = adj.hp;
+  assert.equal(T.useBasic(m, h, 'strike', { target: adj.uid }).ok, true);
+  assert.equal(adj.hp, Math.max(0, hp - 2), 'Strike deals 2');
+  assert.equal(h.held.length, 3, 'paid 2 AP');
+  assert.equal(h.pool + h.held.length, T.RULES.POOL, 'the 15-die invariant holds');
+  assert.equal(h.track.length, 0, 'a basic action never goes on the track');
+
+  assert.equal(T.useBasic(m, h, 'brace').ok, true);
+  assert.ok(h.states.Shield && h.states.Shield.v >= 1, 'Brace shields');
+  h.held = ['AP'];
+  h.pool = T.RULES.POOL - 1;
+  assert.equal(T.canUseBasic(m, h, 'strike').why, 'need 2 AP', 'one AP is one too few');
+});
+
+test('basic actions are refused when they cannot be paid or have nothing to touch', () => {
+  const { m, h } = H.arena('hum_tool');
+  h.held = ['M'];
+  h.pool = T.RULES.POOL - 1;
+  assert.equal(T.canUseBasic(m, h, 'brace').ok, false, 'an etherion is not AP');
+  h.held = ['AP', 'AP'];
+  h.pool = T.RULES.POOL - 2;
+  for (const e of m.enemies) e.pos = null; // nobody within reach
+  m.enemies.forEach((e) => (e.alive = false));
+  assert.equal(T.canUseBasic(m, h, 'strike').why, 'no valid target');
+  assert.equal(T.canUseBasic(m, h, 'nonsense').ok, false);
+});
