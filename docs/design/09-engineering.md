@@ -1,6 +1,6 @@
 # 09 · Engineering
 
-**Status: §1, §3 and §7 are built (v2.1.0, roadmap F1 — [`../reference/STATE_AND_SAVES.md`](../reference/STATE_AND_SAVES.md)) and so is §2 (v2.2.0, roadmap F2 — [`../reference/PLAYERS.md`](../reference/PLAYERS.md)). The rest is proposed.** The v2.0 code is small, tested and deliberately simple. These are the changes that unlock the rest of the roadmap, in the order they pay off.
+**Status: §1, §3, §5 and §7 are built (v2.1.0, roadmap F1 — [`../reference/STATE_AND_SAVES.md`](../reference/STATE_AND_SAVES.md)) and so is §2 (v2.2.0, roadmap F2 — [`../reference/PLAYERS.md`](../reference/PLAYERS.md)). The rest is proposed.** The v2.0 code is small, tested and deliberately simple. These are the changes that unlock the rest of the roadmap, in the order they pay off.
 
 ## 1 · Mission state that can be copied — built
 
@@ -35,8 +35,11 @@ Keep the old heuristic as the *weak* player. The gap between the two is a useful
 
 Record every decision and outcome as structured events. The dossier ([06](06-pilots-and-backstory.md)), replays, the post-mission report and playtest telemetry all read from it.
 
-## 5 · Split the data from the generators
+## 5 · Split the data from the generators — built (2.4.1)
 
+*As built:* the board and mission generators and the Tide Map are in `src/engine/generators.js`, formatted like the rest of the engine; `src/data/world.js` keeps the tables. `test/data.test.js` fails on any recipe whose verb or targeting flow the engine does not know. Props get their schema when they exist (roadmap S1).
+
+*As proposed:* 
 `src/data/world.js` mixes hand-aligned data tables (gear, boons, bestiary, events) with code (board and mission generators, the map). Split it: tables stay as data, generators move to `src/engine/` and get formatted and tested like the rest. Add a schema check for cards and props so a typo in a recipe fails a test instead of failing in play.
 
 ## 6 · Modules, when the time comes

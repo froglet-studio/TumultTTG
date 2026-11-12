@@ -19,7 +19,7 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.4.0',
+    version: '2.4.1',
     items: [
       {
         text: 'Ethereal faces are magic you awaken: a face cannot be played until its card has E 1. Every hero starts with at least two awakened. Do the starting two feel like toys worth having, and is the third and fourth worth saving UP for?',
