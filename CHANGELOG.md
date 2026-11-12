@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.9.0 — 2026-11-12 — no narrow faces left
+
+Plan phase 4, second group of roadmap S2. The audit's last seven narrow faces each gain a small effect that matters in any mission; what they already did is unchanged.
+
+| Face | Card | Now also |
+|---|---|---|
+| Deflect (Eth) | Counterbalance Tail (Jerboa) | Shield E (at least 1) this round |
+| Blend | Chromatic Cloak (Octopus) | Shield 1 |
+| Ink | Ink Screen (Octopus) | foes adjacent to you Weakened 1 |
+| Gills | External Gills (Axolotl) | heal 1 (2 at P 2+) |
+| Enzymes (Eth) | Carnivorous Digestion (Flytrap) | heal 1 + E now |
+| Cilia Field (Eth) | Trigger-Hair Sense (Flytrap) | foes adjacent now Weakened 1 |
+| Endure | Extremophile Traversal (Tardigrade) | Shield 1 (2 at P 2+) this round |
+
+- **Audit:** narrow faces 7 → 0 (168 staples, 30 tools); still no hard-counter candidates or collapsed gate cells. Endure left the never-played list; Vanish (Chromatic Cloak's Ethereal face) joined it.
+- **Balance:** the look-ahead player is unchanged (22 runs of 40). The heuristic falls from 9 runs to 6, and from 65% to 53% on the tier-3 Swarm: it plays any face with a Shield or a Weaken when threatened, so it now spends turns on Blend and Ink that it used to spend on blows. That is the weak player's blind spot, not a harder game (`docs/reference/BALANCE.md`, v2.9.0).
+
 ## 2.8.0 — 2026-11-12 — sensing faces earn their slot
 
 Plan phase 4, the first group of roadmap S2: the audit's narrow faces. Each of the seven Physical faces that only revealed now also does a small thing that matters in any mission. Its reveal is unchanged.

@@ -189,8 +189,8 @@
       fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Plant yourself: immune to push/pull and Shield ${1+P} this round.` },
     { n:'Deflect', ap:2, el:1, cd:3, dur:2, tgt:'self',
-      fx:[{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2}],
-      txt:(P,E)=>`The next melee or force against you is turned back: attacker takes ${2+E} and is pushed 1. Dur 2.` },
+      fx:[{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:(P,E)=>Math.max(1,E), dur:1}],
+      txt:(P,E)=>`Shield ${Math.max(1,E)} this round, and the next melee or force against you is turned back: attacker takes ${2+E} and is pushed 1. Dur 2.` },
     'Redirect incoming momentum at its source.');
 
   /* ───────────────────────── 2 · GRASSHOPPER (M/C) ───────────────────────── */
@@ -352,8 +352,8 @@
     'Impersonates other creatures outright.');
   C('octopus','oct_cloak','Chromatic Cloak','C',2,
     { n:'Blend', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'hidden', dur:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`Match your surroundings: Hidden ${1+h(P)} (breaks if you move).` },
+      fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Match your surroundings: Hidden ${1+h(P)} (breaks if you move) and Shield 1.` },
     { n:'Vanish', ap:1, el:2, cd:3, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+E, canMove:true},{v:'shield', val:(P,E)=>P, dur:1, min:1}],
       txt:(P,E)=>`Bend light: Hidden ${1+E} rounds and you may move while Hidden${P>0?`; Shield ${P}`:''}.` },
@@ -368,8 +368,8 @@
     'Launch yourself and shove them the other way.');
   C('octopus','oct_ink','Ink Screen','S',0,
     { n:'Ink', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'hidden', dur:(P,E)=>1+h(P), party:true, radius:1}],
-      txt:(P,E)=>`Haze your node and its neighbours: heroes there are Hidden ${1+h(P)}.` },
+      fx:[{v:'hidden', dur:(P,E)=>1+h(P), party:true, radius:1},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Haze your node and its neighbours: heroes there are Hidden ${1+h(P)}, and foes adjacent to you are Weakened 1.` },
     { n:'Smoke Step', ap:1, el:1, cd:2, dur:0, tgt:'node_tele',
       fx:[{v:'hidden', dur:1},{v:'teleport', reach:(P,E)=>1+E}],
       txt:(P,E)=>`Vanish into the cloud and re-emerge anywhere within ${1+E}.` },
@@ -508,8 +508,8 @@
     'Perpetual plasticity.');
   C('axolotl','axo_gills','External Gills','C',0,
     { n:'Gills', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'hazardImmune', dur:2}],
-      txt:(P,E)=>`Breathe anything: immune to hazards for 2 rounds.` },
+      fx:[{v:'hazardImmune', dur:2},{v:'heal', n:(P,E)=>1+h(P)}],
+      txt:(P,E)=>`Breathe anything: immune to hazards for 2 rounds, and heal ${1+h(P)}.` },
     { n:'Respire Anywhere', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hazardImmune', dur:(P,E)=>2+E, party:true},{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E, party:true}],
       txt:(P,E)=>`Both heroes: immune to hazards and regenerate 1 each turn for ${2+E} rounds.` },
@@ -659,16 +659,16 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P, trueDmg:true, ifAnchored:true},{v:'heal', n:1, ifAnchored:true}],
       txt:(P,E)=>`Feed on a held foe: if it is Anchored, deal ${2+P} true damage and heal 1.` },
     { n:'Enzymes', ap:1, el:1, cd:3, dur:2, tgt:'self',
-      fx:[{v:'aura', kind:'digest', val:(P,E)=>2+E, dur:2}],
-      txt:(P,E)=>`Accelerate the enzymes: for 2 rounds, every Anchored foe takes ${2+E} true damage at round end and you heal 1 per foe.` },
+      fx:[{v:'heal', n:(P,E)=>1+E},{v:'aura', kind:'digest', val:(P,E)=>2+E, dur:2}],
+      txt:(P,E)=>`Accelerate the enzymes: heal ${1+E} now; for 2 rounds, every Anchored foe takes ${2+E} true damage at round end and you heal 1 per foe.` },
     'Drain what you hold.');
   C('flytrap','fly_hairs','Trigger-Hair Sense','S',0,
     { n:'Hairs', ap:1, el:0, cd:1, dur:2, tgt:'self',
       fx:[{v:'aura', kind:'reveal', radius:(P,E)=>1+P, dur:2},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Tripwire awareness: for 2 rounds, everything within ${1+P} stays revealed; foes adjacent now are Weakened 1.` },
     { n:'Cilia Field', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'aura', kind:'reveal', radius:2, dur:(P,E)=>2+E, markEntrants:true}],
-      txt:(P,E)=>`Mechanosensitive cilia for ${2+E} rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked.` },
+      fx:[{v:'aura', kind:'reveal', radius:2, dur:(P,E)=>2+E, markEntrants:true},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Mechanosensitive cilia for ${2+E} rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked. Foes adjacent now are Weakened 1.` },
     'Know the instant anything enters.');
   C('flytrap','fly_root','Rooting Anchor','M',0,
     { n:'Root', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -828,8 +828,8 @@
     'A death-like state, then function.');
   C('tardigrade','tar_extremo','Extremophile Traversal','S',1,
     { n:'Endure', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'hazardImmune', dur:2}],
-      txt:(P,E)=>`Operate in anything: immune to hazards for 2 rounds.` },
+      fx:[{v:'hazardImmune', dur:2},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Operate in anything: immune to hazards for 2 rounds, and Shield ${1+h(P)} this round.` },
     { n:'Cross the Void', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'teleport', reach:(P,E)=>1+E, height:true, carryAlly:(P,E)=>E>=2}],
       txt:(P,E)=>`Cross the impossible: move to any node within ${1+E} through vacuum, hazard or height${E>=2?', carrying an adjacent ally':''}.` },

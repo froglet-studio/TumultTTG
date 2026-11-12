@@ -48,7 +48,7 @@ One unit model for pilots, actors and props; verbs target by class (harm, affect
 
 ### S2 · Fix the review list — in progress
 
-2.8.0: the seven Physical reveal faces each gained a second, general use (14 → 7 narrow faces).
+2.8.0: the seven Physical reveal faces each gained a second, general use (14 → 7 narrow faces). 2.9.0: the other seven did too — no narrow faces left. Still to do: the 17 faces that can settle a problem alone, the never-played faces, and walk-wins at tier 1.
 
 Work through the audit: the 14 narrow faces gain a second use or a broader verb; the 17 faces that can settle a problem alone are softened so the problem eases rather than vanishes; tier-1 objective missions stop being winnable by walking. ([05](design/05-ability-audit.md))
 
