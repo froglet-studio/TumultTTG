@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.7.0',
+    version: '2.8.0',
     items: [
+      {
+        text: 'The short-range sensing faces now do something besides reveal: Spot (+1 to your next strike), Feel (Shield 1), Listen (a free step), Flick (Marks the nearest foe), Feel Flow (next hit −1), Sense (1 true damage down your lane) and Hairs (adjacent foes Weakened 1). Do you now play them outside the hidden-cache mission?',
+        cards: ['hum_pattern', 'jer_vibrissae', 'owl_sound', 'gec_scent', 'axo_lateral', 'eel_electro', 'fly_hairs'],
+      },
       {
         text: 'Difficulty: the title screen now offers a Flood tide beside the usual Rising tide. From tier 2 every objective needs more (one more seal, dig, valve channel or round held; two at tier 3), clocks start shorter, swarms grow and elites bring escorts. Does it feel hard because you must plan, or just unfair? The Vault at tier 3 is the one we expect to be too harsh.',
       },

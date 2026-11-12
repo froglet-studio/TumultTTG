@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.8.0 — 2026-11-12 — sensing faces earn their slot
+
+Plan phase 4, the first group of roadmap S2: the audit's narrow faces. Each of the seven Physical faces that only revealed now also does a small thing that matters in any mission. Its reveal is unchanged.
+
+| Face | Card | Now also |
+|---|---|---|
+| Spot | Pattern Recognition (Human) | your next strike this turn deals +1 |
+| Feel | Vibrissae Sense (Jerboa) | Shield 1 |
+| Listen | Sound Mapping (Barn Owl) | one free step |
+| Flick | Scent Tongue (Gecko) | Marks the nearest foe (+2 on the next hit) |
+| Feel Flow | Lateral Line (Axolotl) | the next hit on you is −1 |
+| Sense | Electroreception (Eel) | 1 true damage to the nearest foe in your lane |
+| Hairs | Trigger-Hair Sense (Flytrap) | adjacent foes Weakened 1 |
+
+- **Audit:** narrow faces 14 → 7; staples 154 → 161; still no hard-counter candidates or collapsed gate cells. The look-ahead player now plays Feel, which it never did before; it still never plays Listen or Flick, and Spot is still played almost only in the hidden-cache mission. Two faces joined the never-played list (Burrowing's Dig and Paralytic Bite's Ethereal face), most likely sampling noise from the changed play; the next S2 group looks at them.
+- **Balance:** next to nothing moves (`node tools/sim.js 40`; full runs: heuristic 9/40, look-ahead 22/40, as in 2.7.0). Tables in `docs/reference/BALANCE.md`.
+
 ## 2.7.0 — 2026-11-12 — the Flood tide (a harder difficulty)
 
 Plan phase 3, the difficulty retune. Measuring it showed that one setting cannot serve both difficulty targets (BALANCE.md, v2.7.0), so this adds a second difficulty and leaves the first alone.
