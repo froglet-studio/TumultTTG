@@ -59,10 +59,10 @@
       });
       return board;
     },
-    walkNeighbors(board, n) {
-      // ramp lowered → climb edges act as walk edges
+    walkNeighbors(board, n, climber) {
+      // climb edges act as walk edges once the ramp is down, and always for a climber
       const base = board.walkAdj[n] || [];
-      if (!board.ramp) return base;
+      if (!board.ramp && !climber) return base;
       const extra = board.climb.filter((e) => e[0] === n || e[1] === n).map((e) => (e[0] === n ? e[1] : e[0]));
       return base.concat(extra);
     },
@@ -109,14 +109,15 @@
       }
       return out;
     },
-    path(board, a, b, blocked) {
-      // shortest walk path avoiding blocked nodes (except destination)
+    path(board, a, b, blocked, climber) {
+      // shortest walk path avoiding blocked nodes (except destination); only a climber's
+      // path may cross height nodes before the ramp is down
       if (a === b) return [a];
       const prev = { [a]: null };
       const q = [a];
       while (q.length) {
         const n = q.shift();
-        for (const m of B.walkNeighbors(board, n)) {
+        for (const m of B.walkNeighbors(board, n, climber)) {
           if (m in prev) continue;
           if (blocked && blocked.has(m) && m !== b) continue;
           prev[m] = n;
@@ -189,7 +190,28 @@
     });
     return faces;
   };
-  T.hasBoon = (h, id) => (h.boons || []).includes(id);
+  // Boons are wired by hook, never by id: the engine asks for the values a hero's boons
+  // hang on a hook and acts on those, so the table in src/data/world.js is the whole truth.
+  T.BOON_HOOKS = [
+    'face', // val: the die face one AP face becomes
+    'missionStart', // val: { bank: face } — one die already banked as that face
+    'roundStart', // val: { round, hasten } — the track slides extra columns as that round starts
+    'shieldBonus', // val: added to every Shield the holder gains
+    'keen', // val: added to the reach of the holder's reveals; Hidden foes beside them are seen at round start
+    'reward', // val: { crystals, up } — added to every mission's rewards
+    'autoRevive', // val: hp the holder rises with, once per run, instead of going down
+    'firstStrike', // val: added to the holder's first strike each round
+    'noPull', // the holder cannot be pulled
+    'vsElite', // val: added to the holder's damage against elites and the boss
+  ];
+  T.boonVals = function (h, hook) {
+    if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown boon hook ' + hook);
+    return (h.boons || [])
+      .map((id) => T.BOON_BY[id])
+      .filter((b) => b && b.hook === hook)
+      .map((b) => b.val);
+  };
+  const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
 
   T.makeEnemy = function (type, tier, pos) {
     const d = T.ENEMIES[type];
@@ -273,12 +295,12 @@
       h.pool = R().POOL;
       h.rested = false;
       h.gear.forEach((g) => (g.cds = [0, 0]));
-      h.missionFlags = { firstStrikeUsed: false };
-      // boons at mission start
-      if (T.hasBoon(h, 'tidetouched')) {
-        h.pool -= 1;
-        h.held.push('O');
-      }
+      h.roundFlags = { struck: false };
+      for (const v of T.boonVals(h, 'missionStart'))
+        if (v.bank) {
+          h.pool -= 1;
+          h.held.push(v.bank);
+        }
     });
     if (run.bossBonusHp && m.isBoss)
       m.enemies
@@ -431,9 +453,7 @@
   /* ───────────────────────────── STATE HELPERS ───────────────────────────── */
   const st = (ent) => ent.states;
   function addShield(m, ent, v, t, all) {
-    if (ent.kind === 'hero') {
-      v += (ent.boons || []).filter((b) => b === 'thickhide').length;
-    }
+    if (ent.kind === 'hero') v += boonSum(ent, 'shieldBonus');
     const s = st(ent).Shield;
     if (!s || v > s.v || (v === s.v && t > s.t))
       st(ent).Shield = { v, t: Math.max(t, s ? s.t : 0), all: !!(all || (s && s.all)) };
@@ -470,6 +490,10 @@
   function trapImmune(ent) {
     return !!(st(ent).Hover || st(ent).Weightless);
   }
+  /** Weightless heroes and climbing forms walk the climb edges up to height nodes. */
+  function canClimb(ent) {
+    return !!(st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
+  }
   function addTimed(m, ent, name, t, extra) {
     const cur = st(ent)[name];
     st(ent)[name] = Object.assign({}, cur || {}, extra || {}, { t: Math.max(t, cur ? cur.t : 0) });
@@ -505,7 +529,9 @@
   T.allyOf = (m, h) => m.heroes.find((x) => x !== h);
 
   /* ───────────────────────────── DAMAGE PIPELINE ───────────────────────────── */
-  // opts: {kind:'melee'|'los'|'area'|'true'|'any', pierce, trueDmg, ambush, source, label, noReveal}
+  // opts: {kind:'melee'|'los'|'area'|'true'|'any', pierce, trueDmg, ambush, source, label, noReveal, strike}
+  // strike: this is a hero's strike (the strike verb). Only a strike spends or gains what cards
+  // call strike bonuses; a snare, a zone, corrosion or a decoy's blow is not one.
   T.damage = function (m, source, target, amount, opts) {
     opts = opts || {};
     const kind = opts.kind || 'melee';
@@ -536,7 +562,7 @@
     // attacker modifiers (heroes)
     if (source && source.kind === 'hero') {
       const ss = st(source);
-      if (ss.Empower && ss.Empower.length) {
+      if (opts.strike && ss.Empower && ss.Empower.length) {
         // consume the first matching empower
         const idx = ss.Empower.findIndex((e) => !e.kind || e.kind === kind);
         if (idx >= 0) {
@@ -548,12 +574,13 @@
           if (!ss.Empower.length) delete ss.Empower;
         }
       }
-      if (ss.Morph) dmg += ss.Morph.bonus || 0;
-      if (T.hasBoon(source, 'momentum') && !source.missionFlags.firstStrikeUsed) {
-        dmg += 2;
-        source.missionFlags.firstStrikeUsed = true;
+      if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
+      if (opts.strike) {
+        const flags = source.roundFlags || (source.roundFlags = {});
+        if (!flags.struck) dmg += boonSum(source, 'firstStrike');
+        flags.struck = true;
       }
-      if (T.hasBoon(source, 'defiant') && (target.elite || target.boss)) dmg += 2;
+      if (target.elite || target.boss) dmg += boonSum(source, 'vsElite');
       if (ts.Studied) dmg += ts.Studied.n;
       if (ts.Marked) {
         dmg += 2;
@@ -682,10 +709,11 @@
       fx(m, { t: 'revive', ent: h.uid });
       return;
     }
-    if (T.hasBoon(h, 'secondwind') && !m.run.secondWindUsed) {
+    const [rise] = T.boonVals(h, 'autoRevive');
+    if (rise && !m.run.secondWindUsed) {
       m.run.secondWindUsed = true;
-      h.hp = 10;
-      say(m, `A second wind — ${h.name} rises again with 10.`, 'sys');
+      h.hp = rise;
+      say(m, `A second wind — ${h.name} rises again with ${rise}.`, 'sys');
       fx(m, { t: 'revive', ent: h.uid });
       return;
     }
@@ -705,7 +733,7 @@
     return !T.occupied(m, node);
   }
   function pushAway(m, source, target, n) {
-    if (forceImmune(target) || (target.kind === 'hero' && T.hasBoon(target, 'anchorsoul') && false)) {
+    if (forceImmune(target)) {
       say(m, `${target.name} holds fast.`);
       return 0;
     }
@@ -721,7 +749,7 @@
     return moved;
   }
   function pullToward(m, source, target, n) {
-    if (forceImmune(target) || (target.kind === 'hero' && T.hasBoon(target, 'anchorsoul'))) {
+    if (forceImmune(target) || (target.kind === 'hero' && T.boonVals(target, 'noPull').length)) {
       say(m, `${target.name} holds fast.`);
       return 0;
     }
@@ -815,7 +843,7 @@
   /* ───────────────────────────── REVEAL ───────────────────────────── */
   function revealArea(m, actor, center, radius, dur, opts) {
     opts = opts || {};
-    if (actor.kind === 'hero' && T.hasBoon(actor, 'keensense')) radius += 1;
+    if (actor.kind === 'hero') radius += boonSum(actor, 'keen');
     const nodes =
       radius >= 99 ? Object.keys(m.board.nodes).map(Number) : [center].concat(B.within(m.board, center, radius, true));
     const set = new Set(nodes);
@@ -939,14 +967,13 @@
     const out = [];
     const seen = new Set([h.pos]);
     const q = [[h.pos, 0]];
-    const canWalkHeight = !!(st(h).Weightless || (st(h).Morph && st(h).Morph.climb) || bd.ramp);
+    const climber = canClimb(h);
     while (q.length) {
       const [x, d] = q.shift();
       if (d >= n) continue;
-      for (const y of B.walkNeighbors(bd, x)) {
+      for (const y of B.walkNeighbors(bd, x, climber)) {
         if (seen.has(y)) continue;
-        const nd = bd.nodes[y];
-        if (nd.height && !canWalkHeight) continue;
+        if (bd.nodes[y].height && !climber && !bd.ramp) continue;
         const occ = T.entityAt(m, y);
         if (occ && !(ignoreFoes || occ.kind === 'hero')) continue; // can't pass through foes unless ignoring
         seen.add(y);
@@ -968,6 +995,7 @@
       E = T.heroE(h, cardId);
     const elt = face.elt || card.el;
     const eln = face.el || 0;
+    if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
     if (!T.canPay(h, face.ap, elt, eln)) return { ok: false, why: 'cannot pay' };
     const tg = T.targetsFor(m, h, face.tgt, face, P, E);
     if (tg.invalid) return { ok: false, why: tg.invalid };
@@ -1047,33 +1075,34 @@
     const isHero = actor.kind === 'hero';
     const ally = isHero ? T.allyOf(m, actor) : null;
     const party = () => (isHero ? T.liveHeroes(m) : [actor]);
+    // Conditions gate the whole effect, whatever its verb. The ones about a target need it
+    // still standing. An effect that carries `elseVal` runs anyway, at that magnitude instead
+    // (strike and heal read it).
     const condOk = () => {
-      if (f.ifAnchored) {
-        const t = targetEnt(m, ctx);
-        if (!t || !isAnchored(t)) return false;
-      }
       if (f.ifOnHazard && !bd.nodes[actor.pos].hazard) return false;
       if (f.ifE && E < f.ifE) return false;
-      if (f.ifAdjacent) {
-        const t = targetEnt(m, ctx);
-        if (!t || !B.adjacent(bd, actor.pos, t.pos)) return false;
+      if (f.ifAnchored || f.ifAdjacent || f.ifHpBelow != null) {
+        const t = targetEnt(m, ctx) || ctx.lastTarget;
+        if (!t || t.alive === false || t.downed) return false;
+        if (f.ifAnchored && !isAnchored(t)) return false;
+        if (f.ifAdjacent && !B.adjacent(bd, actor.pos, t.pos)) return false;
+        if (f.ifHpBelow != null && t.hp >= num(f.ifHpBelow, P, E)) return false;
       }
       return true;
     };
+    const met = condOk();
+    if (!met && f.elseVal == null) return;
     switch (f.v) {
       /* ---------- STRIKES ---------- */
       case 'strike': {
-        if (!condOk()) {
-          if (f.ifOnHazard && f.elseVal != null) {
-          } else break;
-        }
-        const dmg = num(f.dmg, P, E);
+        const dmg = num(met ? f.dmg : f.elseVal, P, E);
         if (dmg <= 0 && !f.stripShield) break;
         const opts = {
           kind: f.kind === 'lane_all' || f.kind === 'nodeArea' ? 'area' : f.kind === 'any' ? 'any' : f.kind,
           pierce: bool(f.pierce, P, E),
           trueDmg: !!f.trueDmg,
           label: ctx.card ? `uses ${ctx.card[ctx.faceKey].n} on` : 'hits',
+          strike: true,
         };
         let targets = [];
         if (f.kind === 'area') targets = foesAdj(m, actor);
@@ -1144,7 +1173,6 @@
       case 'dot': {
         let targets = [];
         if (f.area === 'nodeArea') {
-          if (!condOk()) break;
           const center = ctx.node != null ? ctx.node : actor.pos;
           targets = foesWithin(m, center, 1);
         } else {
@@ -1457,7 +1485,13 @@
         const list = f.party ? T.liveHeroes(m) : f.target === 'ally' ? (ally && !ally.downed ? [ally] : []) : [actor];
         list.forEach((h) => {
           h.states.Empower = h.states.Empower || [];
-          h.states.Empower.push({ v, uses: f.uses || 1, kind: f.kind || null, pierce: !!f.pierce, t: f.dur || null });
+          h.states.Empower.push({
+            v,
+            uses: f.uses || 1,
+            kind: f.kind || null,
+            pierce: !!f.pierce,
+            t: num(f.dur, P, E) || null,
+          });
           fx(m, { t: 'state', ent: h.uid, name: 'Empower' });
         });
         if (list.length)
@@ -1571,10 +1605,8 @@
       }
       /* ---------- RESOURCES ---------- */
       case 'heal': {
-        if (!condOk() && !(f.ifOnHazard && f.elseVal != null)) break;
-        let n = num(f.n, P, E);
-        if (f.ifOnHazard && !bd.nodes[actor.pos].hazard) n = f.elseVal || 0;
-        if (n <= 0 && !f.min) break;
+        const n = num(met ? f.n : f.elseVal, P, E);
+        if (n <= 0) break;
         let list = [actor];
         if (f.party) list = T.liveHeroes(m);
         else if (f.target === 'ally') list = ally && !ally.downed ? [ally] : [];
@@ -1754,6 +1786,10 @@
           say(m, 'Too far.', 'sys');
           break;
         }
+        if (!f.height && bd.nodes[node].height && actor.pos !== node) {
+          say(m, 'That one needs someone up on the ledge.', 'sys');
+          break;
+        }
         T.doInteract(m, actor, node, true);
         break;
       }
@@ -1813,7 +1849,8 @@
     if (st(h).Rooted || st(h).SlowSelf) return { ok: false, why: 'rooted' };
     const bd = m.board;
     const free = h.freeMove || 0;
-    const canWalkHeight = !!(st(h).Weightless || (st(h).Morph && st(h).Morph.climb) || bd.ramp);
+    const climber = canClimb(h);
+    if (bd.nodes[dest].height && !climber && !bd.ramp) return { ok: false, why: 'height' };
     const p = B.path(
       bd,
       h.pos,
@@ -1823,9 +1860,9 @@
           .map((e) => e.pos)
           .concat(m.decoys.map((d) => d.pos)),
       ),
+      climber,
     );
     if (!p || p.length < 2) return { ok: false, why: 'no path' };
-    if (bd.nodes[dest].height && !canWalkHeight) return { ok: false, why: 'height' };
     if (T.occupied(m, dest)) return { ok: false, why: 'occupied' };
     const steps = p.length - 1;
     const bonus = st(h).Morph && st(h).Morph.move ? 1 : 0;
@@ -1978,6 +2015,7 @@
     for (const h of m.heroes) {
       h.rested = false;
       h.freeMove = 0;
+      h.roundFlags = { struck: false }; // downed heroes too: one rallied mid-round has not struck yet
       if (h.downed) continue;
       T.heroTurnStart(m, h);
     }
@@ -2004,7 +2042,7 @@
   }
   T.heroTurnStart = function (m, h) {
     T.slideTrack(h, 1);
-    if (m.round === 1 && T.hasBoon(h, 'quickhands')) T.slideTrack(h, 1);
+    for (const v of T.boonVals(h, 'roundStart')) if (v.round === m.round && v.hasten) T.slideTrack(h, v.hasten);
     // engines
     for (const en of h.states.Engines || []) {
       if (en.kind === 'regen') {
@@ -2029,7 +2067,7 @@
     for (const z of m.zones)
       if (z.hideHeroes && B.dist(m.board, z.node, h.pos, true) <= z.radius) setHidden(m, h, 1, false);
     // keen sense
-    if (T.hasBoon(h, 'keensense'))
+    if (T.boonVals(h, 'keen').length)
       for (const e of T.liveEnemies(m))
         if (isHidden(e) && B.adjacent(m.board, h.pos, e.pos)) breakHidden(m, e, 'keen sense');
     (h.states.Auras || []).forEach((a) => {
@@ -2252,12 +2290,13 @@
     const map = {
       Hidden: 'Hidden — immune to lane (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
       Shield: `Shield ${v.v} — each hit is reduced by ${v.v}${v.all ? ', even area' : ' (area bypasses)'}. Pierce and true damage ignore it.`,
-      Anchored: 'Anchored — cannot be pushed or pulled; cannot walk. Still acts fully.',
+      Anchored:
+        'Anchored — cannot be pushed or pulled. An anchored foe cannot walk or blink; a hero who walks lets go. Still acts fully.',
       Held: 'Held — immovable by anyone.',
-      Rooted: 'Rooted — cannot walk this round. Still acts.',
+      Rooted: 'Rooted — cannot walk while it lasts. Still acts.',
       Marked: 'Marked — the next hit on this foe deals +2.',
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
-      Located: 'Located — cannot Hide.',
+      Located: 'Located — cannot Hide; can be targeted and struck down the lane even if Hidden.',
       Studied: `Studied — hero hits deal +${v.n}.`,
       Exposed: `Exposed — next hit ignores Shield and deals +${v.bonus}.`,
       Thorns: `Thorns ${v.v} — melee attackers take ${v.v}.`,

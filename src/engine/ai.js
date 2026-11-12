@@ -104,7 +104,7 @@
           if (!t) break;
           const d = dist(m, e.pos, t.pos);
           if (d <= e.speed + 1) setI('ambush', t, `(${dmgOf(e, A.ambush)}${T.isHidden(e) ? ', from Hidden' : ''})`);
-          else setI('creep', t, '(closing, Hidden)');
+          else setI('creep', t, T.isHidden(e) ? '(closing, Hidden)' : '(closing)');
           break;
         }
         case 'binder': {
@@ -135,8 +135,13 @@
           if (T.isHidden(e) || e.readyLance) {
             const hs = T.liveHeroes(m).filter((h) => dist(m, e.pos, h.pos) <= A.lance.reach + 1);
             const t = hs.length ? hs.sort((a, b) => a.hp - b.hp)[0] : lowestHpHero(m);
-            if (t) setI('lance', t, `(blinks adjacent, ${dmgOf(e, A.lance)})`);
-          } else setI('fade', null, '(goes Hidden)');
+            if (t)
+              setI(
+                'lance',
+                t,
+                `(${canBlink(e) ? 'blinks adjacent' : 'held — only if adjacent'}, ${dmgOf(e, A.lance)})`,
+              );
+          } else setI('fade', null, st(e).Located ? '(Located — cannot hide; readies its lance)' : '(goes Hidden)');
           break;
         }
         case 'tidecaller': {
@@ -173,6 +178,9 @@
   /* ───────────────────────────── EXECUTION ───────────────────────────── */
   function canMove(e) {
     return !(st(e).Anchored || st(e).Held || st(e).Slow || e.anchoredPerm);
+  }
+  function canBlink(e) {
+    return canMove(e) && !st(e).NoTele;
   }
   function approach(m, e, targetNode, steps) {
     if (!canMove(e) || steps <= 0) return 0;
@@ -349,8 +357,13 @@
           break;
         }
         case 'hide': {
-          st(e).Hidden = { t: 99, canMove: true };
           e.readyLance = true;
+          // A Located foe cannot hide. It loses the cover, not the turn: its lance is ready all the same.
+          if (st(e).Located) {
+            T.say(m, `${e.name} tries to fade, but it is Located.`, 'enemy');
+            break;
+          }
+          st(e).Hidden = { t: 99, canMove: true };
           T.say(m, `${e.name} fades from sight.`, 'enemy');
           m.fx.push({ t: 'state', ent: e.uid, name: 'Hidden' });
           break;
@@ -368,11 +381,11 @@
         }
         case 'teleStrike': {
           if (!t) break;
-          if (st(e).NoTele) {
-            T.say(m, `${e.name} cannot phase — it is held.`, 'enemy');
-            break;
-          }
-          if (dist(m, e.pos, t.pos) <= ab.reach + 1) {
+          // Whatever stops it walking stops it blinking. It is not robbed of its turn:
+          // a hero already beside it is still struck.
+          if (!canBlink(e)) {
+            if (!B.adjacent(m.board, e.pos, t.pos)) T.say(m, `${e.name} cannot phase — it is held.`, 'enemy');
+          } else if (dist(m, e.pos, t.pos) <= ab.reach + 1) {
             const spot = B.allNeighbors(m.board, t.pos)
               .filter((n) => !T.occupied(m, n) && !m.board.nodes[n].height)
               .sort((a, b) => dist(m, e.pos, a) - dist(m, e.pos, b))[0];

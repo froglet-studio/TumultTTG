@@ -90,7 +90,7 @@ function answersOf(x) {
       break;
     case 'teleport':
       add('tempo', 'burst');
-      if (x.height || x.anyTerrain) add('height');
+      if (x.height) add('height');
       break;
     case 'climb':
       add('height', 'tempo');
@@ -153,7 +153,6 @@ function answersOf(x) {
       break;
     case 'hazardImmune':
       add('hazard');
-      if (x.kind === 'push') add('control');
       break;
     case 'clearHazard':
       add('hazard');
@@ -216,8 +215,7 @@ function soloRisks(x) {
   if (x.v === 'interact' && x.height) out.push('works the Vault from the floor');
   if ((x.v === 'stripShield' && x.amount == null) || (x.v === 'strike' && x.stripShield))
     out.push('deletes a Shield outright');
-  if (x.v === 'hazardImmune' && x.party && x.kind !== 'push' && num(x.dur) >= 2)
-    out.push('whole squad ignores hazards');
+  if (x.v === 'hazardImmune' && x.party && num(x.dur) >= 2) out.push('whole squad ignores hazards');
   return out;
 }
 
@@ -227,7 +225,7 @@ const ABLATIONS = [
     'vertical',
     'no way up',
     (x) =>
-      (x.v === 'teleport' && (x.height || x.anyTerrain)) ||
+      (x.v === 'teleport' && x.height) ||
       ['climb', 'weightless'].includes(x.v) ||
       (x.v === 'morph' && x.climb) ||
       (x.v === 'interact' && x.height),

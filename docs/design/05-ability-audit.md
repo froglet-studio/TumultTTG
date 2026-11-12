@@ -60,6 +60,6 @@ Where a card still has one use after that, change the card.
 - "Staple" says the *effect* is always worth having, not that the *numbers* are right. Whether a staple is actually played is a balance question for pass B with a competent player.
 - The problem list describes v2.0's missions. Every new mission type or condition adds problems; add them to the tool in the same change.
 - A static mapping cannot see combinations. A face that looks narrow may be the hinge of a three-card line. The audit produces a review list for people, not a verdict.
-- Pass A reads recipes — intent. Where the engine does not honour a recipe option (see the known issues in [`HANDOFF.md`](../HANDOFF.md)), the audit overstates: two of the nine "Height" answers cannot reach a ledge today.
+- Pass A reads recipes — intent. It is only as true as the engine: when it was first run, two of the nine "Height" answers could not reach a ledge. Roadmap S0 fixed those, and `test/recipes.test.js` now fails on any recipe option the engine ignores.
 - Pass C's rows are independent samples of random squads on the same boards. Differences under about fifteen points are noise; one row beating the baseline is not a finding.
 - Only trait cards are audited. Gear and enemy abilities should be.

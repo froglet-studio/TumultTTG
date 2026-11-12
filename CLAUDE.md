@@ -18,7 +18,7 @@ npm run check          build + test — run before calling any change done
 npm run format         Prettier (src/data/ is deliberately excluded)
 npm run docs           regenerate docs/reference/CARDS.md and ABILITY_AUDIT.md
 
-node tools/sim.js 40                 balance tables (or `40 missions`, `80 runs`, `10 cards`)
+node tools/sim.js 40                 balance tables (or `40 missions`, `80 runs`, `10 cards`; `--rule VITALITY=28` tries a rules constant)
 node tools/mission-log.js vault 2 7  one narrated mission: archetype, tier, seed [heroA heroB]
 node tools/ui-drive.js 3 --manual    drive a whole run through the UI by clicking (seed 3)
 ```
@@ -57,7 +57,7 @@ Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/
 - 15-die pool per hero: pool + banked = 15, always. Roll 3 per turn. Minted dice are temporary and never count.
 - d12 faces: Mass, Charge, Space, Time, Omni, AP2, and six AP. Omni pays for any etherion.
 - Six-column track: playing either face sends the whole card away for that face's cooldown (after its duration).
-- Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. (The design says that capability exists only at E ≥ 1; v2.0 does not enforce it — see the known issues in `docs/HANDOFF.md` before relying on either behaviour.) Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline.
+- Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. (The pillars say that capability exists only at E ≥ 1; the game lets the face be played at E 0. `T.RULES.ETHEREAL_MIN_E` is the switch and the choice is Garrett's — `docs/HANDOFF.md`, decision 4.) Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline.
 - **No turn theft.** Control taxes position or efficiency; a controlled unit still acts.
 - **No hard counters.** Every state is pressured by several general verbs.
 - Deterministic combat, random replenishment. Defence is proactive (no reactions or interrupts). Enemies telegraph their intent before the player acts.

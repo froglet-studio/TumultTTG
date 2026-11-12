@@ -130,47 +130,80 @@ function createHarness(T = loadTumult()) {
   }
 
   /**
-   * Fire one face of one card in a controlled arena (plenty of dice, a foe
-   * adjacent and a foe in lane). Returns { status: 'fired' | 'unplayable', why? }
-   * and throws if the engine logs an effect error or an unimplemented verb.
+   * A controlled arena for one hero holding the given card(s): plenty of dice, a foe
+   * adjacent and a foe in the hero's lane. Returns { run, m, h, ally, adj, lane }, where
+   * adj and lane are those two foes (either may be undefined on a cramped board).
    */
-  function fireFace(cardId, faceKey) {
-    const card = T.CARD[cardId];
-    const run = T.newRun(77);
+  function arena(cardIds, { up = [2, 2], archetype = 'swarm', tier = 2, seed = 77 } = {}) {
+    const ids = [].concat(cardIds);
+    const run = T.newRun(seed);
     const h = T.makeHero({
       id: 'x',
       name: 'Tester',
-      species: ['human', card.sp, 'eel'],
-      cards: [cardId],
-      up: { [cardId]: [2, 2] },
+      species: ['human', T.CARD[ids[0]].sp, 'eel'],
+      cards: ids,
+      up: Object.fromEntries(ids.map((id) => [id, up.slice()])),
     });
     const ally = T.makeHero({ id: 'y', name: 'Buddy', species: ['human', 'owl', 'gecko'], cards: ['owl_talon'] });
     run.heroes = [h, ally];
     run.crystals = 20;
-    T.launchMission(run, 'swarm', 2);
+    T.launchMission(run, archetype, tier);
     const m = run.mission;
     h.held = ['AP', 'AP', 'AP', 'AP', 'AP', 'O', 'O', 'O', 'M', 'C', 'S', 'T'];
     h.pool = T.RULES.POOL - h.held.length;
-    const adj = T.Board.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
-    if (adj) m.enemies[0].pos = adj;
-    const lane = Object.values(m.board.nodes).find(
+    const adjNode = T.Board.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
+    if (adjNode) m.enemies[0].pos = adjNode;
+    const laneNode = Object.values(m.board.nodes).find(
       (n) => n.lane === m.board.nodes[h.pos].lane && n.id !== h.pos && !T.occupied(m, n.id),
     );
-    if (lane && m.enemies[1]) m.enemies[1].pos = lane.id;
+    if (laneNode && m.enemies[1]) m.enemies[1].pos = laneNode.id;
+    return { run, m, h, ally, adj: adjNode ? m.enemies[0] : undefined, lane: laneNode ? m.enemies[1] : undefined };
+  }
+
+  /**
+   * Play one face from an arena, choosing the first legal target or node unless `choose`
+   * picks another: choose(tg, scene) returns { target } or { node }. Returns T.playFace's
+   * result, or { ok: false, why } if the face cannot be played.
+   */
+  function playIn(scene, cardId, faceKey, choose) {
+    const { m, h } = scene;
     const chk = T.canPlay(m, h, cardId, faceKey);
-    if (!chk.ok) return { status: 'unplayable', why: chk.why };
+    if (!chk.ok) return chk;
     const ctx = { choice: 'pull' };
     if (chk.tg.need === 'foe' || chk.tg.need === 'foeOrAlly') ctx.target = chk.tg.options[0];
     if (chk.tg.need === 'node') ctx.node = chk.tg.options[0];
-    const r = T.playFace(m, h, cardId, faceKey, ctx);
-    if (!r.ok) throw new Error('play failed: ' + r.why);
-    const bad = m.log.filter((l) => /Effect error|unimplemented/.test(l.text));
+    if (choose) Object.assign(ctx, choose(chk.tg, scene));
+    return T.playFace(m, h, cardId, faceKey, ctx);
+  }
+
+  /**
+   * Fire one face of one card in the arena. Returns { status: 'fired' | 'unplayable', why? }
+   * and throws if the engine logs an effect error or an unimplemented verb. `arrange(scene)`
+   * may rearrange the arena first; `choose` is passed to playIn.
+   */
+  function fireFace(cardId, faceKey, { arrange, choose } = {}) {
+    const scene = arena(cardId);
+    if (arrange) arrange(scene);
+    const r = playIn(scene, cardId, faceKey, choose);
+    if (!r.ok) return { status: 'unplayable', why: r.why };
+    const bad = scene.m.log.filter((l) => /Effect error|unimplemented/.test(l.text));
     if (bad.length) throw new Error(bad.map((l) => l.text).join('; '));
-    T.endHeroPhase(m);
+    T.endHeroPhase(scene.m);
     return { status: 'fired' };
   }
 
-  return { T, ARCHETYPES, prebuiltSquad, draftedSquad, addProgression, playMission, playRun, fireFace };
+  return {
+    T,
+    ARCHETYPES,
+    prebuiltSquad,
+    draftedSquad,
+    addProgression,
+    playMission,
+    playRun,
+    arena,
+    playIn,
+    fireFace,
+  };
 }
 
 module.exports = { createHarness, ARCHETYPES };

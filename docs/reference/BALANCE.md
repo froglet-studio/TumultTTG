@@ -40,6 +40,34 @@ These are the numbers the tuning ended on. They drift a few points whenever card
 
 **Full runs** (80, random map choices, autoplayer): **21% won**, average depth 5.6 of 7 rows, 74% mission win rate, zero crashes, save/load round-trips every node.
 
+
+## What v2.0.2 changed (roadmap S0)
+
+Making the engine do what the text says moved the numbers very little. `node tools/sim.js 40` immediately before and after, same seeds:
+
+| archetype | tier | win % before | win % after | avg rounds before | avg rounds after |
+|---|---|---|---|---|---|
+| swarm | 1 | 100% | 100% | 6.0 | 6.0 |
+| swarm | 2 | 88% | **83%** | 6.5 | 6.5 |
+| swarm | 3 | 63% | **65%** | 7.8 | 7.3 |
+| vault | 1 | 98% | 98% | 6.0 | 6.0 |
+| vault | 2 | 73% | 73% | 6.9 | 6.9 |
+| vault | 3 | 38% | 38% | 7.9 | 7.9 |
+| hidden | 1 | 100% | 100% | 4.6 | 4.6 |
+| hidden | 2 | 83% | 83% | 5.0 | 5.0 |
+| hidden | 3 | 60% | 60% | 5.8 | 5.9 |
+| cascade | 1 | 98% | 98% | 5.5 | 5.5 |
+| cascade | 2 | 93% | 93% | 5.9 | 5.9 |
+| cascade | 3 | 63% | 63% | 6.8 | 6.8 |
+| elite | 1 | 95% | **93%** | 7.2 | 7.2 |
+| elite | 2 | 70% | 70% | 8.8 | 8.8 |
+| elite | 3 | 70% | **75%** | 9.5 | 9.8 |
+| boss | 3 | 28% | **33%** | 16.4 | 16.3 |
+
+Full runs (40): 9/40 won before, 8/40 after; missions won within runs 76% before, 75% after; average row reached 5.65 and 5.65.
+
+Where the movement comes from: strike bonuses no longer leak into corrosion and zones, and two "this turn" bonuses now expire (the swarm and elite tier 1–2 cells); Momentum works every round and Quick Hands works at all (tier 3 and the boss, the only cells where the simulator hands out boons); an Anchored Harrier stays put (elite). The autoplayer has no rule for several of the faces that were fixed — it never walks a Weightless hero up a ledge — so for those the table shows no change where a person would see one.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.

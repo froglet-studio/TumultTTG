@@ -220,15 +220,15 @@
     const boss = m.isBoss;
     let up = 2 + bonusHit + (elite ? 1 : 0);
     let crystals = 4 + m.tier + bonusHit * 2 + (elite ? 4 : 0) + (boss ? 10 : 0);
-    run.heroes.forEach((h) => {
-      if (T.hasBoon(h, 'studious')) up += 0;
-    });
-    if (run.heroes.some((h) => T.hasBoon(h, 'deeppockets'))) crystals += 2;
-    const studious = run.heroes.some((h) => T.hasBoon(h, 'studious')) ? 1 : 0;
+    for (const h of run.heroes)
+      for (const v of T.boonVals(h, 'reward')) {
+        up += v.up || 0;
+        crystals += v.crystals || 0;
+      }
     const offer = T.cardOffer(run, 3);
     const boon = elite ? T.boonOffer(run, 2) : null;
     run.lastReward = {
-      up: up + studious,
+      up,
       crystals,
       offer,
       boon,

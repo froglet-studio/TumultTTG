@@ -7,6 +7,7 @@ Tumult was designed and built over a long chat session and has now moved into th
 - **v2.0 is a complete, playable game** and it is all here: source, tools, tests, reference docs, and the original v1.0 design bundle.
 - **The next version is designed but not built.** Garrett's brief — polish and artwork, abilities that are each a staple or a flexible tool, boards that differ every encounter, problems that are not all fights, a game that helps create pilots — is written up as requirements in [`design/00-pillars.md`](design/00-pillars.md), as proposals in the rest of `design/`, and as milestones in [`ROADMAP.md`](ROADMAP.md).
 - **There is now a way to measure the ability rules** (`npm run audit`), and a first set of findings.
+- **Since the handoff:** roadmap milestone S0 is done (v2.0.2, 12 November 2026). The engine now does what the card, boon and bestiary text says; the list this file used to carry is empty, and two tests keep it that way. One question from it is still open — decision 4 below.
 
 ## What is in the repository
 
@@ -31,7 +32,9 @@ On Linux with Node 22, at the commit that added this file:
 - Reformatting the engine and UI with Prettier changed nothing: 16 narrated missions and a full simulation batch were byte-identical before and after.
 - Simulated balance is in line with the v2.0 tuning pass (`docs/reference/BALANCE.md`).
 
-**Not checked:** the tools and tests have not been run on Windows or macOS, and CI has not run yet: it runs on pull requests and on `main`. The code avoids the usual Windows traps (paths, file URLs, line endings), but the first `npm run check` on a new machine and the first CI run are real tests — do them first. In PowerShell, call tools that take arguments as `node tools/…`; `npm run x -- args` loses its `--` there.
+CI has run since: the first pull request and the merge to `main` both passed the format check, build and tests on Node 22 and 24.
+
+**Not checked:** the tools and tests have not been run on Windows or macOS. The code avoids the usual Windows traps (paths, file URLs, line endings), but the first `npm run check` on a new machine is a real test — do it first. In PowerShell, call tools that take arguments as `node tools/…`; `npm run x -- args` loses its `--` there.
 
 ## How this repository was assembled
 
@@ -78,19 +81,11 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 1. The frame: is "a season as guides on Tumult, ending with a berth on the Cosmic Shore" right? ([design/01](design/01-frame-and-campaign.md) lists five specific questions.)
 2. Squad size: three by default, two supported — agreed?
 3. Basic actions, Channel and Overcast ([design/02](design/02-units-verbs-actions.md)): these add rules to the v1.0 core. Acceptable?
-4. Ethereal faces at E 0. v1.0 says an Ethereal capability exists only at E ≥ 1; the v2.0 engine lets the face be played at E 0 with its E-0 numbers, and about a fifth of simulated Ethereal plays are exactly that. Which is the rule?
+4. Ethereal faces at E 0. The pillars and v1.0's text say an Ethereal capability exists only at E ≥ 1; the engine has always let the face be played at E 0 with its E-0 numbers (so did v1.0's reference engine), and that is the game played so far. Which is the rule? It is now one line: `ETHEREAL_MIN_E` in `T.RULES` (`src/data/world.js`), 0 today, 1 for the strict reading. Measured with `node tools/sim.js 40 all --rule ETHEREAL_MIN_E=1`: the autoplayer's win rates move by five points at most, in both directions, and full runs do not move. What changes is the start of a run — each pre-made hero would begin with three or four of six Ethereal faces locked — and how much an E pip means. Today a fifth of simulated Ethereal plays are at E 0. It wants a person's playtest before the switch is flipped.
 
 ## Known issues and debt
 
-**Text the engine does not honour** — found by an independent review at handoff; each should be fixed test-first, and several will move balance a little (roadmap S0):
-- Ethereal faces can be played at E 0: `T.canPlay` has no E check (see decision 4).
-- Conditions on effects (`ifAnchored`, `ifOnHazard`, `ifAdjacent`, `ifE`) are honoured only by `strike`, `heal` and area `dot`; `ifHpBelow` is never read. So *Talon Strike — Pin* Weakens any foe, not only small prey, and *Radiotrophic Resilience — Thrive* mints its AP off-hazard too.
-- Weightless and climbing Morph forms cannot walk onto height nodes: `walkNeighbors` only follows climb edges once the ramp is down.
-- Anchoring a Harrier does not stop its blink; only a Counted Trap's hold does.
-- The *Momentum* boon applies once per mission; its text says each round.
-- `hazardImmune` ignores its `kind: 'push'` option, so *Current-Cling Anchor*'s physical face grants a round of hazard immunity its text does not mention.
-- `anyTerrain` on `teleport`, `los` on `force` and `height` on `interact` are accepted in recipes and never read.
-- A boon's `hook` field is decorative except for `face`; boons are wired by id.
+**Text the engine does not honour** — none known. A review at handoff found eight places; roadmap S0 fixed seven and turned the eighth into decision 4, and found and fixed as many again on the way (`CHANGELOG.md`, 2.0.2). Two tests guard the class: `test/recipes.test.js` fails on any recipe option the engine ignores or formula it never evaluates, and `test/boons.test.js` holds every boon to its text. Neither can read prose, so flavour text, telegraphs and tooltips still need a person's eye when rules change.
 
 **Game**
 - No basic attack; kill objectives are all but impossible for a squad without cards.
@@ -98,12 +93,15 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 - Missions run shorter than the 8–14 round target at tiers 1 and 2.
 - The boss's true difficulty is unknown: the autoplayer wins it a quarter to a third of the time with a realistic kit and almost never with a random one, and nobody has measured how people fare.
 - A mission in progress is not saved; refreshing returns to the map at that node.
+- A hero on a ledge cannot walk back down until the ramp drops; only a blink, a climb or still being Weightless gets them off. Harmless on the Vault, where the ledge is the objective. Settle it before a board puts a ledge anywhere else (roadmap S4).
+- The autoplayer plays a conditional face whether or not its condition holds, and does not know that a Weightless hero can walk up a ledge. Simulation undercounts both (roadmap F2).
 
 **Code**
 - One random stream drives squad building, board generation, dice and opposition, so seeds are not comparable across squads.
 - `tools/sim.js` and `test/missions.test.js` mix the archetype name's *length* into their seeds, so Swarm, Vault and Elite cells play identical squads. Harmless, but the samples are correlated. (`tools/audit.js` uses the archetype's index.)
 - The autoplayer (`src/engine/ai.js`) is a chain of hand-written cases; it is for simulation only and is the weakest part of the measurement story.
 - `T.runEffects` is defined and then wrapped later in `engine.js` (for decoy placement). It works; it is confusing.
+- The Warden's shield stops area damage because `T.damage` checks for its type by name, and an overridden foe's blow at its neighbour skips the damage pipeline altogether. Both are special cases in the engine that should be data and verbs.
 - `src/data/world.js` mixes data tables with generator code.
 - The UI is string templates re-rendered wholesale, with one delegated click handler. Fine at this size; it will not survive the presentation milestones unchanged.
 - Saves carry no version number.
@@ -139,7 +137,6 @@ Only a repository admin can set the rest, on GitHub:
 - **A ruleset on `main`**, the counterpart of Cosmic Shore's "Protect trunks": require a pull request, require the CI checks (`build + test (Node 22)` and `build + test (Node 24)`), require review from Code Owners, and block force pushes and deletion. CODEOWNERS enforces nothing until this exists. Do it before inviting more people: dozens of accounts can already push here.
 - **Actions → Fork pull request workflows:** require approval for all external contributors, the setting Cosmic Shore's CI docs require for a public repository.
 - **Merging:** squash and merge as the default, as Cosmic Shore's git rules set for feature branches.
-- **Watch the first CI run** (format check, build, tests on Node 22 and 24). It runs when a pull request is opened.
 - **Optional — a public play link.** Settings → Pages → Source: *GitHub Actions*, then run the *Publish playable build* workflow by hand. Nothing is published until someone does.
 - **Optional — fewer permission prompts in Claude Code.** A shared `.claude/settings.json` can pre-approve the project's own commands. It is deliberately not included: which commands an agent may run without asking is a decision for the repository's owner. A starting point, to be checked against the current Claude Code permissions documentation:
 

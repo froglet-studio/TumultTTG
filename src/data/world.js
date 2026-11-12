@@ -19,6 +19,8 @@
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
     HAZARD_DMG: 3,
     P_CAP: 3, E_CAP: 3,
+    ETHEREAL_MIN_E: 0,       // E a card needs before its Ethereal face can be played. v1.0's text says 1; v2.0 has
+                             // always played with 0. Garrett's call — docs/HANDOFF.md, decision 4.
     START_UP: 6, START_CARDS: 6, MAX_PER_SPECIES: 3, MAX_CARDS: 9,
     GEAR_SLOTS: 2,
   };
@@ -115,10 +117,10 @@
     { id:'keensense',   name:'Keen Sense',   icon:'👁️', desc:'Your reveals reach 1 further; Hidden foes adjacent to you are revealed at round start.', hook:'keen', val:1 },
     { id:'deeppockets', name:'Deep Pockets', icon:'💰', desc:'+2 ◇ after every mission.', hook:'reward', val:{crystals:2} },
     { id:'studious',    name:'Studious',     icon:'📖', desc:'+1 UP after every mission.', hook:'reward', val:{up:1} },
-    { id:'secondwind',  name:'Second Wind',  icon:'💫', desc:'Once per run, the first hero to be downed rises immediately with 10 hp.', hook:'autoRevive', val:10 },
+    { id:'secondwind',  name:'Second Wind',  icon:'💫', desc:'Once per run, when you would go down, you rise with 10 hp instead.', hook:'autoRevive', val:10 },
     { id:'momentum',    name:'Momentum',     icon:'💥', desc:'Your first strike each round deals +2.', hook:'firstStrike', val:2 },
-    { id:'anchorsoul',  name:'Anchor Soul',  icon:'⚓', desc:'You cannot be pulled.', hook:'noPull', val:1 },
-    { id:'quickhands',  name:'Quick Hands',  icon:'🫳', desc:'At the start of each mission, your track slides 1 extra column on round 1.', hook:'missionStart', val:{hasten:1} },
+    { id:'anchorsoul',  name:'Anchor Soul',  icon:'⚓', desc:'You cannot be pulled.', hook:'noPull', val:true },
+    { id:'quickhands',  name:'Quick Hands',  icon:'🫳', desc:'As round 2 begins, your track slides 1 extra column: what you played in round 1 comes home sooner.', hook:'roundStart', val:{round:2, hasten:1} },
     { id:'aff_M', name:'Mass Affinity',   icon:'◆', desc:'One AP face on your dice becomes Mass.',   hook:'face', val:'M' },
     { id:'aff_C', name:'Charge Affinity', icon:'◆', desc:'One AP face on your dice becomes Charge.', hook:'face', val:'C' },
     { id:'aff_S', name:'Space Affinity',  icon:'◆', desc:'One AP face on your dice becomes Space.',  hook:'face', val:'S' },
@@ -146,7 +148,7 @@
       flavor:'Shoots, retreats, shoots. Deny it the lane.' },
     warden:   { name:'Warden', glyph:'🗿', role:'guardian', hp:[12,15,18], speed:0, policy:'guardian', shield:[3,3,3], anchored:true,
       abilities:{ cleave:{ n:'Cleave', kind:'melee', dmg:[4,5,6] }, brace:{ n:'Brace', kind:'brace' } },
-      flavor:'It does not move. You go around it or through it — Pierce, area, or true damage.' },
+      flavor:'It does not move. You go around it or through it — Pierce or true damage; its shield stops area too.' },
     lurker:   { name:'Lurker', glyph:'🫥', role:'ambusher', hp:[7,9,11], speed:2, policy:'lurker', hidden:true,
       abilities:{ ambush:{ n:'Ambush', kind:'melee', dmg:[5,6,7], ambush:true }, creep:{ n:'Creep', kind:'move' } },
       flavor:'You will not see it until it is adjacent. Reveal it first.' },

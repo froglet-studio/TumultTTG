@@ -172,7 +172,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Talon Strike** · Mass · `owl_talon`
 
 - *Phys — Grip* · 1 AP · CD 0 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
-- *Eth — Pin* · 2 AP + 1 Mass · CD 3 — Melee 3 and pin: Anchored 2; small prey (≤8 hp) is also Weakened 2. *(P3/E3: Melee 6 and pin: Anchored 4; small prey (≤8 hp) is also Weakened 2.)*
+- *Eth — Pin* · 2 AP + 1 Mass · CD 3 — Melee 3 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2. *(P3/E3: Melee 6 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.)*
 
 **Owl Neck Swivel** · Time · `owl_swivel`
 
