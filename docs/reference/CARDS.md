@@ -104,7 +104,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Counterbalance Tail** · Mass · `jer_tail`
 
 - *Phys — Redirect* · 1 AP · CD 1 · Dur 1 — Plant yourself: immune to push/pull and Shield 1 this round. *(P3: Plant yourself: immune to push/pull and Shield 4 this round.)*
-- *Eth — Deflect* · 2 AP + 1 Mass · CD 3 · Dur 2 — The next melee or force against you is turned back: attacker takes 3 and is pushed 1. Dur 2. *(P3/E3: The next melee or force against you is turned back: attacker takes 5 and is pushed 1. Dur 2.)*
+- *Eth — Deflect* · 2 AP + 1 Mass · CD 3 · Dur 2 — Shield 1 this round, and the next melee or force against you is turned back: attacker takes 3 and is pushed 1. Dur 2. *(P3/E3: Shield 3 this round, and the next melee or force against you is turned back: attacker takes 5 and is pushed 1. Dur 2.)*
 
 ## 2 · Red-Legged Grasshopper — leans M/C
 
@@ -215,7 +215,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Chromatic Cloak** ★ · Charge · `oct_cloak`
 
-- *Phys — Blend* · 1 AP · CD 1 — Match your surroundings: Hidden 1 (breaks if you move). *(P3: Match your surroundings: Hidden 2 (breaks if you move).)*
+- *Phys — Blend* · 1 AP · CD 1 — Match your surroundings: Hidden 1 (breaks if you move) and Shield 1. *(P3: Match your surroundings: Hidden 2 (breaks if you move) and Shield 1.)*
 - *Eth — Vanish* · 1 AP + 2 Charge · CD 3 — Bend light: Hidden 2 rounds and you may move while Hidden. *(P3/E3: Bend light: Hidden 4 rounds and you may move while Hidden; Shield 3.)*
 
 **Jet Propulsion** · Mass · `oct_jet`
@@ -225,7 +225,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ink Screen** · Space · `oct_ink`
 
-- *Phys — Ink* · 1 AP · CD 1 — Haze your node and its neighbours: heroes there are Hidden 1. *(P3: Haze your node and its neighbours: heroes there are Hidden 2.)*
+- *Phys — Ink* · 1 AP · CD 1 — Haze your node and its neighbours: heroes there are Hidden 1, and foes adjacent to you are Weakened 1. *(P3: Haze your node and its neighbours: heroes there are Hidden 2, and foes adjacent to you are Weakened 1.)*
 - *Eth — Smoke Step* · 1 AP + 1 Space · CD 2 — Vanish into the cloud and re-emerge anywhere within 2. *(P3/E3: Vanish into the cloud and re-emerge anywhere within 4.)*
 
 **Boneless Squeeze** · Mass · `oct_squeeze`
@@ -318,7 +318,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **External Gills** · Charge · `axo_gills`
 
-- *Phys — Gills* · 1 AP · CD 1 — Breathe anything: immune to hazards for 2 rounds.
+- *Phys — Gills* · 1 AP · CD 1 — Breathe anything: immune to hazards for 2 rounds, and heal 1. *(P3: Breathe anything: immune to hazards for 2 rounds, and heal 2.)*
 - *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(P3/E3: Both heroes: immune to hazards and regenerate 1 each turn for 5 rounds.)*
 
 **Toxic Secretion** · Mass · `axo_toxic`
@@ -417,12 +417,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Carnivorous Digestion** · Time · `fly_digest`
 
 - *Phys — Digest* · 1 AP · CD 1 — Feed on a held foe: if it is Anchored, deal 2 true damage and heal 1. *(P3: Feed on a held foe: if it is Anchored, deal 5 true damage and heal 1.)*
-- *Eth — Enzymes* · 1 AP + 1 Time · CD 3 · Dur 2 — Accelerate the enzymes: for 2 rounds, every Anchored foe takes 3 true damage at round end and you heal 1 per foe. *(P3/E3: Accelerate the enzymes: for 2 rounds, every Anchored foe takes 5 true damage at round end and you heal 1 per foe.)*
+- *Eth — Enzymes* · 1 AP + 1 Time · CD 3 · Dur 2 — Accelerate the enzymes: heal 2 now; for 2 rounds, every Anchored foe takes 3 true damage at round end and you heal 1 per foe. *(P3/E3: Accelerate the enzymes: heal 4 now; for 2 rounds, every Anchored foe takes 5 true damage at round end and you heal 1 per foe.)*
 
 **Trigger-Hair Sense** · Space · `fly_hairs`
 
 - *Phys — Hairs* · 1 AP · CD 1 · Dur 2 — Tripwire awareness: for 2 rounds, everything within 1 stays revealed; foes adjacent now are Weakened 1. *(P3: Tripwire awareness: for 2 rounds, everything within 4 stays revealed; foes adjacent now are Weakened 1.)*
-- *Eth — Cilia Field* · 1 AP + 1 Space · CD 4 — Mechanosensitive cilia for 3 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked. *(P3/E3: Mechanosensitive cilia for 5 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked.)*
+- *Eth — Cilia Field* · 1 AP + 1 Space · CD 4 — Mechanosensitive cilia for 3 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked. Foes adjacent now are Weakened 1. *(P3/E3: Mechanosensitive cilia for 5 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked. Foes adjacent now are Weakened 1.)*
 
 **Rooting Anchor** · Mass · `fly_root`
 
@@ -529,7 +529,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Extremophile Traversal** ☆ · Space · `tar_extremo`
 
-- *Phys — Endure* · 1 AP · CD 1 — Operate in anything: immune to hazards for 2 rounds.
+- *Phys — Endure* · 1 AP · CD 1 — Operate in anything: immune to hazards for 2 rounds, and Shield 1 this round. *(P3: Operate in anything: immune to hazards for 2 rounds, and Shield 2 this round.)*
 - *Eth — Cross the Void* · 1 AP + 1 Space · CD 3 — Cross the impossible: move to any node within 2 through vacuum, hazard or height. *(P3/E3: Cross the impossible: move to any node within 4 through vacuum, hazard or height, carrying an adjacent ally.)*
 
 **Stylet Drain** · Charge · `tar_stylet`

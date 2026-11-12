@@ -224,6 +224,19 @@ Full runs (40): heuristic 9 → 9 won; look-ahead 19 → 22 won, missions won 86
 
 The retune that follows S1 (plan phase 3) has to absorb this: the floor is now solid, so difficulty must come from the opposition and the clock, not from dead dice.
 
+## v2.9.0 — the last narrow faces
+
+Seven more faces gained a general effect (CHANGELOG 2.9.0). `node tools/sim.js 40`, 2.8.0 → 2.9.0, rising tide, cells that moved by 5 points or more:
+
+| archetype | tier | heuristic win% | look-ahead win% |
+|---|---|---|---|
+| swarm | 3 | 65 → 53 | 100 → 100 |
+| vault | 3 | 38 → 33 | 98 → 98 |
+| hidden | 3 | 60 → 53 | 98 → 98 |
+| elite | 2 | 78 → 73 | 98 → 98 |
+
+Full runs (40): heuristic 9 → 6, look-ahead 22 → 22. The look-ahead player, who weighs each face by its outcome, is untouched. The heuristic plays a face with a Shield or a Weaken whenever it feels threatened, so Blend, Ink and Endure now take turns it used to spend striking. The heuristic is meant to win about one run in five; at 6 in 40 it is just under. Watch it in the next measurement before reading it as the game getting harder.
+
 ## v2.8.0 — sensing faces with a second use
 
 Seven Physical reveal faces each gained a small general effect (CHANGELOG 2.8.0). `node tools/sim.js 40`, 2.7.0 → 2.8.0, rising tide, cells that moved:
