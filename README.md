@@ -24,6 +24,8 @@ or build the single-file game, which works offline and can be sent to anyone:
 npm run build      # → dist/TUMULT.html
 ```
 
+**Testing it?** `npm run build:playtest` (or `http://localhost:5173/?playtest` on the dev server) builds the same game with a panel on the title screen: start any mission at any tier with a seed, switch the rule that is waiting on a decision, and copy a report of what happened.
+
 ## Where things stand
 
 **v2.0 is playable end to end**: draft two heroes from eleven bloodlines (99 trait cards), cross a branching seven-row map of generated missions, havens and events, and bring down the boss. It has telegraphed enemy intents, twelve enemy types, gear, boons, saving, a headless simulator and a test suite.
@@ -50,12 +52,13 @@ npm run build      # → dist/TUMULT.html
 |---|---|
 | `npm run dev` | dev server, rebuilds on refresh |
 | `npm run build` | builds `dist/TUMULT.html` and syntax-checks it |
+| `npm run build:playtest` | builds `dist/TUMULT.playtest.html`: the game plus the playtest panel |
 | `npm test` | runs all tests |
 | `npm run check` | build + tests — run before opening a pull request |
 | `npm run format` | formats code with Prettier |
 | `npm run docs` | regenerates the card catalog and the ability audit |
 | `node tools/sim.js 40` | balance tables from simulated missions and runs |
-| `node tools/mission-log.js vault 2 7` | prints one narrated mission (archetype, tier, seed) |
+| `node tools/mission-log.js vault 2 7` | prints one narrated mission (archetype, tier, seed; then two hero numbers and `start` or `tier` for the kit) |
 
 ## Contributing
 

@@ -101,6 +101,7 @@ The print generator, pilot boards, opposition flowcharts, and a one-leg print-an
 ## Throughout
 
 - **Balance** after every systems milestone: `node tools/sim.js 40` before and after, numbers in the pull request. Targets from v1.0 still stand — missions of 8 to 14 rounds, no single hit above a third of a pilot's vitality, tier 1 welcoming and tier 3 tense.
+- **Playtests by hand** after every milestone: `npm run build:playtest`, with the "what to look at" notes in `src/ui/playtest.js` rewritten for the release (a test insists). What a person reports outranks what the autoplayer scores.
 - **Accessibility and motion** settings arrive with the features they govern, not at the end.
 - **Docs**: when a proposal is built, move its description to `docs/reference/` and update its status.
 - **Modules** ([09](design/09-engineering.md) §6): move from the global namespace to ES modules once, between milestones — after F2 is a good moment.

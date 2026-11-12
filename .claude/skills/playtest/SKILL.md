@@ -33,6 +33,14 @@ To compare a change, run the simulation on the base commit first (`git stash` or
 - Forty missions per cell is only good to about ±10–15 points. Do not report a five-point move as a finding; raise the count instead (`node tools/sim.js 200 missions`).
 - Simulation says nothing about whether the game is fun or readable. Say what a person should try by hand.
 
+## When a person plays
+
+`npm run build:playtest` builds the game with a panel for testers (`docs/reference/OVERVIEW.md`, "Play it"). Its **Report** is plain text. For each mission it gives the archetype, tier, seed, squad, kit, result, rounds, hp left, kills, bonus objectives, and faces played as `P n / E n (k at E 0)`, with the rule that was set (`rule E≥0` or `E≥1`) and the build's version.
+
+- A mission started from the panel prints `node tools/mission-log.js <archetype> <tier> <seed> <heroA> <heroB> <kit>`: run it to see the same board and opening dice, then read the report's log lines against it.
+- A mission met in an ordinary Tide cannot be rebuilt from its seed (roadmap F1); go by the log lines.
+- A person's results are the ones that count for feel, pacing and readability. Set them beside the simulated numbers; never average the two.
+
 ## Report
 
 Lead with what changed and whether it is inside the targets. Then the table rows that moved, one narrated example that explains the biggest move, anything the audit flagged, and what you could not determine. Keep it to what the reader needs in order to decide.

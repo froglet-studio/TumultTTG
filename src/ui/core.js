@@ -102,6 +102,8 @@
     else hideTip();
   });
   document.addEventListener('mouseleave', hideTip);
+  // a tip left behind by a tap would otherwise ride along as the page scrolls under it
+  document.addEventListener('scroll', hideTip, true);
 
   /* ───────────── card widgets ───────────── */
   const costStr = (card, face, fk) => {
@@ -149,6 +151,7 @@
       <div class="btns"><button class="primary" data-act="newRun">New Tide</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       <div class="mute small" style="margin-top:14px">Tides sailed: ${meta.runs} · Consolidations toppled: ${meta.wins} · Deepest row: ${meta.bestRow}/6</div>
       <div class="mute small" style="max-width:520px;text-align:center;margin-top:16px;font-family:var(--serif);font-style:italic">${esc(T.FLAVOR.terminalIntro[meta.runs % T.FLAVOR.terminalIntro.length])}</div>
+      ${U.titleExtra ? U.titleExtra() : ''}
     </div>`;
   }
 
@@ -318,6 +321,8 @@
     event: 'Event',
     boss: 'The Heart',
   };
+  U.NODE_ICON = NODE_ICON;
+  U.NODE_NAME = NODE_NAME;
   function partyBar(run) {
     return `<div class="partybar">${run.heroes
       .map(
@@ -556,6 +561,7 @@
   }
 
   /* ───────────── RENDER ROOT ───────────── */
+  let shown = null;
   U.render = function () {
     const root = app();
     let html = '';
@@ -594,6 +600,9 @@
     if (U.modal) html += `<div class="modal-bg" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
     html += tutorialHTML();
     root.innerHTML = html;
+    // #app is the page's scroller: a new screen starts at its top, a re-render stays where it was
+    if (shown !== U.screen) root.scrollTop = 0;
+    shown = U.screen;
     if (U.screen === 'mission') U.afterMissionRender();
     if (U.modal && U.modal.onMount) U.modal.onMount();
   };
@@ -605,6 +614,8 @@
     if (t.disabled) return;
     const act = t.getAttribute('data-act');
     const arg = t.getAttribute('data-arg');
+    // an add-on (the playtest panel) sees every action first and may take it
+    if (U.extraAct && U.extraAct(act, arg, t, e)) return;
     if (U.handleMissionAct && U.screen === 'mission' && U.handleMissionAct(act, arg, t, e)) return;
     switch (act) {
       case 'newRun':
@@ -818,5 +829,7 @@
   }
   U.finishRunMeta = finishRunMeta;
 
-  window.addEventListener('DOMContentLoaded', () => U.render());
+  // Render once the whole script has run and #app exists, whether or not the page is still loading.
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', () => U.render());
+  else setTimeout(() => U.render(), 0);
 })((window.T = window.T || {}));

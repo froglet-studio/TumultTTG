@@ -30,26 +30,8 @@ function createHarness(T = loadTumult()) {
     }
   }
 
-  /** Give a squad the kit it would plausibly have at this tier of a real run. */
-  function addProgression(run, tier) {
-    run.heroes.forEach((h) => {
-      h.upUnspent += (tier - 1) * 6;
-      T.autoAllocate(h);
-    });
-    if (tier >= 2) {
-      run.heroes.forEach((h) => {
-        h.gear.push({ id: T.GEAR[run.rng.int(T.GEAR.length)].id, cds: [0, 0] });
-        if (tier >= 3) {
-          h.gear.push({ id: T.GEAR[run.rng.int(T.GEAR.length)].id, cds: [0, 0] });
-          const extra = T.cardOffer(run, 1)[0];
-          if (extra) T.addCard(h, extra);
-          h.boons.push(T.boonOffer(run, 1)[0]);
-          T.autoAllocate(h);
-        }
-      });
-    }
-    run.crystals = 10 + tier * 5;
-  }
+  /** Give a squad the kit it would plausibly have at this tier of a real run (T.addProgression). */
+  const addProgression = (run, tier) => T.addProgression(run, tier);
 
   /** Auto-play a mission to its end with the heuristic hero autoplayer. */
   function playMission(m, maxRounds = 40) {

@@ -2,7 +2,7 @@
 
 You do not need to write code to help. The most useful contributions right now, roughly in order:
 
-- **Play it and say what happened.** A short playtest note (template below) is worth more than a long opinion.
+- **Play it and say what happened.** A short playtest note (template below) is worth more than a long opinion. The playtest build (`npm run build:playtest`) starts any mission from a seed and writes a report you can paste under your note.
 - **Propose abilities, missions and boards** that fit the rules in [`docs/design/00-pillars.md`](docs/design/00-pillars.md).
 - **Write.** Event text, mission briefings, clade taglines and card flavour all live in plain data files.
 - **Draw.** The art direction, and a proposed pipeline for dropping in finished art, are described in [`docs/design/07-art-and-ux.md`](docs/design/07-art-and-ux.md).
@@ -75,6 +75,6 @@ Tumult is run in the open, the way Cosmic Shore is: the code, the rules, the des
 - **No secrets.** No API keys, passwords, tokens, signing keys or `.env` files; `.gitignore` blocks the usual ones, and credentials live in the team password manager. If one is ever committed, treat it as leaked: revoke it first, then remove it.
 - **No internal or personal material.** No internal documents or links into them, no unreleased story material, no personal data, and no art you do not have the right to share.
 - **Workflows get a second reviewer.** Anything under `.github/` can hand repository permissions to the code it runs, so a code owner reviews every change there (`.github/CODEOWNERS`).
-- **AI work is labelled.** Commits written by Claude are authored `Claude <noreply@anthropic.com>` and carry `Co-Authored-By:` and `Claude-Session:` trailers, as in Cosmic Shore. Keep them, and have a person review agent work before it reaches `main`.
+- **AI work is labelled.** Commits written by Claude are authored `Claude <noreply@anthropic.com>` and carry `Co-Authored-By:` and `Claude-Session:` trailers, as in Cosmic Shore. Keep them, and have a person review agent work before it reaches `main`. The one exception is Garrett's to make: when he tells an agent session to merge its own work, the pull request says so, CI must be green first, and anything under `.github/` still waits for a code owner.
 
 When unsure, ask Garrett first.

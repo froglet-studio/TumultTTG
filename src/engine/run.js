@@ -152,6 +152,53 @@
       h.up[c] = [0, 0];
     });
   };
+  /**
+   * Give a squad the kit it would plausibly have by this tier of a real run: six UP a tier,
+   * a piece of gear from tier 2, and at tier 3 a second piece, a seventh card and a boon.
+   * The balance tables and the playtest build both start their missions from this.
+   */
+  T.addProgression = function (run, tier) {
+    run.heroes.forEach((h) => {
+      h.upUnspent += (tier - 1) * 6;
+      T.autoAllocate(h);
+    });
+    if (tier >= 2) {
+      run.heroes.forEach((h) => {
+        h.gear.push({ id: T.GEAR[run.rng.int(T.GEAR.length)].id, cds: [0, 0] });
+        if (tier >= 3) {
+          h.gear.push({ id: T.GEAR[run.rng.int(T.GEAR.length)].id, cds: [0, 0] });
+          const extra = T.cardOffer(run, 1)[0];
+          if (extra) T.addCard(h, extra);
+          h.boons.push(T.boonOffer(run, 1)[0]);
+          T.autoAllocate(h);
+        }
+      });
+    }
+    run.crystals = 10 + tier * 5;
+  };
+
+  /**
+   * A run that begins inside one chosen mission: two pre-made heroes (indices into T.PREBUILTS)
+   * with their starting kit, or with the kit for the mission's tier. tools/mission-log.js and the
+   * playtest build both start here, so a seed names the same mission in either.
+   */
+  T.quickMission = function ({ seed, heroes = [0, 1], type = 'vault', tier = 1, kit = 'start' } = {}) {
+    const run = T.newRun(seed);
+    run.heroes = heroes.map((i) => T.heroFromPrebuilt(run, T.PREBUILTS[i]));
+    run.heroes.forEach((h) => T.autoAllocate(h));
+    if (kit === 'tier') T.addProgression(run, tier);
+    else run.crystals = 12;
+    T.launchMission(run, type, tier);
+    // The rest of the Tide, so the run can go on afterwards. It is drawn from a stream of its
+    // own: the mission's board and dice are the same whether or not anyone looks at the map.
+    run.map = T.genTideMap(T.makeRng((run.seed ^ 0x7153) >>> 0));
+    const node = run.map.rows[0][0];
+    node.type = type;
+    node.tier = tier;
+    run.nodeId = run.map.current = node.id;
+    run.available = [];
+    return run;
+  };
 
   /* ───────────────────────────── MAP ───────────────────────────── */
   T.startMap = function (run) {

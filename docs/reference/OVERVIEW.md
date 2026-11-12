@@ -8,6 +8,15 @@
 
 `npm install`, then `npm run dev` (http://localhost:5173) or `npm run build` (→ `dist/TUMULT.html`, one self-contained file that works offline). Runs save automatically between nodes, in the browser's local storage.
 
+**The playtest build** — `npm run build:playtest` (→ `dist/TUMULT.playtest.html`) or `http://localhost:5173/?playtest` — is the same game with a panel on the title screen for whoever is testing it:
+
+- **Jump into a mission.** Any of the six archetypes at any tier (the Heart is always tier 3), two of the pre-made heroes, their starting six cards or the kit a squad would carry by that tier, and a seed. The same choices always give the same board and the same opening dice, and `node tools/mission-log.js <archetype> <tier> <seed> <heroA> <heroB> <start|tier>` prints that same mission, because both start from `T.quickMission`. When the mission ends, the Tide carries on from that node.
+- **Rule under test.** Switches `T.RULES.ETHEREAL_MIN_E` between 0 and 1 (decision 4 in `docs/HANDOFF.md`). It takes effect at once, mid-mission too, and stays set on that device.
+- **What to look at in this build.** A short list, rewritten every release; a test fails if its version is not the package's.
+- **Report.** On the title screen and in a mission's top bar: the mission in progress (seed, squad, foes, the last lines of the log, the command that rebuilds its board) and every mission finished on that device, with how many Physical and Ethereal faces were played and how many of those at E 0. It is kept in the browser's local storage (`tumult_v2_playtest`) and goes nowhere unless someone copies it.
+
+The ordinary build carries none of this. No screen scrolls sideways at a phone's width, but the mission screen is still built for a mouse: a card face's numbers are in its hover tooltip (roadmap P1).
+
 ## The pitch, one paragraph
 
 Every round both heroes act freely and interleaved. Each hero's track slides, engines fire, and they roll 3 dice into their bank. **Enemies have already told you what they will do** — intents are drawn on the board as arrows — so each round is a solvable puzzle: step out of a lane and the shot has no line; move two nodes and the slow brute spends its turn walking; Hide and ranged attacks strike afterimages; Anchor a Brute and it cannot close the distance. Cards have two faces: a cheap Physical face that scales with **P**, and an Ethereal face that costs an etherion and does what physical cannot — teleport, chain, area, control, engines — scaling with **E**. Between missions you earn Upgrade Points and omnicrystals, claim new traits (3-of-9 per bloodline), buy gear that patches your verb gaps, and pick up boons. At the top of the map, the Heart.

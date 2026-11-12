@@ -13,13 +13,14 @@ New here? Read `docs/HANDOFF.md` (state of the project), then `docs/ROADMAP.md` 
 npm install            once
 npm run dev            dev server at http://localhost:5173 (rebuilds on refresh)
 npm run build          → dist/TUMULT.html (single self-contained file) + syntax check
+npm run build:playtest → dist/TUMULT.playtest.html: the game plus a panel for testers (mission jump, rule switch, report)
 npm test               all tests (~15 s; includes two full runs through the real UI in jsdom)
 npm run check          build + test — run before calling any change done
 npm run format         Prettier (src/data/ is deliberately excluded)
 npm run docs           regenerate docs/reference/CARDS.md and ABILITY_AUDIT.md
 
 node tools/sim.js 40                 balance tables (or `40 missions`, `80 runs`, `10 cards`; `--rule VITALITY=28` tries a rules constant)
-node tools/mission-log.js vault 2 7  one narrated mission: archetype, tier, seed [heroA heroB]
+node tools/mission-log.js vault 2 7  one narrated mission: archetype, tier, seed [heroA heroB] [start|tier kit]
 node tools/ui-drive.js 3 --manual    drive a whole run through the UI by clicking (seed 3)
 ```
 
@@ -35,6 +36,7 @@ src/engine/engine.js      dice, track, damage, verbs (T.applyEffect), movement, 
 src/engine/ai.js          enemy intents + execution; heuristic hero autoplayer (simulation only)
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
 src/ui/                   screens, SVG board, input (browser only)
+src/ui/playtest.*         the playtest panel — only in the playtest build; its NOTES are rewritten every release
 tools/                    build, dev server, harness, simulators, doc generators, UI driver
 test/                     node --test suites
 docs/reference/           how v2.0 works today (CARDS.md and ABILITY_AUDIT.md are generated)

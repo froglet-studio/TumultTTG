@@ -248,6 +248,40 @@ test('strike bonuses last as long as their card says', () => {
   assert.equal(s.h.states.Empower, undefined, 'gone in the third');
 });
 
+test('Multitask frees the next card played this turn; Parallel’s two wait until they are spent', () => {
+  const quietRoundEnd = (s) => {
+    s.m.enemies = [];
+    s.m.spawns = [];
+    T.roundEnd(s.m);
+  };
+  const free = (h) => (h.states.Freecast || []).reduce((n, g) => n + g.n, 0);
+
+  // the card played next, the same turn, stays in hand
+  let s = H.arena(['oct_arms', 'hum_throw']);
+  assert.ok(H.playIn(s, 'oct_arms', 'P').ok);
+  assert.equal(free(s.h), 1);
+  assert.ok(H.playIn(s, 'hum_throw', 'P').ok);
+  assert.ok(T.inHand(s.h, 'hum_throw'), 'the freed card did not go to the track');
+  assert.equal(free(s.h), 0, 'and the offer is spent');
+
+  // not used this turn: gone when the round ends
+  s = H.arena(['oct_arms', 'hum_throw']);
+  assert.ok(H.playIn(s, 'oct_arms', 'P').ok);
+  quietRoundEnd(s);
+  assert.equal(free(s.h), 0, 'Multitask does not carry into the next round');
+
+  // Parallel says "the next two cards", with no time limit
+  s = H.arena(['oct_arms', 'hum_throw']);
+  assert.ok(H.playIn(s, 'oct_arms', 'E').ok);
+  quietRoundEnd(s);
+  assert.equal(free(s.h), 2, 'Parallel waits');
+
+  // with both waiting, the one that runs out first is spent first
+  s.h.states.Freecast.push({ n: 1, t: 1 });
+  T.commit(s.h, 'hum_throw', 0, 2, '');
+  assert.deepEqual(s.h.states.Freecast, [{ n: 2, t: null }]);
+});
+
 test('a Located Harrier cannot fade from sight — and still readies its lance', () => {
   const B = T.Board;
   const fade = (located) => {

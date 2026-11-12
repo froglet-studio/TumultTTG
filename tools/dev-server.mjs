@@ -3,6 +3,7 @@
  * Tiny dev server: rebuilds the single-file game on every request.
  *
  *   node tools/dev-server.mjs [port]     then open http://localhost:5173
+ *                                        (http://localhost:5173/?playtest for the playtest build)
  *
  * Edit anything under src/, refresh the browser. No dependencies, no watcher.
  */
@@ -17,7 +18,7 @@ http
       return;
     }
     try {
-      const { html } = build();
+      const { html } = build({ playtest: /[?&]playtest\b/.test(req.url) });
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' }).end(html);
     } catch (err) {
       res.writeHead(500, { 'content-type': 'text/plain; charset=utf-8' }).end(String(err.stack || err));
