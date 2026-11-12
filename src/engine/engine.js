@@ -59,10 +59,10 @@
       });
       return board;
     },
-    walkNeighbors(board, n) {
-      // ramp lowered → climb edges act as walk edges
+    walkNeighbors(board, n, climber) {
+      // climb edges act as walk edges once the ramp is down, and always for a climber
       const base = board.walkAdj[n] || [];
-      if (!board.ramp) return base;
+      if (!board.ramp && !climber) return base;
       const extra = board.climb.filter((e) => e[0] === n || e[1] === n).map((e) => (e[0] === n ? e[1] : e[0]));
       return base.concat(extra);
     },
@@ -109,14 +109,15 @@
       }
       return out;
     },
-    path(board, a, b, blocked) {
-      // shortest walk path avoiding blocked nodes (except destination)
+    path(board, a, b, blocked, climber) {
+      // shortest walk path avoiding blocked nodes (except destination); only a climber's
+      // path may cross height nodes before the ramp is down
       if (a === b) return [a];
       const prev = { [a]: null };
       const q = [a];
       while (q.length) {
         const n = q.shift();
-        for (const m of B.walkNeighbors(board, n)) {
+        for (const m of B.walkNeighbors(board, n, climber)) {
           if (m in prev) continue;
           if (blocked && blocked.has(m) && m !== b) continue;
           prev[m] = n;
@@ -469,6 +470,10 @@
   }
   function trapImmune(ent) {
     return !!(st(ent).Hover || st(ent).Weightless);
+  }
+  /** Weightless heroes and climbing forms walk the climb edges up to height nodes. */
+  function canClimb(ent) {
+    return !!(st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
   }
   function addTimed(m, ent, name, t, extra) {
     const cur = st(ent)[name];
@@ -939,14 +944,13 @@
     const out = [];
     const seen = new Set([h.pos]);
     const q = [[h.pos, 0]];
-    const canWalkHeight = !!(st(h).Weightless || (st(h).Morph && st(h).Morph.climb) || bd.ramp);
+    const climber = canClimb(h);
     while (q.length) {
       const [x, d] = q.shift();
       if (d >= n) continue;
-      for (const y of B.walkNeighbors(bd, x)) {
+      for (const y of B.walkNeighbors(bd, x, climber)) {
         if (seen.has(y)) continue;
-        const nd = bd.nodes[y];
-        if (nd.height && !canWalkHeight) continue;
+        if (bd.nodes[y].height && !climber && !bd.ramp) continue;
         const occ = T.entityAt(m, y);
         if (occ && !(ignoreFoes || occ.kind === 'hero')) continue; // can't pass through foes unless ignoring
         seen.add(y);
@@ -1814,7 +1818,8 @@
     if (st(h).Rooted || st(h).SlowSelf) return { ok: false, why: 'rooted' };
     const bd = m.board;
     const free = h.freeMove || 0;
-    const canWalkHeight = !!(st(h).Weightless || (st(h).Morph && st(h).Morph.climb) || bd.ramp);
+    const climber = canClimb(h);
+    if (bd.nodes[dest].height && !climber && !bd.ramp) return { ok: false, why: 'height' };
     const p = B.path(
       bd,
       h.pos,
@@ -1824,9 +1829,9 @@
           .map((e) => e.pos)
           .concat(m.decoys.map((d) => d.pos)),
       ),
+      climber,
     );
     if (!p || p.length < 2) return { ok: false, why: 'no path' };
-    if (bd.nodes[dest].height && !canWalkHeight) return { ok: false, why: 'height' };
     if (T.occupied(m, dest)) return { ok: false, why: 'occupied' };
     const steps = p.length - 1;
     const bonus = st(h).Morph && st(h).Morph.move ? 1 : 0;

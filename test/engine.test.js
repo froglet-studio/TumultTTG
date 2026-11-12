@@ -128,3 +128,36 @@ test('the engine and data stay deterministic and DOM-free', () => {
     assert.ok(!/\bdocument\./.test(code), `${rel} touches the DOM — that belongs in src/ui`);
   }
 });
+
+test('height: Weightless and a climbing form walk up to a ledge; nobody else does until the ramp drops', () => {
+  const B = T.Board;
+  // a hero on the floor beside the Vault's ledge, holding the two cards that promise the climb
+  const below = (prepare) => {
+    const scene = H.arena(['owl_bones', 'axo_neoteny'], { archetype: 'vault', tier: 1 });
+    const { m, h } = scene;
+    const ledge = m.objective.node;
+    h.pos = B.allNeighbors(m.board, ledge).find((n) => !m.board.nodes[n].height && !T.occupied(m, n));
+    if (prepare) prepare(scene);
+    const offered = T.reachableWalk(m, h, 1, false).includes(ledge);
+    const walked = T.walk(m, h, ledge).ok;
+    assert.equal(offered, walked, 'what the board offers is what a step can do');
+    assert.equal(h.pos === ledge, walked);
+    return walked;
+  };
+  assert.equal(below(), false, 'a hero on foot cannot');
+  assert.equal(
+    below((s) => assert.ok(H.playIn(s, 'owl_bones', 'E').ok)),
+    true,
+    'Hollow Bones — Weightless can',
+  );
+  assert.equal(
+    below((s) => assert.ok(H.playIn(s, 'axo_neoteny', 'E').ok)),
+    true,
+    'Neoteny — Reshape can',
+  );
+  assert.equal(
+    below((s) => (s.m.board.ramp = true)),
+    true,
+    'anyone can once the ramp is down',
+  );
+});
