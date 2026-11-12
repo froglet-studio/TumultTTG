@@ -149,7 +149,24 @@
     h.up[cardId] = cur;
     return { ok: true };
   };
+  /** How many of a hero's cards are awakened: E high enough for their Ethereal face to be played. */
+  T.awakenedCount = (h) => h.cards.filter((cid) => T.heroE(h, cid) >= R().ETHEREAL_MIN_E).length;
+  /**
+   * A new hero begins with a few Ethereal faces awakened: if fewer than START_AWAKE cards have
+   * E 1, spend unspent UP on E 1 for the strongest signatures first. Never takes back a point.
+   */
+  T.awaken = function (h) {
+    const order = h.cards
+      .map((cid, i) => ({ cid, i }))
+      .sort((a, b) => T.CARD[b.cid].sig - T.CARD[a.cid].sig || a.i - b.i)
+      .map((x) => x.cid);
+    for (const cid of order) {
+      if (h.upUnspent <= 0 || T.awakenedCount(h) >= R().START_AWAKE) break;
+      if (T.heroE(h, cid) === 0) T.adjustUp(h, cid, 'E', 1);
+    }
+  };
   T.autoAllocate = function (h) {
+    T.awaken(h);
     // spend on signatures first: E for capability cards, P for cheap strikes
     const order = h.cards.slice().sort((a, b) => T.CARD[b].sig - T.CARD[a].sig);
     let guard = 0;

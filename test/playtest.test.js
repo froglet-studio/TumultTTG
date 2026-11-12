@@ -143,27 +143,31 @@ test(
   async () => {
     const html = (await builds())({ playtest: true }).html;
     const p = await boot(html);
-    assert.equal(p.T.RULES.ETHEREAL_MIN_E, 0, 'as shipped');
-    p.act('pt-rule', '1');
-    assert.equal(p.T.RULES.ETHEREAL_MIN_E, 1);
+    assert.equal(p.T.RULES.ETHEREAL_MIN_E, 1, 'as shipped');
+    p.act('pt-rule', '0');
+    assert.equal(p.T.RULES.ETHEREAL_MIN_E, 0);
     startElite(p);
     const h = p.U.run.mission.heroes[0];
     const atZero = h.cards.find((c) => p.T.heroE(h, c) === 0);
-    assert.equal(p.T.canPlay(p.U.run.mission, h, atZero, 'E').why, 'needs E 1', 'mid-mission too');
+    assert.notEqual(p.T.canPlay(p.U.run.mission, h, atZero, 'E').why, 'needs E 1', 'the old rule, in a mission');
     const stored = p.w.localStorage.getItem(KEY);
-    assert.equal(JSON.parse(stored).minE, 1);
+    assert.equal(JSON.parse(stored).etherealMinE, 0);
 
     const again = await boot(html, (w) => w.localStorage.setItem(KEY, stored));
-    assert.equal(again.T.RULES.ETHEREAL_MIN_E, 1, 'still set after a reload');
+    assert.equal(again.T.RULES.ETHEREAL_MIN_E, 0, 'still set after a reload');
+
+    // before 2.4.0 the panel stored its default as 'minE': that was never a tester's choice
+    const old = await boot(html, (w) => w.localStorage.setItem(KEY, JSON.stringify({ minE: 0 })));
+    assert.equal(old.T.RULES.ETHEREAL_MIN_E, 1, 'an old stored default does not override the new rule');
 
     const junk = JSON.stringify({
-      minE: 7,
+      etherealMinE: 7,
       cfg: { type: 'nonsense', tier: 9, heroes: [4, 4], seed: 'x1y2' },
       log: 'no',
     });
     const odd = await boot(html, (w) => w.localStorage.setItem(KEY, junk));
     const st = odd.U.playtest.state;
-    assert.equal(odd.T.RULES.ETHEREAL_MIN_E, 0);
+    assert.equal(odd.T.RULES.ETHEREAL_MIN_E, 1);
     assert.deepEqual(
       [st.cfg.type, st.cfg.tier, Array.from(st.cfg.heroes), st.cfg.seed, st.log.length],
       ['vault', 1, [0, 1], '12', 0],
@@ -193,7 +197,7 @@ test(
     const r = log[0];
     assert.deepEqual(
       [r.seed, r.type, r.tier, r.won, r.rounds, r.v, r.minE, r.quick.kit],
-      [8, 'elite', 2, !!m.won, m.round, p.T.BUILD.version, 0, 'tier'],
+      [8, 'elite', 2, !!m.won, m.round, p.T.BUILD.version, 1, 'tier'],
     );
     const counted = Object.values(r.faces).reduce((a, b) => a + b, 0);
     assert.ok(counted > 0 && counted === r.P + r.E, 'every face played was counted once');

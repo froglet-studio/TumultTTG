@@ -129,6 +129,33 @@ What this says, set against the targets at the top of this file:
 - **The gap is the number to watch.** It is small where a mission cannot be lost (tier 1) and largest where there is something to read: the Heart (+43), Swarm and Vault at tier 3 (+40). A mission with a small gap and a middling win rate is decided by the dice; one with a large gap rewards the player.
 - **None of this has been retuned.** Making tier 2 and 3 hard enough for a careful player is the work of the systems milestones, with a person's playtests beside these numbers.
 
+## v2.4.0 — Ethereal faces must be awakened
+
+Garrett settled handoff decision 4: an Ethereal face cannot be played until its card has E 1, and every hero sets out with at least two cards awakened (`ETHEREAL_MIN_E: 1`, `START_AWAKE: 2`). The pre-made heroes already had two or three; a drafted hero's first two E points go to its strongest signatures. `node tools/sim.js 40` immediately before and after, same seeds:
+
+| archetype | tier | heuristic win% before → after | look-ahead win% before → after | look-ahead rounds before → after |
+|---|---|---|---|---|
+| swarm | 1 | 100% → 100% | 100% → 100% | 6.0 → 6.0 |
+| swarm | 2 | 75% → 80% | 100% → 100% | 6.0 → 6.0 |
+| swarm | 3 | 60% → 58% | 100% → 100% | 7.0 → 7.0 |
+| vault | 1 | 100% → 95% | 100% → 100% | 5.5 → 5.7 |
+| vault | 2 | 60% → 63% | 98% → 95% | 6.0 → 5.9 |
+| vault | 3 | 43% → 40% | 90% → 93% | 5.8 → 5.8 |
+| hidden | 1 | 98% → 98% | 100% → 100% | 3.6 → 3.6 |
+| hidden | 2 | 85% → 85% | 100% → 100% | 3.9 → 3.8 |
+| hidden | 3 | 63% → 68% | 95% → 95% | 4.0 → 4.1 |
+| cascade | 1 | 100% → 100% | 100% → 100% | 5.0 → 5.0 |
+| cascade | 2 | 88% → 85% | 100% → 100% | 4.7 → 4.5 |
+| cascade | 3 | 80% → 78% | 98% → 98% | 4.9 → 5.1 |
+| elite | 1 | 73% → 78% | 95% → 90% | 6.8 → 7.9 |
+| elite | 2 | 68% → 68% | 95% → 95% | 6.3 → 6.8 |
+| elite | 3 | 63% → 68% | 98% → 90% | 6.0 → 7.0 |
+| boss | 3 | 25% → 23% | 70% → 68% | 12.7 → 13.4 |
+
+Full runs (40): heuristic 8 → 9 won, missions won 68% → 68%; look-ahead 20 → 17 won, missions won 85% → 83%.
+
+At 40 missions a cell, differences under about fifteen points are noise, and nothing moved that far. The rule makes the start of a run a little poorer — each hero has three or four of six faces asleep — and makes an E point worth more, since the first one on a card buys a whole face. It does not touch the bigger problem in this file: the game is still far too easy for the look-ahead player.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.

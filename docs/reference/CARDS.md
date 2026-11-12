@@ -4,7 +4,7 @@
 
 Every trait is a card with two faces. The **Physical** face costs AP, has a short cooldown and scales with **P** (`base + P`). The **Ethereal** face costs AP plus an etherion of the card’s colour, has a longer cooldown, and does what the physical face cannot — a *capability* that scales with **E** (P may also scale a mundane sub-part). Playing either face sends the whole card to the track for that face’s cooldown (+ duration).
 
-The design intends an Ethereal capability to exist only at E ≥ 1. v2.0 does not enforce that: an Ethereal face can be played at E 0, with its E-0 numbers (see the known issues in `docs/HANDOFF.md`).
+An Ethereal face is magic that must be awakened: it cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E`). Every hero sets out with at least two cards awakened (`START_AWAKE`). Until 2.3 a face could be played at E 0.
 
 Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = signature trait, ☆ = minor signature. Caps: P 3, E 3. A hero starts with 6 cards and may grow to 9 — never more than 3 of 9 from one bloodline.
 

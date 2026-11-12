@@ -19,8 +19,9 @@
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
     HAZARD_DMG: 3,
     P_CAP: 3, E_CAP: 3,
-    ETHEREAL_MIN_E: 0,       // E a card needs before its Ethereal face can be played. v1.0's text says 1; v2.0 has
-                             // always played with 0. Garrett's call — docs/HANDOFF.md, decision 4.
+    ETHEREAL_MIN_E: 1,       // E a card needs before its Ethereal face can be played: Ethereal faces are magic that
+                             // must be awakened (Garrett, 2026-11-12). 0 is the v2.0 rule, kept as a switch.
+    START_AWAKE: 2,          // a new hero begins with this many cards awakened (E 1), paid from START_UP
     START_UP: 6, START_CARDS: 6, MAX_PER_SPECIES: 3, MAX_CARDS: 9,
     GEAR_SLOTS: 2,
   };

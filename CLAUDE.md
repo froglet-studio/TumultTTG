@@ -64,7 +64,7 @@ Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/
 - 15-die pool per hero: pool + banked = 15, always. Roll 3 per turn. Minted dice are temporary and never count.
 - d12 faces: Mass, Charge, Space, Time, Omni, AP2, and six AP. Omni pays for any etherion.
 - Six-column track: playing either face sends the whole card away for that face's cooldown (after its duration).
-- Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. (The pillars say that capability exists only at E ≥ 1; the game lets the face be played at E 0. `T.RULES.ETHEREAL_MIN_E` is the switch and the choice is Garrett's — `docs/HANDOFF.md`, decision 4.) Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline.
+- Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. The capability must be awakened: an Ethereal face cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E`; Garrett, 2026-11-12), and every hero starts with at least two cards awakened (`START_AWAKE`). Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline.
 - **No turn theft.** Control taxes position or efficiency; a controlled unit still acts.
 - **No hard counters.** Every state is pressured by several general verbs.
 - Deterministic combat, random replenishment. Defence is proactive (no reactions or interrupts). Enemies telegraph their intent before the player acts.
