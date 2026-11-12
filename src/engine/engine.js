@@ -2289,12 +2289,13 @@
     const map = {
       Hidden: 'Hidden — immune to lane (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
       Shield: `Shield ${v.v} — each hit is reduced by ${v.v}${v.all ? ', even area' : ' (area bypasses)'}. Pierce and true damage ignore it.`,
-      Anchored: 'Anchored — cannot be pushed or pulled; cannot walk. Still acts fully.',
+      Anchored:
+        'Anchored — cannot be pushed or pulled. An anchored foe cannot walk or blink; a hero who walks lets go. Still acts fully.',
       Held: 'Held — immovable by anyone.',
-      Rooted: 'Rooted — cannot walk this round. Still acts.',
+      Rooted: 'Rooted — cannot walk while it lasts. Still acts.',
       Marked: 'Marked — the next hit on this foe deals +2.',
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
-      Located: 'Located — cannot Hide.',
+      Located: 'Located — cannot Hide; can be targeted and struck down the lane even if Hidden.',
       Studied: `Studied — hero hits deal +${v.n}.`,
       Exposed: `Exposed — next hit ignores Shield and deals +${v.bonus}.`,
       Thorns: `Thorns ${v.v} — melee attackers take ${v.v}.`,

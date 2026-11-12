@@ -146,7 +146,7 @@
       flavor:'Shoots, retreats, shoots. Deny it the lane.' },
     warden:   { name:'Warden', glyph:'🗿', role:'guardian', hp:[12,15,18], speed:0, policy:'guardian', shield:[3,3,3], anchored:true,
       abilities:{ cleave:{ n:'Cleave', kind:'melee', dmg:[4,5,6] }, brace:{ n:'Brace', kind:'brace' } },
-      flavor:'It does not move. You go around it or through it — Pierce, area, or true damage.' },
+      flavor:'It does not move. You go around it or through it — Pierce or true damage; its shield stops area too.' },
     lurker:   { name:'Lurker', glyph:'🫥', role:'ambusher', hp:[7,9,11], speed:2, policy:'lurker', hidden:true,
       abilities:{ ambush:{ n:'Ambush', kind:'melee', dmg:[5,6,7], ambush:true }, creep:{ n:'Creep', kind:'move' } },
       flavor:'You will not see it until it is adjacent. Reveal it first.' },

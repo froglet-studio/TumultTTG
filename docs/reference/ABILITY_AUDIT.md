@@ -51,13 +51,13 @@ Win rate of two random legal heroes (no gear, no boons) played by the autoplayer
 | no way up | 90 | 100% | 78% | 83% | 65% | 95% | 77% | 100% | 88% | 50% | 65% | 7% |
 | no shield-breakers | 88 | 100% | 80% | 88% | 82% | 83% | 77% | 100% | 92% | 42% | 55% | 13% |
 | no reveals | 84 | 100% | 80% | 82% | 68% | 97% | 82% | 98% | 95% | 47% | 60% | 10% |
-| no area damage | 92 | 100% | 77% | 83% | 85% | 87% | 83% | 100% | 87% | 47% | 57% | 8% |
+| no area damage | 92 | 100% | 77% | 83% | 85% | 87% | 83% | 100% | 87% | 47% | 55% | 8% |
 | no shields or wards | 64 | 100% | 72% | 90% | 87% | 97% | 83% | 97% | 95% | 63% | 63% | 27% |
 | no healing | 85 | 100% | 77% | 85% | 78% | 93% | 87% | 100% | 93% | 53% | 53% | 12% |
 | no movement abilities | 76 | 100% | 80% | 72% | 58% | 93% | 68% | 93% | 88% | 62% | 60% | 13% |
-| no foe control | 73 | 100% | 88% | 73% | 68% | 98% | 85% | 98% | 97% | 27% | 28% | 2% |
+| no foe control | 73 | 100% | 88% | 73% | 68% | 98% | 85% | 98% | 97% | 28% | 28% | 2% |
 | no hazard answers | 84 | 100% | 77% | 85% | 77% | 87% | 80% | 98% | 92% | 47% | 63% | 12% |
-| no dice economy | 81 | 98% | 85% | 88% | 70% | 95% | 80% | 100% | 93% | 57% | 62% | 7% |
+| no dice economy | 81 | 98% | 85% | 88% | 70% | 95% | 80% | 100% | 93% | 58% | 62% | 7% |
 | no cards at all | 0 | 97% | 75% | 43% | 17% ⚠ | 87% | 47% | 95% | 77% | 2% ⚠ | 0% ⚠ | 0% |
 
 No mission type collapses when any one family of answers is removed — among those that can be judged. Not judged: boss t3.
@@ -177,7 +177,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Throwing Arm — Heavy Throw (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 218/392 (0.56) |  |
 | Language — Call (Phys) | tool | The clock, One big telegraphed hit | — |  |
 | Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | — |  |
-| Pattern Recognition — Spot (Phys) | **narrow** | The unseen | 95/433 (0.22) |  |
+| Pattern Recognition — Spot (Phys) | **narrow** | The unseen | 92/433 (0.21) |  |
 | Pattern Recognition — Weak Point (Eth) | staple | One tough foe, Shields | — |  |
 | Opposable Grip — Manipulate (Phys) | staple | One tough foe, One big telegraphed hit | 804/444 (1.81) |  |
 | Opposable Grip — Leverage (Eth) | staple | One tough foe, One big telegraphed hit | 73/444 (0.16) |  |
@@ -202,11 +202,11 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Cheek Caching — Pocket Fold (Eth) | staple | The clock | — |  |
 | Vibrissae Sense — Feel (Phys) | **narrow** | The unseen | 16/91 (0.18) |  |
 | Vibrissae Sense — Seismic (Eth) | staple | A crowd, The unseen, One big telegraphed hit | 0/91 (0.00) | reveals the whole board |
-| Burrowing — Dig (Phys) | staple | One big telegraphed hit | 134/96 (1.40) |  |
+| Burrowing — Dig (Phys) | staple | One big telegraphed hit | 133/96 (1.39) |  |
 | Burrowing — Phase-tunnel (Eth) | staple | Height, The clock, One big telegraphed hit | 39/96 (0.41) |  |
 | Metabolic Torpor — Low Power (Phys) | staple | Attrition | 21/86 (0.24) |  |
 | Metabolic Torpor — Stasis (Eth) | staple | One big telegraphed hit, Attrition | 63/86 (0.73) |  |
-| Counterbalance Tail — Redirect (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 205/97 (2.11) |  |
+| Counterbalance Tail — Redirect (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 204/97 (2.10) |  |
 | Counterbalance Tail — Deflect (Eth) | **narrow** | One big telegraphed hit | 0/97 (0.00) |  |
 
 ### Red-Legged Grasshopper
@@ -268,11 +268,11 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Ink Screen — Ink (Phys) | **narrow** | One big telegraphed hit | — |  |
 | Ink Screen — Smoke Step (Eth) | staple | The clock, One big telegraphed hit | 55/84 (0.65) |  |
 | Boneless Squeeze — Squeeze (Phys) | staple | The clock, One big telegraphed hit, Control on you | 111/84 (1.32) |  |
-| Boneless Squeeze — Compress (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 86/84 (1.02) |  |
+| Boneless Squeeze — Compress (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 87/84 (1.04) |  |
 | Distributed Arms — Multitask (Phys) | staple | The clock | — |  |
 | Distributed Arms — Parallel (Eth) | staple | The clock | — |  |
-| Chemo-Suckers — Taste (Phys) | staple | One tough foe, The unseen | 18/87 (0.21) |  |
-| Chemo-Suckers — Cling-Read (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 76/87 (0.87) |  |
+| Chemo-Suckers — Taste (Phys) | staple | One tough foe, The unseen | 17/87 (0.20) |  |
+| Chemo-Suckers — Cling-Read (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 77/87 (0.89) |  |
 | Paralytic Bite — Bite (Phys) | staple | One tough foe, One big telegraphed hit | 411/78 (5.27) |  |
 | Paralytic Bite — Neurotoxin (Eth) | staple | One tough foe, One big telegraphed hit | 0/78 (0.00) |  |
 | Adaptive Intellect — Study (Phys) | staple | One tough foe | — |  |
@@ -288,7 +288,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Lockjaw Bite — Crush (Eth) | staple | One tough foe, One big telegraphed hit | 0/93 (0.00) |  |
 | Tail Autotomy — Drop Tail (Phys) | staple | A crowd, The clock, One big telegraphed hit, Control on you | 62/94 (0.66) |  |
 | Tail Autotomy — Blink (Eth) | staple | A crowd, The clock, One big telegraphed hit | 37/94 (0.39) |  |
-| Forensic Vision — UV (Phys) | tool | The unseen, The clock | 21/93 (0.23) |  |
+| Forensic Vision — UV (Phys) | tool | The unseen, The clock | 22/93 (0.24) |  |
 | Forensic Vision — Full Spectrum (Eth) | staple | One tough foe, A crowd, The unseen | 0/93 (0.00) | reveals the whole board |
 | Solar Basking — Bask (Phys) | staple | The clock | — |  |
 | Solar Basking — Photovoltaic (Eth) | staple | The clock | 29/77 (0.38) |  |
@@ -397,8 +397,8 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Cryptobiosis — Tun (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 94/91 (1.03) |  |
-| Cryptobiosis — Step Out of Time (Eth) | staple | The clock, One big telegraphed hit | 34/91 (0.37) |  |
+| Cryptobiosis — Tun (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 95/91 (1.04) |  |
+| Cryptobiosis — Step Out of Time (Eth) | staple | The clock, One big telegraphed hit | 33/91 (0.36) |  |
 | Dsup Shielding — Repair Proteins (Phys) | staple | One big telegraphed hit | 118/70 (1.69) |  |
 | Dsup Shielding — Project Shield (Eth) | staple | A crowd, One big telegraphed hit | 0/70 (0.00) |  |
 | Vitrification — Glass (Phys) | staple | A crowd, One big telegraphed hit | 128/79 (1.62) |  |

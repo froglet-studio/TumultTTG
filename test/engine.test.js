@@ -247,3 +247,39 @@ test('strike bonuses last as long as their card says', () => {
   T.roundEnd(s.m);
   assert.equal(s.h.states.Empower, undefined, 'gone in the third');
 });
+
+test('a Located Harrier cannot fade from sight — and still readies its lance', () => {
+  const B = T.Board;
+  const fade = (located) => {
+    const { m, h } = scene('swarm', 1, 5);
+    const far = Object.keys(m.board.nodes)
+      .map(Number)
+      .filter((n) => !T.occupied(m, n))
+      .sort((a, b) => B.dist(m.board, b, h.pos, true) - B.dist(m.board, a, h.pos, true))[0];
+    const e = T.makeEnemy('harrier', 1, far);
+    delete e.states.Hidden; // it has been revealed
+    if (located) e.states.Located = { t: 3 };
+    m.enemies = [e];
+    m.spawns = [];
+    T.chooseIntents(m);
+    assert.equal(e.intent.key, 'fade');
+    T.enemyPhase(m);
+    const hidden = T.isHidden(e);
+    T.chooseIntents(m);
+    return { hidden, next: e.intent.key };
+  };
+  assert.deepEqual(fade(false), { hidden: true, next: 'lance' });
+  assert.deepEqual(fade(true), { hidden: false, next: 'lance' }, 'seen, but not robbed of its turn');
+});
+
+test('a Warden’s shield stops area damage too; Pierce and true damage get through', () => {
+  const { m, h } = scene('vault', 1, 5);
+  const w = m.enemies.find((e) => e.type === 'warden');
+  w.hp = w.maxHp = 60;
+  const blocked = w.shield;
+  assert.ok(blocked > 0);
+  assert.equal(T.damage(m, h, w, 5, { kind: 'melee' }), 5 - blocked);
+  assert.equal(T.damage(m, h, w, 5, { kind: 'area' }), 5 - blocked, 'unlike a plain Shield');
+  assert.equal(T.damage(m, h, w, 5, { kind: 'melee', pierce: true }), 5);
+  assert.equal(T.damage(m, h, w, 5, { kind: 'true', trueDmg: true }), 5);
+});

@@ -104,7 +104,7 @@
           if (!t) break;
           const d = dist(m, e.pos, t.pos);
           if (d <= e.speed + 1) setI('ambush', t, `(${dmgOf(e, A.ambush)}${T.isHidden(e) ? ', from Hidden' : ''})`);
-          else setI('creep', t, '(closing, Hidden)');
+          else setI('creep', t, T.isHidden(e) ? '(closing, Hidden)' : '(closing)');
           break;
         }
         case 'binder': {
@@ -141,7 +141,7 @@
                 t,
                 `(${canBlink(e) ? 'blinks adjacent' : 'held — only if adjacent'}, ${dmgOf(e, A.lance)})`,
               );
-          } else setI('fade', null, '(goes Hidden)');
+          } else setI('fade', null, st(e).Located ? '(Located — cannot hide; readies its lance)' : '(goes Hidden)');
           break;
         }
         case 'tidecaller': {
@@ -357,8 +357,13 @@
           break;
         }
         case 'hide': {
-          st(e).Hidden = { t: 99, canMove: true };
           e.readyLance = true;
+          // A Located foe cannot hide. It loses the cover, not the turn: its lance is ready all the same.
+          if (st(e).Located) {
+            T.say(m, `${e.name} tries to fade, but it is Located.`, 'enemy');
+            break;
+          }
+          st(e).Hidden = { t: 99, canMove: true };
           T.say(m, `${e.name} fades from sight.`, 'enemy');
           m.fx.push({ t: 'state', ent: e.uid, name: 'Hidden' });
           break;
