@@ -13,6 +13,13 @@
  * Requires the dev dependency `jsdom` (npm install).
  */
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+/** Wait until `ready()` is true, checking every few milliseconds; fail after `ms`. */
+async function until(ready, what, ms = 5000) {
+  for (const end = Date.now() + ms; !ready();) {
+    if (Date.now() > end) throw new Error('timed out waiting for ' + what);
+    await sleep(5);
+  }
+}
 
 async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
   const { JSDOM } = require('jsdom');
@@ -28,9 +35,10 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
   });
   const w = dom.window;
   const d = w.document;
-  await sleep(150); // DOMContentLoaded → first render
+  await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render'); // DOMContentLoaded → first render
   const T = w.T;
   const U = T.UI;
+  U.MISSION_OVER_DELAY = 0; // the pause that lets a person see the final board
   const log = [];
   const step = (name) => log.push(`${name} → screen=${U.screen}`);
   const click = (target) => {
@@ -123,7 +131,7 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
         }
         missions++;
         step(`mission "${m.title}" ${m.won ? 'won' : 'lost'} in ${m.round} rounds`);
-        await sleep(1000); // the mission-over modal opens after a short delay
+        await until(() => d.querySelector('[data-act="missionDone"]'), 'the mission-over modal');
         if (!act('missionDone')) throw new Error('mission-over modal did not offer Continue');
       } else if (U.screen === 'reward') {
         if (!click('[data-act="takeCard"]:not([disabled])')) act('skipCard');
@@ -153,7 +161,7 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
   }
 }
 
-module.exports = { driveRun };
+module.exports = { driveRun, until };
 
 if (require.main === module) {
   (async () => {

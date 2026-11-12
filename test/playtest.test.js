@@ -16,7 +16,7 @@ try {
   hasJsdom = false;
 }
 const skip = hasJsdom ? false : 'jsdom is not installed (run `npm install`)';
-const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+const { until } = require('../tools/ui-drive');
 const KEY = 'tumult_v2_playtest';
 
 async function builds() {
@@ -37,9 +37,10 @@ async function boot(html, before) {
       if (before) before(w);
     },
   });
-  await sleep(150); // first render
   const w = dom.window;
   const d = w.document;
+  await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+  w.T.UI.MISSION_OVER_DELAY = 0; // the pause that lets a person see the final board
   const click = (sel) => {
     const el = d.querySelector(sel);
     assert.ok(el, `nothing to click: ${sel}`);
@@ -190,7 +191,7 @@ test(
     }
     assert.ok(m.over, 'the mission ends');
     p.U.updateMission();
-    await sleep(1000); // the mission-over modal opens after a short delay
+    await until(() => p.d.querySelector('[data-act="missionDone"]'), 'the mission-over modal');
     p.act('missionDone');
     const log = p.U.playtest.state.log;
     assert.equal(log.length, 1);
@@ -264,7 +265,7 @@ test(
       if (!m.over) second.T.endHeroPhase(m);
     }
     second.U.updateMission();
-    await sleep(1000);
+    await until(() => second.d.querySelector('[data-act="missionDone"]'), 'the mission-over modal');
     second.act('missionDone');
     const after = second.w.localStorage.getItem(RUN);
     if (second.U.screen === 'reward') {

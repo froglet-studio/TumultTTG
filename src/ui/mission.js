@@ -229,6 +229,8 @@
   }
 
   /* ───────────── update everything ───────────── */
+  /** How long the board stays in view before the mission-over modal opens (ms). Tests set it to 0. */
+  U.MISSION_OVER_DELAY = 900;
   U.updateMission = function () {
     const m = M();
     if (!U.ms.built) buildBoard();
@@ -242,7 +244,7 @@
     playFx(m);
     if (m.over && !U.ms.overShown) {
       U.ms.overShown = true;
-      setTimeout(() => showMissionOver(m), 900);
+      setTimeout(() => showMissionOver(m), U.MISSION_OVER_DELAY);
     }
   };
 

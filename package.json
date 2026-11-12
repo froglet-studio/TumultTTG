@@ -1,6 +1,6 @@
 {
   "name": "tumult-ttg",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "description": "A character driven table top game about completing missions on Tumult",
   "license": "MIT",
   "private": true,
