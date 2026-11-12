@@ -290,7 +290,7 @@
       txt:(P,E)=>`Melee ${2+P} and Weaken 1.` },
     { n:'Pin', ap:2, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'anchor', who:'foe', dur:(P,E)=>1+E},{v:'weaken', val:2, dur:1, ifHpBelow:9}],
-      txt:(P,E)=>`Melee ${3+P} and pin: Anchored ${1+E}; small prey (≤8 hp) is also Weakened 2.` },
+      txt:(P,E)=>`Melee ${3+P} and pin: Anchored ${1+E}; prey left at 8 hp or less is also Weakened 2.` },
     'Crushing grip.');
   C('owl','owl_swivel','Owl Neck Swivel','T',0,
     { n:'Swivel', ap:1, el:0, cd:1, dur:1, tgt:'self',

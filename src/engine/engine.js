@@ -1047,27 +1047,27 @@
     const isHero = actor.kind === 'hero';
     const ally = isHero ? T.allyOf(m, actor) : null;
     const party = () => (isHero ? T.liveHeroes(m) : [actor]);
+    // Conditions gate the whole effect, whatever its verb. The ones about a target need it
+    // still standing. An effect that carries `elseVal` runs anyway, at that magnitude instead
+    // (strike and heal read it).
     const condOk = () => {
-      if (f.ifAnchored) {
-        const t = targetEnt(m, ctx);
-        if (!t || !isAnchored(t)) return false;
-      }
       if (f.ifOnHazard && !bd.nodes[actor.pos].hazard) return false;
       if (f.ifE && E < f.ifE) return false;
-      if (f.ifAdjacent) {
-        const t = targetEnt(m, ctx);
-        if (!t || !B.adjacent(bd, actor.pos, t.pos)) return false;
+      if (f.ifAnchored || f.ifAdjacent || f.ifHpBelow != null) {
+        const t = targetEnt(m, ctx) || ctx.lastTarget;
+        if (!t || t.alive === false || t.downed) return false;
+        if (f.ifAnchored && !isAnchored(t)) return false;
+        if (f.ifAdjacent && !B.adjacent(bd, actor.pos, t.pos)) return false;
+        if (f.ifHpBelow != null && t.hp >= num(f.ifHpBelow, P, E)) return false;
       }
       return true;
     };
+    const met = condOk();
+    if (!met && f.elseVal == null) return;
     switch (f.v) {
       /* ---------- STRIKES ---------- */
       case 'strike': {
-        if (!condOk()) {
-          if (f.ifOnHazard && f.elseVal != null) {
-          } else break;
-        }
-        const dmg = num(f.dmg, P, E);
+        const dmg = num(met ? f.dmg : f.elseVal, P, E);
         if (dmg <= 0 && !f.stripShield) break;
         const opts = {
           kind: f.kind === 'lane_all' || f.kind === 'nodeArea' ? 'area' : f.kind === 'any' ? 'any' : f.kind,
@@ -1144,7 +1144,6 @@
       case 'dot': {
         let targets = [];
         if (f.area === 'nodeArea') {
-          if (!condOk()) break;
           const center = ctx.node != null ? ctx.node : actor.pos;
           targets = foesWithin(m, center, 1);
         } else {
@@ -1571,10 +1570,8 @@
       }
       /* ---------- RESOURCES ---------- */
       case 'heal': {
-        if (!condOk() && !(f.ifOnHazard && f.elseVal != null)) break;
-        let n = num(f.n, P, E);
-        if (f.ifOnHazard && !bd.nodes[actor.pos].hazard) n = f.elseVal || 0;
-        if (n <= 0 && !f.min) break;
+        const n = num(met ? f.n : f.elseVal, P, E);
+        if (n <= 0) break;
         let list = [actor];
         if (f.party) list = T.liveHeroes(m);
         else if (f.target === 'ally') list = ally && !ally.downed ? [ally] : [];
