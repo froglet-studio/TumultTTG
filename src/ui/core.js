@@ -102,6 +102,8 @@
     else hideTip();
   });
   document.addEventListener('mouseleave', hideTip);
+  // a tip left behind by a tap would otherwise ride along as the page scrolls under it
+  document.addEventListener('scroll', hideTip, true);
 
   /* ───────────── card widgets ───────────── */
   const costStr = (card, face, fk) => {
@@ -556,6 +558,7 @@
   }
 
   /* ───────────── RENDER ROOT ───────────── */
+  let shown = null;
   U.render = function () {
     const root = app();
     let html = '';
@@ -594,6 +597,9 @@
     if (U.modal) html += `<div class="modal-bg" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
     html += tutorialHTML();
     root.innerHTML = html;
+    // #app is the page's scroller: a new screen starts at its top, a re-render stays where it was
+    if (shown !== U.screen) root.scrollTop = 0;
+    shown = U.screen;
     if (U.screen === 'mission') U.afterMissionRender();
     if (U.modal && U.modal.onMount) U.modal.onMount();
   };
@@ -818,5 +824,7 @@
   }
   U.finishRunMeta = finishRunMeta;
 
-  window.addEventListener('DOMContentLoaded', () => U.render());
+  // Render once the whole script has run and #app exists, whether or not the page is still loading.
+  if (document.readyState === 'loading') window.addEventListener('DOMContentLoaded', () => U.render());
+  else setTimeout(() => U.render(), 0);
 })((window.T = window.T || {}));
