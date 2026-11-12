@@ -34,11 +34,16 @@ function createHarness(T = loadTumult()) {
   /** Give a squad the kit it would plausibly have at this tier of a real run (T.addProgression). */
   const addProgression = (run, tier) => T.addProgression(run, tier);
 
-  /** Auto-play a mission to its end with the heuristic hero autoplayer. */
-  function playMission(m, maxRounds = 40) {
+  /**
+   * Auto-play a mission to its end. player: 'weak' is the heuristic autoplayer (T.autoHeroPhase),
+   * 'strong' the look-ahead player (T.smartHeroPhase). A mission still going after maxRounds is
+   * called lost: neither side could finish the other.
+   */
+  function playMission(m, { player = 'weak', maxRounds = 40 } = {}) {
+    const phase = player === 'strong' ? T.smartHeroPhase : T.autoHeroPhase;
     let guard = 0;
     while (!m.over && guard++ < maxRounds) {
-      T.autoHeroPhase(m);
+      phase(m);
       if (m.over) break;
       T.endHeroPhase(m);
     }
@@ -52,14 +57,15 @@ function createHarness(T = loadTumult()) {
   /**
    * Auto-play a whole run (map, missions, havens, events) with simple choices; a run already on
    * its map is played on from where it is. The simulated player's choices come from a random
-   * stream of their own ('player'), so they never move the game's.
+   * stream of their own ('player'), so they never move the game's. `player` plays the missions:
+   * 'weak' (the heuristic) or 'strong' (look-ahead).
    * Returns { won, lastRow, missions, missionWins, endedBy, run }.
    *
    * viaSaves: after every node — and once in the middle of every mission — the run is written out
    * as a save and the game goes on from what was read back. `run` in the result is that last copy;
    * the run passed in is left wherever it was first saved.
    */
-  function playRun(run, { viaSaves = false } = {}) {
+  function playRun(run, { viaSaves = false, player = 'weak' } = {}) {
     if (!run.map) T.startMap(run);
     const out = { won: false, lastRow: 0, missions: 0, missionWins: 0, endedBy: null, run };
     const reload = () => {
@@ -74,15 +80,16 @@ function createHarness(T = loadTumult()) {
       if (run.phase === 'mission') {
         if (viaSaves) {
           // two rounds in, with the squad's half of the third played: save, and resume from the save
+          const phase = player === 'strong' ? T.smartHeroPhase : T.autoHeroPhase;
           for (let r = 0; r < 2 && !run.mission.over; r++) {
-            T.autoHeroPhase(run.mission);
+            phase(run.mission);
             if (!run.mission.over) T.endHeroPhase(run.mission);
           }
-          if (!run.mission.over) T.autoHeroPhase(run.mission);
+          if (!run.mission.over) phase(run.mission);
           reload();
           if (!run.mission.over) T.endHeroPhase(run.mission);
         }
-        const m = playMission(run.mission);
+        const m = playMission(run.mission, { player });
         out.missions++;
         if (m.won) out.missionWins++;
         T.missionRewards(run, m);

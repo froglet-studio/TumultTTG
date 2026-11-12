@@ -2150,7 +2150,11 @@
     });
   };
 
-  T.endHeroPhase = function (m) {
+  /**
+   * Play out the rest of the round once the squad has stopped: the enemies do what they declared,
+   * then the round ends. Nothing here is random — which is what lets a player look ahead.
+   */
+  T.finishRound = function (m) {
     if (m.over) return;
     m.phase = 'enemy';
     for (const h of m.heroes) {
@@ -2159,6 +2163,10 @@
     }
     T.enemyPhase(m);
     if (!m.over) T.roundEnd(m);
+  };
+  /** End the squad's phase: finish the round, then begin the next (new dice, reinforcements, new intents). */
+  T.endHeroPhase = function (m) {
+    T.finishRound(m);
     if (!m.over) T.beginRound(m);
   };
 
