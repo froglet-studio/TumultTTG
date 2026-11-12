@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.6.0 — 2026-11-12 — Channel: no die is ever dead
+
+The second slice of roadmap S1 (design/02), accepted into the core by Garrett.
+
+- **Added:** Channel. Spend one banked etherion, or an Omni, with a basic action to do more:
+  - Mass: Strike for 4, or Shove 2 nodes.
+  - Charge: **Reach**, an Interact up to 2 nodes away (2 AP; not up a ledge from below).
+  - Space: **Scramble**, 1 node to any free node, up or down a ledge included (1 AP).
+  - Time: Brace, plus 1 extra track slide.
+
+  Every etherion now has somewhere to go. Each channelled action is its own entry in `T.BASIC` (`el` names its etherion) and uses existing verbs. It is deliberately weaker than any Ethereal face of the same colour.
+- **Changed:** a channelled button appears beside the basic actions only while its etherion is banked. The heuristic channels Mass into Strike when it can; the look-ahead player weighs every channelled action. How to Play explains Channel.
+- **Changed:** a hero stuck on a ledge can Scramble down with a Space die.
+- **Added:** a test that Channel pays its etherion or an Omni, refuses without one, and that every etherion has a channelled action (96 tests in all).
+- **Balance:** this makes the game easier. The heuristic now wins the tier-1 Elite 90% of the time (was 80%), and the look-ahead player wins the Heart 78% (was 68%) and 22 runs of 40 (was 19). Card-less squads now win the tier-2 Vault 88% of the time in the audit (was 31%); the Heart is still 0% without cards. Tables are in `docs/reference/BALANCE.md`. The difficulty retune after S1 has to absorb this.
+
 ## 2.5.0 — 2026-11-12 — basic actions
 
 The first slice of roadmap S1. Garrett accepted basic actions into the core rules (handoff decision 3).

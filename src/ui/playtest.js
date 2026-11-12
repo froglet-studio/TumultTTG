@@ -19,19 +19,19 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.5.0',
+    version: '2.6.0',
     items: [
       {
-        text: 'Every hero has three basic actions under their hand, cards or no cards: Strike (2 damage to an adjacent foe, 2 AP), Brace (Shield 1 until your next turn, 1 AP) and Shove (push an adjacent foe 1, 2 AP). Do they rescue a bad roll without crowding out your cards?',
+        text: 'Channel: with a matching etherion (or Omni) banked, a second button appears beside the basic actions. Mass makes Strike 4 or Shove 2 nodes; Charge reaches an objective 2 nodes away; Space scrambles 1 node, up or down a ledge, for 1 AP; Time adds a track slide to Brace. Does a stranded die now always have somewhere to go?',
       },
       {
-        text: 'Try an Elite with the hand you would rather not play: a squad can now win a kill mission on basic actions alone, slowly. Is that a fair floor, or too comfortable?',
+        text: 'Scramble with a Space die gets a hero up to — or down from — the Vault’s ledge without the ramp. Does that make the Vault too easy, or just less of a dead end?',
+      },
+      {
+        text: 'Strike, Brace and Shove (2.5.0) are under every hero’s hand, with or without cards. Do they rescue a bad roll without crowding out your cards?',
       },
       {
         text: 'Ethereal faces still need E 1 on their card (2.4.0). Do the starting two awakened faces feel like toys worth having?',
-      },
-      {
-        text: 'Plan, in a mission’s top bar, shows what the look-ahead player would do with the turn, basic actions included. Where it plays badly, or far better than a person would, say so.',
       },
     ],
   };

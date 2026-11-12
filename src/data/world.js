@@ -108,6 +108,13 @@
     { id:'strike', n:'Strike', icon:'⚔', ap:2, tgt:'foe_melee', fx:[{v:'strike', kind:'melee', dmg:f(2)}], txt:'2 damage to an adjacent foe.' },
     { id:'brace',  n:'Brace',  icon:'🛡', ap:1, tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)}],      txt:'Shield 1 until your next turn.' },
     { id:'shove',  n:'Shove',  icon:'↦', ap:2, tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(1)}],     txt:'Push an adjacent foe 1 node.' },
+    // Channel: spend one etherion (or Omni) with a basic action to do more work, so no die is ever dead.
+    // Deliberately weaker than any Ethereal face of the same colour: the floor, not a strategy.
+    { id:'strike_M',   n:'Strike',   icon:'⚔', ap:2, el:'M', tgt:'foe_melee', fx:[{v:'strike', kind:'melee', dmg:f(4)}],                   txt:'Channel Mass: 4 damage to an adjacent foe.' },
+    { id:'shove_M',    n:'Shove',    icon:'↦', ap:2, el:'M', tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(2)}],                       txt:'Channel Mass: push an adjacent foe 2 nodes.' },
+    { id:'reach_C',    n:'Reach',    icon:'⚙', ap:2, el:'C', tgt:'node_r2',   fx:[{v:'interact', range:f(2)}],                             txt:'Channel Charge: Interact with an objective up to 2 nodes away (not up a ledge from below).' },
+    { id:'scramble_S', n:'Scramble', icon:'⤴', ap:1, el:'S', tgt:'node_climb', fx:[{v:'climb', reach:f(1)}],                               txt:'Channel Space: step to a free node 1 away, up or down a ledge included.' },
+    { id:'brace_T',    n:'Brace',    icon:'🛡', ap:1, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'hasten', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and your track slides 1 extra column.' },
   ];
   T.BASIC_BY = {}; T.BASIC.forEach(b => T.BASIC_BY[b.id] = b);
 
