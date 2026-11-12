@@ -18,7 +18,7 @@ description: Add, rework or review a Tumult ability (a trait card face, a gear a
 ## Writing it
 
 - Use existing verbs. A new verb is justified only if cards, gear and enemies could all use it; if so, add one `case` to `T.applyEffect` in `src/engine/engine.js`, a `describeState` line if it leaves a state, and a test in `test/engine.test.js`.
-- Physical face: AP only, short cooldown, magnitude `base + P`. Ethereal face: AP plus at least one etherion, longer cooldown, a capability that scales with E — write it so that it does something worth the etherion at E 1 (the engine currently allows play at E 0; see `docs/HANDOFF.md`).
+- Physical face: AP only, short cooldown, magnitude `base + P`. Ethereal face: AP plus at least one etherion, longer cooldown, a capability that scales with E — write it so that it does something worth the etherion at E 1 (the engine allows play at E 0 unless `T.RULES.ETHEREAL_MIN_E` is raised; see `docs/HANDOFF.md`).
 - Magnitudes are functions `(P, E) => n`, and `txt` must resolve to a sentence at every P and E from 0 to 3.
 - Never remove a unit's turn. Never write an effect that only matters against one named enemy or one mission.
 - Conditions (`ifAnchored`, `ifOnHazard`, `ifAdjacent`, `ifE`) are only honoured by `strike`, `heal` and area `dot` today. If the design needs one elsewhere, make the engine honour it and test it — do not write text the engine will not enforce.

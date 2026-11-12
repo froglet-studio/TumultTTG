@@ -60,7 +60,7 @@ Gear is the **orthogonality insurance** from the v1.0 mechanic basis: any build 
 
 ## Boons (passive, per hero; none breaks the 15-die invariant)
 
-Tide-touched (start each mission with an Omni banked) · Thick Hide (every Shield +1) · Keen Sense (reveals +1; adjacent Hidden foes revealed at round start) · Deep Pockets (+2 ◇/mission) · Studious (+1 UP/mission) · Second Wind (once per run, the first downed hero rises at 10) · Momentum (first strike +2 — the boon's text says each round; the engine grants it once per mission, a known issue) · Anchor Soul (cannot be pulled) · Quick Hands (track +1 on round 1 of each mission) · **Mass / Charge / Space / Time Affinity** (one AP face on your dice becomes that etherion) · Omni Core (one AP face becomes Omni) · Defiant (+2 vs Elites and the Heart).
+Tide-touched (start each mission with an Omni banked) · Thick Hide (every Shield +1) · Keen Sense (reveals +1; adjacent Hidden foes revealed at round start) · Deep Pockets (+2 ◇/mission) · Studious (+1 UP/mission) · Second Wind (once per run, its holder rises at 10 instead of going down) · Momentum (first strike of each round +2) · Anchor Soul (cannot be pulled) · Quick Hands (the track slides 1 extra as round 2 begins) · **Mass / Charge / Space / Time Affinity** (one AP face on your dice becomes that etherion) · Omni Core (one AP face becomes Omni) · Defiant (+2 vs Elites and the Heart).
 
 Affinities are the build-around: they move your dice toward your colours, which is exactly how a deck's mana base shapes a draft.
 

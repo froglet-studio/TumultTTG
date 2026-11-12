@@ -38,7 +38,7 @@ At round start every enemy declares one intent (ability + target), drawn as an a
 | Binder 🕸️ | controller | 7/9/11 | 1 | Bind 2/2/3 lane + roots 2 · Drain 3/3/4 melee, heals 2 | Roots a hero in its lane; drains when adjacent |
 | Spawner 🫧 | structure | 7/9/11 | 0 | Spawn (a Biter every 3 rounds) | Immobile; feeds the Heart's shield |
 | Bulwark 🛡️ | elite | 18/22/26 | 1 | Crush 5/6/7 · Quake 3/4/4 area · Brace | Quakes if 2 heroes adjacent; braces under half |
-| Harrier 🗡️ | elite | 12/15/18 | 2 | Phase Lance 5/6/7 (blink adjacent, reach 3) · Fade | Alternates lance and Hidden; a Counted Trap's hold stops the blink (Anchor is meant to and does not — a known issue) |
+| Harrier 🗡️ | elite | 12/15/18 | 2 | Phase Lance 5/6/7 (blink adjacent, reach 3) · Fade | Alternates lance and Hidden. Anchored, Slowed or held in a Counted Trap it cannot blink, though it still lances a hero beside it; Located, it cannot fade |
 | Tidecaller 🌊 | elite | 12/14/16 | 1 | Undertow 2/3/3 lane + pull 2 · Surge 4/5/6 lane + Weaken | Drags heroes toward hazards; alternate undertow/surge |
 | The Heart 🫀 | boss | 32/38/44 | 0 | Lance 3/4/5 lane · Crush 7/8/9 melee + pull 2 · Call the Tide | Phase 1: lance lanes, call Biters when few remain. Phase 2: crush and drag, the flood rises |
 

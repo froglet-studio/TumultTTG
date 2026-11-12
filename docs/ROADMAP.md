@@ -7,7 +7,7 @@ Milestones are grouped into four tracks so that several people can work at once.
 ```
 Foundations   F1 ──► F2 ──► F3
                 │      │
-Systems   S0    └► S1 ─┴► S2 ──► S3 ──► S4      (S0 can start today)
+Systems   S0 ✓  └► S1 ─┴► S2 ──► S3 ──► S4      (S0 is done)
                     │
 Characters          └► C1 ──► C2 ──► C3
 Presentation   P1 ──► P2 ──► P3 ──► P4          (P1 can start today)
@@ -32,10 +32,12 @@ Once the audit reads clean (after S1 and S2), fail the build when a face is narr
 
 ## Systems
 
-### S0 · Make the engine do what the text says
+### S0 · Make the engine do what the text says — done (v2.0.2)
 A review at handoff found places where card, boon or mission text promises something the engine does not do — conditions that are ignored, forms that cannot climb, an Anchor that does not hold a blink. They are listed in [`HANDOFF.md`](HANDOFF.md) under known issues. Fix each one test-first, and settle with Garrett whether Ethereal faces may be played at E 0. Small, independent, and a good way into the codebase.
 
 **Done when:** every item on that list has a test and is either fixed or its text changed; before/after balance tables are in each pull request; the list in the handoff is empty.
+
+**Outcome:** seven of the eight fixed, each with a test, plus as many again that the same tests turned up (`CHANGELOG.md`). The eighth — Ethereal faces at E 0 — is a switch in `T.RULES` with a test for both settings and the numbers for each, waiting on Garrett ([`HANDOFF.md`](HANDOFF.md), decision 4).
 
 ### S1 · Units, target classes and basic actions
 One unit model for pilots, actors and props; verbs target by class (harm, affect, help), not by side; Move, Interact, Rally, Strike, Brace, Carry and Shove for everyone; Channel; Overcast and Debt. ([02](design/02-units-verbs-actions.md))
@@ -105,7 +107,7 @@ The print generator, pilot boards, opposition flowcharts, and a one-leg print-an
 
 ## A sensible first month
 
-1. S0 — quick, concrete, and it makes the game honest.
+1. ~~S0 — quick, concrete, and it makes the game honest.~~ Done.
 2. F1, then F2 — everything else is measured with them.
 3. P1 in parallel — it improves the game people are already playing.
 4. Garrett's answers on the frame, so C1 can be designed against real decisions.
