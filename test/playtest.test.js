@@ -95,6 +95,16 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
   assert.match(p.U.playtest.reportText(), /node tools\/mission-log\.js elite 2 8 3 1 tier/);
   assert.ok(p.d.querySelector('#mtop [data-act="pt-report"]'), 'the report is one click away mid-mission');
 
+  // the forecast: what ending the round now would do, a line a hero, and each hero's vitality says where it is heading
+  const f = p.T.forecast(p.U.run.mission);
+  const said = p.d.querySelector('#mside .forecast').textContent;
+  for (const h of f.heroes) {
+    assert.ok(said.includes(h.name), `the forecast names ${h.name}`);
+    if (h.after < h.hp) assert.ok(said.includes(`takes ${h.hp - h.after} (${h.after} left)`), said);
+  }
+  const heading = Array.from(p.d.querySelectorAll('#mside .hero .hp')).map((el) => el.textContent);
+  f.heroes.forEach((h, i) => assert.equal(heading[i].includes('→ ' + h.after), h.after !== h.hp, heading[i]));
+
   // "Copy save" hands over this exact moment. Where the page may not use the clipboard (as here),
   // the save is shown selected instead — and the tools can carry on from it
   p.act('pt-report');

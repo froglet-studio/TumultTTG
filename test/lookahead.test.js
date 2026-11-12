@@ -196,3 +196,46 @@ test('the look-ahead player beats the heuristic on every mission type', { timeou
   const gap = (total.strong - total.weak) / total.played;
   assert.ok(gap >= 0.1, `the gap over ${total.played} missions is only ${Math.round(gap * 100)} points`);
 });
+
+test('the forecast says exactly what ending the round now will do, and touches nothing', () => {
+  let rounds = 0;
+  let hurt = 0;
+  for (const [arch, tier] of CELLS) {
+    const m = mission(arch, tier, 6);
+    for (let guard = 0; !m.over && guard < 6; guard++) {
+      if (guard % 2) T.autoHeroPhase(m); // sometimes after the squad has acted, sometimes before
+      if (m.over) break;
+      const before = state(m);
+      const f = T.forecast(m);
+      assert.equal(state(m), before, `${arch} t${tier}: forecasting touched the mission`);
+
+      const real = T.clone(m);
+      T.finishRound(real);
+      real.heroes.forEach((h, i) => {
+        const line = f.heroes[i];
+        assert.deepEqual(
+          [line.name, line.hp, line.after, line.downed],
+          [h.name, Math.max(0, m.heroes[i].hp), Math.max(0, h.hp), !m.heroes[i].downed && h.downed],
+          `${arch} t${tier} round ${m.round}: ${h.name}`,
+        );
+        if (line.after < line.hp) hurt++;
+      });
+      assert.equal(f.progress.after, T.objectiveProgress(real));
+      assert.equal(f.progress.before, T.objectiveProgress(m));
+      assert.equal(f.clock, real.clock ? real.clock.value : null);
+      assert.equal(f.result, real.over ? (real.won ? 'won' : 'lost') : null);
+      for (const foe of f.foes) {
+        const e = real.enemies.find((x) => x.uid === foe.uid);
+        assert.deepEqual([foe.to, foe.falls], [e.pos, !e.alive], `${arch} t${tier}: ${foe.name}`);
+      }
+      rounds++;
+      T.endHeroPhase(m);
+    }
+  }
+  assert.ok(rounds > 60 && hurt > 20, `too little was forecast to mean anything (${rounds} rounds, ${hurt} hits)`);
+  assert.equal(
+    T.forecast(Object.assign(mission('swarm', 1, 0), { over: true })),
+    null,
+    'nothing to forecast once it is over',
+  );
+});

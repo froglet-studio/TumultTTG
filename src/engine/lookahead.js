@@ -282,6 +282,41 @@
     }
     return c;
   };
+  /**
+   * What ending the round now would do — the answer to "what happens if I stop here?" The enemies
+   * do what they have declared, hazards and wearing-down effects tick, the objective and the clock
+   * move. None of that is random, so this is not a guess: it is what will happen. It is worked out
+   * on an imagined copy and touches nothing. Returns null once the mission is over.
+   *   heroes    [{ name, hp, after, downed, to }]   vitality now and after; `to` if they are moved
+   *   foes      [{ uid, name, from, to, falls }]    where each ends up, and whether it falls
+   *   progress  { before, after }                   the objective, 0 to 1
+   *   clock     rounds left afterwards, or null
+   *   result    'won' | 'lost' | null               if the round ends the mission
+   */
+  T.forecast = function (m) {
+    if (m.over) return null;
+    const c = T.imagine(m);
+    T.finishRound(c);
+    return {
+      heroes: m.heroes.map((h, i) => {
+        const a = c.heroes[i];
+        return {
+          name: h.name,
+          hp: Math.max(0, h.hp),
+          after: Math.max(0, a.hp),
+          downed: !h.downed && a.downed,
+          to: a.pos !== h.pos ? a.pos : null,
+        };
+      }),
+      foes: T.liveEnemies(m).map((e) => {
+        const a = c.enemies.find((x) => x.uid === e.uid);
+        return { uid: e.uid, name: e.name, from: e.pos, to: a.pos, falls: !a.alive };
+      }),
+      progress: { before: T.objectiveProgress(m), after: T.objectiveProgress(c) },
+      clock: c.clock ? c.clock.value : null,
+      result: c.over ? (c.won ? 'won' : 'lost') : null,
+    };
+  };
   const scratch = (m) => T.clone(Object.assign({}, m, { log: [], fx: [] }));
   /** What the position is worth if the squad stops here: the declared enemy turn plays out, then it is scored. */
   function worthIfStopped(m) {

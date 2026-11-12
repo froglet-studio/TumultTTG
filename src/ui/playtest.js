@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.2.0',
+    version: '2.3.0',
     items: [
+      {
+        text: 'Under the enemy intents there is now a forecast: what ending the round as things stand will cost each hero, whether the objective moves, whether the mission ends. It is exact — an enemy turn has no dice in it. Does it make the turn clearer, or solve it for you?',
+      },
       {
         text: 'Plan, in a mission’s top bar, shows what the look-ahead player would do with the turn — the player the balance tables are now measured with. It wins far more than the old autoplayer did. Where it plays badly, or far better than a person would, say so.',
       },

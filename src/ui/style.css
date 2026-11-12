@@ -1215,6 +1215,19 @@ hr {
 .intent .g {
   font-size: 14px;
 }
+.forecast {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--line2);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.fc-bad {
+  color: #ffb3c7;
+}
+.fc-good {
+  color: var(--green);
+}
 .log {
   height: 150px;
   overflow: auto;
