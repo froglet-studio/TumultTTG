@@ -232,6 +232,8 @@
   U.updateMission = function () {
     const m = M();
     if (!U.ms.built) buildBoard();
+    // what ending the round now would do: the enemy turn is declared, so this is exact (T.forecast)
+    U.ms.forecast = T.forecast(m);
     renderTop(m);
     renderTargetBar(m);
     renderSide(m);
@@ -293,11 +295,11 @@
     const h = hero();
     if (!h || h.downed) return 'Select a hero.';
     const ap = T.apValue(h);
-    const threats = T.liveEnemies(m).filter((e) => e.intent && e.intent.target === h.uid);
     const parts = [`<b>${esc(h.name)}</b>: ${ap} AP banked`];
-    if (threats.length)
+    const f = U.ms.forecast && U.ms.forecast.heroes[U.ms.heroIdx];
+    if (f && f.after < f.hp)
       parts.push(
-        `<span style="color:#ffb3c7">${threats.length} foe${threats.length > 1 ? 's' : ''} targeting you (${threats.reduce((s, e) => s + (e.intent.dmg || 0), 0)} dmg)</span>`,
+        `<span class="fc-bad">ending the round now costs you ${f.hp - f.after}${f.downed ? ' — you go down' : ` (${f.after} left)`}</span>`,
       );
     parts.push('click a card face to play it · click a node to walk (1 AP/step) · End Round when done');
     return parts.join(' · ');
@@ -314,12 +316,41 @@
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
     $('#mside').innerHTML =
-      `<div class="panel tight"><div class="row"><b>Enemy intents</b><span class="dim small right">declared — they adapt only to close distance</span></div><div class="intents" style="margin-top:6px">${intents}</div></div>` +
+      `<div class="panel tight"><div class="row"><b>Enemy intents</b><span class="dim small right">declared — they adapt only to close distance</span></div><div class="intents" style="margin-top:6px">${intents}</div>${forecastHTML(m)}</div>` +
       m.heroes.map((h, i) => heroPanel(m, h, i)).join('');
     // tooltips on intents are computed lazily
     document
       .querySelectorAll('#mside [data-tipid]')
       .forEach((el) => el.setAttribute('data-tip', tipFor(el.getAttribute('data-tipid'))));
+  }
+  /** Beside a hero's vitality: where it will stand if the round ends now, when that is somewhere else. */
+  function heading(i) {
+    const f = U.ms.forecast && U.ms.forecast.heroes[i];
+    if (!f || f.after === f.hp) return '';
+    return ` <span class="${f.after < f.hp ? 'fc-bad' : 'fc-good'}">→ ${f.downed ? 'down' : f.after}</span>`;
+  }
+  /** "What happens if I end the round now?" — the telegraphs, hazards and objective added up, a line a hero. */
+  function forecastHTML(m) {
+    const f = U.ms.forecast;
+    if (!f) return '';
+    const lines = f.heroes
+      .filter((x, i) => !m.heroes[i].downed)
+      .map((x) => {
+        const d = x.hp - x.after;
+        if (x.downed) return `<span class="fc-bad"><b>${esc(x.name)}</b> goes down</span>`;
+        if (d > 0) return `<span class="fc-bad"><b>${esc(x.name)}</b> takes ${d} (${x.after} left)</span>`;
+        if (d < 0) return `<span class="fc-good"><b>${esc(x.name)}</b> mends ${-d} (${x.after})</span>`;
+        return `<span><b>${esc(x.name)}</b> is untouched</span>`;
+      });
+    const falls = f.foes.filter((x) => x.falls).length;
+    if (falls) lines.push(`<span class="fc-good">${falls} foe${falls > 1 ? 's fall' : ' falls'}</span>`);
+    const ob = m.objective;
+    if (f.result)
+      lines.push(`<span class="${f.result === 'won' ? 'fc-good' : 'fc-bad'}"><b>the mission is ${f.result}</b></span>`);
+    else if (f.progress.after > f.progress.before) lines.push('<span class="fc-good">the objective advances</span>');
+    else if (ob && ob.kind === 'hold')
+      lines.push('<span class="fc-bad">no one is by the beacon: the round will not count</span>');
+    return `<div class="forecast" data-tip="Worked out from the declared intents, hazards and effects in play. Nothing in an enemy turn is random: this is what will happen if you end the round as things stand."><span class="dim">End the round now:</span> ${lines.join(' · ')}</div>`;
   }
   function heroPanel(m, h, i) {
     const sel = U.ms.heroIdx === i;
@@ -386,7 +417,7 @@
     const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
     return `<div class="hero ${sel ? 'active' : ''} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
-      <div class="hh"><span class="nm">${esc(h.name)}</span><span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}</span></div>
+      <div class="hh"><span class="nm">${esc(h.name)}</span><span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${states}</div>
       <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="Dice still in your pool. You roll 3 per turn; pool + banked = 15 always.">pool ${h.pool} · AP ${T.apValue(h)}</span></div>

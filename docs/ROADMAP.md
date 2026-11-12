@@ -85,6 +85,8 @@ The board-centred layout, roster rail, hand as cards, intents in resolution orde
 
 **Done when:** nobody has to add up incoming damage by hand; the interface tests still drive a full run.
 
+*Started (v2.3.0):* the forecast is in, as text — the first half of that sentence is true today. The layout, the roster rail, the hand as cards and the forecast's ghosts on the board are not started; they change how the game looks, and want a mock-up agreed first.
+
 ### P2 · Previews, undo and the guided first mission
 **Done when:** every action shows its result before it is paid for; anything not involving new information or dice can be undone; a new player finishes the first mission without opening help.
 

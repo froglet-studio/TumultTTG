@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.3.0 — 2026-11-12 — what happens if I end the round now?
+
+The first slice of roadmap P1: the forecast, as text. No rule changed.
+
+- **Added:** under the enemy intents, a line that says what ending the round as things stand will do: what each hero takes or mends, how many foes fall, whether the objective advances, whether the mission ends. Each hero's vitality shows where it is heading (`26/26 → 20`), and the hint bar says what stopping now costs the selected hero.
+- **Changed:** that replaces the hint bar's "N foes targeting you (X dmg)", which added up declared numbers whether or not the foe could reach. The forecast plays the declared enemy turn out on a copy: a foe that cannot reach does not count; shields, hazards and wearing-down effects do. Nothing in an enemy turn is random, so it is exact.
+- **Added:** `T.forecast(m)`, tested against what really happens at the end of 60-odd rounds across every mission type.
+- **Not yet:** the forecast's ghosts on the board (where each mover ends up), and the rest of P1 — the layout, the roster rail, the hand as cards.
+
 ## 2.2.0 — 2026-11-12 — a second player, who reads the board
 
 Roadmap milestone F2. No rule changed. The game gained a better instrument for measuring itself, and the first thing it measured is that the game is too easy. `docs/reference/PLAYERS.md` describes the player; `docs/reference/BALANCE.md` has the tables.

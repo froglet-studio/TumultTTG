@@ -1,6 +1,6 @@
 # 07 · Art and UX
 
-**Status: Proposed.** v2.0 is functional: emoji for icons, plain tokens for units, panels of text. The brief is a polished state with artwork and a better experience across the board.
+**Status: Proposed, with one piece built.** The forecast exists as text since v2.3.0 — a line under the enemy intents and a heading on each hero's vitality (`docs/reference/OVERVIEW.md`); its ghosts on the board do not, and nothing else here is built. v2.0 is functional: emoji for icons, plain tokens for units, panels of text. The brief is a polished state with artwork and a better experience across the board.
 
 ## Art direction
 

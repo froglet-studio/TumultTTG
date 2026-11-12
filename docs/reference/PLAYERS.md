@@ -46,7 +46,7 @@ One thing is decided for the player: a face that lets its player reroll banked d
 3. **Each position is scored as if the squad stopped there.** `T.finishRound` plays out the rest of the round — the enemies have declared what they will do, and nothing in it is random — and `T.evaluate` scores what is left.
 4. **It plays the best line it found, and plans again** if the search ran out of depth, or if the dice did something no plan could know.
 
-`T.planHeroPhase(m)` returns the plan and changes nothing; `T.smartHeroPhase(m)` plays the squad's phase. Anything that shows a player what would happen — a preview, a forecast, a hint — must start from `T.imagine` for the same reason the planner does.
+`T.planHeroPhase(m)` returns the plan and changes nothing; `T.smartHeroPhase(m)` plays the squad's phase. Anything that shows a player what would happen — a preview, a forecast, a hint — must start from `T.imagine` for the same reason the planner does. The interface's forecast is the first: `T.forecast(m)` is step 3 on its own, reported instead of scored — what each hero takes, where each foe ends up, what the objective and the clock do if the round ends now.
 
 ## The evaluation
 
