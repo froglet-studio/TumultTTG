@@ -135,7 +135,12 @@
           if (T.isHidden(e) || e.readyLance) {
             const hs = T.liveHeroes(m).filter((h) => dist(m, e.pos, h.pos) <= A.lance.reach + 1);
             const t = hs.length ? hs.sort((a, b) => a.hp - b.hp)[0] : lowestHpHero(m);
-            if (t) setI('lance', t, `(blinks adjacent, ${dmgOf(e, A.lance)})`);
+            if (t)
+              setI(
+                'lance',
+                t,
+                `(${canBlink(e) ? 'blinks adjacent' : 'held — only if adjacent'}, ${dmgOf(e, A.lance)})`,
+              );
           } else setI('fade', null, '(goes Hidden)');
           break;
         }
@@ -173,6 +178,9 @@
   /* ───────────────────────────── EXECUTION ───────────────────────────── */
   function canMove(e) {
     return !(st(e).Anchored || st(e).Held || st(e).Slow || e.anchoredPerm);
+  }
+  function canBlink(e) {
+    return canMove(e) && !st(e).NoTele;
   }
   function approach(m, e, targetNode, steps) {
     if (!canMove(e) || steps <= 0) return 0;
@@ -368,11 +376,11 @@
         }
         case 'teleStrike': {
           if (!t) break;
-          if (st(e).NoTele) {
-            T.say(m, `${e.name} cannot phase — it is held.`, 'enemy');
-            break;
-          }
-          if (dist(m, e.pos, t.pos) <= ab.reach + 1) {
+          // Whatever stops it walking stops it blinking. It is not robbed of its turn:
+          // a hero already beside it is still struck.
+          if (!canBlink(e)) {
+            if (!B.adjacent(m.board, e.pos, t.pos)) T.say(m, `${e.name} cannot phase — it is held.`, 'enemy');
+          } else if (dist(m, e.pos, t.pos) <= ab.reach + 1) {
             const spot = B.allNeighbors(m.board, t.pos)
               .filter((n) => !T.occupied(m, n) && !m.board.nodes[n].height)
               .sort((a, b) => dist(m, e.pos, a) - dist(m, e.pos, b))[0];

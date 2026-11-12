@@ -52,9 +52,9 @@ Win rate of two random legal heroes (no gear, no boons) played by the autoplayer
 | no shield-breakers | 88 | 100% | 80% | 88% | 82% | 83% | 77% | 100% | 92% | 42% | 55% | 15% |
 | no reveals | 84 | 100% | 80% | 82% | 68% | 97% | 82% | 98% | 95% | 47% | 60% | 10% |
 | no area damage | 92 | 100% | 77% | 83% | 85% | 87% | 83% | 100% | 87% | 47% | 57% | 8% |
-| no shields or wards | 64 | 100% | 72% | 90% | 87% | 97% | 83% | 97% | 95% | 65% | 63% | 27% |
+| no shields or wards | 64 | 100% | 72% | 90% | 87% | 97% | 83% | 97% | 95% | 63% | 63% | 27% |
 | no healing | 85 | 100% | 77% | 87% | 78% | 93% | 87% | 100% | 93% | 53% | 53% | 12% |
-| no movement abilities | 76 | 100% | 80% | 72% | 58% | 93% | 68% | 93% | 88% | 60% | 60% | 13% |
+| no movement abilities | 76 | 100% | 80% | 72% | 58% | 93% | 68% | 93% | 88% | 62% | 60% | 13% |
 | no foe control | 73 | 100% | 87% | 73% | 68% | 98% | 85% | 98% | 97% | 27% | 28% | 2% |
 | no hazard answers | 84 | 100% | 77% | 85% | 77% | 87% | 80% | 98% | 92% | 47% | 63% | 12% |
 | no dice economy | 81 | 98% | 85% | 88% | 72% | 95% | 80% | 100% | 93% | 57% | 62% | 7% |
@@ -177,7 +177,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Throwing Arm — Heavy Throw (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 217/392 (0.55) |  |
 | Language — Call (Phys) | tool | The clock, One big telegraphed hit | — |  |
 | Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | — |  |
-| Pattern Recognition — Spot (Phys) | **narrow** | The unseen | 94/433 (0.22) |  |
+| Pattern Recognition — Spot (Phys) | **narrow** | The unseen | 95/433 (0.22) |  |
 | Pattern Recognition — Weak Point (Eth) | staple | One tough foe, Shields | — |  |
 | Opposable Grip — Manipulate (Phys) | staple | One tough foe, One big telegraphed hit | 804/444 (1.81) |  |
 | Opposable Grip — Leverage (Eth) | staple | One tough foe, One big telegraphed hit | 73/444 (0.16) |  |
@@ -206,7 +206,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Burrowing — Phase-tunnel (Eth) | staple | Height, The clock, One big telegraphed hit | 39/96 (0.41) |  |
 | Metabolic Torpor — Low Power (Phys) | staple | Attrition | 21/86 (0.24) |  |
 | Metabolic Torpor — Stasis (Eth) | staple | One big telegraphed hit, Attrition | 63/86 (0.73) |  |
-| Counterbalance Tail — Redirect (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 204/97 (2.10) |  |
+| Counterbalance Tail — Redirect (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 205/97 (2.11) |  |
 | Counterbalance Tail — Deflect (Eth) | **narrow** | One big telegraphed hit | 0/97 (0.00) |  |
 
 ### Red-Legged Grasshopper
@@ -214,7 +214,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Catapult Spring — Coil (Phys) | staple | One tough foe | — |  |
-| Catapult Spring — Launch (Eth) | staple | One tough foe, A crowd, Height, The unseen, The clock, One big telegraphed hit | 82/78 (1.05) |  |
+| Catapult Spring — Launch (Eth) | staple | One tough foe, A crowd, Height, The unseen, The clock, One big telegraphed hit | 85/78 (1.09) |  |
 | Stridulation — Rasp (Phys) | staple | One tough foe, A crowd, One big telegraphed hit | — |  |
 | Stridulation — Resonance (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 28/95 (0.29) |  |
 | Tireless Respiration — Diffuse (Phys) | staple | The clock | — |  |
@@ -283,7 +283,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Adhesive Setae — Climb (Phys) | staple | Height, The clock | 75/68 (1.10) |  |
-| Adhesive Setae — Van der Waals (Eth) | tool | One tough foe, One big telegraphed hit | 37/68 (0.54) |  |
+| Adhesive Setae — Van der Waals (Eth) | tool | One tough foe, One big telegraphed hit | 38/68 (0.56) |  |
 | Lockjaw Bite — Latch (Phys) | staple | One tough foe, One big telegraphed hit | 267/93 (2.87) |  |
 | Lockjaw Bite — Crush (Eth) | staple | One tough foe, One big telegraphed hit | 0/93 (0.00) |  |
 | Tail Autotomy — Drop Tail (Phys) | staple | A crowd, The clock, One big telegraphed hit, Control on you | 63/94 (0.67) |  |
@@ -388,7 +388,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Network Regrowth — Reconstitute (Eth) | tool | One big telegraphed hit, Attrition | — |  |
 | Enzyme Spray — Spit (Phys) | staple | One tough foe, Shields | 62/68 (0.91) |  |
 | Enzyme Spray — Saturate (Eth) | staple | One tough foe, A crowd, Shields, The unseen | — | deletes a Shield outright |
-| Mycorrhizal Bond — Bond (Phys) | staple | The clock, Attrition | 61/82 (0.74) |  |
+| Mycorrhizal Bond — Bond (Phys) | staple | The clock, Attrition | 62/82 (0.76) |  |
 | Mycorrhizal Bond — Fuse (Eth) | staple | A crowd, The clock, One big telegraphed hit | 86/82 (1.05) |  |
 | Radiotrophic Resilience — Thrive (Phys) | tool | The clock, Attrition | 68/75 (0.91) | wholly conditional |
 | Radiotrophic Resilience — Feed on Energy (Eth) | tool | The clock, One big telegraphed hit | — |  |
@@ -403,7 +403,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Dsup Shielding — Project Shield (Eth) | staple | A crowd, One big telegraphed hit | 0/70 (0.00) |  |
 | Vitrification — Glass (Phys) | staple | A crowd, One big telegraphed hit | 128/79 (1.62) |  |
 | Vitrification — Partial Crystal (Eth) | staple | A crowd, One big telegraphed hit | 0/79 (0.00) |  |
-| Clawed Grip — Clamp (Phys) | staple | One tough foe, Hazards and being dragged, One big telegraphed hit, Control on you | 281/85 (3.31) |  |
+| Clawed Grip — Clamp (Phys) | staple | One tough foe, Hazards and being dragged, One big telegraphed hit, Control on you | 282/85 (3.32) |  |
 | Clawed Grip — Immovable Hold (Eth) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 17/85 (0.20) |  |
 | Anhydrobiosis Revival — Rehydrate (Phys) | staple | Attrition | 88/84 (1.05) |  |
 | Anhydrobiosis Revival — Guaranteed Return (Eth) | tool | One big telegraphed hit, Attrition | — |  |

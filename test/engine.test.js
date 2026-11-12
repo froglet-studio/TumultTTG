@@ -161,3 +161,35 @@ test('height: Weightless and a climbing form walk up to a ledge; nobody else doe
     'anyone can once the ramp is down',
   );
 });
+
+test('a Harrier that is Anchored, Slowed or held cannot blink — and still lances a hero beside it', () => {
+  const B = T.Board;
+  // one Harrier, ready to lance, either across the board from the squad or beside a hero
+  const harrierTurn = (state, beside) => {
+    const { m, h } = scene('swarm', 1, 5);
+    const far = Object.keys(m.board.nodes)
+      .map(Number)
+      .filter((n) => !T.occupied(m, n) && m.heroes.every((x) => B.dist(m.board, n, x.pos, true) >= 2))
+      .sort((a, b) => B.dist(m.board, a, h.pos, true) - B.dist(m.board, b, h.pos, true))[0];
+    const near = B.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
+    const e = T.makeEnemy('harrier', 1, beside ? near : far);
+    m.enemies = [e];
+    m.spawns = [];
+    Object.assign(e.states, state);
+    T.chooseIntents(m);
+    assert.equal(e.intent.key, 'lance');
+    const from = e.pos;
+    const hpBefore = m.heroes.reduce((s, x) => s + x.hp, 0);
+    T.enemyPhase(m);
+    return { moved: e.pos !== from, hurt: m.heroes.reduce((s, x) => s + x.hp, 0) < hpBefore };
+  };
+  assert.deepEqual(harrierTurn({}, false), { moved: true, hurt: true }, 'free, it blinks in and strikes');
+  for (const [name, state] of [
+    ['Anchored', { Anchored: { t: 2 } }],
+    ['Slowed', { Slow: { t: 2 } }],
+    ['held by a Counted Trap', { Anchored: { t: 2 }, NoTele: { t: 2 } }],
+  ]) {
+    assert.deepEqual(harrierTurn(state, false), { moved: false, hurt: false }, `${name}: no blink`);
+    assert.deepEqual(harrierTurn(state, true), { moved: false, hurt: true }, `${name}: it still acts`);
+  }
+});
