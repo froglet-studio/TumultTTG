@@ -8,6 +8,7 @@ Tumult was designed and built over a long chat session and has now moved into th
 - **The next version is designed but not built.** Garrett's brief — polish and artwork, abilities that are each a staple or a flexible tool, boards that differ every encounter, problems that are not all fights, a game that helps create pilots — is written up as requirements in [`design/00-pillars.md`](design/00-pillars.md), as proposals in the rest of `design/`, and as milestones in [`ROADMAP.md`](ROADMAP.md).
 - **There is now a way to measure the ability rules** (`npm run audit`), and a first set of findings.
 - **Since the handoff:** roadmap milestone S0 is done (v2.0.2, 12 November 2026). The engine now does what the card, boon and bestiary text says; the list this file used to carry is empty, and two tests keep it that way. One question from it is still open — decision 4 below.
+- **There is a build to playtest with** (v2.0.3): `npm run build:playtest` adds a panel that starts any mission from a seed, switches the rule in decision 4, and writes a report. See "Play it" in [`reference/OVERVIEW.md`](reference/OVERVIEW.md).
 
 ## What is in the repository
 
@@ -81,7 +82,7 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 1. The frame: is "a season as guides on Tumult, ending with a berth on the Cosmic Shore" right? ([design/01](design/01-frame-and-campaign.md) lists five specific questions.)
 2. Squad size: three by default, two supported — agreed?
 3. Basic actions, Channel and Overcast ([design/02](design/02-units-verbs-actions.md)): these add rules to the v1.0 core. Acceptable?
-4. Ethereal faces at E 0. The pillars and v1.0's text say an Ethereal capability exists only at E ≥ 1; the engine has always let the face be played at E 0 with its E-0 numbers (so did v1.0's reference engine), and that is the game played so far. Which is the rule? It is now one line: `ETHEREAL_MIN_E` in `T.RULES` (`src/data/world.js`), 0 today, 1 for the strict reading. Measured with `node tools/sim.js 40 all --rule ETHEREAL_MIN_E=1`: the autoplayer's win rates move by five points at most, in both directions, and full runs do not move. What changes is the start of a run — each pre-made hero would begin with three or four of six Ethereal faces locked — and how much an E pip means. Today a fifth of simulated Ethereal plays are at E 0. It wants a person's playtest before the switch is flipped.
+4. Ethereal faces at E 0. The pillars and v1.0's text say an Ethereal capability exists only at E ≥ 1; the engine has always let the face be played at E 0 with its E-0 numbers (so did v1.0's reference engine), and that is the game played so far. Which is the rule? It is now one line: `ETHEREAL_MIN_E` in `T.RULES` (`src/data/world.js`), 0 today, 1 for the strict reading. Measured with `node tools/sim.js 40 all --rule ETHEREAL_MIN_E=1`: the autoplayer's win rates move by five points at most, in both directions, and full runs do not move. What changes is the start of a run — each pre-made hero would begin with three or four of six Ethereal faces locked — and how much an E pip means. Today a fifth of simulated Ethereal plays are at E 0. It wants a person's playtest before the switch is flipped: the playtest build (`npm run build:playtest`) has that switch on its title screen, and its report counts the Ethereal faces played at E 0.
 
 ## Known issues and debt
 
@@ -93,6 +94,7 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 - Missions run shorter than the 8–14 round target at tiers 1 and 2.
 - The boss's true difficulty is unknown: the autoplayer wins it a quarter to a third of the time with a realistic kit and almost never with a random one, and nobody has measured how people fare.
 - A mission in progress is not saved; refreshing returns to the map at that node.
+- The mission screen is built for a mouse. It fits a phone's width, but a card face's numbers are only in its hover tooltip (roadmap P1).
 - A hero on a ledge cannot walk back down until the ramp drops; only a blink, a climb or still being Weightless gets them off. Harmless on the Vault, where the ledge is the objective. Settle it before a board puts a ledge anywhere else (roadmap S4).
 - The autoplayer plays a conditional face whether or not its condition holds, and does not know that a Weightless hero can walk up a ledge. Simulation undercounts both (roadmap F2).
 

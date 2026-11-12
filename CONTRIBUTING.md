@@ -2,7 +2,7 @@
 
 You do not need to write code to help. The most useful contributions right now, roughly in order:
 
-- **Play it and say what happened.** A short playtest note (template below) is worth more than a long opinion.
+- **Play it and say what happened.** A short playtest note (template below) is worth more than a long opinion. The playtest build (`npm run build:playtest`) starts any mission from a seed and writes a report you can paste under your note.
 - **Propose abilities, missions and boards** that fit the rules in [`docs/design/00-pillars.md`](docs/design/00-pillars.md).
 - **Write.** Event text, mission briefings, clade taglines and card flavour all live in plain data files.
 - **Draw.** The art direction, and a proposed pipeline for dropping in finished art, are described in [`docs/design/07-art-and-ux.md`](docs/design/07-art-and-ux.md).
