@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.4.2 — 2026-11-12 — interface tests stop waiting
+
+No rule changed, and nothing a player sees.
+
+- **Changed:** the interface tests and `tools/ui-drive.js` no longer sleep a fixed second at the end of every mission; they set the pause before the mission-over modal (`T.UI.MISSION_OVER_DELAY`, 900 ms for a person) to 0 and wait until the modal is there. The run driven by autoplay went from about 8 s to 3 s, the clicking fuzz run from 9 s to 7 s, and `npm test` from about 25 s to 21 s on four cores.
+
 ## 2.4.1 — 2026-11-12 — generators are engine code
 
 No rule changed; narrated missions and the simulator's tables are byte-identical before and after.

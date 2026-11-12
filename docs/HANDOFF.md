@@ -108,7 +108,7 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 - `T.runEffects` is defined and then wrapped later in `engine.js` (for decoy placement). It works; it is confusing.
 - The Warden's shield stops area damage because `T.damage` checks for its type by name, and an overridden foe's blow at its neighbour skips the damage pipeline altogether. Both are special cases in the engine that should be data and verbs.
 - The UI is string templates re-rendered wholesale, with one delegated click handler. Fine at this size; it will not survive the presentation milestones unchanged.
-- The interface tests wait in real time for end-of-mission animations, which is most of the test suite's 15 seconds.
+- The test suite takes about 20 seconds; the long pole is the test that the look-ahead player beats the heuristic on every mission type (about 14 s on four cores).
 
 **Repository**
 - The Pages workflow (`.github/workflows/pages.yml`) is manual and has never run. It uses the action versions documented in those actions' READMEs, pinned to commit SHAs; adjust if GitHub complains, and bump each SHA with its version comment.
