@@ -93,6 +93,7 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 - Missions run shorter than the 8–14 round target at tiers 1 and 2.
 - The boss's true difficulty is unknown: the autoplayer wins it a quarter to a third of the time with a realistic kit and almost never with a random one, and nobody has measured how people fare.
 - A mission in progress is not saved; refreshing returns to the map at that node.
+- A hero on a ledge cannot walk back down until the ramp drops; only a blink, a climb or still being Weightless gets them off. Harmless on the Vault, where the ledge is the objective. Settle it before a board puts a ledge anywhere else (roadmap S4).
 - The autoplayer plays a conditional face whether or not its condition holds, and does not know that a Weightless hero can walk up a ledge. Simulation undercounts both (roadmap F2).
 
 **Code**

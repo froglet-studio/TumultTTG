@@ -2015,6 +2015,7 @@
     for (const h of m.heroes) {
       h.rested = false;
       h.freeMove = 0;
+      h.roundFlags = { struck: false }; // downed heroes too: one rallied mid-round has not struck yet
       if (h.downed) continue;
       T.heroTurnStart(m, h);
     }
@@ -2042,7 +2043,6 @@
   T.heroTurnStart = function (m, h) {
     T.slideTrack(h, 1);
     for (const v of T.boonVals(h, 'roundStart')) if (v.round === m.round && v.hasten) T.slideTrack(h, v.hasten);
-    h.roundFlags = { struck: false };
     // engines
     for (const en of h.states.Engines || []) {
       if (en.kind === 'regen') {

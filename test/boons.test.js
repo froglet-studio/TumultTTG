@@ -60,6 +60,19 @@ test('Momentum: the first strike each round deals more — every round, and only
   assert.equal(strike(s), 3 + val('momentum'), 'first strike of round 3');
 });
 
+test('Momentum: a hero rallied mid-round still has that round’s first strike', () => {
+  const s = quiet(['momentum']);
+  assert.equal(strike(s), 3 + val('momentum'));
+  T.damage(s.m, s.e, s.h, 99, { kind: 'true', trueDmg: true });
+  assert.equal(s.h.downed, true);
+  T.endHeroPhase(s.m); // round 2 begins with the holder down
+  s.ally.pos = B.walkNeighbors(s.m.board, s.h.pos).find((n) => !T.occupied(s.m, n));
+  s.ally.held = ['AP', 'AP'];
+  s.ally.pool = T.RULES.POOL - 2;
+  assert.ok(T.rally(s.m, s.ally).ok);
+  assert.equal(strike(s), 3 + val('momentum'));
+});
+
 test('Quick Hands: cards played in round 1 come home a column sooner', () => {
   const home = (ids) => {
     const { m, h } = quiet(ids);
