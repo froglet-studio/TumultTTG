@@ -420,9 +420,13 @@
   /* ───────────────────────────── TRACK ───────────────────────────── */
   T.inHand = (h, cardId) => h.cards.includes(cardId) && !h.track.some((t) => t.card === cardId);
   T.commit = function (h, cardId, dur, cd, note) {
-    if (h.states.Freecast && h.states.Freecast.n > 0) {
-      h.states.Freecast.n--;
-      if (h.states.Freecast.n <= 0) delete h.states.Freecast;
+    const grants = h.states.Freecast;
+    if (grants && grants.length) {
+      // several offers may be waiting: spend the one that runs out soonest
+      const left = (g) => (g.t == null ? Infinity : g.t);
+      const g = grants.reduce((a, b) => (left(b) < left(a) ? b : a));
+      if (--g.n <= 0) grants.splice(grants.indexOf(g), 1);
+      if (!grants.length) delete h.states.Freecast;
       return 'free';
     }
     if (dur > 0) h.track.push({ card: cardId, phase: 'dur', left: dur, cd, note: note || '' });
@@ -1569,8 +1573,14 @@
       case 'freecast': {
         const n = num(f.n, P, E);
         if (n <= 0) break;
-        actor.states.Freecast = { n: (actor.states.Freecast ? actor.states.Freecast.n : 0) + n };
-        say(m, `${actor.name}: the next ${n} card${n > 1 ? 's' : ''} won't go to the track.`, 'hero');
+        // dur: the offer lapses after that many round ends (1 = "this turn"); without it, it waits
+        const t = num(f.dur, P, E) || null;
+        (actor.states.Freecast = actor.states.Freecast || []).push({ n, t });
+        say(
+          m,
+          `${actor.name}: the next ${n} card${n > 1 ? 's' : ''}${t === 1 ? ' this turn' : ''} won't go to the track.`,
+          'hero',
+        );
         break;
       }
       case 'phoenix':
@@ -2207,7 +2217,7 @@
         } else if (k === 'Auras') {
           s[k] = v.filter((x) => --x.t > 0);
           if (!s[k].length) delete s[k];
-        } else if (k === 'Empower') {
+        } else if (k === 'Empower' || k === 'Freecast') {
           s[k] = v.filter((x) => x.t == null || --x.t > 0);
           if (!s[k].length) delete s[k];
         } else if (v && typeof v.t === 'number' && v.t < 90) {
@@ -2309,7 +2319,7 @@
       HazardImmune: 'Immune to hazards.',
       StatusImmune: 'Immune to Weaken/Anchor.',
       Guard: 'Guarded — ambush damage halved.',
-      Freecast: `Next ${v.n} card(s) skip the track.`,
+      Freecast: `Next ${Array.isArray(v) ? v.reduce((n, g) => n + g.n, 0) : 0} card(s) skip the track.`,
       Phoenix: `Phoenix — revive with ${v.hp} if downed.`,
       Absorb: `Absorb — next ${v.n} ranged hit(s) negated, minting Charge.`,
       AmbushTrap: `Trigger — first foe to close takes ${v.dmg}.`,

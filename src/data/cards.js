@@ -384,7 +384,7 @@
     'Fit through a coin-sized gap.');
   C('octopus','oct_arms','Distributed Arms','T',1,
     { n:'Multitask', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'freecast', n:1}],
+      fx:[{v:'freecast', n:1, dur:1}],
       txt:(P,E)=>`Eight arms: the next card you play this turn does not go to your track.` },
     { n:'Parallel', ap:2, el:2, cd:4, dur:0, tgt:'self',
       fx:[{v:'freecast', n:2},{v:'mint', face:'AP', n:(P,E)=>E>=2?2:1}],
