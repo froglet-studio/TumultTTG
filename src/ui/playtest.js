@@ -19,30 +19,16 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.9.0',
+    version: '2.10.0',
     items: [
       {
-        text: 'The last seven narrow faces gained a general use too: Deflect (Shield this round), Blend (Shield 1), Ink (Weakens adjacent foes), Gills (heal), Enzymes (heal now), Cilia Field (Weakens adjacent foes) and Endure (Shield). Do the hiding and hazard faces feel worth a slot now?',
-        cards: ['jer_tail', 'oct_cloak', 'oct_ink', 'axo_gills', 'fly_digest', 'fly_hairs', 'tar_extremo'],
+        text: 'A crystal is an action: any banked etherion (or Omni) can be spent on its own, with no AP, for a basic action of its colour — Mass strikes for 2 or shoves 1, Charge arcs 1 damage into a foe up to 3 away, Space scrambles 1 node (ledges too), Time braces and slides your track. Are elements now the rolls you hope for? Does a turn with three crystals and no AP still feel like a turn?',
       },
       {
-        text: 'The short-range sensing faces now do something besides reveal: Spot (+1 to your next strike), Feel (Shield 1), Listen (a free step), Flick (Marks the nearest foe), Feel Flow (next hit −1), Sense (1 true damage down your lane) and Hairs (adjacent foes Weakened 1). Do you now play them outside the hidden-cache mission?',
-        cards: ['hum_pattern', 'jer_vibrissae', 'owl_sound', 'gec_scent', 'axo_lateral', 'eel_electro', 'fly_hairs'],
+        text: 'This makes the game a lot easier (the careful simulated player now wins 38 runs of 40). Tell us whether the Heart and the tier-3 missions still feel like a fight, on either tide.',
       },
       {
-        text: 'Difficulty: the title screen now offers a Flood tide beside the usual Rising tide. From tier 2 every objective needs more (one more seal, dig, valve channel or round held; two at tier 3), clocks start shorter, swarms grow and elites bring escorts. Does it feel hard because you must plan, or just unfair? The Vault at tier 3 is the one we expect to be too harsh.',
-      },
-      {
-        text: 'Channel: with a matching etherion (or Omni) banked, a second button appears beside the basic actions. Mass makes Strike 4 or Shove 2 nodes; Charge reaches an objective 2 nodes away; Space scrambles 1 node, up or down a ledge, for 1 AP; Time adds a track slide to Brace. Does a stranded die now always have somewhere to go?',
-      },
-      {
-        text: 'Scramble with a Space die gets a hero up to — or down from — the Vault’s ledge without the ramp. Does that make the Vault too easy, or just less of a dead end?',
-      },
-      {
-        text: 'Strike, Brace and Shove (2.5.0) are under every hero’s hand, with or without cards. Do they rescue a bad roll without crowding out your cards?',
-      },
-      {
-        text: 'Ethereal faces still need E 1 on their card (2.4.0). Do the starting two awakened faces feel like toys worth having?',
+        text: 'Charge Reach (Interact 2 nodes away) still costs 1 AP. Does Arc give a lone Charge die enough to do when nothing is in reach?',
       },
     ],
   };
