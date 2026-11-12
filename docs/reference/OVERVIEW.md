@@ -49,4 +49,6 @@ The run is the fall of a **quasi-stable Consolidation**. The **Terminal** is the
 
 ## Keyboard / UI notes
 
-Tab switches the selected hero; E ends the round; Esc cancels targeting. Hover any card face, die, state chip or token for exact numbers at the hero's current P/E. The hint bar above the board always says how much AP the selected hero has and how many foes are targeting them.
+Tab switches the selected hero; E ends the round; Esc cancels targeting. Hover any card face, die, state chip or token for exact numbers at the hero's current P/E. The hint bar above the board always says how much AP the selected hero has and what ending the round now would cost them.
+
+**The forecast.** Under the enemy intents, one line answers *what happens if I end the round now?* — what each hero takes or mends, how many foes fall, whether the objective advances, whether the mission ends — and each hero's vitality shows where it is heading (`26/26 → 20`). It adds the telegraphs up properly: a foe that cannot reach does not count, shields and hazards do. An enemy turn has no dice in it, so the forecast is exact (`T.forecast`, tested against what then happens).
