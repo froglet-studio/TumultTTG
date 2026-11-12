@@ -83,3 +83,130 @@ test('Radiotrophic Resilience — Thrive mints its AP only on a hazard', () => {
   assert.equal(wet.h.hp, 14, 'on a hazard it heals 2 + P');
   assert.equal(minted(wet.h, 'AP'), 1, 'and mints 1 AP');
 });
+
+/* ───────────────────── no option on a recipe is silently ignored ───────────────────── */
+
+/** Wrap a recipe so that every key the engine reads from it is recorded in `seen`. */
+function spy(recipe, seen) {
+  return new Proxy(recipe, {
+    get(target, key, receiver) {
+      const value = Reflect.get(target, key, receiver);
+      if (typeof key !== 'string') return value;
+      seen.add(key);
+      // a nested recipe (onKill) is watched too, under "key.child"
+      if (value && typeof value === 'object' && !Array.isArray(value))
+        return spy(value, { add: (k) => seen.add(`${key}.${k}`) });
+      return value;
+    },
+  });
+}
+const keysOf = (recipe, prefix = '') =>
+  Object.entries(recipe).flatMap(([k, v]) =>
+    v && typeof v === 'object' && !Array.isArray(v) ? [prefix + k, ...keysOf(v, `${prefix}${k}.`)] : [prefix + k],
+  );
+
+/** Aim at the thick of it: a foe's own node, else a node beside a foe, else the first option. */
+function nearFoe(tg, { m }) {
+  if (tg.need !== 'node') return {};
+  const foes = T.liveEnemies(m);
+  const on = tg.options.find((n) => foes.some((e) => e.pos === n));
+  const beside = tg.options.find((n) => foes.some((e) => B.adjacent(m.board, n, e.pos)));
+  return { node: on != null ? on : beside != null ? beside : tg.options[0] };
+}
+/**
+ * The situations a recipe is tried in. A key counts as read if the engine reads it in any
+ * of them, so each exists to reach a branch the plain arena does not.
+ */
+const SITUATIONS = {
+  plain: {},
+  // foes that survive the first effect, one of them Anchored, and the action aimed at them
+  crowded: {
+    arrange: ({ adj, lane }) => {
+      [adj, lane].filter(Boolean).forEach((e) => sturdy(e));
+      adj.states.Anchored = { t: 3 };
+    },
+    choose: nearFoe,
+  },
+  // a foe that survives a hit but is left on low hp
+  wounded: { arrange: ({ adj, lane }) => [adj, lane].filter(Boolean).forEach((e) => sturdy(e, 12)) },
+  onHazard: { arrange: ({ m, h }) => (m.board.nodes[h.pos].hazard = true) },
+  allyDown: {
+    arrange: ({ m, h, ally }) => {
+      ally.downed = true;
+      ally.pos = B.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
+    },
+  },
+};
+
+/** Run `use(scene, situation)` in every situation with `holder.fx` spied on; return the keys never read. */
+function unreadKeys(holder, use) {
+  const original = holder.fx;
+  const seen = original.map(() => new Set());
+  holder.fx = original.map((x, i) => spy(x, seen[i]));
+  try {
+    for (const situation of Object.values(SITUATIONS)) use(situation);
+  } finally {
+    holder.fx = original;
+  }
+  return original.flatMap((x, i) =>
+    keysOf(x)
+      .filter((k) => !seen[i].has(k))
+      .map((k) => `${x.v}.${k}`),
+  );
+}
+
+test('no option on a card, gear or consumable recipe is ignored by the engine', () => {
+  const ignored = [];
+  const note = (where, keys) => keys.length && ignored.push(`${where}: ${keys.join(', ')}`);
+
+  for (const card of T.CARDS)
+    for (const faceKey of ['P', 'E'])
+      note(
+        `${card.id}.${faceKey}`,
+        unreadKeys(card[faceKey], (situation) => H.fireFace(card.id, faceKey, situation)),
+      );
+
+  for (const gear of T.GEAR)
+    gear.abilities.forEach((ability, ai) =>
+      note(
+        `${gear.id} — ${ability.n}`,
+        unreadKeys(ability, ({ arrange, choose }) => {
+          const scene = H.arena('hum_tool');
+          scene.h.gear = [{ id: gear.id, cds: [0, 0] }];
+          if (arrange) arrange(scene);
+          const tg = T.targetsFor(scene.m, scene.h, ability.tgt, ability, 0, 0);
+          const ctx = {};
+          if (tg.need === 'foe' || tg.need === 'foeOrAlly') ctx.target = (tg.options || [])[0];
+          if (tg.need === 'node') ctx.node = (tg.options || [])[0];
+          if (choose && tg.options) Object.assign(ctx, choose(tg, scene));
+          T.useGear(scene.m, scene.h, 0, ai, ctx);
+        }),
+      ),
+    );
+
+  for (const item of T.CONSUMABLES)
+    note(
+      item.id,
+      unreadKeys(item, ({ arrange }) => {
+        const scene = H.arena('hum_tool');
+        scene.h.consumables = [item.id];
+        if (arrange) arrange(scene);
+        T.useConsumable(scene.m, scene.h, 0);
+      }),
+    );
+
+  assert.deepEqual(ignored, [], 'the engine never reads these recipe options — implement them or delete them');
+});
+
+test('interact reaches a ledge from below only when its recipe says height', () => {
+  const tryFromFloor = (fx) => {
+    const scene = H.arena('hum_tool', { archetype: 'vault', tier: 1 });
+    const { m, h } = scene;
+    const ledge = m.objective.node;
+    h.pos = B.allNeighbors(m.board, ledge).find((n) => !m.board.nodes[n].height && !T.occupied(m, n));
+    T.runEffects(m, h, [fx], { P: 0, E: 0, node: ledge });
+    return m.objective.done;
+  };
+  assert.equal(tryFromFloor({ v: 'interact', range: 1 }), 0, 'a plain reach cannot work the ledge from the floor');
+  assert.equal(tryFromFloor({ v: 'interact', range: 1, height: true }), 1, 'Reach Rig can');
+});

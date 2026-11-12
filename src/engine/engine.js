@@ -1751,6 +1751,10 @@
           say(m, 'Too far.', 'sys');
           break;
         }
+        if (!f.height && bd.nodes[node].height && actor.pos !== node) {
+          say(m, 'That one needs someone up on the ledge.', 'sys');
+          break;
+        }
         T.doInteract(m, actor, node, true);
         break;
       }

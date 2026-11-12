@@ -173,7 +173,7 @@
       fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Dig in: Hidden ${1+h(P)} and Shield 1.` },
     { n:'Phase-tunnel', ap:2, el:1, cd:4, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true, anyTerrain:true},{v:'hidden', dur:1}],
+      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Tunnel through anything to a node within ${2+E} and surface Hidden.` },
     'Through any terrain to an unseen zone.');
   C('jerboa','jer_torpor','Metabolic Torpor','T',1,
@@ -204,7 +204,7 @@
     'An orthopteran catapult.');
   C('hopper','hop_strid','Stridulation','C',2,
     { n:'Rasp', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>P, uses:1, target:'ally', min:0}],
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>P, uses:1, target:'ally'}],
       txt:(P,E)=>`A sustained tone: adjacent foes Weakened 1${P>0?`; your ally's next strike +${P}`:''}.` },
     { n:'Resonance', ap:3, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'strike', kind:'lane_all', dmg:(P,E)=>2+E},{v:'weaken', val:(P,E)=>E>=2?2:0, dur:1, area:'lane'}],
@@ -421,7 +421,7 @@
       fx:[{v:'climb', reach:(P,E)=>1+P}],
       txt:(P,E)=>`Walk walls and ceilings: move ${1+P}, height nodes included.` },
     { n:'Van der Waals', ap:1, el:1, cd:3, dur:0, tgt:'foe_los',
-      fx:[{v:'force', kind:'pull', n:(P,E)=>1+E, los:true},{v:'anchor', who:'foe', dur:(P,E)=>E>=2?1:0}],
+      fx:[{v:'force', kind:'pull', n:(P,E)=>1+E},{v:'anchor', who:'foe', dur:(P,E)=>E>=2?1:0}],
       txt:(P,E)=>`Command the molecular bond: pull a foe in your lane ${1+E} toward you${E>=2?' and Anchor it 1':''}.` },
     'Dry molecular adhesion.');
   C('gecko','gec_lockjaw','Lockjaw Bite','M',0,
@@ -617,7 +617,7 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P, revealTarget:true},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Twin taps: lane strike ${1+P} that reveals a Hidden target and Weakens 1.` },
     { n:'Spasm', ap:1, el:1, cd:3, dur:0, tgt:'foe_los',
-      fx:[{v:'force', kind:'choose', n:(P,E)=>1+E, los:true},{v:'weaken', val:1, dur:1}],
+      fx:[{v:'force', kind:'choose', n:(P,E)=>1+E},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Drive an involuntary spasm: push or pull a foe in your lane ${1+E} and Weaken it 1.` },
     'Muscles that move on your command.');
   C('eel','eel_buoyancy','Buoyancy Control','M',0,
@@ -704,7 +704,7 @@
     'Resume exactly as you were.');
   C('flytrap','fly_lure','Nectar Lure','C',1,
     { n:'Lure', ap:1, el:0, cd:1, dur:0, tgt:'foe_los',
-      fx:[{v:'force', kind:'pull', n:1, los:true}],
+      fx:[{v:'force', kind:'pull', n:1}],
       txt:(P,E)=>`Scent and UV nectar guides: a foe in your lane is drawn 1 toward you.` },
     { n:'Allure', ap:2, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'force', kind:'pull', n:1, area:true, radius:(P,E)=>1+E},{v:'weaken', val:1, dur:1, area:'radius', radius:(P,E)=>1+E}],
@@ -770,10 +770,10 @@
     'Ongoing breakdown.');
   C('cordyceps','cor_bond','Mycorrhizal Bond','S',0,
     { n:'Bond', ap:1, el:0, cd:1, dur:0, tgt:'ally',
-      fx:[{v:'mint', face:'AP', n:1, target:'ally'},{v:'heal', n:(P,E)=>P, target:'ally', min:0}],
+      fx:[{v:'mint', face:'AP', n:1, target:'ally'},{v:'heal', n:(P,E)=>P, target:'ally'}],
       txt:(P,E)=>`Channel into your ally: they mint 1 AP${P>0?` and heal ${P}`:''}.` },
     { n:'Fuse', ap:1, el:1, cd:3, dur:0, tgt:'ally',
-      fx:[{v:'swap', who:'ally'},{v:'shield', val:(P,E)=>1+h(E), dur:1, party:true}],
+      fx:[{v:'swap'},{v:'shield', val:(P,E)=>1+h(E), dur:1, party:true}],
       txt:(P,E)=>`Fuse positions: swap places with your ally across any distance; both gain Shield ${1+h(E)}.` },
     'Share fate.');
   C('cordyceps','cor_radio','Radiotrophic Resilience','C',0,
@@ -831,7 +831,7 @@
       fx:[{v:'hazardImmune', dur:2}],
       txt:(P,E)=>`Operate in anything: immune to hazards for 2 rounds.` },
     { n:'Cross the Void', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>1+E, height:true, anyTerrain:true, carryAlly:(P,E)=>E>=2}],
+      fx:[{v:'teleport', reach:(P,E)=>1+E, height:true, carryAlly:(P,E)=>E>=2}],
       txt:(P,E)=>`Cross the impossible: move to any node within ${1+E} through vacuum, hazard or height${E>=2?', carrying an adjacent ally':''}.` },
     'Through the void unharmed.');
   C('tardigrade','tar_stylet','Stylet Drain','C',0,
@@ -852,7 +852,7 @@
     'Parthenogenetic.');
   C('tardigrade','tar_cling','Current-Cling Anchor','S',0,
     { n:'Cling', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'anchor', who:'self', dur:(P,E)=>1+P},{v:'hazardImmune', dur:1, kind:'push'}],
+      fx:[{v:'anchor', who:'self', dur:(P,E)=>1+P}],
       txt:(P,E)=>`Cling fast: immune to push/pull for ${1+P} rounds.` },
     { n:'Anchor Space', ap:1, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'anchor', who:'self', dur:(P,E)=>1+E},{v:'anchor', who:'ally', dur:(P,E)=>1+E, adjacent:true},{v:'hazardImmune', dur:(P,E)=>E>=2?1+E:0, party:true}],
