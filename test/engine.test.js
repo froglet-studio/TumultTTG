@@ -172,7 +172,7 @@ test('a Harrier that is Anchored, Slowed or held cannot blink — and still lanc
       .filter((n) => !T.occupied(m, n) && m.heroes.every((x) => B.dist(m.board, n, x.pos, true) >= 2))
       .sort((a, b) => B.dist(m.board, a, h.pos, true) - B.dist(m.board, b, h.pos, true))[0];
     const near = B.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
-    const e = T.makeEnemy('harrier', 1, beside ? near : far);
+    const e = T.spawnEnemy(m, 'harrier', 1, beside ? near : far);
     m.enemies = [e];
     m.spawns = [];
     Object.assign(e.states, state);
@@ -290,7 +290,7 @@ test('a Located Harrier cannot fade from sight — and still readies its lance',
       .map(Number)
       .filter((n) => !T.occupied(m, n))
       .sort((a, b) => B.dist(m.board, b, h.pos, true) - B.dist(m.board, a, h.pos, true))[0];
-    const e = T.makeEnemy('harrier', 1, far);
+    const e = T.spawnEnemy(m, 'harrier', 1, far);
     delete e.states.Hidden; // it has been revealed
     if (located) e.states.Located = { t: 3 };
     m.enemies = [e];

@@ -1,0 +1,1310 @@
+{
+ "comment": "Saves written by Tumult 2.0.3, which had no version field. Kept so later versions can prove they still load them. Never regenerate.",
+ "inMission": {
+  "seed": 4242,
+  "heroes": [
+   {
+    "kind": "hero",
+    "uid": 1,
+    "id": "cavitt_5466",
+    "name": "Cavitt",
+    "title": "the Brawler-in-the-Cloud",
+    "species": [
+     "human",
+     "octopus",
+     "hopper"
+    ],
+    "cards": [
+     "hop_mandibles",
+     "oct_cloak",
+     "oct_jet",
+     "hop_catapult",
+     "hum_throw",
+     "hum_mind"
+    ],
+    "up": {
+     "hop_mandibles": [
+      2,
+      0
+     ],
+     "oct_cloak": [
+      0,
+      1
+     ],
+     "oct_jet": [
+      0,
+      0
+     ],
+     "hop_catapult": [
+      1,
+      2
+     ],
+     "hum_throw": [
+      0,
+      0
+     ],
+     "hum_mind": [
+      0,
+      0
+     ]
+    },
+    "hp": 26,
+    "maxHp": 26,
+    "pos": 5,
+    "pool": 15,
+    "held": [],
+    "temp": [],
+    "track": [],
+    "states": {},
+    "gear": [],
+    "consumables": [],
+    "downed": false,
+    "upUnspent": 0,
+    "stats": {
+     "dmgDealt": 0,
+     "dmgTaken": 0,
+     "kills": 0
+    },
+    "boons": [],
+    "faces": null,
+    "rested": false,
+    "roundFlags": {
+     "struck": false
+    },
+    "freeMove": 0
+   },
+   {
+    "kind": "hero",
+    "uid": 2,
+    "id": "marish_2785",
+    "name": "Marish",
+    "title": "the Tidewarden",
+    "species": [
+     "human",
+     "eel",
+     "flytrap"
+    ],
+    "cards": [
+     "eel_discharge",
+     "eel_electro",
+     "fly_snap",
+     "fly_photo",
+     "hum_persist",
+     "hum_tool"
+    ],
+    "up": {
+     "eel_discharge": [
+      0,
+      2
+     ],
+     "eel_electro": [
+      0,
+      0
+     ],
+     "fly_snap": [
+      0,
+      2
+     ],
+     "fly_photo": [
+      0,
+      1
+     ],
+     "hum_persist": [
+      0,
+      0
+     ],
+     "hum_tool": [
+      1,
+      0
+     ]
+    },
+    "hp": 26,
+    "maxHp": 26,
+    "pos": 6,
+    "pool": 15,
+    "held": [],
+    "temp": [],
+    "track": [],
+    "states": {},
+    "gear": [],
+    "consumables": [],
+    "downed": false,
+    "upUnspent": 0,
+    "stats": {
+     "dmgDealt": 0,
+     "dmgTaken": 0,
+     "kills": 0
+    },
+    "boons": [],
+    "faces": null,
+    "rested": false,
+    "roundFlags": {
+     "struck": false
+    },
+    "freeMove": 0
+   }
+  ],
+  "crystals": 6,
+  "boons": [],
+  "map": {
+   "rows": [
+    [
+     {
+      "id": 0,
+      "row": 0,
+      "col": 0,
+      "type": "swarm",
+      "tier": 1,
+      "next": [
+       3
+      ],
+      "done": false
+     },
+     {
+      "id": 1,
+      "row": 0,
+      "col": 1,
+      "type": "vault",
+      "tier": 1,
+      "next": [
+       3,
+       4
+      ],
+      "done": false
+     },
+     {
+      "id": 2,
+      "row": 0,
+      "col": 2,
+      "type": "cascade",
+      "tier": 1,
+      "next": [
+       4,
+       5
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 3,
+      "row": 1,
+      "col": 0,
+      "type": "event",
+      "tier": 1,
+      "next": [
+       7,
+       6
+      ],
+      "done": false
+     },
+     {
+      "id": 4,
+      "row": 1,
+      "col": 1,
+      "type": "hidden",
+      "tier": 1,
+      "next": [
+       7,
+       8
+      ],
+      "done": false
+     },
+     {
+      "id": 5,
+      "row": 1,
+      "col": 2,
+      "type": "swarm",
+      "tier": 1,
+      "next": [
+       8,
+       7
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 6,
+      "row": 2,
+      "col": 0,
+      "type": "haven",
+      "tier": 2,
+      "next": [
+       10,
+       9
+      ],
+      "done": false
+     },
+     {
+      "id": 7,
+      "row": 2,
+      "col": 1,
+      "type": "vault",
+      "tier": 2,
+      "next": [
+       9,
+       11,
+       10
+      ],
+      "done": false
+     },
+     {
+      "id": 8,
+      "row": 2,
+      "col": 2,
+      "type": "elite",
+      "tier": 2,
+      "next": [
+       10,
+       11
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 9,
+      "row": 3,
+      "col": 0,
+      "type": "cascade",
+      "tier": 2,
+      "next": [
+       12
+      ],
+      "done": false
+     },
+     {
+      "id": 10,
+      "row": 3,
+      "col": 1,
+      "type": "hidden",
+      "tier": 2,
+      "next": [
+       14,
+       13
+      ],
+      "done": false
+     },
+     {
+      "id": 11,
+      "row": 3,
+      "col": 2,
+      "type": "event",
+      "tier": 2,
+      "next": [
+       13,
+       14
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 12,
+      "row": 4,
+      "col": 0,
+      "type": "haven",
+      "tier": 2,
+      "next": [
+       16
+      ],
+      "done": false
+     },
+     {
+      "id": 13,
+      "row": 4,
+      "col": 1,
+      "type": "elite",
+      "tier": 2,
+      "next": [
+       15
+      ],
+      "done": false
+     },
+     {
+      "id": 14,
+      "row": 4,
+      "col": 2,
+      "type": "swarm",
+      "tier": 2,
+      "next": [
+       17
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 15,
+      "row": 5,
+      "col": 0,
+      "type": "vault",
+      "tier": 3,
+      "next": [
+       18
+      ],
+      "done": false
+     },
+     {
+      "id": 16,
+      "row": 5,
+      "col": 1,
+      "type": "cascade",
+      "tier": 3,
+      "next": [
+       18
+      ],
+      "done": false
+     },
+     {
+      "id": 17,
+      "row": 5,
+      "col": 2,
+      "type": "event",
+      "tier": 3,
+      "next": [
+       18
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 18,
+      "row": 6,
+      "col": 1,
+      "type": "boss",
+      "tier": 3,
+      "next": [],
+      "done": false
+     }
+    ]
+   ],
+   "all": {
+    "0": {
+     "id": 0,
+     "row": 0,
+     "col": 0,
+     "type": "swarm",
+     "tier": 1,
+     "next": [
+      3
+     ],
+     "done": false
+    },
+    "1": {
+     "id": 1,
+     "row": 0,
+     "col": 1,
+     "type": "vault",
+     "tier": 1,
+     "next": [
+      3,
+      4
+     ],
+     "done": false
+    },
+    "2": {
+     "id": 2,
+     "row": 0,
+     "col": 2,
+     "type": "cascade",
+     "tier": 1,
+     "next": [
+      4,
+      5
+     ],
+     "done": false
+    },
+    "3": {
+     "id": 3,
+     "row": 1,
+     "col": 0,
+     "type": "event",
+     "tier": 1,
+     "next": [
+      7,
+      6
+     ],
+     "done": false
+    },
+    "4": {
+     "id": 4,
+     "row": 1,
+     "col": 1,
+     "type": "hidden",
+     "tier": 1,
+     "next": [
+      7,
+      8
+     ],
+     "done": false
+    },
+    "5": {
+     "id": 5,
+     "row": 1,
+     "col": 2,
+     "type": "swarm",
+     "tier": 1,
+     "next": [
+      8,
+      7
+     ],
+     "done": false
+    },
+    "6": {
+     "id": 6,
+     "row": 2,
+     "col": 0,
+     "type": "haven",
+     "tier": 2,
+     "next": [
+      10,
+      9
+     ],
+     "done": false
+    },
+    "7": {
+     "id": 7,
+     "row": 2,
+     "col": 1,
+     "type": "vault",
+     "tier": 2,
+     "next": [
+      9,
+      11,
+      10
+     ],
+     "done": false
+    },
+    "8": {
+     "id": 8,
+     "row": 2,
+     "col": 2,
+     "type": "elite",
+     "tier": 2,
+     "next": [
+      10,
+      11
+     ],
+     "done": false
+    },
+    "9": {
+     "id": 9,
+     "row": 3,
+     "col": 0,
+     "type": "cascade",
+     "tier": 2,
+     "next": [
+      12
+     ],
+     "done": false
+    },
+    "10": {
+     "id": 10,
+     "row": 3,
+     "col": 1,
+     "type": "hidden",
+     "tier": 2,
+     "next": [
+      14,
+      13
+     ],
+     "done": false
+    },
+    "11": {
+     "id": 11,
+     "row": 3,
+     "col": 2,
+     "type": "event",
+     "tier": 2,
+     "next": [
+      13,
+      14
+     ],
+     "done": false
+    },
+    "12": {
+     "id": 12,
+     "row": 4,
+     "col": 0,
+     "type": "haven",
+     "tier": 2,
+     "next": [
+      16
+     ],
+     "done": false
+    },
+    "13": {
+     "id": 13,
+     "row": 4,
+     "col": 1,
+     "type": "elite",
+     "tier": 2,
+     "next": [
+      15
+     ],
+     "done": false
+    },
+    "14": {
+     "id": 14,
+     "row": 4,
+     "col": 2,
+     "type": "swarm",
+     "tier": 2,
+     "next": [
+      17
+     ],
+     "done": false
+    },
+    "15": {
+     "id": 15,
+     "row": 5,
+     "col": 0,
+     "type": "vault",
+     "tier": 3,
+     "next": [
+      18
+     ],
+     "done": false
+    },
+    "16": {
+     "id": 16,
+     "row": 5,
+     "col": 1,
+     "type": "cascade",
+     "tier": 3,
+     "next": [
+      18
+     ],
+     "done": false
+    },
+    "17": {
+     "id": 17,
+     "row": 5,
+     "col": 2,
+     "type": "event",
+     "tier": 3,
+     "next": [
+      18
+     ],
+     "done": false
+    },
+    "18": {
+     "id": 18,
+     "row": 6,
+     "col": 1,
+     "type": "boss",
+     "tier": 3,
+     "next": [],
+     "done": false
+    }
+   },
+   "current": 0,
+   "actNames": [
+    "The Shallows",
+    "The Undertow",
+    "The Deep"
+   ]
+  },
+  "nodeId": 0,
+  "available": [
+   0,
+   1,
+   2
+  ],
+  "phase": "mission",
+  "history": [],
+  "bossBonusHp": 0,
+  "nextElite": false,
+  "skipNext": false,
+  "secondWindUsed": false,
+  "seenEvents": [],
+  "stats": {
+   "missions": 0,
+   "kills": 0,
+   "rounds": 0,
+   "lifelineUsed": false
+  },
+  "lifeline": 1,
+  "won": false,
+  "over": false,
+  "lastReward": null,
+  "haven": null,
+  "event": null,
+  "rngState": 0.7086132620461285
+ },
+ "onMap": {
+  "seed": 4242,
+  "heroes": [
+   {
+    "kind": "hero",
+    "uid": 1,
+    "id": "cavitt_5466",
+    "name": "Cavitt",
+    "title": "the Brawler-in-the-Cloud",
+    "species": [
+     "human",
+     "octopus",
+     "hopper"
+    ],
+    "cards": [
+     "hop_mandibles",
+     "oct_cloak",
+     "oct_jet",
+     "hop_catapult",
+     "hum_throw",
+     "hum_mind",
+     "hum_lang"
+    ],
+    "up": {
+     "hop_mandibles": [
+      2,
+      0
+     ],
+     "oct_cloak": [
+      1,
+      1
+     ],
+     "oct_jet": [
+      0,
+      0
+     ],
+     "hop_catapult": [
+      2,
+      2
+     ],
+     "hum_throw": [
+      0,
+      0
+     ],
+     "hum_mind": [
+      0,
+      1
+     ],
+     "hum_lang": [
+      1,
+      0
+     ]
+    },
+    "hp": 26,
+    "maxHp": 26,
+    "pos": 8,
+    "pool": 15,
+    "held": [],
+    "temp": [],
+    "track": [],
+    "states": {},
+    "gear": [],
+    "consumables": [],
+    "downed": false,
+    "upUnspent": 0,
+    "stats": {
+     "dmgDealt": 28,
+     "dmgTaken": 2,
+     "kills": 7
+    },
+    "boons": [],
+    "faces": null,
+    "rested": false,
+    "roundFlags": {
+     "struck": false
+    },
+    "freeMove": 0
+   },
+   {
+    "kind": "hero",
+    "uid": 2,
+    "id": "marish_2785",
+    "name": "Marish",
+    "title": "the Tidewarden",
+    "species": [
+     "human",
+     "eel",
+     "flytrap"
+    ],
+    "cards": [
+     "eel_discharge",
+     "eel_electro",
+     "fly_snap",
+     "fly_photo",
+     "hum_persist",
+     "hum_tool"
+    ],
+    "up": {
+     "eel_discharge": [
+      1,
+      2
+     ],
+     "eel_electro": [
+      0,
+      1
+     ],
+     "fly_snap": [
+      1,
+      2
+     ],
+     "fly_photo": [
+      1,
+      1
+     ],
+     "hum_persist": [
+      0,
+      0
+     ],
+     "hum_tool": [
+      1,
+      0
+     ]
+    },
+    "hp": 26,
+    "maxHp": 26,
+    "pos": 3,
+    "pool": 15,
+    "held": [],
+    "temp": [],
+    "track": [],
+    "states": {},
+    "gear": [],
+    "consumables": [],
+    "downed": false,
+    "upUnspent": 0,
+    "stats": {
+     "dmgDealt": 0,
+     "dmgTaken": 0,
+     "kills": 0
+    },
+    "boons": [],
+    "faces": null,
+    "rested": false,
+    "roundFlags": {
+     "struck": false
+    },
+    "freeMove": 0
+   }
+  ],
+  "crystals": 15,
+  "boons": [],
+  "map": {
+   "rows": [
+    [
+     {
+      "id": 0,
+      "row": 0,
+      "col": 0,
+      "type": "swarm",
+      "tier": 1,
+      "next": [
+       3
+      ],
+      "done": true
+     },
+     {
+      "id": 1,
+      "row": 0,
+      "col": 1,
+      "type": "vault",
+      "tier": 1,
+      "next": [
+       3,
+       4
+      ],
+      "done": false
+     },
+     {
+      "id": 2,
+      "row": 0,
+      "col": 2,
+      "type": "cascade",
+      "tier": 1,
+      "next": [
+       4,
+       5
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 3,
+      "row": 1,
+      "col": 0,
+      "type": "event",
+      "tier": 1,
+      "next": [
+       7,
+       6
+      ],
+      "done": false
+     },
+     {
+      "id": 4,
+      "row": 1,
+      "col": 1,
+      "type": "hidden",
+      "tier": 1,
+      "next": [
+       7,
+       8
+      ],
+      "done": false
+     },
+     {
+      "id": 5,
+      "row": 1,
+      "col": 2,
+      "type": "swarm",
+      "tier": 1,
+      "next": [
+       8,
+       7
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 6,
+      "row": 2,
+      "col": 0,
+      "type": "haven",
+      "tier": 2,
+      "next": [
+       10,
+       9
+      ],
+      "done": false
+     },
+     {
+      "id": 7,
+      "row": 2,
+      "col": 1,
+      "type": "vault",
+      "tier": 2,
+      "next": [
+       9,
+       11,
+       10
+      ],
+      "done": false
+     },
+     {
+      "id": 8,
+      "row": 2,
+      "col": 2,
+      "type": "elite",
+      "tier": 2,
+      "next": [
+       10,
+       11
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 9,
+      "row": 3,
+      "col": 0,
+      "type": "cascade",
+      "tier": 2,
+      "next": [
+       12
+      ],
+      "done": false
+     },
+     {
+      "id": 10,
+      "row": 3,
+      "col": 1,
+      "type": "hidden",
+      "tier": 2,
+      "next": [
+       14,
+       13
+      ],
+      "done": false
+     },
+     {
+      "id": 11,
+      "row": 3,
+      "col": 2,
+      "type": "event",
+      "tier": 2,
+      "next": [
+       13,
+       14
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 12,
+      "row": 4,
+      "col": 0,
+      "type": "haven",
+      "tier": 2,
+      "next": [
+       16
+      ],
+      "done": false
+     },
+     {
+      "id": 13,
+      "row": 4,
+      "col": 1,
+      "type": "elite",
+      "tier": 2,
+      "next": [
+       15
+      ],
+      "done": false
+     },
+     {
+      "id": 14,
+      "row": 4,
+      "col": 2,
+      "type": "swarm",
+      "tier": 2,
+      "next": [
+       17
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 15,
+      "row": 5,
+      "col": 0,
+      "type": "vault",
+      "tier": 3,
+      "next": [
+       18
+      ],
+      "done": false
+     },
+     {
+      "id": 16,
+      "row": 5,
+      "col": 1,
+      "type": "cascade",
+      "tier": 3,
+      "next": [
+       18
+      ],
+      "done": false
+     },
+     {
+      "id": 17,
+      "row": 5,
+      "col": 2,
+      "type": "event",
+      "tier": 3,
+      "next": [
+       18
+      ],
+      "done": false
+     }
+    ],
+    [
+     {
+      "id": 18,
+      "row": 6,
+      "col": 1,
+      "type": "boss",
+      "tier": 3,
+      "next": [],
+      "done": false
+     }
+    ]
+   ],
+   "all": {
+    "0": {
+     "id": 0,
+     "row": 0,
+     "col": 0,
+     "type": "swarm",
+     "tier": 1,
+     "next": [
+      3
+     ],
+     "done": true
+    },
+    "1": {
+     "id": 1,
+     "row": 0,
+     "col": 1,
+     "type": "vault",
+     "tier": 1,
+     "next": [
+      3,
+      4
+     ],
+     "done": false
+    },
+    "2": {
+     "id": 2,
+     "row": 0,
+     "col": 2,
+     "type": "cascade",
+     "tier": 1,
+     "next": [
+      4,
+      5
+     ],
+     "done": false
+    },
+    "3": {
+     "id": 3,
+     "row": 1,
+     "col": 0,
+     "type": "event",
+     "tier": 1,
+     "next": [
+      7,
+      6
+     ],
+     "done": false
+    },
+    "4": {
+     "id": 4,
+     "row": 1,
+     "col": 1,
+     "type": "hidden",
+     "tier": 1,
+     "next": [
+      7,
+      8
+     ],
+     "done": false
+    },
+    "5": {
+     "id": 5,
+     "row": 1,
+     "col": 2,
+     "type": "swarm",
+     "tier": 1,
+     "next": [
+      8,
+      7
+     ],
+     "done": false
+    },
+    "6": {
+     "id": 6,
+     "row": 2,
+     "col": 0,
+     "type": "haven",
+     "tier": 2,
+     "next": [
+      10,
+      9
+     ],
+     "done": false
+    },
+    "7": {
+     "id": 7,
+     "row": 2,
+     "col": 1,
+     "type": "vault",
+     "tier": 2,
+     "next": [
+      9,
+      11,
+      10
+     ],
+     "done": false
+    },
+    "8": {
+     "id": 8,
+     "row": 2,
+     "col": 2,
+     "type": "elite",
+     "tier": 2,
+     "next": [
+      10,
+      11
+     ],
+     "done": false
+    },
+    "9": {
+     "id": 9,
+     "row": 3,
+     "col": 0,
+     "type": "cascade",
+     "tier": 2,
+     "next": [
+      12
+     ],
+     "done": false
+    },
+    "10": {
+     "id": 10,
+     "row": 3,
+     "col": 1,
+     "type": "hidden",
+     "tier": 2,
+     "next": [
+      14,
+      13
+     ],
+     "done": false
+    },
+    "11": {
+     "id": 11,
+     "row": 3,
+     "col": 2,
+     "type": "event",
+     "tier": 2,
+     "next": [
+      13,
+      14
+     ],
+     "done": false
+    },
+    "12": {
+     "id": 12,
+     "row": 4,
+     "col": 0,
+     "type": "haven",
+     "tier": 2,
+     "next": [
+      16
+     ],
+     "done": false
+    },
+    "13": {
+     "id": 13,
+     "row": 4,
+     "col": 1,
+     "type": "elite",
+     "tier": 2,
+     "next": [
+      15
+     ],
+     "done": false
+    },
+    "14": {
+     "id": 14,
+     "row": 4,
+     "col": 2,
+     "type": "swarm",
+     "tier": 2,
+     "next": [
+      17
+     ],
+     "done": false
+    },
+    "15": {
+     "id": 15,
+     "row": 5,
+     "col": 0,
+     "type": "vault",
+     "tier": 3,
+     "next": [
+      18
+     ],
+     "done": false
+    },
+    "16": {
+     "id": 16,
+     "row": 5,
+     "col": 1,
+     "type": "cascade",
+     "tier": 3,
+     "next": [
+      18
+     ],
+     "done": false
+    },
+    "17": {
+     "id": 17,
+     "row": 5,
+     "col": 2,
+     "type": "event",
+     "tier": 3,
+     "next": [
+      18
+     ],
+     "done": false
+    },
+    "18": {
+     "id": 18,
+     "row": 6,
+     "col": 1,
+     "type": "boss",
+     "tier": 3,
+     "next": [],
+     "done": false
+    }
+   },
+   "current": 0,
+   "actNames": [
+    "The Shallows",
+    "The Undertow",
+    "The Deep"
+   ]
+  },
+  "nodeId": 0,
+  "available": [
+   3
+  ],
+  "phase": "map",
+  "history": [
+   {
+    "title": "Breakwater",
+    "archetype": "swarm",
+    "won": true,
+    "rounds": 6,
+    "kills": 7
+   }
+  ],
+  "bossBonusHp": 0,
+  "nextElite": false,
+  "skipNext": false,
+  "secondWindUsed": false,
+  "seenEvents": [],
+  "stats": {
+   "missions": 1,
+   "kills": 7,
+   "rounds": 6,
+   "lifelineUsed": false
+  },
+  "lifeline": 1,
+  "won": false,
+  "over": false,
+  "lastReward": {
+   "up": 4,
+   "crystals": 9,
+   "offer": [
+    "hum_lang",
+    "hop_glide",
+    "fly_dormancy"
+   ],
+   "boon": null,
+   "bonus": [
+    {
+     "achieved": true,
+     "id": "nolow",
+     "text": "No hero drops below 50%"
+    },
+    {
+     "achieved": true,
+     "id": "kills",
+     "text": "Destroy 6 foes",
+     "kills": 6
+    }
+   ],
+   "title": "Breakwater",
+   "won": true,
+   "picked": true,
+   "boonPicked": false
+  },
+  "haven": null,
+  "event": null,
+  "rngState": 0.04699469287879765
+ }
+}

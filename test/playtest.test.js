@@ -60,15 +60,15 @@ const snap = (m) =>
     foes: m.enemies.map((e) => [e.type, e.pos, e.hp]),
     heroes: m.heroes.map((h) => [h.name, h.pos, h.held.join(''), h.cards.join(',')]),
   });
-/** Pick Elite, tier 2, Veil + Marish, seed 7 on the panel and press Play. */
+/** Pick Elite, tier 2, Veil + Marish, seed 8 on the panel and press Play. */
 function startElite(p) {
   p.act('pt-type', 'elite');
   p.act('pt-tier', '2');
   p.act('pt-hero', '0|3');
-  p.type('#pt-seed', '7');
+  p.type('#pt-seed', '8');
   p.act('pt-go');
 }
-const ELITE = { seed: 7, heroes: [3, 1], type: 'elite', tier: 2, kit: 'tier' };
+const ELITE = { seed: 8, heroes: [3, 1], type: 'elite', tier: 2, kit: 'tier' };
 
 test('the playtest notes are written for this version and name real cards', { skip }, async () => {
   const p = await boot((await builds())({ playtest: true }).html);
@@ -92,8 +92,16 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
   assert.equal(p.U.screen, 'mission');
   const here = require('../tools/load')().quickMission(ELITE);
   assert.equal(snap(p.U.run.mission), snap(here.mission), 'same board, foes, squad and opening dice as T.quickMission');
-  assert.match(p.U.playtest.reportText(), /node tools\/mission-log\.js elite 2 7 3 1 tier/);
+  assert.match(p.U.playtest.reportText(), /node tools\/mission-log\.js elite 2 8 3 1 tier/);
   assert.ok(p.d.querySelector('#mtop [data-act="pt-report"]'), 'the report is one click away mid-mission');
+
+  // "Copy save" hands over this exact moment. Where the page may not use the clipboard (as here),
+  // the save is shown selected instead — and the tools can carry on from it
+  p.act('pt-report');
+  p.act('pt-save');
+  const carried = require('../tools/load')().deserializeRun(p.d.getElementById('pt-report').value);
+  assert.equal(snap(carried.mission), snap(p.U.run.mission));
+  assert.deepEqual(carried.mission.rngs, { ...p.U.run.mission.rngs });
 
   // The Heart is always tier 3, and one hero cannot fill both seats
   const q = await boot((await builds())({ playtest: true }).html);
@@ -161,14 +169,14 @@ test(
     const r = log[0];
     assert.deepEqual(
       [r.seed, r.type, r.tier, r.won, r.rounds, r.v, r.minE, r.quick.kit],
-      [7, 'elite', 2, !!m.won, m.round, p.T.BUILD.version, 0, 'tier'],
+      [8, 'elite', 2, !!m.won, m.round, p.T.BUILD.version, 0, 'tier'],
     );
     const counted = Object.values(r.faces).reduce((a, b) => a + b, 0);
     assert.ok(counted > 0 && counted === r.P + r.E, 'every face played was counted once');
     assert.ok(r.E0 <= r.E);
     assert.match(
       p.U.playtest.reportText(),
-      /Missions finished on this device \(1, newest first\):\n.*elite t2 · seed 7/,
+      /Missions finished on this device \(1, newest first\):\n.*elite t2 · seed 8/,
     );
     assert.equal(JSON.parse(p.w.localStorage.getItem(KEY)).log.length, 1, 'kept on this device');
     if (p.U.screen === 'reward') {
@@ -181,6 +189,67 @@ test(
       assert.equal(p.U.screen, 'summary');
     }
     assert.deepEqual(p.errors, []);
+  },
+);
+
+test(
+  'a page closed in the middle of a mission carries on from the same moment',
+  { skip, timeout: 60_000 },
+  async () => {
+    const RUN = 'tumult_v2_run';
+    const html = (await builds())({ playtest: true }).html;
+    const moment = (m) =>
+      JSON.stringify({
+        round: m.round,
+        rngs: m.rngs,
+        crystals: m.crystals,
+        heroes: m.heroes.map((h) => [h.uid, h.hp, h.pos, h.held, h.pool, h.track, h.states]),
+        foes: m.enemies.map((e) => [e.uid, e.type, e.hp, e.pos, e.alive, e.intent]),
+        log: m.log.length,
+      });
+    const endRound = (page) => {
+      page.act('endRound');
+      if (page.U.ms.endConfirm) page.act('endRound'); // "a hero still has AP banked" asks twice
+    };
+
+    const first = await boot(html);
+    startElite(first);
+    endRound(first);
+    assert.equal(first.U.run.mission.round, 2);
+    const saved = first.w.localStorage.getItem(RUN);
+    assert.ok(JSON.parse(saved).mission, 'the mission is in the save');
+
+    // the same storage in a new page: Continue goes straight back into the round
+    const second = await boot(html, (w) => w.localStorage.setItem(RUN, saved));
+    second.act('continueRun');
+    assert.equal(second.U.screen, 'mission');
+    assert.equal(moment(second.U.run.mission), moment(first.U.run.mission));
+    assert.ok(second.d.querySelector('#tokens .token'), 'the board is drawn');
+    endRound(second);
+    endRound(first);
+    assert.equal(moment(second.U.run.mission), moment(first.U.run.mission), 'and both play the same next round');
+
+    // finish it, and close the page again on the reward screen
+    const m = second.U.run.mission;
+    for (let guard = 0; !m.over && guard < 40; guard++) {
+      second.T.autoHeroPhase(m);
+      if (!m.over) second.T.endHeroPhase(m);
+    }
+    second.U.updateMission();
+    await sleep(1000);
+    second.act('missionDone');
+    const after = second.w.localStorage.getItem(RUN);
+    if (second.U.screen === 'reward') {
+      const third = await boot(html, (w) => w.localStorage.setItem(RUN, after));
+      third.act('continueRun');
+      assert.equal(third.U.screen, 'reward');
+      assert.match(
+        third.d.getElementById('app').textContent,
+        /\d+ rounds, \d+ foes destroyed|the tide spares you once/,
+      );
+      assert.deepEqual(third.errors, []);
+    }
+    assert.deepEqual([...first.errors, ...second.errors], []);
   },
 );
 

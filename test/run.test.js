@@ -57,7 +57,8 @@ test('the tide map: every node is reachable and the boss is the last row', () =>
   for (let seed = 1; seed <= 30; seed++) {
     const run = T.newRun(seed);
     T.startMap(run);
-    const { rows, all } = run.map;
+    const { all } = run.map;
+    const rows = run.map.rows.map((row) => row.map((id) => all[id])); // a row is a list of node ids
     assert.equal(rows[rows.length - 1].length, 1);
     assert.equal(rows[rows.length - 1][0].type, 'boss');
     for (let r = 1; r < rows.length; r++) {
@@ -69,6 +70,7 @@ test('the tide map: every node is reachable and the boss is the last row', () =>
       }
     }
     for (const n of Object.values(all)) if (n.type !== 'boss') assert.ok(n.next.length >= 1, 'no dead ends');
+    assert.deepEqual(H.plainProblems(run), [], 'a run on its map is plain data: every node has one home');
   }
 });
 
@@ -101,12 +103,10 @@ test('quick missions: a seed, a squad and a kit name one mission, and the Tide c
   const late = T.quickMission({ ...args, type: 'boss', tier: 3 });
   assert.ok(late.heroes.every((h) => h.gear.length === 2 && h.boons.length === 1));
 
-  // the map is drawn from its own stream: building the mission by hand, with no map, gives the same one
-  const byHand = T.newRun(args.seed);
-  H.prebuiltSquad(byHand, 3, 1);
-  T.addProgression(byHand, 2);
-  T.launchMission(byHand, 'elite', 2);
-  assert.equal(snap(byHand.mission), snap(a.mission));
+  // the board belongs to the seed, the mission and the tier — not to the squad or its kit
+  const board = (m) => JSON.stringify([m.board.nodes, m.board.edges, m.enemies.map((e) => [e.type, e.pos, e.hp])]);
+  assert.equal(board(start.mission), board(a.mission));
+  assert.equal(board(T.quickMission({ ...args, heroes: [0, 5] }).mission), board(a.mission));
 
   // the mission is the first node of a whole Tide, which goes on when it is won
   const node = a.map.all[a.nodeId];

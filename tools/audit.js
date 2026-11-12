@@ -333,15 +333,14 @@ const FACE = Object.fromEntries(FACES.map((f) => [f.key, f]));
 /** Two heroes with random bloodlines and random legal kits, never using a banned card. `banned === 'all'` → no cards. */
 function randomSquad(run, banned, tier) {
   run.heroes = [];
+  const rng = T.runStream(run, 'squad');
   for (let k = 0; k < 2; k++) {
     let h;
     for (let tries = 0; tries < 40; tries++) {
-      const species = run.rng.shuffle(T.SPECIES_ORDER.filter((s) => s !== 'human')).slice(0, 2);
+      const species = rng.shuffle(T.SPECIES_ORDER.filter((s) => s !== 'human')).slice(0, 2);
       h = T.newDraftHero(run, 'Audit' + k, 'the audited', species);
       if (banned === 'all') break;
-      const pool = run.rng.shuffle(
-        T.CARDS.filter((c) => h.species.includes(c.sp) && !banned.has(c.id)).map((c) => c.id),
-      );
+      const pool = rng.shuffle(T.CARDS.filter((c) => h.species.includes(c.sp) && !banned.has(c.id)).map((c) => c.id));
       for (const id of pool) {
         if (h.cards.length >= T.RULES.START_CARDS) break;
         if (T.canAddCard(h, id).ok) T.addCard(h, id);
@@ -362,8 +361,7 @@ function playCell(arch, tier, i, banned, salt) {
   const seed = 90000 + salt * 7919 + i * 131 + tier * 17 + ARCHETYPES.indexOf(arch) * 1009;
   const run = T.newRun(seed);
   randomSquad(run, banned, tier);
-  run.rng = T.makeRng(seed + 1); // the board and its foes depend on the seed only, not on how the squad was built
-  T.launchMission(run, arch, tier);
+  T.launchMission(run, arch, tier); // the board and its foes depend on the seed only, not on how the squad was built
   H.playMission(run.mission);
   return run;
 }

@@ -39,7 +39,7 @@ npm run build      # → dist/TUMULT.html
 | `src/` | the game: `data/` (cards, world), `engine/` (rules, AI, run), `ui/` (browser) |
 | `tools/` | build, dev server, simulators, doc generators, UI driver |
 | `test/` | automated tests (`npm test`) |
-| `docs/reference/` | how the game works today — rules, missions, bestiary, [card catalog](docs/reference/CARDS.md), [ability audit](docs/reference/ABILITY_AUDIT.md), balance, how to extend it |
+| `docs/reference/` | how the game works today — rules, missions, bestiary, [card catalog](docs/reference/CARDS.md), [ability audit](docs/reference/ABILITY_AUDIT.md), balance, [state, seeds and saves](docs/reference/STATE_AND_SAVES.md), how to extend it |
 | `docs/design/` | where the game is going — [pillars](docs/design/00-pillars.md) and proposals |
 | `docs/ROADMAP.md` | milestones with acceptance criteria |
 | `docs/HANDOFF.md` | state of the project when it moved into this repository |
@@ -58,7 +58,7 @@ npm run build      # → dist/TUMULT.html
 | `npm run format` | formats code with Prettier |
 | `npm run docs` | regenerates the card catalog and the ability audit |
 | `node tools/sim.js 40` | balance tables from simulated missions and runs |
-| `node tools/mission-log.js vault 2 7` | prints one narrated mission (archetype, tier, seed; then two hero numbers and `start` or `tier` for the kit) |
+| `node tools/mission-log.js vault 2 7` | prints one narrated mission (archetype, tier, seed; then two hero numbers and `start` or `tier` for the kit); `--save <file>` carries on from a save |
 
 ## Contributing
 

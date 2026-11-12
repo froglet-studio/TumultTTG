@@ -10,7 +10,7 @@ const SEEDS = 8;
 function playMany(arch, tier) {
   let wins = 0;
   for (let i = 0; i < SEEDS; i++) {
-    const run = T.newRun(1000 + i * 17 + tier * 101 + arch.length);
+    const run = T.newRun(1000 + i);
     if (i % 3 === 2) H.draftedSquad(run);
     else H.prebuiltSquad(run, i % 6, (i + 1 + (i % 5)) % 6);
     H.addProgression(run, tier);
