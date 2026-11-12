@@ -1,0 +1,10 @@
+# Changes to workflows, CI and this file need a review from one of these people. Workflow files can
+# hand repository secrets and deploy permissions to whatever they run, so every change gets a second
+# person. The same four review `.github/` in Cosmic Shore.
+#
+# GitHub never lets a PR's author approve it, so a change authored by any owner still needs one of
+# the others, and an owner's approval means a person read the change.
+#
+# This only blocks a merge while a ruleset on `main` requires review from Code Owners
+# (docs/HANDOFF.md, "Repository settings").
+/.github/ @Shombith03 @FenrysUnchained @gradies @YsKhan61

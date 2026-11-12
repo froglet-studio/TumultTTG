@@ -1,0 +1,47 @@
+# Publishes the playable single-file build to GitHub Pages so anyone can play from a link.
+#
+# Manual only: nothing is published until someone presses "Run workflow" on the Actions tab.
+# One-time setup: repository Settings → Pages → Build and deployment → Source: "GitHub Actions".
+name: Publish playable build
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+      - run: mkdir _site && cp dist/TUMULT.html _site/index.html
+      # Versions as documented in the two actions' READMEs (checked 2026-11), pinned to commit SHAs;
+      # bump the pair together, SHA and version comment both.
+      - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: _site/
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
