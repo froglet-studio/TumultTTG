@@ -9,9 +9,9 @@
 
 ## Method
 
-A heuristic **hero autoplayer** (objective-first when a clock runs, otherwise best damage per AP, shields when threatened ≥4, reveals when foes are Hidden, movement toward the objective) plays generated missions headlessly in Node. It is a *floor*, not a ceiling: it doesn't kite, doesn't bait, doesn't plan around intents the way a human does. Parties mix the six prebuilt heroes and freshly drafted ones; tier-2/3 parties get progression comparable to a real run at that depth (extra UP, gear, a boon, an extra card).
+Two simulated players play generated missions headlessly in Node ([`PLAYERS.md`](PLAYERS.md)). The heuristic **hero autoplayer** (objective-first when a clock runs, otherwise best damage per AP, shields when threatened ≥4, reveals when foes are Hidden, movement toward the objective) is a *floor*, not a ceiling: it doesn't kite, doesn't bait, doesn't plan around intents the way a human does. The **look-ahead player**, added in v2.2.0, does plan around intents; the tables up to v2.1.0 below are the heuristic's alone. Parties mix the six prebuilt heroes and freshly drafted ones; tier-2/3 parties get progression comparable to a real run at that depth (extra UP, gear, a boon, an extra card).
 
-`node tools/sim.js 40 missions` · `node tools/sim.js 80 runs` · `node tools/sim.js 10 cards` (fires all 198 faces) · `node tools/mission-log.js vault 2 7` (one narrated mission).
+`node tools/sim.js 40 missions` (both players; add `--player weak` for the heuristic alone, which takes a second) · `node tools/sim.js 80 runs` · `node tools/sim.js 10 cards` (fires all 198 faces) · `node tools/mission-log.js vault 2 7` (one narrated mission).
 
 ## Results (40 missions per cell, the v2.0 tuning pass)
 
@@ -96,6 +96,38 @@ No cell moves by more than its 2 SE. Whole runs (`node tools/sim.js 2000 runs`):
 Two things about the simulator changed with it. The same squads now meet every mission type — squad *i* is built from run seed *i* in every cell, and only the boards differ — where before the cells for Swarm, Vault and Elite shared squads by accident and the rest shared nothing. And the simulated player's choices on the Tide Map come from a stream of their own, so they no longer disturb the game's.
 
 At 40 missions a cell the table wobbles by ten points or more from sampling alone: use 40 for a quick look and 1,000 to claim a change.
+
+## v2.2.0 — two players, and the gap between them
+
+Roadmap F2 added a second simulated player ([`PLAYERS.md`](PLAYERS.md)). The heuristic is the floor it always was. The look-ahead player tries every legal action on a copy of the mission, lets the declared enemy turn play out, and keeps what leaves the squad best off; it thinks one round ahead and no further. Both play the same squads on the same boards with the same dice to come (`node tools/sim.js 100 missions`):
+
+| archetype | tier | heuristic win% | look-ahead win% | gap | rounds (h / l) | in 8–14 band (h / l) | hero HP at end (h / l) |
+|---|---|---|---|---|---|---|---|
+| swarm | 1 | 100% | 100% | 0 | 6.0 / 6.0 | 0% / 0% | 83% / 94% |
+| swarm | 2 | 79% | 99% | +20 | 6.8 / 6.1 | 18% / 3% | 38% / 83% |
+| swarm | 3 | 60% | 100% | +40 | 7.7 / 7.0 | 33% / 3% | 21% / 71% |
+| vault | 1 | 97% | 99% | +2 | 6.0 / 5.7 | 17% / 12% | 75% / 89% |
+| vault | 2 | 69% | 96% | +27 | 7.3 / 5.9 | 52% / 12% | 56% / 88% |
+| vault | 3 | 48% | 88% | +40 | 7.3 / 6.1 | 57% / 26% | 35% / 87% |
+| hidden | 1 | 99% | 100% | +1 | 4.3 / 4.0 | 6% / 1% | 73% / 83% |
+| hidden | 2 | 84% | 99% | +15 | 5.2 / 4.0 | 13% / 6% | 47% / 77% |
+| hidden | 3 | 65% | 97% | +32 | 5.2 / 4.0 | 14% / 5% | 34% / 81% |
+| cascade | 1 | 99% | 100% | +1 | 5.3 / 5.0 | 6% / 2% | 71% / 84% |
+| cascade | 2 | 93% | 99% | +6 | 5.6 / 4.6 | 16% / 3% | 52% / 86% |
+| cascade | 3 | 81% | 98% | +17 | 6.3 / 4.9 | 33% / 6% | 39% / 83% |
+| elite | 1 | 80% | 93% | +13 | 7.6 / 6.3 | 25% / 9% | 64% / 81% |
+| elite | 2 | 75% | 95% | +20 | 9.0 / 6.2 | 20% / 18% | 56% / 81% |
+| elite | 3 | 72% | 98% | +26 | 9.4 / 5.7 | 40% / 17% | 48% / 86% |
+| boss | 3 | 23% | 66% | +43 | 15.8 / 13.3 | 44% / 51% | 14% / 54% |
+
+Whole runs (`node tools/sim.js 100 runs`): the heuristic wins 16 of 100 and 71% of its missions; the look-ahead player wins 63 of 100 and 89% of its missions, and 33 of the 37 runs it loses end at the Heart.
+
+What this says, set against the targets at the top of this file:
+
+- **The game is much easier than the old tables showed.** The targets were tier 2 at 75–90%, tier 3 at 50–75% and the Heart about even *for a competent party*. A player who merely reads the declared intents and thinks a round ahead wins tier 3 between 88% and 100% of the time. Only the Heart, at 66%, is near its target.
+- **Missions are shorter still for a careful player** — four to seven rounds outside the Heart, against a target band of 8 to 14 — and it finishes them with about four fifths of its vitality. Engines and long cooldowns never get their turn.
+- **The gap is the number to watch.** It is small where a mission cannot be lost (tier 1) and largest where there is something to read: the Heart (+43), Swarm and Vault at tier 3 (+40). A mission with a small gap and a middling win rate is decided by the dice; one with a large gap rewards the player.
+- **None of this has been retuned.** Making tier 2 and 3 hard enough for a careful player is the work of the systems milestones, with a person's playtests beside these numbers.
 
 ## What the tuning fixed along the way
 

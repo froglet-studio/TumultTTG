@@ -10,6 +10,7 @@ The game ships as one HTML file built from a handful of plain scripts; everythin
 | `src/data/world.js` | rules constants, lanes, gear, consumables, boons, bestiary, mission generators, Tide Map, events, pre-made heroes, flavor |
 | `src/engine/engine.js` | dice economy, track, damage pipeline, the verbs (`T.applyEffect`), movement and force, reveal, traps/zones/decoys, objectives, hazards, round structure |
 | `src/engine/ai.js` | enemy intent selection and execution per policy; the heuristic hero autoplayer |
+| `src/engine/lookahead.js` | actions as plain data (`T.legalActions`, `T.applyAction`), the evaluation shared by every mission, and the look-ahead player — see [`PLAYERS.md`](PLAYERS.md) |
 | `src/engine/run.js` | draft, UP allocation, Tide Map, rewards, haven, events, the run's random streams, save/load and save versions |
 | `src/ui/core.js`, `src/ui/mission.js`, `src/ui/style.css` | screens, SVG board, panels, targeting, animations, tiny synth |
 | `src/manifest.json`, `src/index.template.html` | load order and the HTML shell the build fills in |

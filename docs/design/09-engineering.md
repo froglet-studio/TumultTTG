@@ -1,6 +1,6 @@
 # 09 · Engineering
 
-**Status: §1, §3 and §7 are built (v2.1.0, roadmap F1) — how they work is in [`../reference/STATE_AND_SAVES.md`](../reference/STATE_AND_SAVES.md). The rest is proposed.** The v2.0 code is small, tested and deliberately simple. These are the changes that unlock the rest of the roadmap, in the order they pay off.
+**Status: §1, §3 and §7 are built (v2.1.0, roadmap F1 — [`../reference/STATE_AND_SAVES.md`](../reference/STATE_AND_SAVES.md)) and so is §2 (v2.2.0, roadmap F2 — [`../reference/PLAYERS.md`](../reference/PLAYERS.md)). The rest is proposed.** The v2.0 code is small, tested and deliberately simple. These are the changes that unlock the rest of the roadmap, in the order they pay off.
 
 ## 1 · Mission state that can be copied — built
 
@@ -14,9 +14,9 @@
 
 Test to write first: for random missions, `clone` then play both copies with the same actions and compare logs.
 
-## 2 · A player that looks ahead
+## 2 · A player that looks ahead — built
 
-The heuristic autoplayer has hand-written rules for some verbs and none for others, so it cannot evaluate a third of the cards and under-plays Ethereal faces ([05](05-ability-audit.md)). Replace it, for measurement, with a generic one:
+*As proposed, before 2.2.0:* The heuristic autoplayer has hand-written rules for some verbs and none for others, so it cannot evaluate a third of the cards and under-plays Ethereal faces ([05](05-ability-audit.md)). Replace it, for measurement, with a generic one:
 
 1. list every legal action for the squad (the engine already knows: `T.canPlay` and its targets, plus the basic actions);
 2. apply each to a copy; then simulate the rest of the round — enemy intents are declared, so this is deterministic;

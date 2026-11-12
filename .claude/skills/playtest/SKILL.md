@@ -9,8 +9,9 @@ description: Simulate Tumult and report what the numbers say — balance tables,
 
 ```
 npm run check                          # build + tests; stop and report if this fails
-node tools/sim.js 40                   # balance tables: missions, full runs, card smoke test
-npm run audit                          # ability rules → docs/reference/ABILITY_AUDIT.md
+node tools/sim.js 40                   # balance tables for both simulated players and the gap (~75 s)
+node tools/sim.js 40 --player weak     # the heuristic alone: a second, for a quick look
+npm run audit                          # ability rules, played by the look-ahead player (~1 min) → docs/reference/ABILITY_AUDIT.md
 node tools/mission-log.js <archetype> <tier> <seed>    # one narrated mission, to see why a number is what it is
 node tools/ui-drive.js 3 --manual      # a whole run clicked through the real interface
 ```
@@ -21,7 +22,7 @@ To compare a change, run the simulation on the base commit first (`git stash` or
 
 ## Read the numbers against the targets
 
-- Win rate by tier: tier 1 welcoming (about 90–100%), tier 2 about 75–90%, tier 3 about 50–75%, boss about even for a decent squad.
+- Win rate by tier, for the look-ahead player: tier 1 welcoming (about 90–100%), tier 2 about 75–90%, tier 3 about 50–75%, boss about even. As of v2.2.0 it is well above the tier 2 and 3 targets: say so until that is fixed, and judge a change by which way it moves them.
 - Mission length: 8 to 14 rounds is the target band. Shorter means engines never come online.
 - No single hit above a third of a hero's vitality.
 - Zero crashes, zero engine errors in logs, and every card face fires.
@@ -29,7 +30,7 @@ To compare a change, run the simulation on the base commit first (`git stash` or
 
 ## Caveats to state in the report
 
-- The autoplayer is a weak, literal player. It has no rule for about a third of the card faces and prefers Physical faces. Its win rates are a floor, and a face it never plays is a question, not a verdict.
+- There are two simulated players (`docs/reference/PLAYERS.md`). The heuristic is a weak, literal player: no rule for a third of the card faces, no reading of intents; its win rates are a floor. The look-ahead player tries every legal action on a copy and thinks one round ahead; its win rates are what a careful player gets, and a face it never plays either is weak for its cost or pays off later than one round. Report both, and the gap: a change that moves only the floor matters less than one that moves the careful player.
 - Forty missions per cell is only good to about ±10–15 points. Do not report a five-point move as a finding; raise the count instead (`node tools/sim.js 200 missions`).
 - Simulation says nothing about whether the game is fun or readable. Say what a person should try by hand.
 

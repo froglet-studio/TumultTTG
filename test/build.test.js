@@ -54,7 +54,10 @@ test('docs/reference/CARDS.md matches the card data', () => {
 });
 
 test('the ability audit runs end to end', () => {
-  const r = spawnSync(process.execPath, [path.join(root, 'tools', 'audit.js'), '2', '--stdout'], { encoding: 'utf8' });
+  // the heuristic player keeps this quick; the look-ahead player it uses by default has tests of its own
+  const r = spawnSync(process.execPath, [path.join(root, 'tools', 'audit.js'), '2', '--stdout', '--player', 'weak'], {
+    encoding: 'utf8',
+  });
   assert.equal(r.status, 0, r.stderr);
   assert.match(r.stdout, /^# Ability audit/);
   assert.match(r.stdout, /## Pass C — gate check/);

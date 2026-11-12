@@ -5,9 +5,9 @@ From v2.0 (a playable roguelike run) to the game in the brief: polished, illustr
 Milestones are grouped into four tracks so that several people can work at once. Each has a **done when** that can be checked. Design detail is in `docs/design/`; everything there except the pillars is a proposal — settle the open questions with Garrett before building on them.
 
 ```
-Foundations   F1 ✓ ─► F2 ──► F3
-                │      │
-Systems   S0 ✓  └► S1 ─┴► S2 ──► S3 ──► S4      (S0 and F1 are done)
+Foundations   F1 ✓ ─► F2 ✓ ─► F3
+                │       │
+Systems   S0 ✓  └► S1 ──┴► S2 ──► S3 ──► S4     (S0, F1 and F2 are done)
                     │
 Characters          └► C1 ──► C2 ──► C3
 Presentation   P1 ──► P2 ──► P3 ──► P4          (P1 can start today)
@@ -20,10 +20,10 @@ Make mission state plain data; give board generation, dice and opposition their 
 
 **Done when:** `clone(mission)` followed by identical actions yields identical logs for 1,000 random missions; the same seed gives the same board whatever squad plays it; a mission can be saved and resumed mid-round. All three are tests in `test/state.test.js`. Saves gained a version and a migration on the way (09 §7).
 
-### F2 · The look-ahead player
-A generic player that lists legal actions, simulates the rest of the round on a copy, and scores outcomes. Keep the heuristic as the weak player. ([09](design/09-engineering.md) §2)
+### F2 · The look-ahead player — done (v2.2.0)
+A generic player that lists legal actions, simulates the rest of the round on a copy, and scores outcomes. Keep the heuristic as the weak player. ([09](design/09-engineering.md) §2; as built: [`reference/PLAYERS.md`](reference/PLAYERS.md))
 
-**Done when:** the audit's "cannot evaluate" list is empty; the look-ahead player beats the heuristic on every mission type; the simulator reports both, and the gap between them.
+**Done when:** the audit's "cannot evaluate" list is empty; the look-ahead player beats the heuristic on every mission type; the simulator reports both, and the gap between them. All three hold: the audit is played by the look-ahead player and the list is empty; it wins as often or more often in all sixteen cells over 100 missions each, 95% of missions against 77%; `node tools/sim.js` prints both and the gap. What the gap shows is in [`reference/BALANCE.md`](reference/BALANCE.md): the game is far easier for a careful player than the old tables said.
 
 ### F3 · The rules as tests
 Once the audit reads clean (after S1 and S2), fail the build when a face is narrow, a mission type is gated, or a narrow face can settle a mission alone. ([05](design/05-ability-audit.md))
@@ -109,7 +109,7 @@ The print generator, pilot boards, opposition flowcharts, and a one-leg print-an
 ## A sensible first month
 
 1. ~~S0 — quick, concrete, and it makes the game honest.~~ Done.
-2. ~~F1~~ (done), then F2 — everything else is measured with them.
+2. ~~F1, then F2~~ — done; everything else is measured with them.
 3. P1 in parallel — it improves the game people are already playing.
 4. Garrett's answers on the frame, so C1 can be designed against real decisions.
 5. S1 — the change that makes the ability rules reachable.

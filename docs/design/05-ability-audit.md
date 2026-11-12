@@ -1,6 +1,6 @@
 # 05 · Ability audit
 
-**Status: Partly built.** The audit tool exists (`npm run audit` → [`docs/reference/ABILITY_AUDIT.md`](../reference/ABILITY_AUDIT.md)). The player it measures with is too weak to trust on its own, and the findings below have not been acted on.
+**Status: Partly built.** The audit tool exists (`npm run audit` → [`docs/reference/ABILITY_AUDIT.md`](../reference/ABILITY_AUDIT.md)), and since v2.2.0 it is played by the look-ahead player ([`../reference/PLAYERS.md`](../reference/PLAYERS.md)), which can play every face: step 1 below is done. The findings below are the first audit's, made with the heuristic autoplayer, and have not been acted on; the current report is the generated file.
 
 ## What it measures
 
@@ -29,7 +29,7 @@ Three things the numbers say that the rules did not ask:
 
 ## What to do about it
 
-**1. Build the look-ahead player first** ([09](09-engineering.md)). Until something can play every face on its merits, usage numbers are a hint, not evidence. Target: the "cannot evaluate" list is empty.
+**1. Build the look-ahead player first** ([09](09-engineering.md)) — *done in v2.2.0; the list is empty.* Until something can play every face on its merits, usage numbers are a hint, not evidence. Target: the "cannot evaluate" list is empty.
 
 **2. Give everyone basic actions** ([02](02-units-verbs-actions.md)). Target: the "no cards at all" row has no zero in it.
 
