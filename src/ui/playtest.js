@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.6.0',
+    version: '2.7.0',
     items: [
+      {
+        text: 'Difficulty: the title screen now offers a Flood tide beside the usual Rising tide. From tier 2 every objective needs more (one more seal, dig, valve channel or round held; two at tier 3), clocks start shorter, swarms grow and elites bring escorts. Does it feel hard because you must plan, or just unfair? The Vault at tier 3 is the one we expect to be too harsh.',
+      },
       {
         text: 'Channel: with a matching etherion (or Omni) banked, a second button appears beside the basic actions. Mass makes Strike 4 or Shove 2 nodes; Charge reaches an objective 2 nodes away; Space scrambles 1 node, up or down a ledge, for 1 AP; Time adds a track slide to Brace. Does a stranded die now always have somewhere to go?',
       },

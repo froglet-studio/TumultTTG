@@ -3,7 +3,8 @@
 /**
  * Headless balance harness.
  *
- *   node tools/sim.js [N=40] [missions|runs|cards|all] [--player weak|strong|both] [--rule NAME=VALUE ...]
+ *   node tools/sim.js [N=40] [missions|runs|cards|all] [--player weak|strong|both] [--tide rising|flood]
+ *                     [--rule NAME=VALUE ...]
  *
  *   missions  N auto-played missions per archetype × tier: win %, length, 8–14-round band, HP, kills
  *   runs      N full auto-played runs (map + missions + havens + events)
@@ -15,6 +16,7 @@
  *             both (the default): the same missions under each, and the gap between them — how much
  *             a mission rewards thinking. The strong player takes about a tenth of a second a mission;
  *             `--player weak` is the quick look.
+ *   --tide    the run's difficulty, a key of T.TIDES (default rising).
  *   --rule    try a different value for a constant in T.RULES, for this run only:
  *             node tools/sim.js 40 missions --rule VITALITY=28 --rule ETHEREAL_MIN_E=1
  *
@@ -28,6 +30,7 @@ const { T } = H;
 const argv = process.argv.slice(2);
 const args = [];
 let players = ['weak', 'strong'];
+let tide = 'rising';
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--player') {
     const who = argv[++i];
@@ -36,6 +39,15 @@ for (let i = 0; i < argv.length; i++) {
       process.exit(2);
     }
     players = who === 'both' ? ['weak', 'strong'] : [who];
+    continue;
+  }
+  if (argv[i] === '--tide') {
+    tide = argv[++i];
+    if (!T.TIDES[tide]) {
+      console.error(`--tide wants one of: ${T.TIDE_ORDER.join(', ')}`);
+      process.exit(2);
+    }
+    console.log(`tide ${tide}`);
     continue;
   }
   if (argv[i] !== '--rule') {
@@ -82,6 +94,7 @@ if (mode === 'all' || mode === 'missions') {
           // each cell's boards, dice and opposition are its own (a mission's seed names its type and tier).
           // Both players get the same squad on the same board with the same dice to come.
           const run = T.newRun(1000 + i);
+          run.tide = tide;
           if (i % 3 === 2) H.draftedSquad(run);
           else H.prebuiltSquad(run, i % 6, (i + 1 + (i % 5)) % 6);
           H.addProgression(run, tier);
@@ -131,6 +144,7 @@ if (mode === 'all' || mode === 'runs') {
     const endedBy = {};
     for (let i = 0; i < N; i++) {
       const run = T.newRun(5000 + i * 31);
+      run.tide = tide;
       try {
         if (i % 2) H.draftedSquad(run);
         else H.prebuiltSquad(run, i % 6, (i + 2) % 6);

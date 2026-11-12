@@ -224,6 +224,31 @@ Full runs (40): heuristic 9 → 9 won; look-ahead 19 → 22 won, missions won 86
 
 The retune that follows S1 (plan phase 3) has to absorb this: the floor is now solid, so difficulty must come from the opposition and the clock, not from dead dice.
 
+## v2.7.0 — the Flood tide
+
+Plan phase 3 set two targets: the look-ahead player (a careful person) should win tier-2 missions 75–90% of the time and tier-3 missions 50–75%, and the heuristic (a casual player) should still win about one run in five. Before changing anything, the levers were measured on tiers 2–3 with both players (30 squads a cell): more foes (+1 at tier 2, +2 at tier 3), tougher foes (Brute, Binder), reinforcements in non-swarm missions, bigger objectives (+1/+2), and longer or shorter clocks.
+
+- **More or tougher foes barely touch the look-ahead player** (tier 3: 87–100% everywhere) while they cut the heuristic hard (vault tier 2: 60% → 33% with a Brute).
+- **Bigger objectives on the same or a shorter clock are the lever that presses a careful squad**, and mostly on the Vault and the Cascade. The Swarm, the Hidden cache and the Elite hardly move: the beacon is never contested, the cache is found by the first reveal, and an elite is a straight fight the look-ahead player always wins. Those need mission rules (phase 6), not numbers.
+- **Every setting that brought the look-ahead player to its tier-3 target took the heuristic to 2–3 run wins in 40.** So one difficulty cannot meet both targets. Garrett is choosing which player the default serves; this release keeps the default as it was and adds the harder tide.
+
+`node tools/sim.js 40` (rising tide, unchanged from 2.6.0) against `node tools/sim.js 40 --tide flood`, same seeds:
+
+| archetype | tier | heuristic win% | look-ahead win% | look-ahead rounds |
+|---|---|---|---|---|
+| swarm | 2 | 88 → 78 | 100 → 100 | 6.0 → 7.0 |
+| swarm | 3 | 65 → 40 | 100 → 90 | 7.0 → 9.2 |
+| vault | 2 | 60 → 40 | 95 → 83 | 6.0 → 7.0 |
+| vault | 3 | 38 → 3 | 98 → 45 | 5.8 → 7.1 |
+| hidden | 2 | 88 → 78 | 100 → 100 | 3.5 → 4.4 |
+| hidden | 3 | 65 → 25 | 98 → 88 | 3.7 → 5.7 |
+| cascade | 2 | 88 → 75 | 100 → 100 | 4.5 → 5.1 |
+| cascade | 3 | 70 → 33 | 98 → 70 | 4.8 → 5.8 |
+| elite | 2 | 78 → 65 | 98 → 95 | 5.2 → 6.3 |
+| elite | 3 | 73 → 58 | 93 → 88 | 6.6 → 8.5 |
+
+Tier 1 and the Heart are identical on both tides. Full runs (40): heuristic 9 → 2 won, missions won 69% → 59%; look-ahead 22 → 14 won, missions won 88% → 74%. On the flood tide 6 of the look-ahead player's 26 losses are the tier-3 Vault (45%), the one cell below its target; the Swarm, Hidden and Elite stay above it, and every tier-2 mission but the Vault stays above 90%.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.

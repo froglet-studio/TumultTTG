@@ -29,8 +29,13 @@ test(
   },
 );
 
-test('UI: clicking card faces, targets and nodes never throws (fuzz)', { skip, timeout: 120_000 }, async () => {
-  const r = await drive({ seed: 2, auto: false });
-  assert.deepEqual(r.errors, [], 'no JavaScript errors');
-  assert.equal(r.screen, 'summary');
-});
+test(
+  'UI: clicking card faces, targets and nodes never throws (fuzz, on the flood tide)',
+  { skip, timeout: 120_000 },
+  async () => {
+    const r = await drive({ seed: 2, auto: false, tide: 'flood' });
+    assert.deepEqual(r.errors, [], 'no JavaScript errors');
+    assert.equal(r.tide, 'flood', "the difficulty picked on the title screen is the run's");
+    assert.equal(r.screen, 'summary');
+  },
+);

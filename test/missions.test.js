@@ -51,3 +51,42 @@ test('every generated board is connected and its objective is reachable', () => 
     }
   }
 });
+
+test('the flood tide asks more from tier 2 on, and leaves tier 1 and the boss alone', () => {
+  const spec = (arch, tier, tide) => {
+    const run = T.newRun(4242);
+    run.tide = tide;
+    H.prebuiltSquad(run, 0, 1);
+    T.launchMission(run, arch, tier);
+    const m = run.mission;
+    return {
+      need: m.objective.need,
+      clock: m.clock ? m.clock.value : null,
+      foes: m.enemies.length,
+      cap: m.spawns.length ? m.spawns[0].max : null,
+      text: m.objective.text,
+    };
+  };
+  for (const arch of ARCHETYPES) {
+    for (const tier of [1, 2, 3]) {
+      if (arch === 'boss' && tier < 3) continue;
+      const rising = spec(arch, tier, 'rising');
+      const flood = spec(arch, tier, 'flood');
+      if (tier === 1 || arch === 'boss') {
+        assert.deepEqual(flood, rising, `${arch} t${tier}: the flood starts at tier 2`);
+        continue;
+      }
+      const t = T.TIDES.flood;
+      if (rising.need != null) {
+        assert.equal(flood.need, rising.need + t.need[tier - 1], `${arch} t${tier}: objective size`);
+        assert.ok(flood.text.includes(String(flood.need)), `${arch} t${tier}: the text says how many`);
+      }
+      if (rising.clock != null && arch !== 'swarm') assert.equal(flood.clock, rising.clock - t.clock[tier - 1]);
+      if (arch === 'swarm') {
+        assert.equal(flood.clock, rising.clock, 'a hold needs more rounds instead of a shorter clock');
+        assert.equal(flood.cap, rising.cap + t.swarm[tier - 1]);
+      }
+      if (arch === 'elite') assert.equal(flood.foes, rising.foes + t.escorts[tier - 1].length);
+    }
+  }
+});

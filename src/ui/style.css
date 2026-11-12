@@ -315,6 +315,20 @@ hr {
   font-size: 15px;
 }
 
+.title .tide-pick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  max-width: 520px;
+}
+.title .tide-pick .mute {
+  flex-basis: 100%;
+  text-align: center;
+}
+
 /* ---------- Draft ---------- */
 .species-grid {
   display: grid;

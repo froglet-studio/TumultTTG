@@ -142,6 +142,16 @@
   }
 
   /* ───────────── TITLE ───────────── */
+  /** The difficulty of the next run (T.TIDES); the last choice is remembered on this device. */
+  const chosenTide = (meta) => (T.TIDES[meta.tide] ? meta.tide : 'rising');
+  function tidePicker(meta) {
+    const cur = chosenTide(meta);
+    const btns = T.TIDE_ORDER.map(
+      (id) =>
+        `<button class="${id === cur ? 'primary' : 'ghost'} sm" data-act="pickTide" data-arg="${id}">${esc(T.TIDES[id].n)}</button>`,
+    ).join('');
+    return `<div class="tide-pick"><span class="dim small">Difficulty</span>${btns}<div class="mute small">${esc(T.TIDES[cur].txt)}</div></div>`;
+  }
   function renderTitle() {
     const meta = T.loadMeta();
     const hasSave = !!T.loadRun();
@@ -150,6 +160,7 @@
       <h1>TUMULT</h1>
       <div class="sub">Draft two heroes from eleven bloodlines. Ride the current through a Consolidation's territory. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
       <div class="btns"><button class="primary" data-act="newRun">New Tide</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
+      ${tidePicker(meta)}
       <div class="mute small" style="margin-top:14px">Tides sailed: ${meta.runs} · Consolidations toppled: ${meta.wins} · Deepest row: ${meta.bestRow}/6</div>
       <div class="mute small" style="max-width:520px;text-align:center;margin-top:16px;font-family:var(--serif);font-style:italic">${esc(T.FLAVOR.terminalIntro[meta.runs % T.FLAVOR.terminalIntro.length])}</div>
       ${U.titleExtra ? U.titleExtra() : ''}
@@ -160,6 +171,7 @@
   const NAMES = ['Sable', 'Quill', 'Marrow', 'Tessel', 'Orin', 'Pell', 'Wren', 'Casque', 'Lumen', 'Hale'];
   U.startDraft = function () {
     U.run = T.newRun();
+    U.run.tide = chosenTide(T.loadMeta());
     U.draft = {
       heroIdx: 0,
       step: 'mode',
@@ -362,7 +374,7 @@
             .join('')}</div>`,
       )
       .join('');
-    return `<div class="wrap">${header('The Tide Map', `<span class="pill" style="margin-left:6px">◇ ${run.crystals}</span>${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
+    return `<div class="wrap">${header('The Tide Map', `<span class="pill" style="margin-left:6px">◇ ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">🌊 ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
       ${partyBar(run)}
       <div class="panel" style="margin-top:12px"><div class="row"><span class="dim small">Pick the next current. Glowing nodes are reachable. The Heart waits at the top.</span><span class="right small dim">Row ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0}/7</span></div><div class="map-rows">${rows}</div></div></div>`;
   }
@@ -623,6 +635,14 @@
     if (U.extraAct && U.extraAct(act, arg, t, e)) return;
     if (U.handleMissionAct && U.screen === 'mission' && U.handleMissionAct(act, arg, t, e)) return;
     switch (act) {
+      case 'pickTide': {
+        if (!T.TIDES[arg]) return;
+        const meta = T.loadMeta();
+        meta.tide = arg;
+        T.saveMeta(meta);
+        U.render();
+        return;
+      }
       case 'newRun':
         U.startDraft();
         U.sfx.click();

@@ -274,3 +274,17 @@ test('a save from 2.0 still loads, and its Tide can be finished', () => {
   }
   assert.throws(() => T.deserializeRun(JSON.stringify({ v: T.SAVE_VERSION + 1, seed: 1 })), /newer/);
 });
+
+test('a save from 2.6 (mid-mission, before tides) loads on the rising tide and plays on', () => {
+  const old = require('./fixtures/save-2.6.json');
+  assert.equal(old.v, 2, 'the fixture is a version-2 save');
+  assert.equal(old.tide, undefined);
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  assert.equal(run.tide, 'rising');
+  assert.equal(run.phase, 'mission');
+  assert.equal(run.mission.round, old.mission.round, 'the mission carries on where it was');
+  assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run), 'it saves again unchanged');
+  H.playRun(run);
+  assert.ok(run.over, 'the Tide plays out');
+});

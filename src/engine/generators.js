@@ -115,12 +115,32 @@
 
   /* ───────────────────────────── MISSION ARCHETYPES ───────────────────────────── */
   // Each generator returns a mission spec the engine instantiates.
+  /** What the run's tide (T.TIDES) adds at this tier: more to do, less time, a bigger swarm, more escorts. */
+  const tideAt = (tide, tier) => {
+    const t = tide || T.TIDES.rising;
+    return { need: t.need[tier - 1], clock: t.clock[tier - 1], swarm: t.swarm[tier - 1], escorts: t.escorts[tier - 1] };
+  };
+  /** Place extra foes on free nodes in the back two columns (the board's own stream picks which). */
+  function addEscorts(rng, b, enemies, starts, types) {
+    for (const type of types) {
+      const taken = new Set(enemies.map((e) => e.node).concat(starts));
+      const free = Object.keys(b.at)
+        .filter((k) => +k.split(',')[0] >= b.cols - 2)
+        .map((k) => b.at[k])
+        .filter((id) => !taken.has(id) && !b.nodes[id].hazard && !b.nodes[id].objective);
+      if (!free.length) return;
+      enemies.push({ type, node: pick(rng, free) });
+    }
+  }
+  const timesWord = (n) => (n === 2 ? 'twice' : n === 3 ? 'three times' : n + ' times');
+
   T.MISSIONS = {
     swarm: {
       title: ['Hold the Beacon', 'The Thinning Tide', 'Breakwater'],
       blurb:
         "A swarm pours from the Consolidation's spawn-nodes. Hold the beacon long enough for the Terminal to log the current.",
-      gen(rng, tier) {
+      gen(rng, tier, tide) {
+        const up = tideAt(tide, tier);
         const b = gridBoard(rng, 4, 3, { corridors: 1 });
         const left = [b.at['0,0'], b.at['0,1'], b.at['0,2']];
         const right = [b.at['3,0'], b.at['3,2']];
@@ -128,7 +148,7 @@
         b.nodes[beacon].objective = { kind: 'beacon' };
         right.forEach((i) => (b.nodes[i].spawn = true));
         const starts = [b.at['0,1'], b.at['1,1']];
-        const need = [6, 6, 7][tier - 1];
+        const need = [6, 6, 7][tier - 1] + up.need;
         const enemies = [
           { type: 'biter', node: b.at['3,1'] },
           { type: 'biter', node: b.at['2,0'] },
@@ -149,7 +169,13 @@
           },
           clock: { value: [10, 11, 12][tier - 1], label: 'Rounds left', onZero: 'lose' },
           spawns: [
-            { nodes: right, every: 1, pool: ['biter', 'biter', 'stinger'], startRound: 2, max: [3, 3, 4][tier - 1] },
+            {
+              nodes: right,
+              every: 1,
+              pool: ['biter', 'biter', 'stinger'],
+              startRound: 2,
+              max: [3, 3, 4][tier - 1] + up.swarm,
+            },
           ],
           bonus: [
             { id: 'nolow', text: 'No hero drops below 50%' },
@@ -162,7 +188,9 @@
       title: ['The Drowning Vault', 'The High Ledge', 'The Flooded Reliquary'],
       blurb:
         'The vault sits on a ledge no road reaches. The water is rising. Space verbs get you up there; the winch lever is the long way.',
-      gen(rng, tier) {
+      gen(rng, tier, tide) {
+        const up = tideAt(tide, tier);
+        const seals = 2 + up.need;
         const b = gridBoard(rng, 4, 3, { corridors: 1 });
         const ledgeAnchors = [b.at['3,0'], b.at['2,0']];
         const ledge = addHeight(b, ledgeAnchors, 'D');
@@ -187,11 +215,11 @@
             leverNode: lever,
             leverNeed: 2,
             leverDone: 0,
-            need: 2,
+            need: seals,
             done: 0,
-            text: 'Break both seals on the ledge (Interact ×2 up there) — or crank the lever twice to drop a ramp first',
+            text: `Break ${seals === 2 ? 'both seals' : 'all ' + seals + ' seals'} on the ledge (Interact ×${seals} up there) — or crank the lever twice to drop a ramp first`,
           },
-          clock: { value: [10, 9, 9][tier - 1], label: 'Water reaches the vault in', onZero: 'lose' },
+          clock: { value: [10, 9, 9][tier - 1] - up.clock, label: 'Water reaches the vault in', onZero: 'lose' },
           spawns: [],
           bonus: [
             { id: 'warden', text: 'Destroy the Warden', killType: 'warden' },
@@ -204,7 +232,9 @@
       title: ['The Sought', 'Three Caches', 'What the Current Hid'],
       blurb:
         'Something the Consolidation does not want found is in one of three caches. Lurkers wait for whoever searches blind. Reveal first.',
-      gen(rng, tier) {
+      gen(rng, tier, tide) {
+        const up = tideAt(tide, tier);
+        const digs = 2 + up.need;
         const b = gridBoard(rng, 4, 4, { corridors: 2 });
         const cands = shuffle(rng, [b.at['3,0'], b.at['2,3'], b.at['3,2'], b.at['1,3']]).slice(0, 3);
         const real = pick(rng, cands);
@@ -226,11 +256,11 @@
             real,
             found: false,
             extracted: false,
-            need: 2,
+            need: digs,
             done: 0,
-            text: 'Find the real cache (reveal it, or search it on foot), then dig it out (Interact ×2)',
+            text: `Find the real cache (reveal it, or search it on foot), then dig it out (Interact ×${digs})`,
           },
-          clock: { value: [11, 10, 10][tier - 1], label: 'Rounds before it is moved', onZero: 'lose' },
+          clock: { value: [11, 10, 10][tier - 1] - up.clock, label: 'Rounds before it is moved', onZero: 'lose' },
           spawns: [],
           bonus: [
             { id: 'quick', text: 'Find it within 4 rounds', byRound: 4 },
@@ -243,7 +273,9 @@
       title: ['The Rising', 'Reactor Tide', 'Cascade'],
       blurb:
         'The flood spreads one ring each round. Two channels at the valve stop it. Time verbs buy you rounds; anchors keep you out of the undertow.',
-      gen(rng, tier) {
+      gen(rng, tier, tide) {
+        const up = tideAt(tide, tier);
+        const turns = 3 + up.need;
         const b = gridBoard(rng, 5, 3, { corridors: 2 });
         const origin = b.at['4,2'];
         b.nodes[origin].hazard = true;
@@ -264,11 +296,11 @@
           objective: {
             kind: 'valve',
             node: valve,
-            need: 3,
+            need: turns,
             done: 0,
-            text: 'Channel the valve three times (Interact ×3) before the flood takes the board',
+            text: `Channel the valve ${timesWord(turns)} (Interact ×${turns}) before the flood takes the board`,
           },
-          clock: { value: [10, 9, 9][tier - 1], label: 'Rounds until the flood is total', onZero: 'lose' },
+          clock: { value: [10, 9, 9][tier - 1] - up.clock, label: 'Rounds until the flood is total', onZero: 'lose' },
           hazardSpread: { origin, everyRounds: 1, delayed: 1 },
           spawns: [],
           bonus: [
@@ -281,7 +313,8 @@
     elite: {
       title: ['The Enforcer', 'A Quasi-stable Thing', "The Consolidation's Hand"],
       blurb: 'An elite holds this current. Elites reward a boon — if you leave standing.',
-      gen(rng, tier) {
+      gen(rng, tier, tide) {
+        const up = tideAt(tide, tier);
         const b = gridBoard(rng, 4, 3, { corridors: 1 });
         const kind = pick(rng, ['bulwark', 'harrier', 'tidecaller']);
         const starts = [b.at['0,1'], b.at['0,2']];
@@ -295,6 +328,7 @@
           b.nodes[b.at['3,0']].hazard = true;
           b.nodes[b.at['3,2']].hazard = true;
         }
+        addEscorts(rng, b, enemies, starts, up.escorts);
         return {
           board: b,
           starts,

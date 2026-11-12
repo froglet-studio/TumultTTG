@@ -5,10 +5,11 @@
  * title → draft (one quick-build hero, one pack-drafted hero) → map →
  * missions / havens / events → run summary. Collects any JavaScript errors.
  *
- *   node tools/ui-drive.js [seed=1] [--manual]
+ *   node tools/ui-drive.js [seed=1] [--manual] [--flood]
  *
  * auto (default): hero turns are played by the engine autoplayer, everything else by clicking.
  * --manual:       hero turns are played by clicking card faces, targets and nodes (a UI fuzz).
+ * --flood:        pick the flood tide (the harder difficulty) on the title screen first.
  *
  * Requires the dev dependency `jsdom` (npm install).
  */
@@ -21,7 +22,7 @@ async function until(ready, what, ms = 5000) {
   }
 }
 
-async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
+async function driveRun(html, { seed = 1, auto = true, maxSteps = 40, tide = 'rising' } = {}) {
   const { JSDOM } = require('jsdom');
   const errors = [];
   const dom = new JSDOM(html, {
@@ -57,7 +58,9 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
 
   try {
     if (!d.querySelector('[data-act="newRun"]')) throw new Error('title screen did not render');
+    if (!act('pickTide', tide)) throw new Error('the title screen offers no ' + tide + ' tide');
     act('newRun');
+    if (U.run.tide !== tide) throw new Error(`the run started on the ${U.run.tide} tide, not ${tide}`);
     // deterministic from here on: every stream of the run restarts from this seed
     U.run.seed = seed;
     U.run.rngs = {};
@@ -159,7 +162,7 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
       }
     }
     step('end');
-    return { log, nodes, missions, over: !!U.run.over, won: !!U.run.won, screen: U.screen, errors };
+    return { log, nodes, missions, tide: U.run.tide, over: !!U.run.over, won: !!U.run.won, screen: U.screen, errors };
   } finally {
     w.close();
   }
@@ -173,7 +176,8 @@ if (require.main === module) {
     const { build } = await import(require('url').pathToFileURL(path.join(__dirname, 'build.mjs')).href);
     const args = process.argv.slice(2);
     const seed = Number(args.find((a) => /^\d+$/.test(a)) || 1);
-    const r = await driveRun(build().html, { seed, auto: !args.includes('--manual') });
+    const tide = args.includes('--flood') ? 'flood' : 'rising';
+    const r = await driveRun(build().html, { seed, auto: !args.includes('--manual'), tide });
     console.log(r.log.join('\n'));
     console.log(`\nnodes=${r.nodes} missions=${r.missions} over=${r.over} won=${r.won} screen=${r.screen}`);
     if (r.errors.length) {

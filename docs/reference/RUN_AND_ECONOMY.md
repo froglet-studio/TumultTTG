@@ -21,6 +21,15 @@ A hero is **Human + two bloodlines**, **6 trait cards** to start, **6 Upgrade Po
 
 Seven rows, bottom to top. Row 0 offers three openers (Swarm / Vault / Cascade). Rows 1–5 mix missions, Elites, Havens (row 2 and a guaranteed Haven in row 4) and Events. Row 6 is the Heart. Each node links to 1–3 nodes in the next row; every node is reachable. Tiers: rows 0–1 tier 1 (*The Shallows*), rows 2–4 tier 2 (*The Undertow*), rows 5–6 tier 3 (*The Deep*). A refused privateer toll upgrades your next mission to an Elite; a paid guide skips a row.
 
+## Difficulty: the tide
+
+Chosen on the title screen before a run (`run.tide`, `T.TIDES` in `world.js`); the device remembers the last choice.
+
+- **Rising tide** — the game as tuned through 2.6.
+- **Flood tide** — for careful players. From tier 2, every objective needs 1 more (tier 3: 2 more): one more round held, seal broken, cache dig or valve channel. Every clock except a hold's starts 1 round shorter (tier 3: 2). Swarms grow 1 larger (2). Elites bring 1 more escort (2: a Kiter, then a Binder). Tier 1 and the Heart are never changed.
+
+What each does to win rates is in `BALANCE.md` (v2.7.0).
+
 ## Rewards (after a won mission)
 
 - **UP:** 2, +1 per bonus objective achieved, +1 for an Elite (+1 with the Studious boon). Both heroes receive it; spend any time on the map via **Train**.
