@@ -224,6 +224,20 @@ Full runs (40): heuristic 9 → 9 won; look-ahead 19 → 22 won, missions won 86
 
 The retune that follows S1 (plan phase 3) has to absorb this: the floor is now solid, so difficulty must come from the opposition and the clock, not from dead dice.
 
+## v2.8.0 — sensing faces with a second use
+
+Seven Physical reveal faces each gained a small general effect (CHANGELOG 2.8.0). `node tools/sim.js 40`, 2.7.0 → 2.8.0, rising tide, cells that moved:
+
+| archetype | tier | heuristic win% | look-ahead win% | look-ahead rounds |
+|---|---|---|---|---|
+| vault | 2 | 60 → 63 | 95 → 93 | 6.0 → 6.0 |
+| hidden | 2 | 88 → 85 | 100 → 100 | 3.5 → 3.5 |
+| hidden | 3 | 65 → 60 | 98 → 98 | 3.7 → 3.8 |
+| elite | 3 | 73 → 75 | 93 → 95 | 6.6 → 5.9 |
+| boss | 3 | 25 → 20 | 78 → 78 | 12.1 → 12.1 |
+
+Every other cell is unchanged. Full runs (40): heuristic 9 → 9, look-ahead 22 → 22. These are noise-sized moves from a different play order, not a change in difficulty.
+
 ## v2.7.0 — the Flood tide
 
 Plan phase 3 set two targets: the look-ahead player (a careful person) should win tier-2 missions 75–90% of the time and tier-3 missions 50–75%, and the heuristic (a casual player) should still win about one run in five. Before changing anything, the levers were measured on tiers 2–3 with both players (30 squads a cell): more foes (+1 at tier 2, +2 at tier 3), tougher foes (Brute, Binder), reinforcements in non-swarm missions, bigger objectives (+1/+2), and longer or shorter clocks.

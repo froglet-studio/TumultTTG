@@ -39,7 +39,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pattern Recognition** · Space · `hum_pattern`
 
-- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives). *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives).)*
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
 - *Eth — Weak Point* · 1 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
 
 **Opposable Grip** · Mass · `hum_grip`
@@ -88,7 +88,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Vibrissae Sense** · Mass · `jer_vibrissae`
 
-- *Phys — Feel* · 1 AP · CD 1 — Feel ground vibration: reveal everything within 1. *(P3: Feel ground vibration: reveal everything within 4.)*
+- *Phys — Feel* · 1 AP · CD 1 — Feel ground vibration: reveal everything within 1, and Shield 1 against what is coming. *(P3: Feel ground vibration: reveal everything within 4, and Shield 1 against what is coming.)*
 - *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal the whole board and Weaken all foes 1 this round.
 
 **Burrowing** · Space · `jer_burrow`
@@ -166,7 +166,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Sound Mapping** ★ · Space · `owl_sound`
 
-- *Phys — Listen* · 1 AP · CD 1 — Locate everything within 2 by ear alone. *(P3: Locate everything within 5 by ear alone.)*
+- *Phys — Listen* · 1 AP · CD 1 — Locate everything within 2 by ear alone, then take one free step. *(P3: Locate everything within 5 by ear alone, then take one free step.)*
 - *Eth — Acoustic Map* · 1 AP + 1 Space · CD 3 — A 3-D map of the whole board for 3 rounds — hidden foes, traps and the hidden objective all pinpointed. *(P3/E3: A 3-D map of the whole board for 5 rounds — hidden foes, traps and the hidden objective all pinpointed.)*
 
 **Talon Strike** · Mass · `owl_talon`
@@ -284,7 +284,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Scent Tongue** · Space · `gec_scent`
 
-- *Phys — Flick* · 1 AP · CD 1 — Taste the air: reveal within 1; the nearest foe can't Hide for 2 rounds. *(P3: Taste the air: reveal within 4; the nearest foe can't Hide for 2 rounds.)*
+- *Phys — Flick* · 1 AP · CD 1 — Taste the air: reveal within 1; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Taste the air: reveal within 4; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
 - *Eth — Lock Scent* · 1 AP + 1 Space · CD 3 — Lock onto a foe: it can never Hide from you, and you may blink adjacent to it if it's within 3. *(P3/E3: Lock onto a foe: it can never Hide from you, and you may blink adjacent to it if it's within 5.)*
 
 **Scaled Hide** · Mass · `gec_hide`
@@ -328,7 +328,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Lateral Line** · Charge · `axo_lateral`
 
-- *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1. *(P3: Feel pressure and flow: reveal within 4.)*
+- *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
 - *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
 
 **Powerful Tail** · Mass · `axo_tail`
@@ -362,7 +362,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Electroreception** ★ · Space · `eel_electro`
 
-- *Phys — Sense* · 1 AP · CD 1 — Sense bioelectric fields: reveal within 2. *(P3: Sense bioelectric fields: reveal within 5.)*
+- *Phys — Sense* · 1 AP · CD 1 — Sense bioelectric fields: reveal within 2, and jolt the nearest foe in your lane for 1 true damage. *(P3: Sense bioelectric fields: reveal within 5, and jolt the nearest foe in your lane for 1 true damage.)*
 - *Eth — Field Map* · 1 AP + 1 Space · CD 3 — Cast your field over the board for 3 rounds: everything revealed, foes can't Hide, and ambushes on either hero deal half. *(P3/E3: Cast your field over the board for 5 rounds: everything revealed, foes can't Hide, and ambushes on either hero deal half.)*
 
 **Electrocyte Charge-Up** · Time · `eel_chargeup`
@@ -421,7 +421,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Trigger-Hair Sense** · Space · `fly_hairs`
 
-- *Phys — Hairs* · 1 AP · CD 1 · Dur 2 — Tripwire awareness: for 2 rounds, everything within 1 stays revealed. *(P3: Tripwire awareness: for 2 rounds, everything within 4 stays revealed.)*
+- *Phys — Hairs* · 1 AP · CD 1 · Dur 2 — Tripwire awareness: for 2 rounds, everything within 1 stays revealed; foes adjacent now are Weakened 1. *(P3: Tripwire awareness: for 2 rounds, everything within 4 stays revealed; foes adjacent now are Weakened 1.)*
 - *Eth — Cilia Field* · 1 AP + 1 Space · CD 4 — Mechanosensitive cilia for 3 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked. *(P3/E3: Mechanosensitive cilia for 5 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked.)*
 
 **Rooting Anchor** · Mass · `fly_root`
