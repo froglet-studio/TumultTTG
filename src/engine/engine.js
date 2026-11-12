@@ -2034,6 +2034,7 @@
     if (!b) return { ok: false, why: 'unknown action' };
     if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
     if (T.apValue(h) < b.ap) return { ok: false, why: 'need ' + b.ap + ' AP' };
+    if (b.el && !T.canPay(h, b.ap, b.el, 1)) return { ok: false, why: 'needs ' + b.el + ' (or Omni)' };
     const tg = T.targetsFor(m, h, b.tgt, b, 0, 0);
     if (tg.invalid) return { ok: false, why: tg.invalid };
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no valid target' };
@@ -2044,8 +2045,8 @@
     const chk = T.canUseBasic(m, h, id);
     if (!chk.ok) return chk;
     const b = T.BASIC_BY[id];
-    T.pay(h, b.ap);
-    say(m, `${h.name}: ${b.n} (${b.ap} AP).`, 'hero');
+    T.pay(h, b.ap, b.el, b.el ? 1 : 0);
+    say(m, `${h.name}: ${b.n} (${b.ap} AP${b.el ? ' + ' + b.el + ', channelled' : ''}).`, 'hero');
     const rctx = Object.assign({}, ctx || {}, { P: 0, E: 0 });
     T.runEffects(m, h, b.fx, rctx);
     T.afterAction(m);

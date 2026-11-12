@@ -426,7 +426,15 @@
       <div class="track">${trackCols.join('')}</div>
       <div class="hand">${hand}</div>
       <div class="actions">
-        ${T.BASIC.map((b) => `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${!m.over && T.canUseBasic(m, h, b.id).ok ? '' : 'disabled'} data-tip="${esc(b.n + ' (' + b.ap + ' AP): ' + b.txt + ' Anyone can do this, any number of times.')}">${b.icon} ${esc(b.n)} (${b.ap})</button>`).join('')}
+        ${T.BASIC.map((b) => {
+          const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
+          if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
+          const tip = b.el
+            ? `${b.n}, channelled (${b.ap} AP + 1 ${EL[b.el].name} or Omni): ${b.txt}`
+            : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
+          const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
+          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(tip)}">${b.icon} ${esc(b.n)}${mark} (${b.ap})</button>`;
+        }).join('')}
         <button class="sm" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
         <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>

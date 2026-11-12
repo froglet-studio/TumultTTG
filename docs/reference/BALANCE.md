@@ -190,6 +190,40 @@ Nothing moves beyond the noise at 40 missions a cell: with cards in hand, a 2-da
 
 Every tier-1 mission type can now be won without cards at least 63% of the time, which meets roadmap S1's bar of a third. The Heart still cannot: Strike's 2 damage does not get through its shield.
 
+## v2.6.0 — Channel
+
+A banked etherion (or Omni) can be channelled into a basic action: Mass into Strike (4 damage) or Shove (2 nodes), Charge into Reach (Interact 2 nodes away), Space into Scramble (1 node, ledges included, 1 AP), Time into Brace (plus a track slide). `node tools/sim.js 40`, 2.5.0 → 2.6.0, same seeds:
+
+| archetype | tier | heuristic win% | look-ahead win% | look-ahead rounds |
+|---|---|---|---|---|
+| swarm | 1 | 100 → 100 | 100 → 100 | 6.0 → 6.0 |
+| swarm | 2 | 83 → 88 | 100 → 100 | 6.0 → 6.0 |
+| swarm | 3 | 65 → 65 | 100 → 100 | 7.0 → 7.0 |
+| vault | 1 | 95 → 95 | 100 → 100 | 5.7 → 5.6 |
+| vault | 2 | 55 → 60 | 95 → 95 | 6.1 → 6.0 |
+| vault | 3 | 38 → 38 | 90 → 98 | 6.0 → 5.8 |
+| hidden | 1 | 98 → 98 | 100 → 100 | 3.8 → 3.6 |
+| hidden | 2 | 88 → 88 | 100 → 100 | 3.8 → 3.5 |
+| hidden | 3 | 65 → 65 | 95 → 98 | 4.2 → 3.7 |
+| cascade | 1 | 100 → 100 | 100 → 100 | 5.0 → 4.8 |
+| cascade | 2 | 85 → 88 | 100 → 100 | 4.7 → 4.5 |
+| cascade | 3 | 70 → 70 | 95 → 98 | 5.3 → 4.8 |
+| elite | 1 | 80 → 90 | 95 → 100 | 6.7 → 4.8 |
+| elite | 2 | 70 → 78 | 93 → 98 | 6.5 → 5.2 |
+| elite | 3 | 68 → 73 | 95 → 93 | 6.2 → 6.6 |
+| boss | 3 | 25 → 25 | 68 → 78 | 12.8 → 12.1 |
+
+Full runs (40): heuristic 9 → 9 won; look-ahead 19 → 22 won, missions won 86% → 88%.
+
+**This makes the game easier, and it was already too easy.** The Elite moves most (heuristic tier 1: 80% → 90%; look-ahead tier 1: 95% → 100%) and the Heart for the look-ahead player (68% → 78%): a Mass die that used to sit unspent is now a 4-damage blow. The audit's card-less row rises further:
+
+| | swarm t1 | swarm t2 | vault t1 | vault t2 | hidden t1 | hidden t2 | cascade t1 | cascade t2 | elite t1 | elite t2 | boss t3 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 2.5.0 | 100% | 88% | 81% | 31% | 94% | 69% | 100% | 69% | 63% | 44% | 0% |
+| 2.6.0 | 100% | 100% | 94% | 88% | 100% | 81% | 100% | 88% | 94% | 50% | 0% |
+
+The retune that follows S1 (plan phase 3) has to absorb this: the floor is now solid, so difficulty must come from the opposition and the clock, not from dead dice.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.

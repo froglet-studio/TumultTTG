@@ -371,3 +371,31 @@ test('basic actions are refused when they cannot be paid or have nothing to touc
   assert.equal(T.canUseBasic(m, h, 'strike').why, 'no valid target');
   assert.equal(T.canUseBasic(m, h, 'nonsense').ok, false);
 });
+
+test('Channel: a banked etherion (or Omni) makes a basic action do more, so no die is ever dead', () => {
+  const { m, h, adj } = H.arena('hum_tool');
+  h.cards = [];
+  adj.shield = 0;
+  if (adj.states.Shield) delete adj.states.Shield;
+  adj.hp = 10;
+  h.held = ['AP', 'AP', 'M'];
+  h.pool = T.RULES.POOL - h.held.length;
+  assert.equal(T.useBasic(m, h, 'strike_M', { target: adj.uid }).ok, true);
+  assert.equal(adj.hp, 6, 'Mass channelled into Strike: 4 damage');
+  assert.deepEqual(h.held, [], 'paid 2 AP and the Mass');
+  assert.equal(h.pool + h.held.length, T.RULES.POOL);
+
+  h.held = ['AP', 'O'];
+  h.pool = T.RULES.POOL - 2;
+  assert.equal(T.canUseBasic(m, h, 'brace_T').ok, true, 'Omni stands in for any etherion');
+  h.held = ['AP', 'AP', 'C'];
+  h.pool = T.RULES.POOL - 3;
+  assert.equal(T.canUseBasic(m, h, 'strike_M').why, 'needs M (or Omni)');
+
+  // every etherion has a channelled action, so none can be stranded in the bank
+  for (const el of ['M', 'C', 'S', 'T'])
+    assert.ok(
+      T.BASIC.some((b) => b.el === el),
+      `a basic action takes ${el}`,
+    );
+});

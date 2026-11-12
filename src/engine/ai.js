@@ -657,10 +657,13 @@
           if (r.ok) continue;
         }
         // 4b. basic actions: strike an adjacent foe the blow can hurt; brace against a big telegraphed hit
-        const strike = T.canUseBasic(m, h, 'strike');
+        // (channelled with a banked Mass when there is one: a spare etherion is otherwise a dead die)
+        const how = T.canUseBasic(m, h, 'strike_M').ok ? 'strike_M' : 'strike';
+        const strike = T.canUseBasic(m, h, how);
         if (strike.ok) {
           const foe = pickFoe(m, h, strike.tg.options);
-          if (foe && foe.shield < 2 && T.useBasic(m, h, 'strike', { target: foe.uid }).ok) continue;
+          const blow = how === 'strike_M' ? 4 : 2;
+          if (foe && foe.shield < blow && T.useBasic(m, h, how, { target: foe.uid }).ok) continue;
         }
         if (threatOnMe(m, h) >= 4 && !st(h).Shield && T.useBasic(m, h, 'brace').ok) continue;
         // 5. move toward the objective, else toward the nearest foe
