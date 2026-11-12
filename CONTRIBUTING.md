@@ -75,6 +75,6 @@ Tumult is run in the open, the way Cosmic Shore is: the code, the rules, the des
 - **No secrets.** No API keys, passwords, tokens, signing keys or `.env` files; `.gitignore` blocks the usual ones, and credentials live in the team password manager. If one is ever committed, treat it as leaked: revoke it first, then remove it.
 - **No internal or personal material.** No internal documents or links into them, no unreleased story material, no personal data, and no art you do not have the right to share.
 - **Workflows get a second reviewer.** Anything under `.github/` can hand repository permissions to the code it runs, so a code owner reviews every change there (`.github/CODEOWNERS`).
-- **AI work is labelled.** Commits written by Claude are authored `Claude <noreply@anthropic.com>` and carry `Co-Authored-By:` and `Claude-Session:` trailers, as in Cosmic Shore. Keep them, and have a person review agent work before it reaches `main`.
+- **AI work is labelled.** Commits written by Claude are authored `Claude <noreply@anthropic.com>` and carry `Co-Authored-By:` and `Claude-Session:` trailers, as in Cosmic Shore. Keep them, and have a person review agent work before it reaches `main`. The one exception is Garrett's to make: when he tells an agent session to merge its own work, the pull request says so, CI must be green first, and anything under `.github/` still waits for a code owner.
 
 When unsure, ask Garrett first.
