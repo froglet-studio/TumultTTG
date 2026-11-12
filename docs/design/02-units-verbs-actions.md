@@ -1,6 +1,6 @@
 # 02 · Units, verbs and actions
 
-**Status: Proposed.** This is the change that makes the ability rules achievable. Build it before adding mission types.
+**Status: Partly built.** Strike, Brace and Shove are in the game (2.5.0, `T.BASIC` in `src/data/world.js`; Move, Interact and Rally were already there). Garrett accepted basic actions and Channel into the core on 2026-11-12; Overcast and Debt wait for the frame. Carry, Channel and the unit model are next. This is the change that makes the ability rules achievable. Build it before adding mission types.
 
 ## The problem
 

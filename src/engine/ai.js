@@ -656,6 +656,13 @@
           const r = T.playFace(m, h, best.cid, best.fk, best.ctx);
           if (r.ok) continue;
         }
+        // 4b. basic actions: strike an adjacent foe the blow can hurt; brace against a big telegraphed hit
+        const strike = T.canUseBasic(m, h, 'strike');
+        if (strike.ok) {
+          const foe = pickFoe(m, h, strike.tg.options);
+          if (foe && foe.shield < 2 && T.useBasic(m, h, 'strike', { target: foe.uid }).ok) continue;
+        }
+        if (threatOnMe(m, h) >= 4 && !st(h).Shield && T.useBasic(m, h, 'brace').ok) continue;
         // 5. move toward the objective, else toward the nearest foe
         if (goal && tryMoveToward(m, h, goal)) continue;
         if (T.apValue(h) >= 1 && !st(h).Rooted && !st(h).SlowSelf) {

@@ -12,7 +12,7 @@ Every document carries a status line:
 |---|---|---|---|
 | 00 | [Pillars](00-pillars.md) | Settled | the two goals, the core that is kept, the ability and mission rules |
 | 01 | [Frame and campaign](01-frame-and-campaign.md) | Proposed | a season as guides on Tumult: squads of three, patrons, beacons, rescue, mission chains |
-| 02 | [Units, verbs and actions](02-units-verbs-actions.md) | Proposed | verbs act on everything; basic actions for everyone; Channel and Overcast |
+| 02 | [Units, verbs and actions](02-units-verbs-actions.md) | Partly built | verbs act on everything; basic actions for everyone; Channel and Overcast |
 | 03 | [Missions](03-missions.md) | Proposed | an objective grammar and twelve mission types, most of them not fights |
 | 04 | [Boards and conditions](04-boards-and-conditions.md) | Proposed | board shapes, sightlines, gravity, wind, the one-hour day |
 | 05 | [Ability audit](05-ability-audit.md) | Partly built | how the ability rules are measured, what the first audit found, what to fix |

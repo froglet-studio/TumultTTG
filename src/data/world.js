@@ -100,6 +100,17 @@
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);
 
+  /* ───────────────────────────── BASIC ACTIONS ───────────────────────────── */
+  // What every hero can always do, with no cards at all (design/02). Weak on purpose: they are the floor,
+  // so that no mission needs an ability. Same verbs as cards; no track, no etherion. Move, Interact and
+  // Rally predate this table and keep their own code.
+  T.BASIC = [
+    { id:'strike', n:'Strike', icon:'⚔', ap:2, tgt:'foe_melee', fx:[{v:'strike', kind:'melee', dmg:f(2)}], txt:'2 damage to an adjacent foe.' },
+    { id:'brace',  n:'Brace',  icon:'🛡', ap:1, tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)}],      txt:'Shield 1 until your next turn.' },
+    { id:'shove',  n:'Shove',  icon:'↦', ap:2, tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(1)}],     txt:'Push an adjacent foe 1 node.' },
+  ];
+  T.BASIC_BY = {}; T.BASIC.forEach(b => T.BASIC_BY[b.id] = b);
+
   /* ───────────────────────────── CONSUMABLES ───────────────────────────── */
   T.CONSUMABLES = [
     { id:'vial',   name:'Rally Vial',  price:2, icon:'🧪', tgt:'self', fx:[{v:'heal', n:f(6)}], txt:'Heal 6.' },

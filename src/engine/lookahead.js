@@ -24,6 +24,7 @@
        walk      { node }
        interact  { node }
        rally     {}
+       basic     { basic: 'strike'|'brace'|'shove', target? }   what every hero can do (T.BASIC)
        gear      { gear, ability, target?, node?, choice? }
        item      { item }
        valve     {}                 fold one of each etherion into an Omni
@@ -66,6 +67,11 @@
           if (!nd.objective || (node !== h.pos && nd.height)) continue;
           if (worthInteracting(m, nd.objective)) out.push({ t: 'interact', hero, node });
         }
+      for (const b of T.BASIC) {
+        const chk = T.canUseBasic(m, h, b.id);
+        if (chk.ok)
+          for (const r of resolutions(chk.tg, b)) out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
+      }
       const ally = T.allyOf(m, h);
       if (ally && ally.downed && ap >= R().RALLY_AP && B.adjacent(m.board, h.pos, ally.pos))
         out.push({ t: 'rally', hero });
@@ -118,6 +124,8 @@
         return T.doInteract(m, h, a.node, false);
       case 'rally':
         return T.rally(m, h);
+      case 'basic':
+        return T.useBasic(m, h, a.basic, ctx);
       case 'gear':
         return T.useGear(m, h, a.gear, a.ability, ctx);
       case 'item':
@@ -138,6 +146,7 @@
     };
     const tail = (a.target != null ? who(a.target) : at) + (a.choice ? ` (${a.choice})` : '');
     if (a.t === 'face') return `${h.name}: ${T.CARD[a.card].name} — ${T.CARD[a.card][a.face].n}${tail}`;
+    if (a.t === 'basic') return `${h.name}: ${T.BASIC_BY[a.basic].n}${tail}`;
     if (a.t === 'gear') {
       const def = T.GEAR_BY[h.gear[a.gear].id];
       return `${h.name}: ${def.name} — ${def.abilities[a.ability].n}${tail}`;

@@ -2028,6 +2028,29 @@
     T.afterAction(m);
     return { ok: true };
   };
+  /** Can this hero take this basic action now? Returns { ok, why?, tg? } like T.canPlay. */
+  T.canUseBasic = function (m, h, id) {
+    const b = T.BASIC_BY[id];
+    if (!b) return { ok: false, why: 'unknown action' };
+    if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
+    if (T.apValue(h) < b.ap) return { ok: false, why: 'need ' + b.ap + ' AP' };
+    const tg = T.targetsFor(m, h, b.tgt, b, 0, 0);
+    if (tg.invalid) return { ok: false, why: tg.invalid };
+    if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no valid target' };
+    return { ok: true, tg };
+  };
+  /** A basic action (T.BASIC): pay its AP and run its verbs. It never goes on the track. */
+  T.useBasic = function (m, h, id, ctx) {
+    const chk = T.canUseBasic(m, h, id);
+    if (!chk.ok) return chk;
+    const b = T.BASIC_BY[id];
+    T.pay(h, b.ap);
+    say(m, `${h.name}: ${b.n} (${b.ap} AP).`, 'hero');
+    const rctx = Object.assign({}, ctx || {}, { P: 0, E: 0 });
+    T.runEffects(m, h, b.fx, rctx);
+    T.afterAction(m);
+    return { ok: true, ctx: rctx };
+  };
   T.useGear = function (m, h, gi, ai, ctx) {
     const g = h.gear[gi];
     if (!g) return { ok: false };

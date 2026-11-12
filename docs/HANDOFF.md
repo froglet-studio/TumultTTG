@@ -84,7 +84,7 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 
 1. The frame: is "a season as guides on Tumult, ending with a berth on the Cosmic Shore" right? ([design/01](design/01-frame-and-campaign.md) lists five specific questions.)
 2. Squad size: three by default, two supported — agreed?
-3. Basic actions, Channel and Overcast ([design/02](design/02-units-verbs-actions.md)): these add rules to the v1.0 core. Acceptable?
+3. ~~Basic actions, Channel and Overcast.~~ **DECIDED (Garrett, 2026-11-12):** basic actions and Channel join the core; Overcast and Debt wait for the frame (C1), because Debt clears at beacons. Strike, Brace and Shove are built (2.5.0).
 4. ~~Ethereal faces at E 0.~~ **DECIDED (Garrett, 2026-11-12):** Ethereal faces are magic that must be awakened — a face needs E 1 on its card — but every hero begins with a few awakened, so they start with some toys. Built in 2.4.0 (`ETHEREAL_MIN_E: 1`, `START_AWAKE: 2`); the playtest build keeps the old rule one switch away.
 
 ## Known issues and debt
@@ -92,7 +92,7 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 **Text the engine does not honour** — none known. A review at handoff found eight places; roadmap S0 fixed seven and turned the eighth into decision 4, and found and fixed as many again on the way (`CHANGELOG.md`, 2.0.2). Two tests guard the class: `test/recipes.test.js` fails on any recipe option the engine ignores or formula it never evaluates, and `test/boons.test.js` holds every boon to its text. Neither can read prose, so flavour text, telegraphs and tooltips still need a person's eye when rules change.
 
 **Game**
-- No basic attack; kill objectives are all but impossible for a squad without cards.
+- With no cards at all, the Heart still cannot be beaten (0% in the audit): Strike's 2 damage does not get through its shield. Every other mission type can now be finished without cards (2.5.0).
 - Tier-1 objective missions can be won by walking to the objective.
 - Missions run shorter than the 8–14 round target at tiers 1 and 2.
 - **Tiers 2 and 3 are too easy for a careful player**, and missions too short: the look-ahead player wins 88–100% of every mission but the Heart, in four to seven rounds, with four fifths of its vitality left. The targets were 75–90% at tier 2 and 50–75% at tier 3. Only the Heart (66%) is near its target. Nothing has been retuned; nobody has measured how people fare.

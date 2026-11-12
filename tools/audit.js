@@ -621,10 +621,9 @@ function writeReport(usageMissions, gate) {
   }
   p();
   p(
-    'The last row is the pure test of rule 2: squads with **no abilities at all** — only walking, Interact and Rally. ' +
-      'Wherever that row is at or near 0%, the mission cannot be finished without cards. That is expected for missions whose ' +
-      'objective is a kill (v2.0 has no basic attack; the rare win is a foe dying in a hazard) and is the reason the roadmap ' +
-      'adds basic actions for everyone.',
+    'The last row is the pure test of rule 2: squads with **no abilities at all** — only walking, Interact, Rally and the ' +
+      'basic actions every hero has (Strike, Brace, Shove; `T.BASIC`, since 2.5.0). Wherever that row is at or near 0%, the ' +
+      'mission cannot be finished without cards.',
   );
   p();
   p('## Review list');
