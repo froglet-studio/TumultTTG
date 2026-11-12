@@ -446,6 +446,14 @@ hr {
 .face.locked {
   opacity: 0.5;
 }
+.face.asleep {
+  opacity: 0.6;
+  border-style: dashed;
+}
+.face .asleep-note {
+  color: var(--gold);
+  margin-top: 2px;
+}
 .face .why {
   font-size: 10.5px;
   color: var(--rose);

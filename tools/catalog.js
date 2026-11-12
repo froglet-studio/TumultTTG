@@ -25,8 +25,8 @@ out.push(
 );
 out.push('');
 out.push(
-  'The design intends an Ethereal capability to exist only at E ≥ 1. v2.0 does not enforce that: an Ethereal face can be ' +
-    'played at E 0, with its E-0 numbers (see the known issues in `docs/HANDOFF.md`).',
+  'An Ethereal face is magic that must be awakened: it cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E`). ' +
+    'Every hero sets out with at least two cards awakened (`START_AWAKE`). Until 2.3 a face could be played at E 0.',
 );
 out.push('');
 out.push(

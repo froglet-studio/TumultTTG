@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.4.0 — 2026-11-12 — Ethereal faces must be awakened
+
+Garrett settled the last open rule from the handoff (decision 4): an Ethereal face is magic that must be awakened, and every hero starts with a few awakened.
+
+- **Changed:** an Ethereal face cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E` is now 1; it was 0). In a mission its button says "needs E 1".
+- **Added:** every hero sets out with at least two cards awakened (`T.RULES.START_AWAKE`). The pre-made heroes already have two or three. A drafted hero's first two E points go to its strongest signatures, paid from the starting six UP; the player can move them, and Confirm tops the count back up to two if UP is left. `T.awaken(h)` and `T.awakenedCount(h)`.
+- **Changed:** in the draft and in Train, an asleep Ethereal face is dashed and shows what it will do at E 1.
+- **Changed:** the playtest panel's switch now offers the rule as shipped (E 1) and the old one (E 0). A choice stored by an older build is ignored, since it was only ever the old default.
+- **Changed:** the ability audit counts an Ethereal face as held only while it is awake.
+- **Added:** a test that every pre-made and drafted hero sets out with at least two cards awakened, paid from the starting UP (92 tests in all).
+- **Balance:** `node tools/sim.js 40` before and after, both players, in `docs/reference/BALANCE.md`. No cell moved more than the noise at 40 missions (about fifteen points); whole runs 8 → 9 of 40 for the heuristic, 20 → 17 for the look-ahead player.
+
 ## 2.3.0 — 2026-11-12 — what happens if I end the round now?
 
 The first slice of roadmap P1: the forecast, as text. No rule changed.

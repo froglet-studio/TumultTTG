@@ -396,7 +396,11 @@ function playJob({ arch, tier, banned, salt, usage }) {
     if (usage)
       for (const h of run.heroes)
         for (const id of h.cards)
-          for (const fk of ['P', 'E']) out.held[id + '.' + fk] = (out.held[id + '.' + fk] || 0) + 1;
+          for (const fk of ['P', 'E']) {
+            // an Ethereal face that is still asleep (E below ETHEREAL_MIN_E) was not in hand to play
+            if (fk === 'E' && T.heroE(h, id) < T.RULES.ETHEREAL_MIN_E) continue;
+            out.held[id + '.' + fk] = (out.held[id + '.' + fk] || 0) + 1;
+          }
   }
   T.playFace = realPlayFace;
   return out;

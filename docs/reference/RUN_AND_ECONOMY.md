@@ -6,7 +6,7 @@ A hero is **Human + two bloodlines**, **6 trait cards** to start, **6 Upgrade Po
 
 **Two ways to build.** *Quick Build* takes one of six pre-made heroes (Cavitt the Brawler-in-the-Cloud, Marish the Tidewarden, Ossa the Bulwark, Veil the Nightwing, Mycel the Network, Kess the Catapult). *Draft* opens packs of 4 cards drawn across your three pools, pick 1, six times; you may pass a pack. Then spend 6 UP on P/E tracks (caps 3/3 per card). Unspent UP carries over.
 
-**P vs E (the v1.0 grammar, unchanged).** P deepens the Physical face's numbers — reliable, AP-fed. E unlocks and scales the Ethereal face's *capability* — something P can never buy at any level. Hover a face to see its exact numbers at the hero's current P/E.
+**P vs E (the v1.0 grammar, unchanged).** P deepens the Physical face's numbers — reliable, AP-fed. E awakens the Ethereal face — it cannot be played until its card has E 1 — and then scales its *capability*, something P can never buy at any level. A new hero sets out with at least two cards awakened (`T.RULES.START_AWAKE`): the pre-made heroes are written that way, and a drafted hero's first two E points go to its strongest signatures from the starting six UP (the player can move them; Confirm tops the count back up to two if UP is left). Hover a face to see its exact numbers at the hero's current P/E.
 
 ## The round (what the player actually does)
 

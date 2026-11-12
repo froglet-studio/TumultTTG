@@ -125,3 +125,35 @@ test('quick missions: a seed, a squad and a kit name one mission, and the Tide c
   T.finishNode(late);
   assert.deepEqual([late.phase, late.won, late.over], ['summary', true, true]);
 });
+
+test('every hero sets out with a few Ethereal faces awakened (RULES.START_AWAKE)', () => {
+  const need = T.RULES.START_AWAKE;
+  assert.ok(need >= 2 && T.RULES.ETHEREAL_MIN_E === 1);
+  // the pre-made heroes as written
+  T.PREBUILTS.forEach((pb) => {
+    const h = T.heroFromPrebuilt(T.newRun(1), pb);
+    assert.ok(T.awakenedCount(h) >= need, `${pb.name} starts with ${T.awakenedCount(h)} awakened`);
+  });
+  // drafted heroes, before any choice of the player's: awaken() spends from the starting UP
+  for (let i = 0; i < 30; i++) {
+    const run = T.newRun(900 + i);
+    const h = T.newDraftHero(run, 'Test', 'the drafted', ['owl', 'eel']);
+    while (h.cards.length < T.RULES.START_CARDS) {
+      const pick = T.draftPack(run, h, 4)[0];
+      T.addCard(h, pick);
+    }
+    T.awaken(h);
+    assert.equal(T.awakenedCount(h), need);
+    assert.equal(h.upUnspent, T.RULES.START_UP - need, 'paid from the starting UP, nothing free');
+    T.autoAllocate(h);
+    assert.ok(T.awakenedCount(h) >= need);
+  }
+  // awaken() never takes back a point the player placed, and does nothing without UP
+  const run = T.newRun(77);
+  const h = T.heroFromPrebuilt(run, T.PREBUILTS[0]);
+  T.respecHero(h);
+  h.upUnspent = 1;
+  T.awaken(h);
+  assert.equal(T.awakenedCount(h), 1, 'one UP awakens one card');
+  assert.equal(h.upUnspent, 0);
+});

@@ -19,47 +19,25 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.3.0',
+    version: '2.4.0',
     items: [
       {
-        text: 'Under the enemy intents there is now a forecast: what ending the round as things stand will cost each hero, whether the objective moves, whether the mission ends. It is exact — an enemy turn has no dice in it. Does it make the turn clearer, or solve it for you?',
+        text: 'Ethereal faces are magic you awaken: a face cannot be played until its card has E 1. Every hero starts with at least two awakened. Do the starting two feel like toys worth having, and is the third and fourth worth saving UP for?',
       },
       {
-        text: 'Plan, in a mission’s top bar, shows what the look-ahead player would do with the turn — the player the balance tables are now measured with. It wins far more than the old autoplayer did. Where it plays badly, or far better than a person would, say so.',
+        text: 'In the draft and in Train, an asleep Ethereal face is dashed and shows what it will do at E 1. In a mission its button says "needs E 1". Is it clear why a face cannot be played?',
       },
       {
-        text: 'Close the page in the middle of a mission, come back and press Continue: the same round, the same dice in hand, the same intents on the board.',
+        text: 'Draft a hero by hand: after the sixth pick, two signature cards are already awakened from your six UP. Move the points if you like; Confirm tops you back up to two if you have UP left.',
       },
       {
-        text: 'A seed is a board now, whoever plays it. Keep the seed and change the squad or the kit: the layout and the foes stay put.',
+        text: 'Pre-made heroes are unchanged: each already starts with two or three cards awakened. Which of them feels poorer for the cards it cannot use yet?',
       },
       {
-        text: 'Report → Copy save copies this exact moment. Sent with a note about something odd, it can be replayed to the die.',
+        text: 'The old rule is one switch away under "Rule". Play a mission both ways with the same seed and say which is more fun.',
       },
       {
-        text: 'On a Tide that was closed and continued, finished nodes are ticked on the map as they should be (2.0 lost track after a reload).',
-      },
-      {
-        text: 'Conditions hold on every effect. Talon Strike — Pin only Weakens prey left at 8 hp or less.',
-        cards: ['owl_talon'],
-      },
-      {
-        text: '"Your next strike" and form bonuses go to strikes only: a corrosion tick or a snare no longer spends them. "This turn" bonuses end with the turn.',
-        cards: ['hum_tool', 'owl_silent'],
-      },
-      {
-        text: 'Multitask frees the next card you play this turn, and no longer waits for a later one.',
-        cards: ['oct_arms'],
-      },
-      {
-        text: 'Hollow Bones — Weightless and Neoteny — Reshape walk up to a ledge without the ramp (Vault missions have one).',
-        cards: ['owl_bones', 'axo_neoteny'],
-      },
-      {
-        text: 'A Harrier that is Anchored or Slowed cannot blink, and a Located one cannot fade. Elite and Sought missions field them.',
-      },
-      {
-        text: 'Boons follow their text: Momentum every round, Quick Hands at last does something, Second Wind belongs to its holder. Tier 3 kits start with one.',
+        text: 'Plan, in a mission’s top bar, shows what the look-ahead player would do with the turn. Where it plays badly, or far better than a person would, say so.',
       },
     ],
   };
@@ -77,7 +55,8 @@
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (saved && typeof saved === 'object') {
         Object.assign(st.cfg, saved.cfg);
-        if (saved.minE === 0 || saved.minE === 1) st.minE = saved.minE;
+        // 'etherealMinE' since 2.4.0: a 'minE' stored before then is the old default, not a choice
+        if (saved.etherealMinE === 0 || saved.etherealMinE === 1) st.minE = saved.etherealMinE;
         if (saved.last) st.last = saved.last;
         if (Array.isArray(saved.log)) st.log = saved.log.slice(0, LOG_MAX);
       }
@@ -98,7 +77,8 @@
   const st = load();
   function save() {
     try {
-      localStorage.setItem(KEY, JSON.stringify(st));
+      const { minE, ...rest } = st;
+      localStorage.setItem(KEY, JSON.stringify({ ...rest, etherealMinE: minE }));
     } catch (e) {}
   }
   T.RULES.ETHEREAL_MIN_E = st.minE;
@@ -269,9 +249,9 @@
         <button class="primary" data-act="pt-go">▶ Play this mission</button></div>
       ${last}
       <p class="dim small">The same seed, squad and kit always give the same board and the same opening dice. After the mission the Tide carries on from that node.</p>
-      <h3>Rule under test: Ethereal faces at E 0</h3>
-      <div class="pt-row">${seg('pt-rule', 0, 'Playable at E 0 — as shipped', st.minE === 0)}${seg('pt-rule', 1, 'Locked until E 1', st.minE === 1)}</div>
-      <p class="dim small">The design says an Ethereal face unlocks a capability that exists only at E 1 or more; the game has always let the face be played at E 0, where it does less. Play it both ways. The switch takes effect at once, even mid-mission, and stays set on this device.</p>
+      <h3>Rule: Ethereal faces need E 1</h3>
+      <div class="pt-row">${seg('pt-rule', 1, 'Asleep until E 1 — as shipped', st.minE === 1)}${seg('pt-rule', 0, 'Playable at E 0 — the old rule', st.minE === 0)}</div>
+      <p class="dim small">Since 2.4.0 an Ethereal face is magic that must be awakened: it cannot be played until its card has E 1. Until 2.3 it could be played at E 0, where it does less. The switch takes effect at once, even mid-mission, and stays set on this device.</p>
       <details><summary>What to look at in this build</summary><ul class="pt-notes">${NOTES.items.map((n) => `<li>${esc(n.text)}${carriers(n.cards)}</li>`).join('')}</ul></details>
     </div>`;
   };

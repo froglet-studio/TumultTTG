@@ -37,7 +37,7 @@ A review at handoff found places where card, boon or mission text promises somet
 
 **Done when:** every item on that list has a test and is either fixed or its text changed; before/after balance tables are in each pull request; the list in the handoff is empty.
 
-**Outcome:** seven of the eight fixed, each with a test, plus as many again that the same tests turned up (`CHANGELOG.md`). The eighth — Ethereal faces at E 0 — is a switch in `T.RULES` with a test for both settings and the numbers for each, waiting on Garrett ([`HANDOFF.md`](HANDOFF.md), decision 4).
+**Outcome:** seven of the eight fixed, each with a test, plus as many again that the same tests turned up (`CHANGELOG.md`). The eighth — Ethereal faces at E 0 — became a switch in `T.RULES`; Garrett settled it in 2.4.0: an Ethereal face must be awakened with E 1, and every hero starts with a few awakened.
 
 ### S1 · Units, target classes and basic actions
 One unit model for pilots, actors and props; verbs target by class (harm, affect, help), not by side; Move, Interact, Rally, Strike, Brace, Carry and Shove for everyone; Channel; Overcast and Debt. ([02](design/02-units-verbs-actions.md))
