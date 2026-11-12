@@ -163,7 +163,7 @@
       heroIdx: 0,
       step: 'mode',
       species: [],
-      name: NAMES[U.run.rng.int(NAMES.length)],
+      name: NAMES[T.runStream(U.run, 'squad').int(NAMES.length)],
       hero: null,
       pack: [],
       picks: 0,
@@ -285,7 +285,7 @@
           heroIdx: 1,
           step: 'mode',
           species: [],
-          name: NAMES[run.rng.int(NAMES.length)],
+          name: NAMES[T.runStream(run, 'squad').int(NAMES.length)],
           hero: null,
           pack: [],
           picks: 0,
@@ -342,7 +342,8 @@
       .map(
         (row, ri) =>
           `<div class="map-row">${ri % 2 === 0 && ri < 6 ? `<span class="actlabel">${esc(map.actNames[T.actOf(ri)])}</span>` : ''}${row
-            .map((nd) => {
+            .map((id) => {
+              const nd = map.all[id];
               const avail = run.available.includes(nd.id) && run.phase === 'map';
               const cls = [
                 'mnode',
@@ -380,7 +381,6 @@
   function renderReward() {
     const run = U.run;
     const rw = run.lastReward;
-    const m = run.mission;
     const bonus = rw.bonus
       .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
       .join('');
@@ -406,7 +406,7 @@
         : '';
     const ready = (!rw.offer || !rw.offer.length || rw.picked) && (!rw.boon || !rw.boon.length || rw.boonPicked);
     return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete')}<div class="panel">
-      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the tide spares you once</h3><p class="dim">No rewards from this current. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${m.round} rounds, ${m.stats.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
+      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the tide spares you once</h3><p class="dim">No rewards from this current. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
       ${offer}${boon}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="rewardDone" ${ready ? '' : 'disabled'}>Continue to the map</button></div></div></div>`;
   }
@@ -626,9 +626,11 @@
         const r = T.loadRun();
         if (!r) return;
         U.run = r;
-        U.screen =
-          r.phase === 'reward' ? 'reward' : r.phase === 'haven' ? 'haven' : r.phase === 'event' ? 'event' : 'map';
-        if (U.screen !== 'map' && !['reward', 'haven', 'event'].includes(r.phase)) U.screen = 'map';
+        if (r.phase === 'mission' && r.mission) {
+          // a mission in progress is part of the save: carry on in the middle of the round
+          U.screen = 'mission';
+          U.enterMission();
+        } else U.screen = ['reward', 'haven', 'event'].includes(r.phase) ? r.phase : 'map';
         U.render();
         return;
       }

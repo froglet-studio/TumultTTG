@@ -390,8 +390,9 @@
       // guarantee every next-row node is reachable
       nxt.forEach((m) => { if (!cur.some(n => n.next.includes(m.id))) { const nearest = cur.reduce((a,b)=>Math.abs(a.col-m.col)<=Math.abs(b.col-m.col)?a:b); nearest.next.push(m.id); } });
     }
+    // each node has one home, map.all; a row is a list of ids (so a saved map loads back as the same map)
     const all = {}; rows.flat().forEach(n => all[n.id] = n);
-    return { rows, all, current: null, actNames: ['The Shallows', 'The Undertow', 'The Deep'] };
+    return { rows: rows.map(row => row.map(n => n.id)), all, current: null, actNames: ['The Shallows', 'The Undertow', 'The Deep'] };
   };
 
   /* ───────────────────────────── EVENTS ───────────────────────────── */

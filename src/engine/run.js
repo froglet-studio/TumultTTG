@@ -11,8 +11,10 @@
   T.newRun = function (seed) {
     seed = seed == null ? Date.now() & 0x7fffffff : seed;
     return {
+      v: T.SAVE_VERSION,
       seed,
-      rng: T.makeRng(seed),
+      rngs: {}, // one number per random stream, made the first time it is asked for (T.runStream)
+      launched: 0,
       heroes: [],
       crystals: 6,
       boons: [],
@@ -39,9 +41,27 @@
 
   /* ───────────────────────────── DRAFT ───────────────────────────── */
   // A hero = Human + two species. Six picks from packs of four drawn across the three pools.
+  /**
+   * A run draws from several random streams, each seeded from the run's seed and its own name, so
+   * that what one draws never moves another: 'squad' (drafts, hero ids), 'map', 'loot' (card, boon
+   * and haven offers), 'event', and for tools 'player' (a simulated player's choices). Each mission
+   * has its own seed again (T.missionSeed). The streams are numbers in run.rngs: a run is plain data.
+   */
+  T.runStream = function (run, name) {
+    if (run.rngs[name] == null) run.rngs[name] = T.subSeed(run.seed, name);
+    return T.stream(run.rngs, name);
+  };
+  /**
+   * The seed of the mission about to be launched. On the Tide Map it belongs to the node, not to
+   * the road taken there or the squad that walks it; off the map, to the order of launching.
+   */
+  T.missionSeed = function (run, type, tier) {
+    const where = run.nodeId != null ? 'n' + run.nodeId : '#' + run.launched;
+    return T.subSeed(run.seed, `mission:${where}:${type}:${tier}`);
+  };
   T.newDraftHero = function (run, name, title, species) {
     const h = T.makeHero({
-      id: name.toLowerCase().replace(/\W+/g, '_') + '_' + run.rng.int(9999),
+      id: name.toLowerCase().replace(/\W+/g, '_') + '_' + T.runStream(run, 'squad').int(9999),
       name,
       title,
       species: ['human'].concat(species),
@@ -79,7 +99,8 @@
     const pool = T.CARDS.filter((c) => T.canAddCard(h, c.id).ok);
     const bySp = {};
     pool.forEach((c) => (bySp[c.sp] = bySp[c.sp] || []).push(c));
-    const sps = run.rng.shuffle(Object.keys(bySp));
+    const rng = T.runStream(run, 'squad');
+    const sps = rng.shuffle(Object.keys(bySp));
     const pack = [];
     let i = 0;
     while (pack.length < size && pool.length) {
@@ -90,7 +111,7 @@
         if (i > 20) break;
         continue;
       }
-      const c = arr.splice(run.rng.int(arr.length), 1)[0];
+      const c = arr.splice(rng.int(arr.length), 1)[0];
       pack.push(c.id);
       const j = pool.indexOf(c);
       if (j >= 0) pool.splice(j, 1);
@@ -99,7 +120,7 @@
   };
   T.heroFromPrebuilt = function (run, pb) {
     const h = T.makeHero({
-      id: pb.id + '_' + run.rng.int(9999),
+      id: pb.id + '_' + T.runStream(run, 'squad').int(9999),
       name: pb.name,
       title: pb.title,
       species: pb.species,
@@ -163,10 +184,11 @@
       T.autoAllocate(h);
     });
     if (tier >= 2) {
+      const rng = T.runStream(run, 'squad');
       run.heroes.forEach((h) => {
-        h.gear.push({ id: T.GEAR[run.rng.int(T.GEAR.length)].id, cds: [0, 0] });
+        h.gear.push({ id: T.GEAR[rng.int(T.GEAR.length)].id, cds: [0, 0] });
         if (tier >= 3) {
-          h.gear.push({ id: T.GEAR[run.rng.int(T.GEAR.length)].id, cds: [0, 0] });
+          h.gear.push({ id: T.GEAR[rng.int(T.GEAR.length)].id, cds: [0, 0] });
           const extra = T.cardOffer(run, 1)[0];
           if (extra) T.addCard(h, extra);
           h.boons.push(T.boonOffer(run, 1)[0]);
@@ -180,7 +202,8 @@
   /**
    * A run that begins inside one chosen mission: two pre-made heroes (indices into T.PREBUILTS)
    * with their starting kit, or with the kit for the mission's tier. tools/mission-log.js and the
-   * playtest build both start here, so a seed names the same mission in either.
+   * playtest build both start here, so a seed names the same mission in either. The board does not
+   * depend on the squad or the kit: the same seed, mission and tier are always the same board.
    */
   T.quickMission = function ({ seed, heroes = [0, 1], type = 'vault', tier = 1, kit = 'start' } = {}) {
     const run = T.newRun(seed);
@@ -188,23 +211,22 @@
     run.heroes.forEach((h) => T.autoAllocate(h));
     if (kit === 'tier') T.addProgression(run, tier);
     else run.crystals = 12;
-    T.launchMission(run, type, tier);
-    // The rest of the Tide, so the run can go on afterwards. It is drawn from a stream of its
-    // own: the mission's board and dice are the same whether or not anyone looks at the map.
-    run.map = T.genTideMap(T.makeRng((run.seed ^ 0x7153) >>> 0));
-    const node = run.map.rows[0][0];
+    // the mission is the first node of a whole Tide, so the run can go on afterwards
+    T.startMap(run);
+    const node = run.map.all[run.map.rows[0][0]];
     node.type = type;
     node.tier = tier;
     run.nodeId = run.map.current = node.id;
+    T.launchMission(run, type, tier);
     run.available = [];
     return run;
   };
 
   /* ───────────────────────────── MAP ───────────────────────────── */
   T.startMap = function (run) {
-    run.map = T.genTideMap(run.rng);
+    run.map = T.genTideMap(T.runStream(run, 'map'));
     run.phase = 'map';
-    run.available = run.map.rows[0].map((n) => n.id);
+    run.available = run.map.rows[0].slice();
     run.nodeId = null;
   };
   T.actOf = (row) => (row <= 1 ? 0 : row <= 4 ? 1 : 2);
@@ -231,10 +253,14 @@
   };
   T.launchMission = function (run, type, tier) {
     const gen = T.MISSIONS[type];
-    const spec = gen.gen(run.rng, tier);
-    spec.title = run.rng.pick(gen.title);
+    const seed = T.missionSeed(run, type, tier);
+    run.launched++;
+    // The board has a stream to itself: the same seed is the same board, whoever plays it.
+    const board = T.makeRng(T.subSeed(seed, 'board'));
+    const spec = gen.gen(board, tier);
+    spec.title = board.pick(gen.title);
     spec.blurb = gen.blurb;
-    run.mission = T.startMission(run, spec, type, tier, run.rng);
+    run.mission = T.startMission(run, spec, type, tier, seed);
     run.phase = 'mission';
   };
   T.finishNode = function (run) {
@@ -279,9 +305,11 @@
       crystals,
       offer,
       boon,
-      bonus: m.bonus.slice(),
+      bonus: m.bonus.map((b) => Object.assign({}, b)),
       title: m.title,
       won: m.won,
+      rounds: m.round,
+      kills: m.stats.kills,
       picked: false,
       boonPicked: false,
     };
@@ -289,7 +317,7 @@
   };
   T.cardOffer = function (run, n) {
     const cands = T.CARDS.filter((c) => run.heroes.some((h) => T.canAddCard(h, c.id).ok));
-    return run.rng
+    return T.runStream(run, 'loot')
       .shuffle(cands)
       .slice(0, n)
       .map((c) => c.id);
@@ -297,14 +325,21 @@
   T.boonOffer = function (run, n) {
     const have = new Set(run.boons.concat(...run.heroes.map((h) => h.boons)));
     const cands = T.BOONS.filter((b) => !have.has(b.id) && b.id !== 'defiant');
-    return run.rng
+    return T.runStream(run, 'loot')
       .shuffle(cands)
       .slice(0, n)
       .map((b) => b.id);
   };
+  /**
+   * The mission is over: bring home what it carried for the run (crystals spent and salvaged, the
+   * once-a-run Second Wind), apply its result, and let it go. After this the run has no mission.
+   */
   T.applyMissionResult = function (run) {
     const m = run.mission;
     const rw = run.lastReward;
+    run.mission = null;
+    run.crystals = m.crystals;
+    run.secondWindUsed = m.secondWindUsed;
     run.stats.missions++;
     run.stats.kills += m.stats.kills;
     run.stats.rounds += m.round;
@@ -367,11 +402,12 @@
   /* ───────────────────────────── HAVEN ───────────────────────────── */
   T.havenStock = function (run) {
     const owned = new Set(run.heroes.flatMap((h) => h.gear.map((g) => g.id)));
-    const gear = run.rng
+    const rng = T.runStream(run, 'loot');
+    const gear = rng
       .shuffle(T.GEAR.filter((g) => !owned.has(g.id)))
       .slice(0, 3)
       .map((g) => g.id);
-    const cons = run.rng
+    const cons = rng
       .shuffle(T.CONSUMABLES)
       .slice(0, 3)
       .map((c) => c.id);
@@ -415,7 +451,7 @@
   /* ───────────────────────────── EVENTS ───────────────────────────── */
   T.pickEvent = function (run) {
     const cands = T.EVENTS.filter((e) => !run.seenEvents.includes(e.id));
-    const ev = run.rng.pick(cands.length ? cands : T.EVENTS);
+    const ev = T.runStream(run, 'event').pick(cands.length ? cands : T.EVENTS);
     run.seenEvents.push(ev.id);
     return ev;
   };
@@ -425,7 +461,7 @@
     const fx = opt.fx || {};
     if (opt.cost && opt.cost.crystals && run.crystals < opt.cost.crystals) return { ok: false, why: 'not enough ◇' };
     if (opt.cost && opt.cost.crystals) run.crystals -= opt.cost.crystals;
-    const hero = run.heroes[heroIdx != null ? heroIdx : run.rng.int(run.heroes.length)];
+    const hero = run.heroes[heroIdx != null ? heroIdx : T.runStream(run, 'event').int(run.heroes.length)];
     let followup = null;
     if (fx.crystals) run.crystals += fx.crystals;
     if (fx.up) run.heroes.forEach((h) => (h.upUnspent += fx.up));
@@ -444,7 +480,7 @@
       followup = { kind: 'boonGiven', boon: offer[0], hero: hero.name };
     }
     if (fx.affinityRandom) {
-      const aff = run.rng.pick(['aff_M', 'aff_C', 'aff_S', 'aff_T', 'omnicore']);
+      const aff = T.runStream(run, 'event').pick(['aff_M', 'aff_C', 'aff_S', 'aff_T', 'omnicore']);
       hero.boons.push(aff);
       followup = { kind: 'boonGiven', boon: aff, hero: hero.name };
     }
@@ -468,34 +504,47 @@
     const sp = T.CARD[dropId].sp;
     T.removeCard(h, dropId);
     const cands = T.cardsOf(sp).filter((c) => T.canAddCard(h, c.id).ok);
-    const nc = run.rng.pick(cands);
+    const nc = T.runStream(run, 'event').pick(cands);
     if (nc) T.addCard(h, nc.id);
     return nc ? nc.id : null;
   };
 
   /* ───────────────────────────── SAVE / LOAD ───────────────────────────── */
+  /**
+   * Saves. A run is plain data — its random streams are numbers, a mission in progress is part of
+   * it — so a save is the run written out, and loading one gives back the same run: it carries on
+   * exactly where it was, in the middle of a round if need be. Saving draws no random number.
+   * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
+   */
+  T.SAVE_VERSION = 2;
   T.serializeRun = function (run) {
-    const r = Object.assign({}, run);
-    delete r.rng;
-    delete r.mission;
-    r.rngState = run.rng ? run.rng() : 0; // advance & drop (non-critical)
-    r.heroes = run.heroes.map((h) =>
-      Object.assign({}, h, { states: {}, temp: [], track: [], held: [], pool: R().POOL }),
+    const m = run.mission;
+    // the mission plays the run's own heroes: write them once, and leave out the animation queue
+    return JSON.stringify(
+      Object.assign({}, run, { mission: m ? Object.assign({}, m, { heroes: null, fx: [] }) : null }),
     );
-    return JSON.stringify(r);
+  };
+  const migrate = {
+    // 2.0 saves had no version: one random stream (not kept), no mission, heroes stripped of dice.
+    1(r) {
+      delete r.rngState;
+      r.rngs = {};
+      r.launched = r.stats.missions;
+      r.mission = null;
+      // 2.0 kept each map node twice, and a loaded save updated only the copy in map.all
+      if (r.map) r.map.rows = r.map.rows.map((row) => row.map((n) => n.id));
+      if (r.phase === 'mission') r.phase = 'map'; // 2.0 never kept a mission: back to the map at that node
+      const last = r.history[r.history.length - 1];
+      if (r.lastReward && last) Object.assign(r.lastReward, { rounds: last.rounds, kills: last.kills });
+      r.v = 2;
+    },
   };
   T.deserializeRun = function (json) {
     const r = JSON.parse(json);
-    r.rng = T.makeRng((r.seed ^ (r.stats.missions * 7919) ^ Math.floor((r.rngState || 0) * 1e6)) >>> 0);
-    r.heroes.forEach((h) => {
-      h.kind = 'hero';
-      h.states = {};
-      h.temp = [];
-      h.track = [];
-      h.held = [];
-      h.pool = R().POOL;
-    });
-    if (r.phase === 'mission') r.phase = 'map'; // missions are not persisted mid-fight
+    if (r.v == null) r.v = 1;
+    if (r.v > T.SAVE_VERSION) throw new Error('this save is from a newer version of the game');
+    while (r.v < T.SAVE_VERSION) migrate[r.v](r);
+    if (r.mission) r.mission.heroes = r.heroes;
     return r;
   };
   T.saveRun = function (run) {

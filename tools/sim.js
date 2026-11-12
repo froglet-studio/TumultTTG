@@ -63,7 +63,9 @@ if (mode === 'all' || mode === 'missions') {
         kills = 0,
         played = 0;
       for (let i = 0; i < N; i++) {
-        const run = T.newRun(1000 + i * 17 + tier * 101 + arch.length);
+        // The same N squads meet every mission: squad i is built from run seed i in every cell, while
+        // each cell's boards, dice and opposition are its own (a mission's seed names its type and tier).
+        const run = T.newRun(1000 + i);
         if (i % 3 === 2) H.draftedSquad(run);
         else H.prebuiltSquad(run, i % 6, (i + 1 + (i % 5)) % 6);
         H.addProgression(run, tier);

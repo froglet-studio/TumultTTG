@@ -372,8 +372,7 @@
           if (e.type === 'spawner') break; // handled at round start
           const spot = B.walkNeighbors(m.board, e.pos).find((n) => !T.occupied(m, n));
           if (spot) {
-            const b = T.makeEnemy('biter', Math.max(1, m.tier - 1), spot);
-            m.enemies.push(b);
+            const b = T.spawnEnemy(m, 'biter', Math.max(1, m.tier - 1), spot);
             T.say(m, `${e.name} calls the tide: a Biter rises.`, 'enemy');
             m.fx.push({ t: 'spawn', ent: b.uid, pos: spot });
           }

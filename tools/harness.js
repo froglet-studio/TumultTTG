@@ -17,13 +17,14 @@ function createHarness(T = loadTumult()) {
   /** Two heroes drafted at random from packs (random bloodlines, random picks). */
   function draftedSquad(run) {
     run.heroes = [];
+    const rng = T.runStream(run, 'squad');
     for (let k = 0; k < 2; k++) {
-      const species = run.rng.shuffle(T.SPECIES_ORDER.filter((s) => s !== 'human')).slice(0, 2);
+      const species = rng.shuffle(T.SPECIES_ORDER.filter((s) => s !== 'human')).slice(0, 2);
       const h = T.newDraftHero(run, 'Drafted' + k, 'the drafted', species);
       for (let p = 0; p < T.RULES.START_CARDS; p++) {
         const pack = T.draftPack(run, h, 4);
         if (!pack.length) break;
-        T.addCard(h, pack[run.rng.int(pack.length)]);
+        T.addCard(h, pack[rng.int(pack.length)]);
       }
       T.autoAllocate(h);
       run.heroes.push(h);
@@ -49,23 +50,42 @@ function createHarness(T = loadTumult()) {
   }
 
   /**
-   * Auto-play a whole run (map, missions, havens, events) with simple choices.
-   * Returns { won, lastRow, missions, missionWins, endedBy }.
+   * Auto-play a whole run (map, missions, havens, events) with simple choices; a run already on
+   * its map is played on from where it is. The simulated player's choices come from a random
+   * stream of their own ('player'), so they never move the game's.
+   * Returns { won, lastRow, missions, missionWins, endedBy, run }.
+   *
+   * viaSaves: after every node — and once in the middle of every mission — the run is written out
+   * as a save and the game goes on from what was read back. `run` in the result is that last copy;
+   * the run passed in is left wherever it was first saved.
    */
-  function playRun(run, { checkSave = true } = {}) {
-    T.startMap(run);
-    const out = { won: false, lastRow: 0, missions: 0, missionWins: 0, endedBy: null };
+  function playRun(run, { viaSaves = false } = {}) {
+    if (!run.map) T.startMap(run);
+    const out = { won: false, lastRow: 0, missions: 0, missionWins: 0, endedBy: null, run };
+    const reload = () => {
+      if (viaSaves) run = out.run = T.deserializeRun(T.serializeRun(run));
+    };
     let guard = 0;
     while (!run.over && guard++ < 30) {
-      const id = run.rng.pick(run.available);
+      const id = T.runStream(run, 'player').pick(run.available);
       const node = run.map.all[id];
       out.lastRow = node.row;
       T.chooseNode(run, id);
       if (run.phase === 'mission') {
-        playMission(run.mission);
+        if (viaSaves) {
+          // two rounds in, with the squad's half of the third played: save, and resume from the save
+          for (let r = 0; r < 2 && !run.mission.over; r++) {
+            T.autoHeroPhase(run.mission);
+            if (!run.mission.over) T.endHeroPhase(run.mission);
+          }
+          if (!run.mission.over) T.autoHeroPhase(run.mission);
+          reload();
+          if (!run.mission.over) T.endHeroPhase(run.mission);
+        }
+        const m = playMission(run.mission);
         out.missions++;
-        if (run.mission.won) out.missionWins++;
-        T.missionRewards(run, run.mission);
+        if (m.won) out.missionWins++;
+        T.missionRewards(run, m);
         T.applyMissionResult(run);
         if (run.over) {
           if (!run.won) out.endedBy = node.type + ' t' + node.tier;
@@ -78,7 +98,7 @@ function createHarness(T = loadTumult()) {
           if (hi >= 0) T.takeOfferedCard(run, cid, hi);
           else T.skipOfferedCard(run);
         }
-        if (rw.boon && rw.boon.length) T.takeBoon(run, rw.boon[0], run.rng.int(2));
+        if (rw.boon && rw.boon.length) T.takeBoon(run, rw.boon[0], T.runStream(run, 'player').int(2));
         run.heroes.forEach((h) => T.autoAllocate(h));
         T.finishNode(run);
       } else if (run.phase === 'haven') {
@@ -102,21 +122,46 @@ function createHarness(T = loadTumult()) {
         run.heroes.forEach((h) => T.autoAllocate(h));
         T.finishNode(run);
       }
-      if (checkSave) {
-        const back = T.deserializeRun(T.serializeRun(run));
-        if (back.heroes.length !== run.heroes.length) throw new Error('save round-trip lost heroes');
-      }
+      reload();
     }
     out.won = !!run.won;
     return out;
   }
 
   /**
+   * Everything in a value that is not plain data, as a list of "path :: what" (empty = plain):
+   * functions, class instances, undefined, numbers JSON cannot write, and anything reachable by
+   * two paths — a copy or a save would quietly split it in two.
+   */
+  function plainProblems(value) {
+    const problems = [];
+    const seen = new Map();
+    (function walk(v, at) {
+      if (v === null) return;
+      const t = typeof v;
+      if (t === 'function') return problems.push(`${at} :: a function`);
+      if (t === 'undefined') return problems.push(`${at} :: undefined`);
+      if (t === 'number' && !Number.isFinite(v)) return problems.push(`${at} :: ${v}`);
+      if (t !== 'object') return;
+      if (seen.has(v)) return problems.push(`${at} :: the same object as ${seen.get(v)}`);
+      seen.set(v, at);
+      if (Array.isArray(v)) return v.forEach((x, i) => walk(x, `${at}[${i}]`));
+      const proto = Object.getPrototypeOf(v);
+      if (proto !== Object.prototype && proto !== null)
+        return problems.push(`${at} :: a ${(proto.constructor && proto.constructor.name) || 'non-plain object'}`);
+      for (const k of Object.keys(v)) walk(v[k], `${at}.${k}`);
+    })(value, 'state');
+    return problems;
+  }
+
+  /**
    * A controlled arena for one hero holding the given card(s): plenty of dice, a foe
    * adjacent and a foe in the hero's lane. Returns { run, m, h, ally, adj, lane }, where
-   * adj and lane are those two foes (either may be undefined on a cramped board).
+   * adj and lane are those two foes (either may be undefined on a cramped board). The default
+   * seed is a board whose start leaves the hero room to step: on a cornered one, with a foe put
+   * beside them, the faces that move a single node have nowhere to go.
    */
-  function arena(cardIds, { up = [2, 2], archetype = 'swarm', tier = 2, seed = 77 } = {}) {
+  function arena(cardIds, { up = [2, 2], archetype = 'swarm', tier = 2, seed = 78 } = {}) {
     const ids = [].concat(cardIds);
     const run = T.newRun(seed);
     const h = T.makeHero({
@@ -160,8 +205,9 @@ function createHarness(T = loadTumult()) {
 
   /**
    * Fire one face of one card in the arena. Returns { status: 'fired' | 'unplayable', why? }
-   * and throws if the engine logs an effect error or an unimplemented verb. `arrange(scene)`
-   * may rearrange the arena first; `choose` is passed to playIn.
+   * and throws if the engine logs an effect error or an unimplemented verb, or if the face leaves
+   * anything in the mission that is not plain data. `arrange(scene)` may rearrange the arena
+   * first; `choose` is passed to playIn.
    */
   function fireFace(cardId, faceKey, { arrange, choose } = {}) {
     const scene = arena(cardId);
@@ -170,8 +216,15 @@ function createHarness(T = loadTumult()) {
     if (!r.ok) return { status: 'unplayable', why: r.why };
     const bad = scene.m.log.filter((l) => /Effect error|unimplemented/.test(l.text));
     if (bad.length) throw new Error(bad.map((l) => l.text).join('; '));
+    assertPlain(scene.m, `after ${cardId} ${faceKey}`);
     T.endHeroPhase(scene.m);
+    assertPlain(scene.m, `a round after ${cardId} ${faceKey}`);
     return { status: 'fired' };
+  }
+  /** Throw unless the mission is plain data (see plainProblems). */
+  function assertPlain(m, when) {
+    const problems = plainProblems(m);
+    if (problems.length) throw new Error(`mission state is not plain data ${when}: ${problems.slice(0, 4).join('; ')}`);
   }
 
   return {
@@ -182,6 +235,8 @@ function createHarness(T = loadTumult()) {
     addProgression,
     playMission,
     playRun,
+    plainProblems,
+    assertPlain,
     arena,
     playIn,
     fireFace,

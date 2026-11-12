@@ -19,8 +19,20 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.0.3',
+    version: '2.1.0',
     items: [
+      {
+        text: 'Close the page in the middle of a mission, come back and press Continue: the same round, the same dice in hand, the same intents on the board.',
+      },
+      {
+        text: 'A seed is a board now, whoever plays it. Keep the seed and change the squad or the kit: the layout and the foes stay put.',
+      },
+      {
+        text: 'Report → Copy save copies this exact moment. Sent with a note about something odd, it can be replayed to the die.',
+      },
+      {
+        text: 'On a Tide that was closed and continued, finished nodes are ticked on the map as they should be (2.0 lost track after a reload).',
+      },
       {
         text: 'Conditions hold on every effect. Talon Strike — Pin only Weakens prey left at 8 hp or less.',
         cards: ['owl_talon'],
@@ -143,6 +155,7 @@
     U.screen = 'mission';
     U.enterMission();
     U.showTutorial('mission');
+    T.saveRun(run);
     U.render();
   }
   const command = (q, type, tier, seed) =>
@@ -183,26 +196,27 @@
   }
   function openReport() {
     U.openModal(
-      `<div class="row"><h3>Playtest report</h3><span class="right row"><button class="sm primary" data-act="pt-copy">Copy</button><button class="sm" data-act="pt-clear">Clear log</button><button class="sm" data-act="closeModal">Close</button></span></div>
-      <p class="dim small">What you are playing now and every mission finished on this device. Nothing leaves the page unless you copy it: paste it wherever you report what you found.</p>
+      `<div class="row"><h3>Playtest report</h3><span class="right row"><button class="sm primary" data-act="pt-copy">Copy report</button><button class="sm" data-act="pt-save" ${U.run ? '' : 'disabled'}>Copy save</button><button class="sm" data-act="pt-clear">Clear log</button><button class="sm" data-act="closeModal">Close</button></span></div>
+      <p class="dim small">What you are playing now and every mission finished on this device. Nothing leaves the page unless you copy it: paste it wherever you report what you found. <b>Copy save</b> copies the Tide exactly as it stands — a mission in progress included — so that whoever gets it can carry on from this moment (<span class="mono">node tools/mission-log.js --save file</span>).</p>
       <textarea class="pt-report" id="pt-report" readonly spellcheck="false">${esc(reportText())}</textarea>`,
     );
   }
-  function copyReport() {
+  /** Put text on the clipboard; where the page may not, show it selected so it can be copied by hand. */
+  function copy(text, done) {
     const box = document.getElementById('pt-report');
-    const text = box ? box.value : reportText();
     const byHand = () => {
       if (!box) return;
+      box.value = text;
       box.focus();
       box.select();
       let ok = false;
       try {
         ok = document.execCommand('copy');
       } catch (e) {}
-      U.toast(ok ? 'Report copied.' : 'Selected — copy it with your keyboard or the menu.');
+      U.toast(ok ? done : 'Selected — copy it with your keyboard or the menu.');
     };
     try {
-      navigator.clipboard.writeText(text).then(() => U.toast('Report copied.'), byHand);
+      navigator.clipboard.writeText(text).then(() => U.toast(done), byHand);
     } catch (e) {
       byHand();
     }
@@ -300,7 +314,10 @@
         openReport();
         return true;
       case 'pt-copy':
-        copyReport();
+        copy(reportText(), 'Report copied.');
+        return true;
+      case 'pt-save':
+        if (U.run) copy(T.serializeRun(U.run), 'Save copied.');
         return true;
       case 'pt-clear':
         st.log = [];

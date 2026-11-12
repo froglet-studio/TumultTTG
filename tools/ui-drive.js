@@ -50,7 +50,9 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40 } = {}) {
   try {
     if (!d.querySelector('[data-act="newRun"]')) throw new Error('title screen did not render');
     act('newRun');
-    U.run.rng = T.makeRng(seed); // deterministic from here on
+    // deterministic from here on: every stream of the run restarts from this seed
+    U.run.seed = seed;
+    U.run.rngs = {};
 
     // Hero 1: quick build. Hero 2: draft from packs.
     act('prebuilt', 'cavitt');

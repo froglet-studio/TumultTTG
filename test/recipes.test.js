@@ -185,6 +185,7 @@ test('no option on a card, gear or consumable recipe is ignored, and every formu
           if (tg.need === 'node') ctx.node = (tg.options || [])[0];
           if (choose && tg.options) Object.assign(ctx, choose(tg, scene));
           T.useGear(scene.m, scene.h, 0, ai, ctx);
+          H.assertPlain(scene.m, `after ${gear.id} — ${ability.n}`);
         }),
       ),
     );
@@ -197,6 +198,7 @@ test('no option on a card, gear or consumable recipe is ignored, and every formu
         scene.h.consumables = [item.id];
         if (arrange) arrange(scene);
         T.useConsumable(scene.m, scene.h, 0);
+        H.assertPlain(scene.m, `after ${item.id}`);
       }),
     );
 

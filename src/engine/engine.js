@@ -14,11 +14,14 @@
   const R = () => T.RULES;
 
   /* ───────────────────────────── RNG ───────────────────────────── */
-  T.makeRng = function (seed) {
-    let a = seed >>> 0 || 0x9e3779b9;
+  // A random stream is one 32-bit number kept in plain state — holder[key] — and drawing from it
+  // advances that number. T.stream is a view on it with the usual helpers; the number is all
+  // there is to copy or save. (mulberry32, the generator the game has always used.)
+  T.stream = function (holder, key) {
     const rng = function () {
-      a |= 0;
+      let a = holder[key] | 0;
       a = (a + 0x6d2b79f5) | 0;
+      holder[key] = a;
       let t = Math.imul(a ^ (a >>> 15), 1 | a);
       t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
@@ -34,6 +37,47 @@
       return b;
     };
     return rng;
+  };
+  /** A stream that stands alone, for generators and tools: T.makeRng(7).pick(list). */
+  T.makeRng = (seed) => T.stream({ s: seed >>> 0 || 0x9e3779b9 }, 's');
+  /**
+   * The seed for one named purpose, derived from another seed. Every stream of a run or a mission
+   * gets its own, so what one of them draws never moves another: T.subSeed(seed, 'dice').
+   */
+  T.subSeed = function (seed, label) {
+    let h = (seed >>> 0) ^ 0x811c9dc5;
+    for (let i = 0; i < label.length; i++) {
+      h ^= label.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    h ^= h >>> 16;
+    h = Math.imul(h, 0x85ebca6b);
+    h ^= h >>> 13;
+    h = Math.imul(h, 0xc2b2ae35);
+    h ^= h >>> 16;
+    return h >>> 0;
+  };
+  /**
+   * A copy of plain data: numbers, strings, booleans, null, arrays and plain objects. A mission is
+   * nothing else, so T.clone(mission) is a second mission that plays on exactly as the first would.
+   * Anything else is refused, because it would be state the copy could not carry.
+   */
+  T.clone = function clone(v) {
+    if (v === null || typeof v !== 'object') {
+      if (typeof v === 'function') throw new Error('T.clone: state holds a function');
+      return v;
+    }
+    if (Array.isArray(v)) {
+      const out = new Array(v.length);
+      for (let i = 0; i < v.length; i++) out[i] = clone(v[i]);
+      return out;
+    }
+    const proto = Object.getPrototypeOf(v);
+    if (proto !== Object.prototype && proto !== null)
+      throw new Error('T.clone: state holds something that is not plain data');
+    const out = {};
+    for (const k of Object.keys(v)) out[k] = clone(v[k]);
+    return out;
   };
   const num = (x, P, E) => (typeof x === 'function' ? x(P || 0, E || 0) : x == null ? 0 : x);
   const bool = (x, P, E) => !!(typeof x === 'function' ? x(P || 0, E || 0) : x);
@@ -142,11 +186,13 @@
   });
 
   /* ───────────────────────────── ENTITIES ───────────────────────────── */
-  let UID = 1;
+  // Every hero, foe and decoy in a mission has a uid, counted by the mission itself (m.uids):
+  // a copied or resumed mission goes on counting where it was, and no two things share one.
+  const nextUid = (m) => ++m.uids;
   T.makeHero = function (spec) {
     const h = {
       kind: 'hero',
-      uid: UID++,
+      uid: null, // given when a mission starts
       id: spec.id,
       name: spec.name,
       title: spec.title || '',
@@ -213,12 +259,19 @@
   };
   const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
 
-  T.makeEnemy = function (type, tier, pos) {
+  /** Put a new foe on the board. The only way one comes to be: it takes its uid from the mission. */
+  T.spawnEnemy = function (m, type, tier, pos) {
+    const e = makeEnemy(type, tier, pos);
+    e.uid = nextUid(m);
+    m.enemies.push(e);
+    return e;
+  };
+  function makeEnemy(type, tier, pos) {
     const d = T.ENEMIES[type];
     const ti = Math.max(0, Math.min(2, tier - 1));
     const e = {
       kind: 'enemy',
-      uid: UID++,
+      uid: null,
       type,
       name: d.name,
       glyph: d.glyph,
@@ -244,7 +297,7 @@
     if (d.hidden) e.states.Hidden = { t: 99, canMove: true };
     if (d.anchored) e.states.Anchored = { t: 99 };
     return e;
-  };
+  }
   T.enemyAbility = (e, key) => {
     const ab = T.ENEMIES[e.type].abilities[key];
     return ab;
@@ -252,9 +305,18 @@
   T.enemyDmg = (e, ab) => (Array.isArray(ab.dmg) ? ab.dmg[e.ti] : ab.dmg || 0);
 
   /* ───────────────────────────── MISSION SETUP ───────────────────────────── */
-  T.startMission = function (run, spec, archetype, tier, rng) {
+  /**
+   * A mission is plain data and nothing in it points back at the run: it can be copied (T.clone),
+   * saved and resumed. What it needs from the run it takes in here — the squad, the crystals, the
+   * once-a-run Second Wind — and T.applyMissionResult hands the last two back.
+   * `seed` names its dice and its opposition; the board in `spec` was drawn before it began.
+   */
+  T.startMission = function (run, spec, archetype, tier, seed) {
     B.build(spec.board);
     const m = {
+      seed,
+      rngs: { dice: T.subSeed(seed, 'dice'), foes: T.subSeed(seed, 'foes') },
+      uids: 0,
       archetype,
       tier,
       board: spec.board,
@@ -275,15 +337,16 @@
       over: false,
       won: false,
       lost: false,
-      rng,
-      run,
+      crystals: run.crystals,
+      secondWindUsed: !!run.secondWindUsed,
       stats: { kills: 0, lowHp: false, ambushDmg: 0, hazardDmg: 0, foundRound: null },
       isBoss: !!spec.isBoss,
       title: spec.title,
-      eliteKind: spec.eliteKind,
+      eliteKind: spec.eliteKind || null,
       spawnedCount: 0,
     };
-    spec.enemies.forEach((en) => m.enemies.push(T.makeEnemy(en.type, tier, en.node)));
+    m.heroes.forEach((h) => (h.uid = nextUid(m)));
+    spec.enemies.forEach((en) => T.spawnEnemy(m, en.type, tier, en.node));
     m.heroes.forEach((h, i) => {
       h.pos = spec.starts[i % spec.starts.length];
       h.downed = false;
@@ -325,7 +388,7 @@
     const faces = T.heroFaces(h);
     const out = [];
     for (let i = 0; i < k; i++) {
-      const f = m.rng.pick(faces);
+      const f = T.stream(m.rngs, 'dice').pick(faces);
       out.push(f);
       h.held.push(f);
     }
@@ -411,8 +474,9 @@
   };
   T.rerollHeld = function (m, h, indices) {
     const faces = T.heroFaces(h);
+    const dice = T.stream(m.rngs, 'dice');
     indices.forEach((i) => {
-      if (i >= 0 && i < h.held.length) h.held[i] = m.rng.pick(faces);
+      if (i >= 0 && i < h.held.length) h.held[i] = dice.pick(faces);
     });
     fx(m, { t: 'roll', hero: h.uid, faces: indices.map((i) => h.held[i]) });
   };
@@ -714,8 +778,8 @@
       return;
     }
     const [rise] = T.boonVals(h, 'autoRevive');
-    if (rise && !m.run.secondWindUsed) {
-      m.run.secondWindUsed = true;
+    if (rise && !m.secondWindUsed) {
+      m.secondWindUsed = true;
       h.hp = rise;
       say(m, `A second wind — ${h.name} rises again with ${rise}.`, 'sys');
       fx(m, { t: 'revive', ent: h.uid });
@@ -784,6 +848,7 @@
   T.pushAway = pushAway;
   T.pullToward = pullToward;
 
+  const heroBy = (m, uid) => m.heroes.find((h) => h.uid === uid) || null;
   function onEnemyEnter(m, e, node) {
     if (!e.alive) return;
     // traps
@@ -793,7 +858,7 @@
       if (!tr.counted) {
         traps.shift();
         say(m, `A snare springs under ${e.name}!`, 'hero');
-        T.damage(m, tr.owner, e, tr.dmg, { kind: 'area', label: 'snares', trueDmg: false, noReveal: false });
+        T.damage(m, heroBy(m, tr.owner), e, tr.dmg, { kind: 'area', label: 'snares', trueDmg: false, noReveal: false });
         if (e.alive && tr.anchor) anchorEnt(m, e, tr.anchor);
         fx(m, { t: 'trap', node });
       } else {
@@ -836,7 +901,7 @@
     const tr = traps.splice(i, 1)[0];
     e.inCounted = null;
     say(m, `The counted snare springs shut on ${e.name}!`, 'hero');
-    T.damage(m, tr.owner, e, tr.dmg, { kind: 'area', label: 'snares' });
+    T.damage(m, heroBy(m, tr.owner), e, tr.dmg, { kind: 'area', label: 'snares' });
     if (e.alive) {
       anchorEnt(m, e, tr.anchor);
       if (tr.noTele) st(e).NoTele = { t: tr.anchor };
@@ -1155,7 +1220,7 @@
           t.hp = 0;
           checkEnemyDeath(m, t, actor);
           if (f.salvage) {
-            m.run.crystals += f.salvage;
+            m.crystals += f.salvage;
             say(m, `Salvaged ${f.salvage} ◇.`, 'sys');
           }
         } else say(m, `${t.name} is not yet dying (${t.hp} > ${th}).`, 'sys');
@@ -1705,7 +1770,7 @@
           h.states.Engines.push({
             kind: f.kind,
             val: num(f.val, P, E),
-            face: typeof f.face === 'function' ? f.face(P, E) : f.face,
+            face: (typeof f.face === 'function' ? f.face(P, E) : f.face) || null,
             t: d,
             cleanse: bool(f.cleanse, P, E),
             mintAlt: num(f.mintAlt, P, E),
@@ -1726,7 +1791,7 @@
         }
         m.traps[node] = m.traps[node] || [];
         m.traps[node].push({
-          owner: actor,
+          owner: actor.uid,
           dmg: num(f.dmg, P, E),
           anchor: num(f.anchor, P, E),
           counted: !!f.counted,
@@ -1761,7 +1826,7 @@
         if (node == null) break;
         const d = {
           kind: 'decoy',
-          uid: UID++,
+          uid: nextUid(m),
           name: 'decoy',
           pos: node,
           hp: 6,
@@ -1970,10 +2035,10 @@
     const ab = def.abilities[ai];
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
-    if (m.run.crystals < ab.cost) return { ok: false, why: 'need ◇' };
+    if (m.crystals < ab.cost) return { ok: false, why: 'need ◇' };
     const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no target' };
-    m.run.crystals -= ab.cost;
+    m.crystals -= ab.cost;
     g.cds[ai] = ab.cd;
     say(m, `${h.name} uses ${def.name} — ${ab.n} (${ab.cost} ◇).`, 'hero');
     fx(m, { t: 'gear', hero: h.uid });
@@ -2012,8 +2077,7 @@
           e.spawnCounter = 0;
           const spot = B.walkNeighbors(m.board, e.pos).find((n) => !T.occupied(m, n));
           if (spot) {
-            const b = T.makeEnemy(T.ENEMIES[e.type].spawns, Math.max(1, m.tier - 1), spot);
-            m.enemies.push(b);
+            const b = T.spawnEnemy(m, T.ENEMIES[e.type].spawns, Math.max(1, m.tier - 1), spot);
             say(m, `${e.name} spawns a ${b.name}.`, 'enemy');
             fx(m, { t: 'spawn', ent: b.uid, pos: spot });
           }
@@ -2036,14 +2100,14 @@
       if (m.round < sp.startRound) continue;
       const liveSwarm = m.enemies.filter((e) => e.alive && e.spawned).length;
       if (liveSwarm >= sp.max) continue;
-      const nodes = m.rng.shuffle(sp.nodes).filter((n) => !T.occupied(m, n));
+      const foes = T.stream(m.rngs, 'foes');
+      const nodes = foes.shuffle(sp.nodes).filter((n) => !T.occupied(m, n));
       if (!nodes.length) continue;
       const count = m.tier >= 2 && m.round % 2 === 0 ? 2 : 1;
       for (let i = 0; i < count && i < nodes.length; i++) {
-        const type = m.rng.pick(sp.pool);
-        const e = T.makeEnemy(type, m.tier, nodes[i]);
+        const type = foes.pick(sp.pool);
+        const e = T.spawnEnemy(m, type, m.tier, nodes[i]);
         e.spawned = true;
-        m.enemies.push(e);
         m.spawnedCount++;
         say(m, `A ${e.name} emerges from the spawn-node.`, 'enemy');
         fx(m, { t: 'spawn', ent: e.uid, pos: nodes[i] });

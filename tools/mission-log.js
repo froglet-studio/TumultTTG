@@ -12,20 +12,41 @@
  *
  * The playtest build's "Jump into a mission" starts from the same T.quickMission, and its
  * report prints this command: same arguments, same board, same opening dice.
+ *
+ *   node tools/mission-log.js --save <file>
+ *
+ * carries on from a save instead — the text the playtest report's "Copy save" button copies, or
+ * the browser's `tumult_v2_run` — from the exact moment it was taken: the log so far, then the
+ * autoplayer's way to the end.
  */
+const fs = require('fs');
 const { createHarness } = require('./harness');
 
 const H = createHarness();
 const { T } = H;
-const [arch = 'vault', tier = '1', seed = '1', a = '0', b = '1', kit = 'start'] = process.argv.slice(2);
-
-const run = T.quickMission({
-  seed: Number(seed),
-  heroes: [Number(a), Number(b)],
-  type: arch,
-  tier: Number(tier),
-  kit,
-});
+let run;
+if (process.argv[2] === '--save') {
+  // a save is the whole run, a mission in progress included: carry on from that exact moment
+  run = T.deserializeRun(fs.readFileSync(process.argv[3], 'utf8'));
+  if (!run.mission) {
+    const at = run.nodeId != null ? `row ${run.map.all[run.nodeId].row + 1}` : 'the start';
+    console.log(`No mission in progress: this save is on the ${run.phase} screen at ${at} of seed ${run.seed}.`);
+    console.log('squad: ' + run.heroes.map((h) => `${h.name} ${h.hp}/${h.maxHp} (${h.cards.join(' ')})`).join(' | '));
+    process.exit(0);
+  }
+  console.log(
+    `resuming seed ${run.seed}: ${run.mission.title} — ${run.mission.archetype} t${run.mission.tier}, round ${run.mission.round}`,
+  );
+} else {
+  const [arch = 'vault', tier = '1', seed = '1', a = '0', b = '1', kit = 'start'] = process.argv.slice(2);
+  run = T.quickMission({
+    seed: Number(seed),
+    heroes: [Number(a), Number(b)],
+    type: arch,
+    tier: Number(tier),
+    kit,
+  });
+}
 const m = run.mission;
 
 const N = m.board.nodes;
