@@ -78,3 +78,29 @@ test('world data: ids are unique and entries are complete', () => {
     assert.ok(e.policy && Object.keys(e.abilities).length >= 1, `${id}: policy + abilities`);
   }
 });
+
+test('every recipe names a verb and a targeting flow the engine knows (a typo fails here, not in play)', () => {
+  const src = require('node:fs').readFileSync(require('node:path').join(__dirname, '../src/engine/engine.js'), 'utf8');
+  // the case labels of a switch, from the line that opens a function to the next `default:`
+  const cases = (opener, endMark) => {
+    const from = src.indexOf(opener);
+    assert.ok(from >= 0, `engine has ${opener}`);
+    const body = src.slice(from, src.indexOf(endMark, from));
+    return new Set([...body.matchAll(/case '([A-Za-z0-9_]+)'/g)].map((x) => x[1]));
+  };
+  const verbs = cases('T.applyEffect = function', 'unimplemented verb');
+  const flows = cases('T.targetsFor = function', 'T.reachableWalk = function');
+  assert.ok(verbs.size > 20 && flows.size > 10, 'the switches were found');
+
+  const recipes = [];
+  for (const c of T.CARDS) for (const fk of ['P', 'E']) recipes.push([`${c.id}.${fk}`, c[fk]]);
+  for (const g of T.GEAR) for (const a of g.abilities) recipes.push([`${g.id} — ${a.n}`, a]);
+  for (const item of T.CONSUMABLES) recipes.push([item.id, item]);
+
+  const wrong = [];
+  for (const [where, r] of recipes) {
+    if (!flows.has(r.tgt)) wrong.push(`${where}: targeting '${r.tgt}'`);
+    for (const fx of r.fx) if (!verbs.has(fx.v)) wrong.push(`${where}: verb '${fx.v}'`);
+  }
+  assert.deepEqual(wrong, []);
+});

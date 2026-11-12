@@ -33,7 +33,8 @@ Tools that take arguments are called with `node` directly, because PowerShell ca
 ```
 src/manifest.json         load order — a new source file must be listed here
 src/data/cards.js         99 trait cards as data (two faces each, verb recipes)
-src/data/world.js         rules constants, gear, boons, bestiary, mission generators, map, events
+src/data/world.js         rules constants, gear, boons, bestiary, events, pre-made heroes
+src/engine/generators.js  board generators, mission archetypes, the Tide Map
 src/engine/engine.js      dice, track, damage, verbs (T.applyEffect), movement, objectives, rounds
 src/engine/ai.js          enemy intents + execution; heuristic hero autoplayer (the weak simulated player)
 src/engine/lookahead.js   actions as data, the shared evaluation, the look-ahead player (the strong one)

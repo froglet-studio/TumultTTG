@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.4.1 — 2026-11-12 — generators are engine code
+
+No rule changed; narrated missions and the simulator's tables are byte-identical before and after.
+
+- **Changed:** the board generators, the mission archetypes and the Tide Map moved from `src/data/world.js` to `src/engine/generators.js`, where they are formatted and tested like the rest of the engine. `world.js` keeps the data tables (design/09 §5).
+- **Added:** a test that every card face, gear ability and consumable names a verb and a targeting flow the engine knows, so a typo in a recipe fails a test instead of quietly doing nothing in play (93 tests in all).
+
 ## 2.4.0 — 2026-11-12 — Ethereal faces must be awakened
 
 Garrett settled the last open rule from the handoff (decision 4): an Ethereal face is magic that must be awakened, and every hero starts with a few awakened.

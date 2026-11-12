@@ -107,7 +107,6 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 - `node tools/sim.js 40` takes over a minute now that it plays every mission twice, and `npm run audit` about a minute on four cores. `--player weak` is the quick look.
 - `T.runEffects` is defined and then wrapped later in `engine.js` (for decoy placement). It works; it is confusing.
 - The Warden's shield stops area damage because `T.damage` checks for its type by name, and an overridden foe's blow at its neighbour skips the damage pipeline altogether. Both are special cases in the engine that should be data and verbs.
-- `src/data/world.js` mixes data tables with generator code.
 - The UI is string templates re-rendered wholesale, with one delegated click handler. Fine at this size; it will not survive the presentation milestones unchanged.
 - The interface tests wait in real time for end-of-mission animations, which is most of the test suite's 15 seconds.
 

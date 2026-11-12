@@ -3,6 +3,7 @@
   "engine": [
     "data/cards.js",
     "data/world.js",
+    "engine/generators.js",
     "engine/engine.js",
     "engine/ai.js",
     "engine/lookahead.js",
@@ -10,5 +11,8 @@
   ],
   "ui": ["ui/core.js", "ui/mission.js"],
   "css": ["ui/style.css"],
-  "playtest": { "js": ["ui/playtest.js"], "css": ["ui/playtest.css"] }
+  "playtest": {
+    "js": ["ui/playtest.js"],
+    "css": ["ui/playtest.css"]
+  }
 }
