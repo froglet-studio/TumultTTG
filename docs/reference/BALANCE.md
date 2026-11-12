@@ -68,6 +68,35 @@ Full runs (40): 9/40 won before, 8/40 after; missions won within runs 76% before
 
 Where the movement comes from: strike bonuses no longer leak into corrosion and zones, and two "this turn" bonuses now expire (the swarm and elite tier 1–2 cells); Momentum works every round and Quick Hands works at all (tier 3 and the boss, the only cells where the simulator hands out boons); an Anchored Harrier stays put (elite). The autoplayer has no rule for several of the faces that were fixed — it never walks a Weightless hero up a ledge — so for those the table shows no change where a person would see one.
 
+## v2.1.0 — the same rules, the dice re-dealt
+
+Roadmap F1 gave the board, the dice and the opposition a random stream each (`STATE_AND_SAVES.md`). No rule changed, but every draw now comes from a different place, so a seed names a different mission than it did and every simulated number is a fresh sample of the same game. The check that nothing else moved, at 1,000 missions a cell (`node tools/sim.js 1000 missions`), with twice the standard error of the difference beside it:
+
+| archetype | tier | win% 2.0.3 | win% 2.1.0 | 2 SE | rounds 2.0.3 | rounds 2.1.0 | in band 2.1.0 | hero HP at end 2.1.0 |
+|---|---|---|---|---|---|---|---|---|
+| swarm | 1 | 100% | 100% | ±0.0 | 6.0 | 6.0 | 1% | 81% |
+| swarm | 2 | 83% | 84% | ±3.3 | 6.6 | 6.6 | 15% | 39% |
+| swarm | 3 | 61% | 64% | ±4.3 | 7.7 | 7.6 | 29% | 23% |
+| vault | 1 | 93% | 93% | ±2.3 | 6.4 | 6.4 | 27% | 74% |
+| vault | 2 | 74% | 72% | ±4.0 | 7.0 | 7.1 | 48% | 58% |
+| vault | 3 | 40% | 42% | ±4.4 | 7.6 | 7.6 | 65% | 39% |
+| hidden | 1 | 97% | 98% | ±1.4 | 4.5 | 4.5 | 8% | 72% |
+| hidden | 2 | 84% | 86% | ±3.2 | 5.1 | 5.2 | 15% | 48% |
+| hidden | 3 | 62% | 62% | ±4.3 | 5.3 | 5.4 | 17% | 31% |
+| cascade | 1 | 99% | 99% | ±0.9 | 5.4 | 5.5 | 10% | 70% |
+| cascade | 2 | 93% | 91% | ±2.4 | 5.9 | 6.0 | 24% | 51% |
+| cascade | 3 | 70% | 72% | ±4.1 | 6.7 | 6.7 | 42% | 39% |
+| elite | 1 | 82% | 79% | ±3.5 | 8.6 | 9.1 | 21% | 63% |
+| elite | 2 | 77% | 77% | ±3.8 | 8.7 | 8.9 | 25% | 55% |
+| elite | 3 | 66% | 68% | ±4.2 | 10.4 | 9.5 | 30% | 48% |
+| boss | 3 | 27% | 25% | ±3.9 | 16.1 | 16.2 | 46% | 17% |
+
+No cell moves by more than its 2 SE. Whole runs (`node tools/sim.js 2000 runs`): 449 of 2,000 won before, 466 after (22% and 23%); missions won within runs 73% and 73%; average row reached 5.48 and 5.52.
+
+Two things about the simulator changed with it. The same squads now meet every mission type — squad *i* is built from run seed *i* in every cell, and only the boards differ — where before the cells for Swarm, Vault and Elite shared squads by accident and the rest shared nothing. And the simulated player's choices on the Tide Map come from a stream of their own, so they no longer disturb the game's.
+
+At 40 missions a cell the table wobbles by ten points or more from sampling alone: use 40 for a quick look and 1,000 to claim a change.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.

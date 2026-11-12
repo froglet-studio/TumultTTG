@@ -5,9 +5,9 @@ From v2.0 (a playable roguelike run) to the game in the brief: polished, illustr
 Milestones are grouped into four tracks so that several people can work at once. Each has a **done when** that can be checked. Design detail is in `docs/design/`; everything there except the pillars is a proposal — settle the open questions with Garrett before building on them.
 
 ```
-Foundations   F1 ──► F2 ──► F3
+Foundations   F1 ✓ ─► F2 ──► F3
                 │      │
-Systems   S0 ✓  └► S1 ─┴► S2 ──► S3 ──► S4      (S0 is done)
+Systems   S0 ✓  └► S1 ─┴► S2 ──► S3 ──► S4      (S0 and F1 are done)
                     │
 Characters          └► C1 ──► C2 ──► C3
 Presentation   P1 ──► P2 ──► P3 ──► P4          (P1 can start today)
@@ -15,10 +15,10 @@ Presentation   P1 ──► P2 ──► P3 ──► P4          (P1 can start 
 
 ## Foundations
 
-### F1 · Cloneable state and separate random streams
-Make mission state plain data; give board generation, dice and opposition their own seeded streams. ([09](design/09-engineering.md) §1, §3)
+### F1 · Cloneable state and separate random streams — done (v2.1.0)
+Make mission state plain data; give board generation, dice and opposition their own seeded streams. ([09](design/09-engineering.md) §1, §3; as built: [`reference/STATE_AND_SAVES.md`](reference/STATE_AND_SAVES.md))
 
-**Done when:** `clone(mission)` followed by identical actions yields identical logs for 1,000 random missions; the same seed gives the same board whatever squad plays it; a mission can be saved and resumed mid-round.
+**Done when:** `clone(mission)` followed by identical actions yields identical logs for 1,000 random missions; the same seed gives the same board whatever squad plays it; a mission can be saved and resumed mid-round. All three are tests in `test/state.test.js`. Saves gained a version and a migration on the way (09 §7).
 
 ### F2 · The look-ahead player
 A generic player that lists legal actions, simulates the rest of the round on a copy, and scores outcomes. Keep the heuristic as the weak player. ([09](design/09-engineering.md) §2)
@@ -109,7 +109,7 @@ The print generator, pilot boards, opposition flowcharts, and a one-leg print-an
 ## A sensible first month
 
 1. ~~S0 — quick, concrete, and it makes the game honest.~~ Done.
-2. F1, then F2 — everything else is measured with them.
+2. ~~F1~~ (done), then F2 — everything else is measured with them.
 3. P1 in parallel — it improves the game people are already playing.
 4. Garrett's answers on the frame, so C1 can be designed against real decisions.
 5. S1 — the change that makes the ability rules reachable.

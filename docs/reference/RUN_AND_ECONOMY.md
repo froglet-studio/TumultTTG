@@ -70,4 +70,4 @@ Terminal Beacon · Privateer Toll · Etherion Storm · Bloom of the Superorganis
 
 ## Saving
 
-The run saves to `localStorage` whenever you return to the map (missions are not saved mid-fight; a refresh during a mission returns you to the map at that node). Lifetime stats (tides sailed, Consolidations toppled, deepest row) persist across runs.
+The run saves to `localStorage` at every node and after every action in a mission; **Continue** returns to wherever the page was closed, in the middle of a round if need be (`docs/reference/STATE_AND_SAVES.md`). Lifetime stats (tides sailed, Consolidations toppled, deepest row) persist across runs.

@@ -10,13 +10,15 @@ The game ships as one HTML file built from a handful of plain scripts; everythin
 | `src/data/world.js` | rules constants, lanes, gear, consumables, boons, bestiary, mission generators, Tide Map, events, pre-made heroes, flavor |
 | `src/engine/engine.js` | dice economy, track, damage pipeline, the verbs (`T.applyEffect`), movement and force, reveal, traps/zones/decoys, objectives, hazards, round structure |
 | `src/engine/ai.js` | enemy intent selection and execution per policy; the heuristic hero autoplayer |
-| `src/engine/run.js` | draft, UP allocation, Tide Map, rewards, haven, events, save/load |
+| `src/engine/run.js` | draft, UP allocation, Tide Map, rewards, haven, events, the run's random streams, save/load and save versions |
 | `src/ui/core.js`, `src/ui/mission.js`, `src/ui/style.css` | screens, SVG board, panels, targeting, animations, tiny synth |
 | `src/manifest.json`, `src/index.template.html` | load order and the HTML shell the build fills in |
 | `tools/` | build, dev server, headless harness, simulators, card catalog and ability audit generators, UI driver |
 | `test/` | `node --test` suites: data integrity, engine rules, missions, runs, build, UI smoke |
 
 All scripts attach to one global namespace, `T` (`window.T` in the browser, `global.T` in Node). Load order is `src/manifest.json`; a new source file must be added there.
+
+A run and its mission are plain data, and every random draw comes from a named stream kept in that data — read [`STATE_AND_SAVES.md`](STATE_AND_SAVES.md) before adding state or randomness.
 
 **After any change:** `npm run check` (build + tests). After changing cards, enemies or missions also run `npm run docs` to regenerate `CARDS.md` and `ABILITY_AUDIT.md`, and `node tools/sim.js 20` to see what moved.
 

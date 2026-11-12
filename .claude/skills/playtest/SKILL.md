@@ -38,7 +38,8 @@ To compare a change, run the simulation on the base commit first (`git stash` or
 `npm run build:playtest` builds the game with a panel for testers (`docs/reference/OVERVIEW.md`, "Play it"). Its **Report** is plain text. For each mission it gives the archetype, tier, seed, squad, kit, result, rounds, hp left, kills, bonus objectives, and faces played as `P n / E n (k at E 0)`, with the rule that was set (`rule E≥0` or `E≥1`) and the build's version.
 
 - A mission started from the panel prints `node tools/mission-log.js <archetype> <tier> <seed> <heroA> <heroB> <kit>`: run it to see the same board and opening dice, then read the report's log lines against it.
-- A mission met in an ordinary Tide cannot be rebuilt from its seed (roadmap F1); go by the log lines.
+- **Copy save** in the report copies the Tide exactly as it stood, a mission in progress included. Put it in a file and `node tools/mission-log.js --save <file>` prints the log so far and plays on from that moment — the surest way to look at something a tester saw. Ask for it whenever a report describes something odd.
+- A seed names a board whoever plays it (`docs/reference/STATE_AND_SAVES.md`), so two testers on the same seed, mission and tier can compare notes on the same layout.
 - A person's results are the ones that count for feel, pacing and readability. Set them beside the simulated numbers; never average the two.
 
 ## Report

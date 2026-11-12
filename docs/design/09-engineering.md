@@ -1,10 +1,10 @@
 # 09 · Engineering
 
-**Status: Proposed.** The v2.0 code is small, tested and deliberately simple. These are the changes that unlock the rest of the roadmap, in the order they pay off.
+**Status: §1, §3 and §7 are built (v2.1.0, roadmap F1) — how they work is in [`../reference/STATE_AND_SAVES.md`](../reference/STATE_AND_SAVES.md). The rest is proposed.** The v2.0 code is small, tested and deliberately simple. These are the changes that unlock the rest of the roadmap, in the order they pay off.
 
-## 1 · Mission state that can be copied
+## 1 · Mission state that can be copied — built
 
-Today a mission is a live object graph. Make it plain data: no functions or DOM references inside the state, cards referenced by id, the random generator's position stored in the state. Then `clone(mission)` is a structured copy, and five things become cheap at once:
+*As proposed, before 2.1.0:* Today a mission is a live object graph. Make it plain data: no functions or DOM references inside the state, cards referenced by id, the random generator's position stored in the state. Then `clone(mission)` is a structured copy, and five things become cheap at once:
 
 - **look-ahead** — try an action on a copy and see what happens;
 - **forecast and previews** in the interface ([07](07-art-and-ux.md));
@@ -27,9 +27,9 @@ Because it scores outcomes instead of recognising verbs, it handles any new card
 
 Keep the old heuristic as the *weak* player. The gap between the two is a useful number: it is how much a mission rewards thinking.
 
-## 3 · Separate random streams
+## 3 · Separate random streams — built
 
-Board generation, dice and opposition choices currently share one generator, so changing how a squad is built changes the board that follows. Give each its own stream derived from the seed. Seeds then mean "this board" regardless of who plays it, which makes paired comparisons and bug reports exact. (`tools/audit.js` already works around this by reseeding before a mission.)
+*As proposed, before 2.1.0:* Board generation, dice and opposition choices currently share one generator, so changing how a squad is built changes the board that follows. Give each its own stream derived from the seed. Seeds then mean "this board" regardless of who plays it, which makes paired comparisons and bug reports exact. (`tools/audit.js` already works around this by reseeding before a mission.)
 
 ## 4 · A season log
 
@@ -43,9 +43,9 @@ Record every decision and outcome as structured events. The dossier ([06](06-pil
 
 The global `T` namespace keeps the build trivial and has cost little so far. It will start to hurt as the engine grows — everything can reach everything. Move to ES modules (engine and data importable on their own, no DOM), add JSDoc types for the data shapes, and keep the single-file output with a small bundling step. Do this once, between milestones, not gradually.
 
-## 7 · Saves that survive updates
+## 7 · Saves that survive updates — built
 
-Saves are keyed `tumult_v2_*` with no version inside. Add a version field and a migration step before the first change that alters the saved shape, and a test that loads a saved game from each prior version.
+*As proposed, before 2.1.0:* Saves are keyed `tumult_v2_*` with no version inside. Add a version field and a migration step before the first change that alters the saved shape, and a test that loads a saved game from each prior version.
 
 ## Constraints that do not move
 

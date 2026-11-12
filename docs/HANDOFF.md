@@ -9,6 +9,7 @@ Tumult was designed and built over a long chat session and has now moved into th
 - **There is now a way to measure the ability rules** (`npm run audit`), and a first set of findings.
 - **Since the handoff:** roadmap milestone S0 is done (v2.0.2, 12 November 2026). The engine now does what the card, boon and bestiary text says; the list this file used to carry is empty, and two tests keep it that way. One question from it is still open — decision 4 below.
 - **There is a build to playtest with** (v2.0.3): `npm run build:playtest` adds a panel that starts any mission from a seed, switches the rule in decision 4, and writes a report. See "Play it" in [`reference/OVERVIEW.md`](reference/OVERVIEW.md).
+- **Roadmap milestone F1 is done** (v2.1.0): a mission is plain data that can be copied, saved in the middle of a round and resumed exactly; the board, the dice and the opposition each have a random stream of their own, so a seed names a board whoever plays it; saves carry a version. [`reference/STATE_AND_SAVES.md`](reference/STATE_AND_SAVES.md) is how it works. F2, the look-ahead player, is next and stands on it.
 
 ## What is in the repository
 
@@ -93,20 +94,18 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 - Tier-1 objective missions can be won by walking to the objective.
 - Missions run shorter than the 8–14 round target at tiers 1 and 2.
 - The boss's true difficulty is unknown: the autoplayer wins it a quarter to a third of the time with a realistic kit and almost never with a random one, and nobody has measured how people fare.
-- A mission in progress is not saved; refreshing returns to the map at that node.
 - The mission screen is built for a mouse. It fits a phone's width, but a card face's numbers are only in its hover tooltip (roadmap P1).
 - A hero on a ledge cannot walk back down until the ramp drops; only a blink, a climb or still being Weightless gets them off. Harmless on the Vault, where the ledge is the objective. Settle it before a board puts a ledge anywhere else (roadmap S4).
 - The autoplayer plays a conditional face whether or not its condition holds, and does not know that a Weightless hero can walk up a ledge. Simulation undercounts both (roadmap F2).
+- A mission can stall. With one hero left and an elite that cannot reach them, the autoplayer neither wins nor loses and the simulator calls it a loss at round 40 — `node tools/mission-log.js elite 2 7 3 1 tier` is one. Whether a person can be stuck the same way is not known; it is the same gap as the missing basic attack (roadmap S1).
 
 **Code**
-- One random stream drives squad building, board generation, dice and opposition, so seeds are not comparable across squads.
-- `tools/sim.js` and `test/missions.test.js` mix the archetype name's *length* into their seeds, so Swarm, Vault and Elite cells play identical squads. Harmless, but the samples are correlated. (`tools/audit.js` uses the archetype's index.)
+- A seed names a different mission from v2.1.0 on than it did in 2.0.x: the draws moved to separate streams. Old seeds in notes and reports do not carry over.
 - The autoplayer (`src/engine/ai.js`) is a chain of hand-written cases; it is for simulation only and is the weakest part of the measurement story.
 - `T.runEffects` is defined and then wrapped later in `engine.js` (for decoy placement). It works; it is confusing.
 - The Warden's shield stops area damage because `T.damage` checks for its type by name, and an overridden foe's blow at its neighbour skips the damage pipeline altogether. Both are special cases in the engine that should be data and verbs.
 - `src/data/world.js` mixes data tables with generator code.
 - The UI is string templates re-rendered wholesale, with one delegated click handler. Fine at this size; it will not survive the presentation milestones unchanged.
-- Saves carry no version number.
 - The interface tests wait in real time for end-of-mission animations, which is most of the test suite's 15 seconds.
 
 **Repository**
@@ -124,7 +123,7 @@ Prompts that make good first sessions:
 
 > Interview me on the open questions in docs/design/01-frame-and-campaign.md, one at a time. Then update the document with my answers and mark what is now settled.
 
-> Implement roadmap milestone F1 as described in docs/design/09-engineering.md. Write the clone-equivalence test first, keep every existing test green, and open a pull request.
+> Implement roadmap milestone F2 as described in docs/design/09-engineering.md §2, on the copyable missions F1 built (docs/reference/STATE_AND_SAVES.md). Write the test that the look-ahead player beats the heuristic on every mission type first, keep every existing test green, and open a pull request.
 
 > Start roadmap milestone P1: propose the new mission-screen layout as a static mock-up in a branch before changing any behaviour.
 
