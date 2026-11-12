@@ -1,6 +1,7 @@
 {
-  "comment": "Load order for the single-file build and for Node tools. Every file attaches to the global namespace T; later files may use anything defined by earlier ones.",
+  "comment": "Load order for the single-file build and for Node tools. Every file attaches to the global namespace T; later files may use anything defined by earlier ones. The playtest files are added only to the playtest build (npm run build:playtest).",
   "engine": ["data/cards.js", "data/world.js", "engine/engine.js", "engine/ai.js", "engine/run.js"],
   "ui": ["ui/core.js", "ui/mission.js"],
-  "css": ["ui/style.css"]
+  "css": ["ui/style.css"],
+  "playtest": { "js": ["ui/playtest.js"], "css": ["ui/playtest.css"] }
 }

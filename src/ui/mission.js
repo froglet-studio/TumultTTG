@@ -269,7 +269,7 @@
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       ${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.run.crystals}</span>
       <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>End Round ▶</button>
-      <button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button></div>`;
+      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button></div>`;
   }
 
   function renderTargetBar(m) {
