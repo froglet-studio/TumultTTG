@@ -71,3 +71,57 @@ test('the tide map: every node is reachable and the boss is the last row', () =>
     for (const n of Object.values(all)) if (n.type !== 'boss') assert.ok(n.next.length >= 1, 'no dead ends');
   }
 });
+
+test('quick missions: a seed, a squad and a kit name one mission, and the Tide carries on from it', () => {
+  const snap = (m) =>
+    JSON.stringify({
+      nodes: m.board.nodes,
+      edges: m.board.edges,
+      foes: m.enemies.map((e) => [e.type, e.pos, e.hp]),
+      heroes: m.heroes.map((h) => [
+        h.name,
+        h.pos,
+        h.held.join(''),
+        h.cards.join(','),
+        h.gear.map((g) => g.id).join(','),
+      ]),
+    });
+  const args = { seed: 7, heroes: [3, 1], type: 'elite', tier: 2, kit: 'tier' };
+  const a = T.quickMission(args);
+  assert.equal(snap(a.mission), snap(T.quickMission(args).mission), 'the same arguments, the same mission');
+  assert.notEqual(snap(a.mission), snap(T.quickMission({ ...args, seed: 8 }).mission));
+
+  // the kit: the starting six, or what the squad would carry by that tier
+  const start = T.quickMission({ ...args, kit: 'start' });
+  assert.ok(start.heroes.every((h) => h.gear.length === 0 && h.cards.length === T.RULES.START_CARDS));
+  assert.ok(
+    a.heroes.every((h) => h.gear.length === 1),
+    'a piece of gear by tier 2',
+  );
+  const late = T.quickMission({ ...args, type: 'boss', tier: 3 });
+  assert.ok(late.heroes.every((h) => h.gear.length === 2 && h.boons.length === 1));
+
+  // the map is drawn from its own stream: building the mission by hand, with no map, gives the same one
+  const byHand = T.newRun(args.seed);
+  H.prebuiltSquad(byHand, 3, 1);
+  T.addProgression(byHand, 2);
+  T.launchMission(byHand, 'elite', 2);
+  assert.equal(snap(byHand.mission), snap(a.mission));
+
+  // the mission is the first node of a whole Tide, which goes on when it is won
+  const node = a.map.all[a.nodeId];
+  assert.deepEqual([node.row, node.type, node.tier], [0, 'elite', 2]);
+  Object.assign(a.mission, { over: true, won: true });
+  T.missionRewards(a, a.mission);
+  T.applyMissionResult(a);
+  T.finishNode(a);
+  assert.equal(a.phase, 'map');
+  assert.ok(a.available.length && a.available.every((id) => a.map.all[id].row === 1));
+
+  // and a Heart beaten this way ends the run like any other
+  Object.assign(late.mission, { over: true, won: true });
+  T.missionRewards(late, late.mission);
+  T.applyMissionResult(late);
+  T.finishNode(late);
+  assert.deepEqual([late.phase, late.won, late.over], ['summary', true, true]);
+});

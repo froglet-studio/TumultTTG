@@ -4,21 +4,28 @@
  * Print the full narrated log of one auto-played mission — the quickest way to
  * see what the rules actually do.
  *
- *   node tools/mission-log.js [archetype=vault] [tier=1] [seed=1] [heroA=0] [heroB=1]
+ *   node tools/mission-log.js [archetype=vault] [tier=1] [seed=1] [heroA=0] [heroB=1] [kit=start]
  *
  * archetype: swarm | vault | hidden | cascade | elite | boss
  * heroA/heroB: indices into the pre-made heroes (T.PREBUILTS)
+ * kit: start (the six-card starting kit) | tier (the kit a squad would have by that tier)
+ *
+ * The playtest build's "Jump into a mission" starts from the same T.quickMission, and its
+ * report prints this command: same arguments, same board, same opening dice.
  */
 const { createHarness } = require('./harness');
 
 const H = createHarness();
 const { T } = H;
-const [arch = 'vault', tier = '1', seed = '1', a = '0', b = '1'] = process.argv.slice(2);
+const [arch = 'vault', tier = '1', seed = '1', a = '0', b = '1', kit = 'start'] = process.argv.slice(2);
 
-const run = T.newRun(Number(seed));
-H.prebuiltSquad(run, Number(a), Number(b));
-run.crystals = 12;
-T.launchMission(run, arch, Number(tier));
+const run = T.quickMission({
+  seed: Number(seed),
+  heroes: [Number(a), Number(b)],
+  type: arch,
+  tier: Number(tier),
+  kit,
+});
 const m = run.mission;
 
 const N = m.board.nodes;
