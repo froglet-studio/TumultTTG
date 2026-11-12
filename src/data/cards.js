@@ -56,7 +56,7 @@
     'A brain that models other minds.');
   C('human','hum_tool','Tool Use','S',2,
     { n:'Improvise', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'empower', val:(P,E)=>1+P, uses:1}],
+      fx:[{v:'empower', val:(P,E)=>1+P, uses:1, dur:1}],
       txt:(P,E)=>`Your next strike this turn deals +${1+P}.` },
     { n:'Reach Rig', ap:1, el:1, cd:2, dur:0, tgt:'node_r2',
       fx:[{v:'interact', range:(P,E)=>1+E, height:true}],
@@ -270,7 +270,7 @@
   /* ───────────────────────── 3 · BARN OWL (S/C) ───────────────────────── */
   C('owl','owl_silent','Silent Flight','S',2,
     { n:'Glide', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>2+P, noTrap:true},{v:'empower', val:2, uses:1}],
+      fx:[{v:'move', n:(P,E)=>2+P, noTrap:true},{v:'empower', val:2, uses:1, dur:1}],
       txt:(P,E)=>`Move ${2+P} without triggering traps; your next strike this turn deals +2 (surprise).` },
     { n:'Dampen', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+E, canMove:true}],

@@ -49,15 +49,15 @@ Win rate of two random legal heroes (no gear, no boons) played by the autoplayer
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
 | any cards (baseline) | 99 | 100% | 87% | 75% | 77% | 85% | 78% | 97% | 85% | 47% | 62% | 7% |
 | no way up | 90 | 100% | 78% | 83% | 65% | 95% | 77% | 100% | 88% | 50% | 65% | 7% |
-| no shield-breakers | 88 | 100% | 80% | 88% | 82% | 83% | 77% | 100% | 92% | 42% | 55% | 15% |
+| no shield-breakers | 88 | 100% | 80% | 88% | 82% | 83% | 77% | 100% | 92% | 42% | 55% | 13% |
 | no reveals | 84 | 100% | 80% | 82% | 68% | 97% | 82% | 98% | 95% | 47% | 60% | 10% |
 | no area damage | 92 | 100% | 77% | 83% | 85% | 87% | 83% | 100% | 87% | 47% | 57% | 8% |
 | no shields or wards | 64 | 100% | 72% | 90% | 87% | 97% | 83% | 97% | 95% | 63% | 63% | 27% |
-| no healing | 85 | 100% | 77% | 87% | 78% | 93% | 87% | 100% | 93% | 53% | 53% | 12% |
+| no healing | 85 | 100% | 77% | 85% | 78% | 93% | 87% | 100% | 93% | 53% | 53% | 12% |
 | no movement abilities | 76 | 100% | 80% | 72% | 58% | 93% | 68% | 93% | 88% | 62% | 60% | 13% |
-| no foe control | 73 | 100% | 87% | 73% | 68% | 98% | 85% | 98% | 97% | 27% | 28% | 2% |
+| no foe control | 73 | 100% | 88% | 73% | 68% | 98% | 85% | 98% | 97% | 27% | 28% | 2% |
 | no hazard answers | 84 | 100% | 77% | 85% | 77% | 87% | 80% | 98% | 92% | 47% | 63% | 12% |
-| no dice economy | 81 | 98% | 85% | 88% | 72% | 95% | 80% | 100% | 93% | 57% | 62% | 7% |
+| no dice economy | 81 | 98% | 85% | 88% | 70% | 95% | 80% | 100% | 93% | 57% | 62% | 7% |
 | no cards at all | 0 | 97% | 75% | 43% | 17% ⚠ | 87% | 47% | 95% | 77% | 2% ⚠ | 0% ⚠ | 0% |
 
 No mission type collapses when any one family of answers is removed — among those that can be judged. Not judged: boss t3.
@@ -168,13 +168,13 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Theory of Mind — Read (Phys) | staple | One tough foe | — |  |
-| Theory of Mind — Pre-empt (Eth) | staple | One big telegraphed hit | 298/456 (0.65) |  |
+| Theory of Mind — Pre-empt (Eth) | staple | One big telegraphed hit | 300/456 (0.66) |  |
 | Tool Use — Improvise (Phys) | staple | One tough foe | — |  |
 | Tool Use — Reach Rig (Eth) | tool | Height, The clock | — | works the Vault from the floor |
 | Persistence — Pace (Phys) | staple | The clock, One big telegraphed hit, Control on you | — |  |
 | Persistence — Second Wind (Eth) | staple | Attrition | 118/415 (0.28) |  |
-| Throwing Arm — Hurl (Phys) | staple | One tough foe | 722/392 (1.84) |  |
-| Throwing Arm — Heavy Throw (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 217/392 (0.55) |  |
+| Throwing Arm — Hurl (Phys) | staple | One tough foe | 720/392 (1.84) |  |
+| Throwing Arm — Heavy Throw (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 218/392 (0.56) |  |
 | Language — Call (Phys) | tool | The clock, One big telegraphed hit | — |  |
 | Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | — |  |
 | Pattern Recognition — Spot (Phys) | **narrow** | The unseen | 95/433 (0.22) |  |
@@ -214,18 +214,18 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Catapult Spring — Coil (Phys) | staple | One tough foe | — |  |
-| Catapult Spring — Launch (Eth) | staple | One tough foe, A crowd, Height, The unseen, The clock, One big telegraphed hit | 85/78 (1.09) |  |
+| Catapult Spring — Launch (Eth) | staple | One tough foe, A crowd, Height, The unseen, The clock, One big telegraphed hit | 87/78 (1.12) |  |
 | Stridulation — Rasp (Phys) | staple | One tough foe, A crowd, One big telegraphed hit | — |  |
 | Stridulation — Resonance (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 28/95 (0.29) |  |
 | Tireless Respiration — Diffuse (Phys) | staple | The clock | — |  |
 | Tireless Respiration — Compress (Eth) | staple | The clock | — |  |
 | Chitinous Exoskeleton — Brace Plates (Phys) | staple | One big telegraphed hit | 143/75 (1.91) |  |
 | Chitinous Exoskeleton — Densify (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 0/75 (0.00) |  |
-| Molt — Shed (Phys) | staple | One big telegraphed hit, Control on you | 111/101 (1.10) |  |
-| Molt — Husk (Eth) | staple | A crowd, The clock, One big telegraphed hit | 44/101 (0.44) |  |
+| Molt — Shed (Phys) | staple | One big telegraphed hit, Control on you | 109/101 (1.08) |  |
+| Molt — Husk (Eth) | staple | A crowd, The clock, One big telegraphed hit | 46/101 (0.46) |  |
 | Compound Eyes — Mosaic (Phys) | tool | The unseen, One big telegraphed hit | 4/84 (0.05) |  |
 | Compound Eyes — Panoramic (Eth) | staple | The unseen, One big telegraphed hit | 80/84 (0.95) | reveals the whole board |
-| Voracious Mandibles — Shred (Phys) | staple | One tough foe | 359/100 (3.59) |  |
+| Voracious Mandibles — Shred (Phys) | staple | One tough foe | 368/100 (3.68) |  |
 | Voracious Mandibles — Metabolize (Eth) | staple | One tough foe, The clock | 30/100 (0.30) |  |
 | Swarm Pheromone — Cue (Phys) | staple | One tough foe, The clock, One big telegraphed hit | — |  |
 | Swarm Pheromone — Swarm Phase (Eth) | staple | A crowd, The clock, One big telegraphed hit | 23/81 (0.28) |  |
@@ -236,23 +236,23 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Silent Flight — Glide (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 89/80 (1.11) |  |
-| Silent Flight — Dampen (Eth) | staple | The clock, One big telegraphed hit | 8/80 (0.10) |  |
+| Silent Flight — Glide (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 90/80 (1.13) |  |
+| Silent Flight — Dampen (Eth) | staple | The clock, One big telegraphed hit | 9/80 (0.11) |  |
 | Sound Mapping — Listen (Phys) | **narrow** | The unseen | 6/87 (0.07) |  |
 | Sound Mapping — Acoustic Map (Eth) | tool | The unseen, The clock | 0/87 (0.00) | reveals the whole board; finds the hidden objective outright |
-| Talon Strike — Grip (Phys) | staple | One tough foe, One big telegraphed hit | 296/92 (3.22) |  |
+| Talon Strike — Grip (Phys) | staple | One tough foe, One big telegraphed hit | 299/92 (3.25) |  |
 | Talon Strike — Pin (Eth) | staple | One tough foe, One big telegraphed hit | 28/92 (0.30) |  |
-| Owl Neck Swivel — Swivel (Phys) | staple | The unseen, One big telegraphed hit | 160/90 (1.78) |  |
+| Owl Neck Swivel — Swivel (Phys) | staple | The unseen, One big telegraphed hit | 162/90 (1.80) |  |
 | Owl Neck Swivel — Counter-see (Eth) | staple | One big telegraphed hit | 0/90 (0.00) |  |
 | Night Eyes — Amplify (Phys) | staple | One tough foe, The unseen | 19/89 (0.21) | 79% of use in elite |
 | Night Eyes — Thermal (Eth) | staple | One tough foe, The unseen | 0/89 (0.00) | reveals the whole board |
 | Soaring Lift — Thermal Ride (Phys) | staple | The clock, One big telegraphed hit | 71/87 (0.82) |  |
 | Soaring Lift — Updraft (Eth) | staple | Height, The clock | 2/87 (0.02) |  |
-| Hollow Bones — Lighten (Phys) | staple | The clock, Hazards and being dragged, One big telegraphed hit | 109/94 (1.16) |  |
+| Hollow Bones — Lighten (Phys) | staple | The clock, Hazards and being dragged, One big telegraphed hit | 108/94 (1.15) |  |
 | Hollow Bones — Weightless (Eth) | tool | Height, Hazards and being dragged, Control on you | — |  |
 | Binocular Foresight — Spot Threat (Phys) | staple | The clock | — |  |
-| Binocular Foresight — Foresee (Eth) | staple | One big telegraphed hit | 75/73 (1.03) |  |
-| Threat Display — Hiss (Phys) | staple | One big telegraphed hit | 423/91 (4.65) |  |
+| Binocular Foresight — Foresee (Eth) | staple | One big telegraphed hit | 73/73 (1.00) |  |
+| Threat Display — Hiss (Phys) | staple | One big telegraphed hit | 422/91 (4.64) |  |
 | Threat Display — Dread (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | — |  |
 
 ### Mimic Octopus
@@ -267,12 +267,12 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Jet Propulsion — Recoil Slam (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 50/73 (0.68) |  |
 | Ink Screen — Ink (Phys) | **narrow** | One big telegraphed hit | — |  |
 | Ink Screen — Smoke Step (Eth) | staple | The clock, One big telegraphed hit | 55/84 (0.65) |  |
-| Boneless Squeeze — Squeeze (Phys) | staple | The clock, One big telegraphed hit, Control on you | 110/84 (1.31) |  |
-| Boneless Squeeze — Compress (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 87/84 (1.04) |  |
+| Boneless Squeeze — Squeeze (Phys) | staple | The clock, One big telegraphed hit, Control on you | 111/84 (1.32) |  |
+| Boneless Squeeze — Compress (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 86/84 (1.02) |  |
 | Distributed Arms — Multitask (Phys) | staple | The clock | — |  |
 | Distributed Arms — Parallel (Eth) | staple | The clock | — |  |
 | Chemo-Suckers — Taste (Phys) | staple | One tough foe, The unseen | 18/87 (0.21) |  |
-| Chemo-Suckers — Cling-Read (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 77/87 (0.89) |  |
+| Chemo-Suckers — Cling-Read (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 76/87 (0.87) |  |
 | Paralytic Bite — Bite (Phys) | staple | One tough foe, One big telegraphed hit | 411/78 (5.27) |  |
 | Paralytic Bite — Neurotoxin (Eth) | staple | One tough foe, One big telegraphed hit | 0/78 (0.00) |  |
 | Adaptive Intellect — Study (Phys) | staple | One tough foe | — |  |
@@ -286,7 +286,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Adhesive Setae — Van der Waals (Eth) | tool | One tough foe, One big telegraphed hit | 38/68 (0.56) |  |
 | Lockjaw Bite — Latch (Phys) | staple | One tough foe, One big telegraphed hit | 267/93 (2.87) |  |
 | Lockjaw Bite — Crush (Eth) | staple | One tough foe, One big telegraphed hit | 0/93 (0.00) |  |
-| Tail Autotomy — Drop Tail (Phys) | staple | A crowd, The clock, One big telegraphed hit, Control on you | 63/94 (0.67) |  |
+| Tail Autotomy — Drop Tail (Phys) | staple | A crowd, The clock, One big telegraphed hit, Control on you | 62/94 (0.66) |  |
 | Tail Autotomy — Blink (Eth) | staple | A crowd, The clock, One big telegraphed hit | 37/94 (0.39) |  |
 | Forensic Vision — UV (Phys) | tool | The unseen, The clock | 21/93 (0.23) |  |
 | Forensic Vision — Full Spectrum (Eth) | staple | One tough foe, A crowd, The unseen | 0/93 (0.00) | reveals the whole board |
@@ -305,7 +305,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Regeneration — Knit (Phys) | staple | Attrition | 85/78 (1.09) |  |
+| Regeneration — Knit (Phys) | staple | Attrition | 86/78 (1.10) |  |
 | Regeneration — Regrow (Eth) | staple | Attrition | 17/78 (0.22) |  |
 | Neoteny — Plasticity (Phys) | staple | One big telegraphed hit | 220/82 (2.68) |  |
 | Neoteny — Reshape (Eth) | staple | One tough foe, Height | — |  |
@@ -314,7 +314,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Toxic Secretion — Exude (Phys) | tool | A crowd, One big telegraphed hit | — |  |
 | Toxic Secretion — Corrode (Eth) | staple | One tough foe, Shields | 48/72 (0.67) | deletes a Shield outright |
 | Lateral Line — Feel Flow (Phys) | **narrow** | The unseen | 10/83 (0.12) |  |
-| Lateral Line — Pressure Map (Eth) | staple | The unseen, One big telegraphed hit | 79/83 (0.95) | reveals the whole board |
+| Lateral Line — Pressure Map (Eth) | staple | The unseen, One big telegraphed hit | 80/83 (0.96) | reveals the whole board |
 | Powerful Tail — Lunge (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 343/94 (3.65) |  |
 | Powerful Tail — Momentum Wave (Eth) | staple | One tough foe, A crowd, The unseen, One big telegraphed hit | 25/94 (0.27) |  |
 | Metamorphosis — Surge (Phys) | staple | One tough foe, The clock | — |  |
@@ -342,7 +342,7 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Ribbon-Fin Glide — Decouple (Eth) | staple | The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 8/67 (0.12) |  |
 | Doublet Jolt — Twitch (Phys) | staple | One tough foe, The unseen, One big telegraphed hit | 93/58 (1.60) |  |
 | Doublet Jolt — Spasm (Eth) | staple | One tough foe, One big telegraphed hit | 11/58 (0.19) | 71% of use in boss |
-| Buoyancy Control — Trim (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 146/83 (1.76) |  |
+| Buoyancy Control — Trim (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 147/83 (1.77) |  |
 | Buoyancy Control — Hover-Anchor (Eth) | tool | Hazards and being dragged, Control on you | — |  |
 | Galvanic Counterstrike — Static (Phys) | tool | A crowd, One big telegraphed hit | — |  |
 | Galvanic Counterstrike — Field Trigger (Eth) | tool | A crowd, One big telegraphed hit | — |  |
@@ -359,11 +359,11 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Carnivorous Digestion — Enzymes (Eth) | **narrow** | A crowd | — |  |
 | Trigger-Hair Sense — Hairs (Phys) | **narrow** | The unseen | — |  |
 | Trigger-Hair Sense — Cilia Field (Eth) | **narrow** | The unseen | — |  |
-| Rooting Anchor — Root (Phys) | staple | Hazards and being dragged, Attrition, Control on you | 40/94 (0.43) |  |
+| Rooting Anchor — Root (Phys) | staple | Hazards and being dragged, Attrition, Control on you | 41/94 (0.44) |  |
 | Rooting Anchor — Taproot (Eth) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 112/94 (1.19) |  |
 | Rhizome Sprout — Sprout (Phys) | staple | One tough foe, The unseen | 11/94 (0.12) |  |
 | Rhizome Sprout — Runner (Eth) | tool | A crowd, One big telegraphed hit | 61/94 (0.65) |  |
-| Vine Growth — Vine (Phys) | tool | One tough foe, One big telegraphed hit | 224/88 (2.55) |  |
+| Vine Growth — Vine (Phys) | tool | One tough foe, One big telegraphed hit | 225/88 (2.56) |  |
 | Vine Growth — Constrict (Eth) | staple | One tough foe, One big telegraphed hit | 17/88 (0.19) |  |
 | Dormancy — Dormant (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 178/104 (1.71) |  |
 | Dormancy — Full Stasis (Eth) | staple | One big telegraphed hit, Attrition | 0/104 (0.00) |  |
@@ -382,11 +382,11 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Spore Burst — Disperse (Eth) | tool | A crowd, One big telegraphed hit | — |  |
 | Decomposition — Decompose (Phys) | staple | One tough foe | — |  |
 | Decomposition — Rot (Eth) | staple | One tough foe, Shields, Hazards and being dragged | — | deletes a Shield outright |
-| Hyphal Drain — Bore (Phys) | staple | One tough foe, Attrition | 346/72 (4.81) |  |
+| Hyphal Drain — Bore (Phys) | staple | One tough foe, Attrition | 342/72 (4.75) |  |
 | Hyphal Drain — Parasitize (Eth) | staple | One tough foe | — |  |
 | Network Regrowth — Fragment (Phys) | staple | Attrition | 30/69 (0.43) |  |
 | Network Regrowth — Reconstitute (Eth) | tool | One big telegraphed hit, Attrition | — |  |
-| Enzyme Spray — Spit (Phys) | staple | One tough foe, Shields | 62/68 (0.91) |  |
+| Enzyme Spray — Spit (Phys) | staple | One tough foe, Shields | 63/68 (0.93) |  |
 | Enzyme Spray — Saturate (Eth) | staple | One tough foe, A crowd, Shields, The unseen | — | deletes a Shield outright |
 | Mycorrhizal Bond — Bond (Phys) | staple | The clock, Attrition | 62/82 (0.76) |  |
 | Mycorrhizal Bond — Fuse (Eth) | staple | A crowd, The clock, One big telegraphed hit | 86/82 (1.05) |  |
@@ -398,8 +398,8 @@ The heuristic autoplayer only understands strikes, shields, heals, reveals, engi
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Cryptobiosis — Tun (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 94/91 (1.03) |  |
-| Cryptobiosis — Step Out of Time (Eth) | staple | The clock, One big telegraphed hit | 35/91 (0.38) |  |
-| Dsup Shielding — Repair Proteins (Phys) | staple | One big telegraphed hit | 119/70 (1.70) |  |
+| Cryptobiosis — Step Out of Time (Eth) | staple | The clock, One big telegraphed hit | 34/91 (0.37) |  |
+| Dsup Shielding — Repair Proteins (Phys) | staple | One big telegraphed hit | 118/70 (1.69) |  |
 | Dsup Shielding — Project Shield (Eth) | staple | A crowd, One big telegraphed hit | 0/70 (0.00) |  |
 | Vitrification — Glass (Phys) | staple | A crowd, One big telegraphed hit | 128/79 (1.62) |  |
 | Vitrification — Partial Crystal (Eth) | staple | A crowd, One big telegraphed hit | 0/79 (0.00) |  |

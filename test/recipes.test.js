@@ -86,12 +86,17 @@ test('Radiotrophic Resilience — Thrive mints its AP only on a hazard', () => {
 
 /* ───────────────────── no option on a recipe is silently ignored ───────────────────── */
 
-/** Wrap a recipe so that every key the engine reads from it is recorded in `seen`. */
+/**
+ * Wrap a recipe so that every key the engine reads from it is recorded in `seen`. A formula
+ * (a function of P and E) counts only once the engine evaluates it: read but never called,
+ * it is being used as a plain truthy value.
+ */
 function spy(recipe, seen) {
   return new Proxy(recipe, {
     get(target, key, receiver) {
       const value = Reflect.get(target, key, receiver);
       if (typeof key !== 'string') return value;
+      if (typeof value === 'function') return (...args) => (seen.add(key), value(...args));
       seen.add(key);
       // a nested recipe (onKill) is watched too, under "key.child"
       if (value && typeof value === 'object' && !Array.isArray(value))
@@ -155,7 +160,7 @@ function unreadKeys(holder, use) {
   );
 }
 
-test('no option on a card, gear or consumable recipe is ignored by the engine', () => {
+test('no option on a card, gear or consumable recipe is ignored, and every formula is evaluated', () => {
   const ignored = [];
   const note = (where, keys) => keys.length && ignored.push(`${where}: ${keys.join(', ')}`);
 
@@ -195,7 +200,11 @@ test('no option on a card, gear or consumable recipe is ignored by the engine', 
       }),
     );
 
-  assert.deepEqual(ignored, [], 'the engine never reads these recipe options — implement them or delete them');
+  assert.deepEqual(
+    ignored,
+    [],
+    'the engine never reads these recipe options (or never evaluates their formula) — implement them or delete them',
+  );
 });
 
 test('interact reaches a ledge from below only when its recipe says height', () => {

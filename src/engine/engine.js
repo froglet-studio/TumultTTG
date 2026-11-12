@@ -510,7 +510,9 @@
   T.allyOf = (m, h) => m.heroes.find((x) => x !== h);
 
   /* ───────────────────────────── DAMAGE PIPELINE ───────────────────────────── */
-  // opts: {kind:'melee'|'los'|'area'|'true'|'any', pierce, trueDmg, ambush, source, label, noReveal}
+  // opts: {kind:'melee'|'los'|'area'|'true'|'any', pierce, trueDmg, ambush, source, label, noReveal, strike}
+  // strike: this is a hero's strike (the strike verb). Only a strike spends or gains what cards
+  // call strike bonuses; a snare, a zone, corrosion or a decoy's blow is not one.
   T.damage = function (m, source, target, amount, opts) {
     opts = opts || {};
     const kind = opts.kind || 'melee';
@@ -541,7 +543,7 @@
     // attacker modifiers (heroes)
     if (source && source.kind === 'hero') {
       const ss = st(source);
-      if (ss.Empower && ss.Empower.length) {
+      if (opts.strike && ss.Empower && ss.Empower.length) {
         // consume the first matching empower
         const idx = ss.Empower.findIndex((e) => !e.kind || e.kind === kind);
         if (idx >= 0) {
@@ -553,8 +555,8 @@
           if (!ss.Empower.length) delete ss.Empower;
         }
       }
-      if (ss.Morph) dmg += ss.Morph.bonus || 0;
-      if (T.hasBoon(source, 'momentum') && !source.missionFlags.firstStrikeUsed) {
+      if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
+      if (opts.strike && T.hasBoon(source, 'momentum') && !source.missionFlags.firstStrikeUsed) {
         dmg += 2;
         source.missionFlags.firstStrikeUsed = true;
       }
@@ -1078,6 +1080,7 @@
           pierce: bool(f.pierce, P, E),
           trueDmg: !!f.trueDmg,
           label: ctx.card ? `uses ${ctx.card[ctx.faceKey].n} on` : 'hits',
+          strike: true,
         };
         let targets = [];
         if (f.kind === 'area') targets = foesAdj(m, actor);
@@ -1460,7 +1463,13 @@
         const list = f.party ? T.liveHeroes(m) : f.target === 'ally' ? (ally && !ally.downed ? [ally] : []) : [actor];
         list.forEach((h) => {
           h.states.Empower = h.states.Empower || [];
-          h.states.Empower.push({ v, uses: f.uses || 1, kind: f.kind || null, pierce: !!f.pierce, t: f.dur || null });
+          h.states.Empower.push({
+            v,
+            uses: f.uses || 1,
+            kind: f.kind || null,
+            pierce: !!f.pierce,
+            t: num(f.dur, P, E) || null,
+          });
           fx(m, { t: 'state', ent: h.uid, name: 'Empower' });
         });
         if (list.length)

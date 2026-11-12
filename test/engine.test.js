@@ -193,3 +193,57 @@ test('a Harrier that is Anchored, Slowed or held cannot blink — and still lanc
     assert.deepEqual(harrierTurn(state, true), { moved: false, hurt: true }, `${name}: it still acts`);
   }
 });
+
+test('strike bonuses belong to strikes: wearing-down damage neither spends nor gains them', () => {
+  const lone = () => {
+    const s = scene();
+    s.m.enemies = [s.e];
+    s.m.spawns = [];
+    Object.assign(s.e, { hp: 60, maxHp: 60, shield: 0, states: {} });
+    return s;
+  };
+  const strike = ({ m, h, e }, kind = 'melee') => {
+    const before = e.hp;
+    T.runEffects(m, h, [{ v: 'strike', kind, dmg: 3 }], { P: 0, E: 0, target: e.uid });
+    return before - e.hp;
+  };
+  const dotTick = (s) => {
+    const before = s.e.hp;
+    T.runEffects(s.m, s.h, [{ v: 'dot', val: 1, dur: 3, kind: 'corrode' }], { P: 0, E: 0, target: s.e.uid });
+    T.roundEnd(s.m);
+    return before - s.e.hp;
+  };
+
+  let s = lone();
+  T.runEffects(s.m, s.h, [{ v: 'empower', val: 2, uses: 1 }], { P: 0, E: 0 });
+  assert.equal(dotTick(s), 1, 'a corrosion tick is not the "next strike"');
+  assert.equal(strike(s), 5, 'so the bonus is still there for the strike');
+  assert.equal(strike(s), 3, 'and is spent by it');
+
+  s = lone();
+  T.runEffects(s.m, s.h, [{ v: 'morph', bonus: 2, dur: 3 }], { P: 0, E: 0 });
+  assert.equal(dotTick(s), 1, 'a form adds to strikes, not to corrosion');
+  assert.equal(strike(s), 5);
+});
+
+test('strike bonuses last as long as their card says', () => {
+  // "this turn": gone when the round ends
+  for (const cardId of ['hum_tool', 'owl_silent']) {
+    const s = H.arena(cardId);
+    assert.ok(H.playIn(s, cardId, 'P').ok, cardId);
+    assert.ok(s.h.states.Empower, `${cardId}: the bonus is there this turn`);
+    s.m.enemies = [];
+    s.m.spawns = [];
+    T.roundEnd(s.m);
+    assert.equal(s.h.states.Empower, undefined, `${cardId}: and gone the next`);
+  }
+  // "for 1 + E rounds": Night Eyes — Thermal at E 1 covers this round and the next
+  const s = H.arena('owl_night', { up: [0, 1] });
+  assert.ok(H.playIn(s, 'owl_night', 'E').ok);
+  s.m.enemies = [];
+  s.m.spawns = [];
+  T.roundEnd(s.m);
+  assert.ok(s.h.states.Empower, 'still there in the second round');
+  T.roundEnd(s.m);
+  assert.equal(s.h.states.Empower, undefined, 'gone in the third');
+});
