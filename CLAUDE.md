@@ -19,7 +19,8 @@ npm run check          build + test — run before calling any change done
 npm run format         Prettier (src/data/ is deliberately excluded)
 npm run docs           regenerate docs/reference/CARDS.md and ABILITY_AUDIT.md
 
-node tools/sim.js 40                 balance tables (or `40 missions`, `80 runs`, `10 cards`; `--rule VITALITY=28` tries a rules constant)
+node tools/sim.js 40                 balance tables for both simulated players and the gap (~75 s; `--player weak` is the 1 s look;
+                                     or `40 missions`, `80 runs`, `10 cards`; `--rule VITALITY=28` tries a rules constant)
 node tools/mission-log.js vault 2 7  one narrated mission: archetype, tier, seed [heroA heroB] [start|tier kit]
 node tools/mission-log.js --save f   carry on from a save (the playtest report's "Copy save") to the mission's end
 node tools/ui-drive.js 3 --manual    drive a whole run through the UI by clicking (seed 3)
@@ -34,7 +35,8 @@ src/manifest.json         load order — a new source file must be listed here
 src/data/cards.js         99 trait cards as data (two faces each, verb recipes)
 src/data/world.js         rules constants, gear, boons, bestiary, mission generators, map, events
 src/engine/engine.js      dice, track, damage, verbs (T.applyEffect), movement, objectives, rounds
-src/engine/ai.js          enemy intents + execution; heuristic hero autoplayer (simulation only)
+src/engine/ai.js          enemy intents + execution; heuristic hero autoplayer (the weak simulated player)
+src/engine/lookahead.js   actions as data, the shared evaluation, the look-ahead player (the strong one)
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
 src/ui/                   screens, SVG board, input (browser only)
 src/ui/playtest.*         the playtest panel — only in the playtest build; its NOTES are rewritten every release
@@ -50,6 +52,7 @@ docs/archive/v1.0/        the original design bundle — frozen, never edit
 - **No framework, no bundler, no runtime dependencies.** Plain scripts that all attach to one global namespace `T` (`window.T` in the browser, `global.T` in Node). The build concatenates them in manifest order into one HTML file. `tools/load.js` loads the same files in Node.
 - **Content is data, rules are verbs.** A card face is `{ n, ap, el, cd, dur, tgt, fx:[{ v:'strike', … }], txt }`. Magnitudes are functions `(P, E) => n`. The engine interprets verbs in `T.applyEffect`. Adding content should rarely need engine code; a new verb must be general enough for cards, gear and enemies alike. Recipes: `docs/reference/EXTENDING.md`.
 - **The engine never touches the DOM** and is deterministic for a given seed. Keep it that way — the simulators, the audit and the tests depend on it. Never call `Math.random()` in `src/engine` or `src/data`.
+- **Two simulated players measure the game**: the heuristic and the look-ahead player (`docs/reference/PLAYERS.md`). Anything that shows or decides what would happen — a preview, a hint, a planner — works on `T.imagine(m)`, never on the mission: the copy holds no dice to come and no hidden cache. Do not fit `T.EVAL` to the win rates.
 - **A run and its mission are plain data** — no functions, no `undefined`, nothing held in two places — so a mission can be copied (`T.clone`), saved mid-round and resumed exactly. A random stream is a number in that state: draw with `T.stream(m.rngs, 'dice')` or `T.runStream(run, 'loot')`, and give a new purpose a stream of its own. `docs/reference/STATE_AND_SAVES.md` has the rules; `test/state.test.js` enforces them. A change to the saved shape raises `T.SAVE_VERSION` and adds a migration and a fixture.
 - **UI** lives under `T.UI`: string-template rendering, one delegated click handler keyed on `data-act` / `data-arg`. Saves use `localStorage` keys `tumult_v2_run`, `tumult_v2_meta`, `tumult_v2_tut`.
 - The code still says `hero` and `species`; the design docs say *pilot* and *clade*. Do not rename piecemeal — it happens once, in roadmap milestone C1.
@@ -75,7 +78,7 @@ Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/
 
 And for missions: **every encounter's board is different**, and **not every problem is a fight**.
 
-Litmus test for any new card, gear, enemy or mission: *can you describe it without naming the one thing it beats or the one thing that beats it?* If not, redesign it as a general verb. `npm run audit` measures these rules for the trait cards (gear and enemy abilities are not audited yet); a change to abilities or missions is not done until the audit has been regenerated and read.
+Litmus test for any new card, gear, enemy or mission: *can you describe it without naming the one thing it beats or the one thing that beats it?* If not, redesign it as a general verb. `npm run audit` measures these rules for the trait cards, played by the look-ahead player (about a minute; gear and enemy abilities are not audited yet); a change to abilities or missions is not done until the audit has been regenerated and read.
 
 ## Working agreements
 

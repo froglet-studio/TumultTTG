@@ -9,7 +9,8 @@ Tumult was designed and built over a long chat session and has now moved into th
 - **There is now a way to measure the ability rules** (`npm run audit`), and a first set of findings.
 - **Since the handoff:** roadmap milestone S0 is done (v2.0.2, 12 November 2026). The engine now does what the card, boon and bestiary text says; the list this file used to carry is empty, and two tests keep it that way. One question from it is still open — decision 4 below.
 - **There is a build to playtest with** (v2.0.3): `npm run build:playtest` adds a panel that starts any mission from a seed, switches the rule in decision 4, and writes a report. See "Play it" in [`reference/OVERVIEW.md`](reference/OVERVIEW.md).
-- **Roadmap milestone F1 is done** (v2.1.0): a mission is plain data that can be copied, saved in the middle of a round and resumed exactly; the board, the dice and the opposition each have a random stream of their own, so a seed names a board whoever plays it; saves carry a version. [`reference/STATE_AND_SAVES.md`](reference/STATE_AND_SAVES.md) is how it works. F2, the look-ahead player, is next and stands on it.
+- **Roadmap milestone F1 is done** (v2.1.0): a mission is plain data that can be copied, saved in the middle of a round and resumed exactly; the board, the dice and the opposition each have a random stream of their own, so a seed names a board whoever plays it; saves carry a version. [`reference/STATE_AND_SAVES.md`](reference/STATE_AND_SAVES.md) is how it works. 
+- **Roadmap milestone F2 is done** (v2.2.0): a second simulated player that tries every legal action on a copy of the mission and scores the outcome. It can play every card face, the simulator reports it beside the old autoplayer, and the ability audit is played by it. [`reference/PLAYERS.md`](reference/PLAYERS.md) is how it works. **What it found matters more than that it exists:** a player who only reads the declared intents and thinks one round ahead wins 88–100% of tier-3 missions and two runs in three — the game is far easier than its targets, and than the old tables said ([`reference/BALANCE.md`](reference/BALANCE.md)).
 
 ## What is in the repository
 
@@ -66,7 +67,7 @@ Full report: [`reference/ABILITY_AUDIT.md`](reference/ABILITY_AUDIT.md). Interpr
 - No mission type is gated by any one family of abilities — but **Elite and Boss are all but unwinnable with no cards**, because there is no basic attack. (The boss could not be judged for gates at all: the autoplayer wins it too rarely even with every card.)
 - **17 faces can settle a mission's central problem alone** (whole-board reveals, outright Shield deletion).
 - Squads with no cards win tier-1 Swarm and Cascade almost every time: those missions are too thin.
-- The autoplayer has no rule for 67 faces and under-plays Ethereal faces, so usage numbers are a floor. That is why the roadmap starts with the foundations for a better player (F1, then F2).
+- The autoplayer has no rule for 67 faces and under-plays Ethereal faces, so usage numbers are a floor. That is why the roadmap starts with the foundations for a better player (F1, then F2). *(Both are built. The audit is now played by the look-ahead player, which can play every face; the generated report is current, and this list is the first audit's.)*
 
 ## Decisions
 
@@ -93,15 +94,16 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 - No basic attack; kill objectives are all but impossible for a squad without cards.
 - Tier-1 objective missions can be won by walking to the objective.
 - Missions run shorter than the 8–14 round target at tiers 1 and 2.
-- The boss's true difficulty is unknown: the autoplayer wins it a quarter to a third of the time with a realistic kit and almost never with a random one, and nobody has measured how people fare.
+- **Tiers 2 and 3 are too easy for a careful player**, and missions too short: the look-ahead player wins 88–100% of every mission but the Heart, in four to seven rounds, with four fifths of its vitality left. The targets were 75–90% at tier 2 and 50–75% at tier 3. Only the Heart (66%) is near its target. Nothing has been retuned; nobody has measured how people fare.
 - The mission screen is built for a mouse. It fits a phone's width, but a card face's numbers are only in its hover tooltip (roadmap P1).
 - A hero on a ledge cannot walk back down until the ramp drops; only a blink, a climb or still being Weightless gets them off. Harmless on the Vault, where the ledge is the objective. Settle it before a board puts a ledge anywhere else (roadmap S4).
-- The autoplayer plays a conditional face whether or not its condition holds, and does not know that a Weightless hero can walk up a ledge. Simulation undercounts both (roadmap F2).
-- A mission can stall. With one hero left and an elite that cannot reach them, the autoplayer neither wins nor loses and the simulator calls it a loss at round 40 — `node tools/mission-log.js elite 2 7 3 1 tier` is one. Whether a person can be stuck the same way is not known; it is the same gap as the missing basic attack (roadmap S1).
+- The heuristic autoplayer plays a conditional face whether or not its condition holds, and does not know that a Weightless hero can walk up a ledge. The look-ahead player has neither blind spot; it has others — it thinks one round ahead, so it never plays some forty faces whose worth comes later (`reference/PLAYERS.md`, "What it cannot do").
+- A mission can stall. With one hero left and an elite that cannot reach them, the heuristic autoplayer neither wins nor loses and the simulator calls it a loss at round 40 — `node tools/mission-log.js elite 2 7 3 1 tier` is one. Whether a person can be stuck the same way is not known; it is the same gap as the missing basic attack (roadmap S1).
 
 **Code**
 - A seed names a different mission from v2.1.0 on than it did in 2.0.x: the draws moved to separate streams. Old seeds in notes and reports do not carry over.
-- The autoplayer (`src/engine/ai.js`) is a chain of hand-written cases; it is for simulation only and is the weakest part of the measurement story.
+- The heuristic autoplayer (`src/engine/ai.js`) is a chain of hand-written cases, kept as the weak player. The look-ahead player's judgement is one table of weights (`T.EVAL`), set by reasoning and not fitted to results; it has never been checked against how a person plays.
+- `node tools/sim.js 40` takes over a minute now that it plays every mission twice, and `npm run audit` about a minute on four cores. `--player weak` is the quick look.
 - `T.runEffects` is defined and then wrapped later in `engine.js` (for decoy placement). It works; it is confusing.
 - The Warden's shield stops area damage because `T.damage` checks for its type by name, and an overridden foe's blow at its neighbour skips the damage pipeline altogether. Both are special cases in the engine that should be data and verbs.
 - `src/data/world.js` mixes data tables with generator code.
@@ -123,7 +125,7 @@ Prompts that make good first sessions:
 
 > Interview me on the open questions in docs/design/01-frame-and-campaign.md, one at a time. Then update the document with my answers and mark what is now settled.
 
-> Implement roadmap milestone F2 as described in docs/design/09-engineering.md §2, on the copyable missions F1 built (docs/reference/STATE_AND_SAVES.md). Write the test that the look-ahead player beats the heuristic on every mission type first, keep every existing test green, and open a pull request.
+> Start roadmap milestone S1 (docs/design/02-units-verbs-actions.md): give every pilot basic actions. Measure before and after with both players (`node tools/sim.js 40`), and say what happens to the "no cards at all" row of the audit.
 
 > Start roadmap milestone P1: propose the new mission-screen layout as a static mock-up in a branch before changing any behaviour.
 

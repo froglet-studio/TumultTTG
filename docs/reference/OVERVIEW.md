@@ -14,6 +14,7 @@
 - **Rule under test.** Switches `T.RULES.ETHEREAL_MIN_E` between 0 and 1 (decision 4 in `docs/HANDOFF.md`). It takes effect at once, mid-mission too, and stays set on that device.
 - **What to look at in this build.** A short list, rewritten every release; a test fails if its version is not the package's.
 - **Report.** On the title screen and in a mission's top bar: the mission in progress (seed, squad, foes, the last lines of the log, the command that rebuilds its board) and every mission finished on that device, with how many Physical and Ethereal faces were played and how many of those at E 0. It is kept in the browser's local storage (`tumult_v2_playtest`) and goes nowhere unless someone copies it. **Copy save** copies the Tide exactly as it stands, a mission in progress included; `node tools/mission-log.js --save <file>` carries on from that moment.
+- **Plan.** In a mission's top bar: what the look-ahead player would do with the turn, step by step, and a button to play it. It is the player the balance tables are measured with ([`PLAYERS.md`](PLAYERS.md)), so this is where to check whether its judgement is any good.
 
 The ordinary build carries none of this. No screen scrolls sideways at a phone's width, but the mission screen is still built for a mouse: a card face's numbers are in its hover tooltip (roadmap P1).
 
