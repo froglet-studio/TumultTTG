@@ -14,8 +14,8 @@
     "engine/story.js",
     "engine/run.js"
   ],
-  "ui": ["ui/icons.js", "ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js"],
-  "css": ["ui/style.css", "ui/theme.css", "ui/party.css"],
+  "ui": ["ui/icons.js", "ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js", "ui/atlas.js"],
+  "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css"],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js"],
     "css": ["ui/playtest.css", "ui/net.css"]

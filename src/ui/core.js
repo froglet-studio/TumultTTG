@@ -138,8 +138,9 @@
 
   /* ───────────── header strip ───────────── */
   function header(title, right) {
-    return `<div class="row" style="margin-bottom:10px"><span class="kick">Tumult</span><h2 style="margin:0 6px">${title}</h2><span class="right row"><button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="codex">Codex</button>${right || ''}</span></div>`;
+    return `<div class="row" style="margin-bottom:10px"><span class="kick">Tumult</span><h2 style="margin:0 6px">${title}</h2><span class="right row"><button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="atlas">Atlas</button><button class="ghost sm" data-act="codex">Codex</button>${right || ''}</span></div>`;
   }
+  U.header = header;
 
   /* ───────────── TITLE ───────────── */
   /** The difficulty of the next run (T.TIDES); the last choice is remembered on this device. */
@@ -162,7 +163,7 @@
       <div class="kick">An expedition on Tumult</div>
       <h1>TUMULT</h1>
       <div class="sub">Draft two pilots from eleven bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
-      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
+      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       ${tidePicker(meta)}
       ${U.partyPicker ? U.partyPicker(meta) : ''}
       ${U.titleNet ? U.titleNet() : ''}
@@ -441,8 +442,11 @@
           at === nd.id ? 'current' : '',
           type === 'boss' ? 'boss' : '',
         ].join(' ');
+        const pg = nd.page && T.PAGE_BY[nd.page];
         const tip = T.MISSIONS[type]
-          ? T.MISSIONS[type].blurb
+          ? (pg
+              ? `<b>${esc(pg.name)}</b> <span class="dim">· ${U.gravityText(pg.gravity)}</span><div>${esc(pg.blurb)}</div>`
+              : '') + esc(T.MISSIONS[type].blurb)
           : type === 'haven'
             ? 'Rest, buy gear and consumables.'
             : 'A fork in the route.';
@@ -743,6 +747,9 @@
       case 'lobby':
         html = U.renderLobby ? U.renderLobby() : '';
         break;
+      case 'atlas':
+        html = U.renderAtlas();
+        break;
       case 'help':
         html = `<div class="wrap">${header('How to Play', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="panel">${U.helpHTML()}</div></div>`;
         break;
@@ -766,6 +773,7 @@
     const arg = t.getAttribute('data-arg');
     // an add-on (the playtest panel) sees every action first and may take it
     if (U.extraAct && U.extraAct(act, arg, t, e)) return;
+    if (U.atlasAct && U.atlasAct(act, arg)) return;
     // with players on other screens, each acts only for their own pilots (src/ui/party.js)
     if (U.gate && !U.gate(act, arg, t)) return;
     if (U.handleMissionAct && U.screen === 'mission' && U.handleMissionAct(act, arg, t, e)) return;
