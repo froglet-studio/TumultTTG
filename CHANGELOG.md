@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.15.0 — 2026-11-13 — between the stops
+
+Garrett: "there should be some more storytelling in between." After every stop the run now writes a short passage, and the run keeps them as its log.
+
+- **A passage after every stop**, shown above the route until you read on: a painting, one or two lines of the Terminal's log (an interface, never a character), and a short exchange between your two pilots about what just happened: a clean win, a close call (the one who came off worst speaks), a loss, a night at a haven, an event, a new leg of the route, the last approach.
+- **Each clade has a voice.** Eleven sets of lines (`T.VOICES`, `src/data/story.js`) about temperament, not lore: the jerboa never stands still, the tardigrade did not notice the fight, the octopus is holding three things that were not theirs. Playing a pilot should tell you who they are (pillar 2). A line said in the last few passages is not said again yet.
+- **The log of the run** is on the summary screen: every passage, in order.
+- **Saves:** version 5 adds `run.story`; an older save starts its log empty (fixture `save-2.14.json`). Each mission's history entry also keeps the foe that mattered, whether it was close, and who was hurt worst.
+- **No rules change.** The story draws from its own stream (`story`); a test plays the same run with and without it and gets the same result, so the simulators are unaffected.
+- With two players, each screen reads on at its own pace.
+
 ## 2.14.0 — 2026-11-13 — drawn, not typed
 
 Garrett: "increase the fidelity across the board; it should feel like it is in our universe the whole time." The first of four steps (fidelity, setting, story between encounters, a different expedition each run). This one changes only what you see.

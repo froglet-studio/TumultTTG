@@ -450,10 +450,28 @@
       .join('');
     return `<div class="route" style="height:${H}px">${bands}<svg class="currents" viewBox="0 0 100 ${H}" preserveAspectRatio="none">${curves.join('')}</svg>${nodes}</div>`;
   }
+  /** One line of a passage: the Terminal's log in its own type, a pilot's words beside their portrait. */
+  function passageLine(run, l) {
+    if (l.who === 'terminal') return `<div class="pl term">${esc(l.text)}</div>`;
+    const h = run.heroes[l.who];
+    return `<div class="pl say">${h ? U.portrait(h, 'sm') : ''}<span>${esc(l.text)}</span></div>`;
+  }
+  U.passageLine = passageLine;
+  /** The passage written after the last stop, until this screen has read it on. */
+  function renderPassage(run) {
+    const p = T.currentPassage(run);
+    if (!p || U.passageRead === p.n) return '';
+    return U.sceneCard(
+      p.scene,
+      `<div class="kick">${p.kind === 'start' ? 'The log opens' : 'Between stops'}</div><h2 style="margin:4px 0 10px">${esc(p.title)}</h2><div class="passage">${p.lines.map((l) => passageLine(run, l)).join('')}</div><div class="row" style="margin-top:12px"><button class="primary" data-act="readPassage" data-arg="${p.n}">Onward</button></div>`,
+      'passage-card',
+    );
+  }
   function renderMap() {
     const run = U.run;
     const map = run.map;
     return `<div class="wrap">${header('The Tide Map', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
+      ${renderPassage(run)}
       ${partyBar(run)}
       <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">Pick the next current. Glowing stops are reachable. The Heart waits at the top.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
   }
@@ -610,6 +628,7 @@
       <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${run.crystals} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
       <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
       <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}
+      ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}</div>` : ''}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="newRun">New Tide</button><button class="ghost" data-act="toTitle">Title</button></div></div></div>`;
   }
 
@@ -823,6 +842,11 @@
         if (e.target.closest('.modal')) return;
         if (U.screen === 'mission' && U.run && U.run.mission && U.run.mission.over) return;
         U.closeModal();
+        return;
+      case 'readPassage':
+        // reading on is this screen's own business: each player reads at their own pace
+        U.passageRead = parseInt(arg, 10);
+        U.render();
         return;
       case 'train':
         U.openTrain(parseInt(arg, 10));

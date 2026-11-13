@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.14.0',
+    version: '2.15.0',
     items: [
+      {
+        text: 'After every stop your pilots now say something about what just happened, in the voice of their clade, and the summary keeps the whole log. Do the two pilots sound like different people? Which line felt most like your pilot, and which felt wrong for them? Do you read them, or skip?',
+      },
       {
         text: 'Drawn icons replace the emoji everywhere: foes on the board, the route, dice, gear, boons, events. Can you tell every foe apart at a glance on the board? Which icon did you have to hover to understand?',
       },

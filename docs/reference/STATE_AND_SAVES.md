@@ -43,6 +43,7 @@ Each purpose has a stream of its own, so what one draws never moves another:
 | `map` | `run.rngs` | the Tide Map |
 | `loot` | `run.rngs` | card and boon offers, haven stock |
 | `event` | `run.rngs` | which event, and the random picks inside one |
+| `story` | `run.rngs` | the passages between stops: who speaks, which lines, which scene (`src/engine/story.js`) |
 | `player` | `run.rngs` | a simulated player's choices in `tools/harness.js` — never the game's |
 | board | used up before the mission starts | the mission generator: board, objective, foes, title |
 | `dice` | `m.rngs` | every roll and reroll |
@@ -74,5 +75,6 @@ The browser saves to `localStorage` (`tumult_v2_run`) after every action in a mi
 | 2 | 2.1.0 | the run as it stands: streams in `run.rngs`, the mission included, map rows as lists of node ids |
 | 3 | 2.7.0 | adds `run.tide`, the difficulty (a key of `T.TIDES`); a version-2 save loads on the rising tide (fixture `save-2.6.json`) |
 | 4 | 2.12.0 | adds `run.party`, the players (`{ players: [{ name }], owner: [seat per hero], ready: [bool per player] }`, `src/engine/party.js`); a version-3 save loads with one player (fixture `save-2.11.json`) |
+| 5 | 2.15.0 | adds `run.story` (`{ log: [passage], threat }`): the chronicle of passages between stops; each history entry also keeps `foe`, `close` and `hurt`. A version-4 save starts its chronicle empty (fixture `save-2.14.json`) |
 
 A version-1 save still loads: it returns to the map (2.0 never kept a mission), its streams start from the seed, and the map is rebuilt from the copy of each node that 2.0 kept up to date. A save from a newer version than the game is refused rather than guessed at.

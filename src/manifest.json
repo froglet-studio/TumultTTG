@@ -3,11 +3,13 @@
   "engine": [
     "data/cards.js",
     "data/world.js",
+    "data/story.js",
     "engine/generators.js",
     "engine/engine.js",
     "engine/ai.js",
     "engine/lookahead.js",
     "engine/party.js",
+    "engine/story.js",
     "engine/run.js"
   ],
   "ui": ["ui/icons.js", "ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js"],
