@@ -45,7 +45,7 @@ Every round both heroes act freely and interleaved. Each hero's track slides, en
 
 ## Lore frame (light touch — for the lore team to refine)
 
-The run is the fall of a **quasi-stable Consolidation**. The **Terminal** is the quest-giver that will not intervene ("helps those who help themselves" — and logs the transaction). Etherion storms grant Affinities; the galactic superorganism's reef blooms offer traits; privateers levy tolls the Terminal tolerates as redistribution; an audit halves hoarded crystals. All event text lives in `src/data/world.js` under `T.EVENTS`. The frame is due to change — see `docs/design/01-frame-and-campaign.md`.
+Each run is an **expedition on Tumult** (since 2.16): a squad of guides set down from an **Ark**, crossing land, sea and air along one route to **the Heart** at its end. Between stops the run writes short passages in the pilots' voices (`src/data/story.js`). The **Terminal** is the quest-giver that will not intervene ("helps those who help themselves" — and logs the transaction). Etherion storms grant Affinities; the superorganism's reef blooms offer traits; privateers levy tolls the Terminal tolerates as redistribution; an audit halves hoarded crystals. All event text lives in `src/data/world.js` under `T.EVENTS`. The frame is due to change — see `docs/design/01-frame-and-campaign.md`.
 
 ## Players
 

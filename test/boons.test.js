@@ -89,7 +89,7 @@ test('Quick Hands: cards played in round 1 come home a column sooner', () => {
   assert.equal(home(['quickhands']), 3 - val('quickhands').hasten);
 });
 
-test('Tide-touched: one die is already banked as Omni when the mission starts', () => {
+test('Etherion-touched: one die is already banked as Omni when the mission starts', () => {
   const run = T.newRun(5);
   H.prebuiltSquad(run, 0, 1);
   run.heroes[0].boons = ['tidetouched'];

@@ -73,7 +73,7 @@
         { n:'Brace', cost:1, cd:1, tgt:'self', fx:[{v:'shield', val:f(3), dur:f(1), all:true}], txt:()=>'Shield 3 against everything this round.' },
         { n:'Bulwark', cost:2, cd:3, tgt:'party', fx:[{v:'shield', val:f(3), dur:f(2), all:true, party:true, allyRange:f(1)}], txt:()=>'Shield 3 against everything for 2 rounds, on you and an adjacent ally.' },
       ]},
-    { id:'lantern', name:'Tide Lantern', price:5, icon:'🏮',
+    { id:'lantern', name:'Storm Lantern', price:5, icon:'🏮',
       desc:'Reveal + Mark, and a beacon for your ally.',
       abilities:[
         { n:'Flare', cost:1, cd:2, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)},{v:'mark', area:true, radius:f(2)}], txt:()=>'Reveal within 2 and Mark every foe revealed.' },
@@ -105,9 +105,9 @@
   // Rising is the game as it was tuned before 2.7. Flood is for careful players: bigger objectives on
   // shorter clocks are what press a careful squad — more or tougher foes hardly do (BALANCE.md, v2.7.0).
   T.TIDES = {
-    rising: { id:'rising', n:'Rising tide', need:[0,0,0], clock:[0,0,0], swarm:[0,0,0], escorts:[[],[],[]],
-      txt:'The tide as it has always run.' },
-    flood: { id:'flood', n:'Flood tide', need:[0,1,2], clock:[0,1,2], swarm:[0,1,2], escorts:[[],['kiter'],['binder','kiter']],
+    rising: { id:'rising', n:'Steady wind', need:[0,0,0], clock:[0,0,0], swarm:[0,0,0], escorts:[[],[],[]],
+      txt:'Tumult as it has always blown.' },
+    flood: { id:'flood', n:'Gale', need:[0,1,2], clock:[0,1,2], swarm:[0,1,2], escorts:[[],['kiter'],['binder','kiter']],
       txt:'From tier 2, every objective needs 1 more (tier 3: 2 more), every clock but a hold’s starts 1 round shorter (2), swarms grow 1 larger (2), and elites bring 1 more escort (2).' },
   };
   T.TIDE_ORDER = ['rising', 'flood'];
@@ -137,7 +137,7 @@
   T.CONSUMABLES = [
     { id:'vial',   name:'Rally Vial',  price:2, icon:'🧪', tgt:'self', fx:[{v:'heal', n:f(6)}], txt:'Heal 6.' },
     { id:'shard',  name:'Omni Shard',  price:3, icon:'💠', tgt:'self', fx:[{v:'mint', face:'O', n:f(1)}], txt:'Mint 1 Omni this turn.' },
-    { id:'charm',  name:'Tide Charm',  price:3, icon:'🪬', tgt:'self', fx:[{v:'clock', delta:f(2)}], txt:'The mission clock gains 2.' },
+    { id:'charm',  name:'Windbreak Charm',  price:3, icon:'🪬', tgt:'self', fx:[{v:'clock', delta:f(2)}], txt:'The mission clock gains 2.' },
     { id:'flash',  name:'Flashpowder', price:2, icon:'✨', tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)}], txt:'Reveal within 2.' },
     { id:'grit',   name:'Grit',        price:2, icon:'🪨', tgt:'self', fx:[{v:'shield', val:f(3), dur:f(1), all:true}], txt:'Shield 3 against everything this round.' },
   ];
@@ -146,7 +146,7 @@
   /* ───────────────────────────── BOONS ───────────────────────────── */
   // Passive run modifiers. None breaks the 15-die invariant; affinities re-face a die.
   T.BOONS = [
-    { id:'tidetouched', name:'Tide-touched', icon:'🌊', desc:'Start each mission with 1 Omni already banked.', hook:'missionStart', val:{bank:'O'} },
+    { id:'tidetouched', name:'Etherion-touched', icon:'🌊', desc:'Start each mission with 1 Omni already banked.', hook:'missionStart', val:{bank:'O'} },
     { id:'thickhide',   name:'Thick Hide',   icon:'🐢', desc:'Every Shield you gain is +1.', hook:'shieldBonus', val:1 },
     { id:'keensense',   name:'Keen Sense',   icon:'👁️', desc:'Your reveals reach 1 further; Hidden foes adjacent to you are revealed at round start.', hook:'keen', val:1 },
     { id:'deeppockets', name:'Deep Pockets', icon:'💰', desc:'+2 ◇ after every mission.', hook:'reward', val:{crystals:2} },
@@ -170,7 +170,7 @@
   T.ENEMIES = {
     biter:    { name:'Biter', glyph:'🦷', role:'swarm', hp:[3,4,5], speed:2, policy:'rush',
       abilities:{ bite:{ n:'Bite', kind:'melee', dmg:[2,3,3] } },
-      flavor:'Spawn of the Consolidation. One is nothing. Six are a tide.' },
+      flavor:'Spawn of the Heart. One is nothing. Six are a swarm.' },
     stinger:  { name:'Stinger', glyph:'🪡', role:'swarm', hp:[3,4,5], speed:1, policy:'shooter',
       abilities:{ sting:{ n:'Sting', kind:'los', dmg:[2,3,3] } },
       flavor:'Keeps its lane and never closes.' },
@@ -191,7 +191,7 @@
       flavor:'Roots you where it wants you. It still cannot stop you acting.' },
     spawner:  { name:'Spawner', glyph:'🫧', role:'structure', hp:[7,9,11], speed:0, policy:'spawner', anchored:true, spawnEvery:3, spawns:'biter',
       abilities:{ spawn:{ n:'Spawn', kind:'summon' } },
-      flavor:'A node of the Consolidation. Kill it and the tide thins.' },
+      flavor:'A node of the Heart. Kill it and the swarm thins.' },
     bulwark:  { name:'Bulwark', glyph:'🛡️', role:'elite', elite:true, hp:[18,22,26], speed:1, policy:'bulwark', shield:[2,2,3],
       abilities:{ crush:{ n:'Crush', kind:'melee', dmg:[5,6,7] }, quake:{ n:'Quake', kind:'area', dmg:[3,4,4] }, brace:{ n:'Brace', kind:'brace' } },
       flavor:'An elite. Its quake punishes clumping.' },
@@ -202,8 +202,8 @@
       abilities:{ undertow:{ n:'Undertow', kind:'los', dmg:[2,3,3], pull:2 }, surge:{ n:'Surge', kind:'los', dmg:[4,5,6], weaken:1 } },
       flavor:'An elite. Drags you toward the hazard. Anchor yourself.' },
     heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,72], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
-      abilities:{ lance:{ n:'Lance', kind:'los', dmg:[3,4,5] }, crush:{ n:'Crush', kind:'melee', dmg:[7,8,9], pull:2 }, call:{ n:'Call the Tide', kind:'summon' } },
-      flavor:'A quasi-stable consolidation. Its shield is fed by its Spawners. When it is half-dead, the Vault begins to drown.' },
+      abilities:{ lance:{ n:'Lance', kind:'los', dmg:[3,4,5] }, crush:{ n:'Crush', kind:'melee', dmg:[7,8,9], pull:2 }, call:{ n:'Call the Swarm', kind:'summon' } },
+      flavor:'What waits at the end of the route. Its shield is fed by its Spawners. When it is half-dead, the Vault begins to drown.' },
   };
 
   /* ───────────────────────────── EVENTS ───────────────────────────── */
@@ -217,35 +217,35 @@
         { label:'Walk on', fx:{}, result:'The relay dims. It has a hundred thousand years; it can wait.' },
       ]},
     { id:'toll', title:'Privateer Toll', icon:'🏴‍☠️',
-      text:'A skiff crewed by privateers drifts across the current. Piracy here is older than law — a redistribution the Terminal tolerates. They want three crystals for safe passage.',
+      text:'Privateers have strung a line across the pass. Piracy here is older than law — a redistribution the Terminal tolerates. They want three crystals for safe passage.',
       options:[
         { label:'Pay the toll (3 ◇)', cost:{crystals:3}, fx:{}, result:'They salute, almost sincerely, and let you through.' },
-        { label:'Refuse', fx:{nextElite:true, crystals:4}, result:'You keep your crystals and take theirs (+4 ◇) — but word travels. The next current will be guarded by an elite.' },
-        { label:'Offer a trade', fx:{tradeCard:true}, result:'One hero swaps a trait for something from the skiff\'s hold.' },
+        { label:'Refuse', fx:{nextElite:true, crystals:4}, result:'You keep your crystals and take theirs (+4 ◇) — but word travels. The next stop will be guarded by an elite.' },
+        { label:'Offer a trade', fx:{tradeCard:true}, result:'One hero swaps a trait for something from the privateers\' hold.' },
       ]},
     { id:'storm', title:'Etherion Storm', icon:'⛈️',
-      text:'The weather itself turns to etherion. Mass, Charge, Space, Time — a raw front of one of them rolls over the skiff. To stand in it is to be changed by it.',
+      text:'The weather itself turns to etherion. Mass, Charge, Space, Time — a raw front of one of them rolls over the squad. To stand in it is to be changed by it.',
       options:[
         { label:'Stand in it', fx:{affinityRandom:true, damageOne:4}, result:'One hero takes 4 and comes out with an Affinity: a die face that was AP now rolls an etherion.' },
         { label:'Shelter', fx:{}, result:'You wait it out. The front passes, taking nothing.' },
       ]},
     { id:'bloom', title:'Bloom of the Superorganism', icon:'🌸',
-      text:'A reef flowers along the current — all of it one body, the biological god of the HyperSea reminding you whose cells you are made from.',
+      text:'A reef flowers along the shore — all of it one body, the superorganism reminding you whose cells you are made from.',
       options:[
         { label:'Rest among the blooms', fx:{healAll:8}, result:'Both heroes heal 8. Something in the reef recognizes your bloodlines.' },
         { label:'Harvest a trait', fx:{cardPick:true}, result:'The reef offers a trait. One hero takes it.' },
       ]},
     { id:'guide', title:'Stranded Guide', icon:'🎈',
-      text:'An airship guide — one of the four services on Tumult — floats becalmed. For two crystals she will show you a shortcut she is not supposed to know.',
+      text:'An airship guide from another service floats becalmed. For two crystals she will show you a shortcut she is not supposed to know.',
       options:[
-        { label:'Pay for the shortcut (2 ◇)', cost:{crystals:2}, fx:{skipNext:true}, result:'She takes you past the next current entirely.' },
+        { label:'Pay for the shortcut (2 ◇)', cost:{crystals:2}, fx:{skipNext:true}, result:'She takes you past the next stop entirely.' },
         { label:'Decline', fx:{}, result:'She waves. You pass.' },
       ]},
     { id:'cache', title:'Drowned Cache', icon:'🧰',
-      text:'A sunken crate, Terminal-sealed, cracked open by the current. Salvage is yours by the oldest law here — but the cold goes into the bones.',
+      text:'A sunken crate, Terminal-sealed, cracked open by the tide. Salvage is yours by the oldest law here — but the cold goes into the bones.',
       options:[
         { label:'Salvage it', fx:{crystals:6, damageOne:3}, result:'+6 ◇. One hero takes 3 from the cold.' },
-        { label:'Leave it', fx:{}, result:'The current keeps its secrets.' },
+        { label:'Leave it', fx:{}, result:'The sea keeps its secrets.' },
       ]},
     { id:'shrine', title:'Lintukoto Shrine', icon:'🕯️',
       text:'A shrine to the old name, maintained by no one. Offerings left in crystal; answers left in nothing you could prove.',
@@ -259,8 +259,8 @@
         { label:'Respec a hero', fx:{respec:true}, result:'Every UP returns to one hero\'s pool. Spend it again.' },
         { label:'Leave the water still', fx:{}, result:'You are who you are.' },
       ]},
-    { id:'envoy', title:'The Consolidation\'s Envoy', icon:'💼',
-      text:'A courteous functionary in a clean coat. The Heart offers eight crystals if you turn the skiff around. "Everyone has a number," the envoy says, meaning it kindly.',
+    { id:'envoy', title:'The Heart\'s Envoy', icon:'💼',
+      text:'A courteous functionary in a clean coat. The Heart offers eight crystals if you turn the expedition around. "Everyone has a number," the envoy says, meaning it kindly.',
       options:[
         { label:'Take the crystals', fx:{crystals:8, bossBonusHp:10}, result:'+8 ◇. The Heart, reassured, grows (+10 hp). You did not turn around.' },
         { label:'Refuse', fx:{boon:'defiant'}, result:'The envoy makes a note. You gain Defiant: +2 damage against elites and the Heart.' },
@@ -275,10 +275,10 @@
       text:'A gentle request for your holdings. The Terminal mitigates consolidation wherever it finds it — including, apologetically, yours.',
       options:[
         { label:'Report honestly', fx:{audit:true}, result:'If you held 10 ◇ or more, half is redistributed. If not, you receive 4.' },
-        { label:'Refuse the audit', fx:{damageOne:4}, result:'The Terminal does not insist. The current does: one hero takes 4.' },
+        { label:'Refuse the audit', fx:{damageOne:4}, result:'The Terminal does not insist. The wind does: one hero takes 4.' },
       ]},
-    { id:'quiet', title:'Quiet Current', icon:'🌙',
-      text:'Nothing hunts here. Nothing calls. The skiff drifts and for one long hour the HyperSea is only water.',
+    { id:'quiet', title:'Quiet Hour', icon:'🌙',
+      text:'Nothing hunts here. Nothing calls. The wind drops, and for one whole Tumult day, an hour and no more, the world is only ground and sky.',
       options:[
         { label:'Rest', fx:{healAll:'half'}, result:'Both heroes recover half their missing vitality.' },
         { label:'Drill', fx:{up:1}, result:'You run the kits until the moves are reflex. +1 UP each.' },
@@ -316,15 +316,15 @@
   /* ───────────────────────────── FLAVOR ───────────────────────────── */
   T.FLAVOR = {
     terminalIntro: [
-      'The Terminal has flagged a quasi-stable consolidation in this current. It will not intervene. It will, as always, help those who help themselves.',
-      'Power consolidates anyway. The stories are about its fall. This one is yours.',
-      'Three gods too large to fight: the etherions, the superorganism, the Terminal. Beneath them, a Consolidation small enough to end.',
+      'The Terminal has flagged something at the end of this route. It will not intervene. It will, as always, help those who help themselves.',
+      'The Ark opens its bay. Below: land, sea and air, and a route no guide has finished. This one is yours.',
+      'Three things too large to fight: the etherions, the superorganism, the Terminal. Beneath them, a Heart small enough to end.',
     ],
     win: [
-      'The Heart stops. The current, unknotted, runs where it likes again. The Terminal logs a redistribution and files no name.',
+      'The Heart stops. The route is open behind you, and the Terminal logs it under no name. Somewhere overhead, the Ark marks the squad for the long way home.',
     ],
     lose: [
-      'The tide takes the skiff. Somewhere, the Terminal notes a consolidation that held one more season — and waits, as it does, for the next crew.',
+      'Tumult keeps the expedition. Somewhere, the Terminal notes a Heart that held one more season — and waits, as it does, for the next squad.',
     ],
   };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

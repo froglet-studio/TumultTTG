@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.15.0',
+    version: '2.16.0',
     items: [
+      {
+        text: 'The words now tell one story: each run is an expedition set down from an Ark, crossing Tumult by land, sea and air to the Heart. The skiff, the HyperSea tide and the Consolidation are gone, and the difficulties are now Steady wind and Gale. Does any screen still feel like it belongs to the old frame? Does the title make you want to set out?',
+      },
       {
         text: 'After every stop your pilots now say something about what just happened, in the voice of their clade, and the summary keeps the whole log. Do the two pilots sound like different people? Which line felt most like your pilot, and which felt wrong for them? Do you read them, or skip?',
       },
@@ -164,7 +167,7 @@
     minE >= 1 ? 'Ethereal faces need E 1 (ETHEREAL_MIN_E = 1)' : 'Ethereal faces playable at E 0 (ETHEREAL_MIN_E = 0)';
   function logLine(r) {
     const when = String(r.at).slice(0, 16).replace('T', ' ');
-    const kit = r.quick ? `${r.quick.kit} kit` : 'in a Tide';
+    const kit = r.quick ? `${r.quick.kit} kit` : 'on an expedition';
     return `${when} · ${r.type} t${r.tier} · seed ${r.seed} · ${r.squad.join(' + ')} · ${kit} · ${r.won ? 'WON' : 'LOST'} in ${r.rounds} rounds · hp ${r.hp.join(', ')} · ${r.kills} kills · bonus ${r.bonus} · faces P ${r.P} / E ${r.E} (${r.E0} at E 0) · rule E≥${r.minE} · v${r.v}`;
   }
   function reportText() {
@@ -229,7 +232,7 @@
     const lines = [...new Set(cards.map((c) => T.SPECIES[T.CARD[c].sp].name))];
     return who.length
       ? ` <span class="pt-who">Play ${esc(who.join(' or '))}.</span>`
-      : ` <span class="pt-who">No pre-made hero carries it: draft ${esc(lines.join(' or '))} in a New Tide.</span>`;
+      : ` <span class="pt-who">No pre-made hero carries it: draft ${esc(lines.join(' or '))} on a New Expedition.</span>`;
   }
   U.titleExtra = function () {
     const c = st.cfg;
@@ -260,7 +263,7 @@
       <div class="pt-row"><span class="pt-lab">Seed</span><input id="pt-seed" class="pt-seed" inputmode="numeric" maxlength="9" placeholder="random" value="${esc(c.seed)}" aria-label="Seed">
         <button class="primary" data-act="pt-go">▶ Play this mission</button></div>
       ${last}
-      <p class="dim small">The same seed, squad and kit always give the same board and the same opening dice. After the mission the Tide carries on from that node.</p>
+      <p class="dim small">The same seed, squad and kit always give the same board and the same opening dice. After the mission the expedition carries on from that node.</p>
       <h3>Rule: Ethereal faces need E 1</h3>
       <div class="pt-row">${seg('pt-rule', 1, 'Asleep until E 1 — as shipped', st.minE === 1)}${seg('pt-rule', 0, 'Playable at E 0 — the old rule', st.minE === 0)}</div>
       <p class="dim small">Since 2.4.0 an Ethereal face is magic that must be awakened: it cannot be played until its card has E 1. Until 2.3 it could be played at E 0, where it does less. The switch takes effect at once, even mid-mission, and stays set on this device.</p>

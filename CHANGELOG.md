@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.16.0 — 2026-11-13 — an expedition on Tumult
+
+Garrett chose the frame: each run is an expedition on Tumult, set down from an Ark, with the Terminal narrating. This step changes only words; the rules, ids and saves are untouched.
+
+- **One setting throughout.** The skiff, the HyperSea tide-run and the Consolidation are gone from every screen, mission, foe, event and log line. The title reads *An expedition on Tumult*; *New Tide* is *New Expedition*; the Tide Map is *the route*, and its three legs are *the Lowland Reach*, *the Open Sea* and *the High Air* (land, sea and air, as Tumult's guide services run). The Heart stays the end of the route.
+- **Difficulty is weather now:** *Steady wind* (was Rising tide) and *Gale* (was Flood tide). Same rules, same ids (`rising`, `flood`), so a saved choice carries over.
+- Renamed to match: Storm Lantern, Windbreak Charm, Etherion-touched, Call the Swarm, The Heart's Envoy, Quiet Hour; three mission titles (The Thinning Swarm, What the Wind Buried, Floodgate).
+- The interface still says *hero* and *bloodline*; those become *pilot* and *clade* together with the code, in roadmap milestone C1.
+- A saved run keeps the leg names it was made with.
+
 ## 2.15.0 — 2026-11-13 — between the stops
 
 Garrett: "there should be some more storytelling in between." After every stop the run now writes a short passage, and the run keeps them as its log.

@@ -136,9 +136,8 @@
 
   T.MISSIONS = {
     swarm: {
-      title: ['Hold the Beacon', 'The Thinning Tide', 'Breakwater'],
-      blurb:
-        "A swarm pours from the Consolidation's spawn-nodes. Hold the beacon long enough for the Terminal to log the current.",
+      title: ['Hold the Beacon', 'The Thinning Swarm', 'Breakwater'],
+      blurb: 'A swarm pours from the spawn-nodes. Hold the beacon long enough for the Terminal to log the way through.',
       gen(rng, tier, tide) {
         const up = tideAt(tide, tier);
         const b = gridBoard(rng, 4, 3, { corridors: 1 });
@@ -229,9 +228,9 @@
       },
     },
     hidden: {
-      title: ['The Sought', 'Three Caches', 'What the Current Hid'],
+      title: ['The Sought', 'Three Caches', 'What the Wind Buried'],
       blurb:
-        'Something the Consolidation does not want found is in one of three caches. Lurkers wait for whoever searches blind. Reveal first.',
+        'Something the Heart does not want found is in one of three caches. Lurkers wait for whoever searches blind. Reveal first.',
       gen(rng, tier, tide) {
         const up = tideAt(tide, tier);
         const digs = 2 + up.need;
@@ -270,7 +269,7 @@
       },
     },
     cascade: {
-      title: ['The Rising', 'Reactor Tide', 'Cascade'],
+      title: ['The Rising', 'Floodgate', 'Cascade'],
       blurb:
         'The flood spreads one ring each round. Two channels at the valve stop it. Time verbs buy you rounds; anchors keep you out of the undertow.',
       gen(rng, tier, tide) {
@@ -311,8 +310,8 @@
       },
     },
     elite: {
-      title: ['The Enforcer', 'A Quasi-stable Thing', "The Consolidation's Hand"],
-      blurb: 'An elite holds this current. Elites reward a boon — if you leave standing.',
+      title: ['The Enforcer', 'A Quasi-stable Thing', 'The Heart’s Hand'],
+      blurb: 'An elite holds this stop. Elites reward a boon — if you leave standing.',
       gen(rng, tier, tide) {
         const up = tideAt(tide, tier);
         const b = gridBoard(rng, 4, 3, { corridors: 1 });
@@ -345,7 +344,7 @@
       },
     },
     boss: {
-      title: ['The Heart of the Consolidation'],
+      title: ['The Heart'],
       blurb:
         'Its shield is fed by its Spawners: destroy both and the shield falls, or bring Pierce. At half vitality the Vault begins to drown — four rounds to finish it.',
       gen(rng, tier) {
@@ -435,7 +434,7 @@
       rows: rows.map((row) => row.map((n) => n.id)),
       all,
       current: null,
-      actNames: ['The Shallows', 'The Undertow', 'The Deep'],
+      actNames: ['The Lowland Reach', 'The Open Sea', 'The High Air'],
     };
   };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

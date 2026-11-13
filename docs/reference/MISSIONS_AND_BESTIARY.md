@@ -15,7 +15,7 @@ Each generator takes a tier (1–3) that scales compositions and clocks. Every m
 | **Swarm — Hold the Beacon** | A hero on or adjacent to the beacon at round end counts a hold; 6/6/7 holds needed. Spawn-nodes emit Biters/Stingers every round from round 2 (cap 3/3/4 live). | 10/11/12 | Area, chains, control, holding ground under escalating pressure |
 | **Vault — The Drowning Vault** | Break two seals by Interacting on the ledge (a height node). The winch lever (Interact ×2) drops a ramp so anyone can walk up. A Warden guards the climb. | 10/9/9 | Space verbs, pierce/true damage vs the Warden, or the slower lever route |
 | **The Sought** | One of three caches is real. Reveal verbs expose caches in radius (or step on one to search it); then dig it out (Interact ×2). Lurkers wait for whoever searches blind. | 11/10/10 | Reveal, ambush defense, efficient searching |
-| **Cascade — The Rising** | The flood spreads one ring per round from round 2. Channel the valve three times. Time verbs and the Tide Charm delay the spread; anchors resist the undertow. | 10/9/9 | Tempo, sustain, hazard immunity, anchors |
+| **Cascade — The Rising** | The flood spreads one ring per round from round 2. Channel the valve three times. Time verbs and the Windbreak Charm delay the spread; anchors resist the undertow. | 10/9/9 | Tempo, sustain, hazard immunity, anchors |
 | **Elite** | Destroy the elite (Bulwark, Harrier or Tidecaller); its escort need not fall. Rewards a boon. | none | Whatever the elite punishes: clumping, squishy heroes, no anchors |
 | **Boss — The Heart** | Destroy the Heart. Its Shield 4 is fed by two Spawners: kill both and it gutters out (or bring Pierce or true damage — area does not get through the Heart's shield, nor a Warden's). At half vitality the Heart cracks: shield gone, Spawners collapse, the flood begins, 4 rounds to finish it, and it crushes and drags. | phase 2: 4 | Everything |
 
@@ -40,7 +40,7 @@ At round start every enemy declares one intent (ability + target), drawn as an a
 | Bulwark 🛡️ | elite | 18/22/26 | 1 | Crush 5/6/7 · Quake 3/4/4 area · Brace | Quakes if 2 heroes adjacent; braces under half |
 | Harrier 🗡️ | elite | 12/15/18 | 2 | Phase Lance 5/6/7 (blink adjacent, reach 3) · Fade | Alternates lance and Hidden. Anchored, Slowed or held in a Counted Trap it cannot blink, though it still lances a hero beside it; Located, it cannot fade |
 | Tidecaller 🌊 | elite | 12/14/16 | 1 | Undertow 2/3/3 lane + pull 2 · Surge 4/5/6 lane + Weaken | Drags heroes toward hazards; alternate undertow/surge |
-| The Heart 🫀 | boss | 50/61/72 | 0 | Lance 3/4/5 lane · Crush 7/8/9 melee + pull 2 · Call the Tide | Phase 1: lance lanes, call Biters when few remain. Phase 2: crush and drag, the flood rises |
+| The Heart 🫀 | boss | 50/61/72 | 0 | Lance 3/4/5 lane · Crush 7/8/9 melee + pull 2 · Call the Swarm | Phase 1: lance lanes, call Biters when few remain. Phase 2: crush and drag, the flood rises |
 
 Biters called by Spawners and by the Heart are one tier lower than the mission (fodder stays fodder). Swarm waves arrive at the mission's own tier and cap at 3/3/4 live.
 
