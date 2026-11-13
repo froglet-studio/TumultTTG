@@ -97,6 +97,11 @@
       ys = nearIds.map((i) => board.nodes[i].y);
     n.x = xs.reduce((a, b) => a + b, 0) / xs.length;
     n.y = Math.min(...ys) - 0.9;
+    // never on top of another space (a page's own high ground may sit there): rise above it
+    const crowded = () => Object.values(board.nodes).some((o) => Math.hypot(o.x - n.x, o.y - n.y) < 0.8);
+    while (crowded()) n.y -= 0.8;
+    // on an atlas page a mission's ledge is named like the page's own extras: L1, L2
+    if (board.page) n.label = 'L' + (Object.values(board.nodes).filter((o) => /^L\d/.test(o.label || '')).length + 1);
     board.nodes[n.id] = n;
     nearIds.forEach((i) => board.climb.push([i, n.id]));
     return n.id;

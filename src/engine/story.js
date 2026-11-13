@@ -64,8 +64,8 @@
   };
   /**
    * Give every stop that is played on a board its atlas page, from the ground of its leg (src/data/atlas.js),
-   * drawn from a stream of its own ('atlas'): never the page of a stop that leads to it, nor of another stop
-   * in its row, while the ground has another page to give. Havens and events stay off the board.
+   * drawn from a stream of its own ('atlas'): not the page of a stop that leads to it, nor of another stop in its
+   * row, while the ground has another page to give (the arriving stops come first). Havens and events stay off the board.
    */
   T.chartPages = function (run) {
     const rng = T.runStream(run, 'atlas');
@@ -81,7 +81,8 @@
           .filter((m) => m.next.includes(id))
           .map((m) => m.page);
         const fresh = pages.filter((p) => !before.includes(p) && !used.includes(p));
-        n.page = rng.pick(fresh.length ? fresh : pages);
+        const notBefore = pages.filter((p) => !before.includes(p));
+        n.page = rng.pick(fresh.length ? fresh : notBefore.length ? notBefore : pages);
         used.push(n.page);
       });
     });
