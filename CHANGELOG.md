@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.13.0 — 2026-11-13 — play online
+
+The second step of multiplayer: two players on two screens, in one game, on the test page.
+
+- **Host and join.** On the test page's title screen, *Play online*: one player hosts and gets a four-letter code, the other joins with it. The host starts the tide when both are there. Each player drafts their own pilot at the same time; the map opens when both are done.
+- **One game, held by the host.** The host's screen carries out every change and writes the whole state to the page's shared store; the guest's screen shows it and sends its own commands, which the host carries out in the order they come. A screen that reloads or joins late is caught up by the next state. `src/ui/net.js`.
+- **Commands.** Everything a player does to the run now goes through `T.execCommand` (`src/engine/party.js`): a card face, a walk, a basic action, gear, an item, the round's Ready, a draft pick joining the squad, training, rewards and shopping. On one screen it runs at once, as before; online, on the host's. The host refuses a command for another player's pilot.
+- **Only the test page has it** (the playtest build, through claude.ai's shared store). `TUMULT.html` still makes no network requests and is unchanged. The partner needs edit access to the page (an organization member at Contributor, or an outside person invited by email as Editor).
+- **No rules change**; the simulators are unaffected. Tests: two pages in jsdom sharing a stand-in store draft, walk and ready up in one game and end with the same state (`test/net.test.js`); a command does what the direct call does (`test/party.test.js`).
+- Not yet: the guest does not see the enemy turn animate, only its result; a host who closes the page ends the game for both (the host can carry on alone from Continue).
+
 ## 2.12.0 — 2026-11-13 — two players
 
 Garrett: "now let's make it multiplayer." The first step: players and seats, which every way of playing together needs. Playing from two screens over the network comes next, on the test page.

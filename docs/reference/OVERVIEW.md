@@ -51,6 +51,8 @@ The run is the fall of a **quasi-stable Consolidation**. The **Terminal** is the
 
 One or two players (title screen). Each hero belongs to a player, its seat (`run.party`, `src/engine/party.js`): with one player, both; with two, one each. Seat 0, the host, makes the squad's shared choices: the route on the map, skipping a reward card, resting and leaving a haven, an event's option, finishing a mission. Each player drafts, trains, equips and flies only their own pilot. A round ends when every player is ready; on one shared screen End Round readies everyone at once. The rules never change with the number of players. `src/ui/party.js` routes clicks: `U.seats` is the list of seats a screen holds, `null` for all of them.
 
+Every change a player makes goes through a command, `T.execCommand(run, { op, hero, … }, seats)`, which refuses one for another player's pilot. **Online** (test page only, `src/ui/net.js`): the host's screen holds the game and writes the whole run to the page's shared store (`games/<CODE>`) after every change; a guest's screen shows it, drafts its own pilot locally, and sends its commands (`games/<CODE>/cmds`), which the host carries out in order. Because a run is plain data and the engine deterministic, the state is the whole truth: there is nothing to reconcile.
+
 ## Keyboard / UI notes
 
 Tab switches the selected hero; E ends the round; Esc cancels targeting. Hover any card face, die, state chip or token for exact numbers at the hero's current P/E. The hint bar above the board always says how much AP the selected hero has and what ending the round now would cost them.

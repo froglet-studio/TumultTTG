@@ -1,0 +1,29 @@
+/* Play online (src/ui/net.js; playtest build only) */
+.title .net-pick {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 14px;
+  max-width: 560px;
+}
+.title .net-pick .mute {
+  flex-basis: 100%;
+  text-align: center;
+}
+.net-pick input {
+  background: #0b1222;
+  border: 1px solid var(--line2);
+  color: var(--txt);
+  padding: 5px 8px;
+  border-radius: 6px;
+}
+.net-lobby {
+  max-width: 520px;
+  margin: 60px auto;
+  text-align: center;
+}
+.net-lobby .row {
+  justify-content: center;
+}

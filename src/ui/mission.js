@@ -839,9 +839,7 @@
     if (ms.mode === 'freeMove') {
       const opts = T.reachableWalk(m, h, ms.freeN, false);
       if (!opts.includes(node)) return;
-      h.freeMove = ms.freeN;
-      const r = T.walk(m, h, node);
-      h.freeMove = 0;
+      const r = U.exec({ op: 'walk', hero: ms.heroIdx, node, free: ms.freeN });
       if (!r.ok) U.toast(r.why);
       ms.mode = 'idle';
       afterAction();
@@ -849,7 +847,7 @@
     }
     if (ms.mode === 'idle') {
       if (h.downed) return;
-      const r = T.walk(m, h, node);
+      const r = U.exec({ op: 'walk', hero: ms.heroIdx, node });
       if (!r.ok) {
         if (r.why && r.why !== 'no path') U.toast(r.why);
         return;
@@ -939,9 +937,11 @@
     }
     let r;
     const fullCtx = Object.assign({}, ctx);
-    if (p.kind === 'card') r = T.playFace(m, h, p.cardId, p.fk, fullCtx);
-    else if (p.kind === 'basic') r = T.useBasic(m, h, p.id, fullCtx);
-    else r = T.useGear(m, h, p.gi, p.ai, fullCtx);
+    const i = ms.heroIdx;
+    // every change goes through a command, so it can be carried out on the host's screen (U.exec)
+    if (p.kind === 'card') r = U.exec({ op: 'face', hero: i, card: p.cardId, fk: p.fk, ctx: fullCtx });
+    else if (p.kind === 'basic') r = U.exec({ op: 'basic', hero: i, id: p.id, ctx: fullCtx });
+    else r = U.exec({ op: 'gear', hero: i, gi: p.gi, ai: p.ai, ctx: fullCtx });
     ms.pending = null;
     ms.mode = 'idle';
     if (!r.ok) {
@@ -950,19 +950,26 @@
       return;
     }
     U.sfx.click();
-    if (fullCtx.pendingReroll) {
-      ms.mode = 'reroll';
-      ms.rerollLeft = fullCtx.pendingReroll;
-      ms.rerollPicked = [];
-    } else if (fullCtx.pendingFreeMove && !h.downed && !m.over) {
-      const opts = T.reachableWalk(m, h, fullCtx.pendingFreeMove, false);
-      if (opts.length) {
-        ms.mode = 'freeMove';
-        ms.freeN = fullCtx.pendingFreeMove;
-      }
-    }
+    U.followUp(r.ctx || {});
     afterAction();
   }
+  /** What a played face asks of its player next: pick dice to reroll, or a free walk. */
+  U.followUp = function (ctx) {
+    const m = M();
+    const ms = U.ms;
+    const h = hero();
+    if (ctx.pendingReroll) {
+      ms.mode = 'reroll';
+      ms.rerollLeft = ctx.pendingReroll;
+      ms.rerollPicked = [];
+    } else if (ctx.pendingFreeMove && !h.downed && !m.over) {
+      const opts = T.reachableWalk(m, h, ctx.pendingFreeMove, false);
+      if (opts.length) {
+        ms.mode = 'freeMove';
+        ms.freeN = ctx.pendingFreeMove;
+      }
+    }
+  };
   function afterAction() {
     U.updateMission();
     // the mission is part of the save: closing the page now loses nothing
@@ -1023,7 +1030,7 @@
       case 'cons': {
         const [i, ci] = arg.split('|').map(Number);
         ms.heroIdx = i;
-        const r = T.useConsumable(m, m.heroes[i], ci);
+        const r = U.exec({ op: 'item', hero: i, ci });
         if (!r.ok) U.toast('Cannot use that now.');
         afterAction();
         return true;
@@ -1046,7 +1053,7 @@
           U.toast('No objective adjacent.');
           return true;
         }
-        const r = T.doInteract(m, h, n, false);
+        const r = U.exec({ op: 'interact', hero: i, node: n });
         if (!r.ok) U.toast(r.why);
         else U.sfx.click();
         afterAction();
@@ -1054,7 +1061,7 @@
       }
       case 'rally': {
         ms.heroIdx = +arg;
-        const r = T.rally(m, hero());
+        const r = U.exec({ op: 'rally', hero: +arg });
         if (!r.ok) U.toast(r.why);
         else U.sfx.heal();
         afterAction();
@@ -1062,7 +1069,7 @@
       }
       case 'valve': {
         ms.heroIdx = +arg;
-        if (T.valve(m, hero())) U.sfx.click();
+        if (U.exec({ op: 'valve', hero: +arg }).ok) U.sfx.click();
         afterAction();
         return true;
       }
@@ -1077,7 +1084,7 @@
         if (i !== ms.heroIdx) return true;
         const h = hero();
         if (ms.mode === 'dump') {
-          T.dump(m, h, di);
+          U.exec({ op: 'dump', hero: i, di });
           ms.mode = 'idle';
           afterAction();
         } else if (ms.mode === 'reroll') {
@@ -1088,8 +1095,7 @@
         return true;
       }
       case 'rerollConfirm': {
-        const h = hero();
-        if (ms.rerollPicked.length) T.rerollHeld(m, h, ms.rerollPicked);
+        if (ms.rerollPicked.length) U.exec({ op: 'reroll', hero: ms.heroIdx, picked: ms.rerollPicked.slice() });
         ms.mode = 'idle';
         ms.rerollPicked = [];
         afterAction();
@@ -1122,13 +1128,7 @@
         }
         ms.endConfirm = false;
         // with players on other screens, the round ends once every one of them is ready
-        if (!T.setReady(U.run, U.seats)) {
-          afterAction();
-          return true;
-        }
-        T.clearReady(U.run);
-        T.endHeroPhase(m);
-        m.heroes.forEach((x) => (x.freeMove = 0));
+        U.exec({ op: 'ready' });
         U.sfx.click();
         afterAction();
         return true;
