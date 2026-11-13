@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.20.0',
+    version: '2.21.0',
     items: [
+      {
+        text: 'Canon notes now reach the lore lead: every ✎ correction and draft answer you write on this page is sent to its private inbox (Canon on the title says how many have gone). Only you and the page’s editors can read them, never other testers. Garrett: Canon → Open the inbox to mark each note canon or rejected, edit its wording, and tick public for what may be copied into the repository. Did anything you wrote fail to arrive?',
+      },
       {
         text: 'Playing now helps write the world. Look for the small ✎ beside the atlas’s rules and field notes, the pilot on the title screen, foes in the Codex and events: say it is wrong, add a detail, or say you love it. When you draft, the game asks why the pilot you picked guides (optional). Everything you write is a proposal for Garrett to approve; find it all under Canon on the title screen, and copy it to send it on. Were the questions welcome, or in the way? Is there text you wanted to correct and could not?',
       },

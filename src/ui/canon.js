@@ -145,6 +145,7 @@
     return `<div class="row"><h3>Canon from play</h3><span class="right small dim">${list.length} note${list.length === 1 ? '' : 's'} on this device</span></div>
       <p class="dim small">Answers and corrections you have written while playing. Each is a proposal until the lore lead approves it. Copy them to send them on.</p>
       <div class="row"><button class="sm ${asks ? 'primary' : 'ghost'}" data-act="canonAsk">${asks ? 'Asking questions as I play: on' : 'Asking questions as I play: off'}</button><span class="small dim">The ✎ marks stay either way.</span></div>
+      ${U.canonListExtra ? U.canonListExtra() : ''}
       <div class="canon-list">${rows || '<p class="dim small">Nothing yet. Look for ✎ beside field notes, pilots, foes and events.</p>'}</div>
       <textarea class="pt-report canon-out" id="canonOut" readonly spellcheck="false">${esc(T.canonLines(list))}</textarea>
       <div class="row" style="margin-top:10px"><button class="primary" data-act="canonCopy" ${list.length ? '' : 'disabled'}>Copy all</button><button class="ghost" data-act="canonClear" ${list.length ? '' : 'disabled'}>${clearing ? 'Really clear them all?' : 'Clear'}</button><button class="right" data-act="closeModal">Close</button></div>`;
@@ -178,7 +179,11 @@
         if (ok) {
           note = null;
           U.closeModal();
-          U.toast('Sent to the lore lead. Thank you.');
+          U.toast(
+            U.canonNet && U.canonNet.ready
+              ? 'Sent to the lore lead. Thank you.'
+              : 'Kept on this device. Copy it from Canon on the title to send it on.',
+          );
         }
         return true;
       }

@@ -60,3 +60,16 @@
 .canon-out {
   height: 90px;
 }
+.canon-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line, #1c2438);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.canon-item.st-rejected {
+  opacity: 0.6;
+}
+.canon-inbox {
+  max-height: 60vh;
+}

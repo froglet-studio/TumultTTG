@@ -35,11 +35,35 @@ The marks never pop up. The question can be turned off under **Canon** on the ti
 
 Records are kept on the device in `localStorage` `tumult_v2_canon` (the newest 500), apart from any run: they are about the world and outlive the run they came from, so the save format does not change. **Canon** on the title screen lists them and copies them as JSON lines (`T.canonLines`).
 
+## The inbox (test page only)
+
+On the test page (`src/ui/canon-net.js`, playtest build only), each record is also sent to the page's store as it is written; records written while the store was not answering are sent when it does (`tumult_v2_canon_sent` remembers which have gone).
+
+| Path | What | Who reads | Who writes |
+| --- | --- | --- | --- |
+| `canon/<viewer id>` | `{ at, last }`: lists a contributor | owner, editors | that contributor |
+| `canon/<viewer id>/notes/<record id>` | the record | owner, editors, that contributor | that contributor |
+| `canonReview/<record id>` | `{ status, public, claim, note, at, from }`: the decision; `claim` only when the wording was edited | owner, editors | owner only |
+
+The test page is published with these store rules and the `user` capability (names of who sent what):
+
+```json
+{ "db": { "rules": [
+    { "path": "canon", "read": "admin", "write": "owner" },
+    { "path": "canon/{self}", "read": "interact", "write": "interact" },
+    { "path": "canonReview", "read": "admin", "write": "owner" } ] },
+  "user": { "scopes": ["profile"] } }
+```
+
+Everything else in the store (online games under `games/`) keeps the default rules. Testers need Contributor access to send, as for online play.
+
+**Canon → Open the inbox** (owner and editors) lists every note with who sent it, what they were shown and where. The owner marks each *canon*, *rejected* or *keep proposed*, may edit the wording first, and ticks **public** for what may be copied into this repository. *Copy canon* gives the approved records as JSON lines with the decision applied (`status`, `public`, the edited `claim`, `decided: { at, note }`).
+
 ## Still to come
 
 The plan has four steps; this is the first.
 
 1. ✓ Records, ✎ marks, the draft question, Canon list (2.20.0).
-2. The test page sends each record to a private inbox (its database), and a review tab lets the lore lead approve, edit, reject and mark public.
+2. ✓ The test page sends each record to a private inbox, and the lore lead approves, edits, rejects and marks public (2.21.0).
 3. A storyteller pack generated from the game's rules and approved canon, for AI storytellers: rules first, then canon, then labelled proposals, then what is off limits.
 4. More questions at natural pauses: a detail of each place on arrival, defining moments after a mission, the end-of-run dossier ([design 06](../design/06-pilots-and-backstory.md)).
