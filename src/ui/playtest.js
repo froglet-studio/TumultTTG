@@ -25,7 +25,7 @@
         text: 'A crystal is an action: any banked etherion (or Omni) can be spent on its own, with no AP, for a basic action of its colour — Mass strikes for 2 or shoves 1, Charge arcs 1 damage into a foe up to 3 away, Space scrambles 1 node (ledges too), Time braces and slides your track. Are elements now the rolls you hope for? Does a turn with three crystals and no AP still feel like a turn?',
       },
       {
-        text: 'This makes the game a lot easier (the careful simulated player now wins 38 runs of 40). Tell us whether the Heart and the tier-3 missions still feel like a fight, on either tide.',
+        text: 'To pay for free crystals, the Heart is tougher (72 vitality at tier 3, was 44) and once it cracks the Vault drowns in four rounds, not seven. Does the last fight feel like a race you can plan for, or a wall?',
       },
       {
         text: 'Charge Reach (Interact 2 nodes away) still costs 1 AP. Does Arc give a lone Charge die enough to do when nothing is in reach?',

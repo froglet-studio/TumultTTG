@@ -224,9 +224,15 @@ Full runs (40): heuristic 9 → 9 won; look-ahead 19 → 22 won, missions won 86
 
 The retune that follows S1 (plan phase 3) has to absorb this: the floor is now solid, so difficulty must come from the opposition and the clock, not from dead dice.
 
-## v2.10.0 — a crystal is an action
+## v2.10.0 — a crystal is an action, and a harder Heart
 
-A banked etherion (or Omni) channelled into a basic action no longer needs AP: Mass — Strike 2 or Shove 1; Charge — Arc 1 damage into a foe within 3 (new), or Reach for 1 AP; Space — Scramble 1, ledges included; Time — Brace with a track slide (CHANGELOG 2.10.0). A first try at fuller strength (Strike 3, Shove 2, Arc 2, Scramble 2) took the look-ahead player to 40 runs of 40 and the heuristic to 30; these are the gentler numbers. `node tools/sim.js 40`, 2.9.0 → 2.10.0, rising tide, same seeds:
+A banked etherion (or Omni) channelled into a basic action no longer needs AP: Mass — Strike 2 or Shove 1; Charge — Arc 1 damage into a foe within 3 (new), or Reach for 1 AP; Space — Scramble 1, ledges included; Time — Brace with a track slide (CHANGELOG 2.10.0).
+
+On its own that made the game far easier: full runs, rising tide, look-ahead 22 → 38 of 40, heuristic 6 → 19 (a first try at Strike 3, Shove 2, Arc 2, Scramble 2 gave 40 and 30). Garrett asked for the difficulty to be rebuilt in the same change, so main never gets easier.
+
+**Where the difficulty went back.** Nearly every mission was already won by a careful player; runs were lost at the Heart, whose test is the race after it cracks. Neither hero vitality (26 → 20: still 39 of 40) nor a thicker shield (5) moved the look-ahead player; more Heart damage did little and broke the lethality budget. More Heart to get through, on a shorter clock, did: **the Heart has 50/61/72 vitality (was 32/38/44), and once cracked the Vault drowns in four rounds (was seven).** Its blows are unchanged.
+
+`node tools/sim.js 40`, 2.9.0 → 2.10.0, rising tide, same seeds:
 
 | archetype | tier | heuristic win% | look-ahead win% | look-ahead rounds |
 |---|---|---|---|---|
@@ -245,11 +251,11 @@ A banked etherion (or Omni) channelled into a basic action no longer needs AP: M
 | elite | 1 | 90 → 80 | 100 → 100 | 4.7 → 4.9 |
 | elite | 2 | 73 → 80 | 98 → 100 | 5.2 → 4.6 |
 | elite | 3 | 73 → 75 | 93 → 98 | 6.5 → 6.0 |
-| boss | 3 | 20 → 73 | 78 → 100 | 12.1 → 8.4 |
+| boss | 3 | 20 → 43 | 78 → 78 | 12.1 → 11.6 |
 
-Full runs (40), rising: heuristic 6 → 19 won, look-ahead 22 → 38. Flood: heuristic 5 → 13, look-ahead 13 → 39.
+Full runs (40): **rising** look-ahead 22 → 19, heuristic 6 → 8 (one run in five, the target). **Flood** look-ahead 13 → 18, heuristic 5 → 5.
 
-**This is the biggest swing in difficulty since the look-ahead player was built, and it is on purpose:** about two dice in five are etherions, and every one of them is now an action. The Heart is where it shows (look-ahead 78% → 100%, heuristic 20% → 73%). Neither tide now presses a careful player; difficulty has to be rebuilt on top of this floor, from the opposition and the clock, not by taking the crystals' actions back.
+The flood tide is now a little easier than it was, because tides never change the Heart and the tier-3 missions got easier for a squad with free crystals; making the flood press the Heart too is the obvious next lever. The Heart is now the right length for a careful player (11 rounds, in the 8–14 band); the other missions are still short.
 
 ## v2.9.0 — the last narrow faces
 

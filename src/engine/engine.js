@@ -2345,8 +2345,8 @@
         e.phase = 2;
         e.shield = 0;
         e.baseShield = 0;
-        say(m, 'THE HEART CRACKS. The Vault begins to drown — seven rounds.', 'sys');
-        m.clock = { value: 7, label: 'Rounds until the Vault drowns', onZero: 'lose' };
+        say(m, 'THE HEART CRACKS. The Vault begins to drown — four rounds.', 'sys');
+        m.clock = { value: 4, label: 'Rounds until the Vault drowns', onZero: 'lose' };
         if (m.hazardSpread) m.hazardSpread.dormant = false;
         m.enemies
           .filter((x) => x.type === 'spawner' && x.alive)

@@ -1,13 +1,14 @@
 # Changelog
 
-## 2.10.0 — 2026-11-12 — a crystal is an action
+## 2.10.0 — 2026-11-13 — a crystal is an action
 
 Garrett, after a playtest: a hero loaded with elemental crystals and no AP, or no card that could use them, had nothing to do with them. "We want elements to be the exciting rolls, not dead weight." He chose, from three ways to do it, to make a crystal an action on its own.
 
 - **Channel costs no AP.** A banked etherion (or Omni) is spent on its own for a basic action of its colour: Mass — Strike an adjacent foe for 2 or Shove it 1 node; Charge — **Arc** (new) 1 damage into a foe up to 3 nodes away, or Reach an objective 2 nodes away (still 1 AP, was 2); Space — Scramble 1 node, up or down a ledge; Time — Brace (Shield 1) and slide your track 1 extra. Was: 2 AP (Strike 4, Shove 2, Reach) or 1 AP (Scramble, Brace) plus the etherion.
 - Every crystal, at level 0, with no AP and no awakened card, now opens something; a test holds it (`test/engine.test.js`).
 - The heuristic player channels Mass and Charge into blows and Time into Brace when threatened.
-- **Balance — the game gets much easier.** Rising tide full runs: look-ahead 22 → 38 of 40, heuristic 6 → 19; flood tide: look-ahead 13 → 39, heuristic 5 → 13 (`docs/reference/BALANCE.md`, v2.10.0). Difficulty needs rebuilding on this floor.
+- **The Heart is harder, to pay for it:** 50/61/72 vitality (was 32/38/44), and once it cracks the Vault drowns in four rounds (was seven). Free crystals alone took the careful simulated player from 22 runs of 40 to 38; Garrett asked for the difficulty back in the same change.
+- **Balance:** full runs, rising tide: look-ahead 22 → 19 of 40, heuristic 6 → 8; flood tide: look-ahead 13 → 18, heuristic 5 → 5. Squads with no cards now beat the Heart sometimes, which closes the last mission an ability was needed for (`docs/reference/BALANCE.md`, v2.10.0).
 
 ## 2.9.0 — 2026-11-12 — no narrow faces left
 

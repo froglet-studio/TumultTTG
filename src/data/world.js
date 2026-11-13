@@ -201,7 +201,7 @@
     tidecaller:{ name:'Tidecaller', glyph:'🌊', role:'elite', elite:true, hp:[12,14,16], speed:1, policy:'tidecaller',
       abilities:{ undertow:{ n:'Undertow', kind:'los', dmg:[2,3,3], pull:2 }, surge:{ n:'Surge', kind:'los', dmg:[4,5,6], weaken:1 } },
       flavor:'An elite. Drags you toward the hazard. Anchor yourself.' },
-    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[32,38,44], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
+    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,72], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
       abilities:{ lance:{ n:'Lance', kind:'los', dmg:[3,4,5] }, crush:{ n:'Crush', kind:'melee', dmg:[7,8,9], pull:2 }, call:{ n:'Call the Tide', kind:'summon' } },
       flavor:'A quasi-stable consolidation. Its shield is fed by its Spawners. When it is half-dead, the Vault begins to drown.' },
   };

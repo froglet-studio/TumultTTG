@@ -347,7 +347,7 @@
     boss: {
       title: ['The Heart of the Consolidation'],
       blurb:
-        'Its shield is fed by its Spawners: destroy both and the shield falls, or bring Pierce. At half vitality the Vault begins to drown — seven rounds to finish it.',
+        'Its shield is fed by its Spawners: destroy both and the shield falls, or bring Pierce. At half vitality the Vault begins to drown — four rounds to finish it.',
       gen(rng, tier) {
         const b = gridBoard(rng, 5, 3, { corridors: 1, diagonals: 1 });
         const heartNode = b.at['4,1'];

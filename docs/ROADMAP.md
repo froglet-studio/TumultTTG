@@ -41,7 +41,7 @@ A review at handoff found places where card, boon or mission text promises somet
 
 ### S1 · Units, target classes and basic actions — in progress
 
-*Started (2.5.0):* Strike, Brace and Shove for every hero, played by both simulated players. Card-less squads now win every tier-1 mission type at least 63% of the time in the audit; the Heart is still out of reach without cards. *2.6.0:* Channel — every etherion has a basic action to go into, so no die is ever dead. *2.10.0:* a channelled crystal costs no AP — every rolled etherion is an action on its own (a big easing; difficulty to be rebuilt on it). Carry and the unit model are next; Overcast and Debt move to C1 (Garrett, 2026-11-12).
+*Started (2.5.0):* Strike, Brace and Shove for every hero, played by both simulated players. Card-less squads now win every tier-1 mission type at least 63% of the time in the audit; the Heart is still out of reach without cards. *2.6.0:* Channel — every etherion has a basic action to go into, so no die is ever dead. *2.10.0:* a channelled crystal costs no AP — every rolled etherion is an action on its own (paid for with a tougher Heart on a shorter drowning clock). Carry and the unit model are next; Overcast and Debt move to C1 (Garrett, 2026-11-12).
 One unit model for pilots, actors and props; verbs target by class (harm, affect, help), not by side; Move, Interact, Rally, Strike, Brace, Carry and Shove for everyone; Channel; Overcast and Debt. ([02](design/02-units-verbs-actions.md))
 
 **Done when:** every existing test still passes; squads with no cards can finish every mission type at tier 1 at least a third of the time with the look-ahead player; no etherion die is ever unspendable; pool + banked + locked = 15 is a tested invariant.
