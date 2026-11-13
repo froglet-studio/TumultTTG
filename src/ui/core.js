@@ -164,6 +164,7 @@
       <div class="sub">Draft two pilots from eleven bloodlines. Ride the current through a Consolidation's territory. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
       <div class="btns"><button class="primary" data-act="newRun">New Tide</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       ${tidePicker(meta)}
+      ${U.partyPicker ? U.partyPicker(meta) : ''}
       <div class="mute small" style="margin-top:14px">Tides sailed: ${meta.runs} · Consolidations toppled: ${meta.wins} · Deepest row: ${meta.bestRow}/6</div>
       <div class="mute small" style="max-width:520px;text-align:center;margin-top:16px;font-family:var(--serif);font-style:italic">${esc(T.FLAVOR.terminalIntro[meta.runs % T.FLAVOR.terminalIntro.length])}</div>
       ${U.titleExtra ? U.titleExtra() : ''}
@@ -184,6 +185,7 @@
   U.startDraft = function () {
     U.run = T.newRun();
     U.run.tide = chosenTide(T.loadMeta());
+    if (U.chosenPlayers) U.run.party = T.newParty(U.chosenPlayers(T.loadMeta()));
     U.draft = {
       heroIdx: 0,
       step: 'mode',
@@ -200,9 +202,10 @@
     const d = U.draft;
     const run = U.run;
     const n = d.heroIdx + 1;
+    const who = U.seatTag ? U.seatTag(d.heroIdx) : '';
     let body = '';
     if (d.step === 'mode') {
-      body = `<div class="panel"><h3>Hero ${n} of 2 — choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
+      body = `<div class="panel"><h3>Hero ${n} of 2 ${who}— choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
         <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span></div>
         <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
         <div class="prebuilt-grid">${T.PREBUILTS.filter((pb) => !run.heroes.some((h) => h.name === pb.name))
@@ -220,7 +223,7 @@
           )
           .join('')}</div></div>`;
     } else if (d.step === 'species') {
-      body = `<div class="panel"><h3>Hero ${n}: choose two bloodlines (Human is always the third)</h3>
+      body = `<div class="panel"><h3>Hero ${n} ${who}: choose two bloodlines (Human is always the third)</h3>
         <div class="row" style="margin:8px 0">${U.portrait({ name: d.name, species: ['human'].concat(d.species) }, 'lg')}<span class="small dim">The portrait follows the two bloodlines: a painting of that exact pair when one exists, else the nearest stand-in.</span></div>
         <div class="row" style="margin:8px 0"><label class="small dim">Name</label><input id="heroName" value="${esc(d.name)}" style="background:#0b1222;border:1px solid var(--line2);color:var(--txt);padding:5px 8px;border-radius:6px"></div>
         <div class="species-grid">${T.SPECIES_ORDER.filter((s) => s !== 'human')
@@ -358,7 +361,7 @@
         (
           h,
           i,
-        ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b><span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
+        ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b>${U.seatTag ? U.seatTag(i) : ''}<span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
       <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc)}">${T.GEAR_BY[g.id].icon} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${T.BOON_BY[b].icon} ${esc(T.BOON_BY[b].name)}</span>`).join('')}${h.consumables.map((c) => `<span class="pill">${T.CONSUMABLE_BY[c].icon}</span>`).join('')}</div>
       <div class="row" style="margin-top:6px"><button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button><button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button></div></div>`,
       )
@@ -646,12 +649,21 @@
     const arg = t.getAttribute('data-arg');
     // an add-on (the playtest panel) sees every action first and may take it
     if (U.extraAct && U.extraAct(act, arg, t, e)) return;
+    // with players on other screens, each acts only for their own pilots (src/ui/party.js)
+    if (U.gate && !U.gate(act, arg, t)) return;
     if (U.handleMissionAct && U.screen === 'mission' && U.handleMissionAct(act, arg, t, e)) return;
     switch (act) {
       case 'pickTide': {
         if (!T.TIDES[arg]) return;
         const meta = T.loadMeta();
         meta.tide = arg;
+        T.saveMeta(meta);
+        U.render();
+        return;
+      }
+      case 'pickPlayers': {
+        const meta = T.loadMeta();
+        meta.players = Math.max(1, Math.min(T.MAX_PLAYERS, parseInt(arg, 10) || 1));
         T.saveMeta(meta);
         U.render();
         return;

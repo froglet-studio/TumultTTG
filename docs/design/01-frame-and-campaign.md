@@ -11,7 +11,7 @@ That makes the campaign, literally, the pilots' origin story. Whatever happened 
 ## The squad
 
 - **Three** members, because a squad is three. The interface and the balance must also work with two (v2.0's size) so a short session stays short.
-- Solo: one player commands all three. Co-op: each player owns one. Hot-seat first; networking is out of scope.
+- Solo: one player commands all three. Co-op: each player owns one. Hot-seat first; networking is out of scope. *Built in 2.12.0 for today's two-pilot squad:* players and seats (`run.party`), each player drafting and flying their own pilot, the host making the squad's shared choices, and a round that ends when every player is ready ([`reference/OVERVIEW.md`](../reference/OVERVIEW.md#players)). Playing over the network, on the test page, is proposed next (Garrett, 2026-11-13).
 - Rename throughout, once, in one change: *hero → pilot*, *species / bloodline → clade*, *Tide Map → season route*.
 
 ## Patrons and domains

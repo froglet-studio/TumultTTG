@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.12.0 — 2026-11-13 — two players
+
+Garrett: "now let's make it multiplayer." The first step: players and seats, which every way of playing together needs. Playing from two screens over the network comes next, on the test page.
+
+- **Players.** The title screen picks Solo or 2 players (kept like the tide). With two, each player drafts and flies one pilot, and their name is on that pilot's draft, panel and party card. Today they pass one screen.
+- **Seats.** Each hero belongs to one player; seat 0, the host, makes the squad's shared choices (the route, rewards to skip, havens, events). A screen that holds only some seats acts only for their pilots; one that holds all (solo, or a passed screen) acts for everyone, as before. `src/engine/party.js` (rules), `src/ui/party.js` (who may click what).
+- **Ready.** A round ends when every player is ready. On one screen, End Round readies everyone at once, so nothing changes; from separate screens the button reads *Ready 1/2* until the last player presses it.
+- **Saves:** version 4 adds `run.party`; an older save loads with one player (fixture `save-2.11.json`).
+- **No rules change.** Two players meet exactly the squad, missions and dice one player does; a test holds a run to the same result whatever the number of players. The simulators are unaffected.
+
 ## 2.11.0 — 2026-11-13 — the Cosmic Shore look
 
 Garrett: a graphical overhaul inspired by Cosmic Shore, whose pilots are Tumult's heroes and who just got new artwork.

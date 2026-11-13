@@ -32,6 +32,7 @@
       stats: { missions: 0, kills: 0, rounds: 0, lifelineUsed: false },
       lifeline: 1,
       tide: 'rising', // difficulty: a key of T.TIDES
+      party: T.newParty(1), // who plays which hero (src/engine/party.js)
       won: false,
       over: false,
       lastReward: null,
@@ -534,7 +535,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 3;
+  T.SAVE_VERSION = 4;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -560,6 +561,11 @@
     2(r) {
       r.tide = 'rising';
       r.v = 3;
+    },
+    // 2.12 added players: every earlier run had one, who played both heroes.
+    3(r) {
+      r.party = T.newParty(1);
+      r.v = 4;
     },
   };
   T.deserializeRun = function (json) {
