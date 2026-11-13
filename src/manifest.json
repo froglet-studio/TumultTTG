@@ -5,6 +5,7 @@
     "data/world.js",
     "data/story.js",
     "data/expeditions.js",
+    "data/atlas.js",
     "engine/generators.js",
     "engine/engine.js",
     "engine/ai.js",

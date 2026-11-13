@@ -274,7 +274,7 @@ test(
       assert.equal(third.U.screen, 'reward');
       assert.match(
         third.d.getElementById('app').textContent,
-        /\d+ rounds, \d+ foes destroyed|the tide spares you once/,
+        /\d+ rounds, \d+ foes destroyed|the Lifeline holds once/,
       );
       assert.deepEqual(third.errors, []);
     }

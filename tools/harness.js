@@ -164,11 +164,11 @@ function createHarness(T = loadTumult()) {
   /**
    * A controlled arena for one hero holding the given card(s): plenty of dice, a foe
    * adjacent and a foe that shares the hero's zone. Returns { run, m, h, ally, adj, zone }, where
-   * adj and zone are those two foes (either may be undefined on a cramped board). The default
-   * seed is a board whose start leaves the hero room to step: on a cornered one, with a foe put
-   * beside them, the faces that move a single node have nowhere to go.
+   * adj and zone are those two foes (either may be undefined on a cramped board). The buddy is
+   * moved two steps off and the zone foe out of reach where the page allows, so the tester always
+   * has a free node to step to. `page` names the atlas page (otherwise the board's stream picks one).
    */
-  function arena(cardIds, { up = [2, 2], archetype = 'swarm', tier = 2, seed = 78 } = {}) {
+  function arena(cardIds, { up = [2, 2], archetype = 'swarm', tier = 2, seed = 78, page } = {}) {
     const ids = [].concat(cardIds);
     const run = T.newRun(seed);
     const h = T.makeHero({
@@ -181,15 +181,26 @@ function createHarness(T = loadTumult()) {
     const ally = T.makeHero({ id: 'y', name: 'Buddy', species: ['human', 'owl', 'gecko'], cards: ['owl_talon'] });
     run.heroes = [h, ally];
     run.crystals = 20;
-    T.launchMission(run, archetype, tier);
+    T.launchMission(run, archetype, tier, page);
     const m = run.mission;
     h.held = ['AP', 'AP', 'AP', 'AP', 'AP', 'O', 'O', 'O', 'M', 'C', 'S', 'T'];
     h.pool = T.RULES.POOL - h.held.length;
+    // the buddy stands two steps off, so the tester keeps room to step even on a narrow edge of a page
+    const B = T.Board;
+    if (B.walkNeighbors(m.board, h.pos).includes(ally.pos)) {
+      const two = B.walkNeighbors(m.board, h.pos)
+        .flatMap((n) => B.walkNeighbors(m.board, n))
+        .filter((n) => n !== h.pos && !B.walkNeighbors(m.board, h.pos).includes(n) && !T.occupied(m, n));
+      if (two.length) ally.pos = two[0];
+    }
     const adjNode = T.Board.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
     if (adjNode) m.enemies[0].pos = adjNode;
-    const zoneNode = Object.values(m.board.nodes).find(
+    // the zone foe stands off, out of reach of a step where the board allows, so the hero is never boxed in
+    const near = T.Board.walkNeighbors(m.board, h.pos);
+    const zoneNodes = Object.values(m.board.nodes).filter(
       (n) => n.id !== h.pos && T.Board.sharesZone(m.board, n.id, h.pos) && !T.occupied(m, n.id),
     );
+    const zoneNode = zoneNodes.find((n) => !near.includes(n.id)) || zoneNodes[0];
     if (zoneNode && m.enemies[1]) m.enemies[1].pos = zoneNode.id;
     return { run, m, h, ally, adj: adjNode ? m.enemies[0] : undefined, zone: zoneNode ? m.enemies[1] : undefined };
   }

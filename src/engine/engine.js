@@ -346,6 +346,7 @@
       secondWindUsed: !!run.secondWindUsed,
       stats: { kills: 0, lowHp: false, ambushDmg: 0, hazardDmg: 0, foundRound: null },
       isBoss: !!spec.isBoss,
+      page: spec.page || null,
       title: spec.title,
       eliteKind: spec.eliteKind || null,
       spawnedCount: 0,
