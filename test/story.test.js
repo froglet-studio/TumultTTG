@@ -72,3 +72,84 @@ test('a save from 2.14 (before the story) loads with an empty chronicle and writ
   assert.ok(run.over);
   assert.ok(run.story.log.length >= 1, 'the chronicle starts at the next stop');
 });
+
+test('every run sets out on an expedition: a patron, a threat, three legs across land, sea and air', () => {
+  const seen = { patron: new Set(), threat: new Set(), order: new Set() };
+  for (let seed = 1; seed <= 60; seed++) {
+    const run = T.newRun(seed);
+    H.prebuiltSquad(run, 0, 1);
+    T.startMap(run);
+    const ex = T.expeditionOf(run);
+    assert.ok(ex.patronDef && ex.threatDef, `seed ${seed}: the patron and the threat are known`);
+    assert.deepEqual(ex.legs.map((l) => l.ground).sort(), ['air', 'land', 'sea'], 'one leg of each ground');
+    assert.equal(ex.legs[2].ground, ex.threatDef.ground, 'the last leg crosses the threat’s own ground');
+    assert.deepEqual(
+      run.map.actNames,
+      ex.legs.map((l) => l.name),
+      'the map’s legs carry the expedition’s names',
+    );
+    for (const l of ex.legs) assert.ok(T.GROUNDS[l.ground].scenes.includes(l.scene));
+    assert.equal(T.threatName(run), ex.threatDef.name);
+    const brief = run.story.log[0].lines.find((l) => l.src === ex.patron);
+    assert.ok(brief && !/\{\w+\}/.test(brief.text), 'the opening passage carries the patron’s brief, filled');
+    assert.deepEqual(H.plainProblems(run), []);
+    seen.patron.add(ex.patron);
+    seen.threat.add(ex.threat);
+    seen.order.add(ex.legs.map((l) => l.ground).join());
+  }
+  assert.equal(seen.patron.size, T.PATRONS.length, 'every patron sends someone');
+  assert.equal(seen.threat.size, T.THREATS.length, 'every threat waits at the end of some route');
+  assert.equal(seen.order.size, 6, 'the legs come in every order');
+});
+
+test('the finale is the Heart by its rules, under the expedition’s name', () => {
+  const run = T.newRun(31);
+  H.prebuiltSquad(run, 0, 1);
+  T.startMap(run);
+  const plain = T.newRun(31);
+  H.prebuiltSquad(plain, 0, 1);
+  T.startMap(plain);
+  plain.story.expedition = null;
+  T.launchMission(run, 'boss', 3);
+  T.launchMission(plain, 'boss', 3);
+  const heart = run.mission.enemies.find((e) => e.type === 'heart');
+  const heart0 = plain.mission.enemies.find((e) => e.type === 'heart');
+  assert.equal(heart.name, T.expeditionOf(run).threatDef.foe);
+  assert.equal(run.mission.title, T.threatTitle(run));
+  assert.equal(heart0.name, 'The Heart', 'a run with no expedition meets the Heart as before');
+  for (const k of ['hp', 'maxHp', 'shield', 'pos'])
+    assert.deepEqual(heart[k], heart0[k], `the Heart’s ${k} is unchanged`);
+});
+
+test('an event on a leg fits its ground when one is left to fit', () => {
+  for (let seed = 1; seed <= 40; seed++) {
+    const run = T.newRun(500 + seed);
+    H.prebuiltSquad(run, 0, 1);
+    T.startMap(run);
+    for (const id of Object.keys(run.map.all)) {
+      run.nodeId = +id || id;
+      const ground = T.groundAt(run, run.map.all[id].row);
+      const ev = T.pickEvent(run);
+      const g = T.EVENT_GROUNDS[ev.id];
+      const fitLeft = T.EVENTS.some(
+        (e) =>
+          !run.seenEvents.slice(0, -1).includes(e.id) &&
+          (!T.EVENT_GROUNDS[e.id] || T.EVENT_GROUNDS[e.id].includes(ground)),
+      );
+      if (fitLeft) assert.ok(!g || g.includes(ground), `${ev.id} fits ${ground}`);
+    }
+  }
+});
+
+test('a save from 2.16 (before expeditions) loads with none and keeps its route', () => {
+  const old = require('./fixtures/save-2.16.json');
+  assert.equal(old.v, 5, 'the fixture is a version-5 save');
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  assert.equal(run.story.expedition, null);
+  assert.deepEqual(run.map.actNames, old.map.actNames);
+  assert.equal(T.threatName(run), 'the Heart');
+  assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run), 'it saves again unchanged');
+  H.playRun(run);
+  assert.ok(run.over);
+});

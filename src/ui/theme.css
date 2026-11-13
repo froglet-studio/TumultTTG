@@ -535,3 +535,14 @@ button.ghost {
     animation: none;
   }
 }
+
+/* who sent the expedition: domains are ways of living, tinted, never teams */
+.dom-jade {
+  color: #5fc79a;
+}
+.dom-ruby {
+  color: #e0606e;
+}
+.dom-gold {
+  color: #e3b649;
+}

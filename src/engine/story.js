@@ -8,6 +8,10 @@
    or an offer, and a saved run resumes on the same words.
    ========================================================================== */
 (function (T) {
+  T.PATRON_BY = {};
+  T.PATRONS.forEach((p) => (T.PATRON_BY[p.id] = p));
+  T.THREAT_BY = {};
+  T.THREATS.forEach((x) => (T.THREAT_BY[x.id] = x));
   /** The head clade of a hero: the first after human. */
   const headClade = (h) => (h.species || []).find((s) => s !== 'human') || 'human';
   const cladeWord = (sp) => {
@@ -22,10 +26,50 @@
       .replace(/\{(\w+)\}/g, (all, k) => (tok[k] != null ? tok[k] : all))
       .replace(/(^|"|[.!?] )([a-z])/g, (all, pre, c) => pre + c.toUpperCase());
 
+  T.fillTokens = fill;
   /** What the end of the route is called on this run (an expedition may rename it). */
   T.threatName = (run) => (run.story && run.story.threat) || 'the Heart';
+  /** The same, to head a line or a screen: "The Standing Storm". */
+  T.threatTitle = (run) => T.threatName(run).replace(/^the /, 'The ');
   /** The name of the leg a map row belongs to. */
   T.legName = (run, row) => (run.map ? run.map.actNames[T.actOf(Math.min(row, 5))].replace(/^The /, 'the ') : '');
+
+  /**
+   * Draw this run's expedition (src/data/expeditions.js) from its own stream: who sent it, what waits at
+   * the end (T.THREATS: the finale keeps the Heart's rules), and its three legs. The last leg crosses the
+   * threat's own ground; the other two come in either order. Plain data: ids and words, nothing else.
+   */
+  T.newExpedition = function (run) {
+    const rng = T.runStream(run, 'expedition');
+    const patron = rng.pick(T.PATRONS);
+    const threat = rng.pick(T.THREATS);
+    const order = rng.shuffle(Object.keys(T.GROUNDS).filter((g) => g !== threat.ground)).concat([threat.ground]);
+    return {
+      patron: patron.id,
+      domain: patron.domain,
+      threat: threat.id,
+      legs: order.map((g) => ({ ground: g, name: rng.pick(T.GROUNDS[g].names), scene: rng.pick(T.GROUNDS[g].scenes) })),
+    };
+  };
+  /** Set a run out on an expedition: its threat names the finale, its legs name the map's acts. */
+  T.beginExpedition = function (run) {
+    if (!run.story) run.story = T.newStory();
+    const ex = T.newExpedition(run);
+    run.story.expedition = ex;
+    run.story.threat = T.THREAT_BY[ex.threat].name;
+    if (run.map) run.map.actNames = ex.legs.map((l) => l.name);
+  };
+  /** The run's expedition and its parts, or null for a run saved before expeditions. */
+  T.expeditionOf = function (run) {
+    const ex = run.story && run.story.expedition;
+    if (!ex) return null;
+    return { ...ex, patronDef: T.PATRON_BY[ex.patron], threatDef: T.THREAT_BY[ex.threat] };
+  };
+  /** The ground ('land' | 'sea' | 'air') of the leg a map row belongs to, or null. */
+  T.groundAt = function (run, row) {
+    const ex = run.story && run.story.expedition;
+    return ex && row != null ? ex.legs[T.actOf(Math.min(row, 5))].ground : null;
+  };
 
   /**
    * Which situation the stop just finished leaves the squad in: 'win', 'close' (won, but someone went down
@@ -85,6 +129,9 @@
     const lines = [];
     const logKind = nextIsBoss ? 'finale' : newLeg ? 'leg' : kind;
     lines.push(line('terminal', T.TERMINAL_LOG[kind], tok(a, b)));
+    const ex = T.expeditionOf(run);
+    if (kind === 'start' && ex)
+      lines.push({ who: 'terminal', text: fill(ex.patronDef.brief, tok(a, b)), src: ex.patron });
     if (logKind !== kind) lines.push(line('terminal', T.TERMINAL_LOG[logKind], tok(a, b)));
     const voice = (i) => T.VOICES[headClade(heroes[i] || nobody)] || T.VOICES.human;
     const say = kind === 'haven' || kind === 'event' ? 'quiet' : kind === 'loss' ? 'close' : kind;
@@ -96,7 +143,10 @@
       n: run.story.log.length + 1,
       kind: logKind,
       title: passageTitle(run, kind, logKind, node, nextRow),
-      scene: rng.pick(T.PASSAGE_SCENES[sceneKind] || T.PASSAGE_SCENES.win),
+      scene:
+        logKind === 'leg' && ex
+          ? ex.legs[T.actOf(Math.min(nextRow, 5))].scene
+          : rng.pick(T.PASSAGE_SCENES[sceneKind] || T.PASSAGE_SCENES.win),
       lines,
     };
     run.story.log.push(p);
@@ -114,5 +164,5 @@
   /** The passage written after the last stop (the newest in the chronicle), or null. */
   T.currentPassage = (run) => (run.story && run.story.log.length ? run.story.log[run.story.log.length - 1] : null);
   /** A run's story state: the chronicle so far and what the route leads to. */
-  T.newStory = () => ({ log: [], threat: null });
+  T.newStory = () => ({ log: [], threat: null, expedition: null });
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

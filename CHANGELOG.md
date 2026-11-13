@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.17.0 — 2026-11-13 — a different expedition each time
+
+Garrett: "it should have a different feel and adventure each time." Each run now draws its own expedition from its seed.
+
+- **Who sent you.** A Jade appointment (light a dark beacon, bring a lost party home), a Ruby venture (be the first to finish the route, chart the new ground) or a Gold contract (a salvage claim, an escort). The opening passage carries the brief, and the route is headed with it.
+- **What waits at the end.** Six threats: the Drowned Engine, the Standing Storm, the Quarry Hive, the Hollow Beacon, the Choking Reef, the Wind Knot. The finale is the Heart by its rules, its stats and its board; only its name and its words change ("Heart of the Standing Storm"). The route, the summary and the passages say what it is.
+- **Three legs in a new order.** Land, sea and air, each under one of four names and over one of its own paintings; the last leg crosses the threat's own ground. A new leg's passage shows that leg's painting.
+- **Events fit the ground.** Each event happens on two of the three grounds (a sunken cache at sea or on land, never in the air), and every ground has eight, so each event comes up as often as before.
+- **Difficulty:** full runs, 80 squads, before → after: look-ahead 41 → 44 wins, heuristic 22 → 27; heuristic alone over 400 runs 108 → 117 (27% → 29%), within the noise of which events a run meets. No rules, foes or missions changed.
+- **Saves:** version 6 adds `run.story.expedition`. A version-5 save has none: its route keeps its names and its finale is the Heart (fixture `save-2.16.json`). The expedition draws from a stream of its own (`expedition`).
+- Names are generic on purpose: no canon places or people (`docs/LORE.md`).
+
 ## 2.16.0 — 2026-11-13 — an expedition on Tumult
 
 Garrett chose the frame: each run is an expedition on Tumult, set down from an Ark, with the Terminal narrating. This step changes only words; the rules, ids and saves are untouched.

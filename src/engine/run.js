@@ -248,6 +248,7 @@
     run.phase = 'map';
     run.available = run.map.rows[0].slice();
     run.nodeId = null;
+    T.beginExpedition(run);
     T.writePassage(run, 'start', null);
   };
   T.actOf = (row) => (row <= 1 ? 0 : row <= 4 ? 1 : 2);
@@ -281,7 +282,15 @@
     const spec = gen.gen(board, tier, T.TIDES[run.tide] || T.TIDES.rising);
     spec.title = board.pick(gen.title);
     spec.blurb = gen.blurb;
+    const threat = T.expeditionOf(run) && T.expeditionOf(run).threatDef;
+    if (type === 'boss' && threat) {
+      // the finale keeps the Heart's rules; the expedition says what the Heart is this time
+      spec.title = T.threatTitle(run);
+      spec.blurb = threat.look + ' ' + gen.blurb;
+    }
     run.mission = T.startMission(run, spec, type, tier, seed);
+    if (type === 'boss' && threat)
+      run.mission.enemies.filter((e) => e.type === 'heart').forEach((e) => (e.name = threat.foe));
     run.phase = 'mission';
   };
   T.finishNode = function (run) {
@@ -490,7 +499,10 @@
   /* ───────────────────────────── EVENTS ───────────────────────────── */
   T.pickEvent = function (run) {
     const cands = T.EVENTS.filter((e) => !run.seenEvents.includes(e.id));
-    const ev = T.runStream(run, 'event').pick(cands.length ? cands : T.EVENTS);
+    // on an expedition, an event that fits the ground of this leg comes first (T.EVENT_GROUNDS)
+    const ground = T.groundAt(run, run.nodeId != null && run.map ? run.map.all[run.nodeId].row : null);
+    const fits = ground ? cands.filter((e) => !T.EVENT_GROUNDS[e.id] || T.EVENT_GROUNDS[e.id].includes(ground)) : cands;
+    const ev = T.runStream(run, 'event').pick(fits.length ? fits : cands.length ? cands : T.EVENTS);
     run.seenEvents.push(ev.id);
     return ev;
   };
@@ -555,7 +567,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 5;
+  T.SAVE_VERSION = 6;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -591,6 +603,11 @@
     4(r) {
       r.story = T.newStory();
       r.v = 5;
+    },
+    // 2.17 sends each run on an expedition. An older run has none: its route keeps the names it was made with.
+    5(r) {
+      if (r.story && r.story.expedition === undefined) r.story.expedition = null;
+      r.v = 6;
     },
   };
   T.deserializeRun = function (json) {

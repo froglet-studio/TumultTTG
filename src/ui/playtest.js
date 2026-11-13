@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.16.0',
+    version: '2.17.0',
     items: [
+      {
+        text: 'Every run is now a different expedition: who sent you (Jade, Ruby or Gold, and why), what waits at the end (the finale plays by the Heart’s rules under a new name), and the order of land, sea and air, each leg with its own painting. Events lean toward the ground you are crossing. Start three runs: do they feel like three different journeys? Which expedition would you most like to play again?',
+      },
       {
         text: 'The words now tell one story: each run is an expedition set down from an Ark, crossing Tumult by land, sea and air to the Heart. The skiff, the HyperSea tide and the Consolidation are gone, and the difficulties are now Steady wind and Gale. Does any screen still feel like it belongs to the old frame? Does the title make you want to set out?',
       },
