@@ -12,7 +12,7 @@
  * namespace (T); the build inlines them, in src/manifest.json order, into a
  * template together with the stylesheet.
  */
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
@@ -20,6 +20,34 @@ import vm from 'node:vm';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
 const read = (rel) => readFileSync(join(src, rel), 'utf8');
+
+const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', woff2: 'font/woff2' };
+const dataUri = (file) => `data:${MIME[file.split('.').pop()]};base64,${readFileSync(file).toString('base64')}`;
+
+/**
+ * The art, inlined so the build stays one file that makes no network requests (assets/README.md).
+ * Every image in a folder listed under manifest.art.images becomes T.ART['<folder>/<NAME>'], a data URI;
+ * the UI falls back to drawn art when a key is missing. Fonts become @font-face rules.
+ */
+export function art(manifest) {
+  const a = manifest.art || { images: [], fonts: [] };
+  const img = {};
+  for (const dir of a.images) {
+    const abs = join(root, dir);
+    if (!existsSync(abs)) continue;
+    const tag = dir.split('/').pop().replace(/s$/, '');
+    for (const f of readdirSync(abs).sort())
+      if (MIME[f.split('.').pop()] && !f.endsWith('.woff2'))
+        img[`${tag}/${f.replace(/\.[^.]+$/, '')}`] = dataUri(join(abs, f));
+  }
+  const css = (a.fonts || [])
+    .map(
+      (f) =>
+        `@font-face { font-family: '${f.family}'; font-weight: ${f.weight}; font-style: normal; font-display: swap; src: url(${dataUri(join(root, f.file))}) format('woff2'); }`,
+    )
+    .join('\n');
+  return { js: `window.T.ART = ${JSON.stringify(img)};\n`, css };
+}
 
 /** Where a variant is written, relative to the repository root. */
 export const outFile = ({ playtest = false, fragment = false } = {}) =>
@@ -32,8 +60,12 @@ export function build({ playtest = false, fragment = false } = {}) {
   const banner = (rel) => `\n/* ───── ${rel} ───── */\n`;
   // The page knows which build it is: the playtest panel shows it and puts it in its reports.
   const stamp = `window.T = window.T || {};\nwindow.T.BUILD = ${JSON.stringify({ version: pkg.version, playtest })};\n`;
-  const js = stamp + [...manifest.engine, ...manifest.ui, ...extra.js].map((rel) => banner(rel) + read(rel)).join('\n');
-  const css = [...manifest.css, ...extra.css].map((rel) => banner(rel) + read(rel)).join('\n');
+  const inlined = art(manifest);
+  const js =
+    stamp +
+    inlined.js +
+    [...manifest.engine, ...manifest.ui, ...extra.js].map((rel) => banner(rel) + read(rel)).join('\n');
+  const css = inlined.css + '\n' + [...manifest.css, ...extra.css].map((rel) => banner(rel) + read(rel)).join('\n');
   if (js.includes('</script'))
     throw new Error('A source file contains "</script" — it would end the inline script early.');
   if (css.includes('</style'))

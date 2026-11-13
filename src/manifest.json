@@ -9,10 +9,21 @@
     "engine/lookahead.js",
     "engine/run.js"
   ],
-  "ui": ["ui/core.js", "ui/mission.js"],
-  "css": ["ui/style.css"],
+  "ui": ["ui/core.js", "ui/pilots.js", "ui/mission.js"],
+  "css": ["ui/style.css", "ui/theme.css"],
   "playtest": {
     "js": ["ui/playtest.js"],
     "css": ["ui/playtest.css"]
+  },
+  "art": {
+    "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",
+    "images": ["assets/pilots", "assets/scenes"],
+    "fonts": [
+      {
+        "family": "Chakra Petch",
+        "weight": 600,
+        "file": "assets/fonts/ChakraPetch-SemiBold.woff2"
+      }
+    ]
   }
 }

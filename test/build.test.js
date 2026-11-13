@@ -62,3 +62,34 @@ test('the ability audit runs end to end', () => {
   assert.match(r.stdout, /^# Ability audit/);
   assert.match(r.stdout, /## Pass C — gate check/);
 });
+
+test('every pilot has a portrait and a scene in the build, and every pre-made hero is a pilot', async () => {
+  const { art } = await import(pathToFileURL(path.join(root, 'tools', 'build.mjs')).href);
+  const manifest = require(path.join(root, 'src', 'manifest.json'));
+  const sandbox = { window: { T: {} } };
+  vm.runInNewContext(art(manifest).js, sandbox);
+  const ART = sandbox.window.T.ART;
+  const T = require(path.join(root, 'tools', 'load.js'))();
+  const g = { T: { UI: {} } };
+  vm.runInNewContext(require('node:fs').readFileSync(path.join(root, 'src', 'ui', 'pilots.js'), 'utf8'), {
+    window: g,
+  });
+  const U = g.T.UI;
+  for (const a of U.PILOT_ART) {
+    assert.match(ART['pilot/' + a.key] || '', /^data:image\/jpeg;base64,/, `${a.key} has a portrait`);
+    assert.match(ART['scene/' + a.key] || '', /^data:image\/jpeg;base64,/, `${a.key} has a scene`);
+    assert.equal(a.clades.length, 2, `${a.key} is a pair of clades`);
+  }
+  // art follows the clade pair: an exact pair beats a stand-in that shares one clade, and the head clade counts
+  const pair = (a, b) => ({ id: a + b, species: ['human', a, b] });
+  assert.equal(U.artForPair(['octopus', 'raven']).key, 'BANDIT');
+  assert.equal(U.artForPair(['mouse', 'owl']).key, 'ECHO', 'the exact pair beats the owl-headed stand-in');
+  assert.equal(U.artForPair(['owl', 'jerboa']).key, 'SUNDIAL', 'a stand-in with the same head clade');
+  assert.equal(U.artForPair(['flytrap', 'cordyceps']), null, 'no painting shares a clade: no portrait');
+  // every pre-made hero has a painting, and no two heroes in a squad share one
+  g.T.UI.run = { heroes: [pair('eel', 'flytrap'), pair('hopper', 'eel')] };
+  const [a1, a2] = g.T.UI.run.heroes.map((h) => U.pilotOf(h));
+  assert.ok(a1 && !(a2 && a2.key === a1.key), 'a squad never shows one face twice');
+  g.T.UI.run = null;
+  for (const pb of T.PREBUILTS) assert.ok(U.pilotOf({ id: pb.id, species: pb.species }), `${pb.name} has a painting`);
+});

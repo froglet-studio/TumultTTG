@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.11.0 — 2026-11-13 — the Cosmic Shore look
+
+Garrett: a graphical overhaul inspired by Cosmic Shore, whose pilots are Tumult's heroes and who just got new artwork.
+
+- **Pilot art follows the clade pair.** Twenty of Cosmic Shore's painted pilots (their portraits and their scenes) ship inside the build. A hero is shown with the painting of their own two clades when one exists, else the nearest stand-in that shares a clade (the head clade first), else their clades' marks; no two heroes in a squad share a face. Every pair is meant to be supported in the end, with Tumult and Cosmic Shore sharing the art as either paints a new one (Garrett, 2026-11-13). `src/ui/pilots.js`; how to add one: `assets/README.md`.
+- **Where it shows:** a pilot in their world behind the title, a new one each tide; a scene banner and portrait on every pre-made hero; the portrait in the draft, the party bar and each hero's panel; portraits on the board's hero tokens; the lead pilot's scene faint under the board.
+- **The look:** Chakra Petch (Cosmic Shore's display face, SIL OFL) for headings and buttons, a deep-sea plate with a faint survey grid, chamfered HUD panels with a lit edge, quieter lanes. Etherion colours are untouched. `src/ui/theme.css`, loaded after `style.css`.
+- **Build:** `tools/build.mjs` inlines `assets/` as data URIs (manifest `art`), so the game is still one file that makes no network requests; it grows from about 0.4 MB to 2 MB. A missing picture falls back to drawn art. A test holds every painting to having both pictures and every pre-made hero to having a face.
+- **Fix:** the channelled Shove and Scramble texts now match what they do (1 node; Scramble steps 1).
+- No rules change; the simulators are unaffected.
+
 ## 2.10.0 — 2026-11-13 — a crystal is an action
 
 Garrett, after a playtest: a hero loaded with elemental crystals and no AP, or no card that could use them, had nothing to do with them. "We want elements to be the exciting rolls, not dead weight." He chose, from three ways to do it, to make a crystal an action on its own.

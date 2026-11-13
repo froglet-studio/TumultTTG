@@ -19,8 +19,14 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.10.0',
+    version: '2.11.0',
     items: [
+      {
+        text: 'New look: Cosmic Shore’s pilots now play the heroes. A hero shows the painting of their own two clades when there is one, else a stand-in that shares a clade (marked “stand-in”). Does seeing a face change how you feel about a hero? Which pairs would you most like painted next?',
+      },
+      {
+        text: 'Read the board and the cards at a glance: do the new type, the panels and the scene under the board help or get in the way? Anything hard to read on a phone?',
+      },
       {
         text: 'A crystal is an action: any banked etherion (or Omni) can be spent on its own, with no AP, for a basic action of its colour — Mass strikes for 2 or shoves 1, Charge arcs 1 damage into a foe up to 3 away, Space scrambles 1 node (ledges too), Time braces and slides your track. Are elements now the rolls you hope for? Does a turn with three crystals and no AP still feel like a turn?',
       },
