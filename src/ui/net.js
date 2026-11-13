@@ -270,7 +270,7 @@
     return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Online game</div><h2>Code <span class="mono">${esc(N.code || '')}</span></h2>
       <p>${esc(N.names[0] || 'Player 1')} (host)${N.names[1] ? ' · ' + esc(N.names[1]) : ''}</p>
       <p class="dim">${esc(N.status)}</p>
-      <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.names[1] ? '' : 'disabled'}>Start the tide</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
+      <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.names[1] ? '' : 'disabled'}>Start the expedition</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
   };
 
   const val = (id) => {

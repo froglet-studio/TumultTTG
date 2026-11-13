@@ -155,18 +155,18 @@
   function renderTitle() {
     const meta = T.loadMeta();
     const hasSave = !!T.loadRun();
-    // a different pilot in their world behind the title each tide, so the people come first
+    // a different pilot in their world behind the title each expedition, so the people come first
     const who = U.PILOT_ART[meta.runs % U.PILOT_ART.length];
     const scene = U.sceneSrc(who);
     return `${scene ? `<div class="title-scene" style="background-image:url(${scene})"></div><div class="title-veil"></div><div class="title-cap"><b>${esc(who.name)}</b> · ${esc(who.key)} · ${esc(who.clades.join(' · '))}</div>` : ''}<div class="title">
-      <div class="kick">A tide-run through the HyperSea</div>
+      <div class="kick">An expedition on Tumult</div>
       <h1>TUMULT</h1>
-      <div class="sub">Draft two pilots from eleven bloodlines. Ride the current through a Consolidation's territory. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
-      <div class="btns"><button class="primary" data-act="newRun">New Tide</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
+      <div class="sub">Draft two pilots from eleven bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
+      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       ${tidePicker(meta)}
       ${U.partyPicker ? U.partyPicker(meta) : ''}
       ${U.titleNet ? U.titleNet() : ''}
-      <div class="mute small" style="margin-top:14px">Tides sailed: ${meta.runs} · Consolidations toppled: ${meta.wins} · Deepest row: ${meta.bestRow}/6</div>
+      <div class="mute small" style="margin-top:14px">Expeditions: ${meta.runs} · Hearts ended: ${meta.wins} · Furthest stop: ${meta.bestRow}/6</div>
       <div class="mute small" style="max-width:520px;text-align:center;margin-top:16px;font-family:var(--serif);font-style:italic">${esc(T.FLAVOR.terminalIntro[meta.runs % T.FLAVOR.terminalIntro.length])}</div>
       ${U.titleExtra ? U.titleExtra() : ''}
     </div>`;
@@ -259,7 +259,7 @@
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
         <p class="dim small">P deepens the physical face's numbers (reliable, AP-fed). E awakens the ethereal face — it cannot be played until its card has E 1 — and scales its <i>capability</i>, something P can never buy. Every hero sets out with at least ${T.RULES.START_AWAKE} cards awakened. Caps: P 3, E 3 per card.</p>
         <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true })).join('')}</div>
-        <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set sail'}</button></div></div>`;
+        <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set out'}</button></div></div>`;
     }
     return `<div class="wrap">${header('The Draft')}<div class="row small dim" style="margin-bottom:8px">${run.heroes
       .filter(Boolean)
@@ -443,7 +443,7 @@
           ? T.MISSIONS[type].blurb
           : type === 'haven'
             ? 'Rest, buy gear and consumables.'
-            : 'A fork in the current.';
+            : 'A fork in the route.';
         const tier = type === 'haven' || type === 'event' ? '' : `<span class="tier">${'◆'.repeat(nd.tier)}</span>`;
         return `<div class="${cls}" style="left:${p.x}%;top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal">${NODE_ICON[type]}</div><div class="t">${NODE_NAME[type]}${tier}</div></div>`;
       })
@@ -470,10 +470,10 @@
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    return `<div class="wrap">${header('The Tide Map', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
+    return `<div class="wrap">${header('The Route', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
       ${renderPassage(run)}
       ${partyBar(run)}
-      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">Pick the next current. Glowing stops are reachable. The Heart waits at the top.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
+      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">Pick the next stop. Glowing stops are reachable. The Heart waits at the end of the route.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
   }
 
   /* ───────────── TRAIN / KIT modals ───────────── */
@@ -519,7 +519,7 @@
         : '';
     const ready = (!rw.offer || !rw.offer.length || rw.picked) && (!rw.boon || !rw.boon.length || rw.boonPicked);
     return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete')}<div class="panel">
-      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the tide spares you once</h3><p class="dim">No rewards from this current. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
+      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
       ${offer}${boon}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="rewardDone" ${ready ? '' : 'disabled'}>Continue to the map</button></div></div></div>`;
   }
@@ -572,7 +572,7 @@
           })
           .join('')}</div>
       </div>
-      <div class="row" style="margin-top:12px"><button class="primary" data-act="leaveHaven">Back to the current</button></div></div>`;
+      <div class="row" style="margin-top:12px"><button class="primary" data-act="leaveHaven">Back to the route</button></div></div>`;
   }
 
   /* ───────────── EVENT ───────────── */
@@ -623,13 +623,13 @@
   function renderSummary() {
     const run = U.run;
     const won = run.won;
-    return `<div class="wrap">${header(won ? 'The Consolidation Falls' : 'The Tide Takes the Skiff')}<div class="panel" style="max-width:760px;margin:0 auto">
+    return `<div class="wrap">${header(won ? 'The Heart Is Ended' : 'The Expedition Is Lost')}<div class="panel" style="max-width:760px;margin:0 auto">
       <p style="font-family:var(--serif);font-size:16px;line-height:1.5">${esc(won ? T.FLAVOR.win[0] : T.FLAVOR.lose[0])}</p>
       <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${run.crystals} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
       <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
       <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}
       ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}</div>` : ''}
-      <div class="row" style="margin-top:14px"><button class="primary" data-act="newRun">New Tide</button><button class="ghost" data-act="toTitle">Title</button></div></div></div>`;
+      <div class="row" style="margin-top:14px"><button class="primary" data-act="newRun">New Expedition</button><button class="ghost" data-act="toTitle">Title</button></div></div></div>`;
   }
 
   /* ───────────── CODEX ───────────── */
@@ -676,7 +676,7 @@
       <p><b>Resources.</b> <kbd>M</kbd> Mass · <kbd>C</kbd> Charge · <kbd>S</kbd> Space · <kbd>T</kbd> Time · <kbd>◇</kbd> Omni spends as any. One of each M C S T can be folded into an Omni (the anti-brick valve). <b>Omnicrystals (◇)</b> are the managed economy: buy gear and fuel it.</p>
       <p><b>Basic actions.</b> With or without cards, any hero can <b>Strike</b> an adjacent foe for 2 (2 AP), <b>Brace</b> for Shield 1 until their next turn (1 AP), or <b>Shove</b> an adjacent foe 1 node (2 AP). They are weak on purpose: the floor, not a plan. <b>Channel</b> a banked etherion (or Omni) on its own, with no AP: Mass — Strike an adjacent foe for 2 or Shove it 1 node; Charge — Arc 1 damage into a foe up to 3 away, or Reach an objective 2 nodes away (1 AP); Space — Scramble 1 node, up or down a ledge; Time — Brace and slide your track 1 extra. Elements are never dead weight: every crystal you roll is something to do.</p>
       <p><b>Downed.</b> At 0 vitality a hero is downed, not dead. An adjacent ally can <b>Rally</b> them for 2 AP (back at 8). Both downed = mission lost. Lose a non-boss mission and your one <b>Lifeline</b> lets you limp on.</p>
-      <p><b>Winning.</b> Reach the top of the Tide Map and destroy the Heart. Its shield is fed by its Spawners.</p></div>`;
+      <p><b>Winning.</b> Follow the route to its end and destroy the Heart. Its shield is fed by its Spawners.</p></div>`;
   };
 
   /* ───────────── TUTORIAL ───────────── */

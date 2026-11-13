@@ -832,7 +832,7 @@
       .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
       .join('');
     U.openModal(
-      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this current.' : 'The tide takes the skiff.'}</p>`}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
+      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
     );
   }
 

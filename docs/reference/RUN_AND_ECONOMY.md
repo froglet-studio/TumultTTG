@@ -1,4 +1,4 @@
-# Tumult v2.0 — the run: Tide Map, progression and economy
+# Tumult v2.0 — the run: route, progression and economy
 
 ## The hero
 
@@ -17,16 +17,16 @@ A hero is **Human + two bloodlines**, **6 trait cards** to start, **6 Upgrade Po
 
 **Downed, not dead.** At 0 a hero is downed and loses states; an adjacent ally can Rally them. Both downed = mission lost.
 
-## The Tide Map
+## The route
 
-Seven rows, bottom to top. Row 0 offers three openers (Swarm / Vault / Cascade). Rows 1–5 mix missions, Elites, Havens (row 2 and a guaranteed Haven in row 4) and Events. Row 6 is the Heart. Each node links to 1–3 nodes in the next row; every node is reachable. Tiers: rows 0–1 tier 1 (*The Shallows*), rows 2–4 tier 2 (*The Undertow*), rows 5–6 tier 3 (*The Deep*). A refused privateer toll upgrades your next mission to an Elite; a paid guide skips a row.
+Seven rows, bottom to top. Row 0 offers three openers (Swarm / Vault / Cascade). Rows 1–5 mix missions, Elites, Havens (row 2 and a guaranteed Haven in row 4) and Events. Row 6 is the Heart. Each node links to 1–3 nodes in the next row; every node is reachable. Tiers: rows 0–1 tier 1 (*The Lowland Reach*), rows 2–4 tier 2 (*The Open Sea*), rows 5–6 tier 3 (*The High Air*). A refused privateer toll upgrades your next mission to an Elite; a paid guide skips a row.
 
-## Difficulty: the tide
+## Difficulty: the wind
 
 Chosen on the title screen before a run (`run.tide`, `T.TIDES` in `world.js`); the device remembers the last choice.
 
-- **Rising tide** — the game as tuned through 2.6.
-- **Flood tide** — for careful players. From tier 2, every objective needs 1 more (tier 3: 2 more): one more round held, seal broken, cache dig or valve channel. Every clock except a hold's starts 1 round shorter (tier 3: 2). Swarms grow 1 larger (2). Elites bring 1 more escort (2: a Kiter, then a Binder). Tier 1 and the Heart are never changed.
+- **Steady wind** (`rising`) — the game as tuned through 2.6.
+- **Gale** (`flood`) — for careful players. From tier 2, every objective needs 1 more (tier 3: 2 more): one more round held, seal broken, cache dig or valve channel. Every clock except a hold's starts 1 round shorter (tier 3: 2). Swarms grow 1 larger (2). Elites bring 1 more escort (2: a Kiter, then a Binder). Tier 1 and the Heart are never changed.
 
 What each does to win rates is in `BALANCE.md` (v2.7.0).
 
@@ -56,26 +56,26 @@ Once per run, losing a **non-boss** mission does not end the run: no rewards, bo
 | Phase-brace | 7 | Blink (teleport 2, height ok, 2◇) · Fade (Hidden 1, 1◇) |
 | Chrono-shim | 7 | Shim (track +1, 1◇) · Rewind (track +3 and clock +1, 3◇) |
 | Aegis Plate | 6 | Brace (Shield 3 all, 1 round, 1◇) · Bulwark (Shield 3 all, 2 rounds, you + adjacent ally, 2◇) |
-| Tide Lantern | 5 | Flare (reveal 2 + Mark all revealed, 1◇) · Beacon (ally free move 2, 2◇) |
+| Storm Lantern | 5 | Flare (reveal 2 + Mark all revealed, 1◇) · Beacon (ally free move 2, 2◇) |
 | Harpoon Gun | 6 | Shot (lane 3 + pull 1, 1◇) · Skewer (lane 5 pierce, 2◇) |
 | Climbing Rig | 4 | Ascend (climb 1, height ok, 1◇) · Rappel (move 2 through foes, 1◇) |
 | Medkit | 5 | Patch (heal 4, 1◇) · Revive (downed adjacent ally at 10, 2◇) |
 
 Gear is the **orthogonality insurance** from the v1.0 mechanic basis: any build can buy the verb it lacks (Space for a vault, Reveal for the Sought, Pierce for a Warden) — general verbs, never keyed counters.
 
-**Consumables** (one use, 3 per hero): Rally Vial (heal 6, 2◇), Omni Shard (mint 1 Omni, 3◇), Tide Charm (clock +2, 3◇), Flashpowder (reveal 2, 2◇), Grit (Shield 3 all for a round, 2◇).
+**Consumables** (one use, 3 per hero): Rally Vial (heal 6, 2◇), Omni Shard (mint 1 Omni, 3◇), Windbreak Charm (clock +2, 3◇), Flashpowder (reveal 2, 2◇), Grit (Shield 3 all for a round, 2◇).
 
 **Havens:** rest for half of missing vitality free, or full repair for 3 ◇.
 
 ## Boons (passive, per hero; none breaks the 15-die invariant)
 
-Tide-touched (start each mission with an Omni banked) · Thick Hide (every Shield +1) · Keen Sense (reveals +1; adjacent Hidden foes revealed at round start) · Deep Pockets (+2 ◇/mission) · Studious (+1 UP/mission) · Second Wind (once per run, its holder rises at 10 instead of going down) · Momentum (first strike of each round +2) · Anchor Soul (cannot be pulled) · Quick Hands (the track slides 1 extra as round 2 begins) · **Mass / Charge / Space / Time Affinity** (one AP face on your dice becomes that etherion) · Omni Core (one AP face becomes Omni) · Defiant (+2 vs Elites and the Heart).
+Etherion-touched (start each mission with an Omni banked) · Thick Hide (every Shield +1) · Keen Sense (reveals +1; adjacent Hidden foes revealed at round start) · Deep Pockets (+2 ◇/mission) · Studious (+1 UP/mission) · Second Wind (once per run, its holder rises at 10 instead of going down) · Momentum (first strike of each round +2) · Anchor Soul (cannot be pulled) · Quick Hands (the track slides 1 extra as round 2 begins) · **Mass / Charge / Space / Time Affinity** (one AP face on your dice becomes that etherion) · Omni Core (one AP face becomes Omni) · Defiant (+2 vs Elites and the Heart).
 
 Affinities are the build-around: they move your dice toward your colours, which is exactly how a deck's mana base shapes a draft.
 
 ## Events (12)
 
-Terminal Beacon · Privateer Toll · Etherion Storm · Bloom of the Superorganism · Stranded Guide · Drowned Cache · Lintukoto Shrine · Mirror Pool (respec) · The Consolidation's Envoy · Molt Season (swap a trait) · Terminal Audit (≥10 ◇ halved, else +4) · Quiet Current. Each is 2–3 choices with costs, risks and occasional follow-ups (a card pick, a trade, a boon). No event repeats within a run.
+Terminal Beacon · Privateer Toll · Etherion Storm · Bloom of the Superorganism · Stranded Guide · Drowned Cache · Lintukoto Shrine · Mirror Pool (respec) · The Heart's Envoy · Molt Season (swap a trait) · Terminal Audit (≥10 ◇ halved, else +4) · Quiet Hour. Each is 2–3 choices with costs, risks and occasional follow-ups (a card pick, a trade, a boon). No event repeats within a run.
 
 ## Saving
 

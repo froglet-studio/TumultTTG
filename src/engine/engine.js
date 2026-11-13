@@ -734,7 +734,7 @@
       }
       say(
         m,
-        `${source ? source.name : 'The current'} ${opts.label || 'hits'} ${target.name} for ${dmg}${pierce ? ' (pierce)' : ''}${trueDmg ? ' (true)' : ''}.`,
+        `${source ? source.name : 'The hazard'} ${opts.label || 'hits'} ${target.name} for ${dmg}${pierce ? ' (pierce)' : ''}${trueDmg ? ' (true)' : ''}.`,
         source && source.kind === 'hero' ? 'hero' : 'enemy',
       );
     } else {
@@ -2266,7 +2266,7 @@
         say(m, `The beacon holds (${ob.held}/${ob.need}).`, 'sys');
         if (ob.held >= ob.need) {
           m.won = true;
-          say(m, 'The Terminal logs the current. Held!', 'sys');
+          say(m, 'The Terminal logs the way through. Held!', 'sys');
         }
       } else say(m, 'No hero near the beacon — the round does not count.', 'sys');
     }
