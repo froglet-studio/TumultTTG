@@ -656,14 +656,24 @@
           const r = T.playFace(m, h, best.cid, best.fk, best.ctx);
           if (r.ok) continue;
         }
-        // 4b. basic actions: strike an adjacent foe the blow can hurt; brace against a big telegraphed hit
-        // (channelled with a banked Mass when there is one: a spare etherion is otherwise a dead die)
-        const how = T.canUseBasic(m, h, 'strike_M').ok ? 'strike_M' : 'strike';
-        const strike = T.canUseBasic(m, h, how);
+        // 4b. channelled actions cost no AP: a banked Mass hits an adjacent foe, a Charge arcs into one within 3,
+        // a Time braces against a telegraphed hit (a spare etherion is otherwise a dead die)
+        const chM = T.canUseBasic(m, h, 'strike_M');
+        if (chM.ok) {
+          const foe = pickFoe(m, h, chM.tg.options);
+          if (foe && foe.shield < 2 && T.useBasic(m, h, 'strike_M', { target: foe.uid }).ok) continue;
+        }
+        const chC = T.canUseBasic(m, h, 'arc_C');
+        if (chC.ok) {
+          const foe = pickFoe(m, h, chC.tg.options);
+          if (foe && foe.shield < 1 && T.useBasic(m, h, 'arc_C', { target: foe.uid }).ok) continue;
+        }
+        if (threatOnMe(m, h) >= 3 && !st(h).Shield && T.useBasic(m, h, 'brace_T').ok) continue;
+        // 4c. basic actions: strike an adjacent foe the blow can hurt; brace against a big telegraphed hit
+        const strike = T.canUseBasic(m, h, 'strike');
         if (strike.ok) {
           const foe = pickFoe(m, h, strike.tg.options);
-          const blow = how === 'strike_M' ? 4 : 2;
-          if (foe && foe.shield < blow && T.useBasic(m, h, how, { target: foe.uid }).ok) continue;
+          if (foe && foe.shield < 2 && T.useBasic(m, h, 'strike', { target: foe.uid }).ok) continue;
         }
         if (threatOnMe(m, h) >= 4 && !st(h).Shield && T.useBasic(m, h, 'brace').ok) continue;
         // 5. move toward the objective, else toward the nearest foe

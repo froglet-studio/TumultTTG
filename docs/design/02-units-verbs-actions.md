@@ -1,6 +1,6 @@
 # 02 · Units, verbs and actions
 
-**Status: Partly built.** Strike, Brace and Shove are in the game (2.5.0, `T.BASIC` in `src/data/world.js`; Move, Interact and Rally were already there). Garrett accepted basic actions and Channel into the core on 2026-11-12; Overcast and Debt wait for the frame. Channel is in too (2.6.0: Mass into Strike or Shove, Charge into a 2-node Reach, Space into a 1-node Scramble over a ledge, Time into Brace with a track slide). Carry and the unit model are next. This is the change that makes the ability rules achievable. Build it before adding mission types.
+**Status: Partly built.** Strike, Brace and Shove are in the game (2.5.0, `T.BASIC` in `src/data/world.js`; Move, Interact and Rally were already there). Garrett accepted basic actions and Channel into the core on 2026-11-12; Overcast and Debt wait for the frame. Channel is in too (2.6.0), and since 2.10.0 a channelled crystal needs no AP — it is an action on its own (Garrett, 2026-11-12: elements should be the exciting rolls); `docs/reference/RUN_AND_ECONOMY.md` has the current list. Carry and the unit model are next. This is the change that makes the ability rules achievable. Build it before adding mission types.
 
 ## The problem
 

@@ -430,10 +430,10 @@
           const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
           if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
           const tip = b.el
-            ? `${b.n}, channelled (${b.ap} AP + 1 ${EL[b.el].name} or Omni): ${b.txt}`
+            ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
             : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
           const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
-          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(tip)}">${b.icon} ${esc(b.n)}${mark} (${b.ap})</button>`;
+          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(tip)}">${b.icon} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
         }).join('')}
         <button class="sm" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>

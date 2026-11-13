@@ -120,13 +120,16 @@
     { id:'strike', n:'Strike', icon:'⚔', ap:2, tgt:'foe_melee', fx:[{v:'strike', kind:'melee', dmg:f(2)}], txt:'2 damage to an adjacent foe.' },
     { id:'brace',  n:'Brace',  icon:'🛡', ap:1, tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)}],      txt:'Shield 1 until your next turn.' },
     { id:'shove',  n:'Shove',  icon:'↦', ap:2, tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(1)}],     txt:'Push an adjacent foe 1 node.' },
-    // Channel: spend one etherion (or Omni) with a basic action to do more work, so no die is ever dead.
-    // Deliberately weaker than any Ethereal face of the same colour: the floor, not a strategy.
-    { id:'strike_M',   n:'Strike',   icon:'⚔', ap:2, el:'M', tgt:'foe_melee', fx:[{v:'strike', kind:'melee', dmg:f(4)}],                   txt:'Channel Mass: 4 damage to an adjacent foe.' },
-    { id:'shove_M',    n:'Shove',    icon:'↦', ap:2, el:'M', tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(2)}],                       txt:'Channel Mass: push an adjacent foe 2 nodes.' },
-    { id:'reach_C',    n:'Reach',    icon:'⚙', ap:2, el:'C', tgt:'node_r2',   fx:[{v:'interact', range:f(2)}],                             txt:'Channel Charge: Interact with an objective up to 2 nodes away (not up a ledge from below).' },
-    { id:'scramble_S', n:'Scramble', icon:'⤴', ap:1, el:'S', tgt:'node_climb', fx:[{v:'climb', reach:f(1)}],                               txt:'Channel Space: step to a free node 1 away, up or down a ledge included.' },
-    { id:'brace_T',    n:'Brace',    icon:'🛡', ap:1, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'hasten', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and your track slides 1 extra column.' },
+    // Channel: a banked etherion (or Omni) is an action on its own — no AP — so a rolled crystal is never a dead
+    // die, even for a hero with no awakened card of its colour (Garrett, 2026-11-12: "we want elements to be the
+    // exciting rolls not dead weight"). Every colour has one that needs no target, or one that almost always has
+    // one. Still weaker than any Ethereal face of the same colour: the floor, not a strategy.
+    { id:'strike_M',   n:'Strike',   icon:'⚔', ap:0, el:'M', tgt:'foe_melee', fx:[{v:'strike', kind:'melee', dmg:f(2)}],                   txt:'Channel Mass: 2 damage to an adjacent foe.' },
+    { id:'shove_M',    n:'Shove',    icon:'↦', ap:0, el:'M', tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(1)}],                       txt:'Channel Mass: push an adjacent foe 1 nodes.' },
+    { id:'arc_C',      n:'Arc',      icon:'ϟ', ap:0, el:'C', tgt:'foe_r3',    fx:[{v:'strike', kind:'any', dmg:f(1)}],                     txt:'Channel Charge: 1 damage to a foe up to 3 nodes away.' },
+    { id:'reach_C',    n:'Reach',    icon:'⚙', ap:1, el:'C', tgt:'node_r2',   fx:[{v:'interact', range:f(2)}],                             txt:'Channel Charge: Interact with an objective up to 2 nodes away (not up a ledge from below).' },
+    { id:'scramble_S', n:'Scramble', icon:'⤴', ap:0, el:'S', tgt:'node_climb', fx:[{v:'climb', reach:f(1)}],                               txt:'Channel Space: move to a free node up to 2 away, up or down a ledge included.' },
+    { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'hasten', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and your track slides 1 extra column.' },
   ];
   T.BASIC_BY = {}; T.BASIC.forEach(b => T.BASIC_BY[b.id] = b);
 
@@ -198,7 +201,7 @@
     tidecaller:{ name:'Tidecaller', glyph:'🌊', role:'elite', elite:true, hp:[12,14,16], speed:1, policy:'tidecaller',
       abilities:{ undertow:{ n:'Undertow', kind:'los', dmg:[2,3,3], pull:2 }, surge:{ n:'Surge', kind:'los', dmg:[4,5,6], weaken:1 } },
       flavor:'An elite. Drags you toward the hazard. Anchor yourself.' },
-    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[32,38,44], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
+    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,72], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
       abilities:{ lance:{ n:'Lance', kind:'los', dmg:[3,4,5] }, crush:{ n:'Crush', kind:'melee', dmg:[7,8,9], pull:2 }, call:{ n:'Call the Tide', kind:'summon' } },
       flavor:'A quasi-stable consolidation. Its shield is fed by its Spawners. When it is half-dead, the Vault begins to drown.' },
   };

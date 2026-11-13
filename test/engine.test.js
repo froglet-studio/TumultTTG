@@ -372,7 +372,7 @@ test('basic actions are refused when they cannot be paid or have nothing to touc
   assert.equal(T.canUseBasic(m, h, 'nonsense').ok, false);
 });
 
-test('Channel: a banked etherion (or Omni) makes a basic action do more, so no die is ever dead', () => {
+test('Channel: a banked etherion (or Omni) is an action on its own, so no die is ever dead', () => {
   const { m, h, adj } = H.arena('hum_tool');
   h.cards = [];
   adj.shield = 0;
@@ -381,12 +381,12 @@ test('Channel: a banked etherion (or Omni) makes a basic action do more, so no d
   h.held = ['AP', 'AP', 'M'];
   h.pool = T.RULES.POOL - h.held.length;
   assert.equal(T.useBasic(m, h, 'strike_M', { target: adj.uid }).ok, true);
-  assert.equal(adj.hp, 6, 'Mass channelled into Strike: 4 damage');
-  assert.deepEqual(h.held, [], 'paid 2 AP and the Mass');
+  assert.equal(adj.hp, 8, 'Mass channelled into Strike: 2 damage');
+  assert.deepEqual(h.held, ['AP', 'AP'], 'paid the Mass alone: a channelled Strike costs no AP');
   assert.equal(h.pool + h.held.length, T.RULES.POOL);
 
-  h.held = ['AP', 'O'];
-  h.pool = T.RULES.POOL - 2;
+  h.held = ['O'];
+  h.pool = T.RULES.POOL - 1;
   assert.equal(T.canUseBasic(m, h, 'brace_T').ok, true, 'Omni stands in for any etherion');
   h.held = ['AP', 'AP', 'C'];
   h.pool = T.RULES.POOL - 3;
@@ -397,5 +397,23 @@ test('Channel: a banked etherion (or Omni) makes a basic action do more, so no d
     assert.ok(
       T.BASIC.some((b) => b.el === el),
       `a basic action takes ${el}`,
+    );
+});
+
+test('at level 0, with no AP and no awakened card, every crystal still opens an action', () => {
+  // Garrett, 2026-11-12: a hero loaded with etherions and no AP had nothing to spend them on.
+  const { m, h } = H.arena('hum_tool');
+  h.cards = [];
+  for (const el of ['M', 'C', 'S', 'T', 'O']) {
+    h.held = [el];
+    h.pool = T.RULES.POOL - 1;
+    const open = T.BASIC.filter((b) => b.el && b.ap === 0 && T.canUseBasic(m, h, b.id).ok);
+    assert.ok(open.length, `a lone ${el} with no AP can be channelled`);
+  }
+  // and one of every colour needs nothing on the board to be worth taking
+  for (const el of ['S', 'T'])
+    assert.ok(
+      T.BASIC.some((b) => b.el === el && b.ap === 0 && (b.tgt === 'self' || b.tgt === 'node_climb')),
+      `${el} has a channelled action that needs no foe`,
     );
 });
