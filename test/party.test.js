@@ -144,3 +144,28 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
   assert.equal(JSON.stringify(U.run.party.ready), '[false,false]', 'and the next round starts with nobody ready');
   assert.deepEqual(errors, []);
 });
+
+test('a command does what the direct call does, and only for its own player', () => {
+  const make = () => {
+    const run = T.quickMission({ seed: 11, type: 'vault', tier: 1 });
+    run.party = T.newParty(2);
+    return run;
+  };
+  const a = make();
+  const b = make();
+  const h = a.mission.heroes[1];
+  const to = T.reachableWalk(a.mission, h, T.apValue(h), false)[0];
+  assert.ok(to != null);
+  T.walk(a.mission, h, to);
+  const r = T.execCommand(b, { op: 'walk', hero: 1, node: to }, [1]);
+  assert.ok(r.ok);
+  assert.equal(T.serializeRun(b), T.serializeRun(a));
+  const refused = T.execCommand(b, { op: 'walk', hero: 0, node: to }, [1]);
+  assert.equal(refused.ok, false, "a guest's command for the host's pilot is refused");
+  assert.equal(T.serializeRun(b), T.serializeRun(a), 'and changes nothing');
+  assert.deepEqual(T.execCommand(b, { op: 'ready' }, [1]), { ok: true, waiting: true });
+  const round = b.mission.round;
+  assert.ok(T.execCommand(b, { op: 'ready' }, [0]).ended);
+  assert.ok(b.mission.round > round || b.mission.over);
+  assert.equal(T.execCommand(b, { op: 'nonsense', hero: 0 }, null).ok, false);
+});

@@ -13,8 +13,8 @@
   "ui": ["ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js"],
   "css": ["ui/style.css", "ui/theme.css", "ui/party.css"],
   "playtest": {
-    "js": ["ui/playtest.js"],
-    "css": ["ui/playtest.css"]
+    "js": ["ui/playtest.js", "ui/net.js"],
+    "css": ["ui/playtest.css", "ui/net.css"]
   },
   "art": {
     "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",

@@ -46,4 +46,94 @@
   T.clearReady = function (run) {
     if (run.party) run.party.ready = run.party.players.map(() => false);
   };
+
+  /* ───────────── commands: every change a player makes, as data ───────────── */
+  /**
+   * A command is one thing a player does, as plain data: { op, hero, … }. Every screen changes
+   * the run only through T.execCommand, so a command made on one screen can be carried out on
+   * another (the host's, when players are on separate screens) with the same result. `seats`
+   * are the seats of the player who made it (null: all); a command for someone else's pilot,
+   * or a shared choice by a player who is not the host, is refused.
+   * Returns { ok, why?, ctx? }: ctx carries what a card face asks of its player next
+   * (pendingReroll: pick that many banked dice; pendingFreeMove: a free walk of that many nodes).
+   */
+  const HERO_OPS = {
+    // in a mission
+    face: (run, m, h, c) => T.playFace(m, h, c.card, c.fk, c.ctx),
+    basic: (run, m, h, c) => T.useBasic(m, h, c.id, c.ctx),
+    gear: (run, m, h, c) => T.useGear(m, h, c.gi, c.ai, c.ctx),
+    item: (run, m, h, c) => T.useConsumable(m, h, c.ci),
+    interact: (run, m, h, c) => T.doInteract(m, h, c.node, false),
+    rally: (run, m, h) => T.rally(m, h),
+    valve: (run, m, h) => ({ ok: !!T.valve(m, h) }),
+    dump: (run, m, h, c) => (T.dump(m, h, c.di), { ok: true }),
+    reroll: (run, m, h, c) => (c.picked.length && T.rerollHeld(m, h, c.picked), { ok: true }),
+    walk: (run, m, h, c) => {
+      if (!c.free) return T.walk(m, h, c.node);
+      h.freeMove = c.free;
+      const r = T.walk(m, h, c.node);
+      h.freeMove = 0;
+      return r;
+    },
+    // between missions
+    adjustUp: (run, m, h, c) => T.adjustUp(h, c.card, c.which, c.delta),
+    autoUp: (run, m, h) => (T.autoAllocate(h), { ok: true }),
+    sellGear: (run, m, h, c) => (T.sellGear(run, c.hero, c.gi), { ok: true }),
+    takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero),
+    takeBoon: (run, m, h, c) => (T.takeBoon(run, c.boon, c.hero), { ok: true }),
+    buyGear: (run, m, h, c) => T.buyGear(run, c.gear, c.hero),
+    buyCons: (run, m, h, c) => T.buyConsumable(run, c.cons, c.hero),
+    evTakeCard: (run, m, h, c) => {
+      const r = T.addCard(h, c.card);
+      if (r.ok && run.event && run.event.followup) run.event.followup.done = true;
+      return r;
+    },
+  };
+  const MISSION_OPS = new Set([
+    'face',
+    'basic',
+    'gear',
+    'item',
+    'interact',
+    'rally',
+    'valve',
+    'dump',
+    'reroll',
+    'walk',
+  ]);
+  T.COMMAND_OPS = Object.keys(HERO_OPS).concat(['ready', 'addHero']);
+
+  T.execCommand = function (run, cmd, seats) {
+    const op = cmd && cmd.op;
+    if (op === 'ready') {
+      // this player is ready to end the round; the last one to be ready ends it
+      const m = run.mission;
+      if (!m || m.over || m.phase !== 'hero') return { ok: false, why: 'not now' };
+      if (!T.setReady(run, seats)) return { ok: true, waiting: true };
+      T.clearReady(run);
+      T.endHeroPhase(m);
+      m.heroes.forEach((x) => (x.freeMove = 0));
+      return { ok: true, ended: true };
+    }
+    if (op === 'addHero') {
+      // a player's drafted pilot joins the squad in that player's place
+      const i = cmd.hero;
+      if (run.phase !== 'draft' || !T.mayActFor(run, seats, i) || run.heroes[i]) return { ok: false, why: 'not now' };
+      const h = cmd.pilot;
+      // two screens draft apart, so two ids could meet: the second one gives way
+      if (run.heroes.some((x) => x && x.id === h.id)) h.id += '_' + i;
+      run.heroes[i] = h;
+      return { ok: true };
+    }
+    const f = HERO_OPS[op];
+    if (!f) return { ok: false, why: 'unknown command ' + op };
+    if (!T.mayActFor(run, seats, cmd.hero)) return { ok: false, why: "that is another player's pilot" };
+    const m = run.mission;
+    if (MISSION_OPS.has(op) && (!m || m.over || m.phase !== 'hero')) return { ok: false, why: 'not now' };
+    const h = MISSION_OPS.has(op) ? m.heroes[cmd.hero] : run.heroes[cmd.hero];
+    if (!h) return { ok: false, why: 'no such hero' };
+    if (MISSION_OPS.has(op) && cmd.ctx == null) cmd.ctx = {};
+    const r = f(run, m, h, cmd) || { ok: false };
+    return Object.assign({}, r, { ctx: cmd.ctx });
+  };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

@@ -165,6 +165,7 @@
       <div class="btns"><button class="primary" data-act="newRun">New Tide</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       ${tidePicker(meta)}
       ${U.partyPicker ? U.partyPicker(meta) : ''}
+      ${U.titleNet ? U.titleNet() : ''}
       <div class="mute small" style="margin-top:14px">Tides sailed: ${meta.runs} · Consolidations toppled: ${meta.wins} · Deepest row: ${meta.bestRow}/6</div>
       <div class="mute small" style="max-width:520px;text-align:center;margin-top:16px;font-family:var(--serif);font-style:italic">${esc(T.FLAVOR.terminalIntro[meta.runs % T.FLAVOR.terminalIntro.length])}</div>
       ${U.titleExtra ? U.titleExtra() : ''}
@@ -186,8 +187,13 @@
     U.run = T.newRun();
     U.run.tide = chosenTide(T.loadMeta());
     if (U.chosenPlayers) U.run.party = T.newParty(U.chosenPlayers(T.loadMeta()));
+    U.beginDraft(0);
+    U.render();
+  };
+  /** Begin drafting hero i (a guest playing online drafts their own while the host drafts theirs). */
+  U.beginDraft = function (i) {
     U.draft = {
-      heroIdx: 0,
+      heroIdx: i,
       step: 'mode',
       species: [],
       name: NAMES[T.runStream(U.run, 'squad').int(NAMES.length)],
@@ -196,7 +202,6 @@
       picks: 0,
     };
     U.screen = 'draft';
-    U.render();
   };
   function renderDraft() {
     const d = U.draft;
@@ -208,7 +213,7 @@
       body = `<div class="panel"><h3>Hero ${n} of 2 ${who}— choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
         <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span></div>
         <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
-        <div class="prebuilt-grid">${T.PREBUILTS.filter((pb) => !run.heroes.some((h) => h.name === pb.name))
+        <div class="prebuilt-grid">${T.PREBUILTS.filter((pb) => !run.heroes.some((h) => h && h.name === pb.name))
           .map(
             (pb) =>
               `<div class="sp-card pilot-card" data-act="prebuilt" data-arg="${pb.id}">${premadeArt(pb)}<div class="ic">${pb.species
@@ -246,6 +251,9 @@
         <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard' })).join('')}</div>
         <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button></div>
         ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
+    } else if (d.step === 'wait') {
+      const other = run.party.players.find((p, s) => !run.heroes[s]);
+      body = `<div class="panel"><h3>Your pilot is ready</h3><p class="dim">Waiting for ${esc(other ? other.name : 'the other player')} to finish drafting…</p></div>`;
     } else if (d.step === 'up') {
       const h = d.hero;
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
@@ -254,6 +262,7 @@
         <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set sail'}</button></div></div>`;
     }
     return `<div class="wrap">${header('The Draft')}<div class="row small dim" style="margin-bottom:8px">${run.heroes
+      .filter(Boolean)
       .map(
         (h) =>
           `<span class="pill">${U.portrait(h, 'xs')} ${esc(h.name)} — ${h.species
@@ -311,6 +320,15 @@
     } else if (act === 'confirmHero') {
       T.awaken(d.hero);
       if (d.hero.upUnspent > 0) U.toast(`${d.hero.upUnspent} UP carried over — spend it later with Train.`);
+      if (U.net && U.net.online()) {
+        // online, each player drafts their own pilot; the map opens once both have
+        const r = U.exec({ op: 'addHero', hero: d.heroIdx, pilot: d.hero });
+        if (!r.ok) U.toast(r.why);
+        d.step = 'wait';
+        U.net.afterChange();
+        U.render();
+        return;
+      }
       run.heroes.push(d.hero);
       if (d.heroIdx === 0) {
         U.draft = {
@@ -626,6 +644,9 @@
       case 'codex':
         html = renderCodex();
         break;
+      case 'lobby':
+        html = U.renderLobby ? U.renderLobby() : '';
+        break;
       case 'help':
         html = `<div class="wrap">${header('How to Play', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="panel">${U.helpHTML()}</div></div>`;
         break;
@@ -743,18 +764,18 @@
       case 'upRun': {
         const i = parseInt(t.getAttribute('data-hero'), 10);
         const [cid, which, delta] = arg.split('|');
-        const r = T.adjustUp(U.run.heroes[i], cid, which, parseInt(delta, 10));
+        const r = U.exec({ op: 'adjustUp', hero: i, card: cid, which, delta: parseInt(delta, 10) });
         if (!r.ok && r.why) U.toast(r.why === 'cap' ? 'Capped at 3.' : 'No UP left.');
         U.openTrain(i);
         return;
       }
       case 'autoUpRun':
-        T.autoAllocate(U.run.heroes[parseInt(arg, 10)]);
+        U.exec({ op: 'autoUp', hero: parseInt(arg, 10) });
         U.openTrain(parseInt(arg, 10));
         return;
       case 'sellGear': {
         const [i, gi] = arg.split('|').map(Number);
-        T.sellGear(U.run, i, gi);
+        U.exec({ op: 'sellGear', hero: i, gi });
         U.openKit(i);
         return;
       }
@@ -775,7 +796,7 @@
       }
       case 'takeCard': {
         const [cid, i] = arg.split('|');
-        const r = T.takeOfferedCard(U.run, cid, parseInt(i, 10));
+        const r = U.exec({ op: 'takeCard', hero: parseInt(i, 10), card: cid });
         if (!r.ok) U.toast(r.why);
         U.sfx.click();
         U.render();
@@ -787,7 +808,7 @@
         return;
       case 'takeBoon': {
         const [b, i] = arg.split('|');
-        T.takeBoon(U.run, b, parseInt(i, 10));
+        U.exec({ op: 'takeBoon', hero: parseInt(i, 10), boon: b });
         U.render();
         return;
       }
@@ -807,7 +828,7 @@
       }
       case 'buyGear': {
         const [g, i] = arg.split('|');
-        const r = T.buyGear(U.run, g, parseInt(i, 10));
+        const r = U.exec({ op: 'buyGear', hero: parseInt(i, 10), gear: g });
         if (!r.ok) U.toast(r.why);
         else U.sfx.click();
         U.render();
@@ -815,7 +836,7 @@
       }
       case 'buyCons': {
         const [c, i] = arg.split('|');
-        const r = T.buyConsumable(U.run, c, parseInt(i, 10));
+        const r = U.exec({ op: 'buyCons', hero: parseInt(i, 10), cons: c });
         if (!r.ok) U.toast(r.why);
         else U.sfx.click();
         U.render();
@@ -838,12 +859,11 @@
       }
       case 'evTakeCard': {
         const [cid, i] = arg.split('|');
-        const r = T.addCard(U.run.heroes[parseInt(i, 10)], cid);
+        const r = U.exec({ op: 'evTakeCard', hero: parseInt(i, 10), card: cid });
         if (!r.ok) {
           U.toast(r.why);
           return;
         }
-        U.run.event.followup.done = true;
         U.render();
         return;
       }

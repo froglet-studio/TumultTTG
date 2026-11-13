@@ -77,6 +77,14 @@
     }
     return true;
   };
+  /**
+   * Carry out a command (T.execCommand). On a guest's screen of a game played over the network
+   * it goes to the host, whose screen carries it out and sends everyone the new state.
+   */
+  U.exec = function (cmd) {
+    if (U.net && U.net.isGuest()) return U.net.send(cmd);
+    return T.execCommand(U.run, cmd, U.seats);
+  };
   /** May this screen move or act for hero i on the board? */
   U.mine = (i) => !U.run || T.mayActFor(U.run, U.seats, i);
 
