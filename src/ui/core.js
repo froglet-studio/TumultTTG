@@ -155,10 +155,13 @@
   function renderTitle() {
     const meta = T.loadMeta();
     const hasSave = !!T.loadRun();
-    return `<div class="title">
+    // a different pilot in their world behind the title each tide, so the people come first
+    const who = U.PILOT_ART[meta.runs % U.PILOT_ART.length];
+    const scene = U.sceneSrc(who);
+    return `${scene ? `<div class="title-scene" style="background-image:url(${scene})"></div><div class="title-veil"></div><div class="title-cap"><b>${esc(who.name)}</b> · ${esc(who.key)} · ${esc(who.clades.join(' · '))}</div>` : ''}<div class="title">
       <div class="kick">A tide-run through the HyperSea</div>
       <h1>TUMULT</h1>
-      <div class="sub">Draft two heroes from eleven bloodlines. Ride the current through a Consolidation's territory. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
+      <div class="sub">Draft two pilots from eleven bloodlines. Ride the current through a Consolidation's territory. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
       <div class="btns"><button class="primary" data-act="newRun">New Tide</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       ${tidePicker(meta)}
       <div class="mute small" style="margin-top:14px">Tides sailed: ${meta.runs} · Consolidations toppled: ${meta.wins} · Deepest row: ${meta.bestRow}/6</div>
@@ -169,6 +172,15 @@
 
   /* ───────────── DRAFT ───────────── */
   const NAMES = ['Sable', 'Quill', 'Marrow', 'Tessel', 'Orin', 'Pell', 'Wren', 'Casque', 'Lumen', 'Hale'];
+  /** A pre-made hero's banner: their pilot in their world, with the portrait over it. */
+  function premadeArt(pb) {
+    const h = { id: pb.id, name: pb.name, species: pb.species };
+    const p = U.pilotOf(h);
+    const sc = U.sceneSrc(p);
+    if (!sc) return '';
+    const label = U.isExact(p, h) ? p.key : 'stand-in · ' + p.key;
+    return `<div class="pc-art" style="background-image:url(${sc})">${U.portrait(h, 'md')}<span class="pc-call">${esc(label)}</span></div>`;
+  }
   U.startDraft = function () {
     U.run = T.newRun();
     U.run.tide = chosenTide(T.loadMeta());
@@ -196,7 +208,7 @@
         <div class="prebuilt-grid">${T.PREBUILTS.filter((pb) => !run.heroes.some((h) => h.name === pb.name))
           .map(
             (pb) =>
-              `<div class="sp-card" data-act="prebuilt" data-arg="${pb.id}"><div class="ic">${pb.species
+              `<div class="sp-card pilot-card" data-act="prebuilt" data-arg="${pb.id}">${premadeArt(pb)}<div class="ic">${pb.species
                 .slice(1)
                 .map((s) => T.SPECIES[s].icon)
                 .join(
@@ -209,6 +221,7 @@
           .join('')}</div></div>`;
     } else if (d.step === 'species') {
       body = `<div class="panel"><h3>Hero ${n}: choose two bloodlines (Human is always the third)</h3>
+        <div class="row" style="margin:8px 0">${U.portrait({ name: d.name, species: ['human'].concat(d.species) }, 'lg')}<span class="small dim">The portrait follows the two bloodlines: a painting of that exact pair when one exists, else the nearest stand-in.</span></div>
         <div class="row" style="margin:8px 0"><label class="small dim">Name</label><input id="heroName" value="${esc(d.name)}" style="background:#0b1222;border:1px solid var(--line2);color:var(--txt);padding:5px 8px;border-radius:6px"></div>
         <div class="species-grid">${T.SPECIES_ORDER.filter((s) => s !== 'human')
           .map((s) => {
@@ -240,7 +253,7 @@
     return `<div class="wrap">${header('The Draft')}<div class="row small dim" style="margin-bottom:8px">${run.heroes
       .map(
         (h) =>
-          `<span class="pill">✓ ${esc(h.name)} — ${h.species
+          `<span class="pill">${U.portrait(h, 'xs')} ${esc(h.name)} — ${h.species
             .slice(1)
             .map((s) => T.SPECIES[s].icon)
             .join('')}</span>`,
@@ -265,7 +278,7 @@
       d.step = 'mode';
     } else if (act === 'openPacks') {
       const inp = $('#heroName');
-      if (inp && inp.value.trim()) d.name = inp.value.trim().slice(0, 16);
+      if (inp && inp.value.trim()) d.name = inp.value.trim().slice(0, 24);
       d.hero = T.newDraftHero(run, d.name, 'the drafted', d.species);
       d.picks = 0;
       d.pack = T.draftPack(run, d.hero, 4);
@@ -345,7 +358,7 @@
         (
           h,
           i,
-        ) => `<div class="panel tight"><div class="row"><b style="font-family:var(--serif)">${esc(h.name)}</b><span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
+        ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b><span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
       <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc)}">${T.GEAR_BY[g.id].icon} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${T.BOON_BY[b].icon} ${esc(T.BOON_BY[b].name)}</span>`).join('')}${h.consumables.map((c) => `<span class="pill">${T.CONSUMABLE_BY[c].icon}</span>`).join('')}</div>
       <div class="row" style="margin-top:6px"><button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button><button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button></div></div>`,
       )

@@ -61,9 +61,12 @@
 
   /* ───────────── skeleton ───────────── */
   U.renderMission = function () {
+    // the board sits in a place: the lead pilot's world, far behind it
+    const lead = U.run && U.run.mission && U.run.mission.heroes[0];
+    const scene = lead && U.sceneSrc(U.pilotOf(lead));
     return `<div class="mission">
       <div class="top panel tight" id="mtop"></div>
-      <div class="boardwrap"><div id="mtarget"></div><div class="board" id="board"><div class="banner" id="banner"></div></div></div>
+      <div class="boardwrap"><div id="mtarget"></div><div class="board" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div></div>
       <div class="side" id="mside"></div>
       <div class="bottom"><div class="log" id="mlog"></div></div>
     </div>`;
@@ -98,6 +101,7 @@
       defs,
     );
     svgEl('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#e56a8f' }, mk);
+    svgEl('circle', { cx: 0, cy: 0, r: 18 }, svgEl('clipPath', { id: 'face-clip' }, defs));
     const lanes = svgEl('g', { id: 'lanes' }, svg);
     const edges = svgEl('g', { id: 'edges' }, svg);
     const nodes = svgEl('g', { id: 'nodes' }, svg);
@@ -419,7 +423,7 @@
     const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
     return `<div class="hero ${sel ? 'active' : ''} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
-      <div class="hh"><span class="nm">${esc(h.name)}</span><span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
+      <div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span><span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${states}</div>
       <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="Dice still in your pool. You roll 3 per turn; pool + banked = 15 always.">pool ${h.pool} · AP ${T.apValue(h)}</span></div>
@@ -609,7 +613,15 @@
           el.setAttribute('data-arg', String(i));
           el.setAttribute('data-tipid', 'h' + h.uid);
           svgEl('circle', { r: 20, class: 'body' }, el);
-          svgEl('text', { y: 5, class: 'initial' }, el).textContent = h.name[0];
+          const face = U.portraitSrc(U.pilotOf(h));
+          if (face) {
+            svgEl(
+              'image',
+              { href: face, x: -18, y: -18, width: 36, height: 36, 'clip-path': 'url(#face-clip)', class: 'face' },
+              el,
+            );
+            svgEl('circle', { r: 20, class: 'ring' }, el);
+          } else svgEl('text', { y: 5, class: 'initial' }, el).textContent = h.name[0];
           svgEl('rect', { x: -18, y: 24, width: 36, height: 4, rx: 2, class: 'hpb' }, el);
           svgEl('rect', { x: -18, y: 24, width: 36, height: 4, rx: 2, class: 'hpf' }, el);
           svgEl('text', { y: 36, class: 'hp' }, el);

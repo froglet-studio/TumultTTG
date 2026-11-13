@@ -125,10 +125,10 @@
     // exciting rolls not dead weight"). Every colour has one that needs no target, or one that almost always has
     // one. Still weaker than any Ethereal face of the same colour: the floor, not a strategy.
     { id:'strike_M',   n:'Strike',   icon:'⚔', ap:0, el:'M', tgt:'foe_melee', fx:[{v:'strike', kind:'melee', dmg:f(2)}],                   txt:'Channel Mass: 2 damage to an adjacent foe.' },
-    { id:'shove_M',    n:'Shove',    icon:'↦', ap:0, el:'M', tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(1)}],                       txt:'Channel Mass: push an adjacent foe 1 nodes.' },
+    { id:'shove_M',    n:'Shove',    icon:'↦', ap:0, el:'M', tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(1)}],                       txt:'Channel Mass: push an adjacent foe 1 node.' },
     { id:'arc_C',      n:'Arc',      icon:'ϟ', ap:0, el:'C', tgt:'foe_r3',    fx:[{v:'strike', kind:'any', dmg:f(1)}],                     txt:'Channel Charge: 1 damage to a foe up to 3 nodes away.' },
     { id:'reach_C',    n:'Reach',    icon:'⚙', ap:1, el:'C', tgt:'node_r2',   fx:[{v:'interact', range:f(2)}],                             txt:'Channel Charge: Interact with an objective up to 2 nodes away (not up a ledge from below).' },
-    { id:'scramble_S', n:'Scramble', icon:'⤴', ap:0, el:'S', tgt:'node_climb', fx:[{v:'climb', reach:f(1)}],                               txt:'Channel Space: move to a free node up to 2 away, up or down a ledge included.' },
+    { id:'scramble_S', n:'Scramble', icon:'⤴', ap:0, el:'S', tgt:'node_climb', fx:[{v:'climb', reach:f(1)}],                               txt:'Channel Space: step to a free node 1 away, up or down a ledge included.' },
     { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'hasten', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and your track slides 1 extra column.' },
   ];
   T.BASIC_BY = {}; T.BASIC.forEach(b => T.BASIC_BY[b.id] = b);

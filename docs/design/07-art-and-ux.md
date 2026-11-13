@@ -1,6 +1,6 @@
 # 07 · Art and UX
 
-**Status: Proposed, with one piece built.** The forecast exists as text since v2.3.0 — a line under the enemy intents and a heading on each hero's vitality (`docs/reference/OVERVIEW.md`); its ghosts on the board do not, and nothing else here is built. v2.0 is functional: emoji for icons, plain tokens for units, panels of text. The brief is a polished state with artwork and a better experience across the board.
+**Status: Proposed, with pieces built.** The forecast exists as text since v2.3.0 — a line under the enemy intents and a heading on each hero's vitality (`docs/reference/OVERVIEW.md`); its ghosts on the board do not. **2.11.0 began the art:** heroes are shown as Cosmic Shore's pilots, with their painted portraits on the board, the panels and the draft, a pilot's scene behind the title and under the board, Chakra Petch for display type and a deep-sea HUD look (`assets/README.md`, `src/ui/pilots.js`, `src/ui/theme.css`). That departs from "drawn in code first" and from "never an animal head on a human body" below: Garrett chose the Cosmic Shore pilots' own art (2026-11-12). Emblems, card frames per etherion, tokens for actors and props, and backdrops per leg are not built.
 
 ## Art direction
 
