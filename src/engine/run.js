@@ -38,6 +38,7 @@
       lastReward: null,
       haven: null,
       event: null,
+      story: T.newStory(), // the run's chronicle (src/engine/story.js)
     };
   };
 
@@ -247,6 +248,7 @@
     run.phase = 'map';
     run.available = run.map.rows[0].slice();
     run.nodeId = null;
+    T.writePassage(run, 'start', null);
   };
   T.actOf = (row) => (row <= 1 ? 0 : row <= 4 ? 1 : 2);
   T.chooseNode = function (run, nodeId) {
@@ -303,6 +305,7 @@
     }
     run.available = next;
     run.phase = 'map';
+    T.writePassage(run, T.passageKind(run, node), node);
   };
 
   /* ───────────────────────────── REWARDS ───────────────────────────── */
@@ -362,7 +365,24 @@
     run.stats.missions++;
     run.stats.kills += m.stats.kills;
     run.stats.rounds += m.round;
-    run.history.push({ title: m.title, archetype: m.archetype, won: m.won, rounds: m.round, kills: m.stats.kills });
+    // what the story needs to remember: the foe that mattered most, and who came off worst
+    const foe = m.enemies.find((e) => e.boss) || m.enemies.find((e) => e.elite) || m.enemies[0];
+    let hurt = 0;
+    run.heroes.forEach((h, i) => {
+      const worst = run.heroes[hurt];
+      if ((h.downed ? -1 : h.hp / h.maxHp) < (worst.downed ? -1 : worst.hp / worst.maxHp)) hurt = i;
+    });
+    const close = run.heroes.some((h) => h.downed || h.hp < h.maxHp / 3);
+    run.history.push({
+      title: m.title,
+      archetype: m.archetype,
+      won: m.won,
+      rounds: m.round,
+      kills: m.stats.kills,
+      foe: foe ? foe.name : null,
+      close,
+      hurt,
+    });
     if (m.won) {
       run.crystals += rw.crystals;
       run.heroes.forEach((h) => (h.upUnspent += rw.up));
@@ -535,7 +555,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 4;
+  T.SAVE_VERSION = 5;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -566,6 +586,11 @@
     3(r) {
       r.party = T.newParty(1);
       r.v = 4;
+    },
+    // 2.15 added the story: a chronicle of passages between stops. An older run starts its chronicle empty.
+    4(r) {
+      r.story = T.newStory();
+      r.v = 5;
     },
   };
   T.deserializeRun = function (json) {
