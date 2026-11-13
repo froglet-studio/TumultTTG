@@ -1,6 +1,6 @@
 /* ============================================================================
    TUMULT v2.0 — UI MISSION SCREEN
-   Board (SVG) with lanes, height, hazards, traps, objectives; tokens with hp;
+   Board (SVG) with zones, height, hazards, traps, objectives; tokens with hp;
    enemy intents drawn as arrows; hero panels (dice, track, hand, gear);
    targeting flows; animations from the engine's fx queue.
    ========================================================================== */
@@ -77,6 +77,42 @@
     U.updateMission();
   };
 
+  /**
+   * Each zone's nodes and the links that draw it as one region: the shortest tree joining its nodes on the
+   * board (Prim's, by drawn distance), so a zone of any shape reads as one piece.
+   */
+  function zoneRegions(m) {
+    const N = m.board.nodes;
+    const byZone = {};
+    Object.values(N).forEach((n) => n.zones.forEach((z) => (byZone[z] = byZone[z] || []).push(n.id)));
+    const d2 = (a, b) => (N[a].x - N[b].x) ** 2 + (N[a].y - N[b].y) ** 2;
+    return Object.keys(byZone)
+      .sort()
+      .map((zone) => {
+        const ids = byZone[zone];
+        const inTree = [ids[0]];
+        const links = [];
+        while (inTree.length < ids.length) {
+          let best = null;
+          inTree.forEach((a) =>
+            ids.forEach((b) => {
+              if (!inTree.includes(b) && (!best || d2(a, b) < best[2])) best = [a, b, d2(a, b)];
+            }),
+          );
+          links.push([best[0], best[1]]);
+          inTree.push(best[1]);
+        }
+        return { zone, ids, links };
+      });
+  }
+  /** An SVG arc of radius r from one angle to another (degrees, clockwise from the top). */
+  function arcPath(r, a0, a1) {
+    const pt = (a) => [r * Math.sin((a * Math.PI) / 180), -r * Math.cos((a * Math.PI) / 180)];
+    const [x0, y0] = pt(a0 + 4),
+      [x1, y1] = pt(a1 - 4);
+    return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+  }
+
   /* ───────────── board build ───────────── */
   function buildBoard() {
     const m = M();
@@ -102,39 +138,49 @@
     );
     svgEl('path', { d: 'M 0 0 L 10 5 L 0 10 z', fill: '#e56a8f' }, mk);
     svgEl('circle', { cx: 0, cy: 0, r: 18 }, svgEl('clipPath', { id: 'face-clip' }, defs));
-    const lanes = svgEl('g', { id: 'lanes' }, svg);
+    const zones = svgEl('g', { id: 'zones' }, svg);
     const edges = svgEl('g', { id: 'edges' }, svg);
     const nodes = svgEl('g', { id: 'nodes' }, svg);
     svgEl('g', { id: 'markers' }, svg);
     svgEl('g', { id: 'intents' }, svg);
     svgEl('g', { id: 'tokens' }, svg);
-    // lane bands (by column x)
-    const cols = {};
-    Object.values(m.board.nodes).forEach((n) => {
-      if (!n.height) cols[n.x] = n.lane;
-    });
-    Object.entries(cols).forEach(([x, lane]) => {
-      const cx = g.pad + (parseFloat(x) - g.minX) * g.cell;
-      svgEl(
-        'rect',
-        { x: cx - 40, y: 0, width: 80, height: g.H, rx: 16, fill: T.LANES[lane].color, class: 'lane-glow' },
-        lanes,
+    // zones: one soft region per zone, whatever its shape (a disc at each of its nodes, joined along the
+    // shortest tree between them), named under its lowest node
+    const N = m.board.nodes;
+    zoneRegions(m).forEach(({ zone, ids, links }) => {
+      const z = T.ZONES[zone];
+      const gr = svgEl('g', { class: 'zone-glow', 'data-zone': zone }, zones);
+      ids.forEach((id) => svgEl('circle', { cx: g.px(N[id]), cy: g.py(N[id]), r: 46, fill: z.color }, gr));
+      links.forEach(([a, b]) =>
+        svgEl(
+          'line',
+          {
+            x1: g.px(N[a]),
+            y1: g.py(N[a]),
+            x2: g.px(N[b]),
+            y2: g.py(N[b]),
+            stroke: z.color,
+            'stroke-width': 92,
+            'stroke-linecap': 'round',
+          },
+          gr,
+        ),
       );
+      const low = ids.reduce((a, b) => (N[b].y > N[a].y || (N[b].y === N[a].y && N[b].x < N[a].x) ? b : a));
       svgEl(
         'text',
         {
-          x: cx,
-          y: g.H - 8,
+          x: g.px(N[low]),
+          y: Math.min(g.H - 4, g.py(N[low]) + 54),
           'text-anchor': 'middle',
-          fill: T.LANES[lane].color,
+          fill: z.color,
           'font-size': 10,
           'font-family': 'var(--mono)',
-          opacity: 0.7,
+          opacity: 0.8,
         },
-        lanes,
-      ).textContent = T.LANES[lane].name + ' lane';
+        zones,
+      ).textContent = z.name + ' zone';
     });
-    const N = m.board.nodes;
     m.board.edges.forEach(([a, b]) =>
       svgEl('line', { x1: g.px(N[a]), y1: g.py(N[a]), x2: g.px(N[b]), y2: g.py(N[b]), class: 'edge' }, edges),
     );
@@ -152,11 +198,13 @@
         nodes,
       );
       svgEl('circle', { r: 27, class: 'ring' }, gr);
-      svgEl(
-        'circle',
-        { r: 31, fill: 'none', stroke: T.LANES[n.lane].color, 'stroke-opacity': 0.35, 'stroke-width': 1.5 },
-        gr,
-      );
+      // the outer ring shows the node's zones: one arc for each
+      n.zones.forEach((zone, i) => {
+        const k = n.zones.length;
+        const attrs = { fill: 'none', stroke: T.ZONES[zone].color, 'stroke-opacity': 0.5, 'stroke-width': 2 };
+        if (k === 1) svgEl('circle', Object.assign({ r: 31 }, attrs), gr);
+        else svgEl('path', Object.assign({ d: arcPath(31, (i / k) * 360, ((i + 1) / k) * 360) }, attrs), gr);
+      });
       svgEl('text', { y: 40, class: 'lbl', 'text-anchor': 'middle' }, gr).textContent = n.height
         ? 'ledge ' + n.id
         : n.id;
@@ -199,7 +247,7 @@
     if (id.startsWith('n')) {
       const n = m.board.nodes[+id.slice(1)];
       if (!n) return '';
-      const bits = [`<b>Node ${n.id}</b> — ${T.LANES[n.lane].name} lane`];
+      const bits = [`<b>Node ${n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`];
       if (n.height) bits.push('Height: reachable only by Space verbs (teleport/climb/hover) or the ramp.');
       if (n.hazard) bits.push(`Hazard: ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`);
       if (n.spawn) bits.push('Spawn-node: foes emerge here.');

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.18.0 — 2026-11-13 — zones instead of lanes
+
+Garrett: "move away from lanes as vertical columns of nodes", toward boards with the spatial variety of Unmatched. This is the first step of the atlas plan: the rule a board of any shape needs.
+
+- **Zones.** Every node sits in one or more coloured zones, and two units that share a zone are in range of a ranged strike, at any distance. A node in two zones reaches both. Every card, foe and piece of gear that said *lane* now says *zone* (`zone_all`, `foe_zone_all`, `area: 'zone'`); Hidden and Located work as before.
+- **On today's boards each column is one zone**, so play is unchanged: the full simulation (`node tools/sim.js 40`, both players) and six narrated missions are byte-identical before and after. Heuristic 13/40 runs, look-ahead 22/40, as before.
+- **Drawn as regions.** Each zone is one soft region whatever its shape (a disc at each node, joined along the shortest tree between them), named under its lowest node; a node's outer ring shows an arc for each of its zones. New muted colours (Slate, Sand, Plum, Sage, Clay, Ash) so a zone is never mistaken for an etherion or a domain.
+- **Saves:** version 7 replaces a board node's `lane` with `zones`. A version-6 save's lane becomes a zone of the same name (fixture `save-2.17.json`).
+
 ## 2.17.0 — 2026-11-13 — a different expedition each time
 
 Garrett: "it should have a different feel and adventure each time." Each run now draws its own expedition from its seed.

@@ -78,10 +78,10 @@ test('damage: Shield reduces; Pierce, true damage and area bypass it; Mark adds 
   assert.equal(e.states.Marked, undefined, 'Mark is consumed');
 });
 
-test('states have several answers: Hidden stops lane strikes, melee contact breaks it', () => {
+test('states have several answers: Hidden stops zone strikes, melee contact breaks it', () => {
   const { m, h, e } = scene();
   Object.assign(e, { hp: 40, maxHp: 40, shield: 0, states: { Hidden: { t: 3 } } });
-  assert.equal(T.damage(m, h, e, 3, { kind: 'los' }), 0, 'lane strike hits an afterimage');
+  assert.equal(T.damage(m, h, e, 3, { kind: 'los' }), 0, 'zone strike hits an afterimage');
   assert.ok(e.states.Hidden);
   assert.equal(T.damage(m, h, e, 3, { kind: 'melee' }), 3);
   assert.equal(e.states.Hidden, undefined, 'contact reveals');

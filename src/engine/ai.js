@@ -35,7 +35,7 @@
     if (!hs.length) return null;
     return hs.slice().sort((a, b) => a.hp - b.hp)[0];
   }
-  function laneTargets(m, e) {
+  function zoneTargets(m, e) {
     return candidates(m).filter((c) => B.los(m.board, e.pos, c.pos) && !(c.kind === 'hero' && T.isHidden(c)));
   }
   function adjacentTargets(m, e) {
@@ -72,9 +72,9 @@
           break;
         }
         case 'shooter': {
-          const lt = laneTargets(m, e);
+          const lt = zoneTargets(m, e);
           const t = lt.length ? lt.sort((a, b) => a.hp - b.hp)[0] : nearestTarget(m, e);
-          if (t) setI('sting', t, `(${dmgOf(e, A.sting)} lane)`);
+          if (t) setI('sting', t, `(${dmgOf(e, A.sting)} zone)`);
           break;
         }
         case 'brute': {
@@ -85,10 +85,10 @@
         }
         case 'kiter': {
           const adj = heroesAdjacent(m, e);
-          const lt = laneTargets(m, e);
+          const lt = zoneTargets(m, e);
           const t = lt.length ? lt[0] : nearestTarget(m, e);
           if (t)
-            setI('shot', t, `(${dmgOf(e, A.shot)} lane${adj.length ? ', after retreating' : ''})`, {
+            setI('shot', t, `(${dmgOf(e, A.shot)} zone${adj.length ? ', after retreating' : ''})`, {
               retreat: adj.length > 0,
             });
           break;
@@ -108,7 +108,7 @@
           break;
         }
         case 'binder': {
-          const lt = laneTargets(m, e).filter((c) => c.kind === 'hero' && !st(c).Rooted);
+          const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero' && !st(c).Rooted);
           const adj = adjacentTargets(m, e);
           if (lt.length) setI('bind', lt[0], `(${dmgOf(e, A.bind)}, roots 2)`);
           else if (adj.length) setI('drain', adj[0], `(${dmgOf(e, A.drain)}, heals 2)`);
@@ -145,25 +145,25 @@
           break;
         }
         case 'tidecaller': {
-          const lt = laneTargets(m, e).filter((c) => c.kind === 'hero');
+          const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero');
           const t = lt.length ? lt[0] : nearestTarget(m, e);
           if (!t) break;
           if (e.lastKey !== 'undertow') setI('undertow', t, `(pulls 2, ${dmgOf(e, A.undertow)})`);
-          else setI('surge', t, `(${dmgOf(e, A.surge)} lane, Weakens)`);
+          else setI('surge', t, `(${dmgOf(e, A.surge)} zone, Weakens)`);
           break;
         }
         case 'heart': {
           if (e.phase === 1) {
-            const lt = laneTargets(m, e).filter((c) => c.kind === 'hero');
+            const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero');
             const biters = T.liveEnemies(m).filter((x) => x.type === 'biter').length;
-            if (lt.length) setI('lance', lt.sort((a, b) => a.hp - b.hp)[0], `(${dmgOf(e, A.lance)} lane)`);
+            if (lt.length) setI('lance', lt.sort((a, b) => a.hp - b.hp)[0], `(${dmgOf(e, A.lance)} zone)`);
             else if (biters < 2) setI('call', null, '(calls a Biter)');
             else setI('lance', null, '(no line — waits)');
           } else {
             const adj = heroesAdjacent(m, e);
             if (adj.length) setI('crush', adj.sort((a, b) => a.hp - b.hp)[0], `(${dmgOf(e, A.crush)})`);
             else {
-              const lt = laneTargets(m, e).filter((c) => c.kind === 'hero');
+              const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero');
               const t = lt.length ? lt[0] : lowestHpHero(m);
               if (t) setI('crush', t, `(drags 2, then ${dmgOf(e, A.crush)})`);
             }
@@ -215,17 +215,16 @@
     }
     return moved;
   }
-  function moveToLane(m, e, target, steps) {
+  function moveToZone(m, e, target, steps) {
     if (!canMove(e) || steps <= 0) return false;
-    const lane = m.board.nodes[target.pos].lane;
     for (let i = 0; i < steps; i++) {
       if (B.los(m.board, e.pos, target.pos)) return true;
       const cands = B.walkNeighbors(m.board, e.pos).filter((n) => !T.occupied(m, n) && !m.board.nodes[n].height);
       if (!cands.length) return false;
-      const laneNodes = Object.values(m.board.nodes)
-        .filter((n) => n.lane === lane && !n.height)
+      const zoneNodes = Object.values(m.board.nodes)
+        .filter((n) => !n.height && B.sharesZone(m.board, n.id, target.pos))
         .map((n) => n.id);
-      const score = (n) => Math.min(...laneNodes.map((l) => dist(m, n, l)));
+      const score = (n) => Math.min(...zoneNodes.map((l) => dist(m, n, l)));
       const best = cands.sort((a, b) => score(a) - score(b))[0];
       if (score(best) >= score(e.pos)) return false;
       T.moveEntity(m, e, best, 'walk');
@@ -327,7 +326,7 @@
             const adj = heroesAdjacent(m, e)[0];
             if (adj) retreat(m, e, adj);
           }
-          if (!B.los(m.board, e.pos, t.pos)) moveToLane(m, e, t, e.speed);
+          if (!B.los(m.board, e.pos, t.pos)) moveToZone(m, e, t, e.speed);
           if (e.alive && B.los(m.board, e.pos, t.pos)) {
             if (ab.pull && t.kind === 'hero') {
               const moved = T.pullToward(m, e, t, ab.pull);
@@ -580,11 +579,11 @@
                   (foe.boss ? 2 : 0) +
                   (foe.elite ? 1 : 0) +
                   (foe.type === 'spawner' ? 4 : 0);
-              } else if (strike.kind === 'area' || strike.kind === 'lane_all' || strike.nearest) {
+              } else if (strike.kind === 'area' || strike.kind === 'zone_all' || strike.nearest) {
                 const n =
                   strike.kind === 'area'
                     ? T.liveEnemies(m).filter((e) => B.adjacent(m.board, h.pos, e.pos)).length
-                    : strike.kind === 'lane_all'
+                    : strike.kind === 'zone_all'
                       ? T.liveEnemies(m).filter((e) => B.los(m.board, h.pos, e.pos)).length
                       : T.liveEnemies(m).some((e) => B.los(m.board, h.pos, e.pos))
                         ? 1

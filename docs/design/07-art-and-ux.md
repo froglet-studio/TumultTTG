@@ -17,7 +17,7 @@ The four etherions own their hues (Mass red, Charge yellow, Space cyan, Time vio
 
 - etherion hue means etherion, everywhere, and nothing else uses those hues at full strength;
 - domains are told apart by **emblem and shape** first, with muted tones second;
-- lanes go away in favour of drawn sightlines ([04](04-boards-and-conditions.md));
+- lanes go away: 2.18 replaced them with zones in muted colours of their own ([04](04-boards-and-conditions.md));
 - nothing is ever conveyed by colour alone — every state has a glyph and a label.
 
 ### Real art, when it arrives

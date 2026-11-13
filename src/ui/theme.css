@@ -358,8 +358,8 @@ button.ghost {
   filter: blur(2px) saturate(0.8);
   border-radius: inherit;
 }
-.lane-glow {
-  opacity: 0.05;
+.zone-glow {
+  opacity: 0.11;
 }
 
 /* ───── drawn icons (src/ui/icons.js): flat, one colour, the text's own ───── */

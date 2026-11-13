@@ -21,6 +21,8 @@ Each generator takes a seed and a size and returns nodes, edges, feature slots (
 
 ## Sightlines, not coloured lanes
 
+> **2.18 took a different road (proposed to Garrett, 2026-11-13):** lanes became **zones**, as on an Unmatched board, rather than drawn sightlines. A zone is a coloured region of any shape and a node may sit in two; sharing a zone is range. It keeps every "lane" card working, resolves at the table by colour, and the new muted zone colours no longer collide with the etherions or the domains. How it works today: [reference/MISSIONS_AND_BESTIARY.md](../reference/MISSIONS_AND_BESTIARY.md). The text below is the earlier proposal.
+
 v2.0 colours nodes by lane. That will not survive more shapes, and the lane colours already collide with the etherion colours and will collide with the domain colours. Replace lanes with **sightlines**: two nodes see each other if the generator says so (a straight run of edges with no blocking feature between). The interface draws them on demand — hover a unit to see what it can see, hover a ranged ability to see what it can reach. Cover, haze, a moved crate or a raised windbreak break a sightline, which gives the squad a way to *make* safety rather than only find it.
 
 ## Terrain features

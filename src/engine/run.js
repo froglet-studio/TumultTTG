@@ -567,7 +567,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 6;
+  T.SAVE_VERSION = 7;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -608,6 +608,16 @@
     5(r) {
       if (r.story && r.story.expedition === undefined) r.story.expedition = null;
       r.v = 6;
+    },
+    // 2.18 replaced lanes with zones: a node's one lane becomes a list of the zones it belongs to.
+    6(r) {
+      const b = r.mission && r.mission.board;
+      if (b)
+        Object.values(b.nodes).forEach((n) => {
+          if (!n.zones) n.zones = [n.lane];
+          delete n.lane;
+        });
+      r.v = 7;
     },
   };
   T.deserializeRun = function (json) {

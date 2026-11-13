@@ -55,7 +55,7 @@ const PROBLEMS = [
 const PROBLEM_NAME = Object.fromEntries(PROBLEMS.map(([k, n]) => [k, n]));
 
 const num = (v, P = 3, E = 3) => (typeof v === 'function' ? v(P, E) : v);
-const WIDE = ['area', 'lane_all', 'nodeArea'];
+const WIDE = ['area', 'zone_all', 'nodeArea'];
 
 /** Which problems one effect (one entry of a face's fx list) helps with. */
 function answersOf(x) {
@@ -94,7 +94,7 @@ function answersOf(x) {
       add('armor', 'single');
       break;
     case 'move':
-      add('tempo', 'burst'); // get there sooner; step out of a lane or out of reach
+      add('tempo', 'burst'); // get there sooner; step out of a zone or out of reach
       break;
     case 'teleport':
       add('tempo', 'burst');
@@ -301,7 +301,7 @@ function autoplayerKnows(face) {
   const foe = /^foe_/.test(face.tgt) && face.tgt !== 'foe_or_ally_adj';
   const node = /^node_/.test(face.tgt);
   const strike = face.fx.find((x) => x.v === 'strike');
-  if (strike) return foe || ['area', 'lane_all'].includes(strike.kind) || !!strike.nearest;
+  if (strike) return foe || ['area', 'zone_all'].includes(strike.kind) || !!strike.nearest;
   if (has('shield', 'preempt', 'counter', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
   if (has('trap')) return node;
