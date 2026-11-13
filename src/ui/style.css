@@ -500,75 +500,170 @@ hr {
   grid-template-columns: 1fr;
   gap: 14px;
 }
-.map-rows {
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 22px;
+.route {
   position: relative;
-  padding: 10px 0;
+  margin-top: 10px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0a1426, #071020);
 }
-.map-row {
-  display: flex;
-  justify-content: center;
-  gap: 28px;
-  position: relative;
-}
-.mnode {
-  width: 118px;
-  border: 1px solid var(--line2);
-  border-radius: 12px;
-  background: var(--panel2);
-  padding: 8px;
-  text-align: center;
-  position: relative;
-  transition:
-    transform 0.12s,
-    border-color 0.12s;
-  opacity: 0.55;
-}
-.mnode .ic {
-  font-size: 22px;
-}
-.mnode .t {
-  font-size: 11.5px;
-  font-weight: 600;
-  margin-top: 2px;
-}
-.mnode .tier {
-  font-size: 10px;
-  color: var(--dim);
-}
-.mnode.avail {
-  opacity: 1;
-  cursor: pointer;
-  border-color: var(--cyan);
-  box-shadow:
-    0 0 0 1px rgba(94, 200, 216, 0.4) inset,
-    0 0 18px rgba(94, 200, 216, 0.25);
-}
-.mnode.avail:hover {
-  transform: translateY(-3px);
-}
-.mnode.done {
-  opacity: 0.9;
-  border-color: var(--green);
-}
-.mnode.current {
-  border-color: var(--gold);
-  opacity: 1;
-}
-.mnode.boss {
-  width: 160px;
-  border-color: var(--rose);
-}
-.actlabel {
+.leg {
   position: absolute;
   left: 0;
+  right: 0;
+  border-top: 1px solid rgba(127, 227, 240, 0.12);
+  overflow: hidden;
+}
+.leg-art {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.22;
+  filter: saturate(0.7) blur(1px);
+  mask-image: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+}
+.leg.finale {
+  background: radial-gradient(ellipse at 50% 60%, rgba(255, 92, 138, 0.18), transparent 60%);
+}
+.leg .actlabel {
+  position: absolute;
+  left: 12px;
+  top: 8px;
   font-size: 10px;
   letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--mute);
-  top: -14px;
+}
+.currents {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.cur {
+  fill: none;
+  stroke: rgba(127, 227, 240, 0.16);
+  stroke-width: 2;
+}
+.cur.taken {
+  stroke: var(--gold);
+  stroke-width: 3;
+}
+.cur.open {
+  stroke: var(--cyan);
+  stroke-width: 2.5;
+  stroke-dasharray: 6 5;
+  animation: current-flow 1.2s linear infinite;
+}
+@keyframes current-flow {
+  to {
+    stroke-dashoffset: -22;
+  }
+}
+.mnode {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 110px;
+  text-align: center;
+  opacity: 0.6;
+  transition:
+    transform 0.14s,
+    opacity 0.14s;
+}
+.mnode .medal {
+  --ring: var(--line2);
+  --fill: #0e1a30;
+  position: relative;
+  width: 46px;
+  height: 46px;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+  background: var(--ring);
+  clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+  color: #cfe9f0;
+}
+.mnode .medal::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: var(--fill);
+  clip-path: inherit;
+}
+.mnode .medal .icn {
+  position: relative;
+}
+.mnode .medal .icn {
+  width: 24px;
+  height: 24px;
+}
+.mnode .t {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 4px;
+  text-shadow: 0 1px 3px #000;
+}
+.mnode .tier {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: var(--gold);
+}
+.mnode.avail {
+  opacity: 1;
+  cursor: pointer;
+}
+.mnode.avail .medal {
+  --fill: #12344a;
+  --ring: var(--cyan);
+  color: #fff;
+  animation: medal-pulse 1.6s ease-in-out infinite;
+}
+@keyframes medal-pulse {
+  50% {
+    filter: drop-shadow(0 0 8px var(--cyan)) brightness(1.2);
+  }
+}
+.mnode.avail:hover {
+  transform: translate(-50%, -50%) scale(1.08);
+}
+.mnode.done {
+  opacity: 0.95;
+}
+.mnode.done .medal {
+  --fill: #2a2410;
+  --ring: #6b5a22;
+  color: var(--gold);
+}
+.mnode.current .medal {
+  --ring: var(--gold);
+}
+.mnode.k-elite .medal {
+  color: #ffc48a;
+}
+.mnode.k-haven .medal {
+  color: #9ff0b4;
+}
+.mnode.k-event .medal {
+  color: #c9b8ff;
+}
+.mnode.boss .medal {
+  width: 64px;
+  height: 64px;
+  color: var(--rose);
+  --ring: var(--rose);
+}
+.mnode.boss .medal .icn {
+  width: 34px;
+  height: 34px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cur.open,
+  .mnode.avail .medal {
+    animation: none;
+  }
 }
 .partybar {
   display: grid;
@@ -581,16 +676,11 @@ hr {
   }
 }
 @media (max-width: 520px) {
-  .map-row {
-    gap: 8px;
+  .mnode {
+    width: 80px;
   }
-  .mnode,
-  .mnode.boss {
-    width: auto;
-    flex: 1 1 0;
-    min-width: 0;
-    max-width: 160px;
-    padding: 6px 4px;
+  .mnode .t {
+    font-size: 10px;
   }
 }
 .hpbar {

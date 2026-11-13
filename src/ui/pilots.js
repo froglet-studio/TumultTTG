@@ -34,6 +34,37 @@
     { key: 'TALON', name: 'Wyvendo Waveline', clades: ['lynx', 'jackal'] },
     { key: 'WINGMAN', name: 'Jorin Gullwing', clades: ['puffin', 'pelican'] },
     { key: 'ZODIAC', name: 'Ivelia Starreach', clades: ['ocelot', 'heron'] },
+    // Cosmic Shore's crew beyond the callsigns: the same painters, the same rules (Docs/Pilots/art/).
+    { key: 'ASTROFOIL', name: 'Astrofoil', clades: ['snail', 'jellyfish'] },
+    { key: 'BUSHY', name: 'Bushy', clades: ['horned_lizard', 'hedgehog'] },
+    { key: 'COMET', name: 'Comet', clades: ['clownfish', 'lobster'] },
+    { key: 'DAMSEL', name: 'Damsel', clades: ['hummingbird', 'lobster'] },
+    { key: 'DOZER', name: 'Dozer', clades: ['tree_frog', 'scorpion'] },
+    { key: 'FIEST', name: 'Fiest', clades: ['cheetah', 'hyena'] },
+    { key: 'FLUX', name: 'Flux', clades: ['oryx', 'orca'] },
+    { key: 'JUGGER', name: 'Jugger', clades: ['orca', 'eagle'] },
+    { key: 'KRUSH', name: 'Krush', clades: ['coyote', 'turkey'] },
+    { key: 'LONGSHIFT', name: 'Longshift', clades: ['black_hare', 'badger'] },
+    { key: 'MAESTRO', name: 'Maestro', clades: ['platypus', 'butterfly'] },
+    { key: 'MASON', name: 'Mason', clades: ['ostrich', 'porcupine'] },
+    { key: 'RIPTIDE', name: 'Riptide', clades: ['zebra', 'lionfish'] },
+    { key: 'SCALES', name: 'Scales', clades: ['egret', 'koi'] },
+    { key: 'SHRAPNEL', name: 'Shrapnel', clades: ['toucan', 'newt'] },
+    { key: 'SIPHON', name: 'Siphon', clades: ['caracal', 'red_panda'] },
+    { key: 'SLINGSHOT', name: 'Slingshot', clades: ['flamingo', 'mantis_shrimp'] },
+    { key: 'SPARE01', name: 'Korvane Ashwhistle', clades: ['mandrill', 'peacock'] },
+    { key: 'SPARE02', name: 'Lunari Hollowreach', clades: ['opossum', 'lynx'] },
+    { key: 'SPARE03', name: 'Bellomo Stripewright', clades: ['zebra', 'yak'] },
+    { key: 'SPARE04', name: 'Zeria Emberwick', clades: ['fox', 'firefly'] },
+    { key: 'SPARE05', name: 'Halven Frostgate', clades: ['hare', 'ram'] },
+    { key: 'SPARE06', name: 'Tamsin Dusklight', clades: ['hare', 'tiger'] },
+    { key: 'SPARE07', name: 'Fennaro Mossbell', clades: ['hare', 'deer'] },
+    { key: 'SPARE08', name: 'Oki Sandrunner', clades: ['kangaroo', 'armadillo'] },
+    { key: 'STRIDER', name: 'Strider', clades: ['shoebill', 'crocodile'] },
+    { key: 'TENACIOUS', name: 'Tenacious', clades: ['tiger', 'tortoise'] },
+    { key: 'TENDER', name: 'Tender', clades: ['parrot', 'narwhal'] },
+    { key: 'TOMAHAWK', name: 'Tomahawk', clades: ['basilisk', 'hawk'] },
+    { key: 'TRACE', name: 'Trace', clades: ['booby', 'jellyfish'] },
   ];
   U.ART_BY = {};
   U.PILOT_ART.forEach((a) => (U.ART_BY[a.key] = a));
@@ -85,7 +116,7 @@
       return `<span class="pfp ${cls || ''}"${tip}><img src="${src}" alt="" draggable="false"></span>`;
     }
     const marks = cladesOf(h)
-      .map((s) => (T.SPECIES[s] ? T.SPECIES[s].icon : ''))
+      .map((s) => (T.SPECIES[s] ? U.icClade(s) : ''))
       .join('');
     return `<span class="pfp ${cls || ''} none">${marks || '?'}</span>`;
   };

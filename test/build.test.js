@@ -77,7 +77,7 @@ test('every pilot has a portrait and a scene in the build, and every pre-made he
   const U = g.T.UI;
   for (const a of U.PILOT_ART) {
     assert.match(ART['pilot/' + a.key] || '', /^data:image\/jpeg;base64,/, `${a.key} has a portrait`);
-    assert.match(ART['scene/' + a.key] || '', /^data:image\/jpeg;base64,/, `${a.key} has a scene`);
+    assert.match(ART['scene/' + a.key] || '', /^data:image\/(jpeg|webp);base64,/, `${a.key} has a scene`);
     assert.equal(a.clades.length, 2, `${a.key} is a pair of clades`);
   }
   // art follows the clade pair: an exact pair beats a stand-in that shares one clade, and the head clade counts

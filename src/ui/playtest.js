@@ -19,8 +19,14 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.13.0',
+    version: '2.14.0',
     items: [
+      {
+        text: 'Drawn icons replace the emoji everywhere: foes on the board, the route, dice, gear, boons, events. Can you tell every foe apart at a glance on the board? Which icon did you have to hover to understand?',
+      },
+      {
+        text: 'The route is now a chart with the road you took lit up, and events and havens show a painting. Does the run feel more like a journey somewhere? Is anything harder to read than the old grid?',
+      },
       {
         text: 'Play online: one of you types a name and presses “Host a game”, the other types the four-letter code and presses Join, from their own screen. Each drafts and flies one pilot; the host picks the route and the round ends when both press Ready. Does it keep up? Anything that went out of step between the two screens, or that you had to wait for, put in a report.',
       },
@@ -232,7 +238,7 @@
           slot + '|' + i,
           `${esc(pb.name)} <span class="pt-sp">${pb.species
             .slice(1)
-            .map((s) => T.SPECIES[s].icon)
+            .map((s) => U.icClade(s))
             .join('')}</span>`,
           c.heroes[slot] === i,
         ),

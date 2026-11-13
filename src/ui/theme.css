@@ -361,3 +361,122 @@ button.ghost {
 .lane-glow {
   opacity: 0.05;
 }
+
+/* ───── drawn icons (src/ui/icons.js): flat, one colour, the text's own ───── */
+.icn {
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.22em;
+  fill: currentColor;
+  fill-rule: evenodd;
+  flex: none;
+}
+.icn.tiny {
+  width: 0.95em;
+  height: 0.95em;
+}
+.token .glyph-ic {
+  fill: #ffe3ec;
+  fill-rule: evenodd;
+  pointer-events: none;
+}
+.token.boss .glyph-ic {
+  fill: #ffd0dc;
+}
+.ev-ic .icn {
+  width: 34px;
+  height: 34px;
+  color: var(--gold);
+}
+.sp-card .ic .icn {
+  width: 30px;
+  height: 30px;
+}
+.intent .g .icn {
+  width: 18px;
+  height: 18px;
+  color: #ffb3c7;
+}
+.die .icn {
+  width: 16px;
+  height: 16px;
+  vertical-align: 0;
+}
+.objmark-ic {
+  fill: #ffe9a8;
+  fill-rule: evenodd;
+  pointer-events: none;
+}
+.hazmark {
+  fill: #7fd3ff;
+  fill-rule: evenodd;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* ───── story panels: a painting beside the words (events, havens) ───── */
+.scene-card {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 0;
+  padding: 0;
+  max-width: 980px;
+  margin: 12px auto 0;
+  overflow: hidden;
+}
+.scene-card.no-art {
+  grid-template-columns: 1fr;
+}
+.scene-art {
+  min-height: 300px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  animation: scene-drift 24s ease-in-out infinite alternate;
+}
+.scene-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 60%, var(--panel) 100%);
+}
+@keyframes scene-drift {
+  from {
+    background-position: 40% 50%;
+  }
+  to {
+    background-position: 60% 50%;
+  }
+}
+.scene-body {
+  padding: 16px 18px;
+}
+.story-text {
+  font-family: var(--flavor);
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: #dfe9f3;
+}
+.story-text.small {
+  font-size: 13.5px;
+  color: var(--dim);
+}
+.haven-rest .scene-art {
+  min-height: 180px;
+}
+@media (max-width: 700px) {
+  .scene-card {
+    grid-template-columns: 1fr;
+  }
+  .scene-art {
+    min-height: 170px;
+  }
+  .scene-art::after {
+    background: linear-gradient(180deg, transparent 55%, var(--panel) 100%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scene-art {
+    animation: none;
+  }
+}
