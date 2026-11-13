@@ -8,7 +8,8 @@ Garrett, after a playtest: a hero loaded with elemental crystals and no AP, or n
 - Every crystal, at level 0, with no AP and no awakened card, now opens something; a test holds it (`test/engine.test.js`).
 - The heuristic player channels Mass and Charge into blows and Time into Brace when threatened.
 - **The Heart is harder, to pay for it:** 50/61/72 vitality (was 32/38/44), and once it cracks the Vault drowns in four rounds (was seven). Free crystals alone took the careful simulated player from 22 runs of 40 to 38; Garrett asked for the difficulty back in the same change.
-- **Balance:** full runs, rising tide: look-ahead 22 → 19 of 40, heuristic 6 → 8; flood tide: look-ahead 13 → 18, heuristic 5 → 5. Squads with no cards now beat the Heart sometimes, which closes the last mission an ability was needed for (`docs/reference/BALANCE.md`, v2.10.0).
+- **Balance:** full runs, rising tide: look-ahead 22 → 19 of 40, heuristic 6 → 8; flood tide: look-ahead 13 → 18, heuristic 5 → 5. (`docs/reference/BALANCE.md`, v2.10.0). Squads with no cards still cannot beat the Heart, as before; free crystals alone had briefly let them (31%).
+- **Audit:** unchanged (168 staples, 30 tools, 0 narrow), except that its look-ahead baseline on the tougher Heart is now too low to judge the Heart for gates.
 
 ## 2.9.0 — 2026-11-12 — no narrow faces left
 
