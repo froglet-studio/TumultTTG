@@ -159,11 +159,11 @@
     // a different pilot in their world behind the title each expedition, so the people come first
     const who = U.PILOT_ART[meta.runs % U.PILOT_ART.length];
     const scene = U.sceneSrc(who);
-    return `${scene ? `<div class="title-scene" style="background-image:url(${scene})"></div><div class="title-veil"></div><div class="title-cap"><b>${esc(who.name)}</b> · ${esc(who.key)} · ${esc(who.clades.join(' · '))}</div>` : ''}<div class="title">
+    return `${scene ? `<div class="title-scene" style="background-image:url(${scene})"></div><div class="title-veil"></div><div class="title-cap"><b>${esc(who.name)}</b> · ${esc(who.key)} · ${esc(who.clades.join(' · '))} ${U.canonMark ? U.canonMark('pilot:' + who.key, `${who.name}, callsign ${who.key}: ${who.clades.join(' and ')}`, 'title:caption') : ''}</div>` : ''}<div class="title">
       <div class="kick">An expedition on Tumult</div>
       <h1>TUMULT</h1>
       <div class="sub">Draft two pilots from eleven bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: three dice, a six-column track, and enemies that tell you what they'll do.</div>
-      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
+      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button data-act="canonList" data-tip="Answers and corrections you have written while playing">Canon</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       ${tidePicker(meta)}
       ${U.partyPicker ? U.partyPicker(meta) : ''}
       ${U.titleNet ? U.titleNet() : ''}
@@ -260,6 +260,7 @@
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
         <p class="dim small">P deepens the physical face's numbers (reliable, AP-fed). E awakens the ethereal face — it cannot be played until its card has E 1 — and scales its <i>capability</i>, something P can never buy. Every hero sets out with at least ${T.RULES.START_AWAKE} cards awakened. Caps: P 3, E 3 per card.</p>
         <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true })).join('')}</div>
+        ${U.pilotQuestion ? U.pilotQuestion(h, d) : ''}
         <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set out'}</button></div></div>`;
     }
     return `<div class="wrap">${header('The Draft')}<div class="row small dim" style="margin-bottom:8px">${run.heroes
@@ -320,6 +321,7 @@
       T.respecHero(d.hero);
     } else if (act === 'confirmHero') {
       T.awaken(d.hero);
+      if (U.savePilotAnswer) U.savePilotAnswer(d);
       if (d.hero.upUnspent > 0) U.toast(`${d.hero.upUnspent} UP carried over — spend it later with Train.`);
       if (U.net && U.net.online()) {
         // online, each player drafts their own pilot; the map opens once both have
@@ -628,7 +630,7 @@
       const ready = !f || f.done || !['cardPick', 'tradeCard'].includes(f.kind);
       body = `<p style="font-family:var(--serif);font-size:15px">${esc(ev.result)}</p>${fu}<div class="row" style="margin-top:12px"><button class="primary" data-act="leaveEvent" ${ready ? '' : 'disabled'}>Continue</button></div>`;
     }
-    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)}</p>${body}`)}</div>`;
+    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
   }
 
   /* ───────────── SUMMARY ───────────── */
@@ -667,7 +669,9 @@
                 (a) =>
                   `<div class="small">• <b>${esc(a.n)}</b> ${a.dmg ? '(' + a.dmg.join('/') + ' ' + a.kind + ')' : '(' + a.kind + ')'}${a.push ? ', push ' + a.push : ''}${a.pull ? ', pull ' + a.pull : ''}${a.anchor ? ', roots ' + a.anchor : ''}</div>`,
               )
-              .join('')}<div class="flavor">${esc(e.flavor)}</div></div>`,
+              .join(
+                '',
+              )}<div class="flavor">${esc(e.flavor)} ${U.canonMark('foe:' + k, e.flavor, 'codex:flavor')}</div></div>`,
         )
         .join('')}</div>`;
     } else if (c.tab === 'gear') {
@@ -774,6 +778,7 @@
     // an add-on (the playtest panel) sees every action first and may take it
     if (U.extraAct && U.extraAct(act, arg, t, e)) return;
     if (U.atlasAct && U.atlasAct(act, arg)) return;
+    if (U.canonAct && U.canonAct(act, arg)) return;
     // with players on other screens, each acts only for their own pilots (src/ui/party.js)
     if (U.gate && !U.gate(act, arg, t)) return;
     if (U.handleMissionAct && U.screen === 'mission' && U.handleMissionAct(act, arg, t, e)) return;

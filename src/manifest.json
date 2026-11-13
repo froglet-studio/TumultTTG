@@ -6,16 +6,18 @@
     "data/story.js",
     "data/expeditions.js",
     "data/atlas.js",
+    "data/canon.js",
     "engine/generators.js",
     "engine/engine.js",
     "engine/ai.js",
     "engine/lookahead.js",
     "engine/party.js",
     "engine/story.js",
-    "engine/run.js"
+    "engine/run.js",
+    "engine/canon.js"
   ],
-  "ui": ["ui/icons.js", "ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js", "ui/atlas.js"],
-  "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css"],
+  "ui": ["ui/icons.js", "ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js", "ui/atlas.js", "ui/canon.js"],
+  "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css", "ui/canon.css"],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js"],
     "css": ["ui/playtest.css", "ui/net.css"]
