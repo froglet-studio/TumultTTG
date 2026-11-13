@@ -85,6 +85,9 @@
     'A red ring is a hazard: 2 damage to anyone on it at the end of the round.',
   ];
 
+  /** A "Correct this" mark on a piece of a page (src/ui/canon.js). */
+  const mark = (page, shown, where) => (U.canonMark ? U.canonMark('place:' + page.id, shown, 'atlas:' + where) : '');
+
   /** A whole spread: the board on the left page, the rules of the place and its field notes facing it. */
   U.atlasSpreadHTML = function (page) {
     const plate = T.ART && T.ART[page.plate];
@@ -92,15 +95,15 @@
     return `<div class="atlas-spread">
       <div class="atlas-leaf atlas-board">
         ${plate ? `<div class="atlas-plate" style="background-image:url(${plate})"></div>` : ''}
-        <div class="atlas-head"><span class="kick">${esc(ground)} · ${esc(U.gravityText(page.gravity))}</span><h3>${esc(page.name)}</h3><div class="small dim">${esc(page.blurb)}</div></div>
+        <div class="atlas-head"><span class="kick">${esc(ground)} · ${esc(U.gravityText(page.gravity))}</span><h3>${esc(page.name)}</h3><div class="small dim">${esc(page.blurb)} ${mark(page, page.blurb, 'blurb')}</div></div>
         ${U.atlasMapSVG(page)}
       </div>
       <div class="atlas-leaf atlas-facing">
-        <section><h4>Rules of this place</h4><ul>${page.rules.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>
+        <section><h4>Rules of this place</h4><ul>${page.rules.map((r, i) => `<li>${esc(r)} ${mark(page, r, 'rules:' + i)}</li>`).join('')}</ul>
           <details class="small dim"><summary>Reading a board</summary><ul>${LEGEND.map((l) => `<li>${esc(l)}</li>`).join('')}</ul></details></section>
         <section class="atlas-notes"><h4>Field notes</h4>
-          <p class="small"><b>Gravity</b> ${esc(U.gravityText(page.gravity))}. <b>Weather</b> ${esc(page.weather)}</p>
-          ${page.notes.map((n) => `<p><b>${esc(n.h)}.</b> ${esc(n.t)}</p>`).join('')}</section>
+          <p class="small"><b>Gravity</b> ${esc(U.gravityText(page.gravity))}. <b>Weather</b> ${esc(page.weather)} ${mark(page, page.weather, 'weather')}</p>
+          ${page.notes.map((n, i) => `<p><b>${esc(n.h)}.</b> ${esc(n.t)} ${mark(page, n.h + '. ' + n.t, 'notes:' + i)}</p>`).join('')}</section>
       </div>
     </div>`;
   };

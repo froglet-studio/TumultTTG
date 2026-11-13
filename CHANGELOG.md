@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.20.0 — 2026-11-13 — canon from play: correct what the game shows
+
+Garrett: "the web experience asks us for flavor through the experience. then this gets recorded into the lore … steer the details of the world by correcting what is presented." This is the first of four steps (plan agreed with Garrett, 2026-11-13).
+
+- **Correct this.** A small ✎ sits beside the atlas's rules of a place, its blurb, weather and field notes; the pilot named on the title screen; every foe's flavour in the Codex; and every event's text. A player picks *That's wrong*, *Add a detail* or *Love this* and writes a line.
+- **One question at the draft:** why does the Cosmic Shore pilot whose painting this hero wears guide? Three answers are offered (a rotation of `T.CANON_HOOKS`), or the player writes their own; it is optional, and can be turned off.
+- **Each answer is a canon record** (`src/engine/canon.js`): plain data with what was shown, where, the build, page and mission, starting *proposed* and *private*. Garrett is the lore lead: only he makes a record canon, and only records he marks public are ever copied into this repository. Records are kept on the device (`tumult_v2_canon`, newest 500), apart from any run, so the save is unchanged.
+- **Canon** on the title screen lists them, turns the questions on or off, and copies them as JSON lines. The test page will send them to a private inbox in the next step.
+- No rules, dice or missions change: the simulation is untouched.
+
 ## 2.19.0 — 2026-11-13 — the atlas: every mission on a page of Tumult
 
 Garrett: "the physical copy should have a book of these with each page a different location … the book of maps becomes an atlas for tumult." Every mission is now played on a fixed board from a page of the atlas.

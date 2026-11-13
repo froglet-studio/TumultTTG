@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.19.0',
+    version: '2.20.0',
     items: [
+      {
+        text: 'Playing now helps write the world. Look for the small ✎ beside the atlas’s rules and field notes, the pilot on the title screen, foes in the Codex and events: say it is wrong, add a detail, or say you love it. When you draft, the game asks why the pilot you picked guides (optional). Everything you write is a proposal for Garrett to approve; find it all under Canon on the title screen, and copy it to send it on. Were the questions welcome, or in the way? Is there text you wanted to correct and could not?',
+      },
       {
         text: 'Every mission is now played on a page of the atlas: a fixed board for a kind of place on Tumult (a quarry, a drowned hamlet, floating meadows), with its own paths, zones and high ground, over its painting. Spaces are named A1 to E3. Click the place’s name in the mission’s top bar, or Atlas on the title, to read its page: the board, the rules of this place and field notes. Do the places feel different to fight across? Is the facing page worth reading? Which page would you redraw?',
       },

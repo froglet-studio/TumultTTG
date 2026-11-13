@@ -1,0 +1,62 @@
+/* ───── canon capture (src/ui/canon.js): the ✎ marks, the note, the pilot question ───── */
+.cmark {
+  display: inline-block;
+  padding: 0 4px;
+  margin: 0 0 0 2px;
+  min-height: 0;
+  line-height: 1.2;
+  font-size: 11px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--mute, #8a94a8);
+  opacity: 0.55;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+.cmark:hover,
+.cmark:focus-visible {
+  opacity: 1;
+  border-color: var(--line2, #2a3550);
+  color: var(--txt, #e6ecf5);
+}
+.canon-quote {
+  margin: 8px 0;
+  padding: 8px 12px;
+  border-left: 3px solid var(--line2, #2a3550);
+  font-family: var(--serif);
+  font-style: italic;
+  white-space: pre-wrap;
+}
+.canon-text,
+.canon-line {
+  width: 100%;
+  box-sizing: border-box;
+  background: #0b1222;
+  border: 1px solid var(--line2, #2a3550);
+  color: var(--txt, #e6ecf5);
+  padding: 6px 8px;
+  border-radius: 6px;
+  font: inherit;
+}
+.canon-ask {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px dashed var(--line2, #2a3550);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.canon-list {
+  max-height: 40vh;
+  overflow: auto;
+  margin: 8px 0;
+}
+.canon-row {
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line, #1c2438);
+}
+.canon-out {
+  height: 90px;
+}
