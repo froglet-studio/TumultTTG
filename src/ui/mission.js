@@ -276,7 +276,7 @@
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       ${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
-      <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>End Round ▶</button>
+      <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>
       ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button></div>`;
   }
 
@@ -423,7 +423,7 @@
     const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
     return `<div class="hero ${sel ? 'active' : ''} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
-      <div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span><span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
+      <div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${states}</div>
       <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="Dice still in your pool. You roll 3 per turn; pool + banked = 15 always.">pool ${h.pool} · AP ${T.apValue(h)}</span></div>
@@ -830,6 +830,7 @@
     const ms = U.ms;
     const h = hero();
     if (!h || m.over) return;
+    if (U.mine && !U.mine(ms.heroIdx)) return; // another player's pilot
     if (ms.mode === 'target' && ms.pending.tg.need === 'node') {
       if (!ms.pending.tg.options.includes(node)) return;
       commitPending({ node });
@@ -1110,7 +1111,7 @@
         if (m.over) return true;
         ms.mode = 'idle';
         ms.pending = null;
-        const unspent = m.heroes.filter((x) => !x.downed && T.apValue(x) >= 4).length;
+        const unspent = m.heroes.filter((x, i) => !x.downed && T.apValue(x) >= 4 && (!U.mine || U.mine(i))).length;
         if (unspent && !ms.endConfirm) {
           ms.endConfirm = true;
           U.toast('A hero still has 4+ AP banked — banking is fine. Click End Round again to confirm.', 2600);
@@ -1120,6 +1121,12 @@
           return true;
         }
         ms.endConfirm = false;
+        // with players on other screens, the round ends once every one of them is ready
+        if (!T.setReady(U.run, U.seats)) {
+          afterAction();
+          return true;
+        }
+        T.clearReady(U.run);
         T.endHeroPhase(m);
         m.heroes.forEach((x) => (x.freeMove = 0));
         U.sfx.click();

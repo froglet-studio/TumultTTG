@@ -47,6 +47,10 @@ Every round both heroes act freely and interleaved. Each hero's track slides, en
 
 The run is the fall of a **quasi-stable Consolidation**. The **Terminal** is the quest-giver that will not intervene ("helps those who help themselves" — and logs the transaction). Etherion storms grant Affinities; the galactic superorganism's reef blooms offer traits; privateers levy tolls the Terminal tolerates as redistribution; an audit halves hoarded crystals. All event text lives in `src/data/world.js` under `T.EVENTS`. The frame is due to change — see `docs/design/01-frame-and-campaign.md`.
 
+## Players
+
+One or two players (title screen). Each hero belongs to a player, its seat (`run.party`, `src/engine/party.js`): with one player, both; with two, one each. Seat 0, the host, makes the squad's shared choices: the route on the map, skipping a reward card, resting and leaving a haven, an event's option, finishing a mission. Each player drafts, trains, equips and flies only their own pilot. A round ends when every player is ready; on one shared screen End Round readies everyone at once. The rules never change with the number of players. `src/ui/party.js` routes clicks: `U.seats` is the list of seats a screen holds, `null` for all of them.
+
 ## Keyboard / UI notes
 
 Tab switches the selected hero; E ends the round; Esc cancels targeting. Hover any card face, die, state chip or token for exact numbers at the hero's current P/E. The hint bar above the board always says how much AP the selected hero has and what ending the round now would cost them.

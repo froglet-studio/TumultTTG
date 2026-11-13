@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.11.0',
+    version: '2.12.0',
     items: [
+      {
+        text: 'Two players: pick “2 players” on the title screen. Each of you drafts and flies one pilot, passing the screen; the first player chooses the route. Does owning one pilot change how you talk through a turn? What would you want to see of the other player’s pilot while it is not your turn?',
+      },
       {
         text: 'New look: Cosmic Shore’s pilots now play the heroes. A hero shows the painting of their own two clades when there is one, else a stand-in that shares a clade (marked “stand-in”). Does seeing a face change how you feel about a hero? Which pairs would you most like painted next?',
       },

@@ -73,5 +73,6 @@ The browser saves to `localStorage` (`tumult_v2_run`) after every action in a mi
 | 1 | 2.0.x (no `v` field) | one random stream, not kept; no mission; heroes stripped of dice and track; each map node stored twice |
 | 2 | 2.1.0 | the run as it stands: streams in `run.rngs`, the mission included, map rows as lists of node ids |
 | 3 | 2.7.0 | adds `run.tide`, the difficulty (a key of `T.TIDES`); a version-2 save loads on the rising tide (fixture `save-2.6.json`) |
+| 4 | 2.12.0 | adds `run.party`, the players (`{ players: [{ name }], owner: [seat per hero], ready: [bool per player] }`, `src/engine/party.js`); a version-3 save loads with one player (fixture `save-2.11.json`) |
 
 A version-1 save still loads: it returns to the map (2.0 never kept a mission), its streams start from the seed, and the map is rebuilt from the copy of each node that 2.0 kept up to date. A save from a newer version than the game is refused rather than guessed at.
