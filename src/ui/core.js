@@ -2,7 +2,7 @@
    TUMULT v2.0 — UI CORE: screens outside the mission, shared widgets.
    ========================================================================== */
 (function (T) {
-  const U = (T.UI = {
+  const U = (T.UI = Object.assign(T.UI || {}, {
     screen: 'title',
     run: null,
     draft: null,
@@ -11,7 +11,7 @@
     tutorialSeen: false,
     modal: null,
     pendingTrain: false,
-  });
+  }));
   const $ = (sel, root) => (root || document).querySelector(sel);
   const app = () => document.getElementById('app');
   const esc = (s) =>
@@ -126,14 +126,14 @@
       return `<div class="face ${fk} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk === 'P' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
     };
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
-      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp">${sp.icon} ${esc(sp.name)}</span></div>
+      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp">${U.icClade(c.sp)} ${esc(sp.name)}</span></div>
       ${face('P')}${face('E')}
       ${o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button> &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button></div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P} · E${E}</div>` : ''}
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div>`;
   };
   const dieHTML = (f, extra) =>
-    `<span class="die ${f} ${extra || ''}" data-tip="${f === 'AP' ? 'AP — the common currency. 1 action point.' : f === 'AP2' ? 'AP2 — a double AP face (worth 2).' : f === 'O' ? 'Omni — spends as any etherion.' : esc(EL[f].name + ' — ' + EL[f].surface)}">${f === 'AP2' ? '2' : f === 'AP' ? '·' : f}</span>`;
+    `<span class="die ${f} ${extra || ''}" data-tip="${f === 'AP' ? 'AP — the common currency. 1 action point.' : f === 'AP2' ? 'AP2 — a double AP face (worth 2).' : f === 'O' ? 'Omni — spends as any etherion.' : esc(EL[f].name + ' — ' + EL[f].surface)}">${f === 'AP2' ? '2' : f === 'AP' ? '·' : U.ic('el.' + f, f)}</span>`;
   U.dieHTML = dieHTML;
 
   /* ───────────── header strip ───────────── */
@@ -218,7 +218,7 @@
             (pb) =>
               `<div class="sp-card pilot-card" data-act="prebuilt" data-arg="${pb.id}">${premadeArt(pb)}<div class="ic">${pb.species
                 .slice(1)
-                .map((s) => T.SPECIES[s].icon)
+                .map((s) => U.icClade(s))
                 .join(
                   ' ',
                 )}</div><b>${esc(pb.name)} <span class="dim" style="font-weight:400">${esc(pb.title)}</span></b><div class="small dim">${pb.species
@@ -235,7 +235,7 @@
           .map((s) => {
             const sp = T.SPECIES[s];
             const sel = d.species.includes(s);
-            return `<div class="sp-card ${sel ? 'sel' : ''}" data-act="pickSpecies" data-arg="${s}"><div class="ic">${sp.icon}</div><b>${esc(sp.name)}</b><div class="small dim">leans ${sp.lean}</div><div class="small" style="margin-top:4px">${esc(sp.tagline)}</div><div class="small mute" style="margin-top:4px">${T.cardsOf(
+            return `<div class="sp-card ${sel ? 'sel' : ''}" data-act="pickSpecies" data-arg="${s}"><div class="ic">${U.icClade(s)}</div><b>${esc(sp.name)}</b><div class="small dim">leans ${sp.lean}</div><div class="small" style="margin-top:4px">${esc(sp.tagline)}</div><div class="small mute" style="margin-top:4px">${T.cardsOf(
               s,
             )
               .filter((c) => c.sig >= 2)
@@ -246,7 +246,7 @@
         <div class="row" style="margin-top:12px"><button class="primary" data-act="openPacks" ${d.species.length === 2 ? '' : 'disabled'}>Open the first pack</button><button class="ghost" data-act="draftBack">Back</button></div></div>`;
     } else if (d.step === 'packs') {
       const h = d.hero;
-      body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${T.SPECIES[s].icon}${h.cards.filter((c) => T.CARD[c].sp === s).length}/3`).join(' ')}</span></div>
+      body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${h.cards.filter((c) => T.CARD[c].sp === s).length}/3`).join(' ')}</span></div>
         <p class="dim small">Each pack mixes your three bloodlines. ★ marks a species' signature traits. Hover any face for exact numbers at your current P/E.</p>
         <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard' })).join('')}</div>
         <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button></div>
@@ -267,7 +267,7 @@
         (h) =>
           `<span class="pill">${U.portrait(h, 'xs')} ${esc(h.name)} — ${h.species
             .slice(1)
-            .map((s) => T.SPECIES[s].icon)
+            .map((s) => U.icClade(s))
             .join('')}</span>`,
       )
       .join('')}</div>${body}</div>`;
@@ -351,16 +351,10 @@
   }
 
   /* ───────────── MAP ───────────── */
-  const NODE_ICON = {
-    swarm: '🐜',
-    vault: '🏛️',
-    hidden: '🔍',
-    cascade: '🌊',
-    elite: '⚔️',
-    haven: '⚓',
-    event: '❔',
-    boss: '🫀',
-  };
+  const NODE_ICON = {};
+  ['swarm', 'vault', 'hidden', 'cascade', 'elite', 'haven', 'event', 'boss'].forEach(
+    (k) => (NODE_ICON[k] = U.icNode(k)),
+  );
   const NODE_NAME = {
     swarm: 'Swarm',
     vault: 'Vault',
@@ -380,37 +374,88 @@
           h,
           i,
         ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b>${U.seatTag ? U.seatTag(i) : ''}<span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
-      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc)}">${T.GEAR_BY[g.id].icon} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${T.BOON_BY[b].icon} ${esc(T.BOON_BY[b].name)}</span>`).join('')}${h.consumables.map((c) => `<span class="pill">${T.CONSUMABLE_BY[c].icon}</span>`).join('')}</div>
+      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc)}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}${h.consumables.map((c) => `<span class="pill">${U.icCons(c)}</span>`).join('')}</div>
       <div class="row" style="margin-top:6px"><button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button><button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button></div></div>`,
       )
       .join('')}</div>`;
   }
+  // The scene painted behind each leg of the route (a key of T.ART), bottom leg first.
+  U.LEG_SCENES = ['scene/FLUME', 'scene/MANGER', 'scene/BANDIT'];
+  /**
+   * The route, drawn as a chart: one medallion per stop, the currents between them as curves, the road
+   * already taken lit, the next choices glowing, each leg over a dimmed painting of its ground.
+   */
+  function renderRoute(run) {
+    const map = run.map;
+    const ROW = 92;
+    const H = map.rows.length * ROW;
+    const pos = (nd) => {
+      const n = map.rows[nd.row].length;
+      return { x: n === 1 ? 50 : ((nd.col + 0.5) / n) * 100, y: H - (nd.row + 0.5) * ROW };
+    };
+    const legs = [];
+    for (let r = 0; r < map.rows.length;) {
+      const a = T.actOf(r);
+      let r2 = r;
+      while (r2 + 1 < map.rows.length && T.actOf(r2 + 1) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss') r2++;
+      legs.push({ act: a, from: r, to: r2 });
+      r = r2 + 1;
+    }
+    const bands = legs
+      .map((l) => {
+        const top = H - (l.to + 1) * ROW;
+        const h = (l.to - l.from + 1) * ROW;
+        const img = T.ART && T.ART[U.LEG_SCENES[l.act]];
+        const boss = map.all[map.rows[l.from][0]].type === 'boss';
+        return `<div class="leg${boss ? ' finale' : ''}" style="top:${top}px;height:${h}px">${img ? `<div class="leg-art" style="background-image:url(${img})"></div>` : ''}<span class="actlabel">${boss ? 'The finale' : esc(map.actNames[l.act])}</span></div>`;
+      })
+      .join('');
+    const at = run.nodeId != null ? run.nodeId : null;
+    const curves = [];
+    Object.values(map.all).forEach((nd) =>
+      nd.next.forEach((nid) => {
+        const m = map.all[nid];
+        const a = pos(nd),
+          b = pos(m);
+        const taken = nd.done && m.done;
+        const open = nd.id === at && run.available.includes(nid) && run.phase === 'map';
+        const cls = taken ? 'taken' : open ? 'open' : '';
+        const my = (a.y + b.y) / 2;
+        curves.push(
+          `<path class="cur ${cls}" d="M${a.x} ${a.y} C${a.x} ${my} ${b.x} ${my} ${b.x} ${b.y}" vector-effect="non-scaling-stroke"/>`,
+        );
+      }),
+    );
+    const nodes = Object.values(map.all)
+      .map((nd) => {
+        const p = pos(nd);
+        const type = nd.type;
+        const avail = run.available.includes(nd.id) && run.phase === 'map';
+        const cls = [
+          'mnode',
+          'k-' + type,
+          avail ? 'avail' : '',
+          nd.done ? 'done' : '',
+          at === nd.id ? 'current' : '',
+          type === 'boss' ? 'boss' : '',
+        ].join(' ');
+        const tip = T.MISSIONS[type]
+          ? T.MISSIONS[type].blurb
+          : type === 'haven'
+            ? 'Rest, buy gear and consumables.'
+            : 'A fork in the current.';
+        const tier = type === 'haven' || type === 'event' ? '' : `<span class="tier">${'◆'.repeat(nd.tier)}</span>`;
+        return `<div class="${cls}" style="left:${p.x}%;top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal">${NODE_ICON[type]}</div><div class="t">${NODE_NAME[type]}${tier}</div></div>`;
+      })
+      .join('');
+    return `<div class="route" style="height:${H}px">${bands}<svg class="currents" viewBox="0 0 100 ${H}" preserveAspectRatio="none">${curves.join('')}</svg>${nodes}</div>`;
+  }
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    const rows = map.rows
-      .map(
-        (row, ri) =>
-          `<div class="map-row">${ri % 2 === 0 && ri < 6 ? `<span class="actlabel">${esc(map.actNames[T.actOf(ri)])}</span>` : ''}${row
-            .map((id) => {
-              const nd = map.all[id];
-              const avail = run.available.includes(nd.id) && run.phase === 'map';
-              const cls = [
-                'mnode',
-                avail ? 'avail' : '',
-                nd.done ? 'done' : '',
-                run.nodeId === nd.id ? 'current' : '',
-                nd.type === 'boss' ? 'boss' : '',
-              ].join(' ');
-              const type = nd.type;
-              return `<div class="${cls}" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(T.MISSIONS[type] ? T.MISSIONS[type].blurb : type === 'haven' ? 'Rest, buy gear and consumables.' : 'A fork in the current.')}"><div class="ic">${NODE_ICON[type]}</div><div class="t">${NODE_NAME[type]}</div><div class="tier">${type === 'haven' || type === 'event' ? '' : 'tier ' + nd.tier}${nd.done ? ' ✓' : ''}</div></div>`;
-            })
-            .join('')}</div>`,
-      )
-      .join('');
-    return `<div class="wrap">${header('The Tide Map', `<span class="pill" style="margin-left:6px">◇ ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">🌊 ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
+    return `<div class="wrap">${header('The Tide Map', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
       ${partyBar(run)}
-      <div class="panel" style="margin-top:12px"><div class="row"><span class="dim small">Pick the next current. Glowing nodes are reachable. The Heart waits at the top.</span><span class="right small dim">Row ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0}/7</span></div><div class="map-rows">${rows}</div></div></div>`;
+      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">Pick the next current. Glowing stops are reachable. The Heart waits at the top.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
   }
 
   /* ───────────── TRAIN / KIT modals ───────────── */
@@ -422,8 +467,8 @@
   };
   U.openKit = function (i) {
     const h = U.run.heroes[i];
-    U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => T.SPECIES[s].icon + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
-    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${T.GEAR_BY[g.id].icon} ${esc(T.GEAR_BY[g.id].name)} <button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half">sell</button></span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${T.BOON_BY[b].icon} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
+    U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => U.icClade(s) + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
+    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} <button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half">sell</button></span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
     <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false })).join('')}</div>`);
   };
 
@@ -452,7 +497,7 @@
         : '';
     const boon =
       rw.boon && rw.boon.length && !rw.boonPicked
-        ? `<hr><h3>An elite falls — choose a boon</h3><div class="row">${rw.boon.map((b) => `<div class="panel tight" style="min-width:220px"><b>${T.BOON_BY[b].icon} ${esc(T.BOON_BY[b].name)}</b><div class="small dim">${esc(T.BOON_BY[b].desc)}</div><div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm primary" data-act="takeBoon" data-arg="${b}|${i}">→ ${esc(h.name)}</button>`).join('')}</div></div>`).join('')}</div>`
+        ? `<hr><h3>An elite falls — choose a boon</h3><div class="row">${rw.boon.map((b) => `<div class="panel tight" style="min-width:220px"><b>${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</b><div class="small dim">${esc(T.BOON_BY[b].desc)}</div><div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm primary" data-act="takeBoon" data-arg="${b}|${i}">→ ${esc(h.name)}</button>`).join('')}</div></div>`).join('')}</div>`
         : '';
     const ready = (!rw.offer || !rw.offer.length || rw.picked) && (!rw.boon || !rw.boon.length || rw.boonPicked);
     return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete')}<div class="panel">
@@ -462,18 +507,42 @@
   }
 
   /* ───────────── HAVEN ───────────── */
+  /**
+   * The scene shown beside an event (a key of T.ART): a painting of life on Tumult whose mood fits it. Cosmic
+   * Shore's pilot scenes are portraits of people at work in their world, so here they stand for the place.
+   */
+  U.EVENT_SCENES = {
+    beacon: 'scene/TRACE',
+    toll: 'scene/BANDIT',
+    storm: 'scene/SPARE02',
+    bloom: 'scene/IVY',
+    guide: 'scene/SPARE03',
+    cache: 'scene/FLUME',
+    shrine: 'scene/MAESTRO',
+    mirror: 'scene/LONGSHIFT',
+    envoy: 'scene/SPARE01',
+    molt: 'scene/COMET',
+    audit: 'scene/SUNDIAL',
+    quiet: 'scene/DOE',
+    haven: 'scene/GALLEON',
+  };
+  /** A story panel: the painting on one side (on top on a phone), the words and choices on the other. */
+  U.sceneCard = function (key, inner, cls) {
+    const img = key && T.ART && T.ART[key];
+    return `<div class="panel scene-card ${cls || ''} ${img ? '' : 'no-art'}">${img ? `<div class="scene-art" style="background-image:url(${img})"></div>` : ''}<div class="scene-body">${inner}</div></div>`;
+  };
   function renderHaven() {
     const run = U.run;
     const hv = run.haven;
-    return `<div class="wrap">${header('Haven', `<span class="pill" style="margin-left:6px">◇ ${run.crystals}</span>`)}
+    return `<div class="wrap">${header('Haven', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>`)}
       ${partyBar(run)}
-      <div class="panel" style="margin-top:12px"><h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || run.crystals < 3 ? 'disabled' : ''}>Full repair — 3 ◇</button></div></div>
+      ${U.sceneCard(U.EVENT_SCENES.haven, `<h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || run.crystals < 3 ? 'disabled' : ''}>Full repair — 3 ◇</button></div><p class="story-text small">Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.</p>`, 'haven-rest')}
       <div class="panel" style="margin-top:12px"><h3>Gear <span class="dim small" style="font-weight:400">— fueled by ◇ per use; 2 slots per hero. Gear grants general verbs, never keyed counters.</span></h3>
         <div class="shop-grid">${
           hv.gear
             .map((gid) => {
               const g = T.GEAR_BY[gid];
-              return `<div class="panel tight"><b>${g.icon} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm ${run.crystals >= g.price && h.gear.length < 2 ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${run.crystals >= g.price && h.gear.length < 2 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
+              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm ${run.crystals >= g.price && h.gear.length < 2 ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${run.crystals >= g.price && h.gear.length < 2 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
             })
             .join('') || '<span class="dim small">Sold out.</span>'
         }</div>
@@ -481,7 +550,7 @@
         <div class="shop-grid">${hv.cons
           .map((cid) => {
             const c = T.CONSUMABLE_BY[cid];
-            return `<div class="panel tight"><b>${c.icon} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${run.crystals >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
+            return `<div class="panel tight"><b>${U.icCons(c.id)} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${run.crystals >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
           })
           .join('')}</div>
       </div>
@@ -523,13 +592,13 @@
       } else if (f && f.kind === 'tradeCard' && f.done)
         fu = `<p class="small">${esc(run.heroes[f.heroIdx].name)} sheds <b>${esc(T.CARD[f.dropped].name)}</b> and grows <b>${f.gained ? esc(T.CARD[f.gained].name) : 'nothing — the bloodline is exhausted'}</b>.</p>`;
       else if (f && f.kind === 'boonGiven')
-        fu = `<p class="small">${esc(f.hero)} gains <b>${T.BOON_BY[f.boon].icon} ${esc(T.BOON_BY[f.boon].name)}</b> — ${esc(T.BOON_BY[f.boon].desc)}</p>`;
+        fu = `<p class="small">${esc(f.hero)} gains <b>${U.icBoon(f.boon)} ${esc(T.BOON_BY[f.boon].name)}</b> — ${esc(T.BOON_BY[f.boon].desc)}</p>`;
       else if (f && f.kind === 'respec')
         fu = `<p class="small">${esc(f.hero)}'s Upgrade Points return to the pool. Use <b>Train</b> on the map to spend them again.</p>`;
       const ready = !f || f.done || !['cardPick', 'tradeCard'].includes(f.kind);
       body = `<p style="font-family:var(--serif);font-size:15px">${esc(ev.result)}</p>${fu}<div class="row" style="margin-top:12px"><button class="primary" data-act="leaveEvent" ${ready ? '' : 'disabled'}>Continue</button></div>`;
     }
-    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">◇ ${run.crystals}</span>`)}<div class="panel" style="max-width:760px;margin:0 auto"><div class="row"><span style="font-size:30px">${def.icon}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p style="font-family:var(--serif);font-size:15.5px;line-height:1.5">${esc(def.text)}</p>${body}</div></div>`;
+    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)}</p>${body}`)}</div>`;
   }
 
   /* ───────────── SUMMARY ───────────── */
@@ -551,8 +620,8 @@
     let body = '';
     if (c.tab === 'species') {
       const sp = T.SPECIES[c.sp];
-      body = `<div class="codex-nav" style="margin-bottom:10px">${T.SPECIES_ORDER.map((s) => `<button class="sm ${c.sp === s ? 'primary' : ''}" data-act="codexSp" data-arg="${s}">${T.SPECIES[s].icon} ${esc(T.SPECIES[s].name)}</button>`).join('')}</div>
-        <div class="row"><h3>${sp.icon} ${esc(sp.name)} <span class="dim small" style="font-weight:400">leans ${sp.lean} — ${esc(sp.tagline)}</span></h3><span class="right row small">Preview at P <button class="sm" data-act="codexPE" data-arg="P|-1">−</button><b>${c.P}</b><button class="sm" data-act="codexPE" data-arg="P|1">+</button> E <button class="sm" data-act="codexPE" data-arg="E|-1">−</button><b>${c.E}</b><button class="sm" data-act="codexPE" data-arg="E|1">+</button></span></div>
+      body = `<div class="codex-nav" style="margin-bottom:10px">${T.SPECIES_ORDER.map((s) => `<button class="sm ${c.sp === s ? 'primary' : ''}" data-act="codexSp" data-arg="${s}">${U.icClade(s)} ${esc(T.SPECIES[s].name)}</button>`).join('')}</div>
+        <div class="row"><h3>${U.icClade(c.sp)} ${esc(sp.name)} <span class="dim small" style="font-weight:400">leans ${sp.lean} — ${esc(sp.tagline)}</span></h3><span class="right row small">Preview at P <button class="sm" data-act="codexPE" data-arg="P|-1">−</button><b>${c.P}</b><button class="sm" data-act="codexPE" data-arg="P|1">+</button> E <button class="sm" data-act="codexPE" data-arg="E|-1">−</button><b>${c.E}</b><button class="sm" data-act="codexPE" data-arg="E|1">+</button></span></div>
         <div class="pack" style="margin-top:8px">${T.cardsOf(c.sp)
           .map((cd) => U.cardHTML(cd.id, { P: c.P, E: c.E }))
           .join('')}</div>`;
@@ -560,7 +629,7 @@
       body = `<div class="shop-grid">${Object.entries(T.ENEMIES)
         .map(
           ([k, e]) =>
-            `<div class="panel tight"><b>${e.glyph} ${esc(e.name)} <span class="dim small">· ${e.role}${e.elite ? ' · elite' : ''}${e.boss ? ' · boss' : ''}</span></b><div class="small mono dim">hp ${e.hp.join('/')} · speed ${e.speed}${e.shield ? ' · shield ' + e.shield.join('/') : ''}${e.hidden ? ' · starts Hidden' : ''}</div>${Object.values(
+            `<div class="panel tight"><b>${U.icEnemy(k, e.glyph)} ${esc(e.name)} <span class="dim small">· ${e.role}${e.elite ? ' · elite' : ''}${e.boss ? ' · boss' : ''}</span></b><div class="small mono dim">hp ${e.hp.join('/')} · speed ${e.speed}${e.shield ? ' · shield ' + e.shield.join('/') : ''}${e.hidden ? ' · starts Hidden' : ''}</div>${Object.values(
               e.abilities,
             )
               .map(
@@ -571,9 +640,9 @@
         )
         .join('')}</div>`;
     } else if (c.tab === 'gear') {
-      body = `<div class="shop-grid">${T.GEAR.map((g) => `<div class="panel tight"><b>${g.icon} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}</div>`).join('')}</div><h3 style="margin-top:12px">Consumables</h3><div class="row">${T.CONSUMABLES.map((x) => `<span class="pill">${x.icon} ${esc(x.name)} · ${x.price} ◇ — ${esc(x.txt)}</span>`).join('')}</div>`;
+      body = `<div class="shop-grid">${T.GEAR.map((g) => `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}</div>`).join('')}</div><h3 style="margin-top:12px">Consumables</h3><div class="row">${T.CONSUMABLES.map((x) => `<span class="pill">${U.icCons(x.id)} ${esc(x.name)} · ${x.price} ◇ — ${esc(x.txt)}</span>`).join('')}</div>`;
     } else if (c.tab === 'boons') {
-      body = `<div class="shop-grid">${T.BOONS.map((b) => `<div class="panel tight"><b>${b.icon} ${esc(b.name)}</b><div class="small dim">${esc(b.desc)}</div></div>`).join('')}</div>`;
+      body = `<div class="shop-grid">${T.BOONS.map((b) => `<div class="panel tight"><b>${U.icBoon(b.id)} ${esc(b.name)}</b><div class="small dim">${esc(b.desc)}</div></div>`).join('')}</div>`;
     } else body = U.helpHTML();
     return `<div class="wrap">${header('Codex', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="codex-nav" style="margin-bottom:10px">${tabs.map((t) => `<button class="${c.tab === t ? 'primary' : ''}" data-act="codexTab" data-arg="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</div>${body}</div>`;
   }

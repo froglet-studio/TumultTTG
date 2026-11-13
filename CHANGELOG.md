@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.14.0 — 2026-11-13 — drawn, not typed
+
+Garrett: "increase the fidelity across the board; it should feel like it is in our universe the whole time." The first of four steps (fidelity, setting, story between encounters, a different expedition each run). This one changes only what you see.
+
+- **Drawn icons instead of emoji.** Every foe, mission kind, event, boon, piece of gear, consumable, basic action, clade, objective and etherion now has a pictogram drawn in Cosmic Shore's icon language: flat filled silhouettes, angular, one colour that the interface tints. Dice show their etherion's mark. `src/ui/icons.js`; a key with no drawing falls back to its emoji, so nothing goes blank. The data keeps its emoji for text.
+- **The route is a chart.** The Tide Map draws each stop as a medallion and the currents between them as curves: the road taken lit gold, the next choices flowing, each leg over a dimmed painting of its ground, the Heart at the top.
+- **Events and havens are illustrated.** A painting of life on Tumult beside the words, chosen for the event's mood.
+- **Thirty more pilots.** Cosmic Shore's crew beyond the callsigns (portraits from their busts, scenes from their paintings): fifty clade pairs painted in all, the pool future events and stories draw their people from.
+- **Build:** scenes are WebP now; the file grows from 2 MB to about 3.4 MB and still makes no network requests.
+- No rules or save change; the simulators are unaffected (the engine is untouched).
+
 ## 2.13.0 — 2026-11-13 — play online
 
 The second step of multiplayer: two players on two screens, in one game, on the test page.

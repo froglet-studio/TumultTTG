@@ -10,7 +10,7 @@
     "engine/party.js",
     "engine/run.js"
   ],
-  "ui": ["ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js"],
+  "ui": ["ui/icons.js", "ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js"],
   "css": ["ui/style.css", "ui/theme.css", "ui/party.css"],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js"],

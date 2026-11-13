@@ -183,7 +183,7 @@
         .filter((k) => k !== 'Anchored' || !e.anchoredPerm)
         .map((k) => `<span class="state">${k}</span>`)
         .join(' ');
-      return `<b>${e.glyph} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}<div class="flavor">${esc(d.flavor)}</div>`;
+      return `<b>${U.icEnemy(e.type, e.glyph)} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}<div class="flavor">${esc(d.flavor)}</div>`;
     }
     if (id.startsWith('h')) {
       const h = m.heroes.find((x) => x.uid === +id.slice(1));
@@ -318,7 +318,7 @@
         .filter((e) => e.intent)
         .map(
           (e) =>
-            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${e.glyph}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' 🛡' + e.shield : ''}</span></span><span class="right small">${esc(e.intent.label)}</span></div>`,
+            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="right small">${esc(e.intent.label)}</span></div>`,
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
     $('#mside').innerHTML =
@@ -408,7 +408,7 @@
         return def.abilities
           .map((a, ai) => {
             const ok = !m.over && !h.downed && g.cds[ai] <= 0 && m.crystals >= a.cost;
-            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${a.cost} ◇ · cd ${a.cd}</div>" ${ok ? '' : 'disabled'}>${def.icon} ${esc(a.n)} <span class="dim">${a.cost}◇${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
+            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${a.cost} ◇ · cd ${a.cd}</div>" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${a.cost}◇${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
           })
           .join('');
       })
@@ -416,7 +416,7 @@
     const cons = h.consumables
       .map(
         (c, ci) =>
-          `<button class="gbtn" data-act="cons" data-arg="${i}|${ci}" data-tip="${esc(T.CONSUMABLE_BY[c].txt)}" ${m.over || h.downed ? 'disabled' : ''}>${T.CONSUMABLE_BY[c].icon} ${esc(T.CONSUMABLE_BY[c].name)}</button>`,
+          `<button class="gbtn" data-act="cons" data-arg="${i}|${ci}" data-tip="${esc(T.CONSUMABLE_BY[c].txt)}" ${m.over || h.downed ? 'disabled' : ''}>${U.icCons(c)} ${esc(T.CONSUMABLE_BY[c].name)}</button>`,
       )
       .join('');
     const canInteract = !h.downed && interactNode(m, h) != null && T.apValue(h) >= 2;
@@ -437,7 +437,7 @@
             ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
             : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
           const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
-          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(tip)}">${b.icon} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
+          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(tip)}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
         }).join('')}
         <button class="sm" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
@@ -525,15 +525,30 @@
     Object.values(N).forEach((n) => {
       const x = g.px(n),
         y = g.py(n);
-      if (n.hazard)
-        svgEl('text', { x: x, y: y - 30, class: 'objmark', 'text-anchor': 'middle' }, mk).textContent = '🌊';
+      if (n.hazard) {
+        const hg = svgEl('g', { class: 'hazmark', transform: `translate(${x - 8},${y - 40}) scale(0.66)` }, mk);
+        U.iconPaths('node.cascade').forEach((d) => svgEl('path', { d }, hg));
+      }
       if (n.spawn) svgEl('circle', { cx: x + 22, cy: y - 22, r: 5, fill: '#e56a8f' }, mk);
       if (n.objective) {
         const o = n.objective;
         let ic = OBJ_ICON[o.kind];
         if (o.kind === 'cache') ic = o.searched ? (o.real ? '💎' : '✖') : '❓';
-        svgEl('text', { x: x, y: y + 6, class: 'objmark', 'text-anchor': 'middle', 'font-size': 18 }, mk).textContent =
-          ic;
+        const key = o.kind === 'cache' ? (o.searched ? (o.real ? 'cons.shard' : null) : 'obj.cache') : 'obj.' + o.kind;
+        const ps = key && U.iconPaths(key);
+        if (ps) {
+          const og = svgEl(
+            'g',
+            { class: 'objmark-ic k-' + o.kind, transform: `translate(${x - 11},${y - 11}) scale(0.92)` },
+            mk,
+          );
+          ps.forEach((d) => svgEl('path', { d }, og));
+        } else
+          svgEl(
+            'text',
+            { x: x, y: y + 6, class: 'objmark', 'text-anchor': 'middle', 'font-size': 18 },
+            mk,
+          ).textContent = ic;
       }
       if (m.traps[n.id] && m.traps[n.id].length)
         svgEl('text', { x: x - 22, y: y - 18, class: 'trapmark' }, mk).textContent = '🪤';
@@ -655,7 +670,12 @@
           el.setAttribute('data-arg', String(e.uid));
           el.setAttribute('data-tipid', 'e' + e.uid);
           svgEl('circle', { r: e.boss ? 24 : 18, class: 'body' }, el);
-          svgEl('text', { y: 6, class: 'glyph' }, el).textContent = e.glyph;
+          const ps = U.iconPaths('enemy.' + e.type);
+          if (ps) {
+            const k = e.boss ? 1.25 : 0.9;
+            const g = svgEl('g', { class: 'glyph-ic', transform: `translate(${-12 * k},${-12 * k}) scale(${k})` }, el);
+            ps.forEach((d) => svgEl('path', { d }, g));
+          } else svgEl('text', { y: 6, class: 'glyph' }, el).textContent = e.glyph;
           svgEl('rect', { x: -16, y: 22, width: 32, height: 4, rx: 2, class: 'hpb' }, el);
           svgEl('rect', { x: -16, y: 22, width: 32, height: 4, rx: 2, class: 'hpf enemy' }, el);
           svgEl('text', { y: 34, class: 'hp' }, el);
