@@ -45,6 +45,7 @@ Each purpose has a stream of its own, so what one draws never moves another:
 | `event` | `run.rngs` | which event, and the random picks inside one |
 | `story` | `run.rngs` | the passages between stops: who speaks, which lines, which scene (`src/engine/story.js`) |
 | `expedition` | `run.rngs` | the run's expedition: patron, threat, the order, names and paintings of its legs (`T.newExpedition`) |
+| `atlas` | `run.rngs` | the atlas page of every stop on the route (`T.chartPages`); a mission launched with no route draws its page from its board's stream |
 | `player` | `run.rngs` | a simulated player's choices in `tools/harness.js` — never the game's |
 | board | used up before the mission starts | the mission generator: board, objective, foes, title |
 | `dice` | `m.rngs` | every roll and reroll |
@@ -78,5 +79,7 @@ The browser saves to `localStorage` (`tumult_v2_run`) after every action in a mi
 | 4 | 2.12.0 | adds `run.party`, the players (`{ players: [{ name }], owner: [seat per hero], ready: [bool per player] }`, `src/engine/party.js`); a version-3 save loads with one player (fixture `save-2.11.json`) |
 | 5 | 2.15.0 | adds `run.story` (`{ log: [passage], threat }`): the chronicle of passages between stops; each history entry also keeps `foe`, `close` and `hurt`. A version-4 save starts its chronicle empty (fixture `save-2.14.json`) |
 | 6 | 2.17.0 | adds `run.story.expedition` (`{ patron, domain, threat, legs: [{ ground, name, scene }] }`, `src/data/expeditions.js`); a version-5 save has none and keeps its route's names (fixture `save-2.16.json`) |
+| 7 | 2.18.0 | a board node's `lane` becomes `zones`, a list of zone keys (`T.ZONES`); a version-6 save's lane becomes a zone of the same name (fixture `save-2.17.json`) |
+| 8 | 2.19.0 | adds `page` (an id of `T.ATLAS`, or null) to every route stop and to the mission, and `label` (`A1`…`E3`, `X1`, `L1`) to a page board's nodes; a version-7 save's stops get null and draw a page when played, and a mission in progress keeps its grid (fixture `save-2.18.json`) |
 
 A version-1 save still loads: it returns to the map (2.0 never kept a mission), its streams start from the seed, and the map is rebuilt from the copy of each node that 2.0 kept up to date. A save from a newer version than the game is refused rather than guessed at.
