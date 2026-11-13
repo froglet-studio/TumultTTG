@@ -137,6 +137,8 @@ async function open(html, db) {
   return { w, d, T: w.T, U: w.T.UI, errors, click, act, type };
 }
 
+const SEED = 7;
+
 test('online: two screens draft, fly and ready up in one game', { skip, timeout: 60_000 }, async () => {
   const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
   const html = build({ playtest: true }).html;
@@ -155,6 +157,10 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
   assert.equal(B.U.screen, 'lobby');
 
   A.act('netStart');
+  // a fixed seed, so the board and the opening dice are the same on every run of this test
+  A.U.run.seed = SEED;
+  A.U.run.rngs = {};
+  A.U.net.publish();
   await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
   assert.deepEqual(
     [A.U.run.party.players[0].name, A.U.run.party.players[1].name],
