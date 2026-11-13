@@ -38,7 +38,7 @@
   T.SPECIES_ORDER = ['human','jerboa','hopper','owl','octopus','gecko','axolotl','eel','flytrap','cordyceps','tardigrade'];
 
   /* Target vocabulary (tgt):
-     self | ally | party | foe_melee | foe_los | foe_any | foe_r2 | foe_adj_all | foe_lane_all
+     self | ally | party | foe_melee | foe_los | foe_any | foe_r2 | foe_adj_all | foe_zone_all
      node_adj | node_r2 | node_any | foe_or_ally_adj
      Verbs (fx.v) are documented in engine.js applyEffect(). */
 
@@ -134,7 +134,7 @@
       txt:(P,E)=>`Shed Anchored/Weakened/dots and step 1.` },
     { n:'Infrared', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:99, dur:(P,E)=>1+E},{v:'strike', kind:'los', dmg:(P,E)=>2+E, trueDmg:true, nearest:true}],
-      txt:(P,E)=>`Read the heat of the whole board for ${1+E} rounds, and lash the nearest foe in your lane for ${2+E} true damage.` },
+      txt:(P,E)=>`Read the heat of the whole board for ${1+E} rounds, and lash the nearest foe in your zone for ${2+E} true damage.` },
     'The largest ears, relative to body, of any mammal.');
   C('jerboa','jer_erratic','Erratic Bounding','T',0,
     { n:'Zigzag', ap:1, el:0, cd:1, dur:1, tgt:'node_move',
@@ -207,8 +207,8 @@
       fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>P, uses:1, target:'ally'}],
       txt:(P,E)=>`A sustained tone: adjacent foes Weakened 1${P>0?`; your ally's next strike +${P}`:''}.` },
     { n:'Resonance', ap:3, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'strike', kind:'lane_all', dmg:(P,E)=>2+E},{v:'weaken', val:(P,E)=>E>=2?2:0, dur:1, area:'lane'}],
-      txt:(P,E)=>`A harmful frequency: every foe in your lane takes ${2+E}${E>=2?' and is Weakened 2':''}.` },
+      fx:[{v:'strike', kind:'zone_all', dmg:(P,E)=>2+E},{v:'weaken', val:(P,E)=>E>=2?2:0, dur:1, area:'zone'}],
+      txt:(P,E)=>`A harmful frequency: every foe in your zone takes ${2+E}${E>=2?' and is Weakened 2':''}.` },
     'Tune the resonance until it hurts.');
   C('hopper','hop_tireless','Tireless Respiration','T',0,
     { n:'Diffuse', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -306,7 +306,7 @@
       txt:(P,E)=>`Reveal within ${1+P} and Mark the nearest foe.` },
     { n:'Thermal', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:99, dur:(P,E)=>1+E},{v:'empower', val:1, uses:99, kind:'los', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`See heat through cover for ${1+E} rounds; your lane strikes deal +1 meanwhile.` },
+      txt:(P,E)=>`See heat through cover for ${1+E} rounds; your zone strikes deal +1 meanwhile.` },
     'Past visible light.');
   C('owl','owl_soar','Soaring Lift','M',0,
     { n:'Thermal Ride', ap:2, el:0, cd:1, dur:0, tgt:'node_move',
@@ -422,7 +422,7 @@
       txt:(P,E)=>`Walk walls and ceilings: move ${1+P}, height nodes included.` },
     { n:'Van der Waals', ap:1, el:1, cd:3, dur:0, tgt:'foe_los',
       fx:[{v:'force', kind:'pull', n:(P,E)=>1+E},{v:'anchor', who:'foe', dur:(P,E)=>E>=2?1:0}],
-      txt:(P,E)=>`Command the molecular bond: pull a foe in your lane ${1+E} toward you${E>=2?' and Anchor it 1':''}.` },
+      txt:(P,E)=>`Command the molecular bond: pull a foe in your zone ${1+E} toward you${E>=2?' and Anchor it 1':''}.` },
     'Dry molecular adhesion.');
   C('gecko','gec_lockjaw','Lockjaw Bite','M',0,
     { n:'Latch', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -575,7 +575,7 @@
   C('eel','eel_electro','Electroreception','S',2,
     { n:'Sense', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>1, trueDmg:true, nearest:true}],
-      txt:(P,E)=>`Sense bioelectric fields: reveal within ${2+P}, and jolt the nearest foe in your lane for 1 true damage.` },
+      txt:(P,E)=>`Sense bioelectric fields: reveal within ${2+P}, and jolt the nearest foe in your zone for 1 true damage.` },
     { n:'Field Map', ap:1, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'reveal', radius:99, dur:(P,E)=>2+E},{v:'guard', dur:(P,E)=>2+E, party:true}],
       txt:(P,E)=>`Cast your field over the board for ${2+E} rounds: everything revealed, foes can't Hide, and ambushes on either hero deal half.` },
@@ -615,10 +615,10 @@
   C('eel','eel_doublet','Doublet Jolt','C',0,
     { n:'Twitch', ap:1, el:0, cd:1, dur:0, tgt:'foe_los',
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P, revealTarget:true},{v:'weaken', val:1, dur:1}],
-      txt:(P,E)=>`Twin taps: lane strike ${1+P} that reveals a Hidden target and Weakens 1.` },
+      txt:(P,E)=>`Twin taps: zone strike ${1+P} that reveals a Hidden target and Weakens 1.` },
     { n:'Spasm', ap:1, el:1, cd:3, dur:0, tgt:'foe_los',
       fx:[{v:'force', kind:'choose', n:(P,E)=>1+E},{v:'weaken', val:1, dur:1}],
-      txt:(P,E)=>`Drive an involuntary spasm: push or pull a foe in your lane ${1+E} and Weaken it 1.` },
+      txt:(P,E)=>`Drive an involuntary spasm: push or pull a foe in your zone ${1+E} and Weaken it 1.` },
     'Muscles that move on your command.');
   C('eel','eel_buoyancy','Buoyancy Control','M',0,
     { n:'Trim', ap:1, el:0, cd:1, dur:1, tgt:'self',
@@ -705,7 +705,7 @@
   C('flytrap','fly_lure','Nectar Lure','C',1,
     { n:'Lure', ap:1, el:0, cd:1, dur:0, tgt:'foe_los',
       fx:[{v:'force', kind:'pull', n:1}],
-      txt:(P,E)=>`Scent and UV nectar guides: a foe in your lane is drawn 1 toward you.` },
+      txt:(P,E)=>`Scent and UV nectar guides: a foe in your zone is drawn 1 toward you.` },
     { n:'Allure', ap:2, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'force', kind:'pull', n:1, area:true, radius:(P,E)=>1+E},{v:'weaken', val:1, dur:1, area:'radius', radius:(P,E)=>1+E}],
       txt:(P,E)=>`Saturate the air: every foe within ${1+E} is drawn 1 toward you and Weakened 1.` },
@@ -763,7 +763,7 @@
   C('cordyceps','cor_enzyme','Enzyme Spray','M',0,
     { n:'Spit', ap:1, el:0, cd:1, dur:0, tgt:'foe_los',
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'stripShield', amount:1}],
-      txt:(P,E)=>`Spit exoenzymes down the lane: ${1+P} damage and −1 to its Shield.` },
+      txt:(P,E)=>`Spit exoenzymes across your zone: ${1+P} damage and −1 to its Shield.` },
     { n:'Saturate', ap:2, el:1, cd:3, dur:0, tgt:'node_r2',
       fx:[{v:'strike', kind:'nodeArea', dmg:(P,E)=>2+E, stripShield:true, remote:2},{v:'dot', val:1, dur:2, kind:'corrode', area:'nodeArea', ifE:2}],
       txt:(P,E)=>`Saturate a node within 2 and its neighbours: every foe there loses its Shield and takes ${2+E}${E>=2?', then corrodes for 1 (2 rounds)':''}.` },

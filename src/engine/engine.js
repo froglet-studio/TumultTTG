@@ -116,8 +116,13 @@
     adjacent(board, a, b) {
       return a !== b && B.allNeighbors(board, a).includes(b);
     },
+    /** In range of a ranged strike: two different nodes that share a zone. */
     los(board, a, b) {
-      return a !== b && board.nodes[a].lane === board.nodes[b].lane;
+      return a !== b && B.sharesZone(board, a, b);
+    },
+    sharesZone(board, a, b) {
+      const zb = board.nodes[b].zones;
+      return board.nodes[a].zones.some((z) => zb.includes(z));
     },
     dist(board, a, b, useAll) {
       if (a === b) return 0;
@@ -981,7 +986,7 @@
           options: foes.filter((e) => B.dist(bd, h.pos, e.pos, true) <= 3 && vis(e)).map((e) => e.uid),
         };
       case 'foe_adj_all':
-      case 'foe_lane_all':
+      case 'foe_zone_all':
         return { need: 'none' };
       case 'foe_or_ally_adj': {
         const opts = foes.filter((e) => B.adjacent(bd, h.pos, e.pos)).map((e) => e.uid);
@@ -1167,7 +1172,7 @@
         const dmg = num(met ? f.dmg : f.elseVal, P, E);
         if (dmg <= 0 && !f.stripShield) break;
         const opts = {
-          kind: f.kind === 'lane_all' || f.kind === 'nodeArea' ? 'area' : f.kind === 'any' ? 'any' : f.kind,
+          kind: f.kind === 'zone_all' || f.kind === 'nodeArea' ? 'area' : f.kind === 'any' ? 'any' : f.kind,
           pierce: bool(f.pierce, P, E),
           trueDmg: !!f.trueDmg,
           label: ctx.card ? `uses ${ctx.card[ctx.faceKey].n} on` : 'hits',
@@ -1175,7 +1180,7 @@
         };
         let targets = [];
         if (f.kind === 'area') targets = foesAdj(m, actor);
-        else if (f.kind === 'lane_all') targets = T.liveEnemies(m).filter((e) => B.los(bd, actor.pos, e.pos));
+        else if (f.kind === 'zone_all') targets = T.liveEnemies(m).filter((e) => B.los(bd, actor.pos, e.pos));
         else if (f.kind === 'nodeArea') {
           const center = ctx.node != null ? ctx.node : actor.pos;
           targets = foesWithin(m, center, 1);
@@ -1524,7 +1529,7 @@
         let targets = [];
         if (f.area === 'adj') targets = foesAdj(m, actor);
         else if (f.area === 'all') targets = T.liveEnemies(m);
-        else if (f.area === 'lane') targets = T.liveEnemies(m).filter((e) => B.los(bd, actor.pos, e.pos));
+        else if (f.area === 'zone') targets = T.liveEnemies(m).filter((e) => B.los(bd, actor.pos, e.pos));
         else if (f.area === 'radius') targets = foesWithin(m, actor.pos, num(f.radius, P, E));
         else if (f.area === 'adjParty') {
           const set = new Set();
@@ -2394,7 +2399,7 @@
   /* ───────────────────────────── BOSS HP PROGRESS for UI ───────────────────────────── */
   T.describeState = function (k, v) {
     const map = {
-      Hidden: 'Hidden — immune to lane (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
+      Hidden: 'Hidden — immune to zone (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
       Shield: `Shield ${v.v} — each hit is reduced by ${v.v}${v.all ? ', even area' : ' (area bypasses)'}. Pierce and true damage ignore it.`,
       Anchored:
         'Anchored — cannot be pushed or pulled. An anchored foe cannot walk or blink; a hero who walks lets go. Still acts fully.',
@@ -2402,7 +2407,7 @@
       Rooted: 'Rooted — cannot walk while it lasts. Still acts.',
       Marked: 'Marked — the next hit on this foe deals +2.',
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
-      Located: 'Located — cannot Hide; can be targeted and struck down the lane even if Hidden.',
+      Located: 'Located — cannot Hide; can be targeted and struck across a zone even if Hidden.',
       Studied: `Studied — hero hits deal +${v.n}.`,
       Exposed: `Exposed — next hit ignores Shield and deals +${v.bonus}.`,
       Thorns: `Thorns ${v.v} — melee attackers take ${v.v}.`,

@@ -55,7 +55,7 @@ console.log(
     Object.values(N)
       .map(
         (n) =>
-          `${n.id}${n.height ? 'H' : ''}${n.objective ? '[' + n.objective.kind + ']' : ''}${n.spawn ? 'S' : ''}(${n.lane})`,
+          `${n.id}${n.height ? 'H' : ''}${n.objective ? '[' + n.objective.kind + ']' : ''}${n.spawn ? 'S' : ''}(${n.zones.join('/')})`,
       )
       .join(' '),
 );

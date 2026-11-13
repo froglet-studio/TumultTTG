@@ -12,7 +12,7 @@ A hero is **Human + two bloodlines**, **6 trait cards** to start, **6 Upgrade Po
 
 1. **Round start.** Spawn-nodes and Spawners emit. Every enemy chooses an intent — shown as an arrow and a label ("Cleave → Cavitt (4)").
 2. **Hero phase.** Each standing hero: track slides one column (cards come home), engines fire, roll 3 dice from the pool into the bank. Then act freely with either hero in any order: play card faces (pay AP + etherion; the card goes to the track for its cooldown), walk (1 AP per edge; height nodes need Space verbs or the ramp), Interact (2 AP), Rally a downed ally (2 AP, back at 8), take a basic action that needs no card — **Strike** an adjacent foe for 2 (2 AP), **Brace** for Shield 1 until your next turn (1 AP), **Shove** an adjacent foe 1 node (2 AP), as often as AP allows and never onto the track; **Channel** a banked etherion (or Omni) on its own, with no AP: Mass — Strike an adjacent foe for 2 or Shove it 1 node; Charge — Arc 1 damage into a foe up to 3 nodes away, or (1 AP) Reach an objective 2 nodes away; Space — Scramble 1 node, ledges included; Time — Brace and slide your track 1 extra. So a rolled crystal is never a dead die, even with no AP and no awakened card of its colour — use gear (◇ per use, own small cooldown), use a consumable, fold M+C+S+T into one Omni, or return a clogged die to the pool. Minted (temporary) dice evaporate at the end of the phase. Banked dice carry — but the pool shrinks, so hoarding starves next turn's roll (the v1.0 hard pool cap, intact).
-3. **Enemy phase.** Each enemy executes its declared intent. If the target left range it closes distance instead; a lane shot against a Hidden hero strikes an afterimage; a pushed enemy's plan collapses. Kiters retreat before shooting. Lurkers ambush from Hidden. Harriers blink adjacent and strike.
+3. **Enemy phase.** Each enemy executes its declared intent. If the target left range it closes distance instead; a zone shot against a Hidden hero strikes an afterimage; a pushed enemy's plan collapses. Kiters retreat before shooting. Lurkers ambush from Hidden. Harriers blink adjacent and strike.
 4. **Round end.** Counted snares spring; decoys strike; hazards deal 3 true damage to anyone standing in them (enemies too — push them in); spores choke; dots tick; the beacon counts if a hero is near it; the clock ticks; the flood spreads; states expire; the Heart may crack.
 
 **Downed, not dead.** At 0 a hero is downed and loses states; an adjacent ally can Rally them. Both downed = mission lost.
@@ -57,7 +57,7 @@ Once per run, losing a **non-boss** mission does not end the run: no rewards, bo
 | Chrono-shim | 7 | Shim (track +1, 1◇) · Rewind (track +3 and clock +1, 3◇) |
 | Aegis Plate | 6 | Brace (Shield 3 all, 1 round, 1◇) · Bulwark (Shield 3 all, 2 rounds, you + adjacent ally, 2◇) |
 | Storm Lantern | 5 | Flare (reveal 2 + Mark all revealed, 1◇) · Beacon (ally free move 2, 2◇) |
-| Harpoon Gun | 6 | Shot (lane 3 + pull 1, 1◇) · Skewer (lane 5 pierce, 2◇) |
+| Harpoon Gun | 6 | Shot (zone 3 + pull 1, 1◇) · Skewer (zone 5 pierce, 2◇) |
 | Climbing Rig | 4 | Ascend (climb 1, height ok, 1◇) · Rappel (move 2 through foes, 1◇) |
 | Medkit | 5 | Patch (heal 4, 1◇) · Revive (downed adjacent ally at 10, 2◇) |
 

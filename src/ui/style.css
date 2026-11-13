@@ -22,10 +22,6 @@
   --T: #b07cf0;
   --O: #eef3f8;
   --AP: #97a6ba;
-  --laneA: #2fb9d6;
-  --laneB: #e0a83a;
-  --laneC: #a97df0;
-  --laneD: #e56a8f;
   --hero: #5ec8d8;
   --enemy: #e56a8f;
   --decoy: #a9b4c4;
@@ -863,7 +859,7 @@ hr {
 .edge.ramp {
   stroke: #7fd08a;
 }
-.lane-glow {
+.zone-glow {
   opacity: 0.08;
 }
 .token {

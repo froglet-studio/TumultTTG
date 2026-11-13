@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.17.0',
+    version: '2.18.0',
     items: [
+      {
+        text: 'Lanes are now zones: soft coloured regions on the board, in new muted colours so they never look like an etherion or a domain. A ranged strike hits anything that shares a zone with you. Today every zone is still one column, so play is exactly as before; this is the ground for boards of any shape (the atlas). Can you tell at a glance which foes can shoot you? Does a zone read as one region?',
+      },
       {
         text: 'Every run is now a different expedition: who sent you (Jade, Ruby or Gold, and why), what waits at the end (the finale plays by the Heart’s rules under a new name), and the order of land, sea and air, each leg with its own painting. Events lean toward the ground you are crossing. Start three runs: do they feel like three different journeys? Which expedition would you most like to play again?',
       },

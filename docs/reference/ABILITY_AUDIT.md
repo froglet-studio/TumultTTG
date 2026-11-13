@@ -83,12 +83,12 @@ Narrow faces whose one use settles a mission’s central problem by itself. Thes
 Fine as tools, but check that the mission keeps some play when one of these is in the squad — the problem should get easier, not vanish.
 
 - **Tool Use — Reach Rig (Eth)** `hum_tool.E` — Interact with an objective up to 2 nodes away — even on a height node. *(works the Vault from the floor)*
-- **Radiator Ears — Infrared (Eth)** `jer_ears.E` — Read the heat of the whole board for 2 rounds, and lash the nearest foe in your lane for 3 true damage. *(reveals the whole board)*
+- **Radiator Ears — Infrared (Eth)** `jer_ears.E` — Read the heat of the whole board for 2 rounds, and lash the nearest foe in your zone for 3 true damage. *(reveals the whole board)*
 - **Gnawing Incisors — Crumble (Eth)** `jer_gnaw.E` — Chew through its Shield entirely, then melee 4. *(deletes a Shield outright)*
 - **Vibrissae Sense — Seismic (Eth)** `jer_vibrissae.E` — Sense every moving mass: reveal the whole board and Weaken all foes 1 this round. *(reveals the whole board)*
 - **Compound Eyes — Panoramic (Eth)** `hop_eyes.E` — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(reveals the whole board)*
 - **Sound Mapping — Acoustic Map (Eth)** `owl_sound.E` — A 3-D map of the whole board for 3 rounds — hidden foes, traps and the hidden objective all pinpointed. *(reveals the whole board; finds the hidden objective outright)*
-- **Night Eyes — Thermal (Eth)** `owl_night.E` — See heat through cover for 2 rounds; your lane strikes deal +1 meanwhile. *(reveals the whole board)*
+- **Night Eyes — Thermal (Eth)** `owl_night.E` — See heat through cover for 2 rounds; your zone strikes deal +1 meanwhile. *(reveals the whole board)*
 - **Forensic Vision — Full Spectrum (Eth)** `gec_forensic.E` — Light the whole board for 2 rounds; every foe within 2 is Marked (weak seams glow). *(reveals the whole board)*
 - **Scent Tongue — Lock Scent (Eth)** `gec_scent.E` — Lock onto a foe: it can never Hide from you, and you may blink adjacent to it if it's within 3. *(locates a foe for the whole mission)*
 - **External Gills — Respire Anywhere (Eth)** `axo_gills.E` — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(whole squad ignores hazards)*
@@ -132,7 +132,7 @@ The look-ahead player held these faces in at least 8 missions and never found th
 - **Distributed Arms — Multitask (Phys)** `oct_arms.P` — Eight arms: the next card you play this turn does not go to your track. *(held in 22 missions)*
 - **Distributed Arms — Parallel (Eth)** `oct_arms.E` — Parallel-process: the next two cards you play don't go to your track, and mint 1 AP. *(held in 11 missions)*
 - **Paralytic Bite — Neurotoxin (Eth)** `oct_bite.E` — Melee 3; the foe is enervated for 1 round: its hits deal −2 and it cannot move. It still acts. *(held in 22 missions)*
-- **Adhesive Setae — Van der Waals (Eth)** `gec_setae.E` — Command the molecular bond: pull a foe in your lane 2 toward you. *(held in 23 missions)*
+- **Adhesive Setae — Van der Waals (Eth)** `gec_setae.E` — Command the molecular bond: pull a foe in your zone 2 toward you. *(held in 23 missions)*
 - **Solar Basking — Photovoltaic (Eth)** `gec_basking.E` — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(held in 17 missions)*
 - **Ambush Patience — Hold (Phys)** `gec_patience.P` — Go motionless: your next strike deals +3. *(held in 28 missions)*
 - **Regeneration — Regrow (Eth)** `axo_regen.E` — Engine for 3 rounds: regenerate 3 each turn. *(held in 26 missions)*
@@ -143,7 +143,7 @@ The look-ahead player held these faces in at least 8 missions and never found th
 - **Electric Discharge — Tesla Cascade (Eth)** `eel_discharge.E` — Strip the target's Shield and strike it for 6; the arc chains to 1 more foe within 1 of it for 4 each. *(held in 27 missions)*
 - **Electrocyte Charge-Up — Store (Phys)** `eel_chargeup.P` — Bank charge: your next strike deals +3. *(held in 20 missions)*
 - **Photosynthesis — Bloom Engine (Eth)** `fly_photo.E` — Engine for 4 rounds: each turn draw 1 guaranteed Charge from your pool. *(held in 19 missions)*
-- **Nectar Lure — Lure (Phys)** `fly_lure.P` — Scent and UV nectar guides: a foe in your lane is drawn 1 toward you. *(held in 11 missions)*
+- **Nectar Lure — Lure (Phys)** `fly_lure.P` — Scent and UV nectar guides: a foe in your zone is drawn 1 toward you. *(held in 11 missions)*
 - **Mycelial Network — Link (Phys)** `cor_network.P` — Link to your ally: pass them 1 temporary AP. *(held in 20 missions)*
 - **Mycelial Network — Wood-Wide Web (Eth)** `cor_network.E` — Run the wood-wide web for 3 rounds: your ally mints 1 AP each turn and both heroes hold Shield 1. *(held in 20 missions)*
 - **Network Regrowth — Reconstitute (Eth)** `cor_regrowth.E` — Seed a node where you stand: if you are downed within 3 rounds, you re-form there with 7 hp. *(held in 16 missions)*

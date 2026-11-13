@@ -26,11 +26,15 @@
     GEAR_SLOTS: 2,
   };
 
-  T.LANES = {
-    A: { name: 'Cyan',   color: '#2fb9d6' },
-    B: { name: 'Amber',  color: '#e0a83a' },
-    C: { name: 'Violet', color: '#a97df0' },
-    D: { name: 'Rose',   color: '#e56a8f' },
+  // Zones: two units that share a zone are in range of a ranged strike. Muted earth tones, so a zone is never
+  // mistaken for an etherion (red, yellow, cyan, violet) or a domain (jade, ruby, gold).
+  T.ZONES = {
+    A: { name: 'Slate', color: '#7f9cc0' },
+    B: { name: 'Sand',  color: '#cdb68a' },
+    C: { name: 'Plum',  color: '#a585ad' },
+    D: { name: 'Sage',  color: '#8fab80' },
+    E: { name: 'Clay',  color: '#c08a6e' },
+    F: { name: 'Ash',   color: '#a3a7ad' },
   };
 
   /* ───────────────────────────── GEAR (◇) ───────────────────────────── */
@@ -80,7 +84,7 @@
         { n:'Beacon', cost:2, cd:2, tgt:'ally', fx:[{v:'rally', move:f(2)}], txt:()=>'Your ally may move 2 for free.' },
       ]},
     { id:'harpoon', name:'Harpoon Gun', price:6, icon:'🎯',
-      desc:'Reach for melee builds: a lane shot that pulls, and a piercing skewer.',
+      desc:'Reach for melee builds: a zone shot that pulls, and a piercing skewer.',
       abilities:[
         { n:'Shot', cost:1, cd:1, tgt:'foe_los', fx:[{v:'strike', kind:'los', dmg:f(3)},{v:'force', kind:'pull', n:f(1)}], txt:()=>'Lane strike 3 and pull the foe 1.' },
         { n:'Skewer', cost:2, cd:3, tgt:'foe_los', fx:[{v:'strike', kind:'los', dmg:f(5), pierce:true}], txt:()=>'Lane strike 5 that ignores Shield.' },
@@ -173,13 +177,13 @@
       flavor:'Spawn of the Heart. One is nothing. Six are a swarm.' },
     stinger:  { name:'Stinger', glyph:'🪡', role:'swarm', hp:[3,4,5], speed:1, policy:'shooter',
       abilities:{ sting:{ n:'Sting', kind:'los', dmg:[2,3,3] } },
-      flavor:'Keeps its lane and never closes.' },
+      flavor:'Keeps its zone and never closes.' },
     brute:    { name:'Brute', glyph:'🦍', role:'bruiser', hp:[10,13,16], speed:1, policy:'brute',
       abilities:{ slam:{ n:'Slam', kind:'melee', dmg:[5,6,7], push:1 } },
       flavor:'Slow. Then not.' },
     kiter:    { name:'Kiter', glyph:'🏹', role:'zoner', hp:[7,9,11], speed:2, policy:'kiter',
       abilities:{ shot:{ n:'Shot', kind:'los', dmg:[3,4,5] } },
-      flavor:'Shoots, retreats, shoots. Deny it the lane.' },
+      flavor:'Shoots, retreats, shoots. Deny it the zone.' },
     warden:   { name:'Warden', glyph:'🗿', role:'guardian', hp:[12,15,18], speed:0, policy:'guardian', shield:[3,3,3], anchored:true,
       abilities:{ cleave:{ n:'Cleave', kind:'melee', dmg:[4,5,6] }, brace:{ n:'Brace', kind:'brace' } },
       flavor:'It does not move. You go around it or through it — Pierce or true damage; its shield stops area too.' },
@@ -310,7 +314,7 @@
     { id:'kess', name:'Kess', title:'the Catapult', species:['human','hopper','eel'],
       cards:['hop_catapult','hop_strid','hop_exo','eel_discharge','eel_chargeup','hum_throw'],
       up:{ hop_catapult:[1,2], hop_strid:[0,1], eel_discharge:[1,0], hop_exo:[1,0] },
-      blurb:'Burst and area. Coils, launches, and resonates whole lanes.' },
+      blurb:'Burst and area. Coils, launches, and resonates whole zones.' },
   ];
 
   /* ───────────────────────────── FLAVOR ───────────────────────────── */

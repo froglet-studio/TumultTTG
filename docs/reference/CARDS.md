@@ -69,7 +69,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Radiator Ears** ★ · Charge · `jer_ears`
 
 - *Phys — Vent* · 1 AP · CD 1 — Shed Anchored/Weakened/dots and step 1.
-- *Eth — Infrared* · 1 AP + 1 Charge · CD 3 — Read the heat of the whole board for 2 rounds, and lash the nearest foe in your lane for 3 true damage. *(P3/E3: Read the heat of the whole board for 4 rounds, and lash the nearest foe in your lane for 5 true damage.)*
+- *Eth — Infrared* · 1 AP + 1 Charge · CD 3 — Read the heat of the whole board for 2 rounds, and lash the nearest foe in your zone for 3 true damage. *(P3/E3: Read the heat of the whole board for 4 rounds, and lash the nearest foe in your zone for 5 true damage.)*
 
 **Erratic Bounding** · Time · `jer_erratic`
 
@@ -118,7 +118,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stridulation** ★ · Charge · `hop_strid`
 
 - *Phys — Rasp* · 1 AP · CD 1 — A sustained tone: adjacent foes Weakened 1. *(P3: A sustained tone: adjacent foes Weakened 1; your ally's next strike +3.)*
-- *Eth — Resonance* · 3 AP + 1 Charge · CD 4 — A harmful frequency: every foe in your lane takes 3. *(P3/E3: A harmful frequency: every foe in your lane takes 5 and is Weakened 2.)*
+- *Eth — Resonance* · 3 AP + 1 Charge · CD 4 — A harmful frequency: every foe in your zone takes 3. *(P3/E3: A harmful frequency: every foe in your zone takes 5 and is Weakened 2.)*
 
 **Tireless Respiration** · Time · `hop_tireless`
 
@@ -182,7 +182,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Night Eyes** · Charge · `owl_night`
 
 - *Phys — Amplify* · 1 AP · CD 1 — Reveal within 1 and Mark the nearest foe. *(P3: Reveal within 4 and Mark the nearest foe.)*
-- *Eth — Thermal* · 1 AP + 1 Charge · CD 3 — See heat through cover for 2 rounds; your lane strikes deal +1 meanwhile. *(P3/E3: See heat through cover for 4 rounds; your lane strikes deal +1 meanwhile.)*
+- *Eth — Thermal* · 1 AP + 1 Charge · CD 3 — See heat through cover for 2 rounds; your zone strikes deal +1 meanwhile. *(P3/E3: See heat through cover for 4 rounds; your zone strikes deal +1 meanwhile.)*
 
 **Soaring Lift** · Mass · `owl_soar`
 
@@ -260,7 +260,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Adhesive Setae** ★ · Charge · `gec_setae`
 
 - *Phys — Climb* · 1 AP · CD 0 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
-- *Eth — Van der Waals* · 1 AP + 1 Charge · CD 3 — Command the molecular bond: pull a foe in your lane 2 toward you. *(P3/E3: Command the molecular bond: pull a foe in your lane 4 toward you and Anchor it 1.)*
+- *Eth — Van der Waals* · 1 AP + 1 Charge · CD 3 — Command the molecular bond: pull a foe in your zone 2 toward you. *(P3/E3: Command the molecular bond: pull a foe in your zone 4 toward you and Anchor it 1.)*
 
 **Lockjaw Bite** · Mass · `gec_lockjaw`
 
@@ -362,7 +362,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Electroreception** ★ · Space · `eel_electro`
 
-- *Phys — Sense* · 1 AP · CD 1 — Sense bioelectric fields: reveal within 2, and jolt the nearest foe in your lane for 1 true damage. *(P3: Sense bioelectric fields: reveal within 5, and jolt the nearest foe in your lane for 1 true damage.)*
+- *Phys — Sense* · 1 AP · CD 1 — Sense bioelectric fields: reveal within 2, and jolt the nearest foe in your zone for 1 true damage. *(P3: Sense bioelectric fields: reveal within 5, and jolt the nearest foe in your zone for 1 true damage.)*
 - *Eth — Field Map* · 1 AP + 1 Space · CD 3 — Cast your field over the board for 3 rounds: everything revealed, foes can't Hide, and ambushes on either hero deal half. *(P3/E3: Cast your field over the board for 5 rounds: everything revealed, foes can't Hide, and ambushes on either hero deal half.)*
 
 **Electrocyte Charge-Up** · Time · `eel_chargeup`
@@ -387,8 +387,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Doublet Jolt** · Charge · `eel_doublet`
 
-- *Phys — Twitch* · 1 AP · CD 1 — Twin taps: lane strike 1 that reveals a Hidden target and Weakens 1. *(P3: Twin taps: lane strike 4 that reveals a Hidden target and Weakens 1.)*
-- *Eth — Spasm* · 1 AP + 1 Charge · CD 3 — Drive an involuntary spasm: push or pull a foe in your lane 2 and Weaken it 1. *(P3/E3: Drive an involuntary spasm: push or pull a foe in your lane 4 and Weaken it 1.)*
+- *Phys — Twitch* · 1 AP · CD 1 — Twin taps: zone strike 1 that reveals a Hidden target and Weakens 1. *(P3: Twin taps: zone strike 4 that reveals a Hidden target and Weakens 1.)*
+- *Eth — Spasm* · 1 AP + 1 Charge · CD 3 — Drive an involuntary spasm: push or pull a foe in your zone 2 and Weaken it 1. *(P3/E3: Drive an involuntary spasm: push or pull a foe in your zone 4 and Weaken it 1.)*
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
@@ -446,7 +446,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Nectar Lure** ☆ · Charge · `fly_lure`
 
-- *Phys — Lure* · 1 AP · CD 1 — Scent and UV nectar guides: a foe in your lane is drawn 1 toward you.
+- *Phys — Lure* · 1 AP · CD 1 — Scent and UV nectar guides: a foe in your zone is drawn 1 toward you.
 - *Eth — Allure* · 2 AP + 1 Charge · CD 3 — Saturate the air: every foe within 2 is drawn 1 toward you and Weakened 1. *(P3/E3: Saturate the air: every foe within 4 is drawn 1 toward you and Weakened 1.)*
 
 ## 9 · Cordyceps Mycelium — leans C/S
@@ -485,7 +485,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Enzyme Spray** · Mass · `cor_enzyme`
 
-- *Phys — Spit* · 1 AP · CD 1 — Spit exoenzymes down the lane: 1 damage and −1 to its Shield. *(P3: Spit exoenzymes down the lane: 4 damage and −1 to its Shield.)*
+- *Phys — Spit* · 1 AP · CD 1 — Spit exoenzymes across your zone: 1 damage and −1 to its Shield. *(P3: Spit exoenzymes across your zone: 4 damage and −1 to its Shield.)*
 - *Eth — Saturate* · 2 AP + 1 Mass · CD 3 — Saturate a node within 2 and its neighbours: every foe there loses its Shield and takes 3. *(P3/E3: Saturate a node within 2 and its neighbours: every foe there loses its Shield and takes 5, then corrodes for 1 (2 rounds).)*
 
 **Mycorrhizal Bond** · Space · `cor_bond`

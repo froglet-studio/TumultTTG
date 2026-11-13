@@ -8,13 +8,14 @@
    ========================================================================== */
 (function (T) {
   /* ───────────────────────────── BOARD GENERATORS ───────────────────────────── */
-  // A board is a graph: nodes with lane colors (= line of sight), walk edges, climb edges to height nodes.
+  // A board is a graph: nodes in one or more coloured zones (two units that share a zone are in range of a
+  // ranged strike, as in Unmatched), walk edges, climb edges to height nodes. On a grid, each column is a zone.
   function gridBoard(rng, cols, rows, opts) {
     opts = opts || {};
     const nodes = {};
     const edges = [];
     const climb = [];
-    const laneKeys = ['A', 'B', 'C', 'D'];
+    const zoneKeys = ['A', 'B', 'C', 'D'];
     let id = 1;
     const at = {};
     for (let r = 0; r < rows; r++)
@@ -23,7 +24,7 @@
           id,
           x: c,
           y: r,
-          lane: laneKeys[c % laneKeys.length],
+          zones: [zoneKeys[c % zoneKeys.length]],
           height: false,
           spawn: false,
           hazard: false,
@@ -79,12 +80,12 @@
     }
     return seen.size === ids.length;
   }
-  function addHeight(board, nearIds, lane) {
+  function addHeight(board, nearIds, zone) {
     const n = {
       id: board.nextId++,
       x: 0,
       y: -1,
-      lane: lane || 'B',
+      zones: [zone || 'B'],
       height: true,
       spawn: false,
       hazard: false,

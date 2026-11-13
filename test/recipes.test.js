@@ -126,14 +126,14 @@ const SITUATIONS = {
   plain: {},
   // foes that survive the first effect, one of them Anchored, and the action aimed at them
   crowded: {
-    arrange: ({ adj, lane }) => {
-      [adj, lane].filter(Boolean).forEach((e) => sturdy(e));
+    arrange: ({ adj, zone }) => {
+      [adj, zone].filter(Boolean).forEach((e) => sturdy(e));
       adj.states.Anchored = { t: 3 };
     },
     choose: nearFoe,
   },
   // a foe that survives a hit but is left on low hp
-  wounded: { arrange: ({ adj, lane }) => [adj, lane].filter(Boolean).forEach((e) => sturdy(e, 12)) },
+  wounded: { arrange: ({ adj, zone }) => [adj, zone].filter(Boolean).forEach((e) => sturdy(e, 12)) },
   onHazard: { arrange: ({ m, h }) => (m.board.nodes[h.pos].hazard = true) },
   allyDown: {
     arrange: ({ m, h, ally }) => {

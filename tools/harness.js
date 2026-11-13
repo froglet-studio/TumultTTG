@@ -163,8 +163,8 @@ function createHarness(T = loadTumult()) {
 
   /**
    * A controlled arena for one hero holding the given card(s): plenty of dice, a foe
-   * adjacent and a foe in the hero's lane. Returns { run, m, h, ally, adj, lane }, where
-   * adj and lane are those two foes (either may be undefined on a cramped board). The default
+   * adjacent and a foe that shares the hero's zone. Returns { run, m, h, ally, adj, zone }, where
+   * adj and zone are those two foes (either may be undefined on a cramped board). The default
    * seed is a board whose start leaves the hero room to step: on a cornered one, with a foe put
    * beside them, the faces that move a single node have nowhere to go.
    */
@@ -187,11 +187,11 @@ function createHarness(T = loadTumult()) {
     h.pool = T.RULES.POOL - h.held.length;
     const adjNode = T.Board.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
     if (adjNode) m.enemies[0].pos = adjNode;
-    const laneNode = Object.values(m.board.nodes).find(
-      (n) => n.lane === m.board.nodes[h.pos].lane && n.id !== h.pos && !T.occupied(m, n.id),
+    const zoneNode = Object.values(m.board.nodes).find(
+      (n) => n.id !== h.pos && T.Board.sharesZone(m.board, n.id, h.pos) && !T.occupied(m, n.id),
     );
-    if (laneNode && m.enemies[1]) m.enemies[1].pos = laneNode.id;
-    return { run, m, h, ally, adj: adjNode ? m.enemies[0] : undefined, lane: laneNode ? m.enemies[1] : undefined };
+    if (zoneNode && m.enemies[1]) m.enemies[1].pos = zoneNode.id;
+    return { run, m, h, ally, adj: adjNode ? m.enemies[0] : undefined, zone: zoneNode ? m.enemies[1] : undefined };
   }
 
   /**
