@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.19.0 — 2026-11-13 — the atlas: every mission on a page of Tumult
+
+Garrett: "the physical copy should have a book of these with each page a different location … the book of maps becomes an atlas for tumult." Every mission is now played on a fixed board from a page of the atlas.
+
+- **Nine pages**, three for each ground: Crystal Quarry, Mast-Crop Hills, Barricaded Market (land); Tidal Wreck Flats, Drowned Hamlet, Kelp Lagoon (sea); Floating Meadows, High Pass Halt, Burrowed Sea Cliff (air). Each grows from a Cosmic Shore pilot scene, whose painting is its plate. Places are kinds, not named spots, so a page can stand for a different place each session (Garrett).
+- **One fixed board per page** (Garrett: "Choose A"), with its own shape: terraces joined by ramps, a threshing ring, a barricaded street, a ring of floats round a lagoon, rafts joined by single paths. Zones follow the place (a raft, a terrace, a ledge), some spaces sit in two, and some pages add high ground or a hazard (X1).
+- **Spaces have names**, A1 to E3: the letter is how far from where you arrive, the number the side. Every mission places its starts, foes and objectives by name, so each of the six missions works on every page. A mission's own ledge is L1.
+- **The Atlas screen** (title and every header): the contents by ground, and each place as a spread: the board on the left page; facing it, *Rules of this place* (what its paths and special spaces do) and *Field notes* (gravity, weather, what it is, ecology, life there, who comes from such places). In a mission, the place's name in the top bar opens its page, and the board sits over the place's painting.
+- **On the route**, each stop is given a page of its leg's ground (stream `atlas`), not the page of a stop that leads to it while the ground has another; the route's tips name the place.
+- **Gravity and weather are printed but have no rules yet**: that is 2.20.
+- **Difficulty (harder, not easier):** `node tools/sim.js 40`, before → after. Heuristic 13 → 8 runs of 40, missions 79% → 74%; look-ahead 22 → 21 runs, missions 90% → 88%. The finale is the main change: Heart win rate 43% → 35% (heuristic) and 78% → 60% (look-ahead), and 15.7 → 18.2 rounds; on its own it ranges by page from 50% (High Pass Halt) to 100% (Tidal Wreck Flats) for the look-ahead player. The Thinning Swarm at tier 3 got easier for the heuristic (63% → 93%) and Elite tier 1 too (80% → 93%), on boards with more room. The ability audit has no narrow faces and no collapsed gate cells.
+- **Saves:** version 8 adds `page` to route stops and the mission, and space labels to a page board. A version-7 save's stops draw a page when played and a mission in progress keeps its grid (fixture `save-2.18.json`).
+- `T.launchMission(run, type, tier, pageId)` takes a page; `tools/mission-log.js` prints the place and space names. Reference: `docs/reference/ATLAS.md`.
+
 ## 2.18.0 — 2026-11-13 — zones instead of lanes
 
 Garrett: "move away from lanes as vertical columns of nodes", toward boards with the spatial variety of Unmatched. This is the first step of the atlas plan: the rule a board of any shape needs.

@@ -1,0 +1,134 @@
+/* ───── the atlas (src/ui/atlas.js): a contents page and each place as a spread ───── */
+.atlas-index {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.atlas-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  text-align: left;
+  padding: 0 0 10px;
+  overflow: hidden;
+  white-space: normal;
+}
+.atlas-card > :not(.atlas-thumb) {
+  padding: 0 10px;
+}
+.atlas-thumb {
+  display: block;
+  width: 100%;
+  height: 92px;
+  background: center / cover no-repeat;
+  margin-bottom: 4px;
+}
+.atlas-spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 0;
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--panel2);
+}
+@media (max-width: 760px) {
+  .atlas-spread {
+    grid-template-columns: 1fr;
+  }
+}
+.atlas-leaf {
+  position: relative;
+  padding: 14px 16px;
+  min-width: 0;
+}
+.atlas-board {
+  isolation: isolate;
+  border-right: 1px solid var(--line2);
+}
+.atlas-plate {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: center / cover no-repeat;
+  opacity: 0.26;
+  filter: saturate(0.85);
+}
+.atlas-head h3 {
+  margin: 2px 0 2px;
+}
+.atlas-map {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 10px;
+}
+.atlas-map .an .ring {
+  fill: #0f1930;
+  stroke: #2a3a58;
+  stroke-width: 1.5;
+}
+.atlas-map .an.high .ring {
+  stroke: #9fb4d8;
+  stroke-dasharray: 3 3;
+}
+.atlas-map .an.hz .ring {
+  stroke: #e56a6a;
+  stroke-width: 2.5;
+}
+.atlas-map text {
+  fill: #c9d6ea;
+  font-size: 13px;
+  font-family: var(--mono);
+}
+.atlas-map .zone-glow {
+  opacity: 0.16;
+}
+.atlas-facing h4 {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 13px;
+  color: var(--gold);
+}
+.atlas-facing ul {
+  margin: 0 0 8px;
+  padding-left: 18px;
+}
+.atlas-facing li {
+  margin-bottom: 4px;
+}
+.atlas-notes {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.atlas-notes p {
+  font-family: var(--flavor);
+  margin: 0 0 8px;
+  line-height: 1.45;
+}
+.atlas-turn {
+  margin-top: 10px;
+}
+.modal:has(.atlas-spread) {
+  max-width: 1100px;
+}
+/* a mission's place link in the top bar */
+button.linkish {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--cyan);
+  text-decoration: underline dotted;
+  cursor: pointer;
+}
+/* a board on an atlas page shows its plate more clearly than a pilot's world behind a grid */
+.board.paged::before {
+  opacity: 0.24;
+  filter: blur(1px) saturate(0.85);
+}

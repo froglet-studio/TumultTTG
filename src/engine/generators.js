@@ -97,6 +97,11 @@
       ys = nearIds.map((i) => board.nodes[i].y);
     n.x = xs.reduce((a, b) => a + b, 0) / xs.length;
     n.y = Math.min(...ys) - 0.9;
+    // never on top of another space (a page's own high ground may sit there): rise above it
+    const crowded = () => Object.values(board.nodes).some((o) => Math.hypot(o.x - n.x, o.y - n.y) < 0.8);
+    while (crowded()) n.y -= 0.8;
+    // on an atlas page a mission's ledge is named like the page's own extras: L1, L2
+    if (board.page) n.label = 'L' + (Object.values(board.nodes).filter((o) => /^L\d/.test(o.label || '')).length + 1);
     board.nodes[n.id] = n;
     nearIds.forEach((i) => board.climb.push([i, n.id]));
     return n.id;
@@ -112,7 +117,56 @@
     }
     return a;
   }
-  T.boardUtil = { gridBoard, addHeight, pick, shuffle };
+  /**
+   * An atlas page's fixed board (src/data/atlas.js), as plain data the engine can play: its fifteen named
+   * spaces answer to the same cells a grid would ("c,r": A1 is "0,0", E3 is "4,2"), so a mission places
+   * things the same way on every page, and its extras (high ground, hazards) come along.
+   */
+  function pageBoard(page) {
+    const nodes = {};
+    const edges = [];
+    const climb = [];
+    const at = {};
+    const byLabel = {};
+    let id = 1;
+    const add = (label, x, y, zones, extra) => {
+      const n = Object.assign(
+        { id, x, y, zones: zones.split(''), height: false, spawn: false, hazard: false, objective: null, start: false },
+        extra,
+        { label },
+      );
+      nodes[id] = n;
+      byLabel[label] = id;
+      return id++;
+    };
+    for (const [label, [x, y, zones]] of Object.entries(page.spaces)) {
+      const c = label.charCodeAt(0) - 65,
+        r = +label.slice(1) - 1;
+      at[c + ',' + r] = add(label, x, y, zones);
+    }
+    for (const [label, ex] of Object.entries(page.extras || {}))
+      add(label, ex.at[0], ex.at[1], ex.zones, { height: !!ex.h, hazard: !!ex.hz });
+    const pairs = (s) => (s ? s.split(' ') : []);
+    for (const e of pairs(page.edges)) {
+      const [a, b] = e.split('-');
+      edges.push([byLabel[a], byLabel[b]]);
+    }
+    for (const [label, ex] of Object.entries(page.extras || {})) {
+      for (const a of pairs(ex.climb)) climb.push([byLabel[a], byLabel[label]]);
+      for (const a of pairs(ex.edges)) edges.push([byLabel[a], byLabel[label]]);
+    }
+    return { nodes, edges, climb, at, cols: 5, rows: 3, nextId: id, page: page.id };
+  }
+  /**
+   * The board a mission is played on: its atlas page's, or, with no page, a grid. `cols` and `rows` are the
+   * part of the board the mission uses (escorts stand in its back two columns).
+   */
+  function boardFor(rng, page, cols, rows, opts) {
+    if (!page) return gridBoard(rng, cols, rows, opts);
+    return Object.assign(pageBoard(page), { cols, rows });
+  }
+  T.pageBoard = pageBoard;
+  T.boardUtil = { gridBoard, addHeight, pick, shuffle, pageBoard, boardFor };
 
   /* ───────────────────────────── MISSION ARCHETYPES ───────────────────────────── */
   // Each generator returns a mission spec the engine instantiates.
@@ -139,9 +193,9 @@
     swarm: {
       title: ['Hold the Beacon', 'The Thinning Swarm', 'Breakwater'],
       blurb: 'A swarm pours from the spawn-nodes. Hold the beacon long enough for the Terminal to log the way through.',
-      gen(rng, tier, tide) {
+      gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
-        const b = gridBoard(rng, 4, 3, { corridors: 1 });
+        const b = boardFor(rng, page, 4, 3, { corridors: 1 });
         const left = [b.at['0,0'], b.at['0,1'], b.at['0,2']];
         const right = [b.at['3,0'], b.at['3,2']];
         const beacon = b.at['2,1'];
@@ -188,10 +242,10 @@
       title: ['The Drowning Vault', 'The High Ledge', 'The Flooded Reliquary'],
       blurb:
         'The vault sits on a ledge no road reaches. The water is rising. Space verbs get you up there; the winch lever is the long way.',
-      gen(rng, tier, tide) {
+      gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
         const seals = 2 + up.need;
-        const b = gridBoard(rng, 4, 3, { corridors: 1 });
+        const b = boardFor(rng, page, 4, 3, { corridors: 1 });
         const ledgeAnchors = [b.at['3,0'], b.at['2,0']];
         const ledge = addHeight(b, ledgeAnchors, 'D');
         b.nodes[ledge].objective = { kind: 'vault' };
@@ -232,11 +286,11 @@
       title: ['The Sought', 'Three Caches', 'What the Wind Buried'],
       blurb:
         'Something the Heart does not want found is in one of three caches. Lurkers wait for whoever searches blind. Reveal first.',
-      gen(rng, tier, tide) {
+      gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
         const digs = 2 + up.need;
-        const b = gridBoard(rng, 4, 4, { corridors: 2 });
-        const cands = shuffle(rng, [b.at['3,0'], b.at['2,3'], b.at['3,2'], b.at['1,3']]).slice(0, 3);
+        const b = boardFor(rng, page, 5, 3, { corridors: 2 });
+        const cands = shuffle(rng, [b.at['3,0'], b.at['4,1'], b.at['3,2'], b.at['4,0']]).slice(0, 3);
         const real = pick(rng, cands);
         cands.forEach((i) => (b.nodes[i].objective = { kind: 'cache', real: i === real, searched: false }));
         const starts = [b.at['0,0'], b.at['0,1']];
@@ -273,10 +327,10 @@
       title: ['The Rising', 'Floodgate', 'Cascade'],
       blurb:
         'The flood spreads one ring each round. Two channels at the valve stop it. Time verbs buy you rounds; anchors keep you out of the undertow.',
-      gen(rng, tier, tide) {
+      gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
         const turns = 3 + up.need;
-        const b = gridBoard(rng, 5, 3, { corridors: 2 });
+        const b = boardFor(rng, page, 5, 3, { corridors: 2 });
         const origin = b.at['4,2'];
         b.nodes[origin].hazard = true;
         const valve = b.at['4,0'];
@@ -313,9 +367,9 @@
     elite: {
       title: ['The Enforcer', 'A Quasi-stable Thing', 'The Heart’s Hand'],
       blurb: 'An elite holds this stop. Elites reward a boon — if you leave standing.',
-      gen(rng, tier, tide) {
+      gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
-        const b = gridBoard(rng, 4, 3, { corridors: 1 });
+        const b = boardFor(rng, page, 4, 3, { corridors: 1 });
         const kind = pick(rng, ['bulwark', 'harrier', 'tidecaller']);
         const starts = [b.at['0,1'], b.at['0,2']];
         const enemies = [
@@ -348,8 +402,8 @@
       title: ['The Heart'],
       blurb:
         'Its shield is fed by its Spawners: destroy both and the shield falls, or bring Pierce. At half vitality the Vault begins to drown — four rounds to finish it.',
-      gen(rng, tier) {
-        const b = gridBoard(rng, 5, 3, { corridors: 1, diagonals: 1 });
+      gen(rng, tier, tide, page) {
+        const b = boardFor(rng, page, 5, 3, { corridors: 1, diagonals: 1 });
         const heartNode = b.at['4,1'];
         const starts = [b.at['0,1'], b.at['0,0']];
         const sp1 = b.at['3,0'],
@@ -404,6 +458,7 @@
           tier: tierFor(r),
           next: [],
           done: false,
+          page: null,
         })),
       );
     }

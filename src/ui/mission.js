@@ -61,12 +61,14 @@
 
   /* ───────────── skeleton ───────────── */
   U.renderMission = function () {
-    // the board sits in a place: the lead pilot's world, far behind it
-    const lead = U.run && U.run.mission && U.run.mission.heroes[0];
-    const scene = lead && U.sceneSrc(U.pilotOf(lead));
+    // the board sits in a place: its atlas page's plate (or, on a board with no page, the lead pilot's world)
+    const m = U.run && U.run.mission;
+    const page = m && m.page && T.PAGE_BY[m.page];
+    const lead = m && m.heroes[0];
+    const scene = (page && T.ART && T.ART[page.plate]) || (lead && U.sceneSrc(U.pilotOf(lead)));
     return `<div class="mission">
       <div class="top panel tight" id="mtop"></div>
-      <div class="boardwrap"><div id="mtarget"></div><div class="board" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div></div>
+      <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div></div>
       <div class="side" id="mside"></div>
       <div class="bottom"><div class="log" id="mlog"></div></div>
     </div>`;
@@ -81,8 +83,8 @@
    * Each zone's nodes and the links that draw it as one region: the shortest tree joining its nodes on the
    * board (Prim's, by drawn distance), so a zone of any shape reads as one piece.
    */
-  function zoneRegions(m) {
-    const N = m.board.nodes;
+  function zoneRegions(board) {
+    const N = board.nodes;
     const byZone = {};
     Object.values(N).forEach((n) => n.zones.forEach((z) => (byZone[z] = byZone[z] || []).push(n.id)));
     const d2 = (a, b) => (N[a].x - N[b].x) ** 2 + (N[a].y - N[b].y) ** 2;
@@ -105,6 +107,7 @@
         return { zone, ids, links };
       });
   }
+  U.zoneRegions = zoneRegions;
   /** An SVG arc of radius r from one angle to another (degrees, clockwise from the top). */
   function arcPath(r, a0, a1) {
     const pt = (a) => [r * Math.sin((a * Math.PI) / 180), -r * Math.cos((a * Math.PI) / 180)];
@@ -112,6 +115,7 @@
       [x1, y1] = pt(a1 - 4);
     return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
   }
+  U.arcPath = arcPath;
 
   /* ───────────── board build ───────────── */
   function buildBoard() {
@@ -147,7 +151,7 @@
     // zones: one soft region per zone, whatever its shape (a disc at each of its nodes, joined along the
     // shortest tree between them), named under its lowest node
     const N = m.board.nodes;
-    zoneRegions(m).forEach(({ zone, ids, links }) => {
+    zoneRegions(m.board).forEach(({ zone, ids, links }) => {
       const z = T.ZONES[zone];
       const gr = svgEl('g', { class: 'zone-glow', 'data-zone': zone }, zones);
       ids.forEach((id) => svgEl('circle', { cx: g.px(N[id]), cy: g.py(N[id]), r: 46, fill: z.color }, gr));
@@ -205,9 +209,8 @@
         if (k === 1) svgEl('circle', Object.assign({ r: 31 }, attrs), gr);
         else svgEl('path', Object.assign({ d: arcPath(31, (i / k) * 360, ((i + 1) / k) * 360) }, attrs), gr);
       });
-      svgEl('text', { y: 40, class: 'lbl', 'text-anchor': 'middle' }, gr).textContent = n.height
-        ? 'ledge ' + n.id
-        : n.id;
+      svgEl('text', { y: 40, class: 'lbl', 'text-anchor': 'middle' }, gr).textContent =
+        n.label || (n.height ? 'ledge ' + n.id : n.id);
     });
     svg.addEventListener('click', onBoardClick);
     svg.addEventListener('mousemove', (e) => {
@@ -247,7 +250,9 @@
     if (id.startsWith('n')) {
       const n = m.board.nodes[+id.slice(1)];
       if (!n) return '';
-      const bits = [`<b>Node ${n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`];
+      const bits = [
+        `<b>${n.label ? 'Space ' + n.label : 'Node ' + n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`,
+      ];
       if (n.height) bits.push('Height: reachable only by Space verbs (teleport/climb/hover) or the ramp.');
       if (n.hazard) bits.push(`Hazard: ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`);
       if (n.spawn) bits.push('Spawn-node: foes emerge here.');
@@ -321,7 +326,7 @@
       ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label)}">⏳ ${m.clock.value}</span>`
       : '';
     $('#mtop').innerHTML =
-      `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
+      `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       ${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
       <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>

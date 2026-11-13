@@ -50,12 +50,14 @@ if (process.argv[2] === '--save') {
 const m = run.mission;
 
 const N = m.board.nodes;
+const page = m.page && T.PAGE_BY[m.page];
+if (page) console.log(`place: ${page.name} (atlas page '${page.id}', ${page.ground}, ${page.gravity} g)`);
 console.log(
   'nodes: ' +
     Object.values(N)
       .map(
         (n) =>
-          `${n.id}${n.height ? 'H' : ''}${n.objective ? '[' + n.objective.kind + ']' : ''}${n.spawn ? 'S' : ''}(${n.zones.join('/')})`,
+          `${n.id}${n.label ? ':' + n.label : ''}${n.height ? 'H' : ''}${n.objective ? '[' + n.objective.kind + ']' : ''}${n.spawn ? 'S' : ''}(${n.zones.join('/')})`,
       )
       .join(' '),
 );

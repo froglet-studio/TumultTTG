@@ -15,7 +15,7 @@ It follows that every rule must be resolvable by hand. "The engine works it out"
 | **Dice** | fifteen d12 per pilot. Custom faces are ideal; ordinary d12s with a reference strip work today: 1 Mass · 2 Charge · 3 Space · 4 Time · 5 Omni · 6 AP×2 · 7–12 AP |
 | **Pilot board** | pool area, bank area, the six-column track, vitality dial, slots for states, Debt and scars |
 | **Trait cards** | tarot-sized, Physical face on the top half and Ethereal on the bottom; P and E tracked with clips or a dry-wipe pip row. The text printed is the resolved text for each level |
-| **Board tiles** | one large card per board shape, or node discs and edge strips for generated layouts; a sightline overlay |
+| **The atlas** | a book, one place to a spread (Garrett, 2026-11-13): the board on the left page, and facing it the rules of this place (what its special spaces and paths do) and field notes (ecology, life there, who comes from such places). Places are kinds, not named spots, so one page stands for a different place each session. A run is a journey from page to page. The game's Atlas screen is this book on a screen (`docs/reference/ATLAS.md`) |
 | **Condition cards** | one per condition, with its timetable printed as a track |
 | **Opposition cards** | one per actor, with its policy as a three-line flowchart; an intent marker placed at round start is the telegraph |
 | **Mission cards** | objective, routes, clock, graded outcomes and what each grade opens |

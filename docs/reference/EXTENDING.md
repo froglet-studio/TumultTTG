@@ -53,7 +53,7 @@ Add a bestiary entry in `T.ENEMIES` (hp/dmg arrays by tier, speed, shield, hidde
 
 ## Adding a mission archetype
 
-Add a generator to `T.MISSIONS`: build a board with `gridBoard(rng, cols, rows)` (+ `addHeight`), place `starts`, `enemies`, special nodes (`objective`, `spawn`, `hazard`), and return `{board, starts, enemies, objective, clock, spawns, hazardSpread, bonus}`. The entry itself also needs `title` (an array of names to pick from — `T.launchMission` throws without it) and `blurb`. Objective kinds the engine resolves: `hold`, `vault` (+lever/ramp), `find` (caches), `valve`, `kill`. New kinds need a branch in `doInteract`/`roundEnd`/`checkEnd`. Then add the archetype to `genTideMap`'s row tables, to the UI's `NODE_ICON/NODE_NAME`, and to `ARCHETYPES` in `tools/harness.js` so the simulators and tests cover it.
+Add a generator to `T.MISSIONS`: build a board with `boardFor(rng, page, cols, rows)` (the atlas page it is played on, or a grid when there is none; + `addHeight`), place things by their space names through `b.at['c,r']` (column A–E = 0–4, row 1–3 = 0–2), place `starts`, `enemies`, special nodes (`objective`, `spawn`, `hazard`), and return `{board, starts, enemies, objective, clock, spawns, hazardSpread, bonus}`. The entry itself also needs `title` (an array of names to pick from — `T.launchMission` throws without it) and `blurb`. Objective kinds the engine resolves: `hold`, `vault` (+lever/ramp), `find` (caches), `valve`, `kill`. New kinds need a branch in `doInteract`/`roundEnd`/`checkEnd`. Then add the archetype to `genTideMap`'s row tables, to the UI's `NODE_ICON/NODE_NAME`, and to `ARCHETYPES` in `tools/harness.js` so the simulators and tests cover it.
 
 ## Adding gear, boons, events
 

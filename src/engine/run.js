@@ -273,13 +273,19 @@
     }
     return { ok: true, type };
   };
-  T.launchMission = function (run, type, tier) {
+  T.launchMission = function (run, type, tier, pageId) {
     const gen = T.MISSIONS[type];
     const seed = T.missionSeed(run, type, tier);
     run.launched++;
     // The board has a stream to itself: the same seed is the same board, whoever plays it.
     const board = T.makeRng(T.subSeed(seed, 'board'));
-    const spec = gen.gen(board, tier, T.TIDES[run.tide] || T.TIDES.rising);
+    // the atlas page it is played on: the route's choice for this stop, or (a mission launched on its own,
+    // as the simulators do) one the board's stream picks, unless the caller names one
+    const node = run.map && run.nodeId != null ? run.map.all[run.nodeId] : null;
+    const picked = board.pick(T.ATLAS).id; // drawn either way, so naming a page leaves the rest of the board alike
+    if (!pageId) pageId = node && node.page ? node.page : picked;
+    const spec = gen.gen(board, tier, T.TIDES[run.tide] || T.TIDES.rising, T.PAGE_BY[pageId]);
+    spec.page = pageId;
     spec.title = board.pick(gen.title);
     spec.blurb = gen.blurb;
     const threat = T.expeditionOf(run) && T.expeditionOf(run).threatDef;
@@ -567,7 +573,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 7;
+  T.SAVE_VERSION = 8;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -618,6 +624,13 @@
           delete n.lane;
         });
       r.v = 7;
+    },
+    // 2.19 plays every mission on an atlas page. An older route's stops have none (each draws one when it
+    // is played), and a mission in progress keeps its grid.
+    7(r) {
+      if (r.map) Object.values(r.map.all).forEach((n) => (n.page = n.page || null));
+      if (r.mission) r.mission.page = r.mission.page || null;
+      r.v = 8;
     },
   };
   T.deserializeRun = function (json) {
