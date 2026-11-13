@@ -59,11 +59,26 @@ Everything else in the store (online games under `games/`) keeps the default rul
 
 **Canon → Open the inbox** (owner and editors) lists every note with who sent it, what they were shown and where. The owner marks each *canon*, *rejected* or *keep proposed*, may edit the wording first, and ticks **public** for what may be copied into this repository. *Copy canon* gives the approved records as JSON lines with the decision applied (`status`, `public`, the edited `claim`, `decided: { at, note }`).
 
+## The storyteller pack
+
+`node tools/canon-pack.js records.jsonl` (records from the inbox's *Copy canon*) writes `dist/canon/tumult-storyteller.md`, for an AI to read before telling a Tumult story, and `tumult-canon.jsonl`, every canon record for tools. The pack reads in order of authority:
+
+1. **Rules a story must respect**, from the game (`T.RULES`): clades and traits, the faces, dice, no turn theft, no hard counters, downed not dead.
+2. **The world**: `docs/LORE.md`.
+3. **Places**, **pilots** and **foes**, each as the game shows it with its canon beneath; a correction names the text it replaces.
+4. **Other canon** (world, events, patrons, threats).
+5. **Proposals**, only with `--proposals`, labelled as ideas to offer and never state as fact.
+6. **Off limits**: no invented canon people, history or story; house terms.
+
+The pack can hold private canon, so it stays under `dist/` and is never committed. Use it as project knowledge for a storyteller, or as the input of the tell-your-own-story mode the atlas plan proposes.
+
+`--public` also updates `docs/canon/public.jsonl`, the repository's copy of canon marked public (`docs/canon/README.md`).
+
 ## Still to come
 
 The plan has four steps; this is the first.
 
 1. ✓ Records, ✎ marks, the draft question, Canon list (2.20.0).
 2. ✓ The test page sends each record to a private inbox, and the lore lead approves, edits, rejects and marks public (2.21.0).
-3. A storyteller pack generated from the game's rules and approved canon, for AI storytellers: rules first, then canon, then labelled proposals, then what is off limits.
+3. ✓ The storyteller pack and the repository's copy of public canon (2.22.0, below).
 4. More questions at natural pauses: a detail of each place on arrival, defining moments after a mission, the end-of-run dossier ([design 06](../design/06-pilots-and-backstory.md)).

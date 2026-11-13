@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.21.0',
+    version: '2.22.0',
     items: [
+      {
+        text: 'Nothing new to play in this build: the canon you approve in the inbox now becomes a storyteller pack for AI (rules first, then canon, then the world), and canon you mark public is kept in the repository too. Keep writing ✎ notes as you play.',
+      },
       {
         text: 'Canon notes now reach the lore lead: every ✎ correction and draft answer you write on this page is sent to its private inbox (Canon on the title says how many have gone). Only you and the page’s editors can read them, never other testers. Garrett: Canon → Open the inbox to mark each note canon or rejected, edit its wording, and tick public for what may be copied into the repository. Did anything you wrote fail to arrive?',
       },

@@ -24,6 +24,7 @@ node tools/sim.js 40                 balance tables for both simulated players a
 node tools/mission-log.js vault 2 7  one narrated mission: archetype, tier, seed [heroA heroB] [start|tier kit]
 node tools/mission-log.js --save f   carry on from a save (the playtest report's "Copy save") to the mission's end
 node tools/ui-drive.js 3 --manual    drive a whole run through the UI by clicking (seed 3)
+node tools/canon-pack.js recs.jsonl  storyteller pack from approved canon → dist/canon/ (`--public` updates docs/canon/public.jsonl)
 ```
 
 Tools that take arguments are called with `node` directly, because PowerShell can swallow the `--` that `npm run x -- args` needs.

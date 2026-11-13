@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.22.0 — 2026-11-13 — canon from play: the storyteller pack
+
+Step 3 of 4. What the lore lead approves becomes a resource for AI storytellers, and public canon is kept in this repository as well.
+
+- **`node tools/canon-pack.js records.jsonl`** writes `dist/canon/tumult-storyteller.md` and `tumult-canon.jsonl` from the game and the approved records (the inbox's *Copy canon*). In order of authority: the rules a story must respect (numbers taken from `T.RULES`), the world (`docs/LORE.md`), every atlas place, Cosmic Shore pilot and foe with its approved canon beneath it (a correction names the text it replaces), other canon, and what is off limits. `--proposals` adds undecided notes, labelled as ideas to offer, never facts. Rejected notes never appear. The pack can hold private canon, so it stays under `dist/` and is never committed.
+- **`--public`** keeps `docs/canon/public.jsonl`: canon the lore lead marked public, a redundant copy in git (Garrett, 2026-11-13). A record no longer public canon leaves it on the next run.
+- No change to play.
+
 ## 2.21.0 — 2026-11-13 — canon from play: the lore lead's inbox
 
 Step 2 of 4. On the test page, canon notes leave the device and reach a private inbox, where the lore lead decides on each one.
