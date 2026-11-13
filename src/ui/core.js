@@ -405,9 +405,11 @@
       .map((l) => {
         const top = H - (l.to + 1) * ROW;
         const h = (l.to - l.from + 1) * ROW;
-        const img = T.ART && T.ART[U.LEG_SCENES[l.act]];
+        const ex = T.expeditionOf(run);
+        const img = T.ART && T.ART[ex ? ex.legs[l.act].scene : U.LEG_SCENES[l.act]];
         const boss = map.all[map.rows[l.from][0]].type === 'boss';
-        return `<div class="leg${boss ? ' finale' : ''}" style="top:${top}px;height:${h}px">${img ? `<div class="leg-art" style="background-image:url(${img})"></div>` : ''}<span class="actlabel">${boss ? 'The finale' : esc(map.actNames[l.act])}</span></div>`;
+        const label = boss ? esc(T.threatTitle(run)) : esc(map.actNames[l.act]);
+        return `<div class="leg${boss ? ' finale' : ''}" style="top:${top}px;height:${h}px">${img ? `<div class="leg-art" style="background-image:url(${img})"></div>` : ''}<span class="actlabel">${label}</span></div>`;
       })
       .join('');
     const at = run.nodeId != null ? run.nodeId : null;
@@ -445,7 +447,7 @@
             ? 'Rest, buy gear and consumables.'
             : 'A fork in the route.';
         const tier = type === 'haven' || type === 'event' ? '' : `<span class="tier">${'◆'.repeat(nd.tier)}</span>`;
-        return `<div class="${cls}" style="left:${p.x}%;top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal">${NODE_ICON[type]}</div><div class="t">${NODE_NAME[type]}${tier}</div></div>`;
+        return `<div class="${cls}" style="left:${p.x}%;top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal">${NODE_ICON[type]}</div><div class="t">${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}${tier}</div></div>`;
       })
       .join('');
     return `<div class="route" style="height:${H}px">${bands}<svg class="currents" viewBox="0 0 100 ${H}" preserveAspectRatio="none">${curves.join('')}</svg>${nodes}</div>`;
@@ -467,13 +469,19 @@
       'passage-card',
     );
   }
+  /** Who sent this expedition, in a few words, to head the route. */
+  function expeditionLine(run) {
+    const ex = T.expeditionOf(run);
+    if (!ex) return '';
+    return `<b class="dom-${ex.domain}">${esc(ex.patronDef.title)}</b> to ${esc(T.threatName(run))}. `;
+  }
   function renderMap() {
     const run = U.run;
     const map = run.map;
     return `<div class="wrap">${header('The Route', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
       ${renderPassage(run)}
       ${partyBar(run)}
-      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">Pick the next stop. Glowing stops are reachable. The Heart waits at the end of the route.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
+      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">${expeditionLine(run)}Pick the next stop. Glowing stops are reachable. ${esc(T.threatTitle(run))} waits at the end of the route.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
   }
 
   /* ───────────── TRAIN / KIT modals ───────────── */
@@ -623,8 +631,8 @@
   function renderSummary() {
     const run = U.run;
     const won = run.won;
-    return `<div class="wrap">${header(won ? 'The Heart Is Ended' : 'The Expedition Is Lost')}<div class="panel" style="max-width:760px;margin:0 auto">
-      <p style="font-family:var(--serif);font-size:16px;line-height:1.5">${esc(won ? T.FLAVOR.win[0] : T.FLAVOR.lose[0])}</p>
+    return `<div class="wrap">${header(won ? T.threatTitle(run) + ' Is Ended' : 'The Expedition Is Lost')}<div class="panel" style="max-width:760px;margin:0 auto">
+      <p style="font-family:var(--serif);font-size:16px;line-height:1.5">${esc(T.fillTokens(won ? T.FLAVOR.win[0] : T.FLAVOR.lose[0], { THREAT: T.threatName(run) }))}</p>
       <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${run.crystals} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
       <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
       <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}

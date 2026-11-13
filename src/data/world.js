@@ -321,10 +321,10 @@
       'Three things too large to fight: the etherions, the superorganism, the Terminal. Beneath them, a Heart small enough to end.',
     ],
     win: [
-      'The Heart stops. The route is open behind you, and the Terminal logs it under no name. Somewhere overhead, the Ark marks the squad for the long way home.',
+      '{THREAT} stops. The route is open behind you, and the Terminal logs it under no name. Somewhere overhead, the Ark marks the squad for the long way home.',
     ],
     lose: [
-      'Tumult keeps the expedition. Somewhere, the Terminal notes a Heart that held one more season — and waits, as it does, for the next squad.',
+      'Tumult keeps the expedition. Somewhere, the Terminal notes that {THREAT} held one more season — and waits, as it does, for the next squad.',
     ],
   };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
