@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.21.0 — 2026-11-13 — canon from play: the lore lead's inbox
+
+Step 2 of 4. On the test page, canon notes leave the device and reach a private inbox, where the lore lead decides on each one.
+
+- **Sent as written.** Every ✎ correction and draft answer is written to the test page's store (`canon/<viewer>/notes/<id>`); notes written while the store was not answering go when it does. *Canon* on the title says how many have been sent.
+- **The inbox** (Canon → *Open the inbox*, for the page's owner and editors): every note with who sent it, what they were shown and where, filtered by proposed, canon, rejected or all. The owner, as lore lead, marks each *canon*, *rejected* or *keep proposed*, edits its wording, and ticks **public** for what may be copied into this repository (Garrett, 2026-11-13); decisions are kept in `canonReview/<id>`. *Copy canon* gives the approved notes as JSON lines with the decisions applied.
+- **Who reads what:** a tester writes and reads only their own notes; editors and the owner read all of them; only the owner decides. The test page is published with these store rules (`docs/reference/CANON.md`).
+- `TUMULT.html` is unchanged: with no store, notes stay on the device and are copied by hand. No rules, dice or missions change.
+
 ## 2.20.0 — 2026-11-13 — canon from play: correct what the game shows
 
 Garrett: "the web experience asks us for flavor through the experience. then this gets recorded into the lore … steer the details of the world by correcting what is presented." This is the first of four steps (plan agreed with Garrett, 2026-11-13).
