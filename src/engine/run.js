@@ -258,7 +258,7 @@
     run.nodeId = nodeId;
     run.map.current = nodeId;
     let type = node.type;
-    if (run.nextElite && ['swarm', 'vault', 'hidden', 'cascade'].includes(type)) {
+    if (run.nextElite && ['swarm', 'vault', 'hidden', 'cascade', 'salvage'].includes(type)) {
       node.type = type = 'elite';
       run.nextElite = false;
     }
@@ -622,7 +622,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 10;
+  T.SAVE_VERSION = 11;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -701,6 +701,11 @@
     9(r) {
       if (r.mission && !r.mission.place) r.mission.place = { gravity: 'normal', weather: 'calm', wind: 0 };
       r.v = 10;
+    },
+    // 2.27 lets a hero carry a crate (salvage). Nobody in an older save is carrying one.
+    10(r) {
+      for (const h of r.heroes || []) if (h && h.carrying === undefined) h.carrying = 0;
+      r.v = 11;
     },
   };
   T.deserializeRun = function (json) {

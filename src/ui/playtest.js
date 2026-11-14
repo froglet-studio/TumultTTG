@@ -10,7 +10,7 @@
   const U = T.UI;
   const esc = U.esc;
   const KEY = 'tumult_v2_playtest';
-  const TYPES = ['swarm', 'vault', 'hidden', 'cascade', 'elite', 'boss'];
+  const TYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'elite', 'boss'];
   const LOG_MAX = 40;
 
   /**
@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.26.0',
+    version: '2.27.0',
     items: [
+      {
+        text: 'A new mission that is not a fight: Salvage. Crates lie on the far side; carry them to the near edge (A) before the water takes the wreck. Interact beside a crate to pick it up, one each at a time; reaching the near edge sets it down, however you get there (even the wind). Did you split up or carry together? Did you fight the scavengers, or go round them? Is it too easy, or too tight? Use the panel to start one: Salvage, any tier.',
+      },
       {
         text: 'Places now have rules. Light gravity (hills, meadows, sea cliff): a shove or pull goes 1 space further. Heavy gravity (quarry, high pass): anything shoved or pulled takes 1 damage a space. Some visits bring wind (at the end of each round everyone not braced, anchored or hovering moves 1 space downwind, into hazards too) or fog (ranged strikes reach only 2 steps). The top bar shows today’s rules; hover them for the sentence. Did a place change what you did? Did the wind ever feel unfair, or fun?',
       },

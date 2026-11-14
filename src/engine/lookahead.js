@@ -65,7 +65,7 @@
         for (const node of [h.pos].concat(B.walkNeighbors(m.board, h.pos))) {
           const nd = m.board.nodes[node];
           if (!nd.objective || (node !== h.pos && nd.height)) continue;
-          if (worthInteracting(m, nd.objective)) out.push({ t: 'interact', hero, node });
+          if (worthInteracting(m, nd.objective, h)) out.push({ t: 'interact', hero, node });
         }
       for (const b of T.BASIC) {
         const chk = T.canUseBasic(m, h, b.id);
@@ -91,9 +91,10 @@
     return out;
   };
   /** Interacting costs AP whatever is there: leave out the ones that can do nothing. */
-  function worthInteracting(m, o) {
+  function worthInteracting(m, o, h) {
     const ob = m.objective;
-    if (o.kind === 'beacon') return false;
+    if (o.kind === 'beacon' || o.kind === 'dock') return false;
+    if (o.kind === 'crate') return ob.kind === 'salvage' && !h.carrying;
     if (o.kind === 'lever') return ob.kind === 'vault' && !m.board.ramp;
     if (o.kind === 'cache') return ob.kind === 'find' && !(o.searched && !o.real);
     return true;
@@ -177,6 +178,9 @@
       const searched = ob.candidates.filter((c) => m.board.nodes[c].objective.searched).length;
       return 0.4 * part(searched, ob.candidates.length);
     }
+    // a crate on someone's back is most of the way there
+    if (ob.kind === 'salvage')
+      return part(ob.done + 0.5 * m.heroes.filter((h) => !h.downed && h.carrying).length, ob.need);
     if (ob.kind === 'kill') {
       const foes = m.enemies.filter((e) => e.type === ob.target);
       if (!foes.length) return 0;
@@ -187,9 +191,16 @@
     return 0;
   };
   /** Where the objective next needs someone: [{ node, on }] — on the node itself, or beside it will do. */
-  function goals(m) {
+  function goals(m, h) {
     const ob = m.objective;
     if (!ob) return [];
+    // salvage: a carrier is wanted at the near edge, everyone else beside a crate
+    if (ob.kind === 'salvage') {
+      if (h && h.carrying) return ob.docks.map((node) => ({ node, on: true }));
+      return Object.values(m.board.nodes)
+        .filter((n) => n.objective && n.objective.kind === 'crate')
+        .map((n) => ({ node: n.id, on: false }));
+    }
     if (ob.kind === 'hold' || ob.kind === 'valve') return [{ node: ob.node, on: false }];
     if (ob.kind === 'vault')
       return [{ node: ob.node, on: true }].concat(m.board.ramp ? [] : [{ node: ob.leverNode, on: false }]);
@@ -246,9 +257,13 @@
     if (m.clock) s += W.clock * m.clock.value;
     s += W.crystal * m.crystals;
     const gs = goals(m);
-    if (gs.length) {
+    const perHero = m.objective && m.objective.kind === 'salvage';
+    if (gs.length || perHero) {
       const away = T.liveHeroes(m)
-        .map((h) => Math.min(...gs.map((g) => stepsTo(m, h, g))))
+        .map((h) => {
+          const mine = perHero ? goals(m, h) : gs;
+          return mine.length ? Math.min(...mine.map((g) => stepsTo(m, h, g))) : 0;
+        })
         .sort((a, b) => a - b);
       away.forEach((steps, i) => (s -= W.approach * steps * (i ? 0.5 : 1)));
       // A hero beside an objective that takes an Interact, and short of the AP for one, should hold
@@ -256,12 +271,12 @@
       if (WORKED.includes(m.objective.kind))
         for (const h of T.liveHeroes(m)) {
           const ap = T.apValue(h);
-          if (ap < R().INTERACT_AP && gs.some((g) => stepsTo(m, h, g) === 0)) s += W.short * ap;
+          if (ap < R().INTERACT_AP && !h.carrying && goals(m, h).some((g) => stepsTo(m, h, g) === 0)) s += W.short * ap;
         }
     }
     return s;
   };
-  const WORKED = ['vault', 'valve', 'find']; // objectives advanced by Interact; a beacon is held, a foe is fought
+  const WORKED = ['vault', 'valve', 'find', 'salvage']; // objectives advanced by Interact; a beacon is held, a foe is fought
   const liveVitality = (m) => m.heroes.reduce((s, h) => s + (h.downed ? 0 : h.hp), 0);
 
   /* ───────────────────────────── SEARCH ───────────────────────────── */

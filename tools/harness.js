@@ -5,7 +5,7 @@
  */
 const loadTumult = require('./load');
 
-const ARCHETYPES = ['swarm', 'vault', 'hidden', 'cascade', 'elite', 'boss'];
+const ARCHETYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'elite', 'boss'];
 
 function createHarness(T = loadTumult()) {
   /** Two pre-made heroes (indices into T.PREBUILTS), UP auto-spent. */

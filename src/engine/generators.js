@@ -445,17 +445,79 @@
     },
   };
 
+  /* ───────────────────────────── NOT A FIGHT ───────────────────────────── */
+  // Missions won without destroying anything (design/03: Salvage). Foes are there, and fighting them is
+  // one way through; it is never the objective.
+  Object.assign(T.MISSIONS, {
+    salvage: {
+      title: ['Salvage Before the Tide', 'What the Water Left', 'Lighten the Wreck'],
+      blurb:
+        'Crates lie on the far side, and the water is coming in behind them. Pick one up (Interact) and carry it to the near edge, where you came in. Space verbs shorten a carry, Time verbs hold the water, and a foe in the way can be walked round, shoved aside or fought.',
+      gen(rng, tier, tide, page) {
+        const up = tideAt(tide, tier);
+        const need = [2, 3, 4][tier - 1] + up.need;
+        const b = boardFor(rng, page, 5, 3, { corridors: 2 });
+        // the water comes in at the far edge's middle and spreads a ring a round, after a round's grace
+        const origin = b.at['4,1'];
+        b.nodes[origin].hazard = true;
+        // one more crate than you need: which to leave behind is a choice
+        const spots = shuffle(rng, [
+          b.at['3,0'],
+          b.at['4,0'],
+          b.at['3,2'],
+          b.at['4,2'],
+          b.at['3,1'],
+          b.at['2,0'],
+          b.at['2,2'],
+        ]);
+        const crates = spots.slice(0, need + 1);
+        crates.forEach((i) => (b.nodes[i].objective = { kind: 'crate' }));
+        const docks = [b.at['0,0'], b.at['0,1'], b.at['0,2']];
+        docks.forEach((i) => (b.nodes[i].objective = { kind: 'dock' }));
+        const starts = [b.at['0,0'], b.at['0,2']];
+        // scavengers among the crates: fighting them is one way through, never the objective
+        const enemies = [];
+        const crew = ['biter', 'kiter'].concat(tier >= 2 ? ['binder'] : [], tier >= 3 ? ['tidecaller'] : []);
+        addEscorts(rng, b, enemies, starts, crew.concat(up.escorts ? ['biter'] : []));
+        return {
+          board: b,
+          starts,
+          enemies,
+          objective: {
+            kind: 'salvage',
+            docks,
+            need,
+            total: crates.length,
+            done: 0,
+            text: `Carry ${need} of the ${need + 1} crates to the near edge (A): Interact beside one to pick it up, one at a time each`,
+          },
+          clock: {
+            value: [8, 7, 7][tier - 1] - up.clock,
+            label: 'Rounds before the water takes the wreck',
+            onZero: 'lose',
+          },
+          hazardSpread: { delayed: 1, dormant: false },
+          spawns: [],
+          bonus: [
+            { id: 'fast', text: 'Finish with 3+ rounds to spare', clockLeft: 3 },
+            { id: 'dry', text: 'Take no hazard damage' },
+          ],
+        };
+      },
+    },
+  });
+
   /* ───────────────────────────── TIDE MAP ───────────────────────────── */
   // 7 rows. Row 0: three openers. Rows 1-5 mixed. Row 6: boss. Each node connects to 1-2 nodes in the next row.
   T.genTideMap = function (rng) {
     const rows = [];
     const typesFor = (r) => {
       if (r === 0) return shuffle(rng, ['swarm', 'vault', 'cascade']);
-      if (r === 1) return shuffle(rng, ['hidden', 'event', 'swarm']);
+      if (r === 1) return shuffle(rng, ['hidden', 'event', 'salvage']);
       if (r === 2) return shuffle(rng, ['elite', 'haven', 'vault']);
       if (r === 3) return shuffle(rng, ['cascade', 'event', 'hidden']);
       if (r === 4) return ['haven', 'elite', 'swarm'];
-      if (r === 5) return shuffle(rng, ['vault', 'cascade', 'event']);
+      if (r === 5) return shuffle(rng, ['vault', 'salvage', 'event']);
       return ['boss'];
     };
     const tierFor = (r) => (r <= 1 ? 1 : r <= 4 ? 2 : 3);

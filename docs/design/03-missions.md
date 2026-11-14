@@ -1,6 +1,6 @@
 # 03 · Missions
 
-**Status: Proposed.** v2.0 has six archetypes (Swarm, Vault, The Sought, Cascade, Elite, Boss). The audit shows both ends are thin: squads with no cards at all win Swarm and Cascade at tier 1 almost every time by walking to the objective, while Elite and Boss are pure fights. Neither is the puzzle we want. This proposes a grammar for objectives and twelve mission types built from it. Depends on [02](02-units-verbs-actions.md).
+**Status: Proposed; one type built.** Salvage is in the game since 2.27 (`docs/reference/MISSIONS_AND_BESTIARY.md`): `carry` without props yet (a pilot carries one crate; no throwing or floating). The rest is the proposal. v2.0 has six archetypes (Swarm, Vault, The Sought, Cascade, Elite, Boss). The audit shows both ends are thin: squads with no cards at all win Swarm and Cascade at tier 1 almost every time by walking to the objective, while Elite and Boss are pure fights. Neither is the puzzle we want. This proposes a grammar for objectives and twelve mission types built from it. Depends on [02](02-units-verbs-actions.md).
 
 ## Rules
 
