@@ -355,7 +355,7 @@
 
   /* ───────────── MAP ───────────── */
   const NODE_ICON = {};
-  ['swarm', 'vault', 'hidden', 'cascade', 'elite', 'haven', 'event', 'boss'].forEach(
+  ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'elite', 'haven', 'event', 'boss'].forEach(
     (k) => (NODE_ICON[k] = U.icNode(k)),
   );
   const NODE_NAME = {
@@ -363,6 +363,7 @@
     vault: 'Vault',
     hidden: 'The Sought',
     cascade: 'Cascade',
+    salvage: 'Salvage',
     elite: 'Elite',
     haven: 'Haven',
     event: 'Event',

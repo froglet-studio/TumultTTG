@@ -6,7 +6,7 @@ A board is a graph. Every node sits in one or more coloured **zones** (two units
 
 Special nodes: **spawn-nodes** (foes emerge), **hazard tiles** (3 true damage at round end to anyone standing there — enemies too), **objective nodes** (vault, lever, beacon, caches, valve), plus snares and spore zones that heroes place.
 
-## The four archetypes (+ Elite + Boss)
+## The archetypes (four objectives, Salvage, Elite and Boss)
 
 Each generator takes a tier (1–3) that scales compositions and clocks. Every mission has an objective, usually a clock, and two bonus objectives.
 
@@ -16,6 +16,7 @@ Each generator takes a tier (1–3) that scales compositions and clocks. Every m
 | **Vault — The Drowning Vault** | Break two seals by Interacting on the ledge (a height node). The winch lever (Interact ×2) drops a ramp so anyone can walk up. A Warden guards the climb. | 10/9/9 | Space verbs, pierce/true damage vs the Warden, or the slower lever route |
 | **The Sought** | One of three caches is real. Reveal verbs expose caches in radius (or step on one to search it); then dig it out (Interact ×2). Lurkers wait for whoever searches blind. | 11/10/10 | Reveal, ambush defense, efficient searching |
 | **Cascade — The Rising** | The flood spreads one ring per round from round 2. Channel the valve three times. Time verbs and the Windbreak Charm delay the spread; anchors resist the undertow. | 10/9/9 | Tempo, sustain, hazard immunity, anchors |
+| **Salvage — Before the Tide** (2.27, not a fight) | One more crate than you need lies on the far side (columns C–E): carry 2/3/4 of them to the near edge (A). Interact beside a crate to pick it up; each pilot carries one at a time, and a crate is set down the moment its carrier stands on the near edge, however they got there (a walk, a blink, the wind). A carrier who goes down drops it. Scavengers stand among the crates and the water spreads from the far edge after a round's grace. | 8/7/7 | Routes and timing; movement of any kind; Time verbs against the water; getting past foes rather than through them |
 | **Elite** | Destroy the elite (Bulwark, Harrier or Tidecaller); its escort need not fall. Rewards a boon. | none | Whatever the elite punishes: clumping, squishy heroes, no anchors |
 | **Boss — The Heart** | Destroy the Heart. Its Shield 4 is fed by two Spawners: kill both and it gutters out (or bring Pierce or true damage — area does not get through the Heart's shield, nor a Warden's). At half vitality the Heart cracks: shield gone, Spawners collapse, the flood begins, 4 rounds to finish it, and it crushes and drags. | phase 2: 4 | Everything |
 

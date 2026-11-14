@@ -364,6 +364,7 @@
       h.held = [];
       h.pool = R().POOL;
       h.rested = false;
+      h.carrying = 0;
       h.gear.forEach((g) => (g.cds = [0, 0]));
       h.roundFlags = { struck: false };
       for (const v of T.boonVals(h, 'missionStart'))
@@ -796,6 +797,14 @@
     }
     h.hp = 0;
     h.downed = true;
+    if (h.carrying) {
+      // the crate falls where they fell, if there is room for it
+      h.carrying = 0;
+      if (!m.board.nodes[h.pos].objective) {
+        m.board.nodes[h.pos].objective = { kind: 'crate' };
+        say(m, `${h.name} drops the crate.`, 'sys');
+      } else say(m, `${h.name}'s crate is lost.`, 'sys');
+    }
     h.states = {};
     h.temp = [];
     say(m, `${h.name} is DOWN. An adjacent ally can Rally them (2 AP).`, 'sys');
@@ -1985,6 +1994,8 @@
     if (!nd || !nd.objective) return { ok: false, why: 'nothing here' };
     const here = h.pos === node,
       adj = B.adjacent(bd, h.pos, node);
+    if (nd.objective.kind === 'crate' && h.carrying) return { ok: false, why: 'already carrying a crate' };
+    if (nd.objective.kind === 'dock') return { ok: false, why: 'carry a crate here: it is delivered as you arrive' };
     if (!viaAbility) {
       if (!(here || (adj && !nd.height)))
         return { ok: false, why: nd.height ? 'must stand on the ledge (or use a Reach verb)' : 'not adjacent' };
@@ -2031,6 +2042,13 @@
           say(m, 'The cache is out.', 'sys');
         }
       } else say(m, `A decoy cache.`, 'sys');
+    } else if (k === 'crate' && ob.kind === 'salvage') {
+      if (h.carrying) return { ok: false, why: 'already carrying a crate' };
+      delete nd.objective;
+      h.carrying = 1;
+      say(m, `${h.name} shoulders a crate.`, 'sys');
+    } else if (k === 'dock') {
+      return { ok: false, why: 'carry a crate here: it is delivered as you arrive' };
     } else if (k === 'beacon') {
       say(m, 'The beacon only needs you near it at round end.', 'sys');
       return { ok: false, why: 'no interaction' };
@@ -2424,6 +2442,18 @@
   T.checkEnd = function (m) {
     if (m.over) return;
     const ob = m.objective;
+    // salvage: a crate is delivered the moment its carrier stands on the near edge, however they got there
+    if (ob && ob.kind === 'salvage' && !m.won)
+      for (const h of T.liveHeroes(m))
+        if (h.carrying && ob.docks.includes(h.pos)) {
+          h.carrying = 0;
+          ob.done++;
+          say(m, `${h.name} sets a crate down safe (${ob.done}/${ob.need}).`, 'sys');
+          if (ob.done >= ob.need) {
+            m.won = true;
+            say(m, 'The salvage is out.', 'sys');
+          }
+        }
     if (ob && ob.kind === 'kill') {
       const alive = T.liveEnemies(m).some((e) => e.type === ob.target);
       if (!alive) m.won = true;

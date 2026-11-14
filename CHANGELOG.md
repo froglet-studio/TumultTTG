@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.27.0 — 2026-11-14 — Salvage, a mission that is not a fight
+
+Step 4 of the two-player plan, and the first of the design's mission types won without destroying anything (`docs/design/03-missions.md`).
+
+- **Salvage — Before the Tide.** One more crate than you need lies on the far side (columns C–E). Carry 2, 3 or 4 of them (by tier) to the near edge, where you came in, before the water takes the wreck (8/7/7 rounds). Interact beside a crate to pick it up. Each pilot carries one at a time, and a crate is set down the moment its carrier stands on the near edge, however they got there: a walk, a blink, a shove or the wind. A carrier who goes down drops it where they fall. Scavengers stand among the crates, and the water spreads from the far edge after a round's grace. The Gale adds a crate, a shorter clock and an escort, as for the other objectives.
+- **Two routes, no single family:** walk round the scavengers or through them, shorten carries with any Space verb or Scramble, hold the water with Time verbs or the Windbreak Charm, and use the wind when it blows your way. Fighting is one way through, never the objective.
+- **On the route:** Salvage replaces one Swarm in row 1 and one Cascade in row 5. A privateer toll can make it an Elite, like the others.
+- Both simulated players can play it. The look-ahead player plans each pilot's way to a crate or to the near edge. The heuristic carries a crate home even with a foe beside it.
+- **Save version 11:** a hero has `carrying`. Nobody in an older save is carrying (fixture `save-2.26.json`).
+- **Balance (`node tools/sim.js 40`):** Salvage 98/68/38% heuristic and 100/98/98% look-ahead by tier, so the gap grows with the tier, as in the Vault (thinking pays). Full runs: heuristic 7 → 4 of 40, look-ahead 19 → 19 of 40, so the game got harder for the weak player and no easier for anyone. Other cells are unchanged.
+- **Dull turns:** about the same as the other objective missions (47% for salvage across tiers). A new kind of mission adds variety; making turns less dull for both players is the job of the next step, moves that pilots make together.
+
 ## 2.26.0 — 2026-11-14 — gravity and weather are rules of the place
 
 Step 3 of the two-player plan: the place is an opponent too, so the same squad plays a different game on a different page. Each rule is one sentence, and each works on foes and pilots alike.

@@ -10,7 +10,7 @@
   const esc = U.esc;
   const EL = T.ETHERIONS;
   const $ = (s, r) => (r || document).querySelector(s);
-  const OBJ_ICON = { vault: '🏛️', lever: '🕹️', beacon: '📡', cache: '❓', valve: '🔧' };
+  const OBJ_ICON = { vault: '🏛️', lever: '🕹️', beacon: '📡', cache: '❓', valve: '🔧', crate: '📦', dock: '⚓' };
   const NS = 'http://www.w3.org/2000/svg';
   const svgEl = (tag, attrs, parent) => {
     const e = document.createElementNS(NS, tag);
@@ -500,7 +500,7 @@
     return `<div class="hero ${sel ? 'active' : ''} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
       <div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
-      <div class="states">${states}</div>
+      <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>
       <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="Dice still in your pool. You roll 3 per turn; pool + banked = 15 always.">pool ${h.pool} · AP ${T.apValue(h)}</span></div>
       <div class="track">${trackCols.join('')}</div>
       <div class="hand">${hand}</div>
@@ -528,7 +528,8 @@
       const nd = m.board.nodes[n];
       if (!nd.objective) continue;
       const k = nd.objective.kind;
-      if (k === 'beacon') continue;
+      if (k === 'beacon' || k === 'dock') continue;
+      if (k === 'crate' && h.carrying) continue;
       if (nd.height && n !== h.pos) continue;
       if (k === 'cache' && (!m.objective.found || !nd.objective.real) && n !== h.pos) continue;
       if (k === 'cache' && nd.objective.searched && !nd.objective.real) continue;

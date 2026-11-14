@@ -430,6 +430,10 @@
     if (ob.kind === 'hold') return ob.node;
     if (ob.kind === 'vault') return m.board.ramp ? ob.node : ob.leverNode;
     if (ob.kind === 'valve') return ob.node;
+    if (ob.kind === 'salvage') {
+      const c = Object.values(m.board.nodes).find((n) => n.objective && n.objective.kind === 'crate');
+      return c ? c.id : ob.docks[1];
+    }
     if (ob.kind === 'find') {
       if (ob.found) return ob.real;
       const un = ob.candidates.filter((c) => !m.board.nodes[c].objective.searched);
@@ -455,6 +459,17 @@
     if (!ob) return null;
     if (ob.kind === 'hold') return { node: ob.node, needOn: false };
     if (ob.kind === 'valve') return { node: ob.node, needOn: false };
+    if (ob.kind === 'salvage') {
+      // carrying: to the nearest space on the near edge; otherwise to the nearest crate
+      const near = (ns) => ns.sort((a, b) => B.dist(m.board, h.pos, a, true) - B.dist(m.board, h.pos, b, true))[0];
+      if (h.carrying) return { node: near(ob.docks.slice()), needOn: true };
+      const c = near(
+        Object.values(m.board.nodes)
+          .filter((n) => n.objective && n.objective.kind === 'crate')
+          .map((n) => n.id),
+      );
+      return c == null ? null : { node: c, needOn: false };
+    }
     if (ob.kind === 'vault') {
       const canReach =
         m.board.ramp ||
@@ -532,7 +547,8 @@
             const nd = m.board.nodes[n];
             if (!nd.objective) continue;
             const k = nd.objective.kind;
-            if (k === 'beacon') continue;
+            if (k === 'beacon' || k === 'dock') continue;
+            if (k === 'crate' && h.carrying) continue;
             if (k === 'cache' && nd.objective.searched && !nd.objective.real) continue;
             if (k === 'cache' && !ob.found && n !== h.pos) continue;
             if (k === 'vault' && n !== h.pos) continue;
@@ -548,7 +564,8 @@
         // 3. objective-first movement when a clock is running (or searching)
         const goal = objectiveGoal(m, h);
         const adjFoe = T.liveEnemies(m).some((e) => B.adjacent(m.board, h.pos, e.pos) && !e.anchoredPerm);
-        if (goal && (m.clock || (ob && ob.kind === 'find')) && !adjFoe) {
+        // a carrier runs for the near edge even with a foe beside them
+        if (goal && (m.clock || (ob && ob.kind === 'find')) && (!adjFoe || h.carrying)) {
           if (tryMoveToward(m, h, goal)) continue;
         }
         // 4. best face

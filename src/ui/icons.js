@@ -29,6 +29,7 @@
     'node.vault': 'M2 9 12 3l10 6v2H2zM4 12h3v7H4zM10.5 12h3v7h-3zM17 12h3v7h-3zM2 20h20v2H2z', // a held structure
     'node.cascade':
       'M2 6c4-3 6 3 10 0s6 3 10 0v4c-4 3-6-3-10 0S6 7 2 10zM2 14c4-3 6 3 10 0s6 3 10 0v4c-4 3-6-3-10 0s-6-3-10 0z', // water that runs
+    'node.salvage': 'M3 8h18v13H3zM3 8l3-5h12l3 5M9 12h6v2H9z', // a crate, lid open
     'node.hidden':
       'M10 2a8 8 0 1 0 4.9 14.3L21 22.4l1.4-1.4-6.1-6.1A8 8 0 0 0 10 2zm0 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10z', // a lens
     'node.elite': 'M4 2h4l4 6 4-6h4l-6 9 6 11h-4l-4-7-4 7H4l6-11z', // crossed blades, read as one mark
@@ -42,6 +43,9 @@
     'obj.lever': 'M15 2l3 2-5 9h-2zM4 14h16v8H4zM8 17v2h8v-2z',
     'obj.beacon': 'M11 8h2v14h-2zM6 4l2 2a6 6 0 0 0 0 8l-2 2A9 9 0 0 1 6 4zm12 0a9 9 0 0 1 0 12l-2-2a6 6 0 0 0 0-8z',
     'obj.cache': 'M2 7h20v4H2zM3 12h18v10H3zM10 12v4h4v-4z',
+    'obj.crate': 'M3 6h18v15H3zM3 6l9 5 9-5M12 11v10', // a lashed crate
+    'obj.dock':
+      'M11 2h2v3h3v2h-3v11a5 5 0 0 0 4-3l-2-1 4-2 1 4-1-.5A8 8 0 0 1 12 22a8 8 0 0 1-7-4.5L4 18l1-4 4 2-2 1a5 5 0 0 0 4 3V7H8V5h3z', // an anchor: set it down here
     'obj.valve': 'M11 2h2v4h5v2h-5v2.2a4 4 0 1 1-2 0V8H6V6h5zM5 20h14v2H5z',
 
     /* ── foes ── */
