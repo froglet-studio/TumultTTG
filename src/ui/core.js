@@ -156,6 +156,12 @@
     return `<div class="row" style="margin-bottom:10px"><span class="kick">Tumult</span><h2 style="margin:0 6px">${title}</h2><span class="right row"><button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="atlas">Atlas</button><button class="ghost sm" data-act="codex">Codex</button>${right || ''}</span></div>`;
   }
   U.header = header;
+  /** The way out of a run screen: to the title (the run is saved), or out of an online game. */
+  const titleBtn = () =>
+    U.net && U.net.online()
+      ? `<button class="ghost sm" data-act="netLeave">Leave game</button>`
+      : `<button class="ghost sm" data-act="quitToTitle" data-tip="Back to the title screen. The run is saved: Continue picks it up here.">Title</button>`;
+  U.titleBtn = titleBtn;
 
   /* ───────────── TITLE ───────────── */
   /** The difficulty of the next run (T.TIDES); the last choice is remembered on this device. */
@@ -219,6 +225,13 @@
     };
     U.screen = 'draft';
   };
+  /** The draft's first step leads back: to the title, to the first pilot, or out of an online game. */
+  function draftOut(d) {
+    if (U.net && U.net.online()) return `<button class="ghost right" data-act="netLeave">Leave game</button>`;
+    if (d.heroIdx > 0 && U.run.heroes[0])
+      return `<button class="ghost right" data-act="draftPrev" data-tip="Back to ${esc(U.run.heroes[0].name)}, the first pilot, as you left them.">Back to ${esc(U.run.heroes[0].name)}</button>`;
+    return `<button class="ghost right" data-act="draftQuit">Back to the title</button>`;
+  }
   function renderDraft() {
     const d = U.draft;
     const run = U.run;
@@ -227,7 +240,7 @@
     let body = '';
     if (d.step === 'mode') {
       body = `<div class="panel"><h3>Hero ${n} of 2 ${who}— choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
-        <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span></div>
+        <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span>${draftOut(d)}</div>
         <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
         <div class="prebuilt-grid">${T.PREBUILTS.filter((pb) => !run.heroes.some((h) => h && h.name === pb.name))
           .map(
@@ -265,7 +278,7 @@
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${h.cards.filter((c) => T.CARD[c].sp === s).length}/3`).join(' ')}</span></div>
         <p class="dim small">Each pack mixes your three bloodlines. ★ marks a species' signature traits. Hover any face for exact numbers at your current P/E.</p>
         <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard' })).join('')}</div>
-        <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button></div>
+        <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button></div>
         ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
     } else if (d.step === 'wait') {
       const other = run.party.players.find((p, s) => !run.heroes[s]);
@@ -276,7 +289,7 @@
         <p class="dim small">P deepens the physical face's numbers (reliable, AP-fed). E awakens the ethereal face — it cannot be played until its card has E 1 — and scales its <i>capability</i>, something P can never buy. Every hero sets out with at least ${T.RULES.START_AWAKE} cards awakened. Caps: P 3, E 3 per card.</p>
         <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true })).join('')}</div>
         ${U.pilotQuestion ? U.pilotQuestion(h, d) : ''}
-        <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set out'}</button></div></div>`;
+        <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set out'}</button><button class="ghost" data-act="draftBack" data-tip="Build this pilot another way: a different pre-made pilot, or a fresh draft.">Back</button></div></div>`;
     }
     return `<div class="wrap">${header('The Draft')}<div class="row small dim" style="margin-bottom:8px">${run.heroes
       .filter(Boolean)
@@ -304,7 +317,18 @@
       const inp = $('#heroName');
       if (inp) d.name = inp.value || d.name;
     } else if (act === 'draftBack') {
-      d.step = 'mode';
+      d.step = arg === 'species' ? 'species' : 'mode';
+      d.hero = null;
+      d.pack = [];
+      d.picks = 0;
+    } else if (act === 'draftQuit') {
+      U.run = null;
+      U.draft = null;
+      U.screen = 'title';
+    } else if (act === 'draftPrev') {
+      // the first pilot comes back to its last step, as it was left
+      const h = run.heroes.pop();
+      U.draft = { heroIdx: 0, step: 'up', species: h.species.slice(1), name: h.name, hero: h, pack: [], picks: 0 };
     } else if (act === 'openPacks') {
       const inp = $('#heroName');
       if (inp && inp.value.trim()) d.name = inp.value.trim().slice(0, 24);
@@ -500,7 +524,7 @@
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    return `<div class="wrap">${header('The Route', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}<button class="ghost sm" data-act="quitToTitle">Title</button>`)}
+    return `<div class="wrap">${header('The Route', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${titleBtn()}`)}
       ${renderPassage(run)}
       ${partyBar(run)}
       <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">${expeditionLine(run)}Pick the next stop. Glowing stops are reachable. ${esc(T.threatTitle(run))} waits at the end of the route.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
@@ -538,7 +562,7 @@
               : `<p class="dim small">Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.</p><div class="pack">${cards
                   .map(
                     (cid) =>
-                      `<div>${U.cardHTML(cid, { flavor: false })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
+                      `<div class="offer">${U.cardHTML(cid, { flavor: false })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
                   )
                   .join(
                     '',
@@ -552,7 +576,7 @@
           })
           .join('');
     const ready = T.rewardSettled(rw);
-    return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete')}<div class="panel">
+    return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete', titleBtn())}<div class="panel">
       ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
       ${perHero}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="rewardDone" ${ready ? '' : 'disabled'}>Continue to the map</button></div></div></div>`;
@@ -586,7 +610,7 @@
   function renderHaven() {
     const run = U.run;
     const hv = run.haven;
-    return `<div class="wrap">${header('Haven', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>`)}
+    return `<div class="wrap">${header('Haven', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${titleBtn()}`)}
       ${partyBar(run)}
       ${U.sceneCard(U.EVENT_SCENES.haven, `<h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || run.crystals < 3 ? 'disabled' : ''}>Full repair — 3 ◇</button></div><p class="story-text small">Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.</p>`, 'haven-rest')}
       <div class="panel" style="margin-top:12px"><h3>Gear <span class="dim small" style="font-weight:400">— fueled by ◇ per use; 2 slots per hero. Gear grants general verbs, never keyed counters.</span></h3>
@@ -650,7 +674,7 @@
       const ready = !f || f.done || !['cardPick', 'tradeCard'].includes(f.kind);
       body = `<p style="font-family:var(--serif);font-size:15px">${esc(ev.result)}</p>${fu}<div class="row" style="margin-top:12px"><button class="primary" data-act="leaveEvent" ${ready ? '' : 'disabled'}>Continue</button></div>`;
     }
-    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
+    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${titleBtn()}`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
   }
 
   /* ───────────── SUMMARY ───────────── */

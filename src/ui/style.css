@@ -391,10 +391,14 @@ hr {
   border-color: var(--gold);
   box-shadow: 0 0 0 1px var(--gold) inset;
 }
+.tcard {
+  min-width: 0;
+}
 .tcard .head {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px;
+  gap: 2px 6px;
   margin-bottom: 6px;
 }
 .tcard .name {
@@ -427,12 +431,14 @@ hr {
 }
 .face .fh {
   display: flex;
-  gap: 6px;
+  flex-wrap: wrap;
+  gap: 3px 6px;
   align-items: center;
   font-size: 12.5px;
 }
 .face .fn {
   font-weight: 700;
+  white-space: nowrap;
 }
 .face .cost {
   margin-left: auto;
@@ -1295,6 +1301,15 @@ hr {
   background: rgba(255, 255, 255, 0.02);
   font-size: 11.5px;
 }
+.fbtn {
+  flex-wrap: wrap;
+}
+.fbtn .fwhy {
+  flex-basis: 100%;
+  font-size: 10px;
+  color: var(--dim);
+  padding-left: 14px;
+}
 .fbtn .fcost {
   margin-left: auto;
   font-family: var(--mono);
@@ -1455,4 +1470,14 @@ hr {
 }
 .tutorial b {
   color: var(--gold);
+}
+
+/* a reward offer: its card fills the column, so every Take button lines up beneath */
+.offer {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.offer > .tcard {
+  flex: 1;
 }

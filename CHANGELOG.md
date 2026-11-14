@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.29.1 — 2026-11-14 — layout fixes and ways back
+
+Garrett: "Fix the formatting issues and add back buttons where possible."
+
+- **Cards fit.** A face's cost and cooldown wrap onto their own line instead of running past the card's edge, a long bloodline name wraps under the card's name, and on the board a face you cannot play gives its reason on a second line. The reward screen's Take buttons line up under their cards.
+- **The board.** Zone names sit below the names of spaces and tokens' health, with a dark outline, so they no longer print over each other.
+- **Ways back.**
+  - The draft's first step leads back to the title, or for the second pilot back to the first pilot as it was left.
+  - The packs lead back to the bloodlines.
+  - Spending Upgrade Points leads back to choosing how to build.
+  - The route, missions, rewards, havens and events all have a Title button. The run is saved, and Continue resumes it where it was left. Online, that button reads *Leave game*.
+- No rule changes.
+
 ## 2.29.0 — dice kinds and four dice a turn
 
 Garrett's original dice (`docs/design/10-dice.md`), aimed at turns with nothing to decide. A pilot's dice now follow its kit.
