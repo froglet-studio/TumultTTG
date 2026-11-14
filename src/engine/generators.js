@@ -166,6 +166,19 @@
     return Object.assign(pageBoard(page), { cols, rows });
   }
   T.pageBoard = pageBoard;
+
+  /** The gravity band of a page: light, normal or heavy (T.GRAVITY). */
+  T.gravityBand = (g) => T.GRAVITY.find((b) => g <= b.max).id;
+  /**
+   * What the place is like on this visit: its gravity band, and a weather drawn from the page's skies
+   * (with the wind's direction: +1 blows toward the far edge, E; -1 toward where you arrive, A).
+   * Plain data, kept on the mission. A page without skies, or no page, is calm.
+   */
+  T.placeConditions = function (page, rng) {
+    const weather = page && page.skies && page.skies.length ? rng.pick(page.skies) : 'calm';
+    const wind = weather === 'wind' ? rng.pick([1, -1]) : 0;
+    return { gravity: page ? T.gravityBand(page.gravity) : 'normal', weather, wind };
+  };
   T.boardUtil = { gridBoard, addHeight, pick, shuffle, pageBoard, boardFor };
 
   /* ───────────────────────────── MISSION ARCHETYPES ───────────────────────────── */

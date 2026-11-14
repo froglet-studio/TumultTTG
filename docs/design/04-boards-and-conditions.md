@@ -1,6 +1,6 @@
 # 04 · Boards and conditions
 
-**Status: Partly settled.** 2.18 replaced lanes with zones and 2.19 plays every mission on a fixed board from a page of the atlas (Garrett, 2026-11-13: one fixed board per page; `docs/reference/ATLAS.md`). Gravity, weather and special spaces (teleporters, power-ups) are the next steps. The rest of this document is the earlier proposal. v2.0 builds every board from a small grid (4×3, 4×4 or 5×3) with a few edges removed and lanes running down the columns. The boards differ in detail and feel the same. The brief is that the board should be different with each encounter.
+**Status: Partly settled.** 2.18 replaced lanes with zones and 2.19 plays every mission on a fixed board from a page of the atlas (Garrett, 2026-11-13: one fixed board per page; `docs/reference/ATLAS.md`). 2.26 gave gravity bands and weather (wind, fog) rules of their own (`docs/reference/ATLAS.md`, *Gravity and weather*). Special spaces (teleporters, power-ups) are next. The rest of this document is the earlier proposal. v2.0 builds every board from a small grid (4×3, 4×4 or 5×3) with a few edges removed and lanes running down the columns. The boards differ in detail and feel the same. The brief is that the board should be different with each encounter.
 
 ## Board shapes
 

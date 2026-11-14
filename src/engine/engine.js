@@ -116,9 +116,9 @@
     adjacent(board, a, b) {
       return a !== b && B.allNeighbors(board, a).includes(b);
     },
-    /** In range of a ranged strike: two different nodes that share a zone. */
+    /** In range of a ranged strike: two different nodes that share a zone (in fog, also within its range). */
     los(board, a, b) {
-      return a !== b && B.sharesZone(board, a, b);
+      return a !== b && B.sharesZone(board, a, b) && (!board.fog || B.dist(board, a, b, true) <= board.fog);
     },
     sharesZone(board, a, b) {
       const zb = board.nodes[b].zones;
@@ -347,6 +347,7 @@
       stats: { kills: 0, lowHp: false, ambushDmg: 0, hazardDmg: 0, foundRound: null },
       isBoss: !!spec.isBoss,
       page: spec.page || null,
+      place: spec.place || { gravity: 'normal', weather: 'calm', wind: 0 },
       title: spec.title,
       eliteKind: spec.eliteKind || null,
       spawnedCount: 0,
@@ -379,6 +380,8 @@
           e.maxHp += run.bossBonusHp;
         });
     m.log.push({ r: 0, who: 'dm', text: spec.blurb });
+    m.board.fog = m.place.weather === 'fog' ? T.FOG_RANGE : 0;
+    for (const t of T.placeRules(m)) m.log.push({ r: 0, who: 'sys', text: t });
     T.beginRound(m);
     return m;
   };
@@ -806,11 +809,25 @@
     if (nd.height && !allowHeight) return false;
     return !T.occupied(m, node);
   }
+  /** Gravity: light carries a shove or pull 1 space further; heavy makes every space of it hurt. */
+  const gravityOf = (m) => (m.place && m.place.gravity) || 'normal';
+  function landed(m, source, target, moved) {
+    if (moved && gravityOf(m) === 'heavy' && target.alive !== false && !target.downed) {
+      say(m, `${target.name} slams down under the weight.`);
+      T.damage(m, source && source.kind === 'hero' ? source : null, target, moved, {
+        kind: 'true',
+        trueDmg: true,
+        label: 'slams down for',
+      });
+    }
+    return moved;
+  }
   function pushAway(m, source, target, n) {
     if (forceImmune(target)) {
       say(m, `${target.name} holds fast.`);
       return 0;
     }
+    if (gravityOf(m) === 'light') n += 1;
     let moved = 0;
     for (let i = 0; i < n; i++) {
       const cands = B.walkNeighbors(m.board, target.pos).filter((x) => canEnter(m, target, x, false));
@@ -820,13 +837,14 @@
       moveEntity(m, target, best, 'forced');
       moved++;
     }
-    return moved;
+    return landed(m, source, target, moved);
   }
   function pullToward(m, source, target, n) {
     if (forceImmune(target) || (target.kind === 'hero' && T.boonVals(target, 'noPull').length)) {
       say(m, `${target.name} holds fast.`);
       return 0;
     }
+    if (gravityOf(m) === 'light') n += 1;
     let moved = 0;
     for (let i = 0; i < n; i++) {
       if (B.adjacent(m.board, target.pos, source.pos)) break;
@@ -837,7 +855,7 @@
       moveEntity(m, target, best, 'forced');
       moved++;
     }
-    return moved;
+    return landed(m, source, target, moved);
   }
   function moveEntity(m, ent, node, how) {
     const from = ent.pos;
@@ -2200,6 +2218,42 @@
     if (!m.over) T.beginRound(m);
   };
 
+  /**
+   * The wind moves every unit 1 space downwind: to the walkable neighbour furthest along the wind
+   * (at least half a space), if it is free. A shield, an anchor or a hover holds a unit, and the boss
+   * stands. Units furthest downwind move first, so nobody is blocked by someone about to move.
+   */
+  T.blowWind = function (m) {
+    const dir = m.place.wind || 1;
+    const x = (n) => m.board.nodes[n].x * dir;
+    const units = T.liveHeroes(m)
+      .concat(T.liveEnemies(m))
+      .filter((u) => !u.boss && !forceImmune(u) && !st(u).Shield)
+      .sort((a, b) => x(b.pos) - x(a.pos) || a.uid - b.uid);
+    const moved = [];
+    for (const u of units) {
+      const to = B.walkNeighbors(m.board, u.pos)
+        .filter((n) => x(n) >= x(u.pos) + 0.5 && canEnter(m, u, n, false))
+        .sort((a, b) => x(b) - x(a) || a - b)[0];
+      if (to == null) continue;
+      moveEntity(m, u, to, 'forced');
+      moved.push(u.name);
+    }
+    if (moved.length) say(m, `The wind drives ${moved.join(', ')} downwind.`, 'enemy');
+  };
+  /** The rules this place adds today, a sentence each (empty in normal gravity and calm weather). */
+  T.placeRules = function (m) {
+    const p = m.place || {};
+    const g = T.GRAVITY.find((b) => b.id === p.gravity);
+    const w = T.WEATHER[p.weather];
+    const out = [];
+    if (g && g.text) out.push(`${g.name}: ${g.text}`);
+    if (w && w.text)
+      out.push(
+        `${w.name}${p.wind ? (p.wind > 0 ? ', toward the far edge (E)' : ', toward where you arrived (A)') : ''}: ${w.text}`,
+      );
+    return out;
+  };
   T.roundEnd = function (m) {
     m.phase = 'end';
     // counted snares spring on enemies still standing in them
@@ -2216,6 +2270,8 @@
         }
       }
     }
+    // wind: every unit moves 1 space downwind if it can (before hazards, so the wind can blow you into one)
+    if (m.place && m.place.weather === 'wind') T.blowWind(m);
     // hazards
     for (const h of T.liveHeroes(m))
       if (m.board.nodes[h.pos].hazard && !hazardImmune(h)) {

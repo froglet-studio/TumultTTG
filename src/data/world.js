@@ -108,6 +108,19 @@
   // How hard a run's missions press. Each list is indexed by tier (1, 2, 3); the boss is never changed.
   // Rising is the game as it was tuned before 2.7. Flood is for careful players: bigger objectives on
   // shorter clocks are what press a careful squad — more or tougher foes hardly do (BALANCE.md, v2.7.0).
+  /* Places as opponents (2.26): the gravity of a page and the weather of the day are rules, each one
+     sentence a player can resolve by hand. Bands by the page's gravity in g. */
+  T.GRAVITY = [
+    { id: 'light',  max: 0.5,      name: 'Light gravity', text: 'Anything shoved or pulled goes 1 space further.' },
+    { id: 'normal', max: 2.9,      name: 'Gravity',       text: '' },
+    { id: 'heavy',  max: Infinity, name: 'Heavy gravity', text: 'Anything shoved or pulled takes 1 damage for each space it is moved.' },
+  ];
+  T.WEATHER = {
+    calm: { name: 'Calm', text: '' },
+    wind: { name: 'Wind', text: 'At the end of every round the wind moves every unit 1 space downwind, if a path leads there and the space is free. A shield, an anchor or a hover holds you; so does the Heart.' },
+    fog:  { name: 'Fog',  text: 'A ranged strike reaches only units within 2 steps, even in its zone.' },
+  };
+  T.FOG_RANGE = 2;
   T.TIDES = {
     rising: { id:'rising', n:'Steady wind', need:[0,0,0], clock:[0,0,0], swarm:[0,0,0], escorts:[[],[],[]],
       txt:'Tumult as it has always blown.' },

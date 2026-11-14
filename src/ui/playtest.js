@@ -19,10 +19,13 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.25.0',
+    version: '2.26.0',
     items: [
       {
-        text: 'Nothing new to play in this build. The simulator now measures how often a pilot’s turn is dull (nothing matters, or one move is obviously right); about two turns in five are. When you play, note any turn where you had nothing interesting to do, and say which mission it was.',
+        text: 'Places now have rules. Light gravity (hills, meadows, sea cliff): a shove or pull goes 1 space further. Heavy gravity (quarry, high pass): anything shoved or pulled takes 1 damage a space. Some visits bring wind (at the end of each round everyone not braced, anchored or hovering moves 1 space downwind, into hazards too) or fog (ranged strikes reach only 2 steps). The top bar shows today’s rules; hover them for the sentence. Did a place change what you did? Did the wind ever feel unfair, or fun?',
+      },
+      {
+        text: 'Note any turn where you had nothing interesting to do, and say which mission it was: the simulator says about two turns in five are like that, mostly at tier 1.',
       },
       {
         text: 'After every won mission each pilot now gets an upgrade of their own: a trait offer of three cards that fit that pilot (or skip for +2 ◇), and after an elite a boon each. With two players, each picks for their own pilot. Did both of you have a pick you cared about? Was one offer always better than the other?',

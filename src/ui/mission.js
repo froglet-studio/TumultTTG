@@ -338,10 +338,19 @@
     const clock = m.clock
       ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label)}">⏳ ${m.clock.value}</span>`
       : '';
+    // the place's rules today: gravity and weather, a pill each, the rule in its tip
+    const pl = m.place || {};
+    const gb = T.GRAVITY.find((b) => b.id === pl.gravity);
+    const wx = T.WEATHER[pl.weather];
+    const place =
+      (gb && gb.text ? `<span class="pill" data-tip="${esc(gb.text)}">${esc(gb.name)}</span>` : '') +
+      (wx && wx.text
+        ? `<span class="pill" data-tip="${esc(wx.text)}">${pl.weather === 'wind' ? (pl.wind > 0 ? 'Wind → E' : 'Wind ← A') : 'Fog'}</span>`
+        : '');
     $('#mtop').innerHTML =
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
-      ${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
+      ${place}${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
       <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>
       ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button></div>`;
   }
