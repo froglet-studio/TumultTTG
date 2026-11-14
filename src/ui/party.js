@@ -25,12 +25,12 @@
     'kit',
     'autoUpRun',
     'sellGear',
+    'skipCard',
   ]);
   const HERO_SECOND = new Set(['takeCard', 'takeBoon', 'buyGear', 'buyCons', 'evTakeCard']);
   // the squad's shared choices: the host makes them
   const LEAD = new Set([
     'goNode',
-    'skipCard',
     'rewardDone',
     'rest',
     'leaveHaven',

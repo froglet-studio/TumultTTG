@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.23.0',
+    version: '2.24.0',
     items: [
+      {
+        text: 'After every won mission each pilot now gets an upgrade of their own: a trait offer of three cards that fit that pilot (or skip for +2 ◇), and after an elite a boon each. With two players, each picks for their own pilot. Did both of you have a pick you cared about? Was one offer always better than the other?',
+      },
       {
         text: 'Two players now take turns. In each round one player flies their pilot and presses End turn, then the other does the same, and the foes act once both are done. Who goes first swaps every round. This applies on one screen and online. Does waiting for your partner feel like planning together, or like dead time?',
       },

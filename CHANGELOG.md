@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.24.0 — 2026-11-14 — every pilot gets an upgrade
+
+Garrett: "both players should always get an upgrade." The first step of the two-player plan (2026-11-14).
+
+- **A trait for every hero.** After a won mission each hero is offered three cards of their own, drawn from the traits that hero can take, and no card is offered to both. Each takes one or skips for +2 ◇. Before, the squad shared one pick of one card.
+- **A boon for every hero** after an elite: each picks one of their own two.
+- **With two players, each chooses for their own pilot**, on one screen or two: *Skip* is now a pilot's choice, not the host's, and goes through `T.execCommand` like *Take*. *Continue* waits until every pilot has chosen.
+- **Save version 9:** the reward keeps one offer per hero (`offers`, `boons`, and a `picked` / `boonPicked` flag each). A version-8 save on the reward screen offers its one trait and boon to each hero (fixture `save-2.22.json`).
+- **Balance:** within noise. Full runs, `node tools/sim.js 40`: heuristic 8 → 9 of 40, look-ahead 21 → 21 of 40; 80 heuristic runs: 20 → 21. Single missions are unchanged (their kits are fixed). The simulated players take the first card offered, so a person who chooses well may gain more than this shows; watch it in playtests.
+
 ## 2.23.0 — 2026-11-14 — two players take turns; online join says why it fails
 
 Garrett: "the multiplayer didn't work. nothing happened they didn't connect. the players should take turns."

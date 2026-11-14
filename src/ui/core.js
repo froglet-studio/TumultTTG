@@ -511,30 +511,34 @@
     const bonus = rw.bonus
       .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
       .join('');
-    const offer =
-      rw.offer && rw.offer.length && !rw.picked
-        ? `<hr><h3>Claim a trait</h3><p class="dim small">Pick one and give it to a hero whose bloodline matches (3-of-9 cap per species, 9 cards max). Or skip for +2 ◇.</p><div class="pack">${rw.offer
-            .map(
-              (cid) =>
-                `<div>${U.cardHTML(cid, { flavor: false })}<div class="row" style="margin-top:6px">${run.heroes
-                  .map((h, i) => {
-                    const ok = T.canAddCard(h, cid);
-                    return `<button class="sm ${ok.ok ? 'primary' : ''}" data-act="takeCard" data-arg="${cid}|${i}" ${ok.ok ? '' : 'disabled'} title="${ok.ok ? '' : esc(ok.why)}">→ ${esc(h.name)}</button>`;
-                  })
-                  .join('')}</div></div>`,
-            )
-            .join(
-              '',
-            )}</div><div class="row" style="margin-top:8px"><button class="ghost" data-act="skipCard">Skip (+2 ◇)</button></div>`
-        : '';
-    const boon =
-      rw.boon && rw.boon.length && !rw.boonPicked
-        ? `<hr><h3>An elite falls — choose a boon</h3><div class="row">${rw.boon.map((b) => `<div class="panel tight" style="min-width:220px"><b>${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</b><div class="small dim">${esc(T.BOON_BY[b].desc)}</div><div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm primary" data-act="takeBoon" data-arg="${b}|${i}">→ ${esc(h.name)}</button>`).join('')}</div></div>`).join('')}</div>`
-        : '';
-    const ready = (!rw.offer || !rw.offer.length || rw.picked) && (!rw.boon || !rw.boon.length || rw.boonPicked);
+    // every pilot chooses an upgrade of their own: a trait (or +2 ◇), and after an elite a boon
+    const perHero = rw.lifeline
+      ? ''
+      : run.heroes
+          .map((h, i) => {
+            const cards = rw.offers[i];
+            const trait = rw.picked[i]
+              ? `<p class="dim small">✓ Trait chosen.</p>`
+              : `<p class="dim small">Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.</p><div class="pack">${cards
+                  .map(
+                    (cid) =>
+                      `<div>${U.cardHTML(cid, { flavor: false })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
+                  )
+                  .join(
+                    '',
+                  )}</div><div class="row" style="margin-top:8px"><button class="ghost" data-act="skipCard" data-arg="${i}">Skip (+2 ◇)</button></div>`;
+            const boon = !rw.boons
+              ? ''
+              : rw.boonPicked[i]
+                ? `<p class="dim small">✓ Boon chosen.</p>`
+                : `<h4>An elite falls: a boon for ${esc(h.name)}</h4><div class="row">${rw.boons[i].map((b) => `<div class="panel tight" style="min-width:220px"><b>${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</b><div class="small dim">${esc(T.BOON_BY[b].desc)}</div><div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeBoon" data-arg="${b}|${i}">Take</button></div></div>`).join('')}</div>`;
+            return `<hr><h3>${esc(h.name)}'s upgrade</h3>${trait}${boon}`;
+          })
+          .join('');
+    const ready = T.rewardSettled(rw);
     return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete')}<div class="panel">
       ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
-      ${offer}${boon}
+      ${perHero}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="rewardDone" ${ready ? '' : 'disabled'}>Continue to the map</button></div></div></div>`;
   }
 
@@ -917,7 +921,7 @@
         return;
       }
       case 'skipCard':
-        T.skipOfferedCard(U.run);
+        U.exec({ op: 'skipCard', hero: parseInt(arg, 10) });
         U.render();
         return;
       case 'takeBoon': {

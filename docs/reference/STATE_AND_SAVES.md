@@ -81,5 +81,6 @@ The browser saves to `localStorage` (`tumult_v2_run`) after every action in a mi
 | 6 | 2.17.0 | adds `run.story.expedition` (`{ patron, domain, threat, legs: [{ ground, name, scene }] }`, `src/data/expeditions.js`); a version-5 save has none and keeps its route's names (fixture `save-2.16.json`) |
 | 7 | 2.18.0 | a board node's `lane` becomes `zones`, a list of zone keys (`T.ZONES`); a version-6 save's lane becomes a zone of the same name (fixture `save-2.17.json`) |
 | 8 | 2.19.0 | adds `page` (an id of `T.ATLAS`, or null) to every route stop and to the mission, and `label` (`A1`…`E3`, `X1`, `L1`) to a page board's nodes; a version-7 save's stops get null and draw a page when played, and a mission in progress keeps its grid (fixture `save-2.18.json`) |
+| 9 | 2.24.0 | the reward holds one offer per hero: `offers` (a trait list each), `boons` (a boon list each, or null), and `picked` / `boonPicked` as one flag per hero, in place of the squad's one `offer`, `boon`, `picked` and `boonPicked`; a version-8 reward still open offers its one trait (and boon) to each hero (fixture `save-2.22.json`) |
 
 A version-1 save still loads: it returns to the map (2.0 never kept a mission), its streams start from the seed, and the map is rebuilt from the copy of each node that 2.0 kept up to date. A save from a newer version than the game is refused rather than guessed at.

@@ -335,20 +335,21 @@
         up += v.up || 0;
         crystals += v.crystals || 0;
       }
-    const offer = T.cardOffer(run, 3);
-    const boon = elite ? T.boonOffer(run, 2) : null;
+    // every pilot gets an upgrade of their own: a trait offer each, and on an elite a boon offer each
+    const offers = T.cardOffers(run, 3);
+    const boons = elite ? T.boonOffers(run, 2) : null;
     run.lastReward = {
       up,
       crystals,
-      offer,
-      boon,
+      offers,
+      boons,
       bonus: m.bonus.map((b) => Object.assign({}, b)),
       title: m.title,
       won: m.won,
       rounds: m.round,
       kills: m.stats.kills,
-      picked: false,
-      boonPicked: false,
+      picked: run.heroes.map((h, i) => !offers[i].length),
+      boonPicked: run.heroes.map(() => !boons),
     };
     return run.lastReward;
   };
@@ -367,6 +368,39 @@
       .slice(0, n)
       .map((b) => b.id);
   };
+  /**
+   * One trait offer for each hero: up to n cards that hero could take, drawn from the loot stream,
+   * no card offered to two heroes. A hero with no legal card gets an empty offer (and nothing to pick).
+   */
+  T.cardOffers = function (run, n) {
+    const rng = T.runStream(run, 'loot');
+    const given = new Set();
+    return run.heroes.map((h) => {
+      const cands = T.CARDS.filter((c) => !given.has(c.id) && T.canAddCard(h, c.id).ok);
+      const pick = rng
+        .shuffle(cands)
+        .slice(0, n)
+        .map((c) => c.id);
+      pick.forEach((id) => given.add(id));
+      return pick;
+    });
+  };
+  /** One boon offer for each hero: n boons nobody in the squad has, no boon offered to two heroes. */
+  T.boonOffers = function (run, n) {
+    const rng = T.runStream(run, 'loot');
+    const have = new Set(run.boons.concat(...run.heroes.map((h) => h.boons)));
+    return run.heroes.map(() => {
+      const cands = T.BOONS.filter((b) => !have.has(b.id) && b.id !== 'defiant');
+      const pick = rng
+        .shuffle(cands)
+        .slice(0, n)
+        .map((b) => b.id);
+      pick.forEach((id) => have.add(id));
+      return pick;
+    });
+  };
+  /** Has every hero made (or passed) the choices this reward offers them? */
+  T.rewardSettled = (rw) => rw.picked.every(Boolean) && rw.boonPicked.every(Boolean);
   /**
    * The mission is over: bring home what it carried for the run (crystals spent and salvaged, the
    * once-a-run Second Wind), apply its result, and let it go. After this the run has no mission.
@@ -410,8 +444,10 @@
         rw.lifeline = true;
         rw.up = 0;
         rw.crystals = 0;
-        rw.offer = [];
-        rw.boon = null;
+        rw.offers = run.heroes.map(() => []);
+        rw.boons = null;
+        rw.picked = run.heroes.map(() => true);
+        rw.boonPicked = run.heroes.map(() => true);
         run.heroes.forEach((h) => {
           h.downed = false;
           h.hp = Math.max(6, Math.floor(h.maxHp * 0.5));
@@ -437,20 +473,31 @@
     });
     run.phase = 'reward';
   };
+  /** A hero takes a card from their own offer. */
   T.takeOfferedCard = function (run, cardId, heroIdx) {
-    const h = run.heroes[heroIdx];
-    const r = T.addCard(h, cardId);
-    if (r.ok) run.lastReward.picked = true;
+    const rw = run.lastReward;
+    if (rw.picked[heroIdx] || !rw.offers[heroIdx].includes(cardId))
+      return { ok: false, why: 'that trait is not on offer to this hero' };
+    const r = T.addCard(run.heroes[heroIdx], cardId);
+    if (r.ok) rw.picked[heroIdx] = true;
     return r;
   };
-  T.skipOfferedCard = function (run) {
-    run.lastReward.picked = true;
+  /** A hero passes on their trait offer, for 2 ◇ to the squad. */
+  T.skipOfferedCard = function (run, heroIdx) {
+    const rw = run.lastReward;
+    if (rw.picked[heroIdx]) return { ok: false, why: 'already chosen' };
+    rw.picked[heroIdx] = true;
     run.crystals += 2;
+    return { ok: true };
   };
+  /** A hero takes a boon from their own offer. */
   T.takeBoon = function (run, boonId, heroIdx) {
-    const h = run.heroes[heroIdx];
-    h.boons.push(boonId);
-    run.lastReward.boonPicked = true;
+    const rw = run.lastReward;
+    if (!rw.boons || rw.boonPicked[heroIdx] || !rw.boons[heroIdx].includes(boonId))
+      return { ok: false, why: 'that boon is not on offer to this hero' };
+    run.heroes[heroIdx].boons.push(boonId);
+    rw.boonPicked[heroIdx] = true;
+    return { ok: true };
   };
 
   /* ───────────────────────────── HAVEN ───────────────────────────── */
@@ -573,7 +620,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 8;
+  T.SAVE_VERSION = 9;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -631,6 +678,21 @@
       if (r.map) Object.values(r.map.all).forEach((n) => (n.page = n.page || null));
       if (r.mission) r.mission.page = r.mission.page || null;
       r.v = 8;
+    },
+    // 2.24 gives every hero an upgrade of their own after a mission. A reward still open from an older
+    // run offers its one trait (and boon) to each hero.
+    8(r) {
+      const rw = r.lastReward;
+      if (rw && !rw.offers) {
+        const n = r.heroes.length;
+        rw.offers = Array.from({ length: n }, () => (rw.offer || []).slice());
+        rw.boons = rw.boon && rw.boon.length ? Array.from({ length: n }, () => rw.boon.slice()) : null;
+        rw.picked = Array.from({ length: n }, (x, i) => !!rw.picked || !rw.offers[i].length);
+        rw.boonPicked = Array.from({ length: n }, () => !!rw.boonPicked || !rw.boons);
+        delete rw.offer;
+        delete rw.boon;
+      }
+      r.v = 9;
     },
   };
   T.deserializeRun = function (json) {
