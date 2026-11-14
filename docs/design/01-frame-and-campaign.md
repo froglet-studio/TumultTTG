@@ -11,7 +11,7 @@ That makes the campaign, literally, the pilots' origin story. Whatever happened 
 ## The squad
 
 - **Three** members, because a squad is three. The interface and the balance must also work with two (v2.0's size) so a short session stays short.
-- Solo: one player commands all three. Co-op: each player owns one. Hot-seat first; networking is out of scope. *Built in 2.12.0 for today's two-pilot squad:* players and seats (`run.party`), each player drafting and flying their own pilot, the host making the squad's shared choices, and a round that ends when every player is ready ([`reference/OVERVIEW.md`](../reference/OVERVIEW.md#players)). Playing over the network was added in 2.13.0, on the test page only: two screens, the host's holding the game (Garrett, 2026-11-13).
+- Solo: one player commands all three. Co-op: each player owns one. Hot-seat first; networking is out of scope. *Built in 2.12.0 for today's two-pilot squad:* players and seats (`run.party`), each player drafting and flying their own pilot, the host making the squad's shared choices, and a round that ends when every player is ready ([`reference/OVERVIEW.md`](../reference/OVERVIEW.md#players)). Playing over the network was added in 2.13.0, on the test page only: two screens, the host's holding the game (Garrett, 2026-11-13). Since 2.23.0 players take turns within a round, and the lead alternates each round (Garrett, 2026-11-14: "the players should take turns").
 - Rename throughout, once, in one change: *hero → pilot*, *species / bloodline → clade*, *Tide Map → season route*.
 
 ## Patrons and domains

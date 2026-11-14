@@ -3,7 +3,7 @@
  * Playing online (src/ui/net.js, playtest build): two screens, one game, through a shared
  * store. Here the store is a small stand-in for the page host's `db` capability, shared by two
  * pages in jsdom: a host and a guest draft their own pilots, the guest's commands are carried
- * out on the host's screen, and a round ends when both are ready.
+ * out on the host's screen, and players take turns, and a round ends when both have had theirs.
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -186,6 +186,18 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
   const mB = () => B.U.run.mission;
   assert.equal(B.U.ms.heroIdx, 1, 'the guest starts on their own pilot');
 
+  const ready = (P) => {
+    P.act('endRound');
+    if (P.U.ms.endConfirm) P.act('endRound');
+  };
+  const round = mA().round;
+  // players take turns, the host first in round 1: the guest waits
+  assert.match(B.d.querySelector('[data-act="endRound"]').textContent, /'s turn…/);
+  ready(A);
+  await until(() => B.U.run.party.ready[0], 'the guest to see the host end their turn');
+  assert.equal(mA().round, round, "the host's turn ends; the round does not");
+  assert.match(B.d.querySelector('[data-act="endRound"]').textContent, /End Round/);
+
   // the guest walks their pilot: carried out on the host's screen, seen on both
   const to = B.T.reachableWalk(mB(), mB().heroes[1], B.T.apValue(mB().heroes[1]), false)[0];
   assert.ok(to != null, 'the guest has somewhere to walk');
@@ -198,16 +210,7 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
   await until(() => A.U.net.rev > rev, 'the host to answer');
   assert.equal(mA().heroes[0].pos, pos0, "the host refuses a guest's command for the host's pilot");
 
-  // the round ends once both have said they are ready
-  const round = mA().round;
-  const ready = (P) => {
-    P.act('endRound');
-    if (P.U.ms.endConfirm) P.act('endRound');
-  };
-  ready(A);
-  await until(() => B.U.run.party.ready[0], 'the guest to see the host ready');
-  assert.match(B.d.querySelector('[data-act="endRound"]').textContent, /1\/2/);
-  assert.equal(mA().round, round);
+  // the guest's turn is the last: ending it ends the round
   ready(B);
   await until(() => (mA().round > round || mA().over) && mB().round === mA().round, 'the next round on both');
   assert.equal(B.T.serializeRun(B.U.run), A.T.serializeRun(A.U.run), 'both screens hold the same game');
