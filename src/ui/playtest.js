@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.30.0',
+    version: '2.31.0',
     items: [
+      {
+        text: 'Words of art now explain themselves. Hidden, Anchor, Weak, Shield, Push, Zone and the rest are drawn as small chips with an icon in card text, foe intents and the log; hover one for its rule in a sentence. Tokens on the board wear the same icons as badges, with a number where a state counts down. Hover a card face, a basic action or a gear ability and the board shows what it would do, exactly: rings on whoever it would reach, damage numbers, where things would be shoved or pulled, which states they would gain. While choosing a target, hover each one to compare. Was there a word you still had to look up? Did a preview ever show something that then did not happen?',
+      },
       {
         text: 'Moving your partner is now yours to decide, all at once. Leg up, Call, Cue and the Beacon gear ask you where your partner goes when you play them, and they move there immediately. Your partner never gets free steps to spend later, so you can plan your whole turn and account only for what the foes do. Does that make two-player turns easier to plan? Do you ever miss letting your partner choose?',
       },
@@ -31,7 +34,7 @@
         text: 'New dice, and four a turn. Most of your dice are d20s: mostly AP, with each element and Omni once. Every card you awaken, and every Affinity boon, swaps a plain die for a d8 of its element (no AP, half that element), marked 8 in its corner; Omni Core gives a d12 with two of each symbol. The element symbols are now Cosmic Shore’s (a key sits under your dice). Foes are tougher and objectives a little bigger to match. Did four dice give you more to decide? Did a pilot start to feel like a mage? Was there ever too little AP?',
       },
       {
-        text: 'Pilots can now help each other with three basic actions, no card needed. Spot (2 AP): mark a foe up to 3 nodes away, so the next hit on it, by either of you, deals +2. Leg up (1 AP): an ally beside you may move 2 nodes for free this round. Lend (2 AP): give an ally beside you 2 AP for this round; lend it before their turn, or it is lost. Did you ever plan a turn around your partner? Which one did you use, and which never?',
+        text: 'Pilots can now help each other with three basic actions, no card needed. Spot (2 AP): mark a foe up to 3 nodes away, so the next hit on it, by either of you, deals +2. Leg up (1 AP): move an ally beside you up to 2 nodes, to where you choose. Lend (2 AP): give an ally beside you 2 AP for this round; lend it before their turn, or it is lost. Did you ever plan a turn around your partner? Which one did you use, and which never?',
       },
       {
         text: 'A new mission that is not a fight: Salvage. Crates lie on the far side; carry them to the near edge (A) before the water takes the wreck. Interact beside a crate to pick it up, one each at a time; reaching the near edge sets it down, however you get there (even the wind). Did you split up or carry together? Did you fight the scavengers, or go round them? Is it too easy, or too tight? Use the panel to start one: Salvage, any tier.',

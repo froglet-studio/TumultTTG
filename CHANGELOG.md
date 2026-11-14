@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.31.0 — 2026-11-14 — words explain themselves, plays preview on the board
+
+Garrett: "make things interactive so any question the player has is answered intuitively by the interface. e.g. hovering over weaken explains what that does with a tooltip and that word indicates that visually to the player before they do so."
+
+- **Keywords.** A new `src/ui/keywords.js` lists the game's words of art, from Weak, Anchor, Root, Mark, Hidden, Locate and Expose through Shield, Thorns, Stasis, Hover, Empower, Pre-empt, Counter and Pierce, Push, Pull, Melee, Lane, Zone and Burst, to Reveal, Mint, Decoy, Trap, Hazard, Height, Heal and Slow. Each has an icon, a tone (helps you, hurts you, or neutral) and one sentence of rule. Card text, foe intents, the log and place rules draw them as chips; hovering a chip shows its sentence. A card's tooltip lists the words it uses with their sentences.
+- **Badges.** Tokens on the board wear the same icons for the states they hold, with a count where a state runs out, instead of emoji.
+- **Previews.** Hovering a playable card face, basic action or gear ability plays it on `T.imagine(m)` for every target it could pick and draws the difference on the board: a ring on each unit it would reach, damage and healing numbers, a ghost where a unit would be moved, the states it would gain, and a "Would:" line above the board. In target mode, hovering a token or node previews just that choice. The mission itself is never touched (a test checks that it is unchanged).
+- The playtest note about Leg up now describes 2.30's rule.
+- No rule or balance changes.
+
 ## 2.30.0 — 2026-11-14 — partner moves are decided by the player who gives them
 
 Garrett: "do a strong pass in ensuring that duo powers are something that the controlling player can treat as deterministic … if they have to wait for another player to make a movement decision for some movement they gave them then the rest of their turn is not something they can determine in their planning."

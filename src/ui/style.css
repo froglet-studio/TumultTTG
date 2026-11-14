@@ -1481,3 +1481,158 @@ hr {
 .offer > .tcard {
   flex: 1;
 }
+
+/* ───────────── keywords (src/ui/keywords.js): one look for a word of art, wherever it appears ───────────── */
+.kw {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2px;
+  padding: 0 4px 0 3px;
+  border-radius: 4px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: help;
+  border-bottom: 1px dotted currentColor;
+}
+.kw .kw-ic,
+.state .kw-ic {
+  width: 0.95em;
+  height: 0.95em;
+  align-self: center;
+  margin-right: 1px;
+}
+.kw-good {
+  color: #7fd6a6;
+  background: rgba(127, 214, 166, 0.08);
+}
+.kw-bad {
+  color: #f08aa8;
+  background: rgba(240, 138, 168, 0.08);
+}
+.kw-neutral {
+  color: #8fd3e6;
+  background: rgba(143, 211, 230, 0.08);
+}
+#mlog .kw {
+  background: none;
+  padding: 0;
+  border-bottom: none;
+  font-weight: inherit;
+}
+.kw-gloss {
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px solid var(--line);
+  font-size: 11.5px;
+  display: grid;
+  gap: 3px;
+}
+.kw-gloss .kw {
+  border-bottom: none;
+}
+
+/* the same icons round the tokens */
+.badge circle {
+  fill: #0b1222;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+.badge path {
+  fill: currentColor;
+}
+.badge.kw-good,
+.badge.kw-bad,
+.badge.kw-neutral {
+  background: none;
+}
+.badge-n {
+  font: 700 9px var(--mono);
+  fill: #fff;
+  paint-order: stroke;
+  stroke: #0b1222;
+  stroke-width: 2.5px;
+}
+.badge.ghost {
+  animation: pv-pulse 0.9s ease-in-out infinite alternate;
+}
+
+/* what a play would do, drawn before it is made */
+#preview {
+  pointer-events: none;
+}
+.pv-ring {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-dasharray: 5 4;
+  animation: pv-spin 6s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.pv-ring.good {
+  stroke: #7fd6a6;
+}
+.pv-ring.bad {
+  stroke: #f08aa8;
+}
+.pv-ring.neutral {
+  stroke: #8fd3e6;
+}
+.pv-num {
+  font: 700 15px var(--mono);
+  paint-order: stroke;
+  stroke: #0b1222;
+  stroke-width: 4px;
+}
+.pv-num.dmg {
+  fill: #ff9db8;
+}
+.pv-num.heal {
+  fill: #8ff0b8;
+}
+.pv-fell {
+  font: 700 30px var(--mono);
+  fill: rgba(255, 120, 150, 0.85);
+}
+.pv-move {
+  stroke: #8fd3e6;
+  stroke-width: 2;
+  stroke-dasharray: 3 4;
+}
+.pv-ghost {
+  fill: rgba(143, 211, 230, 0.12);
+  stroke: #8fd3e6;
+  stroke-dasharray: 3 3;
+}
+.pv-line {
+  margin-top: 4px;
+  font-size: 12px;
+}
+@keyframes pv-pulse {
+  from {
+    opacity: 0.55;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes pv-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+#mtarget {
+  position: relative;
+}
+#mtarget .pv-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 6;
+  padding: 5px 9px;
+  border: 1px solid var(--line2);
+  border-radius: 8px;
+  background: rgba(10, 16, 30, 0.94);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
