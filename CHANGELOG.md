@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.25.0 — 2026-11-14 — measure whether every turn is a decision
+
+Step 2 of the two-player plan: a baseline for "both players have interesting decisions every turn".
+
+- **`T.turnChoices(m, hero)`** (`src/engine/lookahead.js`) says what one hero's turn offers from here: *idle* (nothing is worth 3 points over doing nothing), *forced* (one clear best outcome) or *open* (two or more different outcomes close to the best). It works on an imagined copy and changes nothing.
+- **`node tools/turns.js 10`** plays every archetype and tier with the look-ahead player and reports idle, forced and open turns, and dull turns for each pilot. Baseline: 13% idle, 28% forced, 59% open, so about 41% of turns are dull. The worst are tier 1, elites (69%) and vaults (61%). `docs/reference/PLAYERS.md` has the table.
+- No change to play.
+
 ## 2.24.0 — 2026-11-14 — every pilot gets an upgrade
 
 Garrett: "both players should always get an upgrade." The first step of the two-player plan (2026-11-14).

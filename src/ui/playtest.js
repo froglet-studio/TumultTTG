@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.24.0',
+    version: '2.25.0',
     items: [
+      {
+        text: 'Nothing new to play in this build. The simulator now measures how often a pilot’s turn is dull (nothing matters, or one move is obviously right); about two turns in five are. When you play, note any turn where you had nothing interesting to do, and say which mission it was.',
+      },
       {
         text: 'After every won mission each pilot now gets an upgrade of their own: a trait offer of three cards that fit that pilot (or skip for +2 ◇), and after an elite a boon each. With two players, each picks for their own pilot. Did both of you have a pick you cared about? Was one offer always better than the other?',
       },

@@ -369,6 +369,40 @@
     }
     return best.seq;
   };
+  /**
+   * How much one hero's turn offers, from here: a measure of whether the player has a decision to
+   * make, not of what to do. Every action this hero could take first is tried on a copy, followed by
+   * their best single next action, and the round is played out and scored as the planner scores it.
+   *   pass     the score if this hero does nothing
+   *   stake    how much the best line beats doing nothing (in points of about one vitality)
+   *   choices  how many different outcomes come close to the best (within `margin`, or a quarter
+   *            of the stake if that is more): two moves that end in the same place count once
+   * A turn is `idle` when nothing it could do is worth `idle` points, `forced` when only one outcome
+   * is close to the best, and `open` otherwise. Nothing is changed.
+   */
+  T.turnChoices = function (m, hi, { margin = 3, idle = 3 } = {}) {
+    const root = T.imagine(m);
+    const pass = worthIfStopped(scratch(root));
+    const mine = (c) => T.legalActions(c).filter((a) => a.hero === hi);
+    const scores = [];
+    for (const a of mine(root)) {
+      const c = scratch(root);
+      if (!T.applyAction(c, a).ok) continue;
+      let best = worthIfStopped(scratch(c));
+      if (!c.over)
+        for (const b of mine(c)) {
+          const d = scratch(c);
+          if (T.applyAction(d, b).ok) best = Math.max(best, worthIfStopped(d));
+        }
+      scores.push(best);
+    }
+    const top = Math.max(pass, ...scores);
+    const stake = top - pass;
+    const near = scores.filter((x) => x >= top - Math.max(margin, stake / 4));
+    const choices = new Set(near.map((x) => Math.round(x))).size;
+    const kind = stake < idle ? 'idle' : choices <= 1 ? 'forced' : 'open';
+    return { pass, stake, choices, actions: scores.length, kind };
+  };
   const sameSpot = (a, b) => a.t === b.t && a.hero === b.hero && a.card === b.card && a.face === b.face;
 
   /**

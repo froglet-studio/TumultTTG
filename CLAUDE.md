@@ -19,6 +19,7 @@ npm run check          build + test — run before calling any change done
 npm run format         Prettier (src/data/ is deliberately excluded)
 npm run docs           regenerate docs/reference/CARDS.md and ABILITY_AUDIT.md
 
+node tools/turns.js 10               does every turn offer a decision? idle / forced / open turns per pilot (~3 min)
 node tools/sim.js 40                 balance tables for both simulated players and the gap (~75 s; `--player weak` is the 1 s look;
                                      or `40 missions`, `80 runs`, `10 cards`; `--rule VITALITY=28` tries a rules constant)
 node tools/mission-log.js vault 2 7  one narrated mission: archetype, tier, seed [heroA heroB] [start|tier kit]
