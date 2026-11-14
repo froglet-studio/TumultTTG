@@ -135,13 +135,23 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
     act('endRound');
     if (U.ms.endConfirm) act('endRound');
   };
+  // players take turns: round 1 is the host's first, so the guest's end-turn does nothing yet
+  assert.match(d.querySelector('[data-act="endRound"]').textContent, /Player 1's turn/);
   ready();
-  assert.equal(m.round, round, 'one ready player does not end the round');
-  assert.match(d.querySelector('[data-act="endRound"]').textContent, /1\/2/);
+  assert.equal(m.round, round, "a player cannot end someone else's turn");
   U.seats = [0];
+  U.updateMission();
+  assert.match(d.querySelector('[data-act="endRound"]').textContent, /End Player 1's turn/);
   ready();
-  assert.ok(m.round > round || m.over, 'the second ready player ends it');
-  assert.equal(JSON.stringify(U.run.party.ready), '[false,false]', 'and the next round starts with nobody ready');
+  assert.equal(m.round, round, "ending the first player's turn passes it on; the round goes on");
+  assert.equal(w.T.turnSeat(U.run), 1);
+  U.seats = [1];
+  U.updateMission();
+  assert.match(d.querySelector('[data-act="endRound"]').textContent, /End Round/);
+  ready();
+  assert.ok(m.round > round || m.over, "the last player's turn ends the round");
+  assert.equal(JSON.stringify(U.run.party.ready), '[false,false]', 'and the next round starts with nobody done');
+  if (!m.over) assert.equal(w.T.turnSeat(U.run), 1, 'and the other player goes first');
   assert.deepEqual(errors, []);
 });
 
@@ -153,9 +163,16 @@ test('a command does what the direct call does, and only for its own player', ()
   };
   const a = make();
   const b = make();
+  // round 1: the host's turn first; the guest may not move yet
   const h = a.mission.heroes[1];
   const to = T.reachableWalk(a.mission, h, T.apValue(h), false)[0];
   assert.ok(to != null);
+  const early = T.execCommand(b, { op: 'walk', hero: 1, node: to }, [1]);
+  assert.equal(early.ok, false, "a player cannot act in someone else's turn");
+  assert.match(early.why, /Player 1's turn/);
+  assert.equal(T.execCommand(b, { op: 'ready' }, [1]).ok, false, 'nor end it');
+  assert.deepEqual(T.execCommand(b, { op: 'ready' }, [0]), { ok: true, passed: true, to: 1 });
+  a.party.ready[0] = true;
   T.walk(a.mission, h, to);
   const r = T.execCommand(b, { op: 'walk', hero: 1, node: to }, [1]);
   assert.ok(r.ok);
@@ -163,9 +180,19 @@ test('a command does what the direct call does, and only for its own player', ()
   const refused = T.execCommand(b, { op: 'walk', hero: 0, node: to }, [1]);
   assert.equal(refused.ok, false, "a guest's command for the host's pilot is refused");
   assert.equal(T.serializeRun(b), T.serializeRun(a), 'and changes nothing');
-  assert.deepEqual(T.execCommand(b, { op: 'ready' }, [1]), { ok: true, waiting: true });
   const round = b.mission.round;
-  assert.ok(T.execCommand(b, { op: 'ready' }, [0]).ended);
+  assert.ok(T.execCommand(b, { op: 'ready' }, [1]).ended);
   assert.ok(b.mission.round > round || b.mission.over);
+  if (!b.mission.over) assert.equal(T.turnSeat(b), 1, 'the lead changes hands each round');
   assert.equal(T.execCommand(b, { op: 'nonsense', hero: 0 }, null).ok, false);
+});
+
+test('players take turns; a player with every pilot down is skipped', () => {
+  const run = T.quickMission({ seed: 11, type: 'vault', tier: 1 });
+  assert.equal(T.turnSeat(run), null, 'one player: no turns');
+  run.party = T.newParty(2);
+  assert.equal(T.turnSeat(run), 0);
+  run.mission.heroes[0].downed = true;
+  assert.equal(T.turnSeat(run), 1, 'a downed pilot has no turn to take');
+  assert.equal(T.execCommand(run, { op: 'ready' }, [1]).ended, true, 'so the other player ends the round');
 });
