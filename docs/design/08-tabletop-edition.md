@@ -12,7 +12,7 @@ It follows that every rule must be resolvable by hand. "The engine works it out"
 
 | Component | Notes |
 |---|---|
-| **Dice** | fifteen per pilot, in a bag: plain d20s, plus one d8 of its element for each awakened card (2.29). Draw 3 from the bag each turn; spent dice go back in. Custom faces are ideal; ordinary dice with a reference strip work today. d20: 1 Mass · 2 Charge · 3 Space · 4 Time · 5 Omni · 6–7 AP×2 · 8–20 AP. Element d8: 1–4 its element · 5–8 the other three and Omni |
+| **Dice** | fifteen per pilot, in a bag: plain d20s, plus one d8 of its element for each awakened card and Affinity boon, and an ethereal d12 for Omni Core (2.29). Draw 4 from the bag each turn; spent dice go back in. Custom faces are ideal; ordinary dice with a reference strip work today. d20: 1 Mass · 2 Charge · 3 Space · 4 Time · 5 Omni · 6–20 AP. Element d8: 1–4 its element · 5–8 the other three and Omni |
 | **Pilot board** | pool area, bank area, the six-column track, vitality dial, slots for states, Debt and scars |
 | **Trait cards** | tarot-sized, Physical face on the top half and Ethereal on the bottom; P and E tracked with clips or a dry-wipe pip row. The text printed is the resolved text for each level |
 | **The atlas** | a book, one place to a spread (Garrett, 2026-11-13): the board on the left page, and facing it the rules of this place (what its special spaces and paths do) and field notes (ecology, life there, who comes from such places). Places are kinds, not named spots, so one page stands for a different place each session. A run is a journey from page to page. The game's Atlas screen is this book on a screen (`docs/reference/ATLAS.md`) |

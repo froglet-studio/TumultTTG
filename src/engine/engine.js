@@ -238,6 +238,8 @@
         if (card && T.DICE[card.el] && T.heroE(h, cid) >= R().ETHEREAL_MIN_E && set.length < R().POOL)
           set.push(card.el);
       }
+    // Boons that give a die (the Affinities, Omni Core) swap a plain die each, after the cards'.
+    for (const k of T.boonVals(h, 'die')) if (T.DICE[k] && set.length < R().POOL) set.push(k);
     while (set.length < R().POOL) set.push('plain');
     return set;
   };
@@ -279,7 +281,8 @@
   // Boons are wired by hook, never by id: the engine asks for the values a hero's boons
   // hang on a hook and acts on those, so the table in src/data/world.js is the whole truth.
   T.BOON_HOOKS = [
-    'face', // val: the die face one AP face becomes
+    'face', // val: the die face one AP side of the plain die becomes
+    'die', // val: a key of T.DICE — one plain die in the holder's pool becomes that die (2.29)
     'missionStart', // val: { bank: face } — one die already banked as that face
     'roundStart', // val: { round, hasten } — the track slides extra columns as that round starts
     'shieldBonus', // val: added to every Shield the holder gains
@@ -300,6 +303,8 @@
   const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
 
   /** Put a new foe on the board. The only way one comes to be: it takes its uid from the mission. */
+  /** A foe's vitality: its bestiary value scaled by T.RULES.FOE_HP (percent), rounded. */
+  T.foeHp = (hp) => Math.round((hp * (R().FOE_HP || 100)) / 100);
   T.spawnEnemy = function (m, type, tier, pos) {
     const e = makeEnemy(type, tier, pos);
     e.uid = nextUid(m);
@@ -318,8 +323,8 @@
       tier,
       pos,
       speed: d.speed,
-      hp: d.hp[ti],
-      maxHp: d.hp[ti],
+      hp: T.foeHp(d.hp[ti]),
+      maxHp: T.foeHp(d.hp[ti]),
       shield: d.shield ? d.shield[ti] : 0,
       baseShield: d.shield ? d.shield[ti] : 0,
       states: {},

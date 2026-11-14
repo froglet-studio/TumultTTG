@@ -36,6 +36,8 @@ test('Interact picks a crate up, one at a time; reaching the near edge sets it d
   const c = crates(m)[0];
   h.pos = B.walkNeighbors(m.board, c).find((n) => !T.occupied(m, n)) ?? c;
   h.held = ['AP2', 'AP2', 'AP2'];
+  h.heldDie = [];
+  h.pool = T.RULES.POOL - h.held.length;
   assert.ok(T.doInteract(m, h, c, false).ok);
   assert.equal(h.carrying, 1);
   assert.ok(!m.board.nodes[c].objective, 'the crate has left the board');

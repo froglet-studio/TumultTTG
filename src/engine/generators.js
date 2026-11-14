@@ -455,7 +455,7 @@
         'Crates lie on the far side, and the water is coming in behind them. Pick one up (Interact) and carry it to the near edge, where you came in. Space verbs shorten a carry, Time verbs hold the water, and a foe in the way can be walked round, shoved aside or fought.',
       gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
-        const need = [2, 3, 4][tier - 1] + up.need;
+        const need = [2, 3, 4][tier - 1] + Math.min(1, up.need); // a crate is a round trip: a tide adds one at most
         const b = boardFor(rng, page, 5, 3, { corridors: 2 });
         // the water comes in at the far edge's middle and spreads a ring a round, after a round's grace
         const origin = b.at['4,1'];

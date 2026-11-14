@@ -76,7 +76,17 @@ test('the flood tide asks more from tier 2 on, and leaves tier 1 and the boss al
         assert.deepEqual(flood, rising, `${arch} t${tier}: the flood starts at tier 2`);
         continue;
       }
-      const t = T.TIDES.flood;
+      // the Gale's lead over the steady wind (since 2.29 the steady wind presses too)
+      const f = T.TIDES.flood,
+        r = T.TIDES.rising;
+      const t = {
+        need: f.need.map((x, i) => x - r.need[i]),
+        clock: f.clock.map((x, i) => x - r.clock[i]),
+        swarm: f.swarm.map((x, i) => x - r.swarm[i]),
+        escorts: f.escorts.map((x, i) => x.slice(r.escorts[i].length)),
+      };
+      // a crate is a round trip: a tide adds one at most, so the Gale adds none on top of the steady wind
+      if (arch === 'salvage') t.need = t.need.map(() => 0);
       if (rising.need != null) {
         assert.equal(flood.need, rising.need + t.need[tier - 1], `${arch} t${tier}: objective size`);
         assert.ok(flood.text.includes(String(flood.need)), `${arch} t${tier}: the text says how many`);

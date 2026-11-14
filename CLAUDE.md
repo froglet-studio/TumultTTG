@@ -64,8 +64,8 @@ docs/archive/v1.0/        the original design bundle — frozen, never edit
 
 Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/data.test.js`.
 
-- 15-die pool per hero: pool + banked = 15, always. Roll 3 per turn. Minted dice are temporary and never count.
-- Dice (Garrett, 2026-11-14): the plain die is a d20 (Mass, Charge, Space, Time, Omni once each, two AP2, thirteen AP); each awakened card swaps a plain die for its element's d8 (four of its element, one each of the others and Omni); an ethereal d12 has two of each symbol (`T.DICE`, `docs/design/10-dice.md`). Omni pays for any etherion.
+- 15-die pool per hero: pool + banked = 15, always. Roll 4 per turn (3 before 2.29), drawn from the pool. Minted dice are temporary and never count.
+- Dice (Garrett, 2026-11-14): the plain die is a d20 (Mass, Charge, Space, Time, Omni once each, fifteen AP); each awakened card and each Affinity boon swaps a plain die for its element's d8 (four of its element, one each of the others and Omni); Omni Core swaps one for an ethereal d12 (two of each symbol) (`T.DICE`, `docs/design/10-dice.md`). The element symbols are Cosmic Shore's, shared across Froglet's Hypersea games. Omni pays for any etherion.
 - Six-column track: playing either face sends the whole card away for that face's cooldown (after its duration).
 - Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. The capability must be awakened: an Ethereal face cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E`; Garrett, 2026-11-12), and every hero starts with at least two cards awakened (`START_AWAKE`). Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline.
 - **No turn theft.** Control taxes position or efficiency; a controlled unit still acts.

@@ -11,10 +11,11 @@
   T.RULES = {
     VITALITY: 26,            // hero vitality
     POOL: 15,                // dice per hero — invariant
-    ROLL: 3,                 // dice rolled per turn
+    ROLL: 4,                 // dice rolled per turn (4 since 2.29: Garrett, 2026-11-14)
     TRACK: 6,                // track columns
-    FACES: ['M','C','S','T','O','AP2','AP2','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20
+    FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
+    FOE_HP: 130,             // foes' vitality, percent of the bestiary's
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -136,10 +137,12 @@
   };
   T.FOG_RANGE = 2;
   T.TIDES = {
-    rising: { id:'rising', n:'Steady wind', need:[0,0,0], clock:[0,0,0], swarm:[0,0,0], escorts:[[],[],[]],
-      txt:'Tumult as it has always blown.' },
-    flood: { id:'flood', n:'Gale', need:[0,1,2], clock:[0,1,2], swarm:[0,1,2], escorts:[[],['kiter'],['binder','kiter']],
-      txt:'From tier 2, every objective needs 1 more (tier 3: 2 more), every clock but a hold’s starts 1 round shorter (2), swarms grow 1 larger (2), and elites bring 1 more escort (2).' },
+    // 2.29: four dice a turn, so every objective needs 1 more and every clock but a hold's starts 1 round shorter
+    // than the missions' own numbers, from tier 1; the Gale keeps its lead from tier 2.
+    rising: { id:'rising', n:'Steady wind', need:[1,1,1], clock:[1,1,1], swarm:[0,0,0], escorts:[[],[],[]],
+      txt:'Tumult as it blows: every objective needs 1 more than its base, and every clock but a hold’s starts 1 round shorter.' },
+    flood: { id:'flood', n:'Gale', need:[1,2,2], clock:[1,2,2], swarm:[0,1,2], escorts:[[],['kiter'],['binder','kiter']],
+      txt:'As the steady wind, and from tier 2 every objective needs 1 more again, every clock but a hold’s starts 1 round shorter again, swarms grow 1 larger (tier 3: 2), and elites bring 1 more escort (2).' },
   };
   T.TIDE_ORDER = ['rising', 'flood'];
 
@@ -191,11 +194,11 @@
     { id:'momentum',    name:'Momentum',     icon:'💥', desc:'Your first strike each round deals +2.', hook:'firstStrike', val:2 },
     { id:'anchorsoul',  name:'Anchor Soul',  icon:'⚓', desc:'You cannot be pulled.', hook:'noPull', val:true },
     { id:'quickhands',  name:'Quick Hands',  icon:'🫳', desc:'As round 2 begins, your track slides 1 extra column: what you played in round 1 comes home sooner.', hook:'roundStart', val:{round:2, hasten:1} },
-    { id:'aff_M', name:'Mass Affinity',   icon:'◆', desc:'One AP face on your dice becomes Mass.',   hook:'face', val:'M' },
-    { id:'aff_C', name:'Charge Affinity', icon:'◆', desc:'One AP face on your dice becomes Charge.', hook:'face', val:'C' },
-    { id:'aff_S', name:'Space Affinity',  icon:'◆', desc:'One AP face on your dice becomes Space.',  hook:'face', val:'S' },
-    { id:'aff_T', name:'Time Affinity',   icon:'◆', desc:'One AP face on your dice becomes Time.',   hook:'face', val:'T' },
-    { id:'omnicore', name:'Omni Core',    icon:'◇', desc:'One AP face on your dice becomes Omni.',   hook:'face', val:'O' },
+    { id:'aff_M', name:'Mass Affinity',   icon:'◆', desc:'One of your plain dice becomes a Mass die (d8).',   hook:'die', val:'M' },
+    { id:'aff_C', name:'Charge Affinity', icon:'◆', desc:'One of your plain dice becomes a Charge die (d8).', hook:'die', val:'C' },
+    { id:'aff_S', name:'Space Affinity',  icon:'◆', desc:'One of your plain dice becomes a Space die (d8).',  hook:'die', val:'S' },
+    { id:'aff_T', name:'Time Affinity',   icon:'◆', desc:'One of your plain dice becomes a Time die (d8).',   hook:'die', val:'T' },
+    { id:'omnicore', name:'Omni Core',    icon:'◇', desc:'One of your plain dice becomes an ethereal die (d12: two of each symbol).', hook:'die', val:'eth' },
     { id:'defiant',  name:'Defiant',      icon:'🔥', desc:'+2 damage against Elites and the Heart.', hook:'vsElite', val:2 },
   ];
   T.BOON_BY = {}; T.BOONS.forEach(b => T.BOON_BY[b.id] = b);
@@ -237,7 +240,7 @@
     tidecaller:{ name:'Tidecaller', glyph:'🌊', role:'elite', elite:true, hp:[12,14,16], speed:1, policy:'tidecaller',
       abilities:{ undertow:{ n:'Undertow', kind:'los', dmg:[2,3,3], pull:2 }, surge:{ n:'Surge', kind:'los', dmg:[4,5,6], weaken:1 } },
       flavor:'An elite. Drags you toward the hazard. Anchor yourself.' },
-    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,84], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
+    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,86], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
       abilities:{ lance:{ n:'Lance', kind:'los', dmg:[3,4,5] }, crush:{ n:'Crush', kind:'melee', dmg:[7,8,9], pull:2 }, call:{ n:'Call the Swarm', kind:'summon' } },
       flavor:'What waits at the end of the route. Its shield is fed by its Spawners. When it is half-dead, the Vault begins to drown.' },
   };

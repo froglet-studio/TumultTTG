@@ -1,17 +1,18 @@
 # Changelog
 
-## 2.29.0 — dice kinds: a plain d20 and a d8 for each element
+## 2.29.0 — dice kinds and four dice a turn
 
-Garrett's original dice (`docs/design/10-dice.md`): a pilot's dice now follow its kit.
+Garrett's original dice (`docs/design/10-dice.md`), aimed at turns with nothing to decide. A pilot's dice now follow its kit.
 
-- **The plain die is a d20:** Mass, Charge, Space, Time and Omni once each, AP×2 twice, AP on the other 13 sides. A plain die gives more AP than the old d12 (0.85 against 0.67) and fewer etherions (0.25 against 0.42).
-- **Each awakened card swaps one plain die for a d8 of its element:** four sides its element, one each of the other three and Omni, no AP. A pilot who wakes more cards rolls more etherions and fewer AP, mostly in the colours its own cards need: the mage path. Every pilot still has 15 dice and rolls 3 a turn, drawn at random from the pool. A banked die keeps its kind; a spent one goes back. An ethereal d12 (two of each symbol) is defined for abilities to give; nothing gives one yet.
-- A special die shows its size in the corner and says what it is in its tip. The pool's tip lists its dice by kind, and a key to the symbols sits under the selected pilot's dice. Cosmic Shore's element symbols are not in yet.
-- **Retune, so main does not get easier:** the Heart has 84 vitality at tier 3 (was 78).
-- **Balance:** `node tools/sim.js 80 runs`, main → 2.29.0: heuristic 15 → 16, look-ahead 39 → 41 of 80, within noise. At 40: full runs heuristic 4 → 7, look-ahead 20 → 18; finale 30/63 → 25/48%; heuristic swarm 98/83 → 88/75% and hidden t3 80 → 75%, Vault t3 55 → 70%, Cascade t3 85 → 100%; look-ahead every mission 95% or more.
-- **Dull turns** are unchanged at 41% (`node tools/turns.js 10`). Rolling 4 dice a turn and stronger Channels each cut them a few points, but made runs far easier or let plain play catch up with careful play, so neither is in this release (`docs/reference/BALANCE.md` has the table).
+- **The plain die is a d20:** Mass, Charge, Space, Time and Omni once each, AP on the other 15 sides. No AP×2: the game has variance enough.
+- **Special dice.** Each awakened card, and each Affinity boon, swaps one plain die for a d8 of its element: four sides its element, one each of the other three and Omni, no AP. Omni Core swaps one for an ethereal d12, two of each symbol. A pilot who wakes more cards rolls more etherions and fewer AP, mostly in the colours its own cards need: the mage path. Every pilot still has 15 dice.
+- **Four dice a turn** (was 3), drawn at random from the pool. A banked die keeps its kind; a spent one goes back.
+- **Cosmic Shore's element symbols:** Mass is a triangle, Charge a cut gem, Space a kite, Time a tall diamond, traced from Cosmic Shore's element petals so Froglet's Hypersea games share one set. A special die shows its size in the corner, the pool's tip lists its dice by kind, and a key to the symbols sits under the selected pilot's dice.
+- **Retune, so main does not get easier:** every foe has 130% of its listed vitality; the Heart's tier-3 base is 86 (was 78); the steady wind asks 1 more of every objective and starts every clock but a hold's 1 round shorter, from tier 1, and the Gale keeps its lead from tier 2; a Salvage takes at most one extra crate from any tide.
+- **Balance:** `node tools/sim.js 80 runs`, main → 2.29.0: heuristic 15 → 17, look-ahead 39 → 33, so a little harder for a careful squad. Without the retune four dice gave 40 and 54. Tables in `docs/reference/BALANCE.md`.
+- **Dull turns** (`node tools/turns.js 10`): **41% → 34%**. Turns with nothing worth doing fell from 14% to 8%. Stronger Channels were tried and left out: they let plain play catch up with careful play.
 - **Save version 12:** a banked die has a kind (`heldDie`). A die banked in an older save is plain (fixture `save-2.28.json`).
-- `node tools/turns.js` takes `--rule NAME=VALUE`, as `tools/sim.js` does.
+- `node tools/turns.js` takes `--rule NAME=VALUE`, as `tools/sim.js` does. The recipe test also tries every face against foes one hit from going down.
 
 ## 2.28.0 — 2026-11-14 — duet moves: pilots help each other
 

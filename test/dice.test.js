@@ -15,7 +15,8 @@ test('the dice: a d20 with every element once, a d12 with two of each symbol, a 
   const plain = T.RULES.FACES;
   assert.equal(plain.length, 20);
   for (const e of ['M', 'C', 'S', 'T', 'O']) assert.equal(count(plain, e), 1, `${e} once on the plain die`);
-  assert.equal(count(plain, 'AP2') * 2 + count(plain, 'AP'), 17);
+  assert.equal(count(plain, 'AP'), 15, 'AP on every other side, no AP×2 (Garrett, 2026-11-14)');
+  assert.equal(count(plain, 'AP2'), 0);
   const eth = T.DICE.eth.faces;
   assert.equal(eth.length, 12);
   for (const x of ['AP', 'O', 'M', 'C', 'S', 'T']) assert.equal(count(eth, x), 2);

@@ -166,14 +166,14 @@ test('Anchor Soul: its holder cannot be pulled, and can still be pushed', () => 
   assert.ok(T.pushAway(beside.m, beside.e, beside.h, 1) > 0, 'a shove still moves them');
 });
 
-test('Affinities: one AP face of the holder’s dice becomes the etherion', () => {
-  const count = (faces, f) => faces.filter((x) => x === f).length;
-  const base = T.RULES.FACES;
+test('Affinities and Omni Core: one plain die of the holder becomes a die of their kind', () => {
+  const count = (dice, k) => dice.filter((x) => x === k).length;
+  const base = T.diceSet({ cards: [], up: {}, boons: [] });
   for (const id of ['aff_M', 'aff_C', 'aff_S', 'aff_T', 'omnicore']) {
-    const faces = T.heroFaces({ boons: [id] });
-    assert.equal(faces.length, base.length);
-    assert.equal(count(faces, val(id)), count(base, val(id)) + 1, id);
-    assert.equal(count(faces, 'AP'), count(base, 'AP') - 1, id);
+    const dice = T.diceSet({ cards: [], up: {}, boons: [id] });
+    assert.equal(dice.length, T.RULES.POOL);
+    assert.equal(count(dice, val(id)), count(base, val(id)) + 1, id);
+    assert.equal(count(dice, 'plain'), count(base, 'plain') - 1, id);
   }
 });
 

@@ -1,6 +1,6 @@
 # 10 · Dice kinds — a plain die, an ethereal die, and a die for each element
 
-*Status: built in 2.29.0 with the defaults below except question 2 (3 dice a turn, not 4: 4 made runs far easier), from Garrett's original dice idea (2026-11-14). The open questions are still open; how it works today is in `docs/reference/RUN_AND_ECONOMY.md` (Dice). Ethereal d12s are defined but nothing gives one yet.*
+*Status: built in 2.29.0. Garrett's answers (2026-11-14): no AP×2 on the plain die; four dice a turn; how pilots get special dice stays open-ended (2.29 tries awakened cards, Affinity boons and Omni Core); the symbols are Cosmic Shore's, since Froglet's Hypersea games share resources freely. How it works today: `docs/reference/RUN_AND_ECONOMY.md` (Dice).*
 
 ## Why
 
@@ -8,11 +8,11 @@ Two out of five turns give a pilot no real choice (`node tools/turns.js 10`: 41%
 
 ## The dice
 
-Every die shows the same symbols: AP, Mass, Charge, Space, Time and Omni. Omni still pays for any etherion. The element symbols are to be Cosmic Shore's 2D element symbols (question 4); 2.29.0 still draws Tumult's own, with a key beside the selected pilot's dice.
+Every die shows the same symbols: AP, Mass, Charge, Space, Time and Omni. Omni still pays for any etherion. The element symbols are Cosmic Shore's element petals, with a key beside the selected pilot's dice.
 
 | Die | Faces | Per die rolled |
 |---|---|---|
-| **Plain**, d20 | Mass, Charge, Space, Time, Omni, 2 × AP×2, 13 × AP | 0.85 AP, 0.25 etherion |
+| **Plain**, d20 | Mass, Charge, Space, Time, Omni, 15 × AP | 0.75 AP, 0.25 etherion |
 | **Ethereal**, d12 | 2 each of AP, Omni, Mass, Charge, Space, Time | 0.33 AP, 0.83 etherion |
 | **Mass**, d8 (and one each for Charge, Space, Time) | 4 × its own element, then one each of the other three and Omni. No AP | 0 AP, 1 etherion, half of them its own element |
 

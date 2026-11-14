@@ -134,6 +134,8 @@ const SITUATIONS = {
   },
   // a foe that survives a hit but is left on low hp
   wounded: { arrange: ({ adj, zone }) => [adj, zone].filter(Boolean).forEach((e) => sturdy(e, 12)) },
+  // foes one hit from going down, so what happens on a kill happens
+  frail: { arrange: ({ adj, zone }) => [adj, zone].filter(Boolean).forEach((e) => sturdy(e, 1)) },
   onHazard: { arrange: ({ m, h }) => (m.board.nodes[h.pos].hazard = true) },
   allyDown: {
     arrange: ({ m, h, ally }) => {
