@@ -77,6 +77,42 @@ The weights were set by reasoning and three corrections, each from watching it l
 
 Tried and dropped: scoring two rounds ahead, with the squad standing still for the second. It played more of the faces (never played fell from 61 to 44 of the 180 held often enough to judge) and worse — 87% of missions won against 96%, the Vault falling to a half — because a squad that will stand still for a round is too frightened to stand where the objective is.
 
+## Does every turn offer a decision?
+
+Garrett's aim for two players is that both have interesting decisions every turn (2026-11-14). `T.turnChoices(m, hero)` measures one hero's turn from where the mission stands. On an imagined copy it tries every action that hero could take first, adds their best single next action, plays out the round and scores it as the planner does. It changes nothing.
+
+- **idle**: nothing the hero could do beats doing nothing by 3 points (about 3 vitality).
+- **forced**: one outcome is clearly best, so the turn plays itself.
+- **open**: two or more different outcomes come close to the best (within 3 points, or a quarter of what is at stake). Two moves that end in the same place count once.
+
+`node tools/turns.js 10` plays 10 missions of every archetype and tier with the look-ahead player, asks this of each standing hero at the start of every round, and prints the share of idle, forced and open turns, with *dull* (idle or forced) for each pilot. Both heroes are measured from the round's start, before either acts, so it is an estimate for whoever goes second.
+
+The baseline at 2.25.0:
+
+```
+archetype  tier  turns  idle%  forced%  open%  choices   dull% pilot 1 | pilot 2
+swarm      1      120    31%      19%    50%      2.3      48%   |   52%
+swarm      2      120    11%      18%    71%      2.4      37%   |   22%
+swarm      3      140    11%      20%    69%      2.6      31%   |   31%
+vault      1       96    31%      30%    39%      2.2      60%   |   63%
+vault      2      110    23%      31%    46%      2.2      49%   |   58%
+vault      3      110     7%      32%    61%      2.3      40%   |   38%
+hidden     1       62    18%      42%    40%      2.0      68%   |   52%
+hidden     2       62    10%      34%    56%      2.5      55%   |   32%
+hidden     3       72     6%      28%    67%      2.4      39%   |   28%
+cascade    1       72    15%      40%    44%      2.0      64%   |   47%
+cascade    2       70    14%      30%    56%      2.2      49%   |   40%
+cascade    3       80     3%      38%    60%      2.3      43%   |   38%
+elite      1       70     7%      61%    31%      1.5      69%   |   69%
+elite      2       76     3%      42%    55%      1.9      37%   |   53%
+elite      3      186     6%      16%    78%      2.6      23%   |   22%
+boss       3      267    12%      22%    66%      2.5      34%   |   34%
+
+all: 1713 turns — idle 13%, forced 28%, open 59%, 2.3 close choices a turn
+```
+
+About two turns in five are dull, and tier 1 is the worst: in a tier-1 vault or elite, most turns either do not matter or have one clear answer. This is the number the next steps (rules for places, missions that are not fights, moves that pilots make together) are meant to bring down.
+
 ## Using them
 
 ```

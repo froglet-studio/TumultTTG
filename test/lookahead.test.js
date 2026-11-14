@@ -239,3 +239,18 @@ test('the forecast says exactly what ending the round now will do, and touches n
     'nothing to forecast once it is over',
   );
 });
+
+test("turnChoices measures one hero's turn without changing the mission", () => {
+  const m = mission('swarm', 2, 0);
+  const before = state(m);
+  const t = T.turnChoices(m, 0);
+  assert.equal(state(m), before, 'nothing changed');
+  assert.ok(['idle', 'forced', 'open'].includes(t.kind));
+  assert.ok(t.actions > 0 && t.stake >= 0 && t.choices >= 1, 'at least the best line counts');
+  assert.equal(state(T.turnChoices(m, 0)), state(t), 'the same position gives the same answer');
+  // a mission already over offers nothing to anyone
+  const won = T.clone(m);
+  won.over = true;
+  won.won = true;
+  assert.equal(T.turnChoices(won, 1).kind, 'idle');
+});
