@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.31.0',
+    version: '2.32.0',
     items: [
+      {
+        text: 'A story box now sits under End turn. On your turn, write what it looked like in a line, as the pilot you have selected (for example: "Kess counts the waves between the gusts, and jumps on the ninth"). Press Enter, or just end your turn. It changes nothing in play. Your line shows in the log, then in your pilot’s words in the passage after the stop, and in the record of the run at the end. Online, each player writes their own. Did you write any? What made you want to?',
+      },
       {
         text: 'Words of art now explain themselves. Hidden, Anchor, Weak, Shield, Push, Zone and the rest are drawn as small chips with an icon in card text, foe intents and the log; hover one for its rule in a sentence. Tokens on the board wear the same icons as badges, with a number where a state counts down. Hover a card face, a basic action or a gear ability and the board shows what it would do, exactly: rings on whoever it would reach, damage numbers, where things would be shoved or pulled, which states they would gain. While choosing a target, hover each one to compare. Was there a word you still had to look up? Did a preview ever show something that then did not happen?',
       },

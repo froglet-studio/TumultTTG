@@ -502,6 +502,8 @@
   function passageLine(run, l) {
     if (l.who === 'terminal') return `<div class="pl term">${esc(l.text)}</div>`;
     const h = run.heroes[l.who];
+    if (l.own)
+      return `<div class="pl say own">${h ? U.portrait(h, 'sm') : ''}<span>“${esc(l.text)}”<span class="own-tag">in ${esc(h ? h.name : 'their')}'s words, at the table</span></span></div>`;
     return `<div class="pl say">${h ? U.portrait(h, 'sm') : ''}<span>${esc(l.text)}</span></div>`;
   }
   U.passageLine = passageLine;
@@ -678,6 +680,12 @@
   }
 
   /* ───────────── SUMMARY ───────────── */
+  /** The last mission of a run is told by no passage: its lines of story close the log. */
+  function lastWords(run) {
+    const last = run.history[run.history.length - 1];
+    if (!last || !last.notes || !last.notes.length) return '';
+    return `<div class="entry"><h4>${esc(last.title)}</h4>${last.notes.map((n) => passageLine(run, { who: n.hero, text: n.text, own: true })).join('')}</div>`;
+  }
   function renderSummary() {
     const run = U.run;
     const won = run.won;
@@ -686,7 +694,7 @@
       <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${run.crystals} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
       <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
       <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}
-      ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}</div>` : ''}
+      ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}${lastWords(run)}</div>` : ''}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="newRun">New Expedition</button><button class="ghost" data-act="toTitle">Title</button></div></div></div>`;
   }
 

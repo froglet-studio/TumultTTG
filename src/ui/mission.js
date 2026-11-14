@@ -353,13 +353,64 @@
       (wx && wx.text
         ? `<span class="pill" data-tip="${esc(wx.text)}">${pl.weather === 'wind' ? (pl.wind > 0 ? 'Wind → E' : 'Wind ← A') : 'Fog'}</span>`
         : '');
+    const ae = document.activeElement;
+    const typing = ae && ae.id === 'turnNote' ? [ae.selectionStart, ae.selectionEnd] : null;
     $('#mtop').innerHTML =
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       ${place}${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
-      <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>
+      <div class="endgrp"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${noteBox(m)}</div>
       ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`;
+    const box = typing && $('#turnNote');
+    if (box) {
+      box.focus();
+      box.setSelectionRange(typing[0], typing[1]);
+    }
   }
+
+  /**
+   * The story box beside End turn: the player whose turn it is may give it a line of story, as the
+   * pilot they have selected. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
+   */
+  function noteBox(m) {
+    const ms = U.ms;
+    const t = U.turn && U.turn();
+    const i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    const h = m.heroes[i];
+    if (m.over || !h || (t && !t.here) || (U.mine && !U.mine(i))) return '';
+    const noted = m.log.find((l) => l.who === 'note' && l.hero === i && l.r === m.round);
+    const val = ms.noteDraft != null ? ms.noteDraft : noted ? noted.text : '';
+    const tip =
+      'Optional: what this turn looked like, in a line of story. It changes nothing in play. It is kept in the log, told again between stops, and in the record of the run.';
+    return `<label class="turn-note${noted ? ' noted' : ''}" data-tip="${esc(tip)}"><span class="tn-ic">✎</span><input id="turnNote" maxlength="${T.NOTE_MAX}" autocomplete="off" placeholder="${esc(h.name)}, this turn, in a line of story…" value="${esc(val)}"></label>`;
+  }
+  /** Keep what was typed in the story box, as a line of story for its pilot this round. */
+  function commitNote() {
+    const ms = U.ms;
+    if (!ms || ms.noteDraft == null) return;
+    const m = M();
+    const i = ms.noteHero != null ? ms.noteHero : ms.heroIdx;
+    const text = ms.noteDraft;
+    ms.noteDraft = null;
+    ms.noteHero = null;
+    if (!m || m.over) return;
+    const r = U.exec({ op: 'note', hero: i, text });
+    if (r && r.ok === false && r.why) U.toast(esc(r.why));
+  }
+  U.commitNote = commitNote;
+  document.addEventListener('input', (e) => {
+    if (!e.target || e.target.id !== 'turnNote' || !U.ms) return;
+    if (U.ms.noteDraft == null) U.ms.noteHero = U.ms.heroIdx;
+    U.ms.noteDraft = e.target.value;
+  });
+  document.addEventListener('change', (e) => {
+    if (!e.target || e.target.id !== 'turnNote' || U.screen !== 'mission') return;
+    const had = U.ms.noteDraft != null && U.ms.noteDraft.trim();
+    commitNote();
+    renderLog(M());
+    const box = e.target.closest('.turn-note');
+    if (box) box.classList.toggle('noted', !!had);
+  });
 
   function renderTargetBar(m) {
     const ms = U.ms;
@@ -561,7 +612,11 @@
     const el = $('#mlog');
     el.innerHTML = m.log
       .slice(-60)
-      .map((l) => `<div class="l ${l.who}">${U.kw(esc(l.text))}</div>`)
+      .map((l) =>
+        l.who === 'note'
+          ? `<div class="l note">${U.portrait && m.heroes[l.hero] ? U.portrait(m.heroes[l.hero], 'xs') : ''}<span>“${esc(l.text)}”</span> <span class="dim small">— ${esc(m.heroes[l.hero] ? m.heroes[l.hero].name : '')}</span></div>`
+          : `<div class="l ${l.who}">${U.kw(esc(l.text))}</div>`,
+      )
       .join('');
     el.scrollTop = el.scrollHeight;
   }
@@ -1514,6 +1569,7 @@
           U.toast(`It is ${esc(t.name)}'s turn.`);
           return true;
         }
+        commitNote();
         U.exec({ op: 'ready' });
         U.sfx.click();
         afterAction();
@@ -1542,6 +1598,11 @@
   };
   document.addEventListener('keydown', (e) => {
     if (U.screen !== 'mission' || !U.ms) return;
+    const tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') {
+      if (e.target.id === 'turnNote' && (e.key === 'Enter' || e.key === 'Escape')) e.target.blur();
+      return;
+    }
     if (e.key === 'Escape') {
       U.ms.mode = 'idle';
       U.ms.pending = null;
