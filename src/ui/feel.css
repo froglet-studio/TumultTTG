@@ -1,0 +1,255 @@
+/* ───── feel (src/ui/feel.js): the day over the board, its weather, the readout, flashes ───── */
+
+/* the hour: a wash over the ground under the board, eased from one round to the next */
+.board > svg {
+  position: relative;
+  z-index: 1;
+}
+.board .sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  transition:
+    background 2.4s ease,
+    opacity 2.4s ease;
+  mix-blend-mode: soft-light;
+}
+.board .sky-dawn {
+  background: linear-gradient(180deg, rgba(255, 150, 120, 0.55), rgba(255, 200, 150, 0.15) 60%, transparent);
+}
+.board .sky-morning {
+  background: linear-gradient(180deg, rgba(255, 240, 200, 0.35), transparent 70%);
+}
+.board .sky-noon {
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 235, 0.45), transparent 70%);
+}
+.board .sky-afternoon {
+  background: linear-gradient(200deg, rgba(255, 210, 140, 0.4), transparent 70%);
+}
+.board .sky-dusk {
+  mix-blend-mode: multiply;
+  background: linear-gradient(180deg, rgba(150, 70, 140, 0.55), rgba(230, 120, 80, 0.4) 70%, rgba(80, 40, 90, 0.5));
+}
+.board .sky-night {
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(70, 90, 170, 0.5), rgba(14, 20, 60, 0.85) 90%),
+    linear-gradient(180deg, rgba(30, 40, 100, 0.4), rgba(30, 40, 100, 0.4));
+}
+.pill.day {
+  border-color: rgba(242, 193, 78, 0.45);
+}
+.pill.day-dusk,
+.pill.day-dawn {
+  color: #ffc7a8;
+}
+.pill.day-night {
+  color: #b9c7ff;
+  border-color: rgba(150, 170, 255, 0.45);
+}
+
+/* weather: wind streaks blowing across, toward the edge it blows to; fog drifting low */
+.board .wx {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.board .wx-wind i {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(225, 240, 255, 0.9) 60%, transparent);
+  animation: gust-e linear infinite;
+}
+.board .wx-wind.to-a i {
+  animation-name: gust-a;
+  background: linear-gradient(270deg, transparent, rgba(225, 240, 255, 0.9) 60%, transparent);
+}
+@keyframes gust-e {
+  from {
+    transform: translateX(-260px);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+@keyframes gust-a {
+  from {
+    transform: translateX(110vw);
+  }
+  to {
+    transform: translateX(-260px);
+  }
+}
+.board .wx-fog {
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 70%, rgba(200, 215, 230, 0.22), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 75% 40%, rgba(200, 215, 230, 0.18), transparent 70%);
+  background-size: 160% 100%;
+  animation: fog-drift 18s ease-in-out infinite alternate;
+}
+@keyframes fog-drift {
+  to {
+    background-position: 60% 0;
+  }
+}
+
+/* the Terminal's readout, typed in at the top of the board as a round begins */
+.board .readout {
+  position: absolute;
+  z-index: 3;
+  left: 12px;
+  top: 10px;
+  max-width: calc(100% - 24px);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  background: rgba(7, 16, 32, 0.72);
+  border: 1px solid rgba(94, 200, 216, 0.35);
+  border-radius: 6px;
+  padding: 4px 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+.board .readout.show {
+  animation:
+    readout-type 0.9s steps(var(--chars, 30)) both,
+    readout-fade 5.5s ease forwards;
+}
+@keyframes readout-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes readout-fade {
+  0%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.35;
+  }
+}
+
+/* the board answers: a ring where a card is played (in its etherion's colour), a hit, a fall, a heal */
+#fxlayer .burst {
+  fill: none;
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: burst 0.8s ease-out forwards;
+  pointer-events: none;
+}
+#fxlayer .burst.play {
+  stroke: var(--AP);
+}
+#fxlayer .burst.el-M {
+  stroke: var(--M);
+}
+#fxlayer .burst.el-C {
+  stroke: var(--C);
+}
+#fxlayer .burst.el-S {
+  stroke: var(--S);
+}
+#fxlayer .burst.el-T {
+  stroke: var(--T);
+}
+#fxlayer .burst.el-O {
+  stroke: var(--O);
+}
+#fxlayer .burst.dmg {
+  stroke: #ff7a9a;
+  stroke-width: 4;
+  animation-duration: 0.5s;
+}
+#fxlayer .burst.heal {
+  stroke: var(--green);
+}
+#fxlayer .burst.set {
+  stroke: var(--violet);
+  stroke-dasharray: 4 5;
+}
+#fxlayer .burst.death {
+  stroke: #fff;
+  fill: rgba(255, 255, 255, 0.25);
+  animation: fall 1s ease-out forwards;
+}
+@keyframes burst {
+  from {
+    opacity: 1;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+@keyframes fall {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+.token.hit .body {
+  animation: tok-hit 0.45s ease-out;
+}
+.token.blocked .body {
+  animation: tok-block 0.5s ease-out;
+}
+@keyframes tok-hit {
+  0% {
+    filter: brightness(2.2) drop-shadow(0 0 6px #ff4d6d);
+  }
+  100% {
+    filter: none;
+  }
+}
+@keyframes tok-block {
+  0% {
+    filter: brightness(1.8) drop-shadow(0 0 8px var(--cyan));
+  }
+  100% {
+    filter: none;
+  }
+}
+.floater.state {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--txt);
+}
+.floater.state.kw-good {
+  color: #9ff0b4;
+}
+.floater.state.kw-bad {
+  color: #ffb3c7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board .wx-wind i {
+    display: none;
+  }
+  .board .wx-fog,
+  .board .readout.show {
+    animation: none;
+    opacity: 1;
+  }
+  .board .sky {
+    transition: none;
+  }
+}

@@ -310,6 +310,7 @@
           if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
         }
         U.toast(turn.here && U.seats ? 'Your turn.' : `${esc(turn.name)}'s turn.`);
+        if (U.sfx.turn) U.sfx.turn();
       }
     }
     renderTop(m);
@@ -318,6 +319,7 @@
     renderLog(m);
     updateBoard(m);
     playFx(m);
+    if (U.feelUpdate) U.feelUpdate(m);
     if (m.over && !U.ms.overShown) {
       U.ms.overShown = true;
       setTimeout(() => showMissionOver(m), U.MISSION_OVER_DELAY);
@@ -358,7 +360,7 @@
     $('#mtop').innerHTML =
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
-      ${place}${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
+      ${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
       <div class="endgrp"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${noteBox(m)}</div>
       ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`;
     const box = typing && $('#turnNote');
@@ -1164,6 +1166,7 @@
       setTimeout(() => d.remove(), 1200);
     }, delay || 0);
   }
+  U.floater = floater;
   function banner(text) {
     const b = $('#banner');
     if (!b) return;
@@ -1185,6 +1188,7 @@
             m.decoys.find((d) => d.uid === f.ent)
           : null;
       const node = f.pos != null ? f.pos : ent ? ent.pos : null;
+      if (U.feelFx) U.feelFx(m, f, ent, node, delay);
       switch (f.t) {
         case 'dmg':
           if (node != null) floater(node, '−' + f.amount, 'dmg', delay);
