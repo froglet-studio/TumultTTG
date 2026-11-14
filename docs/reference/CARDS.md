@@ -34,7 +34,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Language** ☆ · Charge · `hum_lang`
 
-- *Phys — Call* · 1 AP · CD 1 — Your ally may immediately move 1 for free. *(P3: Your ally may immediately move 4 for free.)*
+- *Phys — Call* · 1 AP · CD 1 — Call your ally up to 1 nodes: you choose where they go, now. *(P3: Call your ally up to 4 nodes: you choose where they go, now.)*
 - *Eth — Rally* · 2 AP + 1 Charge · CD 3 · Dur 2 — Party strikes +1 for 2 turns; foes adjacent to you are Weakened 1. *(P3/E3: Party strikes +2 for 2 turns; foes adjacent to you are Weakened 1.)*
 
 **Pattern Recognition** · Space · `hum_pattern`
@@ -147,7 +147,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Swarm Pheromone** ☆ · Charge · `hop_swarm`
 
-- *Phys — Cue* · 1 AP · CD 1 — Gregarious cue: your ally's next strike +1 and a free step. *(P3: Gregarious cue: your ally's next strike +4 and a free step.)*
+- *Phys — Cue* · 1 AP · CD 1 — Gregarious cue: your ally's next strike +1, and you step them 1 node where you choose. *(P3: Gregarious cue: your ally's next strike +4, and you step them 1 node where you choose.)*
 - *Eth — Swarm Phase* · 2 AP + 1 Charge · CD 4 — The swarm phase: both heroes mint 1 AP at the start of their turns for 2 rounds; foes adjacent to either are Weakened 1. *(P3/E3: The swarm phase: both heroes mint 1 AP at the start of their turns for 4 rounds; foes adjacent to either are Weakened 1.)*
 
 **Glide Wings** · Space · `hop_glide`

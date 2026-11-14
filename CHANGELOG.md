@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.30.0 — 2026-11-14 — partner moves are decided by the player who gives them
+
+Garrett: "do a strong pass in ensuring that duo powers are something that the controlling player can treat as deterministic … if they have to wait for another player to make a movement decision for some movement they gave them then the rest of their turn is not something they can determine in their planning."
+
+- **The `rally` verb moves your partner now, to a node you choose.** It no longer hands them free steps for later. It uses new targets `ally_move` and `ally_adj_move`, which list the nodes your partner can reach, including staying put. Leg up (basic, 2 nodes, partner beside you), Call (Language, 1 + P), Cue (Swarm Pheromone, 1) and the Beacon gear (2) all work this way.
+- Every other duet power was already settled at play time. Spot marks a foe, Lend gives AP, and the rest of the ally buffs are fixed numbers. A test checks that every power that moves a partner names its node.
+- **Balance** (`node tools/sim.js 40`, before → after):
+  - Heuristic: unchanged (7/40 runs).
+  - Look-ahead: runs 14 → 13 of 40, missions 81% → 84%. The gain is in salvage t2 and t3 (95 → 98%, 88 → 93%), about two missions each at this sample size. The Heart is 43% → 38%.
+  - The shared evaluation no longer counts free steps, since a partner never holds any now.
+
 ## 2.29.1 — 2026-11-14 — layout fixes and ways back
 
 Garrett: "Fix the formatting issues and add back buttons where possible."

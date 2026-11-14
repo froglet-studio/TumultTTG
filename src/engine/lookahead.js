@@ -249,8 +249,7 @@
       }
       s += W.heroHp * h.hp;
       const kept = T.apValue(h) + ETHERIONS.concat('O').reduce((n, f) => n + T.elCount(h, f), 0);
-      // free steps a partner gave (Leg up) are kept movement, as good as a kept AP for walking
-      s += W.dice * Math.min(kept + (h.freeMove || 0), 4) + W.hoard * Math.max(0, kept + (h.freeMove || 0) - 4);
+      s += W.dice * Math.min(kept, 4) + W.hoard * Math.max(0, kept - 4);
       s -= W.cooldown * h.track.reduce((n, t) => n + t.left + (t.phase === 'dur' ? t.cd : 0), 0);
       s += W.item * h.consumables.length;
     }

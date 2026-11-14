@@ -79,9 +79,9 @@
       txt:(P,E)=>`Lane strike for ${3+P}${E>=2?' that pierces Shield':''}, knockback ${E}.` },
     'The one ranged attack no other species does naturally.');
   C('human','hum_lang','Language','C',1,
-    { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'ally',
+    { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
       fx:[{v:'rally', move:(P,E)=>1+P}],
-      txt:(P,E)=>`Your ally may immediately move ${1+P} for free.` },
+      txt:(P,E)=>`Call your ally up to ${1+P} nodes: you choose where they go, now.` },
     { n:'Rally', ap:2, el:1, cd:3, dur:2, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>E>=2?2:1, uses:99, party:true, dur:2},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Party strikes +${E>=2?2:1} for 2 turns; foes adjacent to you are Weakened 1.` },
@@ -251,9 +251,9 @@
       txt:(P,E)=>`Melee ${3+P} and metabolize the mass into ${E} temporary Omni.` },
     'Consumed mass becomes etherions.');
   C('hopper','hop_swarm','Swarm Pheromone','C',1,
-    { n:'Cue', ap:1, el:0, cd:1, dur:0, tgt:'ally',
+    { n:'Cue', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
       fx:[{v:'empower', val:(P,E)=>1+P, uses:1, target:'ally'},{v:'rally', move:1}],
-      txt:(P,E)=>`Gregarious cue: your ally's next strike +${1+P} and a free step.` },
+      txt:(P,E)=>`Gregarious cue: your ally's next strike +${1+P}, and you step them 1 node where you choose.` },
     { n:'Swarm Phase', ap:2, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true},{v:'weaken', val:1, dur:1, area:'adjParty'}],
       txt:(P,E)=>`The swarm phase: both heroes mint 1 AP at the start of their turns for ${1+E} rounds; foes adjacent to either are Weakened 1.` },

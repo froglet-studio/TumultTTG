@@ -62,7 +62,7 @@ One measure for every mission, in points of about one hero vitality each (`T.EVA
 | `foeAlive` | 4 | each foe still standing: it will act again |
 | `clock` | 2.5 | each round left on a clock |
 | `approach` | 1.6 | each step between a hero and where the objective needs someone — the nearest hero in full, the next at half |
-| `dice` | 0.5 | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that); a free move from Leg up counts as one die a space |
+| `dice` | 0.5 | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that) |
 | `short` | 5 | each AP held by a hero who stands where the objective takes an Interact and cannot yet pay for one |
 | `cooldown` | 0.25 | each column a played card still has to travel |
 | `crystal`, `item` | 0.4, 2 | crystals and consumables kept |

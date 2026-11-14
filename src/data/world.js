@@ -83,7 +83,7 @@
       desc:'Reveal + Mark, and a beacon for your ally.',
       abilities:[
         { n:'Flare', cost:1, cd:2, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)},{v:'mark', area:true, radius:f(2)}], txt:()=>'Reveal within 2 and Mark every foe revealed.' },
-        { n:'Beacon', cost:2, cd:2, tgt:'ally', fx:[{v:'rally', move:f(2)}], txt:()=>'Your ally may move 2 for free.' },
+        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'rally', move:f(2)}], txt:()=>'Guide your ally up to 2 nodes, to a node you choose, now.' },
       ]},
     { id:'harpoon', name:'Harpoon Gun', price:6, icon:'🎯',
       desc:'Reach for melee builds: a zone shot that pulls, and a piercing skewer.',
@@ -166,7 +166,7 @@
     // Duet moves (2.28): one pilot sets up, the other cashes in, so a turn can be spent on your partner's.
     // General verbs that already exist (mark, rally, mint); each needs a partner to pay off in full.
     { id:'spot',  n:'Spot',   icon:'◎', ap:2, tgt:'foe_r3',   fx:[{v:'mark'}],                                   txt:'Mark a foe up to 3 nodes away: the next hit on it, by anyone, deals +2.' },
-    { id:'legup', n:'Leg up', icon:'⇡', ap:1, tgt:'ally_adj', fx:[{v:'rally', move:f(2)}],                       txt:'An adjacent ally may move 2 nodes for free this round.' },
+    { id:'legup', n:'Leg up', icon:'⇡', ap:1, tgt:'ally_adj_move', fx:[{v:'rally', move:f(2)}],                  txt:'Boost an adjacent ally up to 2 nodes, to a node you choose, now.' },
     { id:'lend',  n:'Lend',   icon:'⇄', ap:2, tgt:'ally_adj', fx:[{v:'mint', face:'AP', n:f(2), target:'ally'}], txt:'Give an adjacent ally 2 AP to spend this round. Lent after their turn, it is lost.' },
     { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'hasten', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and your track slides 1 extra column.' },
   ];

@@ -197,7 +197,7 @@ test('no option on a card, gear or consumable recipe is ignored, and every formu
       `basic ${b.id}`,
       unreadKeys(b, ({ arrange, choose }) => {
         const scene = H.arena('hum_tool');
-        if (b.tgt === 'ally_adj') {
+        if (b.tgt === 'ally_adj' || b.tgt === 'ally_adj_move') {
           // a duet move needs the partner beside you
           const ally = T.allyOf(scene.m, scene.h);
           ally.pos = T.Board.walkNeighbors(scene.m.board, scene.h.pos).find((n) => !T.occupied(scene.m, n));
