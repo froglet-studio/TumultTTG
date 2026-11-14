@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.32.0',
+    version: '2.33.0',
     items: [
+      {
+        text: 'The route is redrawn as the climb it is. Each leg lies over its painting and says how it is travelled (by land, by sea, by air), with what that ground’s guides would tell you. Each stop is a painted roundel of the place it is played in, with its name, its kind, its tier and its pull: ▲ heavy (uphill) or ▼ light (downhill). Hover a stop to see the place. The road you took is lit gold, the next choices glow, stops you passed by fade, and your two pilots stand where you last stopped. Does the route help you choose where to go? Does it feel like a journey?',
+      },
       {
         text: 'A story box now sits under End turn. On your turn, write what it looked like in a line, as the pilot you have selected (for example: "Kess counts the waves between the gusts, and jumps on the ninth"). Press Enter, or just end your turn. It changes nothing in play. Your line shows in the log, then in your pilot’s words in the passage after the stop, and in the record of the run at the end. Online, each player writes their own. Did you write any? What made you want to?',
       },

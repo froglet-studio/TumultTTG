@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.33.0 — 2026-11-14 — the route, painted
+
+Garrett: "make the ladder up the rogue like adventure look better and more representative of the artwork."
+
+- **Legs.**
+  - Each leg lies over its painting, which is now plain to see (the road is dimmed where it runs, not the whole picture).
+  - Each leg is headed *Leg I · by land*, then its name, then a line from that ground's guides, written from `docs/LORE.md`: ground that deforms and is rebuilt, windbreaks, the constant wind, uphill and downhill.
+  - The finale is headed by what the threat looks like, over its own ground, and breathes rose.
+  - A leg you have finished fades to sepia.
+- **Stops.**
+  - Each stop on a board is a roundel painted with its atlas page's plate, with the kind of stop as a seal in the corner.
+  - Each stop is labelled with the place's name, its kind, its tier and its pull: ▲ heavy (uphill) or ▼ light (downhill), in g.
+  - Hovering a stop shows the place's painting, its gravity, what it is like, and what the stop asks of you.
+  - Havens and events keep their marks and say what they offer.
+- **The road.**
+  - The road taken is lit gold, the next choices glow and flow, and the roads ahead are dotted.
+  - Stops you passed by fade, and stops more than two rows ahead are dimmed, though still readable for planning.
+  - Your two pilots stand beside the stop where you last stopped, and before the first stop at the foot of the route, *setting out*.
+- **Behind the scenes.** A painting shown many times is written into the page once, as a class (`U.artClass`), never repeated in the markup or in tooltips. On a phone, the leg titles shrink to a line and the stops use the whole width.
+- No rule or balance changes.
+
 ## 2.32.0 — 2026-11-14 — a line of story for any turn
 
 Garrett: "have players able to add story fluff to any one of their turns in a box next to the end turn button."
