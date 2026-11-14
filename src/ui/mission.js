@@ -318,6 +318,7 @@
     renderSide(m);
     renderLog(m);
     updateBoard(m);
+    markCombos(m);
     playFx(m);
     if (U.feelUpdate) U.feelUpdate(m);
     if (m.over && !U.ms.overShown) {
@@ -961,15 +962,43 @@
       const fell = (o.kind === 'enemy' ? o.alive && !u.alive : !o.downed && u.downed) || (hpNow > 0 && hpThen <= 0);
       const before = new Set(unitBadges(o).map((b) => b.k + ':' + b.v));
       const added = unitBadges(u).filter((b) => !before.has(b.k + ':' + b.v));
+      // a state gone entirely: a setup paid off (Marked, Exposed, Empower spent) or a guard broken
+      const after = new Set(unitBadges(u).map((b) => b.k));
+      const removed = unitBadges(o).filter((b) => !after.has(b.k));
       const moved = u.pos !== o.pos && m.board.nodes[u.pos] ? u.pos : null;
-      if (hpThen !== hpNow || fell || added.length || moved != null)
-        out.push({ o, u, d: hpThen - hpNow, fell, added, moved });
+      if (hpThen !== hpNow || fell || added.length || removed.length || moved != null)
+        out.push({ o, u, d: hpThen - hpNow, fell, added, removed, moved });
     }
+    return out;
+  }
+  /**
+   * What the world adds to a play: the lines the engine narrates in its own voice (a body slamming down under
+   * heavy gravity, a foe that holds fast, a blow that finds an afterimage), and the setups it pays off (a Mark
+   * or an Exposed spent, an Empower used). Each is { tone: 'good' | 'bad' | 'neutral', text }.
+   */
+  const ROUTINE = [/ strikes a .* for \d+\.$/, / collapses\.$/];
+  const CATCH = [/holds fast/, /afterimage/, /outside time/, /fully blunted/, /is seared by/];
+  function combosOf(m, copy, diffs) {
+    const out = [];
+    for (const l of copy.log) {
+      // (a copy starts with an empty log: T.imagine; everything in it is the play's)
+      if (l.who !== 'dm' || ROUTINE.some((re) => re.test(l.text))) continue;
+      out.push({ tone: CATCH.some((re) => re.test(l.text)) ? 'bad' : 'good', text: l.text });
+    }
+    for (const x of diffs)
+      for (const b of x.removed || []) {
+        const foe = x.o.kind === 'enemy';
+        if (foe && b.kw.tone === 'bad') out.push({ tone: 'good', text: `${x.o.name}'s ${b.k} is spent on this` });
+        else if (!foe && b.k === 'Empower') out.push({ tone: 'good', text: `${x.o.name}'s Empower is spent on this` });
+        else if (foe && b.kw.tone === 'good') out.push({ tone: 'good', text: `${x.o.name} loses ${b.k}` });
+        else if (!foe && b.kw.tone === 'good') out.push({ tone: 'bad', text: `${x.o.name} loses ${b.k}` });
+      }
     return out;
   }
   function previewFor(p, ctxs, i = U.ms.heroIdx) {
     const m = M();
     const all = [];
+    const combos = [];
     for (const ctx of ctxs) {
       const copy = T.imagine(m);
       let r;
@@ -978,10 +1007,15 @@
       } catch (e) {
         r = null;
       }
-      if (r && r.ok) all.push(...diffPlay(m, copy));
+      if (!r || !r.ok) continue;
+      const d = diffPlay(m, copy);
+      all.push(...d);
+      for (const c of combosOf(m, copy, d)) if (!combos.some((x) => x.text === c.text)) combos.push(c);
     }
+    all.combos = combos;
     return all;
   }
+  U.previewFor = previewFor;
   function drawPreview(diffs, note) {
     const svg = U.ms.svg;
     const g = U.ms.g;
@@ -1036,17 +1070,22 @@
         ),
       );
       if (x.moved != null) bits.push('→ ' + esc(N[x.moved].label || x.moved));
+      (x.removed || []).forEach((b) => bits.push(`<s class="dim">${esc(b.k)}</s>`));
       words.push(`<b>${esc(name)}</b> ${bits.join(' ')}`);
     }
     const bar = $('#mtarget');
-    if (bar && (words.length || note)) {
+    if (bar && (words.length || note || (diffs.combos && diffs.combos.length))) {
       let el = bar.querySelector('.pv-line');
       if (!el) {
         el = document.createElement('div');
         el.className = 'pv-line';
         bar.appendChild(el);
       }
-      el.innerHTML = `<span class="dim">Would:</span> ${words.join(' · ') || ''}${note ? ` <span class="dim">${note}</span>` : ''}`;
+      const combos = (diffs.combos || [])
+        .slice(0, 4)
+        .map((c) => `<span class="pv-combo ${c.tone}">${c.tone === 'bad' ? '⚠' : '✦'} ${U.kw(esc(c.text))}</span>`)
+        .join(' ');
+      el.innerHTML = `<span class="dim">Would:</span> ${words.join(' · ') || ''}${note ? ` <span class="dim">${note}</span>` : ''}${combos ? `<div class="pv-combos">${combos}</div>` : ''}`;
     }
   }
   function clearPreview() {
@@ -1087,6 +1126,30 @@
     if (tg.need === 'none') return [{}];
     if (tg.need === 'foe' || tg.need === 'foeOrAlly') return (tg.options || []).map((target) => ({ target }));
     return [];
+  }
+  /**
+   * Light a ✦ on every play the player could make now that the world would add to: try it on a copy for each
+   * target it could pick (and for a few of the nodes it could pick), and keep what the world adds (combosOf).
+   * The mark's tip says what; hovering the play shows it on the board.
+   */
+  function markCombos(m) {
+    if (m.over || U.ms.mode !== 'idle') return;
+    for (const btn of document.querySelectorAll(
+      '#mside [data-act="face"], #mside [data-act="basic"], #mside [data-act="gear"]',
+    )) {
+      if (btn.disabled) continue;
+      const pk = pendingOf(btn);
+      if (!pk) continue;
+      let ctxs = ctxsFor(pk.tg);
+      if (pk.tg.need === 'node') ctxs = (pk.tg.options || []).slice(0, 10).map((node) => ({ node }));
+      const good = (previewFor(pk.p, ctxs, pk.i).combos || []).filter((c) => c.tone === 'good');
+      if (!good.length) continue;
+      const tip = `<b>✦ The world adds to this play</b>${good
+        .slice(0, 4)
+        .map((c) => `<div>${esc(c.text)}</div>`)
+        .join('')}<div class="dim small">Hover the play to see it on the board.</div>`;
+      btn.insertAdjacentHTML('beforeend', `<span class="combo-mark" data-tip="${esc(tip)}">✦</span>`);
+    }
   }
   document.addEventListener('mouseover', (e) => {
     if (U.screen !== 'mission' || !U.ms || !U.ms.built || M().over) return;
