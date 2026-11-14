@@ -210,7 +210,11 @@ test(
     assert.equal(JSON.parse(p.w.localStorage.getItem(KEY)).log.length, 1, 'kept on this device');
     if (p.U.screen === 'reward') {
       // the reward screen wants every pilot's card and boon offers answered before it lets go
-      for (let k = 0; k < 8; k++) if (!p.act('takeBoon') && !p.act('skipCard')) break;
+      for (let k = 0; k < 8; k++) {
+        const a = ['takeBoon', 'skipCard'].find((x) => p.d.querySelector(`[data-act="${x}"]`));
+        if (!a) break;
+        p.act(a);
+      }
       p.act('rewardDone');
       assert.equal(p.U.screen, 'map');
       assert.ok(p.d.querySelector('.mnode.avail'), 'the next row is open');

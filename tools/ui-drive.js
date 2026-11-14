@@ -16,7 +16,7 @@
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /** Wait until `ready()` is true, checking every few milliseconds; fail after `ms`. */
 async function until(ready, what, ms = 5000) {
-  for (const end = Date.now() + ms; !ready(); ) {
+  for (const end = Date.now() + ms; !ready();) {
     if (Date.now() > end) throw new Error('timed out waiting for ' + what);
     await sleep(5);
   }

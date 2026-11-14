@@ -397,7 +397,7 @@
       return { x: n === 1 ? 50 : ((nd.col + 0.5) / n) * 100, y: H - (nd.row + 0.5) * ROW };
     };
     const legs = [];
-    for (let r = 0; r < map.rows.length; ) {
+    for (let r = 0; r < map.rows.length;) {
       const a = T.actOf(r);
       let r2 = r;
       while (r2 + 1 < map.rows.length && T.actOf(r2 + 1) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss') r2++;
