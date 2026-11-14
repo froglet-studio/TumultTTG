@@ -1942,3 +1942,37 @@ hr {
 .log .note .pfp {
   flex: none;
 }
+
+/* combos: what the world adds to a play (mission.js combosOf) */
+.combo-mark {
+  margin-left: 4px;
+  color: var(--gold);
+  font-size: 11px;
+  text-shadow: 0 0 6px rgba(242, 193, 78, 0.8);
+  animation: combo-glint 2.4s ease-in-out infinite;
+}
+@keyframes combo-glint {
+  50% {
+    opacity: 0.55;
+  }
+}
+#mtarget .pv-combos {
+  margin-top: 3px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+.pv-combo {
+  font-size: 12px;
+}
+.pv-combo.good {
+  color: #f6d98a;
+}
+.pv-combo.bad {
+  color: #ffb3c7;
+}
+@media (prefers-reduced-motion: reduce) {
+  .combo-mark {
+    animation: none;
+  }
+}

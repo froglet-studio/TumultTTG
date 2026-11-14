@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.35.0 — 2026-11-14 — combos you can see
+
+Garrett: "I want these character to feel like they have fun toys that can be played with in interesting and expressive ways. they should combine to create emergent effects."
+
+- **✦ on plays the world adds to.** After every action, each play you could make is tried on a copy of the mission (`T.imagine`) against each target it could pick, and against up to ten of the nodes it could pick. If the world would add to it, its button gets a gold ✦, and the ✦'s tooltip says what. Things the world adds:
+  - The engine's own narration: a body slamming down under heavy gravity, a guard broken.
+  - Setups paid off: a Mark or Exposed spent, an Empower used.
+- **What it adds, in the preview.** The "Would:" line above the board now ends with what the world adds (✦) and the catches (⚠): a foe that holds fast against a shove, a blow that finds an afterimage, one that passes through a foe in Stasis or is fully blunted. A play that only meets a catch still shows its line. States a play would spend or break are struck through.
+- Partner combos come out of this as well: once Kess Marks a foe, Cavitt's hits on it carry a ✦ that says the Mark will be spent.
+- Nothing is guessed. Every ✦ comes from the exact result on a copy, and looking never changes the mission (a test checks it).
+- No rule or balance changes.
+
 ## 2.34.0 — 2026-11-14 — the hour, the wind, and the board answering back
 
 Garrett: "Get everything polished and more pleasant to play. think animations, effect, sound … bring that world to life."

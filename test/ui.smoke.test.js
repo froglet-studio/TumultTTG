@@ -247,3 +247,54 @@ test(
     }
   },
 );
+
+test(
+  'UI: a play the world adds to is marked ✦ and its preview says what the world adds',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const { JSDOM } = require('jsdom');
+    const { until } = require('../tools/ui-drive');
+    const dom = new JSDOM(build().html, {
+      runScripts: 'dangerously',
+      pretendToBeVisual: true,
+      url: 'http://localhost/',
+    });
+    const w = dom.window;
+    const d = w.document;
+    try {
+      await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+      const T = w.T;
+      const U = T.UI;
+      const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+      click('[data-act="newRun"]');
+      click('[data-act="prebuilt"][data-arg="cavitt"]');
+      click('[data-act="confirmHero"]');
+      click('[data-act="prebuilt"][data-arg="kess"]');
+      click('[data-act="confirmHero"]');
+      click('.mnode.avail');
+      const m = U.run.mission;
+      const i = U.ms.heroIdx;
+      const h = m.heroes[i];
+      // a foe beside the pilot, with a Mark on it (a partner's Spot), and plenty of AP to act with
+      const near = T.Board.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
+      assert.ok(near != null);
+      const foe = m.enemies.find((e) => e.alive);
+      foe.pos = near;
+      foe.states.Marked = new w.Object();
+      T.mint(h, 'AP', 6);
+      const before = JSON.stringify(m);
+      U.updateMission();
+      const strike = d.querySelector(`#mside [data-act="basic"][data-arg="${i}|strike"]`);
+      assert.ok(strike && !strike.disabled, 'Strike can be used');
+      const mark = strike.querySelector('.combo-mark');
+      assert.ok(mark, 'Strike is marked: it would spend the Mark');
+      assert.match(mark.getAttribute('data-tip'), /Marked is spent on this/);
+      strike.dispatchEvent(new w.MouseEvent('mouseover', { bubbles: true }));
+      assert.match(d.querySelector('#mtarget .pv-combos').textContent, /✦ .*Marked is spent on this/);
+      assert.equal(JSON.stringify(m), before, 'looking never changes the mission');
+    } finally {
+      w.close();
+    }
+  },
+);

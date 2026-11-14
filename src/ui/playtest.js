@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.34.0',
+    version: '2.35.0',
     items: [
+      {
+        text: 'Combos are now shown. A play the world would add to gets a gold ✦: a shove under heavy gravity (the foe slams down for extra damage), a hit on a foe your partner Marked (the Mark is spent for +2), or anything that breaks a foe’s guard. Hover it and the line above the board says what the world adds, worked out exactly on a copy of the mission. A catch shows as ⚠, for example a foe that holds fast against a shove, or a blow that finds an afterimage. Did a ✦ make you try something you would not have? Did one ever promise something that did not happen?',
+      },
       {
         text: 'A mission now has a time of day. A day on Tumult lasts about an hour, so six rounds make one: the board brightens at dawn and noon, goes rose at dusk and blue at night, and the top bar says which. It changes nothing in play. Windy places blow gusts across the board toward the edge the wind pushes to, and fog drifts low. As each round begins the Terminal types a readout (the place, its pull and weather at the start; then the round, the hour and what is left on the clock). Plays, hits, shields, heals and falls now flash on the board, a state you gain floats up by its keyword, and each etherion has its own sound (Mass deep, Charge buzzing, Space airy, Time a bell). Turn the sound on with the speaker button. Is anything too much, or too quiet? Does night ever make the board hard to read?',
       },
