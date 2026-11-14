@@ -16,7 +16,7 @@
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 /** Wait until `ready()` is true, checking every few milliseconds; fail after `ms`. */
 async function until(ready, what, ms = 5000) {
-  for (const end = Date.now() + ms; !ready();) {
+  for (const end = Date.now() + ms; !ready(); ) {
     if (Date.now() > end) throw new Error('timed out waiting for ' + what);
     await sleep(5);
   }
@@ -141,8 +141,12 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40, tide = 'ri
         await until(() => d.querySelector('[data-act="missionDone"]'), 'the mission-over modal');
         if (!act('missionDone')) throw new Error('mission-over modal did not offer Continue');
       } else if (U.screen === 'reward') {
-        if (!click('[data-act="takeCard"]:not([disabled])')) act('skipCard');
-        click('[data-act="takeBoon"]');
+        // each pilot chooses their own upgrade: keep choosing until no choice is left
+        for (let k = 0; k < 8; k++) {
+          if (click('[data-act="takeBoon"]')) continue;
+          if (click('[data-act="takeCard"]:not([disabled])')) continue;
+          if (!click('[data-act="skipCard"]')) break;
+        }
         if (!act('rewardDone')) throw new Error('reward screen would not continue');
       } else if (U.screen === 'haven') {
         act('rest', 'half');

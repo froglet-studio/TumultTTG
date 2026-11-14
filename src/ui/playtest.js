@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.22.0',
+    version: '2.23.0',
     items: [
+      {
+        text: 'After every won mission each pilot now gets an upgrade of their own: a trait offer of three cards that fit that pilot (or skip for +2 ◇), and after an elite a boon each. With two players, each picks for their own pilot. Did both of you have a pick you cared about? Was one offer always better than the other?',
+      },
       {
         text: 'Nothing new to play in this build: the canon you approve in the inbox now becomes a storyteller pack for AI (rules first, then canon, then the world), and canon you mark public is kept in the repository too. Keep writing ✎ notes as you play.',
       },

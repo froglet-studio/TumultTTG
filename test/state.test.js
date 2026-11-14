@@ -206,7 +206,7 @@ test('a run saved in the middle of a round resumes exactly, and saving costs not
       T.missionRewards(r, r.mission);
       T.applyMissionResult(r);
       if (!r.over) {
-        if (r.lastReward.offer.length) T.skipOfferedCard(r);
+        r.heroes.forEach((h, i) => r.lastReward.picked[i] || T.skipOfferedCard(r, i));
         T.finishNode(r);
         const next = r.available.find((id) => T.MISSIONS[r.map.all[id].type]);
         if (next != null) T.chooseNode(r, next);

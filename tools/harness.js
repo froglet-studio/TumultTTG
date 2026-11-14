@@ -99,13 +99,12 @@ function createHarness(T = loadTumult()) {
           break;
         }
         const rw = run.lastReward;
-        if (rw.offer && rw.offer.length) {
-          const cid = rw.offer[0];
-          const hi = run.heroes.findIndex((h) => T.canAddCard(h, cid).ok);
-          if (hi >= 0) T.takeOfferedCard(run, cid, hi);
-          else T.skipOfferedCard(run);
-        }
-        if (rw.boon && rw.boon.length) T.takeBoon(run, rw.boon[0], T.runStream(run, 'player').int(2));
+        run.heroes.forEach((h, hi) => {
+          if (rw.picked[hi]) return;
+          if (rw.offers[hi].length) T.takeOfferedCard(run, rw.offers[hi][0], hi);
+          else T.skipOfferedCard(run, hi);
+        });
+        if (rw.boons) run.heroes.forEach((h, hi) => T.takeBoon(run, rw.boons[hi][0], hi));
         run.heroes.forEach((h) => T.autoAllocate(h));
         T.finishNode(run);
       } else if (run.phase === 'haven') {

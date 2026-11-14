@@ -34,8 +34,8 @@ What each does to win rates is in `BALANCE.md` (v2.7.0).
 
 - **UP:** 2, +1 per bonus objective achieved, +1 for an Elite (+1 with the Studious boon). Both heroes receive it; spend any time on the map via **Train**.
 - **Omnicrystals (◇):** 4 + tier, +2 per bonus objective, +4 Elite, +10 boss (+2 Deep Pockets).
-- **A trait:** pick 1 of 3 cards drawn from traits either hero could legally take, give it to a hero (bloodline must match; 3-of-9 cap; 9 max) — or skip for +2 ◇.
-- **Elites also offer a boon** (pick 1 of 2).
+- **A trait for every hero** (since 2.23): each hero is offered 3 cards of their own, drawn from traits that hero could legally take (bloodline must match; 3-of-9 cap; 9 max), never a card offered to the other hero too. Each takes 1, or skips for +2 ◇. With two players, each chooses for their own pilot.
+- **Elites also offer every hero a boon** (each picks 1 of their own 2).
 - Everyone binds wounds: **+25% vitality** after a won mission; downed heroes get up at 25%.
 
 **Bonus objectives** are per-archetype (e.g. *no hero below 50%*, *destroy the Warden*, *finish with 3+ rounds to spare*, *take no ambush damage*, *take no hazard damage*, *both heroes standing*). They are the skill-expression reward loop.
