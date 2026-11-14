@@ -1034,6 +1034,17 @@
         return B.adjacent(bd, h.pos, ally.pos)
           ? { need: 'none', ally: ally.uid }
           : { need: 'none', invalid: 'your ally must be beside you' };
+      case 'ally_move':
+      case 'ally_adj_move': {
+        // you move your partner, now, to a node you choose: the rest of your turn stays yours to plan
+        if (!ally || ally.downed) return { need: 'none', invalid: 'no ally standing' };
+        if (tgt === 'ally_adj_move' && !B.adjacent(bd, h.pos, ally.pos))
+          return { need: 'none', invalid: 'your ally must be beside you' };
+        const rl = face && face.fx.find((x) => x.v === 'rally');
+        const n = rl ? num(rl.move, P, E) : 0;
+        const steps = st(ally).Rooted || st(ally).SlowSelf ? [] : T.reachableWalk(m, ally, n, false);
+        return { need: 'node', options: [ally.pos].concat(steps), ally: ally.uid, allyMove: n };
+      }
       case 'foe_melee':
         return {
           need: 'foe',
@@ -1464,10 +1475,32 @@
         break;
       }
       case 'rally': {
+        // the player who plays it moves their partner, at once, to the node they chose (ctx.node): nothing is
+        // left for the partner to decide, so whoever plays it can plan the rest of their turn exactly
         if (!ally || ally.downed) break;
         const n = num(f.move, P, E);
-        ally.freeMove = (ally.freeMove || 0) + n;
-        say(m, `${ally.name} may move ${n} for free.`, 'hero');
+        if (ctx.node == null || ctx.node === ally.pos) {
+          if (ctx.node === ally.pos) say(m, `${ally.name} holds their ground.`, 'hero');
+          break;
+        }
+        const climber = canClimb(ally);
+        const p = B.path(
+          bd,
+          ally.pos,
+          ctx.node,
+          new Set(
+            T.liveEnemies(m)
+              .map((e) => e.pos)
+              .concat(m.decoys.map((d) => d.pos)),
+          ),
+          climber,
+        );
+        if (!p || p.length < 2 || p.length - 1 > n || T.occupied(m, ctx.node)) break;
+        for (let i = 1; i < p.length; i++) {
+          moveEntity(m, ally, p[i], 'walk');
+          onHeroEnter(m, ally, p[i]);
+        }
+        say(m, `${actor.name} sends ${ally.name} to ${bd.nodes[ctx.node].label || 'node ' + ctx.node}.`, 'hero');
         break;
       }
       /* ---------- FORCE ---------- */

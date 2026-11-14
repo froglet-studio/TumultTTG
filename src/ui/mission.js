@@ -368,7 +368,10 @@
       return;
     }
     let txt = '';
-    if (ms.mode === 'target')
+    if (ms.mode === 'target' && ms.pending.tg.allyMove != null) {
+      const ally = m.heroes.find((x) => x.uid === ms.pending.tg.ally);
+      txt = `<b>${esc(ms.pending.label)}</b> — choose where ${esc(ally ? ally.name : 'your ally')} goes (up to ${ms.pending.tg.allyMove}; click them to stay). They move now.`;
+    } else if (ms.mode === 'target')
       txt = `<b>${esc(ms.pending.label)}</b> — choose a ${ms.pending.tg.need === 'node' ? 'node' : 'target'} (highlighted).`;
     else if (ms.mode === 'choice') txt = `<b>${esc(ms.pending.label)}</b> — push or pull?`;
     else if (ms.mode === 'reroll') txt = `<b>Reroll</b> — click up to ${ms.rerollLeft} banked dice, then confirm.`;
@@ -1103,6 +1106,11 @@
           ms.pending.tg.options.includes(m.heroes[i].uid)
         ) {
           commitPending({ target: m.heroes[i].uid });
+          return true;
+        }
+        // moving a partner: clicking them keeps them where they stand
+        if (ms.mode === 'target' && ms.pending.tg.need === 'node' && ms.pending.tg.options.includes(m.heroes[i].pos)) {
+          commitPending({ node: m.heroes[i].pos });
           return true;
         }
         if (ms.mode === 'idle') {

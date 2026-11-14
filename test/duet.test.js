@@ -39,13 +39,18 @@ test('Spot marks a foe; the next hit on it, by the partner, deals 2 more', () =>
   assert.ok(!foe.states.Marked, 'the mark is spent');
 });
 
-test('Leg up gives the partner beside you 2 free steps; Lend gives them 2 AP for this round', () => {
+test('Leg up moves the partner beside you, at once, to a node the giver chooses; Lend gives them 2 AP', () => {
   const s = scene();
-  assert.ok(T.useBasic(s.m, s.h, 'legup').ok);
-  assert.equal(s.ally.freeMove, 2);
   const before = T.apValue(s.ally);
   assert.ok(T.useBasic(s.m, s.h, 'lend').ok);
   assert.equal(T.apValue(s.ally), before + 2);
+  const tg = T.canUseBasic(s.m, s.h, 'legup').tg;
+  assert.equal(tg.need, 'node', 'the giver picks the destination');
+  assert.ok(tg.options.includes(s.ally.pos), 'staying put is a choice');
+  const to = tg.options.find((n) => n !== s.ally.pos && B.dist(s.m.board, s.ally.pos, n, false) === 2) ?? tg.options[1];
+  assert.ok(T.useBasic(s.m, s.h, 'legup', { node: to }).ok);
+  assert.equal(s.ally.pos, to, 'the partner is already there: nothing is left for them to decide');
+  assert.ok(!s.ally.freeMove, 'no free steps are handed over');
   assert.equal(s.ally.pool + s.ally.held.length, T.RULES.POOL, 'minted dice never count: 15 dice still');
   T.finishRound(s.m);
   assert.equal(s.ally.temp.length, 0, 'lent AP is gone at the end of the round');
@@ -67,4 +72,22 @@ test('the look-ahead player finds the duet moves', () => {
     }
   }
   assert.ok(used.size >= 1, 'it played at least one duet move');
+});
+
+test('every power that moves your partner resolves on the spot, so a turn can be planned exactly', () => {
+  // Call, Cue, Leg up and the Beacon gear all name the destination when they are played
+  const movers = [];
+  for (const c of Object.values(T.CARD))
+    for (const fk of ['P', 'E']) if (c[fk].fx.some((x) => x.v === 'rally')) movers.push(c[fk].tgt);
+  for (const b of T.BASIC) if (b.fx.some((x) => x.v === 'rally')) movers.push(b.tgt);
+  for (const g of T.GEAR) for (const ab of g.abilities) if (ab.fx.some((x) => x.v === 'rally')) movers.push(ab.tgt);
+  assert.ok(movers.length >= 4);
+  for (const t of movers) assert.ok(['ally_move', 'ally_adj_move'].includes(t), 'a rally names its node: ' + t);
+  // and the same plan played twice gives the same board
+  const a = scene();
+  const b = scene();
+  const to = T.canUseBasic(a.m, a.h, 'legup').tg.options.at(-1);
+  T.useBasic(a.m, a.h, 'legup', { node: to });
+  T.useBasic(b.m, b.h, 'legup', { node: to });
+  assert.equal(JSON.stringify(a.m.heroes), JSON.stringify(b.m.heroes));
 });

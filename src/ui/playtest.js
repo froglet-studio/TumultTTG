@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.29.1',
+    version: '2.30.0',
     items: [
+      {
+        text: 'Moving your partner is now yours to decide, all at once. Leg up, Call, Cue and the Beacon gear ask you where your partner goes when you play them, and they move there immediately. Your partner never gets free steps to spend later, so you can plan your whole turn and account only for what the foes do. Does that make two-player turns easier to plan? Do you ever miss letting your partner choose?',
+      },
       {
         text: 'Layout fixes and ways back. Card costs no longer run off the edge of a card, a bloodline name moves to its own line when it is long, every Take button on the reward screen lines up under its card, and a face you cannot play says why on a line of its own. On the board, zone names no longer print over the names of spaces. Every draft step now has a Back button: to the title, to your first pilot, to the bloodlines, or to start a pilot over. The route, missions, rewards, havens and events all have a Title button, and Continue picks up where you left off. Is there still a screen you could not leave, or text that overflows?',
       },
