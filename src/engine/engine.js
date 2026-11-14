@@ -987,6 +987,11 @@
         return { need: 'none' };
       case 'ally':
         return ally && !ally.downed ? { need: 'none', ally: ally.uid } : { need: 'none', invalid: 'no ally standing' };
+      case 'ally_adj':
+        if (!ally || ally.downed) return { need: 'none', invalid: 'no ally standing' };
+        return B.adjacent(bd, h.pos, ally.pos)
+          ? { need: 'none', ally: ally.uid }
+          : { need: 'none', invalid: 'your ally must be beside you' };
       case 'foe_melee':
         return {
           need: 'foe',

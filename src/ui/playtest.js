@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.27.0',
+    version: '2.28.0',
     items: [
+      {
+        text: 'Pilots can now help each other with three basic actions, no card needed. Spot (2 AP): mark a foe up to 3 nodes away, so the next hit on it, by either of you, deals +2. Leg up (1 AP): an ally beside you may move 2 nodes for free this round. Lend (2 AP): give an ally beside you 2 AP for this round; lend it before their turn, or it is lost. Did you ever plan a turn around your partner? Which one did you use, and which never?',
+      },
       {
         text: 'A new mission that is not a fight: Salvage. Crates lie on the far side; carry them to the near edge (A) before the water takes the wreck. Interact beside a crate to pick it up, one each at a time; reaching the near edge sets it down, however you get there (even the wind). Did you split up or carry together? Did you fight the scavengers, or go round them? Is it too easy, or too tight? Use the panel to start one: Salvage, any tier.',
       },

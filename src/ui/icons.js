@@ -116,6 +116,10 @@
     'basic.strike': 'M2 4h5l15 15-3 3L4 7z',
     'basic.shove': 'M2 9h11V4l9 8-9 8v-5H2z',
     'basic.brace': 'M12 1 21 4v8c0 5-4 9-9 11-5-2-9-6-9-11V4z',
+    'basic.spot':
+      'M11 1h2v4h-2zM11 19h2v4h-2zM1 11h4v2H1zM19 11h4v2h-4zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 3a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', // a sight on a foe
+    'basic.legup': 'M12 2 20 10h-5v6H9v-6H4zM4 19h16v3H4z', // a boost up
+    'basic.lend': 'M3 7h13V3l6 6-6 6v-4H3zM21 17H8v4l-6-6 6-6v4h13z', // passed across
     'basic.arc': 'M14 1 5 13h6l-2 10 10-13h-6z',
     'basic.reach':
       'M10 2h4v3l3 1 2-2 3 3-2 2 1 3h3v4h-3l-1 3 2 2-3 3-2-2-3 1v3h-4v-3l-3-1-2 2-3-3 2-2-1-3H1v-4h3l1-3-2-2 3-3 2 2 3-1zm2 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',

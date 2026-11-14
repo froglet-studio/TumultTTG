@@ -58,16 +58,16 @@ One measure for every mission, in points of about one hero vitality each (`T.EVA
 | `progress` | 70 | the whole objective; `T.objectiveProgress(m)` runs from 0 to 1 for every kind of mission |
 | `heroHp` | 1 | each point of vitality a hero has |
 | `heroDown` | 18 | a hero down, on top of the vitality lost |
-| `foeHp` | 0.9 | each point of vitality and shield a foe still has |
+| `foeHp` | 0.9 | each point of vitality and shield a foe still has; a Marked foe counts 2 less, since its next hit deals +2 |
 | `foeAlive` | 4 | each foe still standing: it will act again |
 | `clock` | 2.5 | each round left on a clock |
 | `approach` | 1.6 | each step between a hero and where the objective needs someone — the nearest hero in full, the next at half |
-| `dice` | 0.5 | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that) |
+| `dice` | 0.5 | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that); a free move from Leg up counts as one die a space |
 | `short` | 5 | each AP held by a hero who stands where the objective takes an Interact and cannot yet pay for one |
 | `cooldown` | 0.25 | each column a played card still has to travel |
 | `crystal`, `item` | 0.4, 2 | crystals and consumables kept |
 
-The weights were set by reasoning and three corrections, each from watching it lose a mission it should have won: both heroes are credited for approaching the objective, not only the nearest; dice beyond four are worth almost nothing, or it hoards; and a hero one AP short of an Interact holds that AP instead of spending it on whatever is to hand. They have not been fitted to the win rates, and should not be: a player tuned until the tables look right measures nothing.
+The weights were set by reasoning and three corrections (plus, in 2.28.0, the two duet notes above, without which a set-up for the other pilot was worth nothing), each from watching it lose a mission it should have won: both heroes are credited for approaching the objective, not only the nearest; dice beyond four are worth almost nothing, or it hoards; and a hero one AP short of an Interact holds that AP instead of spending it on whatever is to hand. They have not been fitted to the win rates, and should not be: a player tuned until the tables look right measures nothing.
 
 ## What it cannot do
 

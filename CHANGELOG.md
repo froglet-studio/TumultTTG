@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.28.0 — 2026-11-14 — duet moves: pilots help each other
+
+Step 5 of the two-player plan: basic actions that one pilot does for the other, so each turn can be planned around your partner. No card is needed, and each is one sentence at the table.
+
+- **Spot** (2 AP): mark a foe up to 3 nodes away; the next hit on it, by anyone, deals +2.
+- **Leg up** (1 AP): an adjacent ally may move 2 nodes for free this round.
+- **Lend** (2 AP): give an adjacent ally 2 AP to spend this round. Lent after their turn, it is lost.
+- Both simulated players can use them. The shared evaluation now counts a Marked foe as 2 hp weaker and a free move as kept dice; without that the look-ahead player never set anything up for its partner (`docs/reference/PLAYERS.md`).
+- **Retune, so main does not get easier:** Spot at 1 AP made careful squads clearly stronger (full runs 19 → 23 of 40, the finale 65 → 80%). Spot costs 2 AP, and the Heart has 78 vitality at tier 3 (was 72).
+- **Balance:** `node tools/sim.js 80 runs`, main → 2.28.0: heuristic 13 → 15, look-ahead 41 → 39 of 80. `node tools/sim.js 40`: full runs heuristic 4 → 4, look-ahead 19 → 20 of 40; finale heuristic 40 → 30%, look-ahead 65 → 63%; Vault tiers fall for the look-ahead player (98/98/95 → 93/88/90%), other cells within a few points (`docs/reference/BALANCE.md`).
+- **Dull turns:** unchanged (`node tools/turns.js 10`: 41% before and after, idle 14%, forced 27%). The duet moves give careful squads a better line more than they give every turn a choice: a turn with 3 AP and one sensible move stays forced. That needs a bigger lever (more AP or dice a turn, or a tier 1 that presses harder), which is a design question, not a tuning one.
+
 ## 2.27.0 — 2026-11-14 — Salvage, a mission that is not a fight
 
 Step 4 of the two-player plan, and the first of the design's mission types won without destroying anything (`docs/design/03-missions.md`).

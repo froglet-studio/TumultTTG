@@ -341,7 +341,11 @@ test('basic actions: every hero can Strike, Brace and Shove with no cards, payin
   const ids = T.legalActions(m)
     .filter((a) => a.t === 'basic' && a.hero === 0)
     .map((a) => a.basic);
-  assert.deepEqual([...new Set(ids)].sort(), ['brace', 'shove', 'strike']);
+  for (const id of ['brace', 'shove', 'strike']) assert.ok(ids.includes(id), id);
+  assert.ok(
+    ids.every((id) => !T.BASIC_BY[id].el),
+    'nothing channelled without an etherion',
+  );
 
   adj.shield = 0;
   if (adj.states.Shield) delete adj.states.Shield;
