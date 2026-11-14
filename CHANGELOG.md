@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.34.0 — 2026-11-14 — the hour, the wind, and the board answering back
+
+Garrett: "Get everything polished and more pleasant to play. think animations, effect, sound … bring that world to life."
+
+- **The hour-long day** (`docs/LORE.md`: "A day lasts about an hour. Night is never far away, and never long."). Each round is about ten minutes, so six rounds make a day: dawn, morning, noon, afternoon, dusk, night. The light washes over the painting under the board, which stays readable at night, and the top bar names the hour. Where in the day a mission starts follows from its seed. Nothing in play reads the time of day.
+- **Weather on the board.** Wind is drawn as gusts blowing toward the edge it pushes to, and fog drifts low.
+- **The Terminal's readout.** As a round begins, a line types in at the top of the board. Round 1 gives the guide log: the place, its pull (uphill or downhill), the weather and the hour. After that, each round gives the round, the hour, and what is left on the clock.
+- **The board answers.**
+  - A card played rings its pilot in its etherion's colour.
+  - A hit flashes the token and bursts, and a shield flares cyan.
+  - A fall collapses, a heal glows, and a decoy, zone or trap set out marks its node.
+  - A state gained floats up, coloured by its keyword.
+- **Sound.** The small synth grew (still WebAudio, no files, no network).
+  - Dice rattle, blows thump, and shields ring.
+  - Forced moves whoosh, falls drop, and turns chime.
+  - Each etherion has its own voice: Mass deep, Charge buzzing, Space airy, Time a bell.
+  - A windy place has a very quiet wind under it, which stops when you leave the board or turn sound off.
+- **Built for all players.** All of it lives in `src/ui/feel.js` and `feel.css`. It reads the mission and its effects queue and never writes to them (a test checks this). Reduced-motion settings turn off the gusts, the flashes and the type-in.
+- No rule or balance changes.
+
 ## 2.33.0 — 2026-11-14 — the route, painted
 
 Garrett: "make the ladder up the rogue like adventure look better and more representative of the artwork."

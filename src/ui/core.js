@@ -845,6 +845,7 @@
   let shown = null;
   U.render = function () {
     const root = app();
+    if (U.screen !== 'mission' && U.windBed) U.windBed(false); // the wind stays on the board
     let html = '';
     switch (U.screen) {
       case 'title':

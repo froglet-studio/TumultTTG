@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.33.0',
+    version: '2.34.0',
     items: [
+      {
+        text: 'A mission now has a time of day. A day on Tumult lasts about an hour, so six rounds make one: the board brightens at dawn and noon, goes rose at dusk and blue at night, and the top bar says which. It changes nothing in play. Windy places blow gusts across the board toward the edge the wind pushes to, and fog drifts low. As each round begins the Terminal types a readout (the place, its pull and weather at the start; then the round, the hour and what is left on the clock). Plays, hits, shields, heals and falls now flash on the board, a state you gain floats up by its keyword, and each etherion has its own sound (Mass deep, Charge buzzing, Space airy, Time a bell). Turn the sound on with the speaker button. Is anything too much, or too quiet? Does night ever make the board hard to read?',
+      },
       {
         text: 'The route is redrawn as the climb it is. Each leg lies over its painting and says how it is travelled (by land, by sea, by air), with what that ground’s guides would tell you. Each stop is a painted roundel of the place it is played in, with its name, its kind, its tier and its pull: ▲ heavy (uphill) or ▼ light (downhill). Hover a stop to see the place. The road you took is lit gold, the next choices glow, stops you passed by fade, and your two pilots stand where you last stopped. Does the route help you choose where to go? Does it feel like a journey?',
       },

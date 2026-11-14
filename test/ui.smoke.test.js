@@ -182,3 +182,68 @@ test('UI: the route paints each stop with the place it is played in', { skip, ti
     w.close();
   }
 });
+
+test(
+  'UI: the day passes over the board, the weather blows on it, and neither touches the mission',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const { JSDOM } = require('jsdom');
+    const { until } = require('../tools/ui-drive');
+    const dom = new JSDOM(build().html, {
+      runScripts: 'dangerously',
+      pretendToBeVisual: true,
+      url: 'http://localhost/',
+    });
+    const w = dom.window;
+    const d = w.document;
+    try {
+      await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+      const U = w.T.UI;
+      const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+      click('[data-act="newRun"]');
+      click('[data-act="prebuilt"][data-arg="cavitt"]');
+      click('[data-act="confirmHero"]');
+      click('[data-act="prebuilt"][data-arg="kess"]');
+      click('[data-act="confirmHero"]');
+      click('.mnode.avail');
+      const m = U.run.mission;
+      // six rounds make a day, starting where the mission's seed says
+      const days = [];
+      for (let r = 1; r <= 7; r++) days.push(U.dayOf(Object.assign({}, m, { round: r })).id);
+      assert.equal(days[0], days[6], 'the day comes round again after six rounds');
+      assert.equal(new Set(days).size, 6);
+      assert.equal(
+        U.dayOf(m).id,
+        U.dayOf(JSON.parse(JSON.stringify(m))).id,
+        'the same mission starts at the same hour',
+      );
+      assert.match(d.querySelector('.sky').className, new RegExp('sky-' + U.dayOf(m).id));
+      assert.ok(d.querySelector('.pill.day'), 'the top bar says what time of day it is');
+      assert.match(d.querySelector('.readout').textContent, /^> GUIDE LOG · /, 'the Terminal reads out the place');
+      // wind draws gusts toward the edge it blows to; drawing it changes nothing
+      const before = JSON.stringify(m);
+      const was = { weather: m.place.weather, wind: m.place.wind };
+      m.place.weather = 'wind';
+      m.place.wind = -1;
+      const withWind = JSON.stringify(m);
+      U.updateMission();
+      assert.ok(d.querySelector('.wx.wx-wind.to-a'));
+      assert.ok(d.querySelectorAll('.wx i').length >= 8);
+      assert.equal(JSON.stringify(m), withWind, 'the look never writes to the mission');
+      m.place.weather = was.weather;
+      m.place.wind = was.wind;
+      U.updateMission();
+      assert.equal(JSON.stringify(m), before);
+      // a play answers on the board, in its own layer
+      const face = d.querySelector('#mside .fbtn.ok');
+      if (face) {
+        face.dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+        const target = d.querySelector('#mtarget [data-act]');
+        assert.ok(d.querySelector('#fxlayer') || target, 'a play is answered, or asks for its target');
+      }
+    } finally {
+      w.close();
+    }
+  },
+);
