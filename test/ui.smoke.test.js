@@ -91,3 +91,57 @@ test('UI: every draft step and run screen has a way back', { skip, timeout: 60_0
     w.close();
   }
 });
+
+test(
+  'UI: words of art are drawn as keywords, explained, and previewed on the board',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const { JSDOM } = require('jsdom');
+    const { until } = require('../tools/ui-drive');
+    const dom = new JSDOM(build().html, {
+      runScripts: 'dangerously',
+      pretendToBeVisual: true,
+      url: 'http://localhost/',
+    });
+    const w = dom.window;
+    const d = w.document;
+    try {
+      await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+      const U = w.T.UI;
+      const html = U.kw('Melee 2 and Weakened 1; the foe is Anchored.');
+      assert.match(html, /class="kw kw-neutral" data-kw="melee"/);
+      assert.match(html, /data-kw="weak"/);
+      assert.match(html, /data-kw="anchor"/);
+      assert.match(
+        U.kwGloss('Weakened 1'),
+        /each hit it deals is N lower/,
+        'a tooltip carries the meaning of its keywords',
+      );
+      // every state a token can wear has its keyword, so the board and the card text look alike
+      for (const s of ['Shield', 'Hidden', 'Anchored', 'Rooted', 'Marked', 'Weak', 'Located', 'Exposed', 'Stasis'])
+        assert.ok(U.kwOfState(s), 'a keyword for ' + s);
+      // hovering a playable face draws what it would do on a copy of the mission, never on the mission itself
+      const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+      click('[data-act="newRun"]');
+      U.run.seed = 5;
+      U.run.rngs = {};
+      click('[data-act="prebuilt"][data-arg="cavitt"]');
+      click('[data-act="confirmHero"]');
+      click('[data-act="prebuilt"][data-arg="kess"]');
+      click('[data-act="confirmHero"]');
+      click('.mnode.avail');
+      const m = U.run.mission;
+      const before = JSON.stringify(m);
+      let drew = 0;
+      for (const b of d.querySelectorAll('#mside .fbtn.ok, #mside [data-act="basic"]:not([disabled])')) {
+        b.dispatchEvent(new w.MouseEvent('mouseover', { bubbles: true }));
+        drew += d.querySelectorAll('#preview .pv').length;
+      }
+      assert.ok(drew > 0, 'some play previews its result');
+      assert.equal(JSON.stringify(m), before, 'previews never touch the mission');
+    } finally {
+      w.close();
+    }
+  },
+);
