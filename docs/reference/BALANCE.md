@@ -230,7 +230,7 @@ A banked etherion (or Omni) channelled into a basic action no longer needs AP: M
 
 On its own that made the game far easier: full runs, rising tide, look-ahead 22 → 38 of 40, heuristic 6 → 19 (a first try at Strike 3, Shove 2, Arc 2, Scramble 2 gave 40 and 30). Garrett asked for the difficulty to be rebuilt in the same change, so main never gets easier.
 
-**Where the difficulty went back.** Nearly every mission was already won by a careful player; runs were lost at the Heart, whose test is the race after it cracks. Neither hero vitality (26 → 20: still 39 of 40) nor a thicker shield (5) moved the look-ahead player; more Heart damage did little and broke the lethality budget. More Heart to get through, on a shorter clock, did: **the Heart has 50/61/72 vitality (was 32/38/44), and once cracked the Vault drowns in four rounds (was seven).** Its blows are unchanged.
+**Where the difficulty went back.** Nearly every mission was already won by a careful player; runs were lost at the Heart, whose test is the race after it cracks. Neither hero vitality (26 → 20: still 39 of 40) nor a thicker shield (5) moved the look-ahead player; more Heart damage did little and broke the lethality budget. More Heart to get through, on a shorter clock, did: **the Heart has 50/61/72 vitality (was 32/38/44; 78 at tier 3 since 2.28.0), and once cracked the Vault drowns in four rounds (was seven).** Its blows are unchanged.
 
 `node tools/sim.js 40`, 2.9.0 → 2.10.0, rising tide, same seeds:
 
@@ -308,6 +308,12 @@ Plan phase 3 set two targets: the look-ahead player (a careful person) should wi
 | elite | 3 | 73 → 58 | 93 → 88 | 6.6 → 8.5 |
 
 Tier 1 and the Heart are identical on both tides. Full runs (40): heuristic 9 → 2 won, missions won 69% → 59%; look-ahead 22 → 14 won, missions won 88% → 74%. On the flood tide 6 of the look-ahead player's 26 losses are the tier-3 Vault (45%), the one cell below its target; the Swarm, Hidden and Elite stay above it, and every tier-2 mission but the Vault stays above 90%.
+
+## v2.28.0 — duet moves
+
+Three basic actions that one pilot does for the other (`T.BASIC`, target `ally_adj` or a foe in range): Spot (mark a foe within 3 for +2 on the next hit, 2 AP), Leg up (an adjacent ally moves 2 for free this round, 1 AP) and Lend (an adjacent ally gets 2 AP for this round, 2 AP). The shared evaluation counts a free move as kept dice and a Mark as 2 hp off its foe, or the look-ahead player never sets anything up.
+
+With Spot at 1 AP the careful player got clearly stronger: full runs 19 → 23 of 40, the finale 65 → 80%. At 2 AP the finale is back at 65%, but the careful squad still arrives fresher and runs stayed easier (look-ahead 41 → 47 of 80 against main). So the Heart gets thicker at tier 3: **72 → 78 vitality**. `node tools/sim.js 80 runs`, main → 2.28.0: heuristic 13 → 15, look-ahead 41 → 39 of 80. At 40: heuristic 4 → 4, look-ahead 19 → 20, finale heuristic 40 → 30%, look-ahead 65 → 63%. Mission cells moved a few points either way (vault tiers fell for the look-ahead player, 98/98/95 → 93/88/90%, as AP goes to Spot instead of the climb).
 
 ## What the tuning fixed along the way
 
