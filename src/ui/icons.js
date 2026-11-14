@@ -16,10 +16,12 @@
   // Shapes are SVG path data; a list draws several paths (evenodd, so an inner ring cuts a hole).
   const P = {
     /* ── the etherions ── */
-    'el.M': 'M12 2 21 7v10l-9 5-9-5V7zM12 7 8 9.5v5L12 17l4-2.5v-5z', // Mass: a heavy hex with a core
-    'el.C': 'M14 1 5 13h6l-2 10 10-13h-6z', // Charge: a bolt
-    'el.S': 'M12 1 23 12 12 23 1 12zM12 6 6 12l6 6 6-6z', // Space: a folded diamond
-    'el.T': 'M5 2h14v3l-5 7 5 7v3H5v-3l5-7-5-7zM8 5l4 5 4-5z', // Time: an hourglass
+    // The element symbols are Cosmic Shore's element petals (froglet-studio/cosmic-shore, MIT,
+    // Assets/Resources/ElementPetals/*_petal.png), traced to paths so Hypersea games share one set (2.29).
+    'el.M': 'M1 19.6 12 4.4 23 19.6z', // Mass: a triangle
+    'el.C': 'M1 7.9 5 1h14l4 6.9L12.1 23z', // Charge: a cut gem
+    'el.S': 'M1.7 8.5 12.1 1l10.2 7.5L12.1 23z', // Space: a kite
+    'el.T': 'M3.9 12.1 12.1 1l8 11.1-8 10.9z', // Time: a tall diamond
     'el.O': 'M12 1 15 9 23 12 15 15 12 23 9 15 1 12 9 9z', // Omni: a four-point star
     crystal: 'M12 1 20 9 12 23 4 9zM12 4.5 7.2 9 12 18.6 16.8 9z', // an omnicrystal (the currency)
     ap: 'M4 4h16v16H4zM8 8v8h8V8z',

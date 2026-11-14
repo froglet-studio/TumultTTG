@@ -230,7 +230,7 @@ A banked etherion (or Omni) channelled into a basic action no longer needs AP: M
 
 On its own that made the game far easier: full runs, rising tide, look-ahead 22 → 38 of 40, heuristic 6 → 19 (a first try at Strike 3, Shove 2, Arc 2, Scramble 2 gave 40 and 30). Garrett asked for the difficulty to be rebuilt in the same change, so main never gets easier.
 
-**Where the difficulty went back.** Nearly every mission was already won by a careful player; runs were lost at the Heart, whose test is the race after it cracks. Neither hero vitality (26 → 20: still 39 of 40) nor a thicker shield (5) moved the look-ahead player; more Heart damage did little and broke the lethality budget. More Heart to get through, on a shorter clock, did: **the Heart has 50/61/72 vitality (was 32/38/44; 78 at tier 3 since 2.28.0), and once cracked the Vault drowns in four rounds (was seven).** Its blows are unchanged.
+**Where the difficulty went back.** Nearly every mission was already won by a careful player; runs were lost at the Heart, whose test is the race after it cracks. Neither hero vitality (26 → 20: still 39 of 40) nor a thicker shield (5) moved the look-ahead player; more Heart damage did little and broke the lethality budget. More Heart to get through, on a shorter clock, did: **the Heart has 50/61/72 vitality (was 32/38/44; 78 at tier 3 in 2.28.0, 86 since 2.29.0, and every foe has 130% of its listed vitality since 2.29.0), and once cracked the Vault drowns in four rounds (was seven).** Its blows are unchanged.
 
 `node tools/sim.js 40`, 2.9.0 → 2.10.0, rising tide, same seeds:
 
@@ -314,6 +314,30 @@ Tier 1 and the Heart are identical on both tides. Full runs (40): heuristic 9 �
 Three basic actions that one pilot does for the other (`T.BASIC`, target `ally_adj` or a foe in range): Spot (mark a foe within 3 for +2 on the next hit, 2 AP), Leg up (an adjacent ally moves 2 for free this round, 1 AP) and Lend (an adjacent ally gets 2 AP for this round, 2 AP). The shared evaluation counts a free move as kept dice and a Mark as 2 hp off its foe, or the look-ahead player never sets anything up.
 
 With Spot at 1 AP the careful player got clearly stronger: full runs 19 → 23 of 40, the finale 65 → 80%. At 2 AP the finale is back at 65%, but the careful squad still arrives fresher and runs stayed easier (look-ahead 41 → 47 of 80 against main). So the Heart gets thicker at tier 3: **72 → 78 vitality**. `node tools/sim.js 80 runs`, main → 2.28.0: heuristic 13 → 15, look-ahead 41 → 39 of 80. At 40: heuristic 4 → 4, look-ahead 19 → 20, finale heuristic 40 → 30%, look-ahead 65 → 63%. Mission cells moved a few points either way (vault tiers fell for the look-ahead player, 98/98/95 → 93/88/90%, as AP goes to Spot instead of the climb).
+
+## v2.29.0 — dice kinds, four dice a turn
+
+Garrett's dice (`docs/design/10-dice.md`; his answers, 2026-11-14): the plain die is a d20 (each element and Omni once, fifteen AP, no AP×2: the system has variance enough), each awakened card and each Affinity boon swaps a plain die for its element's d8, Omni Core for an ethereal d12, and **four dice a turn**, to widen what a turn can do.
+
+Four dice made the game far easier: 80 runs, heuristic 15 → 40, look-ahead 39 → 54. The retune, each part one sentence at the table:
+
+- every foe has **130%** of its listed vitality (`T.RULES.FOE_HP`), the Heart included, whose tier-3 base is **86** (was 78), so 112;
+- the **steady wind** asks 1 more of every objective and starts every clock but a hold's 1 round shorter, from tier 1; the Gale keeps its lead from tier 2;
+- a **Salvage** takes at most one extra crate from any tide (a crate is a round trip; two extra left the Gale's tier-2 Salvage at 50% for the look-ahead player).
+
+Foe vitality alone moved the look-ahead player more than the heuristic (150%: 13 and 25 of 80); tighter objectives are what kept planning paying (`test/lookahead.test.js` passes).
+
+`node tools/sim.js 80 runs`, main → 2.29.0: heuristic 15 → 17, look-ahead 39 → 33. So the game is a little harder for a careful squad and about the same for a plain one. `node tools/sim.js 40`: full runs heuristic 4 → 7, look-ahead 20 → 14; finale 30/63 → 23/43%; tier-3 heuristic Vault 55 → 60%, Cascade 85 → 100%, Salvage 38 → 28%; look-ahead Salvage t3 95 → 88%, Vault t3 90%.
+
+**Dull turns** (`node tools/turns.js 10`): **41% → 34%** (idle 14 → 8%, forced 27 → 26%), 2.5 close choices a turn.
+
+Tried along the way (`node tools/turns.js 6`; dull = idle + forced):
+
+| Change | Dull turns | Runs (look-ahead) | Why not |
+|---|---|---|---|
+| stronger Channels (Strike 3, Arc 2, Scramble 2, Brace Shield 2) | 36% | | with the new dice the look-ahead player's lead over the heuristic fell from 14 to 9 points: a stronger floor rewards plain play more than planning |
+| new dice, 3 a turn | 41% | 41 of 80 | no change to dull turns |
+| new dice, 4 a turn, no retune | 37% | 54 of 80 | far easier |
 
 ## What the tuning fixed along the way
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.29.0 — dice kinds and four dice a turn
+
+Garrett's original dice (`docs/design/10-dice.md`), aimed at turns with nothing to decide. A pilot's dice now follow its kit.
+
+- **The plain die is a d20:** Mass, Charge, Space, Time and Omni once each, AP on the other 15 sides. No AP×2: the game has variance enough.
+- **Special dice.** Each awakened card, and each Affinity boon, swaps one plain die for a d8 of its element: four sides its element, one each of the other three and Omni, no AP. Omni Core swaps one for an ethereal d12, two of each symbol. A pilot who wakes more cards rolls more etherions and fewer AP, mostly in the colours its own cards need: the mage path. Every pilot still has 15 dice.
+- **Four dice a turn** (was 3), drawn at random from the pool. A banked die keeps its kind; a spent one goes back.
+- **Cosmic Shore's element symbols:** Mass is a triangle, Charge a cut gem, Space a kite, Time a tall diamond, traced from Cosmic Shore's element petals so Froglet's Hypersea games share one set. A special die shows its size in the corner, the pool's tip lists its dice by kind, and a key to the symbols sits under the selected pilot's dice.
+- **Retune, so main does not get easier:** every foe has 130% of its listed vitality; the Heart's tier-3 base is 86 (was 78); the steady wind asks 1 more of every objective and starts every clock but a hold's 1 round shorter, from tier 1, and the Gale keeps its lead from tier 2; a Salvage takes at most one extra crate from any tide.
+- **Balance:** `node tools/sim.js 80 runs`, main → 2.29.0: heuristic 15 → 17, look-ahead 39 → 33, so a little harder for a careful squad. Without the retune four dice gave 40 and 54. Tables in `docs/reference/BALANCE.md`.
+- **Dull turns** (`node tools/turns.js 10`): **41% → 34%**. Turns with nothing worth doing fell from 14% to 8%. Stronger Channels were tried and left out: they let plain play catch up with careful play.
+- **Save version 12:** a banked die has a kind (`heldDie`). A die banked in an older save is plain (fixture `save-2.28.json`).
+- `node tools/turns.js` takes `--rule NAME=VALUE`, as `tools/sim.js` does. The recipe test also tries every face against foes one hit from going down.
+
 ## 2.28.0 — 2026-11-14 — duet moves: pilots help each other
 
 Step 5 of the two-player plan: basic actions that one pilot does for the other, so each turn can be planned around your partner. No card is needed, and each is one sentence at the table.

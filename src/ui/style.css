@@ -1156,6 +1156,28 @@ hr {
   border-color: var(--AP);
   font-size: 10px;
 }
+.die.kind {
+  position: relative;
+  border-width: 2px;
+}
+.die .dk {
+  position: absolute;
+  right: -3px;
+  bottom: -5px;
+  font-style: normal;
+  font-size: 8px;
+  line-height: 1;
+  padding: 1px 2px;
+  border-radius: 3px;
+  background: var(--line2);
+  color: #dfe7f2;
+}
+.dicekey {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  margin-top: 4px;
+}
 .die.temp {
   border-style: dashed;
   opacity: 0.9;

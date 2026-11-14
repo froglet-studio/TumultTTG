@@ -443,12 +443,21 @@
       )
       .join('');
     const canPickDie = U.ms.mode === 'reroll' || U.ms.mode === 'dump';
+    const poolTip = (x) => {
+      const left = T.poolDice(x);
+      const n = (k) => left.filter((d) => d === k).length;
+      const special = Object.keys(T.DICE)
+        .filter((k) => k !== 'plain' && n(k))
+        .map((k) => `${n(k)} ${T.DICE[k].n} (d${T.DICE[k].sides})`);
+      return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn, drawn at random from the pool; pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
+    };
     const dice =
       h.held
         .map((f, di) =>
           U.dieHTML(
             f,
             (canPickDie && sel ? 'pick' : '') + (U.ms.rerollPicked.includes(di) && sel ? ' rolled' : ''),
+            T.heldKind(h, di),
           ).replace('<span class="die', `<span data-act="die" data-arg="${i}|${di}" class="die`),
         )
         .join('') + h.temp.map((f) => U.dieHTML(f, 'temp')).join('');
@@ -501,7 +510,7 @@
       <div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>
-      <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="Dice still in your pool. You roll 3 per turn; pool + banked = 15 always.">pool ${h.pool} · AP ${T.apValue(h)}</span></div>
+      <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>${sel ? U.diceKey() : ''}
       <div class="track">${trackCols.join('')}</div>
       <div class="hand">${hand}</div>
       <div class="actions">

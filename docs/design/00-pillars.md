@@ -14,7 +14,7 @@ When the two pull apart, prefer the design in which a mechanical choice also say
 | Rule | Why it stays |
 |---|---|
 | A pool of 15 dice per character; pool + banked = 15, always | hoarding starves your next roll — the economy regulates itself |
-| Roll 3 a turn; d12 faces are Mass, Charge, Space, Time, Omni, AP2 and six AP | random *replenishment*, so each turn asks a different question |
+| Roll 4 a turn, drawn from your pool; the plain die is a d20 (each element and Omni once, the rest AP), and awakened cards and some boons swap plain dice for an element's d8 or an ethereal d12 (Garrett, 2026-11-14; was 3 a turn of one d12) | random *replenishment*, so each turn asks a different question |
 | A six-column track: a played card goes away for its cooldown | tempo is visible and plannable |
 | Every trait is a card with two faces | one decision per card per turn: reliable or remarkable |
 | **Physical** face: AP only, scales with P. **Ethereal** face: AP + etherion, unlocks a capability that exists only at E ≥ 1, scales with E | P buys numbers, E buys verbs; neither replaces the other |

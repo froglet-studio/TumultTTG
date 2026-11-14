@@ -8,12 +8,26 @@
  * Both heroes are measured from the same position at the round's start, before either acts.
  *
  *   node tools/turns.js [N=10] [archetype …]     N missions per archetype × tier (~1 s a mission)
+ *                       [--rule NAME=VALUE …]   try a different value for a constant in T.RULES
  */
 const { createHarness, ARCHETYPES } = require('./harness');
 const H = createHarness();
 const { T } = H;
 
-const args = process.argv.slice(2);
+const args = [];
+for (let i = 2; i < process.argv.length; i++) {
+  if (process.argv[i] !== '--rule') {
+    args.push(process.argv[i]);
+    continue;
+  }
+  const [name, value] = String(process.argv[++i] || '').split('=');
+  if (!(name in T.RULES) || value === undefined || Number.isNaN(Number(value))) {
+    console.error(`--rule wants NAME=NUMBER with NAME one of: ${Object.keys(T.RULES).join(', ')}`);
+    process.exit(2);
+  }
+  T.RULES[name] = Number(value);
+  console.log(`rule ${name} = ${value}`);
+}
 const N = parseInt(args[0], 10) || 10;
 const only = args.slice(1).filter((a) => ARCHETYPES.includes(a));
 const pct = (a, b) => (b ? Math.round((100 * a) / b) : 0);

@@ -28,6 +28,8 @@ At round start every enemy declares one intent (ability + target), drawn as an a
 
 ## Bestiary (stats t1 / t2 / t3)
 
+The HP column is the bestiary's own number. Since 2.29 (four dice a turn) every foe, the Heart included, has 130% of it, rounded (`T.RULES.FOE_HP`): a Biter with 6 has 8.
+
 | Enemy | Role | HP | Speed | Abilities | Policy |
 |---|---|---|---|---|---|
 | Biter 🦷 | swarm | 3/4/5 | 2 | Bite 2/3/3 melee | Rush the nearest hero (decoys count if nearer) |
@@ -41,7 +43,7 @@ At round start every enemy declares one intent (ability + target), drawn as an a
 | Bulwark 🛡️ | elite | 18/22/26 | 1 | Crush 5/6/7 · Quake 3/4/4 area · Brace | Quakes if 2 heroes adjacent; braces under half |
 | Harrier 🗡️ | elite | 12/15/18 | 2 | Phase Lance 5/6/7 (blink adjacent, reach 3) · Fade | Alternates lance and Hidden. Anchored, Slowed or held in a Counted Trap it cannot blink, though it still lances a hero beside it; Located, it cannot fade |
 | Tidecaller 🌊 | elite | 12/14/16 | 1 | Undertow 2/3/3 zone + pull 2 · Surge 4/5/6 zone + Weaken | Drags heroes toward hazards; alternate undertow/surge |
-| The Heart 🫀 | boss | 50/61/78 | 0 | Lance 3/4/5 zone · Crush 7/8/9 melee + pull 2 · Call the Swarm | Phase 1: lance its zone, call Biters when few remain. Phase 2: crush and drag, the flood rises |
+| The Heart 🫀 | boss | 50/61/86 | 0 | Lance 3/4/5 zone · Crush 7/8/9 melee + pull 2 · Call the Swarm | Phase 1: lance its zone, call Biters when few remain. Phase 2: crush and drag, the flood rises |
 
 Biters called by Spawners and by the Heart are one tier lower than the mission (fodder stays fodder). Swarm waves arrive at the mission's own tier and cap at 3/3/4 live.
 
