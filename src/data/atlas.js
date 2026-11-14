@@ -23,7 +23,8 @@
 
    Space format: label: [x, y, zones], x and y in board cells (the near edge
    is on the left), zones a string of zone keys (T.ZONES), one or two.
-   Extras add h:1 (high ground: reached by climbing, a teleport or a hover;
+   `skies` lists the weathers a visit may bring (T.WEATHER): each mission on the page
+   draws one. Extras add h:1 (high ground: reached by climbing, a teleport or a hover;
    `climb` lists its ladders) or hz:1 (a hazard: 2 true damage at round end).
    ========================================================================== */
 (function (T) {
@@ -32,6 +33,7 @@
     {
       id: 'quarry', name: 'Crystal Quarry', ground: 'land', gravity: 4, plate: 'scene/ANVIL', from: 'ANVIL',
       weather: 'Hard noon light, dust on the wind.',
+      skies: ['wind', 'calm'],
       blurb: 'Steps cut into a pale grey cliff, and a ramp of scarred planks up the middle.',
       spaces: {
         A1: [0.0, 0.0, 'A'], B1: [1.3, 0.0, 'B'], C1: [2.6, 0.0, 'B'], D1: [3.9, 0.0, 'D'], E1: [5.2, 0.0, 'D'],
@@ -55,6 +57,7 @@
     {
       id: 'mastcrop', name: 'Mast-Crop Hills', ground: 'land', gravity: 0.3, plate: 'scene/BUSHY', from: 'BUSHY',
       weather: 'Harvest wind; the chaff blows gold at the turn of the hour.',
+      skies: ['wind', 'calm'],
       blurb: 'A round threshing floor on a hilltop, ringed by stalks as tall as masts.',
       spaces: {
         A1: [0.0, 0.2, 'A'], B1: [1.2, 0.0, 'B'], C1: [2.5, 0.3, 'BD'], D1: [3.8, 0.0, 'B'], E1: [5.0, 0.2, 'E'],
@@ -78,6 +81,7 @@
     {
       id: 'barricade', name: 'Barricaded Market', ground: 'land', gravity: 1, plate: 'scene/SHRAPNEL', from: 'SHRAPNEL',
       weather: 'Still air between tall shuttered houses.',
+      skies: ['calm', 'fog'],
       blurb: 'A narrow street of shuttered houses, held overnight behind a wall of fruit crates.',
       spaces: {
         A1: [0.0, 0.0, 'A'], B1: [1.2, 0.1, 'B'], C1: [2.4, 0.0, 'B'], D1: [3.6, 0.1, 'B'], E1: [4.8, 0.0, 'B'],
@@ -103,6 +107,7 @@
     {
       id: 'wreckflats', name: 'Tidal Wreck Flats', ground: 'sea', gravity: 0.8, plate: 'scene/BANDIT', from: 'BANDIT',
       weather: 'The tide is far out, and it is coming back.',
+      skies: ['wind', 'fog'],
       blurb: 'A bay floor at low tide, rippled sand and pools to the horizon, and a wreck on its side.',
       spaces: {
         A1: [0.0, 0.0, 'A'], B1: [1.3, 0.1, 'B'], C1: [2.6, 0.0, 'B'], D1: [3.9, 0.1, 'B'], E1: [5.2, 0.0, 'E'],
@@ -126,6 +131,7 @@
     {
       id: 'hamlet', name: 'Drowned Hamlet', ground: 'sea', gravity: 1.5, plate: 'scene/SPARE08', from: 'SPARE08',
       weather: 'The morning after the flood: flat brown water and lying mist.',
+      skies: ['fog', 'calm'],
       blurb: 'Domed roofs ribbed like urchin shells, standing out of the floodwater to the horizon.',
       spaces: {
         A1: [0.0, 0.2, 'A'], B1: [1.3, 0.0, 'B'], C1: [2.5, 0.2, 'B'], D1: [3.8, 0.0, 'E'], E1: [5.0, 0.2, 'E'],
@@ -149,6 +155,7 @@
     {
       id: 'lagoon', name: 'Kelp Lagoon', ground: 'sea', gravity: 1, plate: 'scene/FLUME', from: 'FLUME',
       weather: 'Still green water at midday.',
+      skies: ['calm', 'fog'],
       blurb: 'A ring of glass floats round a lagoon of bronze kelp, and a salvage barge at anchor.',
       spaces: {
         A1: [0.0, 0.6, 'A'], B1: [1.2, 0.0, 'B'], C1: [2.5, -0.1, 'B'], D1: [3.8, 0.0, 'B'], E1: [5.0, 0.6, 'E'],
@@ -174,6 +181,7 @@
     {
       id: 'meadows', name: 'Floating Meadows', ground: 'air', gravity: 0.1, plate: 'scene/DOE', from: 'DOE',
       weather: 'Dusk haze; at nightfall the other meadows go dark.',
+      skies: ['fog', 'wind'],
       blurb: 'Rafts of turf and reed adrift in open haze, each at its own height.',
       spaces: {
         A1: [0.0, 0.3, 'A'], B1: [1.4, 0.0, 'B'], C1: [2.6, 0.1, 'B'], D1: [4.0, 0.2, 'E'], E1: [5.2, 0.1, 'E'],
@@ -197,6 +205,7 @@
     {
       id: 'highpass', name: 'High Pass Halt', ground: 'air', gravity: 6, plate: 'scene/SPARE03', from: 'SPARE03',
       weather: 'Thin, cold, clear air above a sea of cloud.',
+      skies: ['wind', 'calm'],
       blurb: 'A trading halt under a rock overhang, on a pass between two drops.',
       spaces: {
         A1: [0.0, 0.1, 'A'], B1: [1.3, 0.0, 'B'], C1: [2.6, 0.1, 'B'], D1: [3.9, 0.0, 'E'], E1: [5.2, 0.1, 'E'],
@@ -220,6 +229,7 @@
     {
       id: 'seacliff', name: 'Burrowed Sea Cliff', ground: 'air', gravity: 0.5, plate: 'scene/WINGMAN', from: 'WINGMAN',
       weather: 'Sea haze, and wind up the cliff face.',
+      skies: ['fog', 'wind'],
       blurb: 'Ledges halfway up a sea cliff, riddled with burrow doors, the sea far below.',
       spaces: {
         A1: [0.0, 0.0, 'A'], B1: [1.3, 0.0, 'B'], C1: [2.6, 0.0, 'BC'], D1: [3.9, 0.0, 'C'], E1: [5.2, 0.0, 'C'],

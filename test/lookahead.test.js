@@ -177,8 +177,9 @@ test('objective progress runs from 0 to 1 for every kind of mission', () => {
   }
 });
 
-test('the look-ahead player beats the heuristic on every mission type', { timeout: 120_000 }, () => {
-  const N = 8;
+test('the look-ahead player beats the heuristic on every mission type', { timeout: 240_000 }, () => {
+  // 16 squads a cell: with 8, one unlucky boss or vault moved the gap by several points (2.26)
+  const N = 16;
   const total = { weak: 0, strong: 0, played: 0 };
   for (const arch of ARCHETYPES) {
     const wins = { weak: 0, strong: 0 };

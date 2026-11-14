@@ -286,6 +286,8 @@
     if (!pageId) pageId = node && node.page ? node.page : picked;
     const spec = gen.gen(board, tier, T.TIDES[run.tide] || T.TIDES.rising, T.PAGE_BY[pageId]);
     spec.page = pageId;
+    // the day's weather has a stream of its own, so the board and its foes are the same whatever the sky
+    spec.place = T.placeConditions(T.PAGE_BY[pageId], T.makeRng(T.subSeed(seed, 'place')));
     spec.title = board.pick(gen.title);
     spec.blurb = gen.blurb;
     const threat = T.expeditionOf(run) && T.expeditionOf(run).threatDef;
@@ -620,7 +622,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 9;
+  T.SAVE_VERSION = 10;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -693,6 +695,12 @@
         delete rw.boon;
       }
       r.v = 9;
+    },
+    // 2.26 gives every mission the gravity and weather of its place. A mission already under way keeps
+    // the rules it began with: normal gravity, calm air.
+    9(r) {
+      if (r.mission && !r.mission.place) r.mission.place = { gravity: 'normal', weather: 'calm', wind: 0 };
+      r.v = 10;
     },
   };
   T.deserializeRun = function (json) {

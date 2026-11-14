@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.26.0 — 2026-11-14 — gravity and weather are rules of the place
+
+Step 3 of the two-player plan: the place is an opponent too, so the same squad plays a different game on a different page. Each rule is one sentence, and each works on foes and pilots alike.
+
+- **Light gravity** (0.5 g or less: Mast-Crop Hills, Floating Meadows, Burrowed Sea Cliff): anything shoved or pulled goes 1 space further.
+- **Heavy gravity** (3 g or more: Crystal Quarry, High Pass Halt): anything shoved or pulled takes 1 damage for each space it is moved.
+- **Wind:** at the end of every round every unit moves 1 space downwind (toward E or toward A), if a path leads there and the space is free. A shield, an anchor or a hover holds you; the Heart stands. It blows before hazards.
+- **Fog:** a ranged strike reaches only units within 2 steps, even in its zone.
+- Each page lists the weathers a visit may bring (`skies`), and each mission draws one from a stream of its own, so a seed's board is unchanged. The top bar shows today's rules with the rule in its tip, the forecast shows where the wind will put everyone, the log opens with them, and the atlas spread lists them under *Rules of this place*.
+- **Save version 10:** the mission keeps its `place` and its board its `fog`. A mission under way in an older save keeps normal gravity and calm air (fixture `save-2.24.json`).
+- **Balance (`node tools/sim.js 40`, before → after):** a little harder, never easier. Full runs: heuristic 9 → 7 of 40, look-ahead 21 → 19 of 40. Single missions within a few points everywhere; the heuristic loses a little more at tier 3 (swarm 93 → 83%, cascade 90 → 85%), the look-ahead player wins tier-3 elites 95 → 98% and the finale 60 → 65% (heuristic 35 → 40%).
+- **Dull turns (`node tools/turns.js 10`):** 41% → 39%. Light gravity and wind give Mass and Brace more to do, but most dull turns are still at tier 1; the missions that are not fights (next step) are aimed there.
+- The test that the look-ahead player beats the heuristic now plays 16 squads a cell, not 8: with 8, one unlucky finale moved its gap by several points.
+
 ## 2.25.0 — 2026-11-14 — measure whether every turn is a decision
 
 Step 2 of the two-player plan: a baseline for "both players have interesting decisions every turn".

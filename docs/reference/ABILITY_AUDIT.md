@@ -22,7 +22,7 @@ The rules this checks:
 | 2 · no gates | OK — no mission type collapses when one family of answers is removed (boss t3 cannot be judged — the baseline is too low); but with no cards at all, missions whose objective is a kill are all but unwinnable |
 | 3 · no hard counters | OK — no narrow face settles a mission on its own; 17 broader faces can also settle one alone (review) |
 | 4 · staple or flexible tool | 168 staples, 30 tools, **0 narrow** |
-| what was played | the look-ahead player can play all 198 faces; 36 it held and never played, and 6 it played almost only in one mission type |
+| what was played | the look-ahead player can play all 198 faces; 32 it held and never played, and 6 it played almost only in one mission type |
 
 ## The ten problems, and how many faces answer each
 
@@ -47,18 +47,18 @@ Win rate of two random legal heroes (no gear, no boons) played by the look-ahead
 
 | Squads built with… | cards left | swarm t1 | swarm t2 | vault t1 | vault t2 | hidden t1 | hidden t2 | cascade t1 | cascade t2 | elite t1 | elite t2 | boss t3 † |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
-| any cards (baseline) | 99 | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 88% | 81% | 25% |
-| no way up | 90 | 100% | 100% | 81% | 81% | 100% | 100% | 100% | 100% | 94% | 94% | 13% |
-| no shield-breakers | 87 | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 81% | 88% | 19% |
-| no reveals | 84 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 94% | 88% | 25% |
-| no area damage | 92 | 100% | 100% | 75% | 94% | 100% | 100% | 100% | 100% | 81% | 81% | 13% |
-| no shields or wards | 62 | 100% | 100% | 100% | 81% | 100% | 100% | 100% | 100% | 94% | 94% | 13% |
-| no healing | 85 | 100% | 100% | 88% | 94% | 100% | 100% | 100% | 100% | 88% | 88% | 38% |
-| no movement abilities | 75 | 100% | 100% | 81% | 94% | 100% | 100% | 100% | 100% | 81% | 94% | 25% |
-| no foe control | 71 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 81% | 69% | 13% |
-| no hazard answers | 84 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 94% | 100% | 0% |
-| no dice economy | 81 | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 88% | 88% | 6% |
-| no cards at all | 0 | 100% | 94% | 81% | 81% | 100% | 100% | 100% | 100% | 75% | 63% | 0% |
+| any cards (baseline) | 99 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 94% | 19% |
+| no way up | 90 | 100% | 100% | 75% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 13% |
+| no shield-breakers | 87 | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 81% | 94% | 19% |
+| no reveals | 84 | 100% | 100% | 100% | 81% | 100% | 100% | 100% | 94% | 100% | 94% | 31% |
+| no area damage | 92 | 100% | 100% | 75% | 94% | 100% | 100% | 100% | 100% | 81% | 88% | 6% |
+| no shields or wards | 62 | 100% | 100% | 100% | 88% | 100% | 100% | 100% | 100% | 100% | 94% | 13% |
+| no healing | 85 | 100% | 100% | 81% | 88% | 100% | 100% | 100% | 100% | 88% | 88% | 44% |
+| no movement abilities | 75 | 100% | 100% | 88% | 94% | 100% | 100% | 100% | 100% | 88% | 100% | 25% |
+| no foe control | 71 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 88% | 88% | 19% |
+| no hazard answers | 84 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 94% | 100% | 6% |
+| no dice economy | 81 | 100% | 100% | 100% | 88% | 100% | 100% | 100% | 100% | 88% | 94% | 25% |
+| no cards at all | 0 | 100% | 94% | 88% | 75% | 100% | 100% | 100% | 94% | 75% | 81% | 0% |
 
 No mission type collapses when any one family of answers is removed — among those that can be judged. Not judged: boss t3.
 
@@ -107,7 +107,7 @@ Every effect on the face has a condition (`ifAnchored`, `ifOnHazard`, …). If t
 - **Carnivorous Digestion — Digest (Phys)** `fly_digest.P` — Feed on a held foe: if it is Anchored, deal 3 true damage and heal 1.
 - **Radiotrophic Resilience — Thrive (Phys)** `cor_radio.P` — Thrive on hazard: heal 3 and mint 1 AP if you stand in a hazard (else heal 1).
 
-### Never played (36)
+### Never played (32)
 
 The look-ahead player held these faces in at least 8 missions and never found them the best thing to do. Either the face is weak for its cost, or what it sets up pays off later than the one round the player looks ahead.
 
@@ -121,7 +121,6 @@ The look-ahead player held these faces in at least 8 missions and never found th
 - **Catapult Spring — Coil (Phys)** `hop_catapult.P` — Store elastic energy: your next strike deals +3. *(held in 21 missions)*
 - **Tireless Respiration — Diffuse (Phys)** `hop_tireless.P` — Breathe through every pore: mint 2 temporary AP. *(held in 20 missions)*
 - **Molt — Shed (Phys)** `hop_molt.P` — Slip every hold and dot; Shield 2. *(held in 25 missions)*
-- **Swarm Pheromone — Cue (Phys)** `hop_swarm.P` — Gregarious cue: your ally's next strike +2 and a free step. *(held in 19 missions)*
 - **Swarm Pheromone — Swarm Phase (Eth)** `hop_swarm.E` — The swarm phase: both heroes mint 1 AP at the start of their turns for 2 rounds; foes adjacent to either are Weakened 1. *(held in 19 missions)*
 - **Sound Mapping — Listen (Phys)** `owl_sound.P` — Locate everything within 3 by ear alone, then take one free step. *(held in 13 missions)*
 - **Sound Mapping — Acoustic Map (Eth)** `owl_sound.E` — A 3-D map of the whole board for 3 rounds — hidden foes, traps and the hidden objective all pinpointed. *(held in 13 missions)*
@@ -131,14 +130,11 @@ The look-ahead player held these faces in at least 8 missions and never found th
 - **Distributed Arms — Multitask (Phys)** `oct_arms.P` — Eight arms: the next card you play this turn does not go to your track. *(held in 22 missions)*
 - **Distributed Arms — Parallel (Eth)** `oct_arms.E` — Parallel-process: the next two cards you play don't go to your track, and mint 1 AP. *(held in 11 missions)*
 - **Adhesive Setae — Van der Waals (Eth)** `gec_setae.E` — Command the molecular bond: pull a foe in your zone 2 toward you. *(held in 23 missions)*
-- **Forensic Vision — UV (Phys)** `gec_forensic.P` — See into ultraviolet: reveal within 2 and sense which way the hidden objective lies. *(held in 17 missions)*
 - **Solar Basking — Photovoltaic (Eth)** `gec_basking.E` — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(held in 17 missions)*
 - **Ambush Patience — Hold (Phys)** `gec_patience.P` — Go motionless: your next strike deals +3. *(held in 28 missions)*
 - **Regeneration — Regrow (Eth)** `axo_regen.E` — Engine for 3 rounds: regenerate 3 each turn. *(held in 26 missions)*
 - **Neoteny — Reshape (Eth)** `axo_neoteny.E` — Grow what the moment needs for 2 rounds: strikes +2 and you may climb onto height nodes. *(held in 29 missions)*
-- **External Gills — Respire Anywhere (Eth)** `axo_gills.E` — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(held in 15 missions)*
 - **Metamorphosis — Apex Form (Eth)** `axo_meta.E` — The war-form, for 2 rounds: strikes +3, melee reaches 2 nodes, +1 move, Shield 2. *(held in 17 missions)*
-- **Suction Gape — Gulp (Phys)** `axo_suction.P` — Vacuum a foe within 2 one node toward you. *(held in 15 missions)*
 - **Electric Discharge — Tesla Cascade (Eth)** `eel_discharge.E` — Strip the target's Shield and strike it for 6; the arc chains to 1 more foe within 1 of it for 4 each. *(held in 27 missions)*
 - **Electrocyte Charge-Up — Store (Phys)** `eel_chargeup.P` — Bank charge: your next strike deals +3. *(held in 20 missions)*
 - **Photosynthesis — Bloom Engine (Eth)** `fly_photo.E` — Engine for 4 rounds: each turn draw 1 guaranteed Charge from your pool. *(held in 19 missions)*
@@ -152,12 +148,12 @@ The look-ahead player held these faces in at least 8 missions and never found th
 
 At least 70% of this face’s use (per mission held) came from a single mission type — a hint that it is a specialist.
 
-- **Pattern Recognition — Spot (Phys)** `hum_pattern.P` — Reveal everything within 2 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(88% in hidden; 11 plays)*
-- **Opposable Grip — Leverage (Eth)** `hum_grip.E` — Melee 3 and Anchor the foe for 2 rounds (it cannot move). *(73% in boss; 16 plays)*
-- **Chitinous Exoskeleton — Brace Plates (Phys)** `hop_exo.P` — Shield 3 this round. *(73% in boss; 16 plays)*
-- **Impersonation — Mimic (Phys)** `oct_imperson.P` — Become something else: a decoy on an adjacent node draws attacks for 2 rounds. *(84% in elite; 16 plays)*
+- **Opposable Grip — Manipulate (Phys)** `hum_grip.P` — Melee 2 and Weaken 1 (its next hit deals −1). *(70% in boss; 78 plays)*
+- **Opposable Grip — Leverage (Eth)** `hum_grip.E` — Melee 3 and Anchor the foe for 2 rounds (it cannot move). *(84% in boss; 14 plays)*
+- **Gnawing Incisors — Gnaw (Phys)** `jer_gnaw.P` — Melee 3. *(79% in boss; 44 plays)*
 - **Scaled Hide — Scales (Phys)** `gec_hide.P` — Shield 3 this round. *(86% in boss; 19 plays)*
-- **Hyphal Drain — Bore (Phys)** `cor_drain.P` — Bore filaments in: melee 2, heal 1. *(71% in boss; 63 plays)*
+- **Doublet Jolt — Twitch (Phys)** `eel_doublet.P` — Twin taps: zone strike 2 that reveals a Hidden target and Weakens 1. *(73% in boss; 15 plays)*
+- **Hyphal Drain — Bore (Phys)** `cor_drain.P` — Bore filaments in: melee 2, heal 1. *(79% in boss; 59 plays)*
 
 ### Faces the player cannot evaluate (0)
 
@@ -173,20 +169,20 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Theory of Mind — Read (Phys) | staple | One tough foe | 29/109 (0.27) |  |
-| Theory of Mind — Pre-empt (Eth) | staple | One big telegraphed hit | 30/109 (0.28) |  |
+| Theory of Mind — Read (Phys) | staple | One tough foe | 30/109 (0.28) |  |
+| Theory of Mind — Pre-empt (Eth) | staple | One big telegraphed hit | 33/109 (0.30) |  |
 | Tool Use — Improvise (Phys) | staple | One tough foe | 1/110 (0.01) |  |
-| Tool Use — Reach Rig (Eth) | tool | Height, The clock | 43/110 (0.39) | works the Vault from the floor |
+| Tool Use — Reach Rig (Eth) | tool | Height, The clock | 44/110 (0.40) | works the Vault from the floor |
 | Persistence — Pace (Phys) | staple | The clock, One big telegraphed hit, Control on you | 0/117 (0.00) |  |
 | Persistence — Second Wind (Eth) | staple | Attrition | 0/100 (0.00) |  |
-| Throwing Arm — Hurl (Phys) | staple | One tough foe | 179/113 (1.58) |  |
-| Throwing Arm — Heavy Throw (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 20/99 (0.20) |  |
-| Language — Call (Phys) | tool | The clock, One big telegraphed hit | 3/119 (0.03) |  |
+| Throwing Arm — Hurl (Phys) | staple | One tough foe | 174/113 (1.54) |  |
+| Throwing Arm — Heavy Throw (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 25/99 (0.25) |  |
+| Language — Call (Phys) | tool | The clock, One big telegraphed hit | 1/119 (0.01) |  |
 | Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 2/80 (0.03) |  |
-| Pattern Recognition — Spot (Phys) | staple | One tough foe, The unseen | 11/126 (0.09) | 88% of use in hidden |
+| Pattern Recognition — Spot (Phys) | staple | One tough foe, The unseen | 9/126 (0.07) |  |
 | Pattern Recognition — Weak Point (Eth) | staple | One tough foe, Shields | 1/12 (0.08) |  |
-| Opposable Grip — Manipulate (Phys) | staple | One tough foe, One big telegraphed hit | 87/119 (0.73) |  |
-| Opposable Grip — Leverage (Eth) | staple | One tough foe, One big telegraphed hit | 16/97 (0.16) | 73% of use in boss |
+| Opposable Grip — Manipulate (Phys) | staple | One tough foe, One big telegraphed hit | 78/119 (0.66) | 70% of use in boss |
+| Opposable Grip — Leverage (Eth) | staple | One tough foe, One big telegraphed hit | 14/97 (0.14) | 84% of use in boss |
 | Cooperative Instinct — Assist (Phys) | staple | One tough foe | 0/106 (0.00) |  |
 | Cooperative Instinct — Unity (Eth) | staple | The clock | 0/13 (0.00) |  |
 | Adaptive Generalist — Improv (Phys) | staple | The clock | 1/124 (0.01) |  |
@@ -196,23 +192,23 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Saltatorial Leap — Spring (Phys) | staple | The clock, One big telegraphed hit | 67/20 (3.35) |  |
+| Saltatorial Leap — Spring (Phys) | staple | The clock, One big telegraphed hit | 65/20 (3.25) |  |
 | Saltatorial Leap — Fold-hop (Eth) | staple | Height, The clock, One big telegraphed hit | 3/20 (0.15) |  |
 | Radiator Ears — Vent (Phys) | staple | The clock, One big telegraphed hit, Control on you | 0/25 (0.00) |  |
-| Radiator Ears — Infrared (Eth) | staple | One tough foe, Shields, The unseen | 6/25 (0.24) | reveals the whole board |
-| Erratic Bounding — Zigzag (Phys) | staple | The clock, One big telegraphed hit | 12/20 (0.60) |  |
+| Radiator Ears — Infrared (Eth) | staple | One tough foe, Shields, The unseen | 5/25 (0.20) | reveals the whole board |
+| Erratic Bounding — Zigzag (Phys) | staple | The clock, One big telegraphed hit | 15/20 (0.75) |  |
 | Erratic Bounding — Stutter-step (Eth) | staple | The clock, One big telegraphed hit | 0/5 (0.00) |  |
-| Gnawing Incisors — Gnaw (Phys) | staple | One tough foe | 49/20 (2.45) |  |
-| Gnawing Incisors — Crumble (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 5/19 (0.26) | deletes a Shield outright |
+| Gnawing Incisors — Gnaw (Phys) | staple | One tough foe | 44/20 (2.20) | 79% of use in boss |
+| Gnawing Incisors — Crumble (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 7/19 (0.37) | deletes a Shield outright |
 | Cheek Caching — Stash (Phys) | staple | The clock | 7/19 (0.37) |  |
 | Cheek Caching — Pocket Fold (Eth) | staple | The clock | 0/4 (0.00) |  |
 | Vibrissae Sense — Feel (Phys) | staple | The unseen, One big telegraphed hit | 0/22 (0.00) |  |
 | Vibrissae Sense — Seismic (Eth) | staple | A crowd, The unseen, One big telegraphed hit | 1/1 (1.00) | reveals the whole board |
 | Burrowing — Dig (Phys) | staple | One big telegraphed hit | 2/20 (0.10) |  |
-| Burrowing — Phase-tunnel (Eth) | staple | Height, The clock, One big telegraphed hit | 2/17 (0.12) |  |
-| Metabolic Torpor — Low Power (Phys) | staple | Attrition | 8/22 (0.36) |  |
-| Metabolic Torpor — Stasis (Eth) | staple | One big telegraphed hit, Attrition | 6/15 (0.40) |  |
-| Counterbalance Tail — Redirect (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 20/21 (0.95) |  |
+| Burrowing — Phase-tunnel (Eth) | staple | Height, The clock, One big telegraphed hit | 4/17 (0.24) |  |
+| Metabolic Torpor — Low Power (Phys) | staple | Attrition | 6/22 (0.27) |  |
+| Metabolic Torpor — Stasis (Eth) | staple | One big telegraphed hit, Attrition | 4/15 (0.27) |  |
+| Counterbalance Tail — Redirect (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 14/21 (0.67) |  |
 | Counterbalance Tail — Deflect (Eth) | staple | One big telegraphed hit | 0/2 (0.00) |  |
 
 ### Red-Legged Grasshopper
@@ -220,158 +216,158 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Catapult Spring — Coil (Phys) | staple | One tough foe | 0/21 (0.00) |  |
-| Catapult Spring — Launch (Eth) | staple | One tough foe, A crowd, Height, The unseen, The clock, One big telegraphed hit | 20/21 (0.95) |  |
+| Catapult Spring — Launch (Eth) | staple | One tough foe, A crowd, Height, The unseen, The clock, One big telegraphed hit | 21/21 (1.00) |  |
 | Stridulation — Rasp (Phys) | staple | One tough foe, A crowd, One big telegraphed hit | 3/22 (0.14) |  |
-| Stridulation — Resonance (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 2/22 (0.09) |  |
+| Stridulation — Resonance (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 1/22 (0.05) |  |
 | Tireless Respiration — Diffuse (Phys) | staple | The clock | 0/20 (0.00) |  |
 | Tireless Respiration — Compress (Eth) | staple | The clock | 0/5 (0.00) |  |
-| Chitinous Exoskeleton — Brace Plates (Phys) | staple | One big telegraphed hit | 16/23 (0.70) | 73% of use in boss |
+| Chitinous Exoskeleton — Brace Plates (Phys) | staple | One big telegraphed hit | 18/23 (0.78) |  |
 | Chitinous Exoskeleton — Densify (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 0/2 (0.00) |  |
 | Molt — Shed (Phys) | staple | One big telegraphed hit, Control on you | 0/25 (0.00) |  |
-| Molt — Husk (Eth) | staple | A crowd, The clock, One big telegraphed hit | 8/22 (0.36) |  |
+| Molt — Husk (Eth) | staple | A crowd, The clock, One big telegraphed hit | 10/22 (0.45) |  |
 | Compound Eyes — Mosaic (Phys) | tool | The unseen, One big telegraphed hit | 1/20 (0.05) |  |
 | Compound Eyes — Panoramic (Eth) | staple | The unseen, One big telegraphed hit | 0/4 (0.00) | reveals the whole board |
-| Voracious Mandibles — Shred (Phys) | staple | One tough foe | 25/25 (1.00) |  |
-| Voracious Mandibles — Metabolize (Eth) | staple | One tough foe, The clock | 11/22 (0.50) |  |
-| Swarm Pheromone — Cue (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 0/19 (0.00) |  |
+| Voracious Mandibles — Shred (Phys) | staple | One tough foe | 36/25 (1.44) |  |
+| Voracious Mandibles — Metabolize (Eth) | staple | One tough foe, The clock | 5/22 (0.23) |  |
+| Swarm Pheromone — Cue (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 1/19 (0.05) |  |
 | Swarm Pheromone — Swarm Phase (Eth) | staple | A crowd, The clock, One big telegraphed hit | 0/19 (0.00) |  |
-| Glide Wings — Buzz (Phys) | staple | The clock, One big telegraphed hit | 56/27 (2.07) |  |
+| Glide Wings — Buzz (Phys) | staple | The clock, One big telegraphed hit | 68/27 (2.52) |  |
 | Glide Wings — Hover (Eth) | tool | Hazards and being dragged, Control on you | 0/2 (0.00) |  |
 
 ### Barn Owl
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Silent Flight — Glide (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 59/21 (2.81) |  |
-| Silent Flight — Dampen (Eth) | staple | The clock, One big telegraphed hit | 4/21 (0.19) |  |
+| Silent Flight — Glide (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 64/21 (3.05) |  |
+| Silent Flight — Dampen (Eth) | staple | The clock, One big telegraphed hit | 3/21 (0.14) |  |
 | Sound Mapping — Listen (Phys) | staple | The unseen, The clock, One big telegraphed hit | 0/13 (0.00) |  |
 | Sound Mapping — Acoustic Map (Eth) | tool | The unseen, The clock | 0/13 (0.00) | reveals the whole board; finds the hidden objective outright |
-| Talon Strike — Grip (Phys) | staple | One tough foe, One big telegraphed hit | 33/21 (1.57) |  |
+| Talon Strike — Grip (Phys) | staple | One tough foe, One big telegraphed hit | 25/21 (1.19) |  |
 | Talon Strike — Pin (Eth) | staple | One tough foe, One big telegraphed hit | 3/19 (0.16) |  |
-| Owl Neck Swivel — Swivel (Phys) | staple | The unseen, One big telegraphed hit | 11/17 (0.65) |  |
+| Owl Neck Swivel — Swivel (Phys) | staple | The unseen, One big telegraphed hit | 13/17 (0.76) |  |
 | Owl Neck Swivel — Counter-see (Eth) | staple | One big telegraphed hit | 0/3 (0.00) |  |
 | Night Eyes — Amplify (Phys) | staple | One tough foe, The unseen | 1/15 (0.07) |  |
 | Night Eyes — Thermal (Eth) | staple | One tough foe, The unseen | 0/5 (0.00) | reveals the whole board |
-| Soaring Lift — Thermal Ride (Phys) | staple | The clock, One big telegraphed hit | 10/20 (0.50) |  |
+| Soaring Lift — Thermal Ride (Phys) | staple | The clock, One big telegraphed hit | 9/20 (0.45) |  |
 | Soaring Lift — Updraft (Eth) | staple | Height, The clock | 0/1 (0.00) |  |
-| Hollow Bones — Lighten (Phys) | staple | The clock, Hazards and being dragged, One big telegraphed hit | 18/29 (0.62) |  |
+| Hollow Bones — Lighten (Phys) | staple | The clock, Hazards and being dragged, One big telegraphed hit | 17/29 (0.59) |  |
 | Hollow Bones — Weightless (Eth) | tool | Height, Hazards and being dragged, Control on you | 0/4 (0.00) |  |
 | Binocular Foresight — Spot Threat (Phys) | staple | The clock | 0/23 (0.00) |  |
-| Binocular Foresight — Foresee (Eth) | staple | One big telegraphed hit | 1/5 (0.20) |  |
-| Threat Display — Hiss (Phys) | staple | One big telegraphed hit | 8/27 (0.30) |  |
+| Binocular Foresight — Foresee (Eth) | staple | One big telegraphed hit | 2/5 (0.40) |  |
+| Threat Display — Hiss (Phys) | staple | One big telegraphed hit | 5/27 (0.19) |  |
 | Threat Display — Dread (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/6 (0.00) |  |
 
 ### Mimic Octopus
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Impersonation — Mimic (Phys) | tool | A crowd, One big telegraphed hit | 16/29 (0.55) | 84% of use in elite |
+| Impersonation — Mimic (Phys) | tool | A crowd, One big telegraphed hit | 5/29 (0.17) |  |
 | Impersonation — Become (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 0/29 (0.00) |  |
-| Chromatic Cloak — Blend (Phys) | staple | One big telegraphed hit | 2/19 (0.11) |  |
+| Chromatic Cloak — Blend (Phys) | staple | One big telegraphed hit | 3/19 (0.16) |  |
 | Chromatic Cloak — Vanish (Eth) | staple | One big telegraphed hit | 0/19 (0.00) |  |
-| Jet Propulsion — Jet (Phys) | staple | The clock, One big telegraphed hit | 65/30 (2.17) |  |
-| Jet Propulsion — Recoil Slam (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 6/27 (0.22) |  |
-| Ink Screen — Ink (Phys) | staple | A crowd, One big telegraphed hit | 7/27 (0.26) |  |
-| Ink Screen — Smoke Step (Eth) | staple | The clock, One big telegraphed hit | 9/24 (0.38) |  |
-| Boneless Squeeze — Squeeze (Phys) | staple | The clock, One big telegraphed hit, Control on you | 24/25 (0.96) |  |
-| Boneless Squeeze — Compress (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 1/2 (0.50) |  |
+| Jet Propulsion — Jet (Phys) | staple | The clock, One big telegraphed hit | 66/30 (2.20) |  |
+| Jet Propulsion — Recoil Slam (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 8/27 (0.30) |  |
+| Ink Screen — Ink (Phys) | staple | A crowd, One big telegraphed hit | 13/27 (0.48) |  |
+| Ink Screen — Smoke Step (Eth) | staple | The clock, One big telegraphed hit | 8/24 (0.33) |  |
+| Boneless Squeeze — Squeeze (Phys) | staple | The clock, One big telegraphed hit, Control on you | 22/25 (0.88) |  |
+| Boneless Squeeze — Compress (Eth) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 0/2 (0.00) |  |
 | Distributed Arms — Multitask (Phys) | staple | The clock | 0/22 (0.00) |  |
 | Distributed Arms — Parallel (Eth) | staple | The clock | 0/11 (0.00) |  |
-| Chemo-Suckers — Taste (Phys) | staple | One tough foe, The unseen | 5/29 (0.17) |  |
+| Chemo-Suckers — Taste (Phys) | staple | One tough foe, The unseen | 7/29 (0.24) |  |
 | Chemo-Suckers — Cling-Read (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/3 (0.00) |  |
-| Paralytic Bite — Bite (Phys) | staple | One tough foe, One big telegraphed hit | 54/22 (2.45) |  |
+| Paralytic Bite — Bite (Phys) | staple | One tough foe, One big telegraphed hit | 52/22 (2.36) |  |
 | Paralytic Bite — Neurotoxin (Eth) | staple | One tough foe, One big telegraphed hit | 1/22 (0.05) |  |
-| Adaptive Intellect — Study (Phys) | staple | One tough foe | 1/29 (0.03) |  |
+| Adaptive Intellect — Study (Phys) | staple | One tough foe | 3/29 (0.10) |  |
 | Adaptive Intellect — Counter-Model (Eth) | staple | One big telegraphed hit | 0/3 (0.00) |  |
 
 ### Tokay Gecko
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Adhesive Setae — Climb (Phys) | staple | Height, The clock | 40/23 (1.74) |  |
+| Adhesive Setae — Climb (Phys) | staple | Height, The clock | 42/23 (1.83) |  |
 | Adhesive Setae — Van der Waals (Eth) | tool | One tough foe, One big telegraphed hit | 0/23 (0.00) |  |
-| Lockjaw Bite — Latch (Phys) | staple | One tough foe, One big telegraphed hit | 19/27 (0.70) |  |
+| Lockjaw Bite — Latch (Phys) | staple | One tough foe, One big telegraphed hit | 21/27 (0.78) |  |
 | Lockjaw Bite — Crush (Eth) | staple | One tough foe, One big telegraphed hit | 16/25 (0.64) |  |
-| Tail Autotomy — Drop Tail (Phys) | staple | A crowd, The clock, One big telegraphed hit, Control on you | 8/26 (0.31) |  |
-| Tail Autotomy — Blink (Eth) | staple | A crowd, The clock, One big telegraphed hit | 4/21 (0.19) |  |
-| Forensic Vision — UV (Phys) | tool | The unseen, The clock | 0/17 (0.00) |  |
+| Tail Autotomy — Drop Tail (Phys) | staple | A crowd, The clock, One big telegraphed hit, Control on you | 5/26 (0.19) |  |
+| Tail Autotomy — Blink (Eth) | staple | A crowd, The clock, One big telegraphed hit | 5/21 (0.24) |  |
+| Forensic Vision — UV (Phys) | tool | The unseen, The clock | 1/17 (0.06) |  |
 | Forensic Vision — Full Spectrum (Eth) | staple | One tough foe, A crowd, The unseen | 0/4 (0.00) | reveals the whole board |
 | Solar Basking — Bask (Phys) | staple | The clock | 2/21 (0.10) |  |
 | Solar Basking — Photovoltaic (Eth) | staple | The clock | 0/17 (0.00) |  |
-| Scent Tongue — Flick (Phys) | staple | One tough foe, The unseen | 3/21 (0.14) |  |
-| Scent Tongue — Lock Scent (Eth) | staple | The unseen, The clock, One big telegraphed hit | 2/18 (0.11) | locates a foe for the whole mission |
+| Scent Tongue — Flick (Phys) | staple | One tough foe, The unseen | 5/21 (0.24) |  |
+| Scent Tongue — Lock Scent (Eth) | staple | The unseen, The clock, One big telegraphed hit | 3/18 (0.17) | locates a foe for the whole mission |
 | Scaled Hide — Scales (Phys) | staple | One big telegraphed hit | 19/18 (1.06) | 86% of use in boss |
 | Scaled Hide — Plating (Eth) | staple | A crowd, One big telegraphed hit | 0/1 (0.00) |  |
 | Ambush Patience — Hold (Phys) | staple | One tough foe | 0/28 (0.00) |  |
 | Ambush Patience — Instant Release (Eth) | tool | A crowd, One big telegraphed hit | 1/5 (0.20) |  |
-| Wall Sprint — Sprint (Phys) | staple | The clock, One big telegraphed hit | 67/25 (2.68) |  |
+| Wall Sprint — Sprint (Phys) | staple | The clock, One big telegraphed hit | 71/25 (2.84) |  |
 | Wall Sprint — Haste (Eth) | staple | The clock, One big telegraphed hit | 0/1 (0.00) |  |
 
 ### Axolotl
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Regeneration — Knit (Phys) | staple | Attrition | 20/26 (0.77) |  |
+| Regeneration — Knit (Phys) | staple | Attrition | 16/26 (0.62) |  |
 | Regeneration — Regrow (Eth) | staple | Attrition | 0/26 (0.00) |  |
-| Neoteny — Plasticity (Phys) | staple | One big telegraphed hit | 27/29 (0.93) |  |
+| Neoteny — Plasticity (Phys) | staple | One big telegraphed hit | 24/29 (0.83) |  |
 | Neoteny — Reshape (Eth) | staple | One tough foe, Height | 0/29 (0.00) |  |
-| External Gills — Gills (Phys) | staple | Hazards and being dragged, Attrition | 8/18 (0.44) |  |
-| External Gills — Respire Anywhere (Eth) | staple | Hazards and being dragged, Attrition | 0/15 (0.00) | whole squad ignores hazards |
-| Toxic Secretion — Exude (Phys) | tool | A crowd, One big telegraphed hit | 7/25 (0.28) |  |
-| Toxic Secretion — Corrode (Eth) | staple | One tough foe, Shields | 9/23 (0.39) | deletes a Shield outright |
-| Lateral Line — Feel Flow (Phys) | staple | The unseen, One big telegraphed hit | 1/36 (0.03) |  |
+| External Gills — Gills (Phys) | staple | Hazards and being dragged, Attrition | 2/18 (0.11) |  |
+| External Gills — Respire Anywhere (Eth) | staple | Hazards and being dragged, Attrition | 1/15 (0.07) | whole squad ignores hazards |
+| Toxic Secretion — Exude (Phys) | tool | A crowd, One big telegraphed hit | 6/25 (0.24) |  |
+| Toxic Secretion — Corrode (Eth) | staple | One tough foe, Shields | 8/23 (0.35) | deletes a Shield outright |
+| Lateral Line — Feel Flow (Phys) | staple | The unseen, One big telegraphed hit | 2/36 (0.06) |  |
 | Lateral Line — Pressure Map (Eth) | staple | The unseen, One big telegraphed hit | 0/7 (0.00) | reveals the whole board |
-| Powerful Tail — Lunge (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 127/29 (4.38) |  |
+| Powerful Tail — Lunge (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 132/29 (4.55) |  |
 | Powerful Tail — Momentum Wave (Eth) | staple | One tough foe, A crowd, The unseen, One big telegraphed hit | 2/24 (0.08) |  |
 | Metamorphosis — Surge (Phys) | staple | One tough foe, The clock | 1/21 (0.05) |  |
 | Metamorphosis — Apex Form (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 0/17 (0.00) |  |
-| Suction Gape — Gulp (Phys) | tool | One tough foe, One big telegraphed hit | 0/15 (0.00) |  |
+| Suction Gape — Gulp (Phys) | tool | One tough foe, One big telegraphed hit | 2/15 (0.13) |  |
 | Suction Gape — Vacuum (Eth) | staple | One tough foe, One big telegraphed hit | 0/1 (0.00) |  |
-| Degeneration Resistance — Housekeep (Phys) | staple | Attrition, Control on you | 12/17 (0.71) |  |
+| Degeneration Resistance — Housekeep (Phys) | staple | Attrition, Control on you | 9/17 (0.53) |  |
 | Degeneration Resistance — Rewind Cells (Eth) | staple | Attrition, Control on you | 0/1 (0.00) |  |
 
 ### Electric Eel
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Electric Discharge — Jolt (Phys) | staple | One tough foe | 45/27 (1.67) |  |
+| Electric Discharge — Jolt (Phys) | staple | One tough foe | 49/27 (1.81) |  |
 | Electric Discharge — Tesla Cascade (Eth) | staple | One tough foe, A crowd, Shields | 0/27 (0.00) | deletes a Shield outright |
-| Electroreception — Sense (Phys) | staple | One tough foe, Shields, The unseen | 7/20 (0.35) |  |
-| Electroreception — Field Map (Eth) | tool | The unseen, One big telegraphed hit | 2/20 (0.10) | reveals the whole board |
+| Electroreception — Sense (Phys) | staple | One tough foe, Shields, The unseen | 5/20 (0.25) |  |
+| Electroreception — Field Map (Eth) | tool | The unseen, One big telegraphed hit | 1/20 (0.05) | reveals the whole board |
 | Electrocyte Charge-Up — Store (Phys) | staple | One tough foe | 0/20 (0.00) |  |
 | Electrocyte Charge-Up — Pre-charge (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 2/2 (1.00) |  |
-| Insulated Body — Ground (Phys) | staple | One big telegraphed hit | 10/20 (0.50) |  |
+| Insulated Body — Ground (Phys) | staple | One big telegraphed hit | 11/20 (0.55) |  |
 | Insulated Body — Insulate (Eth) | staple | A crowd, One big telegraphed hit, Control on you | 0/1 (0.00) |  |
-| Air-Gulp Endurance — Gulp (Phys) | staple | Attrition, Control on you | 7/21 (0.33) |  |
+| Air-Gulp Endurance — Gulp (Phys) | staple | Attrition, Control on you | 10/21 (0.48) |  |
 | Air-Gulp Endurance — Reserve (Eth) | staple | The clock | 0/5 (0.00) |  |
-| Ribbon-Fin Glide — Undulate (Phys) | staple | The clock, One big telegraphed hit | 67/30 (2.23) |  |
-| Ribbon-Fin Glide — Decouple (Eth) | staple | The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 2/22 (0.09) |  |
-| Doublet Jolt — Twitch (Phys) | staple | One tough foe, The unseen, One big telegraphed hit | 18/13 (1.38) |  |
+| Ribbon-Fin Glide — Undulate (Phys) | staple | The clock, One big telegraphed hit | 61/30 (2.03) |  |
+| Ribbon-Fin Glide — Decouple (Eth) | staple | The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 3/22 (0.14) |  |
+| Doublet Jolt — Twitch (Phys) | staple | One tough foe, The unseen, One big telegraphed hit | 15/13 (1.15) | 73% of use in boss |
 | Doublet Jolt — Spasm (Eth) | staple | One tough foe, One big telegraphed hit | 0/0 |  |
-| Buoyancy Control — Trim (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 15/26 (0.58) |  |
+| Buoyancy Control — Trim (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 19/26 (0.73) |  |
 | Buoyancy Control — Hover-Anchor (Eth) | tool | Hazards and being dragged, Control on you | 0/3 (0.00) |  |
-| Galvanic Counterstrike — Static (Phys) | tool | A crowd, One big telegraphed hit | 9/24 (0.38) |  |
+| Galvanic Counterstrike — Static (Phys) | tool | A crowd, One big telegraphed hit | 11/24 (0.46) |  |
 | Galvanic Counterstrike — Field Trigger (Eth) | tool | A crowd, One big telegraphed hit | 0/0 |  |
 
 ### Venus Flytrap
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Snap-Trap — Set Jaws (Phys) | tool | A crowd, One big telegraphed hit | 15/23 (0.65) |  |
-| Snap-Trap — Counted Trap (Eth) | tool | A crowd, One big telegraphed hit | 7/23 (0.30) |  |
+| Snap-Trap — Set Jaws (Phys) | tool | A crowd, One big telegraphed hit | 13/23 (0.57) |  |
+| Snap-Trap — Counted Trap (Eth) | tool | A crowd, One big telegraphed hit | 6/23 (0.26) |  |
 | Photosynthesis — Bask (Phys) | staple | The clock | 2/19 (0.11) |  |
 | Photosynthesis — Bloom Engine (Eth) | staple | The clock | 0/19 (0.00) |  |
-| Carnivorous Digestion — Digest (Phys) | tool | One tough foe, Shields, Attrition | 6/22 (0.27) | wholly conditional |
+| Carnivorous Digestion — Digest (Phys) | tool | One tough foe, Shields, Attrition | 7/22 (0.32) | wholly conditional |
 | Carnivorous Digestion — Enzymes (Eth) | staple | A crowd, Attrition | 0/3 (0.00) |  |
-| Trigger-Hair Sense — Hairs (Phys) | staple | A crowd, The unseen, One big telegraphed hit | 1/22 (0.05) |  |
+| Trigger-Hair Sense — Hairs (Phys) | staple | A crowd, The unseen, One big telegraphed hit | 3/22 (0.14) |  |
 | Trigger-Hair Sense — Cilia Field (Eth) | staple | A crowd, The unseen, One big telegraphed hit | 0/1 (0.00) |  |
-| Rooting Anchor — Root (Phys) | staple | Hazards and being dragged, Attrition, Control on you | 11/26 (0.42) |  |
+| Rooting Anchor — Root (Phys) | staple | Hazards and being dragged, Attrition, Control on you | 10/26 (0.38) |  |
 | Rooting Anchor — Taproot (Eth) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 0/3 (0.00) |  |
-| Rhizome Sprout — Sprout (Phys) | staple | One tough foe, The unseen | 2/22 (0.09) |  |
+| Rhizome Sprout — Sprout (Phys) | staple | One tough foe, The unseen | 1/22 (0.05) |  |
 | Rhizome Sprout — Runner (Eth) | tool | A crowd, One big telegraphed hit | 1/4 (0.25) |  |
-| Vine Growth — Vine (Phys) | tool | One tough foe, One big telegraphed hit | 8/19 (0.42) |  |
-| Vine Growth — Constrict (Eth) | staple | One tough foe, One big telegraphed hit | 9/18 (0.50) |  |
-| Dormancy — Dormant (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 22/33 (0.67) |  |
+| Vine Growth — Vine (Phys) | tool | One tough foe, One big telegraphed hit | 12/19 (0.63) |  |
+| Vine Growth — Constrict (Eth) | staple | One tough foe, One big telegraphed hit | 8/18 (0.44) |  |
+| Dormancy — Dormant (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 26/33 (0.79) |  |
 | Dormancy — Full Stasis (Eth) | staple | One big telegraphed hit, Attrition | 1/2 (0.50) |  |
 | Nectar Lure — Lure (Phys) | tool | One tough foe, One big telegraphed hit | 0/11 (0.00) |  |
 | Nectar Lure — Allure (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/5 (0.00) |  |
@@ -380,45 +376,45 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Behavioral Hijack — Tendrils (Phys) | staple | One tough foe, One big telegraphed hit | 28/22 (1.27) |  |
+| Behavioral Hijack — Tendrils (Phys) | staple | One tough foe, One big telegraphed hit | 26/22 (1.18) |  |
 | Behavioral Hijack — Override (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/22 (0.00) |  |
 | Mycelial Network — Link (Phys) | staple | The clock | 2/20 (0.10) |  |
 | Mycelial Network — Wood-Wide Web (Eth) | staple | A crowd, The clock, One big telegraphed hit | 0/20 (0.00) |  |
-| Spore Burst — Puff (Phys) | staple | A crowd, One big telegraphed hit | 4/25 (0.16) |  |
-| Spore Burst — Disperse (Eth) | tool | A crowd, One big telegraphed hit | 5/3 (1.67) |  |
-| Decomposition — Decompose (Phys) | staple | One tough foe | 30/22 (1.36) |  |
+| Spore Burst — Puff (Phys) | staple | A crowd, One big telegraphed hit | 1/25 (0.04) |  |
+| Spore Burst — Disperse (Eth) | tool | A crowd, One big telegraphed hit | 6/3 (2.00) |  |
+| Decomposition — Decompose (Phys) | staple | One tough foe | 28/22 (1.27) |  |
 | Decomposition — Rot (Eth) | staple | One tough foe, Shields, Hazards and being dragged | 0/3 (0.00) | deletes a Shield outright |
-| Hyphal Drain — Bore (Phys) | staple | One tough foe, Attrition | 63/25 (2.52) | 71% of use in boss |
+| Hyphal Drain — Bore (Phys) | staple | One tough foe, Attrition | 59/25 (2.36) | 79% of use in boss |
 | Hyphal Drain — Parasitize (Eth) | staple | One tough foe | 1/3 (0.33) |  |
-| Network Regrowth — Fragment (Phys) | staple | Attrition | 4/24 (0.17) |  |
+| Network Regrowth — Fragment (Phys) | staple | Attrition | 3/24 (0.13) |  |
 | Network Regrowth — Reconstitute (Eth) | tool | One big telegraphed hit, Attrition | 0/16 (0.00) |  |
-| Enzyme Spray — Spit (Phys) | staple | One tough foe, Shields | 5/28 (0.18) |  |
-| Enzyme Spray — Saturate (Eth) | staple | One tough foe, A crowd, Shields, The unseen | 20/24 (0.83) | deletes a Shield outright |
-| Mycorrhizal Bond — Bond (Phys) | staple | The clock, Attrition | 6/21 (0.29) |  |
+| Enzyme Spray — Spit (Phys) | staple | One tough foe, Shields | 8/28 (0.29) |  |
+| Enzyme Spray — Saturate (Eth) | staple | One tough foe, A crowd, Shields, The unseen | 15/24 (0.63) | deletes a Shield outright |
+| Mycorrhizal Bond — Bond (Phys) | staple | The clock, Attrition | 12/21 (0.57) |  |
 | Mycorrhizal Bond — Fuse (Eth) | staple | A crowd, The clock, One big telegraphed hit | 2/5 (0.40) |  |
-| Radiotrophic Resilience — Thrive (Phys) | tool | The clock, Attrition | 9/23 (0.39) | wholly conditional |
+| Radiotrophic Resilience — Thrive (Phys) | tool | The clock, Attrition | 12/23 (0.52) | wholly conditional |
 | Radiotrophic Resilience — Feed on Energy (Eth) | tool | The clock, One big telegraphed hit | 0/5 (0.00) |  |
 
 ### Tardigrade
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Cryptobiosis — Tun (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 3/21 (0.14) |  |
-| Cryptobiosis — Step Out of Time (Eth) | staple | The clock, One big telegraphed hit | 5/21 (0.24) |  |
-| Dsup Shielding — Repair Proteins (Phys) | staple | One big telegraphed hit | 12/16 (0.75) |  |
-| Dsup Shielding — Project Shield (Eth) | staple | A crowd, One big telegraphed hit | 3/16 (0.19) |  |
-| Vitrification — Glass (Phys) | staple | A crowd, One big telegraphed hit | 20/23 (0.87) |  |
+| Cryptobiosis — Tun (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 4/21 (0.19) |  |
+| Cryptobiosis — Step Out of Time (Eth) | staple | The clock, One big telegraphed hit | 3/21 (0.14) |  |
+| Dsup Shielding — Repair Proteins (Phys) | staple | One big telegraphed hit | 14/16 (0.88) |  |
+| Dsup Shielding — Project Shield (Eth) | staple | A crowd, One big telegraphed hit | 2/16 (0.13) |  |
+| Vitrification — Glass (Phys) | staple | A crowd, One big telegraphed hit | 22/23 (0.96) |  |
 | Vitrification — Partial Crystal (Eth) | staple | A crowd, One big telegraphed hit | 0/1 (0.00) |  |
-| Clawed Grip — Clamp (Phys) | staple | One tough foe, Hazards and being dragged, One big telegraphed hit, Control on you | 24/24 (1.00) |  |
+| Clawed Grip — Clamp (Phys) | staple | One tough foe, Hazards and being dragged, One big telegraphed hit, Control on you | 22/24 (0.92) |  |
 | Clawed Grip — Immovable Hold (Eth) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 0/6 (0.00) |  |
-| Anhydrobiosis Revival — Rehydrate (Phys) | staple | Attrition | 7/20 (0.35) |  |
+| Anhydrobiosis Revival — Rehydrate (Phys) | staple | Attrition | 6/20 (0.30) |  |
 | Anhydrobiosis Revival — Guaranteed Return (Eth) | tool | One big telegraphed hit, Attrition | 0/3 (0.00) |  |
-| Extremophile Traversal — Endure (Phys) | staple | Hazards and being dragged, One big telegraphed hit | 3/23 (0.13) |  |
-| Extremophile Traversal — Cross the Void (Eth) | staple | Height, The clock, One big telegraphed hit | 16/23 (0.70) |  |
-| Stylet Drain — Pierce (Phys) | staple | One tough foe, Shields | 35/27 (1.30) |  |
-| Stylet Drain — Tap the Line (Eth) | staple | One tough foe, Shields, The clock | 10/24 (0.42) |  |
-| Self-Replication — Bud (Phys) | tool | A crowd, One big telegraphed hit | 2/13 (0.15) |  |
-| Self-Replication — Duplicate (Eth) | staple | A crowd, The clock, One big telegraphed hit | 1/2 (0.50) |  |
+| Extremophile Traversal — Endure (Phys) | staple | Hazards and being dragged, One big telegraphed hit | 4/23 (0.17) |  |
+| Extremophile Traversal — Cross the Void (Eth) | staple | Height, The clock, One big telegraphed hit | 13/23 (0.57) |  |
+| Stylet Drain — Pierce (Phys) | staple | One tough foe, Shields | 39/27 (1.44) |  |
+| Stylet Drain — Tap the Line (Eth) | staple | One tough foe, Shields, The clock | 9/24 (0.38) |  |
+| Self-Replication — Bud (Phys) | tool | A crowd, One big telegraphed hit | 1/13 (0.08) |  |
+| Self-Replication — Duplicate (Eth) | staple | A crowd, The clock, One big telegraphed hit | 3/2 (1.50) |  |
 | Current-Cling Anchor — Cling (Phys) | tool | Hazards and being dragged, Control on you | 0/23 (0.00) |  |
 | Current-Cling Anchor — Anchor Space (Eth) | tool | Hazards and being dragged, Control on you | 0/1 (0.00) | whole squad ignores hazards |
 

@@ -46,7 +46,22 @@ Every board is checked by `test/atlas.test.js`: all fifteen names, every space r
 | Air | High Pass Halt | 6 g | SPARE03 |
 | Air | Burrowed Sea Cliff | 0.5 g | WINGMAN |
 
-Gravity and weather are printed but have no rules yet; they are the next step (2.20). Canon gives only the range (10 g at the poles, 0.1 g at the equator); each page's value is the atlas's proposal.
+Canon gives only the range of gravity (10 g at the poles, 0.1 g at the equator); each page's value is the atlas's proposal.
+
+## Gravity and weather (since 2.26)
+
+A place is an opponent as well as a board. Its gravity and the day's weather are rules, one sentence each, and they work on every unit alike, foes and pilots (`T.GRAVITY`, `T.WEATHER` in `src/data/world.js`; `T.placeConditions` in `src/engine/generators.js`).
+
+| | Rule |
+|---|---|
+| **Light gravity** (0.5 g or less) | Anything shoved or pulled goes 1 space further. |
+| **Heavy gravity** (3 g or more) | Anything shoved or pulled takes 1 damage for each space it is moved. |
+| **Wind** | At the end of every round the wind moves every unit 1 space downwind, if a path leads there and the space is free. A shield, an anchor or a hover holds you; so does the Heart. It blows before hazards, so it can blow you, or a foe, into one. |
+| **Fog** | A ranged strike reaches only units within 2 steps, even in its zone. |
+
+Each page lists its `skies`, the weathers a visit may bring, and every mission on the page draws one from a stream of its own (`place`), so the same seed is the same board under any sky. Wind blows toward one edge, E or A, drawn with it. The mission's top bar shows today's rules, the forecast shows where the wind will put everyone, and the spread lists the page's gravity rule and its possible weathers under *Rules of this place*.
+
+Gravity and weather add no new verbs. They change what the existing ones are worth: a Mass shove, Brace, a Space step, a hover, a ranged strike. That is the point, because the same squad has to play a different game on a different page.
 
 ## On the route
 

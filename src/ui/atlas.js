@@ -18,6 +18,18 @@
   ];
 
   /** Gravity as a player reads it: "0.3 g (light)". */
+  /** The rules gravity and weather add on this page: its gravity band, and each weather a visit may bring. */
+  U.placeRuleItems = function (page) {
+    const gb = T.GRAVITY.find((b) => b.id === T.gravityBand(page.gravity));
+    const out = [];
+    if (gb.text) out.push(`<li><b>${esc(gb.name)}.</b> ${esc(gb.text)}</li>`);
+    const skies = (page.skies || []).filter((w) => T.WEATHER[w].text);
+    for (const w of skies)
+      out.push(
+        `<li><b>${esc(T.WEATHER[w].name)}</b> (some visits${w === 'wind' ? '; it blows toward one edge, shown when you arrive' : ''}). ${esc(T.WEATHER[w].text)}</li>`,
+      );
+    return out.join('');
+  };
   U.gravityText = function (g) {
     const feel = g < 0.7 ? 'light' : g <= 1.5 ? 'Earth-like' : g < 5 ? 'heavy' : 'crushing';
     return `${g} g (${feel})`;
@@ -99,7 +111,7 @@
         ${U.atlasMapSVG(page)}
       </div>
       <div class="atlas-leaf atlas-facing">
-        <section><h4>Rules of this place</h4><ul>${page.rules.map((r, i) => `<li>${esc(r)} ${mark(page, r, 'rules:' + i)}</li>`).join('')}</ul>
+        <section><h4>Rules of this place</h4><ul>${page.rules.map((r, i) => `<li>${esc(r)} ${mark(page, r, 'rules:' + i)}</li>`).join('')}${U.placeRuleItems(page)}</ul>
           <details class="small dim"><summary>Reading a board</summary><ul>${LEGEND.map((l) => `<li>${esc(l)}</li>`).join('')}</ul></details></section>
         <section class="atlas-notes"><h4>Field notes</h4>
           <p class="small"><b>Gravity</b> ${esc(U.gravityText(page.gravity))}. <b>Weather</b> ${esc(page.weather)} ${mark(page, page.weather, 'weather')}</p>
