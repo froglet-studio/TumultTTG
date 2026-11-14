@@ -114,7 +114,8 @@
 
   /**
    * Write the passage for a situation and keep it on the run. `node` is the stop just finished (null at the
-   * start). The passage is the newest entry of run.story.log: { n, kind, title, scene, lines: [{ who: 'terminal' | heroIndex, text }] }.
+   * start). The passage is the newest entry of run.story.log: { n, kind, title, scene, lines: [{ who: 'terminal' | heroIndex, text, own? }] }
+   * (own: a player's line from the box beside End turn, kept as written).
    */
   T.writePassage = function (run, kind, node) {
     if (!run.story) run.story = T.newStory();
@@ -161,6 +162,9 @@
     if (kind === 'start' && ex)
       lines.push({ who: 'terminal', text: fill(ex.patronDef.brief, tok(a, b)), src: ex.patron });
     if (logKind !== kind) lines.push(line('terminal', T.TERMINAL_LOG[logKind], tok(a, b)));
+    // the players' own lines from the mission just played, in their pilots' names, before the clades speak
+    if (last && ['win', 'close', 'loss'].includes(kind))
+      for (const n of last.notes || []) if (heroes[n.hero]) lines.push({ who: n.hero, text: n.text, own: true });
     const voice = (i) => T.VOICES[headClade(heroes[i] || nobody)] || T.VOICES.human;
     const say = kind === 'haven' || kind === 'event' ? 'quiet' : kind === 'loss' ? 'close' : kind;
     const said = kind === 'start' || logKind !== kind ? voice(a).onward : voice(a)[say];

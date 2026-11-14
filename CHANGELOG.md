@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.32.0 — 2026-11-14 — a line of story for any turn
+
+Garrett: "have players able to add story fluff to any one of their turns in a box next to the end turn button."
+
+- **The story box.** It sits under End turn. In your own turn, write a line about what the turn looked like, as the pilot you have selected. Press Enter or just end your turn, and it is kept. Each pilot gets one line per round: writing again replaces it, and clearing the box takes it back.
+- **Where it goes.**
+  - The mission's log shows it in your pilot's name.
+  - The passage after the stop tells it again, in your pilot's words and before the clades' own lines.
+  - The record at the end of the run closes with the last mission's lines.
+  - Copy save carries all of it.
+  - It is not sent to the canon inbox: it is the table's story, not a correction to the setting.
+- **Rules.** `T.addNote(m, hero, text)` keeps `{ r, who: 'note', hero, text }` in the mission's log. The text is trimmed, cut to 200 characters, and always shown as text, never as markup. A line changes nothing in play, and a test checks that a run plays the same with or without lines. It is also a command (`op: 'note'`), so online each player writes for their own pilot, in their own turn.
+- **Saves.** Version 13. Each mission in the run's history keeps its `notes`. A 2.30 save loads with none (fixture `save-2.30.json`).
+- No balance changes.
+
 ## 2.31.0 — 2026-11-14 — words explain themselves, plays preview on the board
 
 Garrett: "make things interactive so any question the player has is answered intuitively by the interface. e.g. hovering over weaken explains what that does with a tooltip and that word indicates that visually to the player before they do so."
