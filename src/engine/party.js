@@ -88,6 +88,7 @@
     item: (run, m, h, c) => T.useConsumable(m, h, c.ci),
     interact: (run, m, h, c) => T.doInteract(m, h, c.node, false, c.pay),
     rally: (run, m, h) => T.rally(m, h),
+    note: (run, m, h, c) => T.addNote(m, c.hero, c.text),
     valve: (run, m, h) => ({ ok: !!T.valve(m, h) }),
     dump: (run, m, h, c) => (T.dump(m, h, c.di), { ok: true }),
     reroll: (run, m, h, c) => (c.picked.length && T.rerollHeld(m, h, c.picked), { ok: true }),
@@ -114,6 +115,7 @@
     },
   };
   const MISSION_OPS = new Set([
+    'note',
     'face',
     'basic',
     'gear',

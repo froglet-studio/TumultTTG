@@ -157,6 +157,7 @@
     svgEl('g', { id: 'markers' }, svg);
     svgEl('g', { id: 'intents' }, svg);
     svgEl('g', { id: 'tokens' }, svg);
+    svgEl('g', { id: 'preview' }, svg);
     // zones: one soft region per zone, whatever its shape (a disc at each of its nodes, joined along the
     // shortest tree between them), named under its lowest node
     const N = m.board.nodes;
@@ -311,6 +312,7 @@
   U.MISSION_OVER_DELAY = 900;
   U.updateMission = function () {
     const m = M();
+    clearPreview();
     if (!U.ms.built) buildBoard();
     // what ending the round now would do: the enemy turn is declared, so this is exact (T.forecast)
     U.ms.forecast = T.forecast(m);
@@ -368,13 +370,64 @@
       (wx && wx.text
         ? `<span class="pill" data-tip="${esc(wx.text)}">${pl.weather === 'wind' ? (pl.wind > 0 ? 'Wind → E' : 'Wind ← A') : 'Fog'}</span>`
         : '');
+    const ae = document.activeElement;
+    const typing = ae && ae.id === 'turnNote' ? [ae.selectionStart, ae.selectionEnd] : null;
     $('#mtop').innerHTML =
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       ${place}${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
-      <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>
+      <div class="endgrp"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${noteBox(m)}</div>
       ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`;
+    const box = typing && $('#turnNote');
+    if (box) {
+      box.focus();
+      box.setSelectionRange(typing[0], typing[1]);
+    }
   }
+
+  /**
+   * The story box beside End turn: the player whose turn it is may give it a line of story, as the
+   * pilot they have selected. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
+   */
+  function noteBox(m) {
+    const ms = U.ms;
+    const t = U.turn && U.turn();
+    const i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    const h = m.heroes[i];
+    if (m.over || !h || (t && !t.here) || (U.mine && !U.mine(i))) return '';
+    const noted = m.log.find((l) => l.who === 'note' && l.hero === i && l.r === m.round);
+    const val = ms.noteDraft != null ? ms.noteDraft : noted ? noted.text : '';
+    const tip =
+      'Optional: what this turn looked like, in a line of story. It changes nothing in play. It is kept in the log, told again between stops, and in the record of the run.';
+    return `<label class="turn-note${noted ? ' noted' : ''}" data-tip="${esc(tip)}"><span class="tn-ic">✎</span><input id="turnNote" maxlength="${T.NOTE_MAX}" autocomplete="off" placeholder="${esc(h.name)}, this turn, in a line of story…" value="${esc(val)}"></label>`;
+  }
+  /** Keep what was typed in the story box, as a line of story for its pilot this round. */
+  function commitNote() {
+    const ms = U.ms;
+    if (!ms || ms.noteDraft == null) return;
+    const m = M();
+    const i = ms.noteHero != null ? ms.noteHero : ms.heroIdx;
+    const text = ms.noteDraft;
+    ms.noteDraft = null;
+    ms.noteHero = null;
+    if (!m || m.over) return;
+    const r = U.exec({ op: 'note', hero: i, text });
+    if (r && r.ok === false && r.why) U.toast(esc(r.why));
+  }
+  U.commitNote = commitNote;
+  document.addEventListener('input', (e) => {
+    if (!e.target || e.target.id !== 'turnNote' || !U.ms) return;
+    if (U.ms.noteDraft == null) U.ms.noteHero = U.ms.heroIdx;
+    U.ms.noteDraft = e.target.value;
+  });
+  document.addEventListener('change', (e) => {
+    if (!e.target || e.target.id !== 'turnNote' || U.screen !== 'mission') return;
+    const had = U.ms.noteDraft != null && U.ms.noteDraft.trim();
+    commitNote();
+    renderLog(M());
+    const box = e.target.closest('.turn-note');
+    if (box) box.classList.toggle('noted', !!had);
+  });
 
   function renderTargetBar(m) {
     const ms = U.ms;
@@ -417,7 +470,7 @@
         .filter((e) => e.intent)
         .map(
           (e) =>
-            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="right small">${esc(e.intent.label)}</span></div>`,
+            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
     $('#mside').innerHTML =
@@ -463,7 +516,7 @@
     const states = Object.keys(h.states)
       .map(
         (k) =>
-          `<span class="state ${['Weak', 'Rooted', 'Slow', 'SlowSelf', 'NoTele'].includes(k) ? 'bad' : ''}" data-tip="${esc(T.describeState(k, h.states[k]))}">${k}${h.states[k] && h.states[k].v != null ? ' ' + h.states[k].v : ''}${h.states[k] && typeof h.states[k].t === 'number' && h.states[k].t < 90 ? ' · ' + h.states[k].t : ''}</span>`,
+          `<span class="state ${['Weak', 'Rooted', 'Slow', 'SlowSelf', 'NoTele'].includes(k) ? 'bad' : ''}" data-tip="${esc(T.describeState(k, h.states[k]))}">${U.kwOfState(k) ? U.ic(U.kwOfState(k).icon, '', 'kw-ic') : ''}${k}${h.states[k] && h.states[k].v != null ? ' ' + h.states[k].v : ''}${h.states[k] && typeof h.states[k].t === 'number' && h.states[k].t < 90 ? ' · ' + h.states[k].t : ''}</span>`,
       )
       .join('');
     const canPickDie = U.ms.mode === 'reroll' || U.ms.mode === 'dump';
@@ -516,7 +569,7 @@
         return def.abilities
           .map((a, ai) => {
             const ok = !m.over && !h.downed && g.cds[ai] <= 0 && m.crystals >= a.cost;
-            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${a.cost} ◇ · cd ${a.cd}</div>" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${a.cost}◇${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
+            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="${esc(`<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${a.cost} ◇ · cd ${a.cd}</div>${U.kwGloss(a.txt())}`)}" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${a.cost}◇${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
           })
           .join('');
       })
@@ -546,7 +599,7 @@
             ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
             : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
           const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
-          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(tip)}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
+          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
         }).join('')}
         <button class="sm" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
@@ -578,7 +631,11 @@
     const el = $('#mlog');
     el.innerHTML = m.log
       .slice(-60)
-      .map((l) => `<div class="l ${l.who}">${l.who === 'sys' ? '' : ''}${esc(l.text)}</div>`)
+      .map((l) =>
+        l.who === 'note'
+          ? `<div class="l note">${U.portrait && m.heroes[l.hero] ? U.portrait(m.heroes[l.hero], 'xs') : ''}<span>“${esc(l.text)}”</span> <span class="dim small">— ${esc(m.heroes[l.hero] ? m.heroes[l.hero].name : '')}</span></div>`
+          : `<div class="l ${l.who}">${U.kw(esc(l.text))}</div>`,
+      )
       .join('');
     el.scrollTop = el.scrollHeight;
   }
@@ -768,8 +825,7 @@
         (el) => {
           el.querySelector('.hpf').setAttribute('width', (36 * Math.max(0, h.hp)) / h.maxHp);
           el.querySelector('.hp').textContent = h.downed ? 'down' : h.hp;
-          const sh = el.querySelector('#sh-' + h.uid);
-          sh.textContent = h.states.Shield ? '🛡' + h.states.Shield.v : h.states.Hidden ? '👁' : '';
+          stateBadges(el, h, 20);
           el.setAttribute('data-tip', tipFor('h' + h.uid));
         },
       );
@@ -807,12 +863,7 @@
         (el) => {
           el.querySelector('.hpf').setAttribute('width', (32 * Math.max(0, e.hp)) / e.maxHp);
           el.querySelector('.hp').textContent = e.hp;
-          const sh = el.querySelector('#sh-' + e.uid);
-          sh.textContent =
-            (e.shield ? '🛡' + e.shield : '') +
-            (e.states.Anchored && !e.anchoredPerm ? '⚓' : '') +
-            (e.states.Marked ? '◎' : '') +
-            (e.states.Weak ? '↓' : '');
+          stateBadges(el, e, e.boss ? 24 : 18);
           el.setAttribute('data-tip', tipFor('e' + e.uid));
         },
       );
@@ -848,6 +899,274 @@
         }
       });
   }
+
+  /**
+   * The states a unit carries, drawn round its token with the same icons the words use on cards (U.kw):
+   * what a card says it does and the mark it leaves look alike. Good states sit on the right, bad on the left.
+   */
+  const BADGE_STATES = [
+    'Shield',
+    'Hidden',
+    'Anchored',
+    'Rooted',
+    'Marked',
+    'Weak',
+    'Located',
+    'Exposed',
+    'Thorns',
+    'Stasis',
+    'Hover',
+    'Weightless',
+    'Empower',
+    'Preempt',
+    'Counter',
+    'Slow',
+    'SlowSelf',
+    'Held',
+  ];
+  function unitBadges(u) {
+    const out = [];
+    const shield = u.kind === 'enemy' ? u.shield : u.states.Shield && u.states.Shield.v;
+    for (const k of BADGE_STATES) {
+      if (k === 'Shield' ? !shield : !u.states[k]) continue;
+      if (k === 'Anchored' && u.anchoredPerm) continue;
+      const kw = U.kwOfState(k);
+      if (!kw) continue;
+      const v = k === 'Shield' ? shield : u.states[k] && u.states[k].v;
+      out.push({ k, kw, v: typeof v === 'number' ? v : null });
+    }
+    return out;
+  }
+  function stateBadges(el, u, r) {
+    let g = el.querySelector('.badges');
+    if (g) g.remove();
+    const list = unitBadges(u);
+    if (!list.length) return;
+    g = svgEl('g', { class: 'badges' }, el);
+    const good = list.filter((b) => b.kw.tone === 'good');
+    const bad = list.filter((b) => b.kw.tone !== 'good');
+    const place = (arr, side) =>
+      arr.forEach((b, j) => {
+        const a = ((side > 0 ? -50 : -130) + side * j * 34) * (Math.PI / 180);
+        const x = Math.cos(a) * (r + 6),
+          y = Math.sin(a) * (r + 6);
+        const bg = svgEl(
+          'g',
+          { class: 'badge kw-' + b.kw.tone, transform: `translate(${x.toFixed(1)},${y.toFixed(1)})` },
+          g,
+        );
+        svgEl('circle', { r: 8 }, bg);
+        const ig = svgEl('g', { transform: 'translate(-6,-6) scale(0.5)' }, bg);
+        U.iconPaths(b.kw.icon).forEach((d) => svgEl('path', { d }, ig));
+        if (b.v != null && b.v > 1) svgEl('text', { x: 7, y: 9, class: 'badge-n' }, bg).textContent = b.v;
+      });
+    place(good, 1);
+    place(bad, -1);
+  }
+
+  /* ───────────── preview: what a play would do, before it is made ───────────── */
+  /**
+   * Hovering a face, a basic action or a gear ability (or, while aiming, a target) plays it on a copy of the
+   * mission (T.imagine) and draws the difference on the board: damage, the states it leaves (with the same
+   * icons as the words on the card), who moves where, who falls. Combat is deterministic, so this is exactly
+   * what the play will do; the copy holds no dice to come.
+   */
+  function play(copy, p, i, ctx) {
+    const h = copy.heroes[i];
+    if (p.kind === 'card') return T.playFace(copy, h, p.cardId, p.fk, ctx);
+    if (p.kind === 'basic') return T.useBasic(copy, h, p.id, ctx);
+    return T.useGear(copy, h, p.gi, p.ai, ctx);
+  }
+  function units(m) {
+    return m.heroes.concat(m.enemies);
+  }
+  function diffPlay(m, copy) {
+    const out = [];
+    for (const u of units(copy)) {
+      const o = units(m).find((x) => x.uid === u.uid);
+      if (!o) continue;
+      const hpNow = Math.max(0, o.hp),
+        hpThen = Math.max(0, u.hp);
+      const fell = (o.kind === 'enemy' ? o.alive && !u.alive : !o.downed && u.downed) || (hpNow > 0 && hpThen <= 0);
+      const before = new Set(unitBadges(o).map((b) => b.k + ':' + b.v));
+      const added = unitBadges(u).filter((b) => !before.has(b.k + ':' + b.v));
+      const moved = u.pos !== o.pos && m.board.nodes[u.pos] ? u.pos : null;
+      if (hpThen !== hpNow || fell || added.length || moved != null)
+        out.push({ o, u, d: hpThen - hpNow, fell, added, moved });
+    }
+    return out;
+  }
+  function previewFor(p, ctxs, i = U.ms.heroIdx) {
+    const m = M();
+    const all = [];
+    for (const ctx of ctxs) {
+      const copy = T.imagine(m);
+      let r;
+      try {
+        r = play(copy, p, i, Object.assign({}, ctx));
+      } catch (e) {
+        r = null;
+      }
+      if (r && r.ok) all.push(...diffPlay(m, copy));
+    }
+    return all;
+  }
+  function drawPreview(diffs, note) {
+    const svg = U.ms.svg;
+    const g = U.ms.g;
+    const pv = svg && $('#preview', svg);
+    if (!pv) return;
+    pv.innerHTML = '';
+    const N = M().board.nodes;
+    const words = [];
+    for (const x of diffs) {
+      const n = N[x.o.pos];
+      if (!n) continue;
+      const cx = g.px(n),
+        cy = g.py(n);
+      const grp = svgEl('g', { class: 'pv', transform: `translate(${cx},${cy})` }, pv);
+      svgEl(
+        'circle',
+        { r: 30, class: 'pv-ring ' + (x.d < 0 || x.fell ? (x.o.kind === 'enemy' ? 'good' : 'bad') : 'neutral') },
+        grp,
+      );
+      if (x.d)
+        svgEl(
+          'text',
+          { y: -34, class: 'pv-num ' + (x.d < 0 ? 'dmg' : 'heal'), 'text-anchor': 'middle' },
+          grp,
+        ).textContent = (x.d > 0 ? '+' : '') + x.d;
+      if (x.fell) svgEl('text', { y: 6, class: 'pv-fell', 'text-anchor': 'middle' }, grp).textContent = '✕';
+      x.added.forEach((b, j) => {
+        const bg = svgEl(
+          'g',
+          { class: 'badge ghost kw-' + b.kw.tone, transform: `translate(${-10 * (x.added.length - 1) + j * 20},40)` },
+          grp,
+        );
+        svgEl('circle', { r: 9 }, bg);
+        const ig = svgEl('g', { transform: 'translate(-6.5,-6.5) scale(0.54)' }, bg);
+        U.iconPaths(b.kw.icon).forEach((d) => svgEl('path', { d }, ig));
+      });
+      if (x.moved != null) {
+        const to = N[x.moved];
+        svgEl('line', { x1: 0, y1: 0, x2: g.px(to) - cx, y2: g.py(to) - cy, class: 'pv-move' }, grp);
+        svgEl('circle', { cx: g.px(to) - cx, cy: g.py(to) - cy, r: 20, class: 'pv-ghost' }, grp);
+      }
+      const name = x.o.name;
+      const bits = [];
+      if (x.d) bits.push(`${x.d > 0 ? '+' : ''}${x.d}`);
+      if (x.fell) bits.push(x.o.kind === 'enemy' ? 'destroyed' : 'down');
+      x.added.forEach((b) =>
+        bits.push(
+          U.kwChip(
+            b.kw,
+            b.kw.tip.split(':')[0].replace(/ N$/, '') + (b.v != null && b.k !== 'Hidden' ? ' ' + b.v : ''),
+          ),
+        ),
+      );
+      if (x.moved != null) bits.push('→ ' + esc(N[x.moved].label || x.moved));
+      words.push(`<b>${esc(name)}</b> ${bits.join(' ')}`);
+    }
+    const bar = $('#mtarget');
+    if (bar && (words.length || note)) {
+      let el = bar.querySelector('.pv-line');
+      if (!el) {
+        el = document.createElement('div');
+        el.className = 'pv-line';
+        bar.appendChild(el);
+      }
+      el.innerHTML = `<span class="dim">Would:</span> ${words.join(' · ') || ''}${note ? ` <span class="dim">${note}</span>` : ''}`;
+    }
+  }
+  function clearPreview() {
+    const pv = U.ms && U.ms.svg && $('#preview', U.ms.svg);
+    if (pv) pv.innerHTML = '';
+    const el = document.querySelector('#mtarget .pv-line');
+    if (el) el.remove();
+  }
+  U.clearPreview = clearPreview;
+  /** The play a hovered button stands for, with its targets, or null. */
+  function pendingOf(btn) {
+    const m = M();
+    const act = btn.getAttribute('data-act');
+    const arg = btn.getAttribute('data-arg') || '';
+    const parts = arg.split('|');
+    const i = +parts[0];
+    const h = m.heroes[i];
+    if (!h || !U.mine(i)) return null;
+    if (act === 'face') {
+      const chk = T.canPlay(m, h, parts[1], parts[2]);
+      return chk.ok ? { p: { kind: 'card', cardId: parts[1], fk: parts[2] }, tg: chk.tg, i } : null;
+    }
+    if (act === 'basic') {
+      const chk = T.canUseBasic(m, h, parts[1]);
+      return chk.ok ? { p: { kind: 'basic', id: parts[1] }, tg: chk.tg, i } : null;
+    }
+    if (act === 'gear') {
+      const [gi, ai] = [+parts[1], +parts[2]];
+      const g = h.gear[gi];
+      const ab = g && T.GEAR_BY[g.id].abilities[ai];
+      if (!ab) return null;
+      const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
+      return tg.invalid ? null : { p: { kind: 'gear', gi, ai }, tg, i };
+    }
+    return null;
+  }
+  function ctxsFor(tg) {
+    if (tg.need === 'none') return [{}];
+    if (tg.need === 'foe' || tg.need === 'foeOrAlly') return (tg.options || []).map((target) => ({ target }));
+    return [];
+  }
+  document.addEventListener('mouseover', (e) => {
+    if (U.screen !== 'mission' || !U.ms || !U.ms.built || M().over) return;
+    const ms = U.ms;
+    if (ms.mode === 'idle') {
+      const btn =
+        e.target.closest &&
+        e.target.closest('#mside [data-act="face"], #mside [data-act="basic"], #mside [data-act="gear"]');
+      if (!btn || btn.disabled) return;
+      const pk = pendingOf(btn);
+      if (!pk) return clearPreview();
+      const ctxs = ctxsFor(pk.tg);
+      const many = ctxs.length > 1;
+      drawPreview(
+        previewFor(pk.p, ctxs, pk.i),
+        pk.tg.need === 'node' ? '(pick a node to see exactly)' : many ? '(each ring is a target you could pick)' : '',
+      );
+      return;
+    }
+    if (ms.mode === 'target' && ms.pending) {
+      const tok = e.target.closest && e.target.closest('#tokens .token, #nodes .node');
+      if (!tok) return;
+      let ctx = null;
+      const tgArg = tok.getAttribute('data-arg');
+      if (tok.classList.contains('enemy') && (ms.pending.tg.need === 'foe' || ms.pending.tg.need === 'foeOrAlly'))
+        ctx = { target: +tgArg };
+      else if (tok.classList.contains('hero') && ms.pending.tg.need === 'foeOrAlly')
+        ctx = { target: M().heroes[+tgArg].uid };
+      else if (ms.pending.tg.need === 'node') {
+        const node = tok.classList.contains('node')
+          ? +tok.getAttribute('data-node')
+          : tok.classList.contains('hero')
+            ? M().heroes[+tgArg].pos
+            : null;
+        if (node != null && ms.pending.tg.options.includes(node)) ctx = { node };
+      }
+      if (!ctx) return;
+      const p =
+        ms.pending.kind === 'card' ? { kind: 'card', cardId: ms.pending.cardId, fk: ms.pending.fk } : ms.pending;
+      drawPreview(previewFor(p, [ctx]));
+    }
+  });
+  document.addEventListener('mouseout', (e) => {
+    if (U.screen !== 'mission' || !U.ms) return;
+    const from = e.target.closest && e.target.closest('#mside [data-act], #tokens .token, #nodes .node');
+    const to =
+      e.relatedTarget &&
+      e.relatedTarget.closest &&
+      e.relatedTarget.closest('#mside [data-act], #tokens .token, #nodes .node');
+    if (from && from !== to) clearPreview();
+  });
 
   /* ───────────── fx / animation ───────────── */
   function floater(node, text, cls, delay) {
@@ -1281,6 +1600,7 @@
           U.toast(`It is ${esc(t.name)}'s turn.`);
           return true;
         }
+        commitNote();
         U.exec({ op: 'ready' });
         U.sfx.click();
         afterAction();
@@ -1309,6 +1629,11 @@
   };
   document.addEventListener('keydown', (e) => {
     if (U.screen !== 'mission' || !U.ms) return;
+    const tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA') {
+      if (e.target.id === 'turnNote' && (e.key === 'Enter' || e.key === 'Escape')) e.target.blur();
+      return;
+    }
     if (e.key === 'Escape') {
       U.ms.mode = 'idle';
       U.ms.pending = null;

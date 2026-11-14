@@ -433,6 +433,7 @@
       foe: foe ? foe.name : null,
       close,
       hurt,
+      notes: T.notesOf(m), // the players' own lines of story, for the chronicle
     });
     if (m.won) {
       run.crystals += rw.crystals;
@@ -622,7 +623,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 12;
+  T.SAVE_VERSION = 13;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -713,6 +714,11 @@
       for (const h of r.heroes || [])
         if (h && Array.isArray(h.held) && !h.heldDie) h.heldDie = h.held.map(() => 'plain');
       r.v = 12;
+    },
+    // 2.31 keeps the players' own lines of story with each mission. An older mission has none.
+    12(r) {
+      for (const x of r.history || []) if (!x.notes) x.notes = [];
+      r.v = 13;
     },
   };
   T.deserializeRun = function (json) {

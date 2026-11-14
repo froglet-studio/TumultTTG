@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Survey (2.31): the second mission that is not a fight (design/03). Tag survey marks spread over the
+ * Survey (2.34): the second mission that is not a fight (design/03). Tag survey marks spread over the
  * whole board before night falls. Half of them are veiled and must be sighted first, from within 1 or
  * with a reveal, so information verbs have real work and two pilots have a reason to split up. Each
  * mark is of an element, and a die of it tags the mark in place of 2 AP: a rolled element always has a use.

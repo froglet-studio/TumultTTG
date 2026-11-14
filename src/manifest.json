@@ -16,7 +16,16 @@
     "engine/run.js",
     "engine/canon.js"
   ],
-  "ui": ["ui/icons.js", "ui/core.js", "ui/party.js", "ui/pilots.js", "ui/mission.js", "ui/atlas.js", "ui/canon.js"],
+  "ui": [
+    "ui/icons.js",
+    "ui/keywords.js",
+    "ui/core.js",
+    "ui/party.js",
+    "ui/pilots.js",
+    "ui/mission.js",
+    "ui/atlas.js",
+    "ui/canon.js"
+  ],
   "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css", "ui/canon.css"],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js"],

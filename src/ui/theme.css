@@ -559,3 +559,19 @@ button.ghost {
 .dom-gold {
   color: #e3b649;
 }
+
+/* a player's own line of story (the box beside End turn), told again between stops */
+.passage .pl.say.own > span {
+  font-style: italic;
+  color: #fbe6b8;
+  border-left: 2px solid var(--gold);
+  padding-left: 10px;
+}
+.passage .pl.say.own .own-tag {
+  display: block;
+  font-style: normal;
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--dim);
+  letter-spacing: 0.04em;
+}

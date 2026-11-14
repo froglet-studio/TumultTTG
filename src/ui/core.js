@@ -112,7 +112,7 @@
   };
   U.faceTipHTML = function (card, fk, P, E) {
     const face = card[fk];
-    return `<b>${esc(card.name)} — ${esc(face.n)}</b> <span class="dim">(${fk === 'P' ? 'Physical' : EL[face.elt || card.el].name} face)</span><div style="margin:4px 0" class="mono small">${costStr(card, face, fk)}</div><div>${esc(face.txt(P, E))}</div>${fk === 'E' ? `<div class="mute small" style="margin-top:4px">E unlocks and scales this capability; P ${face.txt(1, 0) !== face.txt(0, 0) ? 'also scales a physical sub-part' : 'does not substitute for it'}.</div>` : ''}`;
+    return `<b>${esc(card.name)} — ${esc(face.n)}</b> <span class="dim">(${fk === 'P' ? 'Physical' : EL[face.elt || card.el].name} face)</span><div style="margin:4px 0" class="mono small">${costStr(card, face, fk)}</div><div>${esc(face.txt(P, E))}</div>${U.kwGloss(face.txt(P, E))}${fk === 'E' ? `<div class="mute small" style="margin-top:4px">E unlocks and scales this capability; P ${face.txt(1, 0) !== face.txt(0, 0) ? 'also scales a physical sub-part' : 'does not substitute for it'}.</div>` : ''}`;
   };
   U.cardHTML = function (cardId, o) {
     o = o || {};
@@ -123,7 +123,7 @@
     const face = (fk) => {
       const f = c[fk];
       const asleep = fk === 'E' && (o.up || o.showUp) && E < T.RULES.ETHEREAL_MIN_E;
-      return `<div class="face ${fk} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk === 'P' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
+      return `<div class="face ${fk} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk === 'P' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${U.kw(esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E)))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
     };
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
       <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp">${U.icClade(c.sp)} ${esc(sp.name)}</span></div>
@@ -426,16 +426,55 @@
   // The scene painted behind each leg of the route (a key of T.ART), bottom leg first.
   U.LEG_SCENES = ['scene/FLUME', 'scene/MANGER', 'scene/BANDIT'];
   /**
-   * The route, drawn as a chart: one medallion per stop, the currents between them as curves, the road
-   * already taken lit, the next choices glowing, each leg over a dimmed painting of its ground.
+   * A painting (a key of T.ART) as a class, so a picture shown many times is written into the page once,
+   * in a stylesheet of its own, and never repeated in the markup (or in a tooltip).
+   */
+  const artClasses = {};
+  U.artClass = function (key) {
+    if (!key || !T.ART || !T.ART[key] || typeof document === 'undefined') return '';
+    const cls = 'art-' + key.replace(/[^A-Za-z0-9]/g, '-');
+    if (!artClasses[key]) {
+      let sheet = document.getElementById('art-classes');
+      if (!sheet) {
+        sheet = document.createElement('style');
+        sheet.id = 'art-classes';
+        document.head.appendChild(sheet);
+      }
+      sheet.appendChild(document.createTextNode(`.${cls}{background-image:url(${T.ART[key]})}`));
+      artClasses[key] = cls;
+    }
+    return cls;
+  };
+  /** What each ground's guides would tell you before setting out on it (docs/LORE.md: guides, wind, ground that moves). */
+  const GROUND_READOUT = {
+    land: 'LAND GUIDES · the ground here deforms and is rebuilt; windbreaks are the road',
+    sea: 'SEA GUIDES · coasts collapse and come back elsewhere; read the water, not the chart',
+    air: 'AIR GUIDES · the wind never stops; downhill is light, uphill is heavy',
+  };
+  const GROUND_NAME = { land: 'by land', sea: 'by sea', air: 'by air' };
+  const ROMAN = ['I', 'II', 'III'];
+  /** A place's pull, in a few characters: its g, and whether it lies uphill (heavy) or downhill (light). */
+  function pullTag(g) {
+    if (g == null) return '';
+    const dir = g < 0.7 ? 'down' : g > 1.5 ? 'up' : 'level';
+    return `<span class="pull pull-${dir}">${dir === 'up' ? '▲' : dir === 'down' ? '▼' : '•'} ${g} g</span>`;
+  }
+  /**
+   * The route, drawn as the climb it is: each leg over its painting, each stop a painted roundel of the place
+   * it is played in (its atlas page), the road already taken lit gold, the next choices glowing, the squad
+   * standing where it last stopped, and the threat waiting at the top.
    */
   function renderRoute(run) {
     const map = run.map;
-    const ROW = 92;
-    const H = map.rows.length * ROW;
+    const ROW = 116;
+    const FOOT = 64; // room below the first row for the squad before it sets out
+    const H = map.rows.length * ROW + FOOT;
+    const ex = T.expeditionOf(run);
+    // the stops stand in a field to the right of the leg titles (--gut, which narrow screens set to 0)
+    const fx = (x) => `calc(var(--gut) + (100% - var(--gut)) * ${x / 100})`;
     const pos = (nd) => {
       const n = map.rows[nd.row].length;
-      return { x: n === 1 ? 50 : ((nd.col + 0.5) / n) * 100, y: H - (nd.row + 0.5) * ROW };
+      return { x: n === 1 ? 50 : ((nd.col + 0.5) / n) * 100, y: H - FOOT - (nd.row + 0.5) * ROW };
     };
     const legs = [];
     for (let r = 0; r < map.rows.length;) {
@@ -445,18 +484,28 @@
       legs.push({ act: a, from: r, to: r2 });
       r = r2 + 1;
     }
+    const at = run.nodeId != null ? run.nodeId : null;
+    const here = at != null ? map.all[at].row : -1;
     const bands = legs
       .map((l) => {
-        const top = H - (l.to + 1) * ROW;
-        const h = (l.to - l.from + 1) * ROW;
-        const ex = T.expeditionOf(run);
-        const img = T.ART && T.ART[ex ? ex.legs[l.act].scene : U.LEG_SCENES[l.act]];
+        const top = H - FOOT - (l.to + 1) * ROW;
+        const h = (l.to - l.from + 1) * ROW + (l.from === 0 ? FOOT : 0);
         const boss = map.all[map.rows[l.from][0]].type === 'boss';
+        const leg = ex && ex.legs[l.act];
+        const art = U.artClass(boss && ex ? ex.legs[2].scene : leg ? leg.scene : U.LEG_SCENES[l.act]);
         const label = boss ? esc(T.threatTitle(run)) : esc(map.actNames[l.act]);
-        return `<div class="leg${boss ? ' finale' : ''}" style="top:${top}px;height:${h}px">${img ? `<div class="leg-art" style="background-image:url(${img})"></div>` : ''}<span class="actlabel">${label}</span></div>`;
+        const passed = here > l.to;
+        const kick = boss ? 'The end of the route' : `Leg ${ROMAN[l.act]}${leg ? ' · ' + GROUND_NAME[leg.ground] : ''}`;
+        const readout = boss
+          ? T.THREAT_BY && ex && T.THREAT_BY[ex.threat]
+            ? esc(T.THREAT_BY[ex.threat].look)
+            : ''
+          : leg
+            ? '&gt; ' + esc(GROUND_READOUT[leg.ground])
+            : '';
+        return `<div class="leg${boss ? ' finale' : ''}${passed ? ' passed' : ''}${leg ? ' g-' + leg.ground : ''}" style="top:${top}px;height:${h}px"><div class="leg-art ${art}"></div><div class="leg-head"><span class="leg-kick">${kick}</span><span class="actlabel">${label}</span>${readout ? `<span class="leg-read">${readout}</span>` : ''}</div></div>`;
       })
       .join('');
-    const at = run.nodeId != null ? run.nodeId : null;
     const curves = [];
     Object.values(map.all).forEach((nd) =>
       nd.next.forEach((nid) => {
@@ -465,18 +514,29 @@
           b = pos(m);
         const taken = nd.done && m.done;
         const open = nd.id === at && run.available.includes(nid) && run.phase === 'map';
-        const cls = taken ? 'taken' : open ? 'open' : '';
+        const cls = taken ? 'taken' : open ? 'open' : nd.row < here ? 'gone' : '';
         const my = (a.y + b.y) / 2;
         curves.push(
           `<path class="cur ${cls}" d="M${a.x} ${a.y} C${a.x} ${my} ${b.x} ${my} ${b.x} ${b.y}" vector-effect="non-scaling-stroke"/>`,
         );
       }),
     );
+    // before the first stop, the roads lead up from where the squad sets out
+    if (at == null)
+      map.rows[0].forEach((id) => {
+        const b = pos(map.all[id]);
+        const a = { x: 50, y: H - FOOT / 2 };
+        const my = (a.y + b.y) / 2;
+        curves.push(
+          `<path class="cur open" d="M${a.x} ${a.y} C${a.x} ${my} ${b.x} ${my} ${b.x} ${b.y}" vector-effect="non-scaling-stroke"/>`,
+        );
+      });
     const nodes = Object.values(map.all)
       .map((nd) => {
         const p = pos(nd);
         const type = nd.type;
         const avail = run.available.includes(nd.id) && run.phase === 'map';
+        const ahead = nd.row - Math.max(here, -1);
         const cls = [
           'mnode',
           'k-' + type,
@@ -484,25 +544,41 @@
           nd.done ? 'done' : '',
           at === nd.id ? 'current' : '',
           type === 'boss' ? 'boss' : '',
+          !nd.done && !avail && ahead > 2 ? 'far' : '',
+          !nd.done && nd.row <= here && at !== nd.id ? 'missed' : '',
         ].join(' ');
         const pg = nd.page && T.PAGE_BY[nd.page];
+        const plate = type === 'boss' ? (ex ? ex.legs[2].scene : null) : pg ? pg.plate : null;
+        const art = U.artClass(plate);
         const tip = T.MISSIONS[type]
           ? (pg
-              ? `<b>${esc(pg.name)}</b> <span class="dim">· ${U.gravityText(pg.gravity)}</span><div>${esc(pg.blurb)}</div>`
-              : '') + esc(T.MISSIONS[type].blurb)
+              ? `<div class="tip-plate ${art}"></div><b>${esc(pg.name)}</b> <span class="dim">· ${U.gravityText(pg.gravity)}</span><div>${esc(pg.blurb)}</div><div class="small" style="margin-top:4px"><b>${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}</b>${type === 'haven' || type === 'event' ? '' : ' · tier ' + nd.tier}: `
+              : `<b>${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}</b> · tier ${nd.tier}<div class="small">`) +
+            esc(T.MISSIONS[type].blurb) +
+            '</div>'
           : type === 'haven'
-            ? 'Rest, buy gear and consumables.'
-            : 'A fork in the route.';
+            ? '<b>Haven</b><div>A night under a windbreak: rest, trade, buy gear and consumables.</div>'
+            : '<b>Event</b><div>A fork in the route: something on the road, and a choice about it.</div>';
         const tier = type === 'haven' || type === 'event' ? '' : `<span class="tier">${'◆'.repeat(nd.tier)}</span>`;
-        return `<div class="${cls}" style="left:${p.x}%;top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal">${NODE_ICON[type]}</div><div class="t">${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}${tier}</div></div>`;
+        const name = type === 'boss' ? esc(T.threatTitle(run)) : pg ? esc(pg.name) : NODE_NAME[type];
+        const sub = type === 'boss' ? 'The Heart’s rules' : pg ? NODE_NAME[type] : '';
+        return `<div class="${cls}" style="left:${fx(p.x)};top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal${art ? ' painted' : ''}">${art ? `<span class="plate ${art}"></span>` : ''}<span class="mic">${NODE_ICON[type]}</span></div><div class="t"><span class="nm">${name}</span>${sub || tier || pg ? `<span class="sub">${sub ? sub + ' ' : ''}${tier}${pg && type !== 'boss' ? pullTag(pg.gravity) : ''}</span>` : ''}</div></div>`;
       })
       .join('');
-    return `<div class="route" style="height:${H}px">${bands}<svg class="currents" viewBox="0 0 100 ${H}" preserveAspectRatio="none">${curves.join('')}</svg>${nodes}</div>`;
+    // the squad stands where it last stopped (or at the foot of the route, before it sets out)
+    const sp = at != null ? pos(map.all[at]) : { x: 50, y: H - FOOT / 2 };
+    const squad = `<div class="squad-mark${at == null ? ' start' : ''}" style="left:${fx(sp.x)};top:${sp.y}px">${run.heroes
+      .filter(Boolean)
+      .map((h) => U.portrait(h, 'sm'))
+      .join('')}${at == null ? '<span class="sm-label">Setting out</span>' : ''}</div>`;
+    return `<div class="route" style="height:${H}px">${bands}<svg class="currents" viewBox="0 0 100 ${H}" preserveAspectRatio="none">${curves.join('')}</svg>${nodes}${squad}</div>`;
   }
   /** One line of a passage: the Terminal's log in its own type, a pilot's words beside their portrait. */
   function passageLine(run, l) {
     if (l.who === 'terminal') return `<div class="pl term">${esc(l.text)}</div>`;
     const h = run.heroes[l.who];
+    if (l.own)
+      return `<div class="pl say own">${h ? U.portrait(h, 'sm') : ''}<span>“${esc(l.text)}”<span class="own-tag">in ${esc(h ? h.name : 'their')}'s words, at the table</span></span></div>`;
     return `<div class="pl say">${h ? U.portrait(h, 'sm') : ''}<span>${esc(l.text)}</span></div>`;
   }
   U.passageLine = passageLine;
@@ -679,6 +755,12 @@
   }
 
   /* ───────────── SUMMARY ───────────── */
+  /** The last mission of a run is told by no passage: its lines of story close the log. */
+  function lastWords(run) {
+    const last = run.history[run.history.length - 1];
+    if (!last || !last.notes || !last.notes.length) return '';
+    return `<div class="entry"><h4>${esc(last.title)}</h4>${last.notes.map((n) => passageLine(run, { who: n.hero, text: n.text, own: true })).join('')}</div>`;
+  }
   function renderSummary() {
     const run = U.run;
     const won = run.won;
@@ -687,7 +769,7 @@
       <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${run.crystals} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
       <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
       <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}
-      ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}</div>` : ''}
+      ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}${lastWords(run)}</div>` : ''}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="newRun">New Expedition</button><button class="ghost" data-act="toTitle">Title</button></div></div></div>`;
   }
 

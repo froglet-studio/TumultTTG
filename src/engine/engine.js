@@ -432,6 +432,26 @@
   const say = (m, text, who) => m.log.push({ r: m.round, who: who || 'dm', text });
   const fx = (m, o) => m.fx.push(o);
   T.say = say;
+  /**
+   * A player's line of story for a turn (the box beside End turn): kept in the mission's log as
+   * { r, who: 'note', hero, text }, one per hero a round (a new one replaces it; an empty one takes it
+   * back). It changes nothing in play. It goes on to the run's history and the chronicle.
+   */
+  T.NOTE_MAX = 200;
+  T.addNote = function (m, i, text) {
+    if (!m.heroes[i]) return { ok: false, why: 'no such hero' };
+    const clean = String(text == null ? '' : text)
+      .replace(/[\u0000-\u001f\u007f]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, T.NOTE_MAX);
+    const at = m.log.findIndex((l) => l.who === 'note' && l.hero === i && l.r === m.round);
+    if (at >= 0) m.log.splice(at, 1);
+    if (clean) m.log.push({ r: m.round, who: 'note', hero: i, text: clean });
+    return { ok: true };
+  };
+  /** The players' lines of story in a mission, in the order written: [{ r, hero, text }]. */
+  T.notesOf = (m) => m.log.filter((l) => l.who === 'note').map((l) => ({ r: l.r, hero: l.hero, text: l.text }));
 
   /* ───────────────────────────── DICE ───────────────────────────── */
   T.rollDice = function (m, h) {

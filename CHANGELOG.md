@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.31.0 — 2026-11-14 — Survey, a second mission that is not a fight
+## 2.34.0 — 2026-11-14 — Survey, a second mission that is not a fight
 
 The next non-combat mission from the plan for two-player runs (`docs/design/03-missions.md`), aimed at turns where one move is clearly best.
 
@@ -9,9 +9,54 @@ The next non-combat mission from the plan for two-player runs (`docs/design/03-m
 - **Veiled marks.** Half the marks, the farthest first, start veiled (a ringed ! on the board). A veiled mark can't be tagged until a pilot stands within 1 of it or a reveal reaches it, which gives information verbs real work. A few foes wander between the marks, and a lurker joins from tier 2.
 - **On the route** it takes Cascade's place in the middle row (tier 2). Cascade still opens the run.
 - The look-ahead player sees both ways to pay. The heuristic heads for the nearest mark its partner is not nearer to, so the two split the board.
-- **Balance** (`node tools/sim.js 80 runs`, main → 2.31.0): heuristic 17 → 17, look-ahead 29 → 29. Survey cells over 40 missions, heuristic / look-ahead: t1 100/100%, t2 80/100%, t3 33/90%.
+- **Balance** (`node tools/sim.js 80 runs`, main → 2.34.0): heuristic 17 → 17, look-ahead 29 → 29. Survey cells over 40 missions, heuristic / look-ahead: t1 100/100%, t2 80/100%, t3 33/90%.
 - **Dull turns** (`node tools/turns.js 10`): Survey t1/t2/t3 31/24/35%, against 38/42/31% for the Cascade it replaces at tier 2. It started at 43% at tier 2 when marks took AP only and could be tagged from beside them.
 - No mission needs an ability: squads with no cards at all win Survey 100% at tier 1 and 94% at tier 2 (`ABILITY_AUDIT.md`).
+## 2.33.0 — 2026-11-14 — the route, painted
+
+Garrett: "make the ladder up the rogue like adventure look better and more representative of the artwork."
+
+- **Legs.**
+  - Each leg lies over its painting, which is now plain to see (the road is dimmed where it runs, not the whole picture).
+  - Each leg is headed *Leg I · by land*, then its name, then a line from that ground's guides, written from `docs/LORE.md`: ground that deforms and is rebuilt, windbreaks, the constant wind, uphill and downhill.
+  - The finale is headed by what the threat looks like, over its own ground, and breathes rose.
+  - A leg you have finished fades to sepia.
+- **Stops.**
+  - Each stop on a board is a roundel painted with its atlas page's plate, with the kind of stop as a seal in the corner.
+  - Each stop is labelled with the place's name, its kind, its tier and its pull: ▲ heavy (uphill) or ▼ light (downhill), in g.
+  - Hovering a stop shows the place's painting, its gravity, what it is like, and what the stop asks of you.
+  - Havens and events keep their marks and say what they offer.
+- **The road.**
+  - The road taken is lit gold, the next choices glow and flow, and the roads ahead are dotted.
+  - Stops you passed by fade, and stops more than two rows ahead are dimmed, though still readable for planning.
+  - Your two pilots stand beside the stop where you last stopped, and before the first stop at the foot of the route, *setting out*.
+- **Behind the scenes.** A painting shown many times is written into the page once, as a class (`U.artClass`), never repeated in the markup or in tooltips. On a phone, the leg titles shrink to a line and the stops use the whole width.
+- No rule or balance changes.
+
+## 2.32.0 — 2026-11-14 — a line of story for any turn
+
+Garrett: "have players able to add story fluff to any one of their turns in a box next to the end turn button."
+
+- **The story box.** It sits under End turn. In your own turn, write a line about what the turn looked like, as the pilot you have selected. Press Enter or just end your turn, and it is kept. Each pilot gets one line per round: writing again replaces it, and clearing the box takes it back.
+- **Where it goes.**
+  - The mission's log shows it in your pilot's name.
+  - The passage after the stop tells it again, in your pilot's words and before the clades' own lines.
+  - The record at the end of the run closes with the last mission's lines.
+  - Copy save carries all of it.
+  - It is not sent to the canon inbox: it is the table's story, not a correction to the setting.
+- **Rules.** `T.addNote(m, hero, text)` keeps `{ r, who: 'note', hero, text }` in the mission's log. The text is trimmed, cut to 200 characters, and always shown as text, never as markup. A line changes nothing in play, and a test checks that a run plays the same with or without lines. It is also a command (`op: 'note'`), so online each player writes for their own pilot, in their own turn.
+- **Saves.** Version 13. Each mission in the run's history keeps its `notes`. A 2.30 save loads with none (fixture `save-2.30.json`).
+- No balance changes.
+
+## 2.31.0 — 2026-11-14 — words explain themselves, plays preview on the board
+
+Garrett: "make things interactive so any question the player has is answered intuitively by the interface. e.g. hovering over weaken explains what that does with a tooltip and that word indicates that visually to the player before they do so."
+
+- **Keywords.** A new `src/ui/keywords.js` lists the game's words of art, from Weak, Anchor, Root, Mark, Hidden, Locate and Expose through Shield, Thorns, Stasis, Hover, Empower, Pre-empt, Counter and Pierce, Push, Pull, Melee, Lane, Zone and Burst, to Reveal, Mint, Decoy, Trap, Hazard, Height, Heal and Slow. Each has an icon, a tone (helps you, hurts you, or neutral) and one sentence of rule. Card text, foe intents, the log and place rules draw them as chips; hovering a chip shows its sentence. A card's tooltip lists the words it uses with their sentences.
+- **Badges.** Tokens on the board wear the same icons for the states they hold, with a count where a state runs out, instead of emoji.
+- **Previews.** Hovering a playable card face, basic action or gear ability plays it on `T.imagine(m)` for every target it could pick and draws the difference on the board: a ring on each unit it would reach, damage and healing numbers, a ghost where a unit would be moved, the states it would gain, and a "Would:" line above the board. In target mode, hovering a token or node previews just that choice. The mission itself is never touched (a test checks that it is unchanged).
+- The playtest note about Leg up now describes 2.30's rule.
+- No rule or balance changes.
 
 ## 2.30.0 — 2026-11-14 — partner moves are decided by the player who gives them
 
