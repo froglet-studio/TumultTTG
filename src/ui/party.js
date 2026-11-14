@@ -45,6 +45,8 @@
     'prebuilt',
     'pickSpecies',
     'draftBack',
+    'draftQuit',
+    'draftPrev',
     'openPacks',
     'pickCard',
     'rerollPack',

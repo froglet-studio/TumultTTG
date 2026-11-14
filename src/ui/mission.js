@@ -175,12 +175,16 @@
         'text',
         {
           x: g.px(N[low]),
-          y: Math.min(g.H - 4, g.py(N[low]) + 54),
+          // below the space's own name and a token's health, so the three never print over each other
+          y: Math.min(g.H - 4, g.py(N[low]) + 62),
           'text-anchor': 'middle',
           fill: z.color,
           'font-size': 10,
           'font-family': 'var(--mono)',
-          opacity: 0.8,
+          stroke: '#0a1120',
+          'stroke-width': 3,
+          'paint-order': 'stroke',
+          opacity: 0.9,
         },
         zones,
       ).textContent = z.name + ' zone';
@@ -352,7 +356,7 @@
       <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       ${place}${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
       <button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>
-      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button></div>`;
+      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`;
   }
 
   function renderTargetBar(m) {
@@ -481,7 +485,7 @@
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
           const elt = f.elt || c.el;
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
-          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${fk === 'E' ? '◆' : '•'}</span><span>${esc(f.n)}</span><span class="fcost">${cost}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? ' · ' + esc(chk.why) : ''}</span></button>`;
+          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${fk === 'E' ? '◆' : '•'}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
         return `<div class="hcard"><div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span style="color:var(--gold);font-size:10px">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>${fb('P')}${fb('E')}</div>`;
       })
