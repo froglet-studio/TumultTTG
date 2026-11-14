@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.29.0 — dice kinds: a plain d20 and a d8 for each element
+
+Garrett's original dice (`docs/design/10-dice.md`): a pilot's dice now follow its kit.
+
+- **The plain die is a d20:** Mass, Charge, Space, Time and Omni once each, AP×2 twice, AP on the other 13 sides. A plain die gives more AP than the old d12 (0.85 against 0.67) and fewer etherions (0.25 against 0.42).
+- **Each awakened card swaps one plain die for a d8 of its element:** four sides its element, one each of the other three and Omni, no AP. A pilot who wakes more cards rolls more etherions and fewer AP, mostly in the colours its own cards need: the mage path. Every pilot still has 15 dice and rolls 3 a turn, drawn at random from the pool. A banked die keeps its kind; a spent one goes back. An ethereal d12 (two of each symbol) is defined for abilities to give; nothing gives one yet.
+- A special die shows its size in the corner and says what it is in its tip. The pool's tip lists its dice by kind, and a key to the symbols sits under the selected pilot's dice. Cosmic Shore's element symbols are not in yet.
+- **Retune, so main does not get easier:** the Heart has 84 vitality at tier 3 (was 78).
+- **Balance:** `node tools/sim.js 80 runs`, main → 2.29.0: heuristic 15 → 16, look-ahead 39 → 41 of 80, within noise. At 40: full runs heuristic 4 → 7, look-ahead 20 → 18; finale 30/63 → 25/48%; heuristic swarm 98/83 → 88/75% and hidden t3 80 → 75%, Vault t3 55 → 70%, Cascade t3 85 → 100%; look-ahead every mission 95% or more.
+- **Dull turns** are unchanged at 41% (`node tools/turns.js 10`). Rolling 4 dice a turn and stronger Channels each cut them a few points, but made runs far easier or let plain play catch up with careful play, so neither is in this release (`docs/reference/BALANCE.md` has the table).
+- **Save version 12:** a banked die has a kind (`heldDie`). A die banked in an older save is plain (fixture `save-2.28.json`).
+- `node tools/turns.js` takes `--rule NAME=VALUE`, as `tools/sim.js` does.
+
 ## 2.28.0 — 2026-11-14 — duet moves: pilots help each other
 
 Step 5 of the two-player plan: basic actions that one pilot does for the other, so each turn can be planned around your partner. No card is needed, and each is one sentence at the table.

@@ -229,8 +229,43 @@
   };
   T.heroP = (h, cardId) => (h.up[cardId] || [0, 0])[0];
   T.heroE = (h, cardId) => (h.up[cardId] || [0, 0])[1];
+  /** A pilot's 15 dice by kind: one die of its element for each awakened card (T.RULES.ELEMENT_DICE), the rest plain. */
+  T.diceSet = function (h) {
+    const set = [];
+    if (R().ELEMENT_DICE)
+      for (const cid of h.cards || []) {
+        const card = T.CARD[cid];
+        if (card && T.DICE[card.el] && T.heroE(h, cid) >= R().ETHEREAL_MIN_E && set.length < R().POOL)
+          set.push(card.el);
+      }
+    while (set.length < R().POOL) set.push('plain');
+    return set;
+  };
+  /** The faces of one of a pilot's dice. A plain die is T.RULES.FACES as the pilot's boons re-face it. */
+  T.dieFaces = (h, kind) => (kind && kind !== 'plain' && T.DICE[kind] ? T.DICE[kind].faces : T.heroFaces(h));
+  /** The kind of the i-th banked die (a die banked without one, as in older saves, is plain). */
+  T.heldKind = (h, i) => (h.heldDie && h.heldDie[i]) || 'plain';
+  function bank(h, face, kind) {
+    if (!h.heldDie) h.heldDie = [];
+    while (h.heldDie.length < h.held.length) h.heldDie.push('plain');
+    h.held.push(face);
+    h.heldDie.push(kind || 'plain');
+  }
+  function unbank(h, i) {
+    h.held.splice(i, 1);
+    if (h.heldDie) h.heldDie.splice(i, 1);
+  }
+  /** The dice still in the pool, by kind: the pilot's set less the dice banked. */
+  T.poolDice = function (h) {
+    const left = T.diceSet(h);
+    h.held.forEach((_, i) => {
+      const j = left.indexOf(T.heldKind(h, i));
+      left.splice(j >= 0 ? j : left.lastIndexOf('plain') >= 0 ? left.lastIndexOf('plain') : 0, 1);
+    });
+    return left;
+  };
   T.heroFaces = function (h) {
-    // Affinity boons re-face one AP die each
+    // Affinity boons re-face one AP side of the plain die each
     const faces = R().FACES.slice();
     (h.boons || []).forEach((b) => {
       const bo = T.BOON_BY[b];
@@ -362,6 +397,7 @@
       h.temp = [];
       h.track = [];
       h.held = [];
+      h.heldDie = [];
       h.pool = R().POOL;
       h.rested = false;
       h.carrying = 0;
@@ -370,7 +406,7 @@
       for (const v of T.boonVals(h, 'missionStart'))
         if (v.bank) {
           h.pool -= 1;
-          h.held.push(v.bank);
+          bank(h, v.bank, 'plain');
         }
     });
     if (run.bossBonusHp && m.isBoss)
@@ -394,13 +430,16 @@
 
   /* ───────────────────────────── DICE ───────────────────────────── */
   T.rollDice = function (m, h) {
+    // Draw ROLL dice at random from those in the pool, and roll each.
     const k = Math.min(R().ROLL, h.pool);
-    const faces = T.heroFaces(h);
+    const dice = T.stream(m.rngs, 'dice');
+    const left = T.poolDice(h);
     const out = [];
     for (let i = 0; i < k; i++) {
-      const f = T.stream(m.rngs, 'dice').pick(faces);
+      const kind = left.splice(dice.int(left.length), 1)[0];
+      const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
-      h.held.push(f);
+      bank(h, f, kind);
     }
     h.pool -= k;
     if (h.pool + h.held.length !== R().POOL) throw new Error('dice invariant broken for ' + h.name);
@@ -425,7 +464,7 @@
     }
     i = h.held.indexOf(face);
     if (i >= 0) {
-      h.held.splice(i, 1);
+      unbank(h, i);
       h.pool++;
       return true;
     }
@@ -457,7 +496,7 @@
     let got = 0;
     for (let i = 0; i < n && h.pool > 0; i++) {
       h.pool--;
-      h.held.push(face);
+      bank(h, face, 'plain');
       got++;
     }
     return got;
@@ -467,26 +506,24 @@
     const idx = ['M', 'C', 'S', 'T'].map((f) => h.held.indexOf(f));
     if (idx.some((i) => i < 0)) return false;
     ['M', 'C', 'S', 'T'].forEach((f) => {
-      const i = h.held.indexOf(f);
-      h.held.splice(i, 1);
+      unbank(h, h.held.indexOf(f));
       h.pool++;
     });
     h.pool--;
-    h.held.push('O');
+    bank(h, 'O', 'plain');
     say(m, `${h.name} folds one of each etherion into an Omni.`, 'sys');
     return true;
   };
   T.dump = function (m, h, idx) {
     if (idx < 0 || idx >= h.held.length) return false;
-    h.held.splice(idx, 1);
+    unbank(h, idx);
     h.pool++;
     return true;
   };
   T.rerollHeld = function (m, h, indices) {
-    const faces = T.heroFaces(h);
     const dice = T.stream(m.rngs, 'dice');
     indices.forEach((i) => {
-      if (i >= 0 && i < h.held.length) h.held[i] = dice.pick(faces);
+      if (i >= 0 && i < h.held.length) h.held[i] = dice.pick(T.dieFaces(h, T.heldKind(h, i)));
     });
     fx(m, { t: 'roll', hero: h.uid, faces: indices.map((i) => h.held[i]) });
   };

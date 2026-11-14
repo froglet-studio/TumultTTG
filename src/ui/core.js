@@ -132,8 +132,23 @@
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div>`;
   };
-  const dieHTML = (f, extra) =>
-    `<span class="die ${f} ${extra || ''}" data-tip="${f === 'AP' ? 'AP — the common currency. 1 action point.' : f === 'AP2' ? 'AP2 — a double AP face (worth 2).' : f === 'O' ? 'Omni — spends as any etherion.' : esc(EL[f].name + ' — ' + EL[f].surface)}">${f === 'AP2' ? '2' : f === 'AP' ? '·' : U.ic('el.' + f, f)}</span>`;
+  /** A die showing face `f`. `kind` (a key of T.DICE) marks a special die with its size in the corner. */
+  const dieHTML = (f, extra, kind) => {
+    const k = kind && kind !== 'plain' && T.DICE[kind] ? kind : '';
+    const what =
+      f === 'AP'
+        ? 'AP — the common currency. 1 action point.'
+        : f === 'AP2'
+          ? 'AP2 — a double AP face (worth 2).'
+          : f === 'O'
+            ? 'Omni — spends as any etherion.'
+            : EL[f].name + ' — ' + EL[f].surface;
+    const from = k ? ` Rolled on your ${T.DICE[k].n} (d${T.DICE[k].sides}).` : '';
+    return `<span class="die ${f} ${k ? 'kind k-' + k : ''} ${extra || ''}" data-tip="${esc(what + from)}">${f === 'AP2' ? '2' : f === 'AP' ? '·' : U.ic('el.' + f, f)}${k ? `<i class="dk">${T.DICE[k].sides}</i>` : ''}</span>`;
+  };
+  /** The key to the die symbols, always beside a pilot's dice. */
+  U.diceKey = () =>
+    `<div class="dicekey small dim" aria-label="Dice key">${['M', 'C', 'S', 'T'].map((e) => `<span>${U.ic('el.' + e, e)} ${esc(EL[e].name)}</span>`).join('')}<span>◇ Omni</span><span>· AP</span><span>2 AP×2</span></div>`;
   U.dieHTML = dieHTML;
 
   /* ───────────── header strip ───────────── */
@@ -689,7 +704,7 @@
 
   U.helpHTML = function () {
     return `<div class="help"><h3>How to play</h3>
-      <p><b>The turn.</b> Each round your two heroes act freely, in any order, interleaved. At the start of the round each hero's <b>track</b> slides one column (cards come back), engines fire, and each hero <b>rolls 3 dice</b> from their 15-die pool into their bank. Dice you don't spend stay banked — but the pool shrinks, so hoarding starves next turn's roll. <b>Three AP a turn is normal; etherions are scarce spice.</b></p>
+      <p><b>The turn.</b> Each round your two heroes act freely, in any order, interleaved. At the start of the round each hero's <b>track</b> slides one column (cards come back), engines fire, and each hero <b>rolls 3 dice</b> drawn from their 15-die pool into their bank. Dice you don't spend stay banked — but the pool shrinks, so hoarding starves next turn's roll. Most dice are plain d20s (mostly AP, each element once); every card you awaken swaps a plain die for a d8 of its element (no AP, mostly that element), so a pilot who wakes more cards rolls more etherions and fewer AP. A die's size shows in its corner.</p>
       <p><b>Cards have two faces.</b> The <b>Physical</b> face costs AP, has a short cooldown, and scales with <b>P</b>. The <b>Ethereal</b> face costs AP + an etherion, has a longer cooldown, and does something physical cannot — teleport, area, chain, control, engines — scaling with <b>E</b>. Playing <i>either</i> face sends the whole card to the track for its cooldown.</p>
       <p><b>Enemies telegraph.</b> Every enemy shows what it will do before you act. Step out of its zone and a zone shot has no line. Move two nodes and a slow brute spends its turn walking. Hide and ranged shots strike afterimages. Push it off the node and its plan collapses. <b>Defense is proactive</b> — there are no reactions; you prepare on your turn.</p>
       <p><b>Zones.</b> Every node sits in one or two coloured zones. Ranged ("zone") strikes hit anything that shares a zone with you, at any distance. Melee needs a shared edge. Height nodes (dashed ring) can only be reached by Space verbs — teleport, climb, hover — or by dropping the ramp with the lever.</p>

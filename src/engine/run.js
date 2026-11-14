@@ -622,7 +622,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 11;
+  T.SAVE_VERSION = 12;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -706,6 +706,13 @@
     10(r) {
       for (const h of r.heroes || []) if (h && h.carrying === undefined) h.carrying = 0;
       r.v = 11;
+    },
+    // 2.29 gives dice kinds (a plain d20, an ethereal d12, a d8 for each element). A die banked in an older
+    // save was rolled on the one die there was; it counts as plain.
+    11(r) {
+      for (const h of r.heroes || [])
+        if (h && Array.isArray(h.held) && !h.heldDie) h.heldDie = h.held.map(() => 'plain');
+      r.v = 12;
     },
   };
   T.deserializeRun = function (json) {

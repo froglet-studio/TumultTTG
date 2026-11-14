@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.28.0',
+    version: '2.29.0',
     items: [
+      {
+        text: 'New dice. Most of your dice are now d20s: mostly AP, with each element and Omni once. Every card you awaken swaps a plain die for a d8 of its element (no AP, half that element), shown with an 8 in its corner. A pilot who wakes more cards rolls more etherions and fewer AP. Did you have more to do with a roll? Did a pilot start to feel like a mage? Was there ever too little AP?',
+      },
       {
         text: 'Pilots can now help each other with three basic actions, no card needed. Spot (2 AP): mark a foe up to 3 nodes away, so the next hit on it, by either of you, deals +2. Leg up (1 AP): an ally beside you may move 2 nodes for free this round. Lend (2 AP): give an ally beside you 2 AP for this round; lend it before their turn, or it is lost. Did you ever plan a turn around your partner? Which one did you use, and which never?',
       },

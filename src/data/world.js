@@ -13,7 +13,8 @@
     POOL: 15,                // dice per hero — invariant
     ROLL: 3,                 // dice rolled per turn
     TRACK: 6,                // track columns
-    FACES: ['M','C','S','T','O','AP2','AP','AP','AP','AP','AP','AP'], // base d12
+    FACES: ['M','C','S','T','O','AP2','AP2','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20
+    ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -103,6 +104,19 @@
       ]},
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);
+
+  /* ───────────────────────────── DICE KINDS (2.29) ───────────────────────────── */
+  // Garrett's original dice: a plain d20 (T.RULES.FACES: every element once, the rest AP), an ethereal d12 with two
+  // of every symbol, and a d8 for each element (half its own element, one each of the others and Omni, no AP).
+  // A pilot always has 15 dice; awakened cards swap plain dice for their element's d8, the mage path. docs/design/10-dice.md
+  T.DICE = {
+    plain: { n:'Plain die', sides:20 },
+    eth:   { n:'Ethereal die', sides:12, faces:['AP','AP','O','O','M','M','C','C','S','S','T','T'] },
+    M:     { n:'Mass die',   sides:8, faces:['M','M','M','M','C','S','T','O'] },
+    C:     { n:'Charge die', sides:8, faces:['C','C','C','C','M','S','T','O'] },
+    S:     { n:'Space die',  sides:8, faces:['S','S','S','S','M','C','T','O'] },
+    T:     { n:'Time die',   sides:8, faces:['T','T','T','T','M','C','S','O'] },
+  };
 
   /* ───────────────────────────── TIDES (difficulty) ───────────────────────────── */
   // How hard a run's missions press. Each list is indexed by tier (1, 2, 3); the boss is never changed.
@@ -223,7 +237,7 @@
     tidecaller:{ name:'Tidecaller', glyph:'🌊', role:'elite', elite:true, hp:[12,14,16], speed:1, policy:'tidecaller',
       abilities:{ undertow:{ n:'Undertow', kind:'los', dmg:[2,3,3], pull:2 }, surge:{ n:'Surge', kind:'los', dmg:[4,5,6], weaken:1 } },
       flavor:'An elite. Drags you toward the hazard. Anchor yourself.' },
-    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,78], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
+    heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,84], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
       abilities:{ lance:{ n:'Lance', kind:'los', dmg:[3,4,5] }, crush:{ n:'Crush', kind:'melee', dmg:[7,8,9], pull:2 }, call:{ n:'Call the Swarm', kind:'summon' } },
       flavor:'What waits at the end of the route. Its shield is fed by its Spawners. When it is half-dead, the Vault begins to drown.' },
   };

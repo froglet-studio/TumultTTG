@@ -157,7 +157,7 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
 
 test('a command does what the direct call does, and only for its own player', () => {
   const make = () => {
-    const run = T.quickMission({ seed: 11, type: 'vault', tier: 1 });
+    const run = T.quickMission({ seed: 14, type: 'vault', tier: 1 });
     run.party = T.newParty(2);
     return run;
   };

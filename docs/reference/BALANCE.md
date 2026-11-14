@@ -230,7 +230,7 @@ A banked etherion (or Omni) channelled into a basic action no longer needs AP: M
 
 On its own that made the game far easier: full runs, rising tide, look-ahead 22 → 38 of 40, heuristic 6 → 19 (a first try at Strike 3, Shove 2, Arc 2, Scramble 2 gave 40 and 30). Garrett asked for the difficulty to be rebuilt in the same change, so main never gets easier.
 
-**Where the difficulty went back.** Nearly every mission was already won by a careful player; runs were lost at the Heart, whose test is the race after it cracks. Neither hero vitality (26 → 20: still 39 of 40) nor a thicker shield (5) moved the look-ahead player; more Heart damage did little and broke the lethality budget. More Heart to get through, on a shorter clock, did: **the Heart has 50/61/72 vitality (was 32/38/44; 78 at tier 3 since 2.28.0), and once cracked the Vault drowns in four rounds (was seven).** Its blows are unchanged.
+**Where the difficulty went back.** Nearly every mission was already won by a careful player; runs were lost at the Heart, whose test is the race after it cracks. Neither hero vitality (26 → 20: still 39 of 40) nor a thicker shield (5) moved the look-ahead player; more Heart damage did little and broke the lethality budget. More Heart to get through, on a shorter clock, did: **the Heart has 50/61/72 vitality (was 32/38/44; 78 at tier 3 in 2.28.0, 84 since 2.29.0), and once cracked the Vault drowns in four rounds (was seven).** Its blows are unchanged.
 
 `node tools/sim.js 40`, 2.9.0 → 2.10.0, rising tide, same seeds:
 
@@ -314,6 +314,24 @@ Tier 1 and the Heart are identical on both tides. Full runs (40): heuristic 9 �
 Three basic actions that one pilot does for the other (`T.BASIC`, target `ally_adj` or a foe in range): Spot (mark a foe within 3 for +2 on the next hit, 2 AP), Leg up (an adjacent ally moves 2 for free this round, 1 AP) and Lend (an adjacent ally gets 2 AP for this round, 2 AP). The shared evaluation counts a free move as kept dice and a Mark as 2 hp off its foe, or the look-ahead player never sets anything up.
 
 With Spot at 1 AP the careful player got clearly stronger: full runs 19 → 23 of 40, the finale 65 → 80%. At 2 AP the finale is back at 65%, but the careful squad still arrives fresher and runs stayed easier (look-ahead 41 → 47 of 80 against main). So the Heart gets thicker at tier 3: **72 → 78 vitality**. `node tools/sim.js 80 runs`, main → 2.28.0: heuristic 13 → 15, look-ahead 41 → 39 of 80. At 40: heuristic 4 → 4, look-ahead 19 → 20, finale heuristic 40 → 30%, look-ahead 65 → 63%. Mission cells moved a few points either way (vault tiers fell for the look-ahead player, 98/98/95 → 93/88/90%, as AP goes to Spot instead of the climb).
+
+## v2.29.0 — dice kinds
+
+Garrett's dice (`docs/design/10-dice.md`): the plain die is a d20 (each element and Omni once, two AP×2, thirteen AP), and each awakened card swaps a plain die for its element's d8. Three dice a turn still. The Heart has **84 vitality at tier 3 (was 78)**. `node tools/sim.js 80 runs`, main → 2.29.0: heuristic 15 → 16, look-ahead 39 → 41 of 80, within noise. At 40: full runs heuristic 4 → 7, look-ahead 20 → 18; finale 30/63 → 25/48%; heuristic swarm 98/83 → 88/75% and hidden t3 80 → 75%, Vault t3 55 → 70%, Cascade t3 85 → 100%; look-ahead every mission 95% or more.
+
+Aimed at dull turns, and tried before settling (`node tools/turns.js 6` or `10`; dull = idle + forced):
+
+| Change | Dull turns | Runs | What it cost |
+|---|---|---|---|
+| main (2.28.0) | 41% | look-ahead 39 of 80 | |
+| roll 4 a turn (old d12) | 36% | | far easier |
+| stronger Channels (Strike 3, Arc 2, Scramble 2, Brace Shield 2) | 36% | | |
+| both | 35% | look-ahead 37 of 40 | far easier; a harsher tide and a 110-hp Heart still left it easier |
+| new dice, roll 4 | 37% | look-ahead 32 of 40 | far easier |
+| new dice and stronger Channels, Heart 96 | 38% | look-ahead 33 of 80 | the look-ahead player's edge over the heuristic fell from 14 to 9 points (`test/lookahead.test.js` wants 10): a stronger floor rewards plain play more than planning |
+| **new dice, Heart 84 (shipped)** | 41% | look-ahead 41 of 80 | |
+
+So the dice kinds are a feature (a pilot's dice follow its kit), not a fix for dull turns. Turns that play themselves, one clearly best move (28%), barely move with more AP or stronger elements; they need missions with competing goals.
 
 ## What the tuning fixed along the way
 
