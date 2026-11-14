@@ -679,7 +679,7 @@
       if (r.mission) r.mission.page = r.mission.page || null;
       r.v = 8;
     },
-    // 2.23 gives every hero an upgrade of their own after a mission. A reward still open from an older
+    // 2.24 gives every hero an upgrade of their own after a mission. A reward still open from an older
     // run offers its one trait (and boon) to each hero.
     8(r) {
       const rw = r.lastReward;

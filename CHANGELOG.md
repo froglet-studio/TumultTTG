@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.23.0 — 2026-11-14 — every pilot gets an upgrade
+## 2.24.0 — 2026-11-14 — every pilot gets an upgrade
 
 Garrett: "both players should always get an upgrade." The first step of the two-player plan (2026-11-14).
 
@@ -9,6 +9,13 @@ Garrett: "both players should always get an upgrade." The first step of the two-
 - **With two players, each chooses for their own pilot**, on one screen or two: *Skip* is now a pilot's choice, not the host's, and goes through `T.execCommand` like *Take*. *Continue* waits until every pilot has chosen.
 - **Save version 9:** the reward keeps one offer per hero (`offers`, `boons`, and a `picked` / `boonPicked` flag each). A version-8 save on the reward screen offers its one trait and boon to each hero (fixture `save-2.22.json`).
 - **Balance:** within noise. Full runs, `node tools/sim.js 40`: heuristic 8 → 9 of 40, look-ahead 21 → 21 of 40; 80 heuristic runs: 20 → 21. Single missions are unchanged (their kits are fixed). The simulated players take the first card offered, so a person who chooses well may gain more than this shows; watch it in playtests.
+
+## 2.23.0 — 2026-11-14 — two players take turns; online join says why it fails
+
+Garrett: "the multiplayer didn't work. nothing happened they didn't connect. the players should take turns."
+
+- **Turns.** With two players, a mission's hero phase is played one player at a time. The player whose turn it is flies their own pilot and presses *End turn*, the other player then does the same, and the enemy turn comes once both are done. The first player alternates each round: seat (round − 1) mod players goes first. A player whose pilots are all down is skipped. `T.turnSeat(run)` decides, and `T.execCommand` refuses a command, or an end of turn, from a player whose turn it is not. This applies on one shared screen and online alike. It is tracked in `party.ready`, so the save shape does not change. It only restricts the order of actions and changes no rules or numbers, so difficulty can only hold or rise.
+- **Why the join failed.** A partner who opened the test page from its share link holds view access, and view access can never write to the page's store, so their join failed with no message. The title now checks `user.can('data.write')` and, when it is false, explains that the partner needs an email invite as Editor or a Contributor seat in the organization. Store errors when hosting, joining or sending are shown instead of swallowed. Online games move to a separate invite-only page.
 
 ## 2.22.0 — 2026-11-13 — canon from play: the storyteller pack
 

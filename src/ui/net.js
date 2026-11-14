@@ -25,6 +25,7 @@
   let db = null;
   const N = (U.net = {
     available: false,
+    canWrite: null, // may this viewer write the shared store? false: they can watch but not play; null: not told
     code: null,
     role: null, // 'host' | 'guest'
     seat: null,
@@ -43,9 +44,27 @@
         db = d;
         N.available = !!d;
         if (d && U.screen === 'title') U.render();
+        return window.claude.use('user');
+      })
+      .then(async (u) => {
+        if (!u || typeof u.can !== 'function') return;
+        const c = await u.can('data.write');
+        N.canWrite = c == null ? null : !!c;
+        if (U.screen === 'title') U.render();
       })
       .catch(() => {});
   }
+
+  /** Why a store call failed, as a player can act on it. */
+  const NO_ACCESS =
+    "Your access to this page lets you look but not write, so you can't host or join. Ask the page's owner to invite you by email as an Editor (on a page that isn't shared by link), or to add you to their organization as a Contributor.";
+  const why = (e) => {
+    const code = String((e && (e.code || e.message)) || e || '');
+    return /denied|grant|permission|not_writer|forbidden|unauth/i.test(code)
+      ? NO_ACCESS
+      : 'Could not reach the game (' + esc(code || 'unavailable') + ').';
+  };
+  N.why = why;
 
   const gameDoc = () => db.doc('games/' + N.code);
   const unsubs = [];
@@ -80,6 +99,10 @@
 
   N.host = async function (name) {
     if (!db) return;
+    if (N.canWrite === false) {
+      U.toast(NO_ACCESS, 9000);
+      return;
+    }
     N.code = newCode();
     N.role = 'host';
     N.seat = 0;
@@ -88,7 +111,13 @@
     U.screen = 'lobby';
     N.status = 'Waiting for player 2…';
     U.render();
-    await gameDoc().set({ rev: 0, run: null, host: tab, names: N.names, at: Date.now() });
+    try {
+      await gameDoc().set({ rev: 0, run: null, host: tab, names: N.names, at: Date.now() });
+    } catch (e) {
+      U.toast(why(e), 9000);
+      N.leave();
+      return;
+    }
     // who has taken seat 1
     unsubs.push(
       db.doc(`games/${N.code}/seats/1`).onSnapshot((snap) => {
@@ -159,7 +188,7 @@
     sent.set(id, cmd.hero);
     db.doc(`games/${N.code}/cmds/${id}`)
       .set({ cmd: JSON.parse(JSON.stringify(cmd)), seats: U.seats, at: Date.now() })
-      .catch((e) => U.toast('Could not send that: ' + esc((e && e.code) || e)));
+      .catch((e) => U.toast(why(e), 6000));
     return { ok: true, sent: true, ctx: {} };
   };
 
@@ -169,22 +198,37 @@
       .toUpperCase()
       .replace(/[^A-Z]/g, '')
       .slice(0, 4);
+    if (code.length !== 4) {
+      U.toast('A game code is four letters.');
+      return;
+    }
+    if (N.canWrite === false) {
+      U.toast(NO_ACCESS, 9000);
+      return;
+    }
     N.code = code;
-    const snap = await gameDoc().get();
-    if (!snap.exists) {
+    U.toast('Joining ' + esc(code) + '…');
+    try {
+      const snap = await gameDoc().get();
+      if (!snap.exists) {
+        N.code = null;
+        U.toast('No game with that code. Check it with the host; the host must keep their page open.');
+        return;
+      }
+      const seatDoc = db.doc(`games/${code}/seats/1`);
+      const lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
+      const taken = (await seatDoc.get()).data();
+      if (!lease.acquired || (taken && taken.name && taken.name !== name)) {
+        N.code = null;
+        U.toast('That game already has two players.');
+        return;
+      }
+      await seatDoc.set({ name: name || 'Player 2', holder: tab });
+    } catch (e) {
       N.code = null;
-      U.toast('No game with that code.');
+      U.toast(why(e), 9000);
       return;
     }
-    const seatDoc = db.doc(`games/${code}/seats/1`);
-    const lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
-    const taken = (await seatDoc.get()).data();
-    if (!lease.acquired || (taken && taken.name && taken.name !== name)) {
-      N.code = null;
-      U.toast('That game already has two players.');
-      return;
-    }
-    await seatDoc.set({ name: name || 'Player 2', holder: tab });
     N.role = 'guest';
     N.seat = 1;
     U.seats = [1];
@@ -258,12 +302,14 @@
   /* ───────────── screens ───────────── */
   U.titleNet = function () {
     if (!N.available) return '';
+    if (N.canWrite === false)
+      return `<div class="net-pick"><span class="dim small">Play online</span><div class="mute small">${esc(NO_ACCESS)}</div></div>`;
     return `<div class="net-pick"><span class="dim small">Play online</span>
       <input id="netName" placeholder="Your name" maxlength="24">
       <button class="sm" data-act="netHost">Host a game</button>
       <input id="netCode" placeholder="CODE" maxlength="4" style="width:5em;text-transform:uppercase">
       <button class="sm" data-act="netJoin">Join</button>
-      <div class="mute small">Two players, two screens: each flies one pilot. Share the game's code with your partner; they need edit access to this page.</div></div>`;
+      <div class="mute small">Two players, two screens: each flies one pilot and you take turns. The host keeps this page open and shares the code; the partner needs write access to this page (an email invite as Editor, or Contributor in your organization). A view-only link can't join.</div></div>`;
   };
   U.renderLobby = function () {
     const host = N.role === 'host';

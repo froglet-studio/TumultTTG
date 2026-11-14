@@ -65,13 +65,18 @@
   /** May this screen take this action? Says why not when it may not. */
   U.gate = function (act, arg, el) {
     const run = U.run;
-    if (!run || !U.seats) return true;
+    if (!run) return true;
     const i = U.heroOfAct(act, arg, el);
     if (i != null && !isNaN(i) && !T.mayActFor(run, U.seats, i)) {
       U.toast(`${esc(T.ownerName(run, i))} plays that pilot.`);
       return false;
     }
-    if (LEAD.has(act) && !T.mayLead(run, U.seats)) {
+    const turn = U.screen === 'mission' && HERO_FIRST.has(act) ? T.turnSeat(run) : null;
+    if (turn != null && i != null && !isNaN(i) && T.ownerOf(run, i) !== turn) {
+      U.toast(`It is ${esc(run.party.players[turn].name)}'s turn.`);
+      return false;
+    }
+    if (U.seats && LEAD.has(act) && !T.mayLead(run, U.seats)) {
       U.toast(`${esc(run.party.players[0].name)} makes the squad's choices.`);
       return false;
     }
@@ -86,7 +91,17 @@
     return T.execCommand(U.run, cmd, U.seats);
   };
   /** May this screen move or act for hero i on the board? */
-  U.mine = (i) => !U.run || T.mayActFor(U.run, U.seats, i);
+  U.mine = (i) => {
+    if (!U.run) return true;
+    const turn = T.turnSeat(U.run);
+    return T.mayActFor(U.run, U.seats, i) && (turn == null || T.ownerOf(U.run, i) === turn);
+  };
+  /** The player whose turn it is, when turns apply; and whether this screen holds that player. */
+  U.turn = function () {
+    const t = U.run ? T.turnSeat(U.run) : null;
+    if (t == null) return null;
+    return { seat: t, name: U.run.party.players[t].name, here: !U.seats || U.seats.includes(t) };
+  };
 
   /** A small label naming the player of hero i, when there is more than one player. */
   U.seatTag = function (i) {
@@ -95,9 +110,15 @@
     return `<span class="seat-tag seat-${T.ownerOf(run, i)}">${esc(T.ownerName(run, i))}</span>`;
   };
 
-  /** The end-of-round button's label: with players on other screens, it says who is ready. */
+  /** The end-of-round button's label: with players taking turns, it says whose turn it is. */
   U.endRoundLabel = function () {
     const run = U.run;
+    const t = U.turn();
+    if (t) {
+      if (!t.here) return `${esc(t.name)}'s turn…`;
+      const last = run.party.players.every((p, s) => s === t.seat || run.party.ready[s]);
+      return last ? 'End Round ▶' : `End ${esc(t.name)}'s turn ▶`;
+    }
     if (!run || !run.party || !U.seats || T.playerCount(run) < 2) return 'End Round ▶';
     const p = run.party;
     const n = p.ready.filter(Boolean).length;

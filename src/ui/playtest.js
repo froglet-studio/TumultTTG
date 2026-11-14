@@ -19,13 +19,16 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.23.0',
+    version: '2.24.0',
     items: [
       {
         text: 'After every won mission each pilot now gets an upgrade of their own: a trait offer of three cards that fit that pilot (or skip for +2 ◇), and after an elite a boon each. With two players, each picks for their own pilot. Did both of you have a pick you cared about? Was one offer always better than the other?',
       },
       {
-        text: 'Nothing new to play in this build: the canon you approve in the inbox now becomes a storyteller pack for AI (rules first, then canon, then the world), and canon you mark public is kept in the repository too. Keep writing ✎ notes as you play.',
+        text: 'Two players now take turns. In each round one player flies their pilot and presses End turn, then the other does the same, and the foes act once both are done. Who goes first swaps every round. This applies on one screen and online. Does waiting for your partner feel like planning together, or like dead time?',
+      },
+      {
+        text: 'Online play now says why when it cannot connect. A partner who only has view access to the page (a share link) cannot write to the game, so the title tells them to ask for an email invite as Editor. Play online on the separate invite-only Tumult Online page. Did joining work first time?',
       },
       {
         text: 'Canon notes now reach the lore lead: every ✎ correction and draft answer you write on this page is sent to its private inbox (Canon on the title says how many have gone). Only you and the page’s editors can read them, never other testers. Garrett: Canon → Open the inbox to mark each note canon or rejected, edit its wording, and tick public for what may be copied into the repository. Did anything you wrote fail to arrive?',
@@ -55,7 +58,7 @@
         text: 'The route is now a chart with the road you took lit up, and events and havens show a painting. Does the run feel more like a journey somewhere? Is anything harder to read than the old grid?',
       },
       {
-        text: 'Play online: one of you types a name and presses “Host a game”, the other types the four-letter code and presses Join, from their own screen. Each drafts and flies one pilot; the host picks the route and the round ends when both press Ready. Does it keep up? Anything that went out of step between the two screens, or that you had to wait for, put in a report.',
+        text: 'Play online: one of you types a name and presses “Host a game”, the other types the four-letter code and presses Join, from their own screen. Each drafts and flies one pilot; the host picks the route and you take turns. Does it keep up? Anything that went out of step between the two screens, or that you had to wait for, put in a report.',
       },
       {
         text: 'Two players on one screen: pick “2 players” on the title screen and pass the screen. Does owning one pilot change how you talk through a turn?',

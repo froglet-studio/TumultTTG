@@ -293,6 +293,19 @@
     if (!U.ms.built) buildBoard();
     // what ending the round now would do: the enemy turn is declared, so this is exact (T.forecast)
     U.ms.forecast = T.forecast(m);
+    // players take turns: when the turn passes, say whose it is and pick up their pilot
+    const turn = U.turn();
+    const tkey = turn ? m.round + ':' + turn.seat : null;
+    if (tkey !== U.ms.lastTurn) {
+      U.ms.lastTurn = tkey;
+      if (turn) {
+        if (turn.here) {
+          const mine = T.heroesOf(U.run, turn.seat).filter((i) => !m.heroes[i].downed);
+          if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
+        }
+        U.toast(turn.here && U.seats ? 'Your turn.' : `${esc(turn.name)}'s turn.`);
+      }
+    }
     renderTop(m);
     renderTargetBar(m);
     renderSide(m);
@@ -1200,7 +1213,12 @@
           return true;
         }
         ms.endConfirm = false;
-        // with players on other screens, the round ends once every one of them is ready
+        // with two players, this ends the turn of the one playing; the last turn ends the round
+        const t = U.turn && U.turn();
+        if (t && !t.here) {
+          U.toast(`It is ${esc(t.name)}'s turn.`);
+          return true;
+        }
         U.exec({ op: 'ready' });
         U.sfx.click();
         afterAction();
