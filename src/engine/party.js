@@ -86,7 +86,7 @@
     basic: (run, m, h, c) => T.useBasic(m, h, c.id, c.ctx),
     gear: (run, m, h, c) => T.useGear(m, h, c.gi, c.ai, c.ctx),
     item: (run, m, h, c) => T.useConsumable(m, h, c.ci),
-    interact: (run, m, h, c) => T.doInteract(m, h, c.node, false),
+    interact: (run, m, h, c) => T.doInteract(m, h, c.node, false, c.pay),
     rally: (run, m, h) => T.rally(m, h),
     valve: (run, m, h) => ({ ok: !!T.valve(m, h) }),
     dump: (run, m, h, c) => (T.dump(m, h, c.di), { ok: true }),

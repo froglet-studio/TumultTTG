@@ -505,6 +505,63 @@
         };
       },
     },
+    survey: {
+      title: ['Survey Before Nightfall', 'Mark the Shifting Ground', 'Chart the Breaking Land'],
+      blurb:
+        'Survey marks are scattered across the whole board, and night is coming. Tag them by standing on one and Interacting, for 2 AP or a die of the mark’s element. A veiled mark must be sighted first: stand within 1 of it, or reach it with a reveal. Two pilots can split up, and foes here are a cost, not the point.',
+      gen(rng, tier, tide, page) {
+        const up = tideAt(tide, tier);
+        const need = [4, 5, 6][tier - 1] + up.need;
+        const b = boardFor(rng, page, 5, 3, { corridors: 2 });
+        const starts = [b.at['0,0'], b.at['0,2']];
+        // two more marks than you need, at least one in every column past the start: the board is the route
+        const colOf = {};
+        const cols = [1, 2, 3, 4].map((c) =>
+          shuffle(
+            rng,
+            [0, 1, 2].map((r) => ((colOf[b.at[c + ',' + r]] = c), b.at[c + ',' + r])),
+          ),
+        );
+        const marks = cols.map((c) => c[0]);
+        const rest = shuffle(
+          rng,
+          cols.flatMap((c) => c.slice(1)),
+        );
+        while (marks.length < need + 2) marks.push(rest.shift());
+        // half of them, the farther ones first, are veiled until sighted
+        const veiled = new Set(
+          marks
+            .slice()
+            .sort((a, c) => colOf[c] - colOf[a] || a - c)
+            .slice(0, Math.floor(marks.length / 2)),
+        );
+        // each mark is of an element: a die of it (or Omni) tags it in place of 2 AP
+        marks.forEach(
+          (i) => (b.nodes[i].objective = { kind: 'mark', el: pick(rng, ['M', 'C', 'S', 'T']), veiled: veiled.has(i) }),
+        );
+        const enemies = [];
+        const crew = ['biter', 'kiter'].concat(tier >= 2 ? ['lurker'] : [], tier >= 3 ? ['stinger'] : []);
+        addEscorts(rng, b, enemies, starts, crew.concat(up.escorts ? ['biter'] : []));
+        return {
+          board: b,
+          starts,
+          enemies,
+          objective: {
+            kind: 'survey',
+            need,
+            total: marks.length,
+            done: 0,
+            text: `Tag ${need} of the ${marks.length} survey marks (Interact standing on one, for 2 AP or a die of the mark's element); a veiled mark must be sighted first, from within 1 or by a reveal`,
+          },
+          clock: { value: [6, 6, 5][tier - 1] - up.clock, label: 'Rounds before nightfall', onZero: 'lose' },
+          spawns: [],
+          bonus: [
+            { id: 'fast', text: 'Finish with 2+ rounds to spare', clockLeft: 2 },
+            { id: 'nolow', text: 'No hero drops below 50%' },
+          ],
+        };
+      },
+    },
   });
 
   /* ───────────────────────────── TIDE MAP ───────────────────────────── */
@@ -515,7 +572,7 @@
       if (r === 0) return shuffle(rng, ['swarm', 'vault', 'cascade']);
       if (r === 1) return shuffle(rng, ['hidden', 'event', 'salvage']);
       if (r === 2) return shuffle(rng, ['elite', 'haven', 'vault']);
-      if (r === 3) return shuffle(rng, ['cascade', 'event', 'hidden']);
+      if (r === 3) return shuffle(rng, ['survey', 'event', 'hidden']);
       if (r === 4) return ['haven', 'elite', 'swarm'];
       if (r === 5) return shuffle(rng, ['vault', 'salvage', 'event']);
       return ['boss'];

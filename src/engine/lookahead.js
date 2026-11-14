@@ -22,7 +22,7 @@
      An action is plain data: { t, hero, … }. `hero` is an index into m.heroes.
        face      { card, face: 'P'|'E', target?, node?, choice? }
        walk      { node }
-       interact  { node }
+       interact  { node, pay? }      pay: 'ap' | 'el' for a survey mark
        rally     {}
        basic     { basic: 'strike'|'brace'|'shove', target? }   what every hero can do (T.BASIC)
        gear      { gear, ability, target?, node?, choice? }
@@ -61,12 +61,18 @@
       const steps = Math.min(3, Math.floor(ap / R().MOVE_AP) + (h.freeMove || 0));
       if (steps > 0 && !h.states.Rooted && !h.states.SlowSelf)
         for (const node of T.reachableWalk(m, h, steps, false)) out.push({ t: 'walk', hero, node });
-      if (ap >= R().INTERACT_AP)
-        for (const node of [h.pos].concat(B.walkNeighbors(m.board, h.pos))) {
-          const nd = m.board.nodes[node];
-          if (!nd.objective || (node !== h.pos && nd.height)) continue;
-          if (worthInteracting(m, nd.objective, h)) out.push({ t: 'interact', hero, node });
-        }
+      for (const node of [h.pos].concat(B.walkNeighbors(m.board, h.pos))) {
+        const nd = m.board.nodes[node];
+        if (!nd.objective || (node !== h.pos && nd.height)) continue;
+        if (!worthInteracting(m, nd.objective, h)) continue;
+        // a survey mark takes 2 AP or a die of its element: both, when both can pay
+        if (nd.objective.kind === 'mark') {
+          if (node === h.pos)
+            ['ap', 'el'].forEach(
+              (pay) => T.markPay(h, nd.objective, pay) && out.push({ t: 'interact', hero, node, pay }),
+            );
+        } else if (ap >= R().INTERACT_AP) out.push({ t: 'interact', hero, node });
+      }
       for (const b of T.BASIC) {
         const chk = T.canUseBasic(m, h, b.id);
         if (chk.ok)
@@ -97,6 +103,7 @@
     if (o.kind === 'crate') return ob.kind === 'salvage' && !h.carrying;
     if (o.kind === 'lever') return ob.kind === 'vault' && !m.board.ramp;
     if (o.kind === 'cache') return ob.kind === 'find' && !(o.searched && !o.real);
+    if (o.kind === 'mark') return ob.kind === 'survey' && !o.veiled;
     return true;
   }
 
@@ -122,7 +129,7 @@
       case 'walk':
         return T.walk(m, h, a.node);
       case 'interact':
-        return T.doInteract(m, h, a.node, false);
+        return T.doInteract(m, h, a.node, false, a.pay);
       case 'rally':
         return T.rally(m, h);
       case 'basic':
@@ -181,6 +188,7 @@
     // a crate on someone's back is most of the way there
     if (ob.kind === 'salvage')
       return part(ob.done + 0.5 * m.heroes.filter((h) => !h.downed && h.carrying).length, ob.need);
+    if (ob.kind === 'survey') return part(ob.done, ob.need);
     if (ob.kind === 'kill') {
       const foes = m.enemies.filter((e) => e.type === ob.target);
       if (!foes.length) return 0;
@@ -201,6 +209,11 @@
         .filter((n) => n.objective && n.objective.kind === 'crate')
         .map((n) => ({ node: n.id, on: false }));
     }
+    // survey: a mark is tagged from on it (and standing there sights a veiled one)
+    if (ob.kind === 'survey')
+      return Object.values(m.board.nodes)
+        .filter((n) => n.objective && n.objective.kind === 'mark')
+        .map((n) => ({ node: n.id, on: true }));
     if (ob.kind === 'hold' || ob.kind === 'valve') return [{ node: ob.node, on: false }];
     if (ob.kind === 'vault')
       return [{ node: ob.node, on: true }].concat(m.board.ramp ? [] : [{ node: ob.leverNode, on: false }]);
@@ -278,7 +291,7 @@
     }
     return s;
   };
-  const WORKED = ['vault', 'valve', 'find', 'salvage']; // objectives advanced by Interact; a beacon is held, a foe is fought
+  const WORKED = ['vault', 'valve', 'find', 'salvage', 'survey']; // objectives advanced by Interact; a beacon is held, a foe is fought
   const liveVitality = (m) => m.heroes.reduce((s, h) => s + (h.downed ? 0 : h.hp), 0);
 
   /* ───────────────────────────── SEARCH ───────────────────────────── */

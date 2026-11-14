@@ -10,7 +10,7 @@
   const U = T.UI;
   const esc = U.esc;
   const KEY = 'tumult_v2_playtest';
-  const TYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'elite', 'boss'];
+  const TYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey', 'elite', 'boss'];
   const LOG_MAX = 40;
 
   /**
@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.30.0',
+    version: '2.31.0',
     items: [
+      {
+        text: 'A new mission that is not a fight: Survey. Survey marks lie across the whole board and night is coming. Tag them by Interacting on or beside one, for 2 AP or one die of the mark’s colour (Omni counts). The far ones start veiled (a ringed ! on the board): stand within 1 of one, or reach it with a reveal, to sight it first. It sits in the middle of the route, in place of the second Cascade. Did the two of you split up? Did a rolled element ever go to a mark instead of a card, and was that a real choice? Use the panel to start one: Survey, any tier.',
+      },
       {
         text: 'Moving your partner is now yours to decide, all at once. Leg up, Call, Cue and the Beacon gear ask you where your partner goes when you play them, and they move there immediately. Your partner never gets free steps to spend later, so you can plan your whole turn and account only for what the foes do. Does that make two-player turns easier to plan? Do you ever miss letting your partner choose?',
       },

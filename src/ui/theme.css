@@ -407,6 +407,19 @@ button.ghost {
   fill-rule: evenodd;
   pointer-events: none;
 }
+/* a survey mark in its element's colour: a die of that element tags it */
+.objmark-ic.mk-M {
+  fill: var(--M);
+}
+.objmark-ic.mk-C {
+  fill: var(--C);
+}
+.objmark-ic.mk-S {
+  fill: var(--S);
+}
+.objmark-ic.mk-T {
+  fill: var(--T);
+}
 .hazmark {
   fill: #7fd3ff;
   fill-rule: evenodd;
