@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.35.0',
+    version: '2.36.0',
     items: [
+      {
+        text: 'The same player now goes first every round (Player 1, then Player 2, then the foes). Nobody takes two turns in a row any more, so you can plan your next turn while your partner takes theirs, knowing nothing new will land on you before you act. Does the wait feel like planning time now?',
+      },
       {
         text: 'Combos are now shown. A play the world would add to gets a gold ✦: a shove under heavy gravity (the foe slams down for extra damage), a hit on a foe your partner Marked (the Mark is spent for +2), or anything that breaks a foe’s guard. Hover it and the line above the board says what the world adds, worked out exactly on a copy of the mission. A catch shows as ⚠, for example a foe that holds fast against a shove, or a blow that finds an afterimage. Did a ✦ make you try something you would not have? Did one ever promise something that did not happen?',
       },
@@ -61,7 +64,7 @@
         text: 'After every won mission each pilot now gets an upgrade of their own: a trait offer of three cards that fit that pilot (or skip for +2 ◇), and after an elite a boon each. With two players, each picks for their own pilot. Did both of you have a pick you cared about? Was one offer always better than the other?',
       },
       {
-        text: 'Two players now take turns. In each round one player flies their pilot and presses End turn, then the other does the same, and the foes act once both are done. Who goes first swaps every round. This applies on one screen and online. Does waiting for your partner feel like planning together, or like dead time?',
+        text: 'Two players now take turns. In each round one player flies their pilot and presses End turn, then the other does the same, and the foes act once both are done. The same player goes first every round, so nobody takes two turns in a row. This applies on one screen and online. Does waiting for your partner feel like planning together, or like dead time?',
       },
       {
         text: 'Online play now says why when it cannot connect. A partner who only has view access to the page (a share link) cannot write to the game, so the title tells them to ask for an email invite as Editor. Play online on the separate invite-only Tumult Online page. Did joining work first time?',

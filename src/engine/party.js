@@ -4,8 +4,9 @@
    one player may hold several. The rules do not change with the number of players:
    the same squad meets the same missions. What changes is who may act for whom, and
    that players take turns: in a mission's hero phase one player acts at a time, the
-   others wait, and the round's enemy turn comes once every player has had theirs. The
-   player who goes first changes every round.
+   others wait, and the round's enemy turn comes once every player has had theirs. Seats
+   always go in the same order, host first, so nobody takes two turns in a row and each
+   player can plan their next turn while the others take theirs (Garrett, 2026-11-15).
    Seat 0 is the host: it makes the squad's shared choices (route, events, havens).
    ========================================================================== */
 (function (T) {
@@ -51,16 +52,15 @@
 
   /**
    * Whose turn it is in a mission's hero phase: a seat, or null when turns do not apply (one
-   * player, or no hero phase under way). Seats go in order from this round's first player,
-   * (round - 1) mod players, so the lead changes hands every round; party.ready marks the
-   * players who have had their turn. A player whose pilots are all down has no turn to take.
+   * player, or no hero phase under way). Seats go in order, 0 first, every round, so no player
+   * ever takes two turns in a row; party.ready marks the players who have had their turn. A player whose pilots are all down has no turn to take.
    */
   T.turnSeat = function (run) {
     const m = run.mission;
     const p = run.party;
     if (!p || p.players.length < 2 || !m || m.over || m.phase !== 'hero') return null;
     const n = p.players.length;
-    const first = (Math.max(1, m.round) - 1) % n;
+    const first = 0;
     for (let k = 0; k < n; k++) {
       const s = (first + k) % n;
       if (p.ready[s]) continue;

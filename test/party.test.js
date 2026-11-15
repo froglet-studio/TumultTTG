@@ -151,7 +151,8 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
   ready();
   assert.ok(m.round > round || m.over, "the last player's turn ends the round");
   assert.equal(JSON.stringify(U.run.party.ready), '[false,false]', 'and the next round starts with nobody done');
-  if (!m.over) assert.equal(w.T.turnSeat(U.run), 1, 'and the other player goes first');
+  if (!m.over)
+    assert.equal(w.T.turnSeat(U.run), 0, 'and the same player goes first again: nobody takes two turns in a row');
   assert.deepEqual(errors, []);
 });
 
@@ -183,7 +184,7 @@ test('a command does what the direct call does, and only for its own player', ()
   const round = b.mission.round;
   assert.ok(T.execCommand(b, { op: 'ready' }, [1]).ended);
   assert.ok(b.mission.round > round || b.mission.over);
-  if (!b.mission.over) assert.equal(T.turnSeat(b), 1, 'the lead changes hands each round');
+  if (!b.mission.over) assert.equal(T.turnSeat(b), 0, 'the host leads every round');
   assert.equal(T.execCommand(b, { op: 'nonsense', hero: 0 }, null).ok, false);
 });
 
