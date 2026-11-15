@@ -52,6 +52,8 @@ Once per run, losing a **non-boss** mission does not end the run: no rewards, bo
 
 ◇ is the **managed economy** (v1.0: "etherions = weather, omnicrystals = supply"). It is both currency and **fuel**: gear abilities cost ◇ per use and have their own small cooldown (not the track). Each hero carries up to **2 gear**; Havens stock 3 at a time (prices 4–7 ◇), and you may sell for half.
 
+**A purse per player** (since 2.39; Garrett, 2026-11-15). One player keeps one purse for both pilots, so a solo run plays exactly as before. Two players keep one each (`run.purses`, `src/engine/party.js`). The 6 ◇ a squad starts with are shared out when the route opens. A pilot buys gear and consumables, sells gear and fuels its gear in a mission from its own player's purse, and a skipped trait (+2 ◇) or a Deep Pockets boon (+2 ◇) pays its own player. What the squad earns together (a mission's crystals, an event's) is shared out evenly, the odd crystal to the emptier purse. What it pays together (a haven's full repair, an event's price) comes from the fuller purse first. The audit reads the crystals together and halves every purse. Each screen shows only its own player's buy, sell and train buttons; the partner's purse and choices are shown, never offered.
+
 | Gear | Price | Verbs it grants |
 |---|---|---|
 | Grapnel | 6 | Reel (pull 1, 1◇) · Winch (pull from anywhere into melee + Anchor 2, 2◇) |

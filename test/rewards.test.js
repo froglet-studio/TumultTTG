@@ -47,9 +47,9 @@ test('the reward is settled only when every hero has taken or skipped, and only 
   assert.equal(run.heroes[0].cards.length, before + 1);
   assert.equal(T.takeOfferedCard(run, rw.offers[0][1], 0).ok, false, 'one trait each');
   assert.ok(!T.rewardSettled(rw));
-  const cr = run.crystals;
+  const cr = T.crystalsFor(run, 1);
   assert.ok(T.skipOfferedCard(run, 1).ok);
-  assert.equal(run.crystals, cr + 2);
+  assert.equal(T.crystalsFor(run, 1), cr + 2);
   assert.equal(T.skipOfferedCard(run, 1).ok, false);
   assert.ok(T.rewardSettled(rw));
 });

@@ -16,7 +16,7 @@
       rngs: {}, // one number per random stream, made the first time it is asked for (T.runStream)
       launched: 0,
       heroes: [],
-      crystals: 6,
+      crystals: 6, // the squad's starting crystals; they become the players' purses when the route opens (T.settlePurses)
       boons: [],
       map: null,
       nodeId: null,
@@ -244,6 +244,7 @@
 
   /* ───────────────────────────── MAP ───────────────────────────── */
   T.startMap = function (run) {
+    T.settlePurses(run);
     run.map = T.genTideMap(T.runStream(run, 'map'));
     run.phase = 'map';
     run.available = run.map.rows[0].slice();
@@ -274,6 +275,7 @@
     return { ok: true, type };
   };
   T.launchMission = function (run, type, tier, pageId) {
+    T.settlePurses(run);
     const gen = T.MISSIONS[type];
     const seed = T.missionSeed(run, type, tier);
     run.launched++;
@@ -332,17 +334,22 @@
     const boss = m.isBoss;
     let up = 2 + bonusHit + (elite ? 1 : 0);
     let crystals = 4 + m.tier + bonusHit * 2 + (elite ? 4 : 0) + (boss ? 10 : 0);
-    for (const h of run.heroes)
+    // the mission's crystals are shared out among the purses; a pilot's own boon pays its own player
+    const purse = T.splitCrystals(crystals, run.purses.length);
+    run.heroes.forEach((h, i) => {
       for (const v of T.boonVals(h, 'reward')) {
         up += v.up || 0;
         crystals += v.crystals || 0;
+        purse[T.purseSeat(run, i)] += v.crystals || 0;
       }
+    });
     // every pilot gets an upgrade of their own: a trait offer each, and on an elite a boon offer each
     const offers = T.cardOffers(run, 3);
     const boons = elite ? T.boonOffers(run, 2) : null;
     run.lastReward = {
       up,
       crystals,
+      purse,
       offers,
       boons,
       bonus: m.bonus.map((b) => Object.assign({}, b)),
@@ -411,7 +418,7 @@
     const m = run.mission;
     const rw = run.lastReward;
     run.mission = null;
-    run.crystals = m.crystals;
+    run.purses = m.purses.slice();
     run.secondWindUsed = m.secondWindUsed;
     run.stats.missions++;
     run.stats.kills += m.stats.kills;
@@ -436,7 +443,7 @@
       notes: T.notesOf(m), // the players' own lines of story, for the chronicle
     });
     if (m.won) {
-      run.crystals += rw.crystals;
+      rw.purse.forEach((n, s) => (run.purses[s] += n));
       run.heroes.forEach((h) => (h.upUnspent += rw.up));
     }
     if (m.isBoss && m.won) run.won = true;
@@ -447,6 +454,7 @@
         rw.lifeline = true;
         rw.up = 0;
         rw.crystals = 0;
+        rw.purse = run.purses.map(() => 0);
         rw.offers = run.heroes.map(() => []);
         rw.boons = null;
         rw.picked = run.heroes.map(() => true);
@@ -485,12 +493,12 @@
     if (r.ok) rw.picked[heroIdx] = true;
     return r;
   };
-  /** A hero passes on their trait offer, for 2 ◇ to the squad. */
+  /** A hero passes on their trait offer, for 2 ◇ to its player's purse. */
   T.skipOfferedCard = function (run, heroIdx) {
     const rw = run.lastReward;
     if (rw.picked[heroIdx]) return { ok: false, why: 'already chosen' };
     rw.picked[heroIdx] = true;
-    run.crystals += 2;
+    run.purses[T.purseSeat(run, heroIdx)] += 2;
     return { ok: true };
   };
   /** A hero takes a boon from their own offer. */
@@ -520,9 +528,10 @@
   T.buyGear = function (run, gearId, heroIdx) {
     const g = T.GEAR_BY[gearId];
     const h = run.heroes[heroIdx];
-    if (run.crystals < g.price) return { ok: false, why: 'not enough ◇' };
+    const s = T.purseSeat(run, heroIdx);
+    if (run.purses[s] < g.price) return { ok: false, why: 'not enough ◇' };
     if (h.gear.length >= R().GEAR_SLOTS) return { ok: false, why: 'gear slots full (2)' };
-    run.crystals -= g.price;
+    run.purses[s] -= g.price;
     h.gear.push({ id: gearId, cds: [0, 0] });
     run.haven.gear = run.haven.gear.filter((x) => x !== gearId);
     run.haven.bought.push(gearId);
@@ -531,21 +540,22 @@
   T.sellGear = function (run, heroIdx, gi) {
     const h = run.heroes[heroIdx];
     const g = h.gear.splice(gi, 1)[0];
-    if (g) run.crystals += Math.floor(T.GEAR_BY[g.id].price / 2);
+    if (g) run.purses[T.purseSeat(run, heroIdx)] += Math.floor(T.GEAR_BY[g.id].price / 2);
   };
   T.buyConsumable = function (run, cid, heroIdx) {
     const c = T.CONSUMABLE_BY[cid];
     const h = run.heroes[heroIdx];
-    if (run.crystals < c.price) return { ok: false, why: 'not enough ◇' };
+    const s = T.purseSeat(run, heroIdx);
+    if (run.purses[s] < c.price) return { ok: false, why: 'not enough ◇' };
     if (h.consumables.length >= 3) return { ok: false, why: 'pack full (3)' };
-    run.crystals -= c.price;
+    run.purses[s] -= c.price;
     h.consumables.push(cid);
     return { ok: true };
   };
   T.havenRest = function (run, full) {
     if (full) {
-      if (run.crystals < 3) return { ok: false, why: 'need 3 ◇' };
-      run.crystals -= 3;
+      // the squad's repair: paid from the fullest purse first
+      if (!T.payShared(run, 3)) return { ok: false, why: 'need 3 ◇' };
       run.heroes.forEach((h) => (h.hp = h.maxHp));
     } else run.heroes.forEach((h) => (h.hp = Math.min(h.maxHp, h.hp + Math.ceil((h.maxHp - h.hp) / 2))));
     run.haven.healed = true;
@@ -566,11 +576,13 @@
     const ev = run.event.def;
     const opt = ev.options[optIdx];
     const fx = opt.fx || {};
-    if (opt.cost && opt.cost.crystals && run.crystals < opt.cost.crystals) return { ok: false, why: 'not enough ◇' };
-    if (opt.cost && opt.cost.crystals) run.crystals -= opt.cost.crystals;
+    // an event's price is the squad's, paid from the fullest purse first; what it gives is shared out
+    if (opt.cost && opt.cost.crystals && T.totalCrystals(run) < opt.cost.crystals)
+      return { ok: false, why: 'not enough ◇' };
+    if (opt.cost && opt.cost.crystals) T.payShared(run, opt.cost.crystals);
     const hero = run.heroes[heroIdx != null ? heroIdx : T.runStream(run, 'event').int(run.heroes.length)];
     let followup = null;
-    if (fx.crystals) run.crystals += fx.crystals;
+    if (fx.crystals) T.gainShared(run, fx.crystals);
     if (fx.up) run.heroes.forEach((h) => (h.upUnspent += fx.up));
     if (fx.healAll === 'full') run.heroes.forEach((h) => (h.hp = h.maxHp));
     else if (fx.healAll === 'half')
@@ -592,8 +604,9 @@
       followup = { kind: 'boonGiven', boon: aff, hero: hero.name };
     }
     if (fx.audit) {
-      if (run.crystals >= 10) run.crystals = Math.ceil(run.crystals / 2);
-      else run.crystals += 4;
+      // the audit reads the squad's crystals together, and halves every purse alike
+      if (T.totalCrystals(run) >= 10) run.purses = run.purses.map((n) => Math.ceil(n / 2));
+      else T.gainShared(run, 4);
     }
     if (fx.respec) {
       T.respecHero(hero);
@@ -623,7 +636,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 13;
+  T.SAVE_VERSION = 14;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -719,6 +732,25 @@
     12(r) {
       for (const x of r.history || []) if (!x.notes) x.notes = [];
       r.v = 13;
+    },
+    // 2.39 gives each player a purse of their own. An older run's crystals are shared out among its players
+    // (one player keeps them all), and so are a mission's and an open reward's. A squad still being drafted
+    // keeps its starting crystals until the route opens.
+    13(r) {
+      const n = r.party && r.party.players ? r.party.players.length : 1;
+      if (r.phase !== 'draft' && typeof r.crystals === 'number') {
+        r.purses = T.splitCrystals(r.crystals, n);
+        delete r.crystals;
+      }
+      const m = r.mission;
+      if (m && typeof m.crystals === 'number') {
+        m.purses = T.splitCrystals(m.crystals, n);
+        m.owner = (r.heroes || []).map((h, i) => (r.party && r.party.owner ? r.party.owner[i] || 0 : 0));
+        delete m.crystals;
+      }
+      const rw = r.lastReward;
+      if (rw && !rw.purse) rw.purse = rw.lifeline ? Array(n).fill(0) : T.splitCrystals(rw.crystals || 0, n);
+      r.v = 14;
     },
   };
   T.deserializeRun = function (json) {

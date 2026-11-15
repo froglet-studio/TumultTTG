@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.39.0 — 2026-11-15 — a purse each
+
+Garrett, after a two-player playtest: "the money that we spend in the shop. we should each have our own. we should have our own buttons instead of looking like we can upgrade or buy things for each other." He chose a purse per player, with one player keeping one purse.
+
+- **A purse per player.** Two players keep their omnicrystals apart (`run.purses`). A solo run keeps one purse and plays exactly as before.
+  - The starting 6 ◇ are shared out when the route opens: 3 each.
+  - A pilot buys gear and consumables, sells gear, and fuels its gear in a mission from its own player's purse. A skipped trait and Deep Pockets pay their own player. A finishing blow's salvage goes to whoever struck it.
+  - What the squad earns together (a mission's crystals, an event's) is shared out evenly; the odd crystal goes to the emptier purse.
+  - What the squad pays together (the haven's full repair, an event's price) comes from the fuller purse first. The audit halves every purse.
+- **Your own buttons.** Each screen offers only its own pilot's Buy, Sell and Train buttons, and its own trait and boon choices. The partner's upgrade shows "… is choosing" until it is done. Both purses are shown, named, with this screen's own marked in gold. The mission's top bar shows them as one pill (yours in bold).
+- **Saves.** `T.SAVE_VERSION` is 14. An older save's crystals are shared out among its players, and so are a mission's and an open reward's (fixture `save-2.38.json`).
+- No change for one player: the simulators play solo, and `node tools/sim.js 40` gives the same tables as before.
+
 ## 2.38.0 — 2026-11-15 — the objective answers back
 
 Garrett, after a two-player playtest: "we need more juice when you get objectives so you know you are doing the right things."

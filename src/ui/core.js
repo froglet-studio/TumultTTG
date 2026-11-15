@@ -410,6 +410,30 @@
   };
   U.NODE_ICON = NODE_ICON;
   U.NODE_NAME = NODE_NAME;
+  /** May this screen act for hero i? Everyone may with one player; with two, each for their own pilot. */
+  const own = (i) => !U.run || T.mayActFor(U.run, U.seats, i);
+  U.own = own;
+  /**
+   * The omnicrystals, as pills: one purse for one player; with two players, a purse each, named, this
+   * screen's own marked (T.splitCrystals and friends, src/engine/party.js). `x` is the run or the mission.
+   */
+  U.purseHTML = function (x, compact) {
+    const run = U.run;
+    const purses = x && x.purses ? x.purses : [T.totalCrystals(x || {})];
+    const ic = U.ic('crystal', '◇', 'tiny');
+    if (purses.length < 2)
+      return `<span class="pill purse" data-tip="Omnicrystals: buy gear at a haven and fuel it in a mission.">${ic} ${purses[0]}</span>`;
+    const nameOf = (s) => (run && run.party && run.party.players[s] ? run.party.players[s].name : 'Player ' + (s + 1));
+    if (compact)
+      return `<span class="pill purse" data-tip="${esc(`<b>Omnicrystals, a purse each</b><div>${purses.map((n, s) => `${esc(nameOf(s))}: ${n} ◇`).join(' · ')}</div><div class='dim small'>Your pilot fuels its gear from your own purse.</div>`)}">${ic} ${purses.map((n, s) => (U.seats && U.seats.includes(s) ? `<b>${n}</b>` : n)).join(' · ')}</span>`;
+    return purses
+      .map((n, s) => {
+        const name = nameOf(s);
+        const mine = U.seats && U.seats.includes(s);
+        return `<span class="pill purse seat-${s}${mine ? ' mine' : ''}" data-tip="${esc(`<b>${esc(name)}'s omnicrystals</b><div>Each player has their own: your pilot buys, sells and fuels gear from yours. What the squad earns is shared out evenly; what it pays together comes from the fuller purse first.</div>`)}">${ic} ${n} <span class="dim small">${esc(name)}</span></span>`;
+      })
+      .join('');
+  };
   function partyBar(run) {
     return `<div class="partybar">${run.heroes
       .map(
@@ -418,7 +442,7 @@
           i,
         ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b>${U.seatTag ? U.seatTag(i) : ''}<span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
       <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc)}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}${h.consumables.map((c) => `<span class="pill">${U.icCons(c)}</span>`).join('')}</div>
-      <div class="row" style="margin-top:6px"><button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button><button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button></div></div>`,
+      <div class="row" style="margin-top:6px">${own(i) ? `<button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button>` : ''}<button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button>${T.playerCount(run) > 1 && run.purses ? `<span class="right pill small" data-tip="${esc(T.ownerName(run, i))}'s omnicrystals">${U.ic('crystal', '◇', 'tiny')} ${T.crystalsFor(run, i)}</span>` : ''}</div></div>`,
       )
       .join('')}</div>`;
   }
@@ -600,7 +624,7 @@
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    return `<div class="wrap">${header('The Route', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${titleBtn()}`)}
+    return `<div class="wrap">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${titleBtn()}`)}
       ${renderPassage(run)}
       ${partyBar(run)}
       <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">${expeditionLine(run)}Pick the next stop. Glowing stops are reachable. ${esc(T.threatTitle(run))} waits at the end of the route.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
@@ -616,7 +640,7 @@
   U.openKit = function (i) {
     const h = U.run.heroes[i];
     U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => U.icClade(s) + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
-    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} <button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half">sell</button></span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
+    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} ${own(i) ? `<button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half, to your own purse">sell</button>` : ''}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
     <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false })).join('')}</div>`);
   };
 
@@ -633,6 +657,9 @@
       : run.heroes
           .map((h, i) => {
             const cards = rw.offers[i];
+            // a partner's upgrade is theirs to choose: shown, never offered to this screen
+            if (!own(i))
+              return `<hr><h3>${esc(h.name)}'s upgrade</h3><p class="dim small">${rw.picked[i] && (!rw.boons || rw.boonPicked[i]) ? '✓ Chosen.' : `${esc(T.ownerName(run, i))} is choosing…`}</p>`;
             const trait = rw.picked[i]
               ? `<p class="dim small">✓ Trait chosen.</p>`
               : `<p class="dim small">Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.</p><div class="pack">${cards
@@ -653,7 +680,7 @@
           .join('');
     const ready = T.rewardSettled(rw);
     return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete', titleBtn())}<div class="panel">
-      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
+      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill" ${rw.purse && rw.purse.length > 1 ? `data-tip="${esc(rw.purse.map((n, s) => `${esc(run.party.players[s].name)}: +${n}`).join(' · '))}"` : ''}>+${rw.crystals} ◇${rw.purse && rw.purse.length > 1 ? ` (${rw.purse.map((n) => '+' + n).join(' / ')})` : ''}</span></div>${bonus}`}
       ${perHero}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="rewardDone" ${ready ? '' : 'disabled'}>Continue to the map</button></div></div></div>`;
   }
@@ -686,15 +713,21 @@
   function renderHaven() {
     const run = U.run;
     const hv = run.haven;
-    return `<div class="wrap">${header('Haven', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${titleBtn()}`)}
+    return `<div class="wrap">${header('Haven', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${titleBtn()}`)}
       ${partyBar(run)}
-      ${U.sceneCard(U.EVENT_SCENES.haven, `<h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || run.crystals < 3 ? 'disabled' : ''}>Full repair — 3 ◇</button></div><p class="story-text small">Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.</p>`, 'haven-rest')}
+      ${U.sceneCard(U.EVENT_SCENES.haven, `<h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || T.totalCrystals(run) < 3 ? 'disabled' : ''} data-tip="The squad's repair: both pilots back to full.${T.playerCount(run) > 1 ? ' Paid from the fuller purse first.' : ''}">Full repair — 3 ◇</button></div><p class="story-text small">Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.</p>`, 'haven-rest')}
       <div class="panel" style="margin-top:12px"><h3>Gear <span class="dim small" style="font-weight:400">— fueled by ◇ per use; 2 slots per hero. Gear grants general verbs, never keyed counters.</span></h3>
         <div class="shop-grid">${
           hv.gear
             .map((gid) => {
               const g = T.GEAR_BY[gid];
-              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm ${run.crystals >= g.price && h.gear.length < 2 ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${run.crystals >= g.price && h.gear.length < 2 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
+              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes
+                .map((h, i) => {
+                  if (!own(i)) return '';
+                  const can = T.crystalsFor(run, i) >= g.price && h.gear.length < 2;
+                  return `<button class="sm ${can ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${can ? '' : 'disabled'}>Buy for ${esc(h.name)}</button>`;
+                })
+                .join('')}</div></div>`;
             })
             .join('') || '<span class="dim small">Sold out.</span>'
         }</div>
@@ -702,7 +735,13 @@
         <div class="shop-grid">${hv.cons
           .map((cid) => {
             const c = T.CONSUMABLE_BY[cid];
-            return `<div class="panel tight"><b>${U.icCons(c.id)} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${run.crystals >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
+            return `<div class="panel tight"><b>${U.icCons(c.id)} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes
+              .map((h, i) =>
+                own(i)
+                  ? `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${T.crystalsFor(run, i) >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>Buy for ${esc(h.name)}</button>`
+                  : '',
+              )
+              .join('')}</div></div>`;
           })
           .join('')}</div>
       </div>
@@ -719,7 +758,7 @@
       body = `<div class="col">${def.options
         .map((o, i) => {
           const cost = o.cost && o.cost.crystals;
-          const can = !cost || run.crystals >= cost;
+          const can = !cost || T.totalCrystals(run) >= cost;
           return `<button data-act="eventOpt" data-arg="${i}" ${can ? '' : 'disabled'} style="text-align:left;padding:10px 14px">${esc(o.label)}${!can ? ' <span class="dim small">(not enough ◇)</span>' : ''}</button>`;
         })
         .join('')}</div>`;
@@ -750,7 +789,7 @@
       const ready = !f || f.done || !['cardPick', 'tradeCard'].includes(f.kind);
       body = `<p style="font-family:var(--serif);font-size:15px">${esc(ev.result)}</p>${fu}<div class="row" style="margin-top:12px"><button class="primary" data-act="leaveEvent" ${ready ? '' : 'disabled'}>Continue</button></div>`;
     }
-    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${titleBtn()}`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
+    return `<div class="wrap">${header('Event', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${titleBtn()}`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
   }
 
   /* ───────────── SUMMARY ───────────── */
@@ -765,7 +804,7 @@
     const won = run.won;
     return `<div class="wrap">${header(won ? T.threatTitle(run) + ' Is Ended' : 'The Expedition Is Lost')}<div class="panel" style="max-width:760px;margin:0 auto">
       <p style="font-family:var(--serif);font-size:16px;line-height:1.5">${esc(T.fillTokens(won ? T.FLAVOR.win[0] : T.FLAVOR.lose[0], { THREAT: T.threatName(run) }))}</p>
-      <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${run.crystals} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
+      <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${T.totalCrystals(run)} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
       <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
       <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}
       ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}${lastWords(run)}</div>` : ''}

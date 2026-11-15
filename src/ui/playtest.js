@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.38.0',
+    version: '2.39.0',
     items: [
+      {
+        text: 'Two players now have a purse each. The 6 ◇ you start with are shared out (3 each), and so is what a mission earns. Your pilot buys, sells and fuels its gear from your own purse, and a skipped trait pays you. The haven’s full repair and event prices come from the fuller purse first. Each screen now shows only your own Buy, Sell and Train buttons; your partner’s upgrade shows "… is choosing" until they are done. Both purses show at the top, named, with yours in gold. Solo play is unchanged: one player, one purse. Did you miss being able to pool crystals? Would a "give ◇" button help?',
+      },
       {
         text: 'Moving the objective forward is now celebrated. Breaking a seal, turning the winch or the valve, holding the beacon, checking a cache or lifting a crate brings up a gold card on the board ("A seal breaks", "The valve turns"…) with a bar that fills from where the objective was to where it is now, gold rings where it happened, and a rising chime (with the sound on). The objective pill in the top bar fills with gold as you go. You can also see beforehand what will count: Interact glows gold when it would count, a play that would move the objective gets a gold ◎, and hovering it says "◎ moves the objective forward". Do you now know when you are doing the right thing? Is the card ever in the way?',
       },

@@ -108,10 +108,10 @@ function createHarness(T = loadTumult()) {
         run.heroes.forEach((h) => T.autoAllocate(h));
         T.finishNode(run);
       } else if (run.phase === 'haven') {
-        T.havenRest(run, run.crystals >= 6);
+        T.havenRest(run, T.totalCrystals(run) >= 6);
         for (const g of run.haven.gear.slice()) {
           const hi = run.heroes.findIndex((h) => h.gear.length < 2);
-          if (hi >= 0 && run.crystals >= T.GEAR_BY[g].price) T.buyGear(run, g, hi);
+          if (hi >= 0 && T.crystalsFor(run, hi) >= T.GEAR_BY[g].price) T.buyGear(run, g, hi);
         }
         T.finishNode(run);
       } else if (run.phase === 'event') {

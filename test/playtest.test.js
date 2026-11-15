@@ -235,7 +235,7 @@ test(
       JSON.stringify({
         round: m.round,
         rngs: m.rngs,
-        crystals: m.crystals,
+        purses: m.purses,
         heroes: m.heroes.map((h) => [h.uid, h.hp, h.pos, h.held, h.pool, h.track, h.states]),
         foes: m.enemies.map((e) => [e.uid, e.type, e.hp, e.pos, e.alive, e.intent]),
         log: m.log.length,
