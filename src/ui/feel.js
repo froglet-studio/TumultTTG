@@ -210,6 +210,108 @@
     }
   };
 
+  /* ───────────── the objective answering back ───────────── */
+  /**
+   * When the objective moves forward, the board says so: a gold banner names what was done and fills a bar
+   * from where the objective stood to where it stands now, gold rings go out from where it happened, and a
+   * rising chime plays. It reads T.objectiveProgress before and after each update, so it answers any kind of
+   * objective, a partner's progress online as well, and the hold counted at the end of a round.
+   */
+  const obNodes = (m) => {
+    const out = {};
+    for (const n of Object.values(m.board.nodes)) if (n.objective) out[n.id] = JSON.stringify(n.objective);
+    return out;
+  };
+  const carriers = (m) => m.heroes.filter((h) => !h.downed && h.carrying).length;
+  function obSnap(m) {
+    return {
+      p: T.objectiveProgress ? T.objectiveProgress(m) : 0,
+      ob: JSON.stringify(m.objective || {}),
+      nodes: obNodes(m),
+      carry: carriers(m),
+      ramp: !!m.board.ramp,
+    };
+  }
+  /** In words, what just moved the objective forward. */
+  function obNews(m, was, now) {
+    const a = JSON.parse(was.ob);
+    const b = m.objective || {};
+    const up = (k) => (b[k] || 0) > (a[k] || 0);
+    if (m.won) return 'Objective complete';
+    switch (b.kind) {
+      case 'hold':
+        return 'The beacon holds';
+      case 'valve':
+        return 'The valve turns';
+      case 'vault':
+        if (up('done')) return 'A seal breaks';
+        if (now.ramp && !was.ramp) return 'The ramp is down';
+        if (up('leverDone')) return 'The winch turns';
+        break;
+      case 'find':
+        if (b.found && !a.found) return 'The real cache';
+        if (up('done')) return 'Digging it out';
+        return 'Not this one';
+      case 'salvage':
+        if (up('done')) return 'Crate brought home';
+        if (now.carry > was.carry) return 'Crate lifted';
+        break;
+    }
+    return 'The objective moves';
+  }
+  /** Where it happened: the objective's spaces that changed, else the objective's own space. */
+  function obWhere(m, was, now) {
+    const changed = Object.keys(now.nodes).filter((k) => now.nodes[k] !== was.nodes[k]);
+    for (const k of Object.keys(was.nodes)) if (!(k in now.nodes) && !changed.includes(k)) changed.push(k);
+    const ids = changed.filter((k) => m.board.nodes[k]).map((k) => m.board.nodes[k].id);
+    if (ids.length) return ids;
+    const ob = m.objective || {};
+    if (ob.kind === 'salvage') return m.heroes.filter((h) => !h.downed && h.carrying).map((h) => h.pos);
+    return ob.node != null ? [ob.node] : [];
+  }
+  /**
+   * Compare the objective with how it stood at the last update, and answer when it moved forward. Returns
+   * the news, or null. The mission screen calls it at the top of each update (mission.js updateMission).
+   */
+  U.objectiveCheck = function (m) {
+    const ms = U.ms;
+    if (!ms || !m) return null;
+    const now = obSnap(m);
+    const was = ms.obSnap;
+    ms.obSnap = now;
+    if (!was || now.p <= was.p + 1e-6) return null;
+    // chipping at a target's vitality is answered by the hit itself; only its fall is news
+    if (m.objective && m.objective.kind === 'kill' && !m.won) return null;
+    const news = { text: obNews(m, was, now), from: was.p, to: now.p, where: obWhere(m, was, now), done: !!m.won };
+    ms.obJust = Date.now() + 1400;
+    showGoal(news);
+    return news;
+  };
+  function showGoal(news) {
+    const host = document.getElementById('board');
+    if (host) {
+      let el = host.querySelector('#goal');
+      if (!el) {
+        el = document.createElement('div');
+        el.id = 'goal';
+        host.appendChild(el);
+      }
+      const pct = (x) => Math.round(100 * Math.max(0, Math.min(1, x))) + '%';
+      el.className = 'goal' + (news.done ? ' done' : '');
+      el.innerHTML = `<div class="goal-card"><div class="goal-kick">◎ Objective</div><div class="goal-txt">${esc(news.text)}</div><div class="goal-bar" style="--from:${pct(news.from)};--to:${pct(news.to)}"><i></i></div><div class="goal-pct">${pct(news.to)}</div></div>`;
+      el.getBoundingClientRect(); // restart the animation
+      el.classList.add('show');
+      clearTimeout(showGoal.t);
+      showGoal.t = setTimeout(() => el.classList.remove('show'), 2200);
+    }
+    news.where.forEach((n, i) => {
+      burst(n, 'goal', i * 90, 1100);
+      burst(n, 'goal goal-2', 220 + i * 90, 1200);
+    });
+    if (U.floater && news.where.length) U.floater(news.where[0], '◎', 'goal', 0);
+    if (U.sfx.goal) U.sfx.goal(news.done);
+  }
+
   /* ───────────── sound ───────────── */
   // a small synth: oscillators and filtered noise through one master gain; nothing is loaded
   let ctx = null;
@@ -316,6 +418,13 @@
     },
     readout: () => {
       for (let i = 0; i < 4; i++) tone(1600 + i * 120, 0.03, { type: 'square', vol: 0.006, at: i * 0.04 });
+    },
+    // the objective moved: a rising major arpeggio over a soft shimmer; the whole objective rings longer
+    goal: (done) => {
+      const notes = done ? [523, 659, 784, 1047, 1319] : [587, 740, 880, 1175];
+      notes.forEach((f, i) => tone(f, 0.5, { type: 'triangle', vol: 0.035, at: i * 0.07 }));
+      tone(notes[notes.length - 1] * 2, 0.9, { vol: 0.012, at: notes.length * 0.07 });
+      noise(0.6, { vol: 0.012, freq: 6000, q: 1, at: 0.1 });
     },
     turn: () => {
       tone(587, 0.18, { vol: 0.03 });

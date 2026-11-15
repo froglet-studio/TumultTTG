@@ -359,3 +359,49 @@ test(
     }
   },
 );
+
+test('UI: moving the objective forward is answered on the board', { skip, timeout: 60_000 }, async () => {
+  const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const { JSDOM } = require('jsdom');
+  const { until } = require('../tools/ui-drive');
+  const dom = new JSDOM(build().html, { runScripts: 'dangerously', pretendToBeVisual: true, url: 'http://localhost/' });
+  const w = dom.window;
+  const d = w.document;
+  try {
+    await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+    const T = w.T;
+    const U = T.UI;
+    const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+    // a cascade (a valve, worked by Interact), started the way the playtest panel starts one
+    U.run = T.quickMission({ seed: 5, type: 'cascade', tier: 1 });
+    U.screen = 'mission';
+    U.enterMission();
+    U.render();
+    const m = U.run.mission;
+    const ob = m.objective;
+    assert.equal(ob.kind, 'valve');
+    const target = ob.node;
+    const i = U.ms.heroIdx;
+    const h = m.heroes[i];
+    h.pos = T.Board.walkNeighbors(m.board, target).find((n) => !T.occupied(m, n));
+    T.mint(h, 'AP', 6);
+    U.updateMission();
+    assert.equal(U.objectiveCheck(m), null, 'nothing moved since the last look: no news');
+    const btn = d.querySelector(`#mside [data-act="interact"][data-arg="${i}"]`);
+    assert.ok(btn && !btn.disabled && btn.classList.contains('goal-act'), 'Interact glows where it would count');
+    const p0 = T.objectiveProgress(m);
+    click(`#mside [data-act="interact"][data-arg="${i}"]`);
+    assert.ok(T.objectiveProgress(m) > p0, 'the objective moved');
+    const card = d.querySelector('#board #goal.show');
+    assert.ok(card, 'a card says so on the board');
+    assert.match(card.textContent, /Objective/);
+    assert.match(card.querySelector('.goal-bar').getAttribute('style'), /--from:\s*\d+%;\s*--to:\s*\d+%/);
+    assert.ok(d.querySelector('#mtop .obj-prog.just'), 'the progress pill in the top bar pulses');
+    await until(() => d.querySelector('#fxlayer .burst.goal'), 'gold rings where it happened');
+    const before = JSON.stringify(m);
+    U.updateMission();
+    assert.equal(JSON.stringify(m), before, 'answering never changes the mission');
+  } finally {
+    w.close();
+  }
+});

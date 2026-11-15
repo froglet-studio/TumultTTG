@@ -349,6 +349,7 @@
         if (U.sfx.turn) U.sfx.turn();
       }
     }
+    if (U.objectiveCheck) U.objectiveCheck(m);
     renderTop(m);
     renderTargetBar(m);
     renderSide(m);
@@ -397,7 +398,7 @@
     const changed = setHTML(
       $('#mtop'),
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
-      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
+      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       <div class="tpills">${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span></div>
       <div class="endgrp"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${noteBox(m)}</div>
       ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`,
@@ -650,7 +651,7 @@
           const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
           return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
         }).join('')}
-        <button class="sm" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP). Height objectives require standing on the node.">⚙ Interact (2)</button>
+        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
         <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>
         <button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>
@@ -1066,6 +1067,8 @@
     const m = M();
     const all = [];
     const combos = [];
+    const p0 = T.objectiveProgress(m);
+    let goal = 0;
     for (const ctx of ctxs) {
       const copy = T.imagine(m);
       let r;
@@ -1077,9 +1080,11 @@
       if (!r || !r.ok) continue;
       const d = diffPlay(m, copy);
       all.push(...d);
+      goal = Math.max(goal, T.objectiveProgress(copy) - p0);
       for (const c of combosOf(m, copy, d)) if (!combos.some((x) => x.text === c.text)) combos.push(c);
     }
     all.combos = combos;
+    all.goal = goal > 1e-6 && !(m.objective && m.objective.kind === 'kill') ? goal : 0; // a hit on the target says so itself
     return all;
   }
   U.previewFor = previewFor;
@@ -1141,6 +1146,7 @@
       words.push(`<b>${esc(name)}</b> ${bits.join(' ')}`);
     }
     const bar = $('#mtarget');
+    if (diffs.goal) words.unshift('<span class="pv-goal">◎ moves the objective forward</span>');
     if (bar && (words.length || note || (diffs.combos && diffs.combos.length))) {
       let el = bar.querySelector('.pv-line');
       if (!el) {
@@ -1222,14 +1228,19 @@
     for (const btn of document.querySelectorAll(
       '#mside [data-act="face"], #mside [data-act="basic"], #mside [data-act="gear"]',
     )) {
-      const had = btn.querySelector('.combo-mark');
-      if (had) had.remove(); // the panel is kept when it did not change: work the marks out afresh
+      btn.querySelectorAll('.combo-mark').forEach((x) => x.remove()); // the panel is kept when it did not change: work the marks out afresh
       if (btn.disabled) continue;
       const pk = pendingOf(btn);
       if (!pk) continue;
       let ctxs = ctxsFor(pk.tg);
       if (pk.tg.need === 'node') ctxs = (pk.tg.options || []).slice(0, 10).map((node) => ({ node }));
-      const good = (previewFor(pk.p, ctxs, pk.i).combos || []).filter((c) => c.tone === 'good');
+      const pv = previewFor(pk.p, ctxs, pk.i);
+      if (pv.goal)
+        btn.insertAdjacentHTML(
+          'beforeend',
+          `<span class="combo-mark goal-mark" data-tip="${esc('<b>◎ This play moves the objective forward</b><div class="dim small">Hover it to see how on the board.</div>')}">◎</span>`,
+        );
+      const good = (pv.combos || []).filter((c) => c.tone === 'good');
       if (!good.length) continue;
       const tip = `<b>✦ The world adds to this play</b>${good
         .slice(0, 4)
