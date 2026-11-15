@@ -220,21 +220,7 @@
    * they could show, and land one after another on the faces the engine rolled. Then each is dealt into the
    * pilot's hand. The faces shown while tumbling are for show only; the result was settled by the engine.
    */
-  const DIE_SHAPE = {
-    plain: {
-      out: 'M20 2 36 11 36 29 20 38 4 29 4 11z',
-      lines:
-        'M20 9 31 27H9zM20 2v7M36 11 31 27M36 29 31 27M20 38 31 27M20 38 9 27M4 29 9 27M4 11 9 27M4 11l16-2M36 11 20 9',
-    },
-    eth: {
-      out: 'M20 2 37 14 31 36H9L3 14z',
-      lines: 'M20 9 29 16 26 28H14L11 16zM20 2v7M37 14 29 16M31 36 26 28M9 36 14 28M3 14 11 16',
-    },
-    el: { out: 'M20 1 37 20 20 39 3 20z', lines: 'M3 20h34M20 1 13 20 20 39M20 1 27 20 20 39' },
-  };
-  const shapeOf = (kind) =>
-    DIE_SHAPE[kind] || (T.DICE[kind] && T.DICE[kind].sides === 8 ? DIE_SHAPE.el : DIE_SHAPE.plain);
-  const faceGlyph = (f) => (f === 'AP' ? '<b>1</b>' : f === 'AP2' ? '<b>2</b>' : U.ic('el.' + f, f));
+  const faceGlyph = (f) => U.faceGlyph(f);
   function rollTray(m, f, delay) {
     const host = typeof document !== 'undefined' && document.getElementById('board');
     const hi = m.heroes.findIndex((h) => h.uid === f.hero);
@@ -270,9 +256,8 @@
         `<span class="who">${esc(h.name)}</span>` +
         f.faces
           .map((face, j) => {
-            const sh = shapeOf(kinds[j]);
-            const sides = (T.DICE[kinds[j]] && T.DICE[kinds[j]].sides) || 20;
-            return `<span class="rdie k-${kinds[j]}" style="--j:${j}" data-face="${face}"><svg viewBox="0 0 40 40" aria-hidden="true"><path class="o" d="${sh.out}"/><path class="l" d="${sh.lines}"/></svg><i class="rf">${faceGlyph(face)}</i><i class="rs">d${sides}</i></span>`;
+            const sides = U.dieSides(kinds[j]);
+            return `<span class="rdie d${sides} k-${kinds[j]}" style="--j:${j}" data-face="${face}">${U.dieSVG(kinds[j])}<i class="rf">${faceGlyph(face)}</i><i class="rs">d${sides}</i></span>`;
           })
           .join('');
       tray.appendChild(row);
