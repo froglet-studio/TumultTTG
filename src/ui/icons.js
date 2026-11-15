@@ -22,7 +22,10 @@
     'el.C': 'M1 7.9 5 1h14l4 6.9L12.1 23z', // Charge: a cut gem
     'el.S': 'M1.7 8.5 12.1 1l10.2 7.5L12.1 23z', // Space: a kite
     'el.T': 'M3.9 12.1 12.1 1l8 11.1-8 10.9z', // Time: a tall diamond
-    'el.O': 'M12 1 15 9 23 12 15 15 12 23 9 15 1 12 9 9z', // Omni: a four-point star
+    // Omni is Cosmic Shore's omnicrystal (Assets/_Graphics/ElementIcons/OmniCrystal_Active.png), redrawn on the grid:
+    // a pentagon, five rhombi off its corners and five points beyond the cut squares on its sides (2.40).
+    'el.O':
+      'M12 7.98 15.64 10.62 14.25 14.90 9.75 14.90 8.36 10.62zM14.64 4.34 18.76 2.51 18.28 6.98zM19.92 12.02 22.93 15.36 18.53 16.29zM14.25 19.40 12 23.30 9.75 19.40zM5.47 16.29 1.07 15.36 4.08 12.02zM5.72 6.98 5.24 2.51 9.36 4.34zM12 7.98 9.36 4.34 12 0.70 14.64 4.34zM15.64 10.62 18.28 6.98 22.56 8.38 19.92 12.02zM14.25 14.90 18.53 16.29 18.53 20.79 14.25 19.40zM9.75 14.90 9.75 19.40 5.47 20.79 5.47 16.29zM8.36 10.62 4.08 12.02 1.44 8.38 5.72 6.98z',
     crystal: 'M12 1 20 9 12 23 4 9zM12 4.5 7.2 9 12 18.6 16.8 9z', // an omnicrystal (the currency)
     ap: 'M4 4h16v16H4zM8 8v8h8V8z',
 
