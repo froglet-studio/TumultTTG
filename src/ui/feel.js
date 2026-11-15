@@ -192,6 +192,9 @@
           U.floater(node, '+' + f.name, 'state ' + (k ? 'kw-' + k.tone : ''), delay);
         }
         break;
+      case 'roll':
+        rollTray(m, f, delay);
+        break;
       case 'move':
         if (f.how === 'forced' || f.how === 'swap') setTimeout(() => U.sfx.whoosh(), delay);
         break;
@@ -209,6 +212,94 @@
         break;
     }
   };
+
+  /* ───────────── the dice rolling ───────────── */
+  /**
+   * When a pilot's new dice come up, they are rolled where everyone can see them: the dice tumble across a tray
+   * on the board in their own shapes (the plain d20, an element's d8, the ethereal d12), flicker through faces
+   * they could show, and land one after another on the faces the engine rolled. Then each is dealt into the
+   * pilot's hand. The faces shown while tumbling are for show only; the result was settled by the engine.
+   */
+  const DIE_SHAPE = {
+    plain: {
+      out: 'M20 2 36 11 36 29 20 38 4 29 4 11z',
+      lines:
+        'M20 9 31 27H9zM20 2v7M36 11 31 27M36 29 31 27M20 38 31 27M20 38 9 27M4 29 9 27M4 11 9 27M4 11l16-2M36 11 20 9',
+    },
+    eth: {
+      out: 'M20 2 37 14 31 36H9L3 14z',
+      lines: 'M20 9 29 16 26 28H14L11 16zM20 2v7M37 14 29 16M31 36 26 28M9 36 14 28M3 14 11 16',
+    },
+    el: { out: 'M20 1 37 20 20 39 3 20z', lines: 'M3 20h34M20 1 13 20 20 39M20 1 27 20 20 39' },
+  };
+  const shapeOf = (kind) =>
+    DIE_SHAPE[kind] || (T.DICE[kind] && T.DICE[kind].sides === 8 ? DIE_SHAPE.el : DIE_SHAPE.plain);
+  const faceGlyph = (f) => (f === 'AP' ? '<b>1</b>' : f === 'AP2' ? '<b>2</b>' : U.ic('el.' + f, f));
+  function rollTray(m, f, delay) {
+    const host = typeof document !== 'undefined' && document.getElementById('board');
+    const hi = m.heroes.findIndex((h) => h.uid === f.hero);
+    const h = m.heroes[hi];
+    if (!h || !f.faces || !f.faces.length) return;
+    const kinds = f.kinds || f.faces.map(() => 'plain');
+    const at = f.at || [];
+    // the new dice in the hand are dealt in as each one lands
+    const deal = (j, ms) =>
+      setTimeout(() => {
+        const d = document.querySelector(`#mside .die[data-arg="${hi}|${at[j]}"]`);
+        if (!d) return;
+        d.classList.remove('fresh');
+        d.getBoundingClientRect();
+        d.classList.add('fresh');
+        setTimeout(() => d.classList.remove('fresh'), 700);
+      }, ms);
+    if (!host || reduced()) {
+      at.forEach((_, j) => deal(j, delay));
+      return;
+    }
+    setTimeout(() => {
+      let tray = host.querySelector('#rolltray');
+      if (!tray) {
+        tray = document.createElement('div');
+        tray.id = 'rolltray';
+        tray.className = 'rolltray';
+        host.appendChild(tray);
+      }
+      const row = document.createElement('div');
+      row.className = 'rollrow';
+      row.innerHTML =
+        `<span class="who">${esc(h.name)}</span>` +
+        f.faces
+          .map((face, j) => {
+            const sh = shapeOf(kinds[j]);
+            const sides = (T.DICE[kinds[j]] && T.DICE[kinds[j]].sides) || 20;
+            return `<span class="rdie k-${kinds[j]}" style="--j:${j}" data-face="${face}"><svg viewBox="0 0 40 40" aria-hidden="true"><path class="o" d="${sh.out}"/><path class="l" d="${sh.lines}"/></svg><i class="rf">${faceGlyph(face)}</i><i class="rs">d${sides}</i></span>`;
+          })
+          .join('');
+      tray.appendChild(row);
+      const dice = [...row.querySelectorAll('.rdie')];
+      dice.forEach((el, j) => {
+        const could = T.dieFaces(h, kinds[j]);
+        const face = el.querySelector('.rf');
+        const flick = setInterval(() => {
+          face.innerHTML = faceGlyph(could[Math.floor(Math.random() * could.length)]);
+        }, 70);
+        const land = 620 + j * 140;
+        setTimeout(() => {
+          clearInterval(flick);
+          face.innerHTML = faceGlyph(f.faces[j]);
+          el.classList.add('landed', 'f-' + f.faces[j]);
+          if (j === dice.length - 1 && U.sfx.land) U.sfx.land();
+        }, land);
+        deal(j, land + 700);
+      });
+      const done = 620 + dice.length * 140 + 1000;
+      setTimeout(() => row.classList.add('gone'), done);
+      setTimeout(() => {
+        row.remove();
+        if (!tray.children.length) tray.remove();
+      }, done + 400);
+    }, delay || 0);
+  }
 
   /* ───────────── the objective answering back ───────────── */
   /**
@@ -395,6 +486,11 @@
       noise(0.4, { vol: 0.03, type: 'lowpass', freq: 600, to: 120 });
     },
     tap: () => tone(1100, 0.05, { type: 'triangle', vol: 0.02 }),
+    // the last die settling: a soft knock and a bright tick
+    land: () => {
+      noise(0.05, { vol: 0.05, type: 'lowpass', freq: 1400 });
+      tone(990, 0.08, { type: 'triangle', vol: 0.018, at: 0.02 });
+    },
     // each etherion's own colour of sound: Mass deep, Charge buzzing, Space airy, Time a bell
     ether: (el) => {
       if (el === 'M') {
