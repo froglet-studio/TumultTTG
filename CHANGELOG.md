@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.36.0 — 2026-11-15 — the same player goes first every round
+
+Garrett, after a two-player playtest: "we should not switch who goes first because it is confusing to take two turns in a row and it defeats the purpose of rolling at the end of the turn and thinking about your turn ahead of time if you have to take another turn with new information immediately."
+
+- **Turn order is fixed.** Seat 0 (the host) goes first in every round, then seat 1, then the foes. The lead no longer swaps, so a player never ends one round's turn and starts the next round's straight away. Each player can plan their next turn while the others play. `T.turnSeat` changes; a player whose pilots are all down is still skipped.
+- One player, or the simulators: no change (turns apply only with two players).
+
 ## 2.35.0 — 2026-11-14 — combos you can see
 
 Garrett: "I want these character to feel like they have fun toys that can be played with in interesting and expressive ways. they should combine to create emergent effects."
