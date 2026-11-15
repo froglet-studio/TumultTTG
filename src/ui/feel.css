@@ -458,7 +458,7 @@ button.goal-act:not(:disabled) {
   color: var(--c);
   animation: die-tumble 0.62s cubic-bezier(0.25, 0.6, 0.35, 1) calc(var(--j) * 0.14s) both;
 }
-.rdie svg {
+.rdie .dbody {
   position: absolute;
   inset: 0;
   width: 100%;

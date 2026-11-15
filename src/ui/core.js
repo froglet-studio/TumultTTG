@@ -127,27 +127,54 @@
     };
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
       <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp">${U.icClade(c.sp)} ${esc(sp.name)}</span></div>
-      ${face('P')}${face('E')}
+      ${U.cardArt(c)}${face('P')}${face('E')}
       ${o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button> &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button></div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P} · E${E}</div>` : ''}
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div>`;
   };
   /**
-   * What a face of a die can do, as a little playing card: the action it pays for in pictures. AP pays for
-   * anything (its number is the art); an etherion pays for its colour and is a Channel on its own (T.BASIC: the
-   * basic actions with that `el`), so its card shows that action; Omni pays as any colour.
+   * The dice are drawn as dice, each in its own shape (Garrett, 2026-11-15: "dice should look like dice"): the
+   * plain die a d20, an element's die a d8, the ethereal die a d12. Outline and facet lines on a 40-unit grid.
    */
-  U.faceDeed = function (f) {
-    if (f === 'AP' || f === 'AP2') return { art: `<b class="num">${f === 'AP2' ? 2 : 1}</b>`, cap: 'AP', acts: [] };
-    if (f === 'O') return { art: U.ic('el.O', '◇'), cap: 'Any', acts: [] };
-    const acts = (T.BASIC || []).filter((b) => b.el === f);
-    const art = acts.length ? U.ic('basic.' + acts[0].id.replace(/_[A-Z]$/, ''), acts[0].icon) : U.ic('el.' + f, f);
-    return { art, cap: acts.map((b) => b.n).join(' ') || (EL[f] && EL[f].name) || f, acts };
+  U.DIE_SHAPE = {
+    // an icosahedron seen down a corner: a hexagon, the front face in the middle, three faces round it
+    d20: {
+      out: 'M20 1.5 36 10.8 36 29.2 20 38.5 4 29.2 4 10.8z',
+      lines:
+        'M20 10.5 29.5 27 10.5 27zM20 10.5 20 1.5M20 10.5 36 10.8M20 10.5 4 10.8M29.5 27 36 29.2M29.5 27 36 10.8M29.5 27 20 38.5M10.5 27 4 29.2M10.5 27 20 38.5M10.5 27 4 10.8',
+    },
+    // a dodecahedron seen face on: a decagon, the front pentagon and five faces round it
+    d12: {
+      out: 'M20 1.5 30.9 5 37.6 14.3 37.6 25.7 30.9 35 20 38.5 9.1 35 2.4 25.7 2.4 14.3 9.1 5z',
+      lines:
+        'M20 11.5 28.6 17.7 25.3 27.8 14.7 27.8 11.4 17.7zM20 11.5 20 1.5M28.6 17.7 37.6 14.3M25.3 27.8 30.9 35M14.7 27.8 9.1 35M11.4 17.7 2.4 14.3',
+    },
+    // an octahedron turned a little: a diamond with its front corner nearer the eye
+    d8: { out: 'M20 1.5 36.5 19 20 38.5 3.5 19z', lines: 'M3.5 19 23 24 36.5 19M20 1.5 23 24 20 38.5' },
+  };
+  /** The sides of a die of `kind` (a key of T.DICE; anything else is the plain d20). */
+  U.dieSides = (kind) => (T.DICE[kind] && T.DICE[kind].sides) || 20;
+  /** A die's body as SVG, in its own shape, for its kind. */
+  U.dieSVG = (kind) => {
+    const sh = U.DIE_SHAPE['d' + U.dieSides(kind)] || U.DIE_SHAPE.d20;
+    return `<svg class="dbody" viewBox="0 0 40 40" aria-hidden="true"><path class="o" d="${sh.out}"/><path class="l" d="${sh.lines}"/></svg>`;
+  };
+  /** What shows on a rolled face: AP its number, an etherion its symbol. */
+  U.faceGlyph = (f) => (f === 'AP' ? '<b>1</b>' : f === 'AP2' ? '<b>2</b>' : U.ic('el.' + f, f));
+  /**
+   * The art at the top of an ability card: what its two faces do, in pictures. The card is cut on a diagonal,
+   * the Physical side in steel on the left and the Ethereal side in its etherion's colour on the right, each
+   * with its face's verb drawn large, over the silhouette of the clade the trait comes from. `asleep` dims the
+   * Ethereal side of a card not yet awakened.
+   */
+  U.cardArt = (c, asleep) => {
+    const elt = (c.E && c.E.elt) || c.el;
+    return `<div class="hart${asleep ? ' asleep' : ''}" style="--c:${EL[elt].color}" aria-hidden="true"><i class="clade">${U.icClade(c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E, c.el)}</i></div>`;
   };
   /**
-   * A die showing face `f`, drawn as a small card: the face's symbol in the corner, the action it pays for as
-   * its art, a caption, and the die's size (d20 plain, d8 element, d12 ethereal). `kind` is a key of T.DICE;
-   * `attrs` adds attributes to the element (the mission screen's click target and its place in the fan).
+   * A die showing face `f`. `kind` is a key of T.DICE (the plain die when left out); `attrs` adds attributes to
+   * the element (the mission screen's click target). The tooltip says what the face pays for, the Channel an
+   * etherion is on its own, and which die it was rolled on.
    */
   const dieHTML = (f, extra, kind, attrs) => {
     const k = kind && kind !== 'plain' && T.DICE[kind] ? kind : '';
@@ -159,14 +186,13 @@
           : f === 'O'
             ? 'Omni — spends as any etherion.'
             : EL[f].name + ' — ' + EL[f].surface;
-    const d = U.faceDeed(f);
-    const chan = d.acts.length
-      ? ` Or spend it alone as a Channel: ${d.acts.map((b) => b.n + (b.ap ? ` (+${b.ap} AP)` : '')).join(', ')}.`
+    const acts = (T.BASIC || []).filter((b) => b.el === f);
+    const chan = acts.length
+      ? ` Or spend it alone as a Channel: ${acts.map((b) => b.n + (b.ap ? ` (+${b.ap} AP)` : '')).join(', ')}.`
       : '';
-    const sides = k ? T.DICE[k].sides : (T.DICE.plain && T.DICE.plain.sides) || 20;
+    const sides = U.dieSides(k || 'plain');
     const from = ` Rolled on your ${k ? T.DICE[k].n : 'plain die'} (d${sides}).`;
-    const pip = f === 'AP' || f === 'AP2' ? U.ic('ap', '·') : U.ic('el.' + f, f);
-    return `<span class="die ${f} ${k ? 'kind k-' + k : ''} ${extra || ''}" ${attrs || ''} data-tip="${esc(what + chan + from)}"><i class="pip">${pip}</i><i class="art">${d.art}</i><i class="cap">${esc(d.cap)}</i><i class="dk">${sides}</i></span>`;
+    return `<span class="die ${f} d${sides} ${k ? 'kind k-' + k : ''} ${extra || ''}" ${attrs || ''} data-tip="${esc(what + chan + from)}">${U.dieSVG(k || 'plain')}<i class="face">${U.faceGlyph(f)}</i></span>`;
   };
   /** The key to the die symbols, always beside a pilot's dice. */
   U.diceKey = () =>

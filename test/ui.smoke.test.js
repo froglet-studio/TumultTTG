@@ -407,7 +407,7 @@ test('UI: moving the objective forward is answered on the board', { skip, timeou
 });
 
 test(
-  'UI: dice are held as a hand of cards and new dice are rolled on the board',
+  'UI: dice look like dice, abilities like cards, and new dice are rolled on the board',
   { skip, timeout: 60_000 },
   async () => {
     const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
@@ -435,24 +435,28 @@ test(
       h.heldDie = ['plain', 'plain', 'M', 'C', 'eth', 'T', 'plain'];
       h.pool = T.RULES.POOL - h.held.length;
       U.updateMission();
-      const card = (di) => d.querySelector(`#mside .die[data-arg="${i}|${di}"]`);
-      // each die is a card: its symbol, the action it pays for as art, a caption, its size
-      assert.equal(card(0).querySelector('.cap').textContent, 'AP');
-      assert.equal(card(0).querySelector('.art').textContent, '1');
-      assert.equal(card(1).querySelector('.art').textContent, '2');
-      assert.equal(card(2).querySelector('.cap').textContent, 'Strike Shove', 'Mass is a Channel: Strike or Shove');
-      assert.equal(card(3).querySelector('.cap').textContent, 'Arc Reach');
-      assert.equal(card(4).querySelector('.cap').textContent, 'Scramble');
-      assert.equal(card(5).querySelector('.cap').textContent, 'Brace');
-      assert.equal(card(6).querySelector('.cap').textContent, 'Any');
-      assert.equal(card(0).querySelector('.dk').textContent, '20', 'a plain die is a d20');
-      assert.equal(card(2).querySelector('.dk').textContent, '8');
-      assert.equal(card(4).querySelector('.dk').textContent, '12');
-      assert.ok(card(2).querySelector('.art svg.icn'), 'an etherion shows its action as a picture');
-      assert.match(card(2).getAttribute('data-tip'), /Channel: Strike, Shove/);
-      assert.match(card(0).getAttribute('style'), /--r:-?\d/, 'the hand is fanned');
+      const die = (di) => d.querySelector(`#mside .die[data-arg="${i}|${di}"]`);
+      // each die is drawn as the die it is: a d20 a hexagon of facets, a d8 a diamond, a d12 a decagon
+      const outline = (el) => el.querySelector('.dbody .o').getAttribute('d');
+      const corners = (el) => outline(el).trim().split(/\s+/).length / 2;
+      assert.ok(die(0).classList.contains('d20') && corners(die(0)) === 6, 'a plain die is an icosahedron');
+      assert.ok(die(2).classList.contains('d8') && corners(die(2)) === 4, 'an element die is an octahedron');
+      assert.ok(die(4).classList.contains('d12') && corners(die(4)) === 10, 'the ethereal die is a dodecahedron');
+      assert.equal(die(0).querySelector('.face').textContent, '1', 'AP shows its number');
+      assert.equal(die(1).querySelector('.face').textContent, '2');
+      assert.ok(die(2).querySelector('.face svg.icn'), 'an etherion shows its symbol');
+      assert.match(die(2).getAttribute('data-tip'), /Channel: Strike, Shove/);
       // the Omni symbol is Cosmic Shore's omnicrystal (several shapes), not a single star
-      assert.ok(card(6).querySelectorAll('.pip svg path').length === 1 && /z\s*M/.test(T.UI.ICON_PATHS['el.O']));
+      assert.ok(die(6).querySelector('.face svg path') && /z\s*M/.test(T.UI.ICON_PATHS['el.O']));
+      // the abilities are cards, with art showing what each face does
+      const hc = d.querySelector('#mside .hcard');
+      assert.ok(
+        hc && hc.querySelector('.hart .vp svg') && hc.querySelector('.hart .ve svg'),
+        'card art for both faces',
+      );
+      for (const id of Object.keys(T.CARD))
+        for (const fk of ['P', 'E'])
+          assert.ok(T.UI.ICON_PATHS[T.UI.verbIconKey(T.CARD[id][fk], T.CARD[id].el)], id + fk);
       assert.ok(d.querySelector('.dicekey').innerHTML.includes('<svg'), 'the key draws the Omni symbol too');
 
       // a new round: the dice that come up tumble in a tray on the board and land on what was rolled

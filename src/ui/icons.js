@@ -130,6 +130,11 @@
       'M10 2h4v3l3 1 2-2 3 3-2 2 1 3h3v4h-3l-1 3 2 2-3 3-2-2-3 1v3h-4v-3l-3-1-2 2-3-3 2-2-1-3H1v-4h3l1-3-2-2 3-3 2 2 3-1zm2 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
     'basic.scramble': 'M2 20h6v-6h6V8h4V4l5 6-5 6v-4h-2v6h-6v6H2z',
 
+    /* ── what a card face does, for the art on ability cards (2.41) ── */
+    'verb.pull': 'M22 9H11V4l-9 8 9 8v-5h11z', // drawn in
+    'verb.weaken': 'M10 2h4v11h5l-7 9-7-9h5z', // brought down
+    'verb.dice': 'M12 1 22 6.5v11L12 23 2 17.5v-11zM12 6l-5.5 9.5h11z', // a die, rolled again
+
     /* ── clades ── */
     'clade.human': 'M12 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM3 22c0-5 4-8 9-8s9 3 9 8z',
     'clade.jerboa': 'M8 4a3 3 0 1 1 0 6l3 3c3 0 6 2 7 5l4 1-1 2-4-1H7l1-4-3-4c-2-2-1-6 3-8z',
@@ -163,6 +168,68 @@
     if (!ps) return fallback == null ? '' : `<span class="ic-fb ${cls || ''}">${fallback}</span>`;
     return `<svg class="icn ${cls || ''}" viewBox="0 0 24 24" aria-hidden="true">${ps.map((d) => `<path d="${d}"/>`).join('')}</svg>`;
   };
+  /**
+   * The picture for what a card face does: its first verb (strikes by how they reach, forces by which way they
+   * move a foe), drawn with the icon that verb already has elsewhere when there is one. The ability cards'
+   * art is made from these, so it always shows what the card does.
+   */
+  const VERB_ICON = {
+    'strike.melee': 'basic.strike',
+    'strike.los': 'enemy.kiter',
+    'strike.any': 'basic.arc',
+    strike: 'cons.flash',
+    'force.pull': 'verb.pull',
+    force: 'basic.shove',
+    shield: 'basic.brace',
+    absorb: 'basic.brace',
+    thorns: 'boon.thickhide',
+    counter: 'boon.thickhide',
+    hazardImmune: 'boon.thickhide',
+    redirect: 'basic.lend',
+    move: 'basic.scramble',
+    climb: 'basic.scramble',
+    hover: 'event.guide',
+    weightless: 'event.guide',
+    teleport: 'gear.phasebrace',
+    swap: 'gear.phasebrace',
+    reveal: 'boon.keensense',
+    locate: 'boon.keensense',
+    expose: 'boon.keensense',
+    studied: 'boon.keensense',
+    mark: 'basic.spot',
+    hidden: 'enemy.lurker',
+    decoy: 'event.mirror',
+    morph: 'event.mirror',
+    heal: 'gear.medkit',
+    cleanse: 'gear.medkit',
+    phoenix: 'boon.defiant',
+    mint: 'cons.shard',
+    empower: 'gear.capacitor',
+    engine: 'gear.capacitor',
+    freecast: 'gear.capacitor',
+    draw: 'boon.studious',
+    reroll: 'verb.dice',
+    hasten: 'gear.chronoshim',
+    preempt: 'gear.chronoshim',
+    stasis: 'gear.chronoshim',
+    anchor: 'boon.anchorsoul',
+    weaken: 'verb.weaken',
+    stripShield: 'verb.weaken',
+    dot: 'verb.weaken',
+    execute: 'node.elite',
+    trap: 'enemy.biter',
+    ambushTrap: 'enemy.biter',
+    zone: 'event.bloom',
+    aura: 'event.bloom',
+    rally: 'basic.legup',
+    interact: 'basic.reach',
+  };
+  U.verbIconKey = function (face, el) {
+    const x = (face && face.fx && face.fx[0]) || {};
+    const k = VERB_ICON[x.v + '.' + x.kind] || VERB_ICON[x.v];
+    return k && P[k] ? k : 'el.' + ((face && face.elt) || el || 'M');
+  };
+  U.icFace = (face, el, cls) => U.ic(U.verbIconKey(face, el), '•', cls);
   // The keys the rest of the interface uses, by kind, so a caller never builds strings by hand.
   U.icEnemy = (type, glyph, cls) => U.ic('enemy.' + type, glyph, cls);
   U.icNode = (type, cls) => U.ic('node.' + type, '•', cls);
