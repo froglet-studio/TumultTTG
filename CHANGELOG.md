@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.38.0 — 2026-11-15 — the objective answers back
+
+Garrett, after a two-player playtest: "we need more juice when you get objectives so you know you are doing the right things."
+
+- **When the objective moves forward, the board says so.**
+  - A gold card names what was done: a seal breaks, the winch turns, the valve turns, the beacon holds, not this one (a decoy cache), the real cache, a crate lifted or brought home. It has a bar that fills from where the objective was to where it is now.
+  - Gold rings go out from where it happened, with a rising chime (a longer one when the objective is complete).
+  - The objective's pill in the top bar pulses, and it now fills with gold as the objective comes along.
+  - This works for every kind of objective, because it compares `T.objectiveProgress` before and after each update. It answers a partner's progress online as well, and the beacon counted at the end of a round. Hits on a kill target are not announced, because the hit already shows.
+- **What will count, shown beforehand.**
+  - Interact glows gold whenever it can be used: it is always the objective's own action.
+  - A card, basic action or gear ability that would move the objective gets a gold ◎. Like the ✦ hints, this is worked out on a copy (`T.imagine`).
+  - Hovering it adds "◎ moves the objective forward" to the line above the board.
+- No rule or balance changes. Nothing here writes to the mission (a test checks it).
+
 ## 2.37.0 — 2026-11-15 — faster clicks, and a screen that folds
 
 Garrett, after a two-player playtest: "the interface should be more dynamic, collapsible, and use space better. it should also update faster when selections are made."

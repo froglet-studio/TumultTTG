@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.37.0',
+    version: '2.38.0',
     items: [
+      {
+        text: 'Moving the objective forward is now celebrated. Breaking a seal, turning the winch or the valve, holding the beacon, checking a cache or lifting a crate brings up a gold card on the board ("A seal breaks", "The valve turns"…) with a bar that fills from where the objective was to where it is now, gold rings where it happened, and a rising chime (with the sound on). The objective pill in the top bar fills with gold as you go. You can also see beforehand what will count: Interact glows gold when it would count, a play that would move the objective gets a gold ◎, and hovering it says "◎ moves the objective forward". Do you now know when you are doing the right thing? Is the card ever in the way?',
+      },
       {
         text: 'The mission screen now folds away what you are not using, so the board is much bigger. The pilot you are not playing folds to its vitality and dice, above the one you are; click it to switch, or "Show cards" to see its hand without switching. The log folds to its last lines (▾ opens it), the enemy intents fold to the forecast (click their heading), and a long objective folds to two lines (click it to read it all). Your choices are remembered on this computer. Clicks should also answer faster: panels redraw only when something in them changed, the ✦ hints are worked out just after the screen updates, and online, your own moves show on your screen at once instead of waiting for the host. Does anything feel slow still? Did you ever miss something that was folded away?',
       },
