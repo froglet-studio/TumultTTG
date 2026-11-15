@@ -563,6 +563,13 @@
         .map((k) => `${n(k)} ${T.DICE[k].n} (d${T.DICE[k].sides})`);
       return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn, drawn at random from the pool; pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
     };
+    // the dice are held like a hand of cards: a gentle fan, overlapping a little once the hand is large
+    const nDice = h.held.length + h.temp.length;
+    const fan = (j) => {
+      const o = j - (nDice - 1) / 2;
+      const r = Math.max(-9, Math.min(9, o * 2.4));
+      return `style="--r:${r.toFixed(1)}deg;--y:${Math.min(6, o * o * 0.35).toFixed(1)}px"`;
+    };
     const dice =
       h.held
         .map((f, di) =>
@@ -570,9 +577,10 @@
             f,
             (canPickDie && sel ? 'pick' : '') + (U.ms.rerollPicked.includes(di) && sel ? ' rolled' : ''),
             T.heldKind(h, di),
-          ).replace('<span class="die', `<span data-act="die" data-arg="${i}|${di}" class="die`),
+            `data-act="die" data-arg="${i}|${di}" ${fan(di)}`,
+          ),
         )
-        .join('') + h.temp.map((f) => U.dieHTML(f, 'temp')).join('');
+        .join('') + h.temp.map((f, j) => U.dieHTML(f, 'temp', '', fan(h.held.length + j))).join('');
     const trackCols = [];
     for (let c = 1; c <= T.RULES.TRACK; c++) {
       const items = h.track.filter((t) => t.left === c);
@@ -618,7 +626,7 @@
     const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>`;
-    const diceRow = `<div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>`;
+    const diceRow = `<div class="dice${nDice > 7 ? ' crowd' : ''}" style="--n:${nDice}"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span><span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>`;
     // a pilot not selected folds to its vitality and dice; its cards open on request
     if (!sel && !U.layout.peek[i]) {
       const ready = h.cards.filter(

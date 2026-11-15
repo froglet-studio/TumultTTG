@@ -405,3 +405,86 @@ test('UI: moving the objective forward is answered on the board', { skip, timeou
     w.close();
   }
 });
+
+test(
+  'UI: dice are held as a hand of cards and new dice are rolled on the board',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const { JSDOM } = require('jsdom');
+    const { until } = require('../tools/ui-drive');
+    const dom = new JSDOM(build().html, {
+      runScripts: 'dangerously',
+      pretendToBeVisual: true,
+      url: 'http://localhost/',
+    });
+    const w = dom.window;
+    const d = w.document;
+    try {
+      await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+      const T = w.T;
+      const U = T.UI;
+      U.run = T.quickMission({ seed: 7, type: 'vault', tier: 2 });
+      U.screen = 'mission';
+      U.enterMission();
+      U.render();
+      const m = U.run.mission;
+      const i = U.ms.heroIdx;
+      const h = m.heroes[i];
+      h.held = ['AP', 'AP2', 'M', 'C', 'S', 'T', 'O'];
+      h.heldDie = ['plain', 'plain', 'M', 'C', 'eth', 'T', 'plain'];
+      h.pool = T.RULES.POOL - h.held.length;
+      U.updateMission();
+      const card = (di) => d.querySelector(`#mside .die[data-arg="${i}|${di}"]`);
+      // each die is a card: its symbol, the action it pays for as art, a caption, its size
+      assert.equal(card(0).querySelector('.cap').textContent, 'AP');
+      assert.equal(card(0).querySelector('.art').textContent, '1');
+      assert.equal(card(1).querySelector('.art').textContent, '2');
+      assert.equal(card(2).querySelector('.cap').textContent, 'Strike Shove', 'Mass is a Channel: Strike or Shove');
+      assert.equal(card(3).querySelector('.cap').textContent, 'Arc Reach');
+      assert.equal(card(4).querySelector('.cap').textContent, 'Scramble');
+      assert.equal(card(5).querySelector('.cap').textContent, 'Brace');
+      assert.equal(card(6).querySelector('.cap').textContent, 'Any');
+      assert.equal(card(0).querySelector('.dk').textContent, '20', 'a plain die is a d20');
+      assert.equal(card(2).querySelector('.dk').textContent, '8');
+      assert.equal(card(4).querySelector('.dk').textContent, '12');
+      assert.ok(card(2).querySelector('.art svg.icn'), 'an etherion shows its action as a picture');
+      assert.match(card(2).getAttribute('data-tip'), /Channel: Strike, Shove/);
+      assert.match(card(0).getAttribute('style'), /--r:-?\d/, 'the hand is fanned');
+      // the Omni symbol is Cosmic Shore's omnicrystal (several shapes), not a single star
+      assert.ok(card(6).querySelectorAll('.pip svg path').length === 1 && /z\s*M/.test(T.UI.ICON_PATHS['el.O']));
+      assert.ok(d.querySelector('.dicekey').innerHTML.includes('<svg'), 'the key draws the Omni symbol too');
+
+      // a new round: the dice that come up tumble in a tray on the board and land on what was rolled
+      await until(() => d.querySelector('#board #rolltray'), 'the first roll of the mission is shown too');
+      d.querySelector('#board #rolltray').remove();
+      const fx0 = m.fx.length;
+      T.beginRound(m);
+      const roll = m.fx.slice(fx0).find((f) => f.t === 'roll' && f.hero === h.uid);
+      assert.ok(roll && roll.kinds.length === roll.faces.length && roll.at.length === roll.faces.length);
+      roll.at.forEach((di, j) => {
+        assert.equal(h.held[di], roll.faces[j], 'the roll says where each die was banked');
+        assert.equal(T.heldKind(h, di), roll.kinds[j]);
+      });
+      U.updateMission();
+      await until(() => d.querySelector('#board #rolltray .rollrow'), 'a tray of tumbling dice');
+      await until(() => d.querySelectorAll('#board .rdie.landed').length >= roll.faces.length, 'the dice land', 4000);
+      const mine = [...d.querySelectorAll('#board .rollrow')].find((r) => r.textContent.includes(h.name));
+      assert.deepEqual(
+        [...mine.querySelectorAll('.rdie')].map((x) => x.getAttribute('data-face')),
+        [...roll.faces], // the engine's array is from the page's realm
+        'they land on the faces the engine rolled',
+      );
+      await until(() => !d.querySelector('#board #rolltray'), 'the tray clears', 6000);
+    } finally {
+      w.close();
+    }
+  },
+);
+
+test('UI: the story line under End Round is written in the light text colour', () => {
+  const css = require('node:fs').readFileSync(path.join(__dirname, '..', 'src', 'ui', 'style.css'), 'utf8');
+  const rule = css.match(/\.turn-note input\s*\{[^}]*\}/);
+  assert.ok(rule, 'the rule exists');
+  assert.match(rule[0], /color:\s*var\(--txt\)/);
+});

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.40.0 — 2026-11-15 — dice like a hand of cards
+
+Garrett: "The typed text under the end round is black on dark. very hard to read. lets steadily upgrade the look. start with the dice. the omni could use the symbol from cosmic shore. it could also animate 4 d20s rolling at the end of your turn. it could feel more like a hand of cards with art depicting the actions."
+
+- **Readable story line.** The text you type under End Round was drawn in the page's background colour. It is now the light text colour.
+- **Dice as a hand of cards.** Each banked die is a small card: its face's symbol in the corner, the action it pays for as its picture (AP shows its number; Mass shows Strike and Shove, Charge Arc and Reach, Space Scramble, Time Brace, taken from the Channel basic actions; Omni shows "Any"), a caption, and its size (20, 8 or 12). The hand fans gently, overlaps a little once it holds more than seven, and a card lifts on hover. The tooltip names the Channels too.
+- **Cosmic Shore's Omni symbol.** Omni is drawn as Cosmic Shore's omnicrystal (`OmniCrystal_Active.png`, MIT), redrawn as an SVG path, wherever an etherion symbol is shown, including the dice key.
+- **The roll, shown.** When a round begins (and when dice are rerolled), each pilot's new dice tumble across a tray at the foot of the board in their own shapes (a d20, an element's d8, the ethereal d12), flicker through faces they could show and land one by one on the rolled faces, with a knock as the last one lands. Then each is dealt into the hand. The roll effect now says each die's kind and where it was banked (`kinds`, `at`). The effects queue is not saved, so saves do not change. Reduced-motion settings skip the tumbling.
+- No rule or balance changes.
+
 ## 2.39.0 — 2026-11-15 — a purse each
 
 Garrett, after a two-player playtest: "the money that we spend in the shop. we should each have our own. we should have our own buttons instead of looking like we can upgrade or buy things for each other." He chose a purse per player, with one player keeping one purse.

@@ -462,15 +462,20 @@
     const dice = T.stream(m.rngs, 'dice');
     const left = T.poolDice(h);
     const out = [];
+    const kinds = [];
+    const at = [];
     for (let i = 0; i < k; i++) {
       const kind = left.splice(dice.int(left.length), 1)[0];
       const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
+      kinds.push(kind);
+      at.push(h.held.length);
       bank(h, f, kind);
     }
     h.pool -= k;
     if (h.pool + h.held.length !== R().POOL) throw new Error('dice invariant broken for ' + h.name);
-    fx(m, { t: 'roll', hero: h.uid, faces: out });
+    // which dice were rolled, and where they were banked, so the screen can roll them (feel.js)
+    fx(m, { t: 'roll', hero: h.uid, faces: out, kinds, at });
     return out;
   };
   T.apValue = (h) => h.held.concat(h.temp).reduce((s, f) => s + (f === 'AP' ? 1 : f === 'AP2' ? 2 : 0), 0);
@@ -552,7 +557,8 @@
     indices.forEach((i) => {
       if (i >= 0 && i < h.held.length) h.held[i] = dice.pick(T.dieFaces(h, T.heldKind(h, i)));
     });
-    fx(m, { t: 'roll', hero: h.uid, faces: indices.map((i) => h.held[i]) });
+    const at = indices.filter((i) => i >= 0 && i < h.held.length);
+    fx(m, { t: 'roll', hero: h.uid, faces: at.map((i) => h.held[i]), kinds: at.map((i) => T.heldKind(h, i)), at });
   };
 
   /* ───────────────────────────── TRACK ───────────────────────────── */
