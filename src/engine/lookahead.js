@@ -77,7 +77,7 @@
         out.push({ t: 'rally', hero });
       h.gear.forEach((g, gear) =>
         T.GEAR_BY[g.id].abilities.forEach((ab, ability) => {
-          if (g.cds[ability] > 0 || m.crystals < ab.cost) return;
+          if (g.cds[ability] > 0 || T.crystalsFor(m, hero) < ab.cost) return;
           const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
           if (tg.invalid || (tg.need !== 'none' && !(tg.options && tg.options.length))) return;
           for (const r of resolutions(tg, ab)) out.push(Object.assign({ t: 'gear', hero, gear, ability }, r));
@@ -257,7 +257,7 @@
     for (const e of m.enemies)
       if (e.alive) s -= W.foeAlive + W.foeHp * (Math.max(0, e.hp) + e.shield - (e.states.Marked ? 2 : 0));
     if (m.clock) s += W.clock * m.clock.value;
-    s += W.crystal * m.crystals;
+    s += W.crystal * T.totalCrystals(m);
     const gs = goals(m);
     const perHero = m.objective && m.objective.kind === 'salvage';
     if (gs.length || perHero) {

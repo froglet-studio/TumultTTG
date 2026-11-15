@@ -16,3 +16,12 @@
 .seat-tag.seat-1 {
   color: #ffb36b;
 }
+
+/* each player's own purse of omnicrystals (U.purseHTML) */
+.pill.purse + .pill.purse {
+  margin-left: 4px;
+}
+.pill.purse.mine {
+  border-color: rgba(242, 193, 78, 0.7);
+  box-shadow: 0 0 0 1px rgba(242, 193, 78, 0.2) inset;
+}

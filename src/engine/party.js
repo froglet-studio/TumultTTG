@@ -26,6 +26,65 @@
   /** The heroes a seat plays. */
   T.heroesOf = (run, seat) => run.heroes.map((h, i) => i).filter((i) => T.ownerOf(run, i) === seat);
 
+  /* ───────────── purses: each player's own crystals ───────────── */
+  /**
+   * Omnicrystals belong to the players: one purse a seat (`run.purses`, and `m.purses` while a mission lasts),
+   * so one player keeps one purse for both pilots, and two players keep one each (Garrett, 2026-11-15).
+   * A pilot buys, sells and fuels gear from its own player's purse. What the squad earns together is shared
+   * out evenly, and what the squad pays together comes from the fullest purse first.
+   */
+  /** n crystals shared among k purses: evenly, the odd ones to the first seats. */
+  T.splitCrystals = (n, k) => {
+    k = Math.max(1, k | 0);
+    n = Math.max(0, n | 0);
+    return Array.from({ length: k }, (x, s) => Math.floor(n / k) + (s < n % k ? 1 : 0));
+  };
+  /** The seat whose purse pays for hero i: in a mission, the seat it was dealt at launch. */
+  T.purseSeat = (x, i) => {
+    const owner = x.party ? x.party.owner : x.owner;
+    const s = owner ? owner[i] || 0 : 0;
+    return s < x.purses.length ? s : 0;
+  };
+  /** The crystals hero i may spend (its player's purse); in a mission, pass the mission. */
+  T.crystalsFor = (x, i) => x.purses[T.purseSeat(x, i)];
+  /** All the crystals there are, every purse together. */
+  T.totalCrystals = (x) => (x.purses ? x.purses.reduce((a, b) => a + b, 0) : x.crystals || 0);
+  /** The squad earns n crystals together: shared out evenly, the odd ones to the emptiest purses. */
+  T.gainShared = function (x, n) {
+    n = Math.max(0, n | 0);
+    const k = x.purses.length;
+    for (let s = 0; s < k; s++) x.purses[s] += Math.floor(n / k);
+    for (let r = 0; r < n % k; r++) {
+      let s = 0;
+      x.purses.forEach((v, j) => {
+        if (v < x.purses[s]) s = j;
+      });
+      x.purses[s]++;
+    }
+  };
+  /** The squad pays n crystals together, a crystal at a time from the fullest purse. False if all of them can't. */
+  T.payShared = function (x, n) {
+    if (T.totalCrystals(x) < n) return false;
+    for (let k = 0; k < n; k++) {
+      let s = 0;
+      x.purses.forEach((v, j) => {
+        if (v > x.purses[s]) s = j;
+      });
+      x.purses[s]--;
+    }
+    return true;
+  };
+  /**
+   * Before the route opens, the starting crystals (`run.crystals`, set while the squad is drafted, or by the
+   * tools) become the players' purses. Called by T.startMap and T.launchMission; a run already settled is left
+   * as it is unless something has set `run.crystals` again (a tool giving a squad its kit for a tier).
+   */
+  T.settlePurses = function (run) {
+    if (typeof run.crystals !== 'number') return;
+    run.purses = T.splitCrystals(run.crystals, T.playerCount(run));
+    delete run.crystals;
+  };
+
   /**
    * May a screen holding these seats act for hero i? `seats` null means every seat is here
    * (one player, or players passing one screen round).
