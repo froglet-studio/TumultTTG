@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.39.0',
+    version: '2.40.0',
     items: [
+      {
+        text: 'The dice got a new look. Your dice are now held like a hand of cards: each one is a small card with its symbol in the corner, a picture of what it does (Mass shows Strike and Shove, Charge Arc and Reach, Space Scramble, Time Brace, Omni pays for anything, AP shows its number), and its size (d20 plain, d8 element, d12 ethereal). Hover one and it lifts. Omni now uses the omnicrystal symbol from Cosmic Shore. When a new round begins, each pilot’s dice tumble across a tray at the foot of the board in their own shapes, land one after another on what they rolled, and are dealt into your hand. The story line under End Round is now readable (it was dark text on a dark box). Is the tray ever in the way? Can you read what each die does at a glance?',
+      },
       {
         text: 'Two players now have a purse each. The 6 ◇ you start with are shared out (3 each), and so is what a mission earns. Your pilot buys, sells and fuels its gear from your own purse, and a skipped trait pays you. The haven’s full repair and event prices come from the fuller purse first. Each screen now shows only your own Buy, Sell and Train buttons; your partner’s upgrade shows "… is choosing" until they are done. Both purses show at the top, named, with yours in gold. Solo play is unchanged: one player, one purse. Did you miss being able to pool crystals? Would a "give ◇" button help?',
       },
