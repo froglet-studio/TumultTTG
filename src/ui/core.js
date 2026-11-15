@@ -132,8 +132,24 @@
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div>`;
   };
-  /** A die showing face `f`. `kind` (a key of T.DICE) marks a special die with its size in the corner. */
-  const dieHTML = (f, extra, kind) => {
+  /**
+   * What a face of a die can do, as a little playing card: the action it pays for in pictures. AP pays for
+   * anything (its number is the art); an etherion pays for its colour and is a Channel on its own (T.BASIC: the
+   * basic actions with that `el`), so its card shows that action; Omni pays as any colour.
+   */
+  U.faceDeed = function (f) {
+    if (f === 'AP' || f === 'AP2') return { art: `<b class="num">${f === 'AP2' ? 2 : 1}</b>`, cap: 'AP', acts: [] };
+    if (f === 'O') return { art: U.ic('el.O', '◇'), cap: 'Any', acts: [] };
+    const acts = (T.BASIC || []).filter((b) => b.el === f);
+    const art = acts.length ? U.ic('basic.' + acts[0].id.replace(/_[A-Z]$/, ''), acts[0].icon) : U.ic('el.' + f, f);
+    return { art, cap: acts.map((b) => b.n).join(' ') || (EL[f] && EL[f].name) || f, acts };
+  };
+  /**
+   * A die showing face `f`, drawn as a small card: the face's symbol in the corner, the action it pays for as
+   * its art, a caption, and the die's size (d20 plain, d8 element, d12 ethereal). `kind` is a key of T.DICE;
+   * `attrs` adds attributes to the element (the mission screen's click target and its place in the fan).
+   */
+  const dieHTML = (f, extra, kind, attrs) => {
     const k = kind && kind !== 'plain' && T.DICE[kind] ? kind : '';
     const what =
       f === 'AP'
@@ -143,12 +159,18 @@
           : f === 'O'
             ? 'Omni — spends as any etherion.'
             : EL[f].name + ' — ' + EL[f].surface;
-    const from = k ? ` Rolled on your ${T.DICE[k].n} (d${T.DICE[k].sides}).` : '';
-    return `<span class="die ${f} ${k ? 'kind k-' + k : ''} ${extra || ''}" data-tip="${esc(what + from)}">${f === 'AP2' ? '2' : f === 'AP' ? '·' : U.ic('el.' + f, f)}${k ? `<i class="dk">${T.DICE[k].sides}</i>` : ''}</span>`;
+    const d = U.faceDeed(f);
+    const chan = d.acts.length
+      ? ` Or spend it alone as a Channel: ${d.acts.map((b) => b.n + (b.ap ? ` (+${b.ap} AP)` : '')).join(', ')}.`
+      : '';
+    const sides = k ? T.DICE[k].sides : (T.DICE.plain && T.DICE.plain.sides) || 20;
+    const from = ` Rolled on your ${k ? T.DICE[k].n : 'plain die'} (d${sides}).`;
+    const pip = f === 'AP' || f === 'AP2' ? U.ic('ap', '·') : U.ic('el.' + f, f);
+    return `<span class="die ${f} ${k ? 'kind k-' + k : ''} ${extra || ''}" ${attrs || ''} data-tip="${esc(what + chan + from)}"><i class="pip">${pip}</i><i class="art">${d.art}</i><i class="cap">${esc(d.cap)}</i><i class="dk">${sides}</i></span>`;
   };
   /** The key to the die symbols, always beside a pilot's dice. */
   U.diceKey = () =>
-    `<div class="dicekey small dim" aria-label="Dice key">${['M', 'C', 'S', 'T'].map((e) => `<span>${U.ic('el.' + e, e)} ${esc(EL[e].name)}</span>`).join('')}<span>◇ Omni</span><span>· AP</span></div>`;
+    `<div class="dicekey small dim" aria-label="Dice key">${['M', 'C', 'S', 'T', 'O'].map((e) => `<span>${U.ic('el.' + e, e)} ${esc(EL[e].name)}</span>`).join('')}<span>${U.ic('ap', '·')} AP</span><span class="dk-sz">d20 plain · d8 element · d12 ethereal</span></div>`;
   U.dieHTML = dieHTML;
 
   /* ───────────── header strip ───────────── */
