@@ -2024,7 +2024,7 @@ hr {
   border: 0;
   outline: 0;
   background: transparent;
-  color: var(--ink, #e4edf6);
+  color: var(--txt);
   font-family: var(--flavor, var(--serif));
   font-style: italic;
   font-size: 13px;
