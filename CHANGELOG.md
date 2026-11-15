@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.41.0 — 2026-11-15 — dice like dice, abilities like cards
+
+Garrett, on 2.40: "the abilities should look like cards that dice shoud look like dice", and "the dice should look like the 20 sided dice that they are and the 12 sides should look 12 sided, etc."
+
+- **Dice in their real shapes.** A banked die is drawn as its polyhedron. The plain die is a d20, an icosahedron seen down a corner: a hexagon with the front face in the middle. An element's die is a d8, an octahedron. The ethereal die is a d12, a dodecahedron seen face on: a decagon round a pentagon. The face the die shows sits in the middle, in its etherion's colour (AP shows its number). The roll tray uses the same shapes (`U.DIE_SHAPE`, `U.dieSVG`). Each die lies a little turned, the same way every time it is drawn. The tooltip still names the Channel an etherion is on its own.
+- **Abilities as cards.** Each ability in the hand is a card framed in its etherion's colour. At the top is art showing what its two faces do: the Physical side in steel on the left and the Ethereal side in its colour on the right, each face's verb drawn large, over the silhouette of the clade it comes from (`U.cardArt`, verb pictures from `U.verbIconKey`). The Ethereal side dims until the card is awakened. Each face button carries its picture. The large trait cards in the draft and rewards show the same art.
+- No rule or balance changes.
+
 ## 2.40.0 — 2026-11-15 — dice like a hand of cards
 
 Garrett: "The typed text under the end round is black on dark. very hard to read. lets steadily upgrade the look. start with the dice. the omni could use the symbol from cosmic shore. it could also animate 4 d20s rolling at the end of your turn. it could feel more like a hand of cards with art depicting the actions."
