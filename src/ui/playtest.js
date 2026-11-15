@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.36.0',
+    version: '2.37.0',
     items: [
+      {
+        text: 'The mission screen now folds away what you are not using, so the board is much bigger. The pilot you are not playing folds to its vitality and dice, above the one you are; click it to switch, or "Show cards" to see its hand without switching. The log folds to its last lines (▾ opens it), the enemy intents fold to the forecast (click their heading), and a long objective folds to two lines (click it to read it all). Your choices are remembered on this computer. Clicks should also answer faster: panels redraw only when something in them changed, the ✦ hints are worked out just after the screen updates, and online, your own moves show on your screen at once instead of waiting for the host. Does anything feel slow still? Did you ever miss something that was folded away?',
+      },
       {
         text: 'The same player now goes first every round (Player 1, then Player 2, then the foes). Nobody takes two turns in a row any more, so you can plan your next turn while your partner takes theirs, knowing nothing new will land on you before you act. Does the wait feel like planning time now?',
       },
