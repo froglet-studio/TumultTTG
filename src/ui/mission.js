@@ -563,13 +563,8 @@
         .map((k) => `${n(k)} ${T.DICE[k].n} (d${T.DICE[k].sides})`);
       return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn, drawn at random from the pool; pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
     };
-    // the dice are held like a hand of cards: a gentle fan, overlapping a little once the hand is large
-    const nDice = h.held.length + h.temp.length;
-    const fan = (j) => {
-      const o = j - (nDice - 1) / 2;
-      const r = Math.max(-9, Math.min(9, o * 2.4));
-      return `style="--r:${r.toFixed(1)}deg;--y:${Math.min(6, o * o * 0.35).toFixed(1)}px"`;
-    };
+    // dice lie as they fell: each a little turned, the same way each time it is drawn
+    const tilt = (j) => `style="--r:${(((j * 37 + 11) % 13) - 6) * 2}deg"`;
     const dice =
       h.held
         .map((f, di) =>
@@ -577,10 +572,10 @@
             f,
             (canPickDie && sel ? 'pick' : '') + (U.ms.rerollPicked.includes(di) && sel ? ' rolled' : ''),
             T.heldKind(h, di),
-            `data-act="die" data-arg="${i}|${di}" ${fan(di)}`,
+            `data-act="die" data-arg="${i}|${di}" ${tilt(di)}`,
           ),
         )
-        .join('') + h.temp.map((f, j) => U.dieHTML(f, 'temp', '', fan(h.held.length + j))).join('');
+        .join('') + h.temp.map((f, j) => U.dieHTML(f, 'temp', '', tilt(h.held.length + j))).join('');
     const trackCols = [];
     for (let c = 1; c <= T.RULES.TRACK; c++) {
       const items = h.track.filter((t) => t.left === c);
@@ -594,16 +589,19 @@
         const P = T.heroP(h, cid),
           E = T.heroE(h, cid);
         const onTrack = h.track.find((t) => t.card === cid);
+        const asleep = E < T.RULES.ETHEREAL_MIN_E;
+        const elC = EL[(c.E && c.E.elt) || c.el].color;
+        const title = `<div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>`;
         if (onTrack)
-          return `<div class="hcard cooling"><div class="hn">${esc(c.name)}<span class="pe">P${P} E${E}</span></div><div class="small dim">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
+          return `<div class="hcard cooling" style="--c:${elC}">${U.cardArt(c, asleep)}${title}<div class="small dim back">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
         const fb = (fk) => {
           const f = c[fk];
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
           const elt = f.elt || c.el;
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
-          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${fk === 'E' ? '◆' : '•'}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
+          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
-        return `<div class="hcard"><div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span style="color:var(--gold);font-size:10px">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>${fb('P')}${fb('E')}</div>`;
+        return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep)}${title}${fb('P')}${fb('E')}</div>`;
       })
       .join('');
     const gear = h.gear
@@ -626,7 +624,7 @@
     const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>`;
-    const diceRow = `<div class="dice${nDice > 7 ? ' crowd' : ''}" style="--n:${nDice}"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span><span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>`;
+    const diceRow = `<div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span><span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>`;
     // a pilot not selected folds to its vitality and dice; its cards open on request
     if (!sel && !U.layout.peek[i]) {
       const ready = h.cards.filter(
