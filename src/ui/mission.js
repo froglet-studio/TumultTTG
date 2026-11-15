@@ -34,6 +34,42 @@
   const M = () => U.run.mission;
   const hero = () => M().heroes[U.ms.heroIdx];
 
+  /**
+   * Which parts of the mission screen are folded away: the log (folded to its last lines), the enemy
+   * intents (folded to the forecast), the objective (folded to two lines), and, for a pilot not selected,
+   * whether its cards are shown anyway. Kept for this browser in tumult_v2_ui; a page without storage
+   * starts from the defaults.
+   */
+  const LAYOUT_KEY = 'tumult_v2_ui';
+  U.layout = (() => {
+    const base = { log: false, intents: true, obj: false, peek: {} };
+    try {
+      return Object.assign(base, JSON.parse(localStorage.getItem(LAYOUT_KEY) || '{}'), { peek: {} });
+    } catch {
+      return base;
+    }
+  })();
+  function saveLayout() {
+    try {
+      const { log, intents, obj } = U.layout;
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj }));
+    } catch {
+      /* no storage: the choice lasts for this page */
+    }
+  }
+  /** The small button that folds a part of the screen away or opens it out. */
+  function foldBtn(key, what) {
+    const open = !!U.layout[key];
+    return `<button class="fold ghost sm" data-act="fold" data-arg="${key}" aria-expanded="${open}" data-tip="${open ? 'Fold ' + what + ' away' : 'Show all of ' + what}">${open ? '▴' : '▾'}</button>`;
+  }
+  /** Write a panel's HTML only when it changed: no work for the browser, and hover and focus survive. */
+  function setHTML(el, html) {
+    if (!el || el._html === html) return false;
+    el.innerHTML = html;
+    el._html = html;
+    return true;
+  }
+
   /* ───────────── geometry ───────────── */
   function geom(m) {
     const ns = Object.values(m.board.nodes);
@@ -70,7 +106,7 @@
       <div class="top panel tight" id="mtop"></div>
       <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div></div>
       <div class="side" id="mside"></div>
-      <div class="bottom"><div class="log" id="mlog"></div></div>
+      <div class="bottom">${foldBtn('log', 'the log')}<div class="log${U.layout.log ? '' : ' folded'}" id="mlog"></div></div>
     </div>`;
   };
   U.afterMissionRender = function () {
@@ -318,7 +354,7 @@
     renderSide(m);
     renderLog(m);
     updateBoard(m);
-    markCombos(m);
+    scheduleCombos();
     playFx(m);
     if (U.feelUpdate) U.feelUpdate(m);
     if (m.over && !U.ms.overShown) {
@@ -358,13 +394,15 @@
         : '');
     const ae = document.activeElement;
     const typing = ae && ae.id === 'turnNote' ? [ae.selectionStart, ae.selectionEnd] : null;
-    $('#mtop').innerHTML =
+    const changed = setHTML(
+      $('#mtop'),
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
-      <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
-      ${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
+      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
+      <div class="tpills">${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span></div>
       <div class="endgrp"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${noteBox(m)}</div>
-      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`;
-    const box = typing && $('#turnNote');
+      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`,
+    );
+    const box = changed && typing && $('#turnNote');
     if (box) {
       box.focus();
       box.setSelectionRange(typing[0], typing[1]);
@@ -459,13 +497,23 @@
             `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
-    $('#mside').innerHTML =
-      `<div class="panel tight"><div class="row"><b>Enemy intents</b><span class="dim small right">declared — they adapt only to close distance</span></div><div class="intents" style="margin-top:6px">${intents}</div>${forecastHTML(m)}</div>` +
-      m.heroes.map((h, i) => heroPanel(m, h, i)).join('');
+    const open = U.layout.intents;
+    const foes = T.liveEnemies(m).length;
+    const changed = setHTML(
+      $('#mside'),
+      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b>Enemy intents</b><span class="dim small right">${open ? 'declared — they adapt only to close distance' : `${foes} foe${foes === 1 ? '' : 's'} · shown on the board`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}${forecastHTML(m)}</div>` +
+        // the pilots not selected, folded, above the one being played: all of them in view at once
+        m.heroes
+          .map((h, i) => i)
+          .sort((a, b) => (a === U.ms.heroIdx) - (b === U.ms.heroIdx) || a - b)
+          .map((i) => heroPanel(m, m.heroes[i], i))
+          .join(''),
+    );
     // tooltips on intents are computed lazily
-    document
-      .querySelectorAll('#mside [data-tipid]')
-      .forEach((el) => el.setAttribute('data-tip', tipFor(el.getAttribute('data-tipid'))));
+    if (changed)
+      document
+        .querySelectorAll('#mside [data-tipid]')
+        .forEach((el) => el.setAttribute('data-tip', tipFor(el.getAttribute('data-tipid'))));
   }
   /** Beside a hero's vitality: where it will stand if the round ends now, when that is somewhere else. */
   function heading(i) {
@@ -566,15 +614,31 @@
           `<button class="gbtn" data-act="cons" data-arg="${i}|${ci}" data-tip="${esc(T.CONSUMABLE_BY[c].txt)}" ${m.over || h.downed ? 'disabled' : ''}>${U.icCons(c)} ${esc(T.CONSUMABLE_BY[c].name)}</button>`,
       )
       .join('');
+    const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
+      <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
+      <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>`;
+    const diceRow = `<div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>`;
+    // a pilot not selected folds to its vitality and dice; its cards open on request
+    if (!sel && !U.layout.peek[i]) {
+      const ready = h.cards.filter(
+        (cid) =>
+          !h.track.some((t) => t.card === cid) &&
+          !m.over &&
+          !h.downed &&
+          (T.canPlay(m, h, cid, 'P').ok || T.canPlay(m, h, cid, 'E').ok),
+      ).length;
+      const onTrack = h.track.length;
+      return `<div class="hero folded ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
+      ${head}${diceRow}
+      <div class="fold-sum small dim"><span>${h.cards.length} cards · ${ready} playable now${onTrack ? ` · ${onTrack} on the track` : ''}${h.gear.length ? ` · ${h.gear.length} gear` : ''}</span><button class="ghost sm peek" data-act="peek" data-arg="${i}">Show cards ▾</button></div>
+    </div>`;
+    }
     const canInteract = !h.downed && interactNode(m, h) != null && T.apValue(h) >= 2;
     const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
-    return `<div class="hero ${sel ? 'active' : ''} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
-      <div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
-      <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
-      <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>
-      <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>${sel ? U.diceKey() : ''}
-      <div class="track">${trackCols.join('')}</div>
+    return `<div class="hero ${sel ? 'active' : 'peeking'} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
+      ${head}${diceRow}${sel ? U.diceKey() : `<div class="fold-sum small dim"><span>Not selected: click to select ${esc(h.name)}</span><button class="ghost sm peek" data-act="peek" data-arg="${i}">Hide cards ▴</button></div>`}
+      ${h.track.length ? `<div class="track">${trackCols.join('')}</div>` : ''}
       <div class="hand">${hand}</div>
       <div class="actions">
         ${T.BASIC.map((b) => {
@@ -613,15 +677,18 @@
 
   function renderLog(m) {
     const el = $('#mlog');
-    el.innerHTML = m.log
-      .slice(-60)
-      .map((l) =>
-        l.who === 'note'
-          ? `<div class="l note">${U.portrait && m.heroes[l.hero] ? U.portrait(m.heroes[l.hero], 'xs') : ''}<span>“${esc(l.text)}”</span> <span class="dim small">— ${esc(m.heroes[l.hero] ? m.heroes[l.hero].name : '')}</span></div>`
-          : `<div class="l ${l.who}">${U.kw(esc(l.text))}</div>`,
-      )
-      .join('');
-    el.scrollTop = el.scrollHeight;
+    const changed = setHTML(
+      el,
+      m.log
+        .slice(-60)
+        .map((l) =>
+          l.who === 'note'
+            ? `<div class="l note">${U.portrait && m.heroes[l.hero] ? U.portrait(m.heroes[l.hero], 'xs') : ''}<span>“${esc(l.text)}”</span> <span class="dim small">— ${esc(m.heroes[l.hero] ? m.heroes[l.hero].name : '')}</span></div>`
+            : `<div class="l ${l.who}">${U.kw(esc(l.text))}</div>`,
+        )
+        .join(''),
+    );
+    if (changed) el.scrollTop = el.scrollHeight;
   }
 
   /* ───────────── board update ───────────── */
@@ -1132,11 +1199,31 @@
    * target it could pick (and for a few of the nodes it could pick), and keep what the world adds (combosOf).
    * The mark's tip says what; hovering the play shows it on the board.
    */
+  let comboJob = 0;
+  /**
+   * The ✦ marks are worked out after the click has been drawn: each one tries plays on a copy, which is the
+   * slowest thing on this screen, and the player should see what they did first. A newer update cancels an
+   * older job.
+   */
+  function scheduleCombos() {
+    const job = ++comboJob;
+    const run = () => {
+      if (job !== comboJob || U.screen !== 'mission' || !U.run || !U.run.mission) return;
+      markCombos(U.run.mission);
+    };
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => setTimeout(run, 0));
+    else setTimeout(run, 0);
+  }
   function markCombos(m) {
-    if (m.over || U.ms.mode !== 'idle') return;
+    if (m.over || U.ms.mode !== 'idle') {
+      document.querySelectorAll('#mside .combo-mark').forEach((x) => x.remove());
+      return;
+    }
     for (const btn of document.querySelectorAll(
       '#mside [data-act="face"], #mside [data-act="basic"], #mside [data-act="gear"]',
     )) {
+      const had = btn.querySelector('.combo-mark');
+      if (had) had.remove(); // the panel is kept when it did not change: work the marks out afresh
       if (btn.disabled) continue;
       const pk = pendingOf(btn);
       if (!pk) continue;
@@ -1478,6 +1565,26 @@
     const m = M();
     const ms = U.ms;
     switch (act) {
+      case 'fold': {
+        if (!['log', 'intents', 'obj'].includes(arg)) return true;
+        U.layout[arg] = !U.layout[arg];
+        saveLayout();
+        if (arg === 'log') {
+          const log = $('#mlog');
+          if (log) {
+            log.classList.toggle('folded', !U.layout.log);
+            log.scrollTop = log.scrollHeight;
+          }
+          const btn = $('.mission .bottom .fold');
+          if (btn) btn.outerHTML = foldBtn('log', 'the log');
+        }
+        U.updateMission();
+        return true;
+      }
+      case 'peek':
+        U.layout.peek[arg] = !U.layout.peek[arg];
+        U.updateMission();
+        return true;
       case 'selHero':
         if (ms.mode === 'idle') {
           ms.heroIdx = +arg;

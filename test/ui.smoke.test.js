@@ -287,12 +287,73 @@ test(
       U.updateMission();
       const strike = d.querySelector(`#mside [data-act="basic"][data-arg="${i}|strike"]`);
       assert.ok(strike && !strike.disabled, 'Strike can be used');
+      // the marks are worked out just after the click is drawn
+      assert.ok(!strike.querySelector('.combo-mark'), 'not before the screen has been drawn');
+      await until(() => strike.querySelector('.combo-mark'), 'the ✦ marks');
       const mark = strike.querySelector('.combo-mark');
       assert.ok(mark, 'Strike is marked: it would spend the Mark');
       assert.match(mark.getAttribute('data-tip'), /Marked is spent on this/);
       strike.dispatchEvent(new w.MouseEvent('mouseover', { bubbles: true }));
       assert.match(d.querySelector('#mtarget .pv-combos').textContent, /✦ .*Marked is spent on this/);
       assert.equal(JSON.stringify(m), before, 'looking never changes the mission');
+    } finally {
+      w.close();
+    }
+  },
+);
+
+test(
+  'UI: the mission screen folds away what is not in use, and redraws only what changed',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const { JSDOM } = require('jsdom');
+    const { until } = require('../tools/ui-drive');
+    const dom = new JSDOM(build().html, {
+      runScripts: 'dangerously',
+      pretendToBeVisual: true,
+      url: 'http://localhost/',
+    });
+    const w = dom.window;
+    const d = w.document;
+    try {
+      await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+      const U = w.T.UI;
+      const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+      click('[data-act="newRun"]');
+      click('[data-act="prebuilt"][data-arg="cavitt"]');
+      click('[data-act="confirmHero"]');
+      click('[data-act="prebuilt"][data-arg="kess"]');
+      click('[data-act="confirmHero"]');
+      click('.mnode.avail');
+      const m = U.run.mission;
+      const before = JSON.stringify(m);
+      const sel = U.ms.heroIdx;
+      const other = 1 - sel;
+      const panel = (i) => d.querySelector(`#mside .hero[data-arg="${i}"]`);
+      // the pilot being played is open; the other is folded to its vitality and dice, and listed first
+      assert.ok(panel(sel).querySelector('.hand'), 'the selected pilot shows its cards');
+      assert.ok(panel(other).classList.contains('folded') && !panel(other).querySelector('.hand'));
+      assert.ok(panel(other).querySelector('.dice') && panel(other).querySelector('.hpbar'));
+      assert.equal(d.querySelector('#mside .hero').getAttribute('data-arg'), String(other));
+      // its cards open on request, without selecting it
+      click(`#mside .hero[data-arg="${other}"] [data-act="peek"]`);
+      assert.ok(panel(other).querySelector('.hand'));
+      assert.equal(U.ms.heroIdx, sel);
+      // the log folds to its last lines, and the choice is kept for this browser
+      assert.ok(d.getElementById('mlog').classList.contains('folded'), 'the log starts folded');
+      click('.mission .bottom [data-act="fold"]');
+      assert.ok(!d.getElementById('mlog').classList.contains('folded'));
+      assert.equal(JSON.parse(w.localStorage.getItem('tumult_v2_ui')).log, true);
+      // the intents fold to the forecast
+      click('#mside [data-act="fold"][data-arg="intents"]');
+      assert.ok(!d.querySelector('#mside .intents'), 'the intents are folded away');
+      assert.ok(d.querySelector('#mside .forecast'), 'the forecast stays');
+      // an update that changes nothing leaves the panels as they are
+      const side = d.querySelector('#mside .hero');
+      U.updateMission();
+      assert.equal(d.querySelector('#mside .hero'), side, 'the side panel was not redrawn');
+      assert.equal(JSON.stringify(m), before, 'folding never changes the mission');
     } finally {
       w.close();
     }

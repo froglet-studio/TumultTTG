@@ -179,17 +179,38 @@
   // anything the host does on its own screen is written after the click that did it
   const later = () => setTimeout(() => N.publish(), 0);
   document.addEventListener('click', later);
-  document.addEventListener('keydown', later);
+  // typing in a box changes nothing until it is kept (on change), so a keystroke there writes nothing
+  document.addEventListener('keydown', (e) => {
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    later();
+  });
 
   /* ───────────── a guest ───────────── */
   const sent = new Map(); // command id → the hero it was for
+  /**
+   * This screen's commands the host has not carried out yet. A guest plays each command on its own copy
+   * at once, so the click answers without waiting for the round trip: the engine is deterministic, so the
+   * host works out the same thing. The host's state still wins. Each state it writes is taken as it comes,
+   * and the commands it has not reached yet are played again on top.
+   */
+  let pending = [];
+  const PENDING_MS = 15000; // a command the host never answers stops being shown after this
   N.send = function (cmd) {
+    cmd = JSON.parse(JSON.stringify(cmd));
+    // a drafted pilot is not played ahead: the map opens on the host's word, once both are in
+    const ahead = U.run && cmd.op !== 'addHero';
+    const r = ahead ? T.execCommand(U.run, cmd, U.seats) : { ok: true, ctx: {} };
+    if (r && r.ok === false) return r; // refused here: the host would refuse it too, so say why now
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
     sent.set(id, cmd.hero);
+    if (ahead) pending.push({ id, cmd, at: Date.now() });
     db.doc(`games/${N.code}/cmds/${id}`)
-      .set({ cmd: JSON.parse(JSON.stringify(cmd)), seats: U.seats, at: Date.now() })
-      .catch((e) => U.toast(why(e), 6000));
-    return { ok: true, sent: true, ctx: {} };
+      .set({ cmd, seats: U.seats, at: Date.now() })
+      .catch((e) => {
+        pending = pending.filter((p) => p.id !== id);
+        U.toast(why(e), 6000);
+      });
+    return Object.assign({ sent: true }, r, { ok: true, ctx: (r && r.ctx) || {} });
   };
 
   N.join = async function (code, name) {
@@ -252,6 +273,11 @@
     const before = U.run;
     const run = T.deserializeRun(d.run);
     if (run.mission) run.mission.fx = JSON.parse(d.fx || '[]');
+    const res = JSON.parse(d.results || '{}');
+    // play again what this screen has done that the host has not reached yet
+    const now = Date.now();
+    pending = pending.filter((p) => !(p.id in res) && now - p.at < PENDING_MS);
+    for (const p of pending) T.execCommand(run, p.cmd, U.seats);
     U.run = run;
     // which screen: the run's phase decides, except the draft, which each player does on their own
     const sameMission =
@@ -271,14 +297,18 @@
       if (U.screen === 'mission') U.modal = null;
       U.screen = ['reward', 'haven', 'event', 'summary'].includes(run.phase) ? run.phase : 'map';
     }
-    // what came of this screen's own commands
-    const res = JSON.parse(d.results || '{}');
+    // what came of this screen's own commands: what followed from each was shown when it was played here,
+    // so only a refusal is news (the host's state had moved on); a pick it opened is closed again
     for (const [id, r] of Object.entries(res)) {
       if (!sent.has(id)) continue;
       sent.delete(id);
-      if (!r.ok && r.why) U.toast(esc(r.why));
-      else if (r.ctx && U.screen === 'mission' && U.ms && U.ms.mode === 'idle') U.followUp(r.ctx);
+      if (!r.ok) {
+        if (r.why) U.toast(esc(r.why));
+        if (U.screen === 'mission' && U.ms && U.ms.mode !== 'idle') U.ms.mode = 'idle';
+      }
     }
+    // effects already shown are not shown again; if the host's state has fewer, start counting from there
+    if (sameMission && U.ms && run.mission && run.mission.fx.length < U.ms.fxDone) U.ms.fxDone = run.mission.fx.length;
     if (sameMission) U.updateMission();
     else U.render();
   };
@@ -290,6 +320,8 @@
 
   N.leave = function () {
     stop();
+    pending = [];
+    sent.clear();
     if (N.realSave) T.saveRun = N.realSave;
     Object.assign(N, { code: null, role: null, seat: null, rev: 0, status: '' });
     U.seats = null;

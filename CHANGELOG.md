@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.37.0 — 2026-11-15 — faster clicks, and a screen that folds
+
+Garrett, after a two-player playtest: "the interface should be more dynamic, collapsible, and use space better. it should also update faster when selections are made."
+
+- **Folding.** The mission screen folds away what you are not using:
+  - The pilot not selected folds to its vitality, states and dice, with a line saying how many of its cards are playable. It sits above the selected pilot, so both are in view without scrolling. Click it to select it, or "Show cards" to open its hand without selecting it.
+  - The log folds to its last two lines (▾ opens it).
+  - The enemy intents fold to the forecast; the intents are still drawn on the board.
+  - A long objective folds to two lines; click it to read it all.
+  - An empty cooldown track is not drawn. The place, clock, hour, round and crystal pills share two rows, so the top bar stays on one line at 1280 px.
+  - The log, intents and objective choices are kept in this browser (`localStorage` key `tumult_v2_ui`). At 1280×800 the board is about 40% taller (568 px instead of 408).
+- **Faster.**
+  - The top bar, side panel and log are redrawn only when what they show has changed, so hover and focus survive a click.
+  - The ✦ combo hints (2.35) are worked out just after the click has been drawn, not before.
+  - Online, a guest's command is carried out on the guest's own screen at once, then sent to the host. The engine is deterministic, so the host gets the same result. The host's state still wins: each state it writes is taken as it comes, and commands it has not reached yet are played again on top. A command the guest's screen refuses is not sent, and the reason shows at once.
+  - The host no longer writes the game after keystrokes in a text box.
+- No rule or balance changes.
+
 ## 2.36.0 — 2026-11-15 — the same player goes first every round
 
 Garrett, after a two-player playtest: "we should not switch who goes first because it is confusing to take two turns in a row and it defeats the purpose of rolling at the end of the turn and thinking about your turn ahead of time if you have to take another turn with new information immediately."
