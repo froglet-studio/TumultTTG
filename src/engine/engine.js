@@ -216,7 +216,7 @@
       consumables: [],
       downed: false,
       upUnspent: 0,
-      bound: {}, // card id → upgrade points that may be spent on that card alone (a trait picked twice)
+      bound: {}, // card id → [UP that card alone may use (a trait picked twice), of those spent on it]
       stats: { dmgDealt: 0, dmgTaken: 0, kills: 0 },
       boons: [],
       faces: null,
