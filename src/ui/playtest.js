@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.48.0',
+    version: '2.49.0',
     items: [
+      {
+        text: 'Eight more clades: Fennec Fox, Red Fox, Golden Jackal, Coyote and Spotted Hyena, then Sea Otter, Honey Badger and Red Panda. The dogs and the hyena share Keen Nose, Pack Howl and Long Trot (the hyena also shares the cats’ Killing Bite, since hyenas sit nearer the cats). The otter, badger and red panda share Musk and Dense Fur. Does each feel like itself? Which shared trait did you take twice?',
+      },
       {
         text: 'A trait your two clades share can be taken a second time, and that pick is now 1 Upgrade Point for that card alone (it was 2, and often gave nothing at all because of a bug, now fixed). Over whole runs that is about as strong as taking a different card. When you are offered a trait you already hold, which do you take, and does it feel like a real choice?',
       },

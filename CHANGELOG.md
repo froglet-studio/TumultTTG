@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.49.0 — 2026-11-16 — dogs, hyenas and weasel kin
+
+The third and fourth branches of the tree (`docs/design/11-clades.md`): eight painted animals, each with nine traits.
+
+- **Fennec Fox, Red Fox, Golden Jackal, Coyote and Spotted Hyena** (branch *Dogs and hyenas*).
+  - Keen Nose, Pack Howl and Long Trot are carried by all five; Pin Down by the four dogs.
+  - Fennec and fox share Mousing Pounce and Den; jackal and coyote share Yip Chorus and Opportunist.
+  - The hyena also carries the cats' Killing Bite: hyenas sit on the cat side of the carnivores, so a branch may name a second branch it is kin to (`alsoKin`).
+- **Sea Otter, Honey Badger and Red Panda** (branch *Weasel kin*). All three carry Musk and Dense Fur; otter and badger share Ferocity. The otter also shares Human Tool Use; the red panda shares Human Grip and the ocelot's Headfirst Descent (variants for unrelated climbers).
+- Every clade keeps at least one trait no clade on its branch carries; each has a voice in the passages between stops.
+- The audit reports no narrow faces (Keen Nose's Track also Marks the nearest foe).
+- Balance: in 240 drafted runs with the look-ahead player, main wins 88 and this release 85. The new clades together win about as often as the old (37% against 36%); the red fox ran highest, so Go to Ground no longer heals and Line Up gives +1 instead of +1 to +2. `node tools/sim.js 120 runs` moves 47 → 55 (look-ahead) and 22 → 27 (heuristic), but half its squads are drafted from a longer clade list, so they are different squads; the paired drafted runs above are the like-for-like test.
+
 ## 2.48.0 — 2026-11-16 — a trait taken twice: 1 UP, and it counts
 
 Garrett: "lets also consider the right number on upgrading from a second card, so another card and more upgrade power result in comparable win rates".

@@ -151,6 +151,62 @@
       onward: ['"{PLACE}. Open?" {A} asks. "Tell me it is open."', '{A} is already on their toes. "{THREAT}. Let me run at it."'],
       reply: ['{A} chirps.', '"Yes, yes, go," {A} says.', '{A} is already looking at the horizon again.'],
     },
+    fennec: {
+      win: ['{A}\'s huge ears swivel, then settle. "That was the last one. I can hear it."', '"Small," {A} says, "is not the same as easy."'],
+      close: ['{A} drinks almost nothing and pretends that was the plan.', '"Too loud," {A} says, ears flat. "Everything was too loud."'],
+      quiet: ['{A} digs a neat little hollow beside the fire and curls into it.', '{A} listens to the ground for a while, smiling at whatever is under it.'],
+      onward: ['"{PLACE} is hot and dry?" {A} asks. "Good. Mine, then."', '{A} tilts both ears toward {PLACE}. "{THREAT} is in there. I heard it breathe."'],
+      reply: ['{A}\'s ears turn to {B}.', '"Mm-hm," {A} says brightly.', '{A} yips, once.'],
+    },
+    fox: {
+      win: ['{A} trots back with their brush held high. "Told you it would work."', '"They went left," {A} says. "I knew they would go left."'],
+      close: ['{A} licks a torn ear and grumbles. "That was not clever. That was lucky."', '"Somebody out-thought me," {A} says, offended.'],
+      quiet: ['{A} pounces on a mouse in the grass, nose-first, and comes up proud.', '{A} has stolen {B}\'s spoon, and is wondering whether to give it back.'],
+      onward: ['"There is always a back way into {PLACE}," {A} says. "Always."', '{A} grins. "{THREAT}. I have an idea, and you are going to hate it."'],
+      reply: ['{A} grins with too many teeth.', '"Obviously," {A} says.', '{A}\'s tail swishes.'],
+    },
+    jackal: {
+      win: ['{A} bumps shoulders with {B}. "Pair work. Told you."', '"We took it from two sides," {A} says. "Nothing likes two sides."'],
+      close: ['{A} limps back on three legs and refuses to be carried.', '"I lost you for a moment," {A} says to {B}. "Don\'t do that."'],
+      quiet: ['{A} trades a long howl with something far off, and seems satisfied with the answer.', '{A} sleeps back to back with {B}.'],
+      onward: ['"You go round, I go through," {A} says, nodding at {PLACE}.', '"{THREAT} is one thing," {A} says. "We are two."'],
+      reply: ['{A} yips.', '"With you," {A} says.', '{A} nudges {B}\'s arm with their nose.'],
+    },
+    coyote: {
+      win: ['{A} laughs, a ragged, delighted sound. "It fell for that? It fell for that."', '"Never do the same trick twice," {A} says. "Except that one. That one works."'],
+      close: ['{A} shakes off and grins anyway. "Learned something. Mostly about pain."', '"Plan B," {A} says. "I had a plan B, and a plan C, and it ate both."'],
+      quiet: ['{A} eats whatever is in the pot, and then whatever is in the other pot.', '{A} sings, badly and at length, to nobody in particular.'],
+      onward: ['"{PLACE}? I can live anywhere," {A} says.', '"{THREAT} is going to be so surprised," {A} says, and won\'t say by what.'],
+      reply: ['{A} cackles.', '"Sure, sure," {A} says.', '{A} cocks their head, amused.'],
+    },
+    hyena: {
+      win: ['{A} cracks something between their teeth that was not meant to crack. "Done."', '{A} whoops, and something far off whoops back.'],
+      close: ['{A} keeps walking long after it should hurt too much to walk.', '"It ran," {A} says. "Things that run get tired. I do not."'],
+      quiet: ['{A} gnaws on a bone nobody else would have kept.', '{A} giggles in their sleep, which unsettles everyone except {B}.'],
+      onward: ['"{PLACE}," {A} says. "Long way. Fine. I walk."', '"{THREAT} will be tired by the end," {A} says. "I will not."'],
+      reply: ['{A} giggles.', '"Hm," {A} says, chewing.', '{A} whoops softly.'],
+    },
+    otter: {
+      win: ['{A} floats on their back, pleased with themselves. "That went well."', '"Teamwork," {A} says, and holds out a paw for {B} to hold.'],
+      close: ['{A} grooms the same patch of fur over and over. "I got cold."', '"It cracked me," {A} says. "I am the one who cracks things."'],
+      quiet: ['{A} has found a favourite stone and keeps it in a fold under their arm.', '{A} juggles three pebbles, very fast, for no one.'],
+      onward: ['"Is there water in {PLACE}?" {A} asks. "Please say water."', '{A} taps a stone against their chest. "{THREAT} has a shell. Shells open."'],
+      reply: ['{A} squeaks happily.', '"Yes! Yes," {A} says.', '{A} rolls over.'],
+    },
+    badger: {
+      win: ['{A} sits back on their haunches, unhurried. "It should not have stayed."', '"I was not going to stop," {A} says. "It worked that out."'],
+      close: ['{A} shakes off what should have stopped them and keeps going.', '"It bit me," {A} says. "It bit me. I do not care."'],
+      quiet: ['{A} digs a hole, sleeps in it, and fills it in behind them in the morning.', '{A} raids a wild hive and comes back stung, sticky and pleased.'],
+      onward: ['"I will go first into {PLACE}," {A} says. Nobody argues.', '"{THREAT}," {A} says. "Fine. It will learn."'],
+      reply: ['{A} grunts.', '"Hm," {A} says.', '{A} does not move, which is agreement.'],
+    },
+    red_panda: {
+      win: ['{A} stands up on their hind legs, arms wide, very pleased. "Ha!"', '"Up and down," {A} says. "Up and down, and it never found me."'],
+      close: ['{A} wraps their tail around their face and declines to talk about it.', '"Too warm," {A} says. "I fight badly when it is warm."'],
+      quiet: ['{A} naps on the highest branch in camp, limbs hanging down on either side.', '{A} eats bamboo, slowly, with total concentration.'],
+      onward: ['"Trees in {PLACE}?" {A} asks hopefully.', '{A} rears up to look bigger. "{THREAT}. I am ready."'],
+      reply: ['{A} squeaks.', '"Okay," {A} says, from a branch.', '{A} curls their tail around {B}\'s ankle.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

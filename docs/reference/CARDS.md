@@ -637,7 +637,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Scent Mark** · Space · `lem_scent`
 
-- *Phys — Mark Ground* · 1 AP · CD 1 — Reveal within 1 for 2 rounds; the nearest foe is Marked and can't Hide for 2 rounds. *(P3: Reveal within 4 for 2 rounds; the nearest foe is Marked and can't Hide for 2 rounds.)*
+- *Phys — Mark Ground* · 1 AP · CD 1 — Reveal within 1 for 2 rounds; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Reveal within 4 for 2 rounds; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
 - *Eth — Territory* · 1 AP + 1 Space · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds.)*
 
 **Tail Signal** · Time · `lem_tail`
@@ -938,3 +938,395 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Trip* · 1 AP · CD 0 — Hook a leg: melee 1, and it cannot move next round. *(P3: Hook a leg: melee 4, and it cannot move next round.)*
 - *Eth — Tumble* · 1 AP + 1 Mass · CD 3 — Melee 3; it cannot move and is Weakened 1 for 1 round. *(P3/E3: Melee 5; it cannot move and is Weakened 1 for 2 rounds.)*
+
+## 19 · Fennec Fox — leans S/T
+
+*Tiny desert fox with enormous ears. Hears prey under the sand.*
+
+**Keen Nose** · Space · `dog_nose`
+
+- *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+
+**Pack Howl** · Charge · `dog_howl`
+
+- *Phys — Howl* · 1 AP · CD 1 — Foes beside you are Weakened 1 this round; your ally's next strike deals +1. *(P3: Foes beside you are Weakened 1 this round; your ally's next strike deals +2.)*
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — For 2 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1. *(P3/E3: For 4 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1.)*
+
+**Long Trot** · Time · `dog_trot`
+
+- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+
+**Pin Down** · Mass · `dog_pin`
+
+- *Phys — Pin* · 1 AP · CD 1 — Melee 2, and it is Anchored 1. *(P3: Melee 5, and it is Anchored 1.)*
+- *Eth — Hold Down* · 1 AP + 1 Mass · CD 3 — Melee 2; hold it down: Anchored, unable to blink, and Weakened 1, for 1 round. *(P3/E3: Melee 4; hold it down: Anchored, unable to blink, and Weakened 1, for 2 rounds.)*
+
+**Mousing Pounce** · Mass · `fox_pounce`
+
+- *Phys — Snow Dive* · 1 AP · CD 1 — Dive on a foe within 2 for 2, hidden or not, and your hits on it deal +1 after. *(P3: Dive on a foe within 2 for 5, hidden or not, and your hits on it deal +1 after.)*
+- *Eth — High Arc* · 1 AP + 1 Mass · CD 3 — Arc through the air to beside a foe within 3, height included, and land on it for 4. *(P3/E3: Arc through the air to beside a foe within 5, height included, and land on it for 6.)*
+
+**Den** · Time · `fox_den`
+
+- *Phys — Go to Ground* · 1 AP · CD 2 — Go to ground: Hidden 1 and Shield 1 this round. *(P3: Go to ground: Hidden 1 and Shield 2 this round.)*
+- *Eth — Earth* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden for 2 rounds; both heroes heal 1 and ignore hazards this round. *(P3/E3: You and an ally beside you are Hidden for 4 rounds; both heroes heal 1 and ignore hazards this round.)*
+
+**Big Ears** ★ · Space · `fen_ears`
+
+- *Phys — Cool Down* · 1 AP · CD 1 — Hear everything within 2 this round; your ears shed the heat: hazards don't touch you for 2 rounds. *(P3: Hear everything within 5 this round; your ears shed the heat: hazards don't touch you for 2 rounds.)*
+- *Eth — Under the Sand* · 1 AP + 1 Space · CD 3 — Hear the whole field for 2 rounds; the next hit on you is 1 less. *(P3/E3: Hear the whole field for 4 rounds; the next hit on you is 2 less.)*
+
+**Desert Thrift** · Time · `fen_thrift`
+
+- *Phys — Ration* · 1 AP · CD 2 — Heal 1; every card on your track returns 1 column sooner. *(P3: Heal 2; every card on your track returns 1 column sooner.)*
+- *Eth — Long Dry* · 1 AP + 1 Time · CD 4 — For 2 rounds you gain 1 AP at the start of each turn; heal 1. *(P3/E3: For 4 rounds you gain 1 AP at the start of each turn; heal 1.)*
+
+**Night Trot** · Space · `fen_night`
+
+- *Phys — Night Trot* · 1 AP · CD 1 — Move 2 without setting off traps, seeing what is beside you as you go. *(P3: Move 5 without setting off traps, seeing what is beside you as you go.)*
+- *Eth — Moon Run* · 1 AP + 1 Space · CD 3 — Hide for 2 rounds, moving freely, and run 2 now. *(P3/E3: Hide for 4 rounds, moving freely, and run 2 now.)*
+
+## 20 · Red Fox — leans S/C
+
+*Clever, adaptable, and always one step to the side of where you looked.*
+
+**Keen Nose** · Space · `dog_nose`
+
+- *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+
+**Pack Howl** · Charge · `dog_howl`
+
+- *Phys — Howl* · 1 AP · CD 1 — Foes beside you are Weakened 1 this round; your ally's next strike deals +1. *(P3: Foes beside you are Weakened 1 this round; your ally's next strike deals +2.)*
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — For 2 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1. *(P3/E3: For 4 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1.)*
+
+**Long Trot** · Time · `dog_trot`
+
+- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+
+**Pin Down** · Mass · `dog_pin`
+
+- *Phys — Pin* · 1 AP · CD 1 — Melee 2, and it is Anchored 1. *(P3: Melee 5, and it is Anchored 1.)*
+- *Eth — Hold Down* · 1 AP + 1 Mass · CD 3 — Melee 2; hold it down: Anchored, unable to blink, and Weakened 1, for 1 round. *(P3/E3: Melee 4; hold it down: Anchored, unable to blink, and Weakened 1, for 2 rounds.)*
+
+**Mousing Pounce** · Mass · `fox_pounce`
+
+- *Phys — Snow Dive* · 1 AP · CD 1 — Dive on a foe within 2 for 2, hidden or not, and your hits on it deal +1 after. *(P3: Dive on a foe within 2 for 5, hidden or not, and your hits on it deal +1 after.)*
+- *Eth — High Arc* · 1 AP + 1 Mass · CD 3 — Arc through the air to beside a foe within 3, height included, and land on it for 4. *(P3/E3: Arc through the air to beside a foe within 5, height included, and land on it for 6.)*
+
+**Den** · Time · `fox_den`
+
+- *Phys — Go to Ground* · 1 AP · CD 2 — Go to ground: Hidden 1 and Shield 1 this round. *(P3: Go to ground: Hidden 1 and Shield 2 this round.)*
+- *Eth — Earth* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden for 2 rounds; both heroes heal 1 and ignore hazards this round. *(P3/E3: You and an ally beside you are Hidden for 4 rounds; both heroes heal 1 and ignore hazards this round.)*
+
+**Magnetic Sense** · Space · `fox_magnet`
+
+- *Phys — Line Up* · 1 AP · CD 1 — Line up on any foe: it can't Hide for 2 rounds, and your hits on it deal +1. *(P3: Line up on any foe: it can't Hide for 5 rounds, and your hits on it deal +1.)*
+- *Eth — North Leap* · 1 AP + 1 Space · CD 3 — Leap the long way to beside a foe within 4, and land on it for 3. *(P3/E3: Leap the long way to beside a foe within 6, and land on it for 5.)*
+
+**Cunning** ★ · Time · `fox_cunning`
+
+- *Phys — Read It* · 1 AP · CD 1 — Work out a foe within 3: Weakened 1 for 1 round, and your hits on it deal +1. *(P3: Work out a foe within 3: Weakened 1 for 2 rounds, and your hits on it deal +1.)*
+- *Eth — Outfox* · 1 AP + 1 Time · CD 4 — Both heroes' next hit taken is 2 less, and the next card you play this turn doesn't go to the track. *(P3/E3: Both heroes' next hit taken is 4 less, and the next card you play this turn doesn't go to the track.)*
+
+**Brush Feint** · Space · `fox_brush`
+
+- *Phys — Brush* · 1 AP · CD 1 — The next hit on you is 1 less, and you dodge a step from it; step 1 now. *(P3: The next hit on you is 2 less, and you dodge a step from it; step 1 now.)*
+- *Eth — Tail Flag* · 1 AP + 1 Space · CD 3 — Flick your tail where you are not: a decoy draws foes to a node within 3 for 2 rounds, and you are Hidden 1. *(P3/E3: Flick your tail where you are not: a decoy draws foes to a node within 3 for 4 rounds, and you are Hidden 1.)*
+
+## 21 · Golden Jackal — leans C/T
+
+*Hunts in pairs, takes every chance, and is never as lost as it looks.*
+
+**Keen Nose** · Space · `dog_nose`
+
+- *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+
+**Pack Howl** · Charge · `dog_howl`
+
+- *Phys — Howl* · 1 AP · CD 1 — Foes beside you are Weakened 1 this round; your ally's next strike deals +1. *(P3: Foes beside you are Weakened 1 this round; your ally's next strike deals +2.)*
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — For 2 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1. *(P3/E3: For 4 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1.)*
+
+**Long Trot** · Time · `dog_trot`
+
+- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+
+**Pin Down** · Mass · `dog_pin`
+
+- *Phys — Pin* · 1 AP · CD 1 — Melee 2, and it is Anchored 1. *(P3: Melee 5, and it is Anchored 1.)*
+- *Eth — Hold Down* · 1 AP + 1 Mass · CD 3 — Melee 2; hold it down: Anchored, unable to blink, and Weakened 1, for 1 round. *(P3/E3: Melee 4; hold it down: Anchored, unable to blink, and Weakened 1, for 2 rounds.)*
+
+**Yip Chorus** · Charge · `dog_yip`
+
+- *Phys — Yip* · 1 AP · CD 1 — Call out what you see within 2; your ally's next strike deals +1. *(P3: Call out what you see within 5; your ally's next strike deals +1.)*
+- *Eth — Where Are You* · 1 AP + 1 Charge · CD 3 — The whole field answers for 2 rounds: everything is seen, and both heroes' next hit taken is 1 less. *(P3/E3: The whole field answers for 4 rounds: everything is seen, and both heroes' next hit taken is 1 less.)*
+
+**Opportunist** · Mass · `dog_opp`
+
+- *Phys — Snatch* · 1 AP · CD 2 — Melee 1, and draw 1 pool die as AP. *(P3: Melee 4, and draw 1 pool die as AP.)*
+- *Eth — Steal the Kill* · 1 AP + 1 Mass · CD 3 — Melee 3; if it falls, mint 1 Omni. Then step 1. *(P3/E3: Melee 5; if it falls, mint 1 Omni. Then step 1.)*
+
+**Pair Hunt** ★ · Charge · `jac_pair`
+
+- *Phys — Flank* · 1 AP · CD 1 — Melee 1, opening it up: both heroes' hits on it deal +1 after. *(P3: Melee 4, opening it up: both heroes' hits on it deal +1 after.)*
+- *Eth — Pair Hunt* · 1 AP + 1 Charge · CD 3 — Send your partner up to 2; both heroes' next strike deals +2. *(P3/E3: Send your partner up to 2; both heroes' next strike deals +4.)*
+
+**Golden Coat** · Time · `jac_coat`
+
+- *Phys — Golden Coat* · 1 AP · CD 1 — Shield 1 this round, and shake off Anchored and Weakened. *(P3: Shield 4 this round, and shake off Anchored and Weakened.)*
+- *Eth — Sunlit* · 1 AP + 1 Time · CD 3 — Both heroes hold Shield 2 this round and shake off Anchored and Weakened. *(P3/E3: Both heroes hold Shield 4 this round and shake off Anchored and Weakened.)*
+
+**Scavenger's Luck** · Time · `jac_luck`
+
+- *Phys — Scrounge* · 1 AP · CD 2 — Draw 1 pool die as AP, and reroll 1 banked die. *(P3: Draw 1 pool die as AP, and reroll 2 banked dice.)*
+- *Eth — Lucky Find* · 1 AP + 1 Time · CD 4 — Mint 1 temporary Omni, and heal 2. *(P3/E3: Mint 1 temporary Omni, and heal 4.)*
+
+## 22 · Coyote — leans T/S
+
+*The trickster. Lives anywhere, sounds like ten of itself.*
+
+**Keen Nose** · Space · `dog_nose`
+
+- *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+
+**Pack Howl** · Charge · `dog_howl`
+
+- *Phys — Howl* · 1 AP · CD 1 — Foes beside you are Weakened 1 this round; your ally's next strike deals +1. *(P3: Foes beside you are Weakened 1 this round; your ally's next strike deals +2.)*
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — For 2 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1. *(P3/E3: For 4 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1.)*
+
+**Long Trot** · Time · `dog_trot`
+
+- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+
+**Pin Down** · Mass · `dog_pin`
+
+- *Phys — Pin* · 1 AP · CD 1 — Melee 2, and it is Anchored 1. *(P3: Melee 5, and it is Anchored 1.)*
+- *Eth — Hold Down* · 1 AP + 1 Mass · CD 3 — Melee 2; hold it down: Anchored, unable to blink, and Weakened 1, for 1 round. *(P3/E3: Melee 4; hold it down: Anchored, unable to blink, and Weakened 1, for 2 rounds.)*
+
+**Yip Chorus** · Charge · `dog_yip`
+
+- *Phys — Yip* · 1 AP · CD 1 — Call out what you see within 2; your ally's next strike deals +1. *(P3: Call out what you see within 5; your ally's next strike deals +1.)*
+- *Eth — Where Are You* · 1 AP + 1 Charge · CD 3 — The whole field answers for 2 rounds: everything is seen, and both heroes' next hit taken is 1 less. *(P3/E3: The whole field answers for 4 rounds: everything is seen, and both heroes' next hit taken is 1 less.)*
+
+**Opportunist** · Mass · `dog_opp`
+
+- *Phys — Snatch* · 1 AP · CD 2 — Melee 1, and draw 1 pool die as AP. *(P3: Melee 4, and draw 1 pool die as AP.)*
+- *Eth — Steal the Kill* · 1 AP + 1 Mass · CD 3 — Melee 3; if it falls, mint 1 Omni. Then step 1. *(P3/E3: Melee 5; if it falls, mint 1 Omni. Then step 1.)*
+
+**Trickster** ★ · Space · `coy_trick`
+
+- *Phys — Lure* · 1 AP · CD 1 — Lure a foe within 3 1 toward you; it is Weakened 1 this round. *(P3: Lure a foe within 3 2 toward you; it is Weakened 1 this round.)*
+- *Eth — Switcheroo* · 1 AP + 1 Space · CD 3 — Leave a decoy where you stand and slip to a node within 3; your next strike deals +2. *(P3/E3: Leave a decoy where you stand and slip to a node within 5; your next strike deals +2.)*
+
+**Adapt Anywhere** · Time · `coy_adapt`
+
+- *Phys — Adapt* · 1 AP · CD 2 — Shake off Anchored and Weakened, ignore hazards for 2 rounds, and heal 1. *(P3: Shake off Anchored and Weakened, ignore hazards for 2 rounds, and heal 2.)*
+- *Eth — Make Do* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; no foe can Weaken or Root you for 2. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; no foe can Weaken or Root you for 4.)*
+
+**Lope Feint** · Space · `coy_lope`
+
+- *Phys — Lope* · 1 AP · CD 1 — Lope 2, slipping past foes. *(P3: Lope 5, slipping past foes.)*
+- *Eth — Double Back* · 1 AP + 1 Space · CD 3 — Lope 3 past foes and double back unseen: Hidden 1, and your next strike deals +1. *(P3/E3: Lope 5 past foes and double back unseen: Hidden 1, and your next strike deals +1.)*
+
+## 23 · Spotted Hyena — leans M/C
+
+*Bone-cracking jaws, a matriarch's clan, and a laugh that carries for miles.*
+
+**Killing Bite** · Mass · `cat_bite`
+
+- *Phys — Throat Bite* · 1 AP · CD 1 — Melee 2; if that leaves it at 6 HP or less, bite again for 2. *(P3: Melee 5; if that leaves it at 6 HP or less, bite again for 2.)*
+- *Eth — Finish* · 1 AP + 1 Mass · CD 3 — Melee 3; if that leaves it at 4 HP or less, it falls (not a boss). *(P3/E3: Melee 5; if that leaves it at 6 HP or less, it falls (not a boss).)*
+
+**Keen Nose** · Space · `dog_nose`
+
+- *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+
+**Pack Howl** · Charge · `dog_howl`
+
+- *Phys — Howl* · 1 AP · CD 1 — Foes beside you are Weakened 1 this round; your ally's next strike deals +1. *(P3: Foes beside you are Weakened 1 this round; your ally's next strike deals +2.)*
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — For 2 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1. *(P3/E3: For 4 rounds both heroes gain 1 AP at the start of each turn; both heroes' next strike deals +1.)*
+
+**Long Trot** · Time · `dog_trot`
+
+- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+
+**Bone Crush** ★ · Mass · `hye_crush`
+
+- *Phys — Crunch* · 1 AP · CD 1 — Melee 2; it is Weakened 1 this round. *(P3: Melee 5 through Shield; it is Weakened 1 this round.)*
+- *Eth — Bone Crack* · 1 AP + 1 Mass · CD 3 — Crack its Shield away, melee 4, and it is Weakened 2 for 1 round. *(P3/E3: Crack its Shield away, melee 6, and it is Weakened 2 for 2 rounds.)*
+
+**Clan Whoop** · Charge · `hye_whoop`
+
+- *Phys — Whoop* · 1 AP · CD 1 — Call your partner up to 2 nodes; their next strike deals +1.
+- *Eth — Mob* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds; both heroes' next strike deals +1. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds; both heroes' next strike deals +1.)*
+
+**Scavenge** · Time · `hye_scav`
+
+- *Phys — Scavenge* · 1 AP · CD 1 — Melee 1 and heal 1; if it falls, heal 2 more. *(P3: Melee 4 and heal 1; if it falls, heal 2 more.)*
+- *Eth — Iron Gut* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds, and shake off Anchored and Weakened. *(P3/E3: Heal 1 at the start of each turn for 5 rounds, and shake off Anchored and Weakened.)*
+
+**Endurance** · Time · `hye_endure`
+
+- *Phys — Keep Going* · 1 AP · CD 1 — Move 2, and heal 1. *(P3: Move 5, and heal 1.)*
+- *Eth — Run It Down* · 1 AP + 1 Time · CD 4 — For 3 rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner. *(P3/E3: For 5 rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner.)*
+
+**Matriarch** · Charge · `hye_matri`
+
+- *Phys — Rank* · 1 AP · CD 1 — Your ally heals 1 and their next strike deals +1. *(P3: Your ally heals 1 and their next strike deals +2.)*
+- *Eth — Clan* · 1 AP + 1 Charge · CD 4 — Both heroes hold Shield 1 for 2 rounds; their next two strikes deal +1. *(P3/E3: Both heroes hold Shield 1 for 2 rounds; their next two strikes deal +2.)*
+
+## 24 · Sea Otter — leans C/M
+
+*Floats on its back, cracks shells on a rock, holds hands while it sleeps.*
+
+**Tool Use** ★ · Space · `hum_tool`
+
+- *Phys — Improvise* · 1 AP · CD 1 — Your next strike this turn deals +1. *(P3: Your next strike this turn deals +4.)*
+- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away — even on a height node. *(P3/E3: Interact with an objective up to 4 nodes away — even on a height node.)*
+
+**Musk** · Charge · `wea_musk`
+
+- *Phys — Musk* · 1 AP · CD 1 — Foes beside you are Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: Foes beside you are Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
+- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened.)*
+
+**Dense Fur** · Mass · `wea_fur`
+
+- *Phys — Thick Coat* · 1 AP · CD 1 — Shield 1 this round, and hazards don't touch you. *(P3: Shield 4 this round, and hazards don't touch you.)*
+- *Eth — Weatherproof* · 1 AP + 1 Mass · CD 3 — Shield 2 for 2 rounds; hazards don't touch you for 2. *(P3/E3: Shield 4 for 2 rounds; hazards don't touch you for 4.)*
+
+**Ferocity** · Mass · `wea_ferocity`
+
+- *Phys — Savage* · 1 AP · CD 1 — Melee 2; your next strike this turn deals +1. *(P3: Melee 5; your next strike this turn deals +1.)*
+- *Eth — Frenzy* · 1 AP + 1 Mass · CD 3 — Melee 3, then thrash: every foe beside you takes 1. For 2 rounds, a foe that hits you in melee takes 1. *(P3/E3: Melee 5, then thrash: every foe beside you takes 1. For 4 rounds, a foe that hits you in melee takes 1.)*
+
+**Raft Together** · Charge · `ott_raft`
+
+- *Phys — Hold Paws* · 1 AP · CD 1 — Hold Shield 2 this round; an ally beside you holds it too. *(P3: Hold Shield 3 this round; an ally beside you holds it too.)*
+- *Eth — Raft* · 1 AP + 1 Charge · CD 4 — Both heroes heal 2, hold Shield 1 this round, and ignore hazards for 2. *(P3/E3: Both heroes heal 4, hold Shield 1 this round, and ignore hazards for 2.)*
+
+**Shell Crack** ★ · Mass · `ott_shell`
+
+- *Phys — Crack* · 1 AP · CD 1 — Knock its whole Shield off with your rock, then melee 1. *(P3: Knock its whole Shield off with your rock, then melee 4.)*
+- *Eth — Rock Throw* · 1 AP + 1 Mass · CD 3 — Throw your rock at a foe in sight: 2 of its Shield cracks, and it takes 3. *(P3/E3: Throw your rock at a foe in sight: 2 of its Shield cracks, and it takes 5.)*
+
+**Otter Roll** · Space · `ott_roll`
+
+- *Phys — Roll* · 1 AP · CD 1 — Roll 1, past foes, shaking off Anchored and Weakened. *(P3: Roll 4, past foes, shaking off Anchored and Weakened.)*
+- *Eth — Spin Free* · 1 AP + 1 Space · CD 3 — Spin away to a node within 3; both heroes shake off Anchored and Weakened. *(P3/E3: Spin away to a node within 5; both heroes shake off Anchored and Weakened.)*
+
+**Kelp Anchor** · Time · `ott_kelp`
+
+- *Phys — Wrap* · 1 AP · CD 1 — Wrap yourself in place: nothing can push or pull you for 1 round; Shield 1 and heal 1. *(P3: Wrap yourself in place: nothing can push or pull you for 2 rounds; Shield 1 and heal 1.)*
+- *Eth — Kelp Bed* · 1 AP + 1 Time · CD 4 — Neither hero can be pushed or pulled for 2 rounds, and both heal 1. *(P3/E3: Neither hero can be pushed or pulled for 4 rounds, and both heal 1.)*
+
+**Whisker Hunt** · Space · `ott_whisker`
+
+- *Phys — Whiskers* · 1 AP · CD 1 — Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and your hits on it deal +1. *(P3: Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and your hits on it deal +2.)*
+- *Eth — Murky Hunt* · 1 AP + 1 Space · CD 3 — Feel the water within 3 for 2 rounds; every foe within 2 is Marked. *(P3/E3: Feel the water within 3 for 4 rounds; every foe within 2 is Marked.)*
+
+## 25 · Honey Badger — leans M/T
+
+*Loose skin, no fear, and a habit of eating things that sting.*
+
+**Musk** · Charge · `wea_musk`
+
+- *Phys — Musk* · 1 AP · CD 1 — Foes beside you are Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: Foes beside you are Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
+- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened.)*
+
+**Dense Fur** · Mass · `wea_fur`
+
+- *Phys — Thick Coat* · 1 AP · CD 1 — Shield 1 this round, and hazards don't touch you. *(P3: Shield 4 this round, and hazards don't touch you.)*
+- *Eth — Weatherproof* · 1 AP + 1 Mass · CD 3 — Shield 2 for 2 rounds; hazards don't touch you for 2. *(P3/E3: Shield 4 for 2 rounds; hazards don't touch you for 4.)*
+
+**Ferocity** · Mass · `wea_ferocity`
+
+- *Phys — Savage* · 1 AP · CD 1 — Melee 2; your next strike this turn deals +1. *(P3: Melee 5; your next strike this turn deals +1.)*
+- *Eth — Frenzy* · 1 AP + 1 Mass · CD 3 — Melee 3, then thrash: every foe beside you takes 1. For 2 rounds, a foe that hits you in melee takes 1. *(P3/E3: Melee 5, then thrash: every foe beside you takes 1. For 4 rounds, a foe that hits you in melee takes 1.)*
+
+**Venom Shrug** · Time · `bad_venom`
+
+- *Phys — Shrug* · 1 AP · CD 2 — Shake off Anchored and Weakened, heal 1, and no foe can Weaken or Root you this round. *(P3: Shake off Anchored and Weakened, heal 2, and no foe can Weaken or Root you this round.)*
+- *Eth — Sleep It Off* · 1 AP + 1 Time · CD 4 — Heal 3; no foe can Weaken or Root you for 2 rounds. *(P3/E3: Heal 5; no foe can Weaken or Root you for 4 rounds.)*
+
+**Burrow In** · Mass · `bad_dig`
+
+- *Phys — Dig* · 1 AP · CD 2 — Dig in: Hidden 1 and Shield 1 this round. *(P3: Dig in: Hidden 1 and Shield 2 this round.)*
+- *Eth — Tunnel* · 1 AP + 1 Mass · CD 3 — Tunnel to a node within 3 and come up Hidden 1. *(P3/E3: Tunnel to a node within 5 and come up Hidden 1.)*
+
+**Loose Hide** · Time · `bad_hide`
+
+- *Phys — Twist Free* · 1 AP · CD 1 — Shake off Anchored and Weakened; the next hit on you is 1 less, and you bite back for 1. *(P3: Shake off Anchored and Weakened; the next hit on you is 2 less, and you bite back for 1.)*
+- *Eth — Loose Skin* · 1 AP + 1 Time · CD 3 — Hold a turn-and-bite ready: the next foe to hit you in melee takes 3, and that hit is 2 less. *(P3/E3: Hold a turn-and-bite ready: the next foe to hit you in melee takes 5, and that hit is 2 less.)*
+
+**Bee Raid** · Charge · `bad_bee`
+
+- *Phys — Raid* · 1 AP · CD 1 — Melee 1, and it is stung: 1 a round for 2 rounds. *(P3: Melee 4, and it is stung: 1 a round for 2 rounds.)*
+- *Eth — Kick the Hive* · 1 AP + 1 Charge · CD 3 — Kick a hive open at a node within 2: every foe on or beside it is stung, 1 a round for 2 rounds. Stings don't bother you for 2. *(P3/E3: Kick a hive open at a node within 2: every foe on or beside it is stung, 2 a round for 2 rounds. Stings don't bother you for 2.)*
+
+**Never Retreat** ★ · Mass · `bad_never`
+
+- *Phys — Stand* · 1 AP · CD 1 — Plant your feet: nothing can push or pull you this round, and your next strike deals +1. *(P3: Plant your feet: nothing can push or pull you this round, and your next strike deals +4.)*
+- *Eth — No Retreat* · 1 AP + 1 Mass · CD 4 — For 2 rounds nothing can Weaken, Root, push or pull you, and a foe that hits you in melee takes 1. *(P3/E3: For 4 rounds nothing can Weaken, Root, push or pull you, and a foe that hits you in melee takes 2.)*
+
+**Bite Hold** · Mass · `bad_bite`
+
+- *Phys — Bite* · 1 AP · CD 1 — Melee 1, and don't let go: 1 a round for 2 rounds. *(P3: Melee 4, and don't let go: 1 a round for 2 rounds.)*
+- *Eth — Lockjaw* · 1 AP + 1 Mass · CD 3 — Melee 3 and lock on: it is Anchored and can't blink for 2 rounds, and takes 1 a round for 2. *(P3/E3: Melee 5 and lock on: it is Anchored and can't blink for 2 rounds, and takes 2 a round for 2.)*
+
+## 26 · Red Panda — leans T/S
+
+*Treetop dweller in a thick red coat. Stands tall when it means it.*
+
+**Opposable Grip** · Mass · `hum_grip`
+
+- *Phys — Manipulate* · 1 AP · CD 1 — Melee 1 and Weaken 1 (its next hit deals −1). *(P3: Melee 4 and Weaken 1 (its next hit deals −1).)*
+- *Eth — Leverage* · 2 AP + 1 Mass · CD 3 — Melee 2 and Anchor the foe for 2 rounds (it cannot move). *(P3/E3: Melee 5 and Anchor the foe for 4 rounds (it cannot move).)*
+
+**Headfirst Descent** · Space · `oce_descent`
+
+- *Phys — Descend* · 1 AP · CD 1 — Climb up to 1, height included, and drop on every foe beside where you land for 1. *(P3: Climb up to 4, height included, and drop on every foe beside where you land for 2.)*
+- *Eth — Branch Drop* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3, melee 4, and it is Weakened 1. *(P3/E3: Drop beside a foe within 5, melee 6, and it is Weakened 1.)*
+
+**Musk** · Charge · `wea_musk`
+
+- *Phys — Musk* · 1 AP · CD 1 — Foes beside you are Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: Foes beside you are Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
+- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened.)*
+
+**Dense Fur** · Mass · `wea_fur`
+
+- *Phys — Thick Coat* · 1 AP · CD 1 — Shield 1 this round, and hazards don't touch you. *(P3: Shield 4 this round, and hazards don't touch you.)*
+- *Eth — Weatherproof* · 1 AP + 1 Mass · CD 3 — Shield 2 for 2 rounds; hazards don't touch you for 2. *(P3/E3: Shield 4 for 2 rounds; hazards don't touch you for 4.)*
+
+**Stand Tall** ★ · Charge · `rpa_tall`
+
+- *Phys — Stand Tall* · 1 AP · CD 1 — Rear up, arms wide: foes beside you are Weakened 1 this round, and the next hit on you is 1 less. *(P3: Rear up, arms wide: foes beside you are Weakened 1 this round, and the next hit on you is 2 less.)*
+- *Eth — Arms Up* · 1 AP + 1 Charge · CD 3 — Foes beside you are driven back 1, and every foe within 2 is Weakened 1 for 2 rounds. *(P3/E3: Foes beside you are driven back 2, and every foe within 2 is Weakened 1 for 4 rounds.)*
+
+**Tree Nap** · Time · `rpa_nap`
+
+- *Phys — Nap* · 1 AP · CD 2 — Curl up out of sight: heal 1, and Hidden 1. *(P3: Curl up out of sight: heal 4, and Hidden 1.)*
+- *Eth — Long Nap* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; Hidden 1. *(P3/E3: Heal 2 at the start of each turn for 3 rounds; Hidden 1.)*
+
+**Tail Wrap** · Space · `rpa_tail`
+
+- *Phys — Balance* · 1 AP · CD 1 — Climb up to 1, height included, balanced on your tail: Shield 1 this round. *(P3: Climb up to 4, height included, balanced on your tail: Shield 1 this round.)*
+- *Eth — Wrap Up* · 1 AP + 1 Space · CD 3 — Wrap up tight: Shield 2 for 2 rounds, and nothing can push or pull you. *(P3/E3: Wrap up tight: Shield 4 for 2 rounds, and nothing can push or pull you.)*
+
+**Bamboo Jaw** · Mass · `rpa_bamboo`
+
+- *Phys — Chew* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crush Stalk* · 1 AP + 1 Mass · CD 3 — Melee 4; it is Weakened 1 for 2 rounds. *(P3/E3: Melee 6; it is Weakened 1 for 2 rounds.)*
+
+**Cold Sleep** · Time · `rpa_cold`
+
+- *Phys — Slow Down* · 1 AP · CD 2 — Shield 1 this round, ignore hazards for 2, and your track returns 1 column sooner. *(P3: Shield 2 this round, ignore hazards for 2, and your track returns 1 column sooner.)*
+- *Eth — Torpor* · 1 AP + 1 Time · CD 4 — Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for 2 rounds. *(P3/E3: Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for 4 rounds.)*
