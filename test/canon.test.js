@@ -102,15 +102,98 @@ test('canon: the device keeps at most the newest T.CANON_MAX_RECORDS', () => {
   });
 });
 
-test('canon: the pilot question offers three different hooks from the pool, and they change between runs', () => {
-  const seen = new Set();
-  for (let run = 0; run < 8; run++) {
-    const h = T.canonHooks('ANVIL', run);
-    assert.equal(new Set(h).size, 3);
-    h.forEach((x) => assert.ok(T.CANON_HOOKS.includes(x)));
-    seen.add(h.join('|'));
+test('canon: every question gives a detail, asks about it, and offers three openings', () => {
+  const ids = new Set();
+  for (const p of T.CANON_PROMPTS) {
+    assert.ok(!ids.has(p.id), 'unique id ' + p.id);
+    ids.add(p.id);
+    assert.ok(p.subject === 'pilot' || T.isCanonSubject(p.subject), p.id);
+    assert.ok(p.detail.length > 20 && p.ask.endsWith('?'), p.id);
+    assert.equal(p.angles.length, 3, p.id);
   }
-  assert.ok(seen.size > 1);
+  for (const page of T.ATLAS) {
+    const n = T.CANON_PROMPTS.filter((p) => p.subject === 'place:' + page.id).length;
+    assert.ok(n >= 3, `${page.id} has ${n} questions`);
+  }
+});
+
+test('canon: a finished mission names its defining moments, most dramatic first, from the mission alone', () => {
+  const hero = (uid, hp, downed) => ({ uid, hp, maxHp: 26, downed: !!downed });
+  const kinds = (m) => T.canonMoments(m).map((x) => x.kind + x.hero);
+  // down at the end beats a close call
+  assert.deepEqual(kinds({ won: false, heroes: [hero(1, 2), hero(2, 0, true)], fx: [{ t: 'down', ent: 2 }] }), [
+    'fell1',
+  ]);
+  // went down, got up: rallied; got up without going down (a seeded return): spared
+  const m = {
+    won: true,
+    heroes: [hero(1, 9), hero(2, 14)],
+    fx: [
+      { t: 'dmg', ent: 1 },
+      { t: 'down', ent: 1 },
+      { t: 'revive', ent: 1 },
+      { t: 'dmg', ent: 2 },
+      { t: 'revive', ent: 2 },
+    ],
+  };
+  assert.deepEqual(kinds(m), ['rallied0', 'spared1']);
+  // a win on 3 vitality or less is a close call; a win without a hit is untouched; neither on a loss
+  assert.deepEqual(kinds({ won: true, heroes: [hero(1, 26), hero(2, 3)], fx: [{ t: 'dmg', ent: 2 }] }), [
+    'clutch1',
+    'untouched0',
+  ]);
+  assert.deepEqual(kinds({ won: false, heroes: [hero(1, 26)], fx: [] }), []);
+  assert.deepEqual(kinds({ won: true, heroes: [hero(1, 12)], fx: [{ t: 'dmg', ent: 1 }] }), [], 'an ordinary day');
+  // every kind has a question with a detail, a question and three openings, its tokens filled
+  for (const k of T.CANON_MOMENTS) {
+    const p = T.canonMomentPrompt(
+      'pilot:ANVIL',
+      { kind: k.kind, hp: 2 },
+      { name: 'Anvil', other: 'Doe', place: 'the Quarry', a: 'ant' },
+    );
+    assert.equal(p.id, 'moment.' + k.kind + ':pilot:ANVIL');
+    assert.ok(p.ask.endsWith('?') && p.angles.length === 3, k.kind);
+    assert.doesNotMatch(p.detail + p.ask + p.angles.join(''), /\{/, k.kind);
+  }
+  assert.equal(T.canonMomentPrompt('nobody', { kind: 'fell' }, {}), null);
+});
+
+test('canon: a real mission played to its end can be read for moments without changing it', () => {
+  const heroes = [T.makeHero(T.PREBUILTS[0]), T.makeHero(T.PREBUILTS[1])];
+  const m = { won: true, heroes, fx: [] };
+  heroes.forEach((h, i) => (h.uid = i + 1));
+  const before = JSON.stringify(m);
+  assert.deepEqual(
+    T.canonMoments(m).map((x) => x.kind),
+    ['untouched', 'untouched'],
+  );
+  assert.equal(JSON.stringify(m), before);
+});
+
+test('canon: a place question is not asked again on a device until its others are answered', () => {
+  const first = T.canonPrompt('place:quarry', { turn: 0 });
+  assert.equal(first.subject, 'place:quarry');
+  const seen = new Set([first.id]);
+  let answered = [first.id];
+  for (let k = 0; k < 2; k++) {
+    const p = T.canonPrompt('place:quarry', { turn: 0, answered });
+    assert.ok(!seen.has(p.id), 'a new question');
+    seen.add(p.id);
+    answered = answered.concat(p.id);
+  }
+  assert.ok(T.canonPrompt('place:quarry', { answered }), 'all answered: ask again rather than nothing');
+  assert.equal(T.canonPrompt('place:nowhere', {}), null);
+});
+
+test('canon: a pilot gets their own question first, then shared ones with their name and clades', () => {
+  const who = { name: 'Brikon Copperwright', a: 'yak', b: 'beetle' };
+  const own = T.canonPrompt('pilot:ANVIL', { who });
+  assert.equal(own.id, 'pilot.ANVIL');
+  const next = T.canonPrompt('pilot:ANVIL', { who, answered: ['pilot.ANVIL'], turn: 1 });
+  assert.match(next.id, /^pilot\.[a-z]+:pilot:ANVIL$/);
+  assert.ok(!/\{(name|a|b)\}/.test(next.detail + next.ask + next.angles.join('')), 'tokens filled');
+  const other = T.canonPrompt('pilot:ZODIAC', { who: { name: 'Ivelia Starreach', a: 'ocelot', b: 'heron' } });
+  assert.match(other.id, /:pilot:ZODIAC$/, 'a pilot with no page gets a shared question');
 });
 
 /* ───────────── through the real page ───────────── */
@@ -175,21 +258,32 @@ test(
 );
 
 test(
-  'canon UI: the draft asks why the pilot guides, keeps an answer, and asks nothing once turned off',
+  'canon UI: the draft asks about the pilot, keeps an embellished answer, and asks nothing once turned off',
   { skip, timeout: 60_000 },
   async () => {
     const { d, click, errors, records } = await page();
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
-    assert.ok(d.querySelector('.canon-ask'), 'the question sits under the upgrades');
-    click('[data-act="canonHook"][data-arg="1"]');
+    assert.ok(d.querySelector('.canon-ask .canon-detail'), 'the question sits under the upgrades');
+    const key = 'draft0';
+    click(`[data-act="canonAngle"][data-arg="${key}|1"]`);
+    const box = d.getElementById('cp-' + key);
+    assert.ok(box.value.length > 3, 'an opening is put in the box');
+    box.value += 'they never speak of it.';
+    box.dispatchEvent(new d.defaultView.Event('input', { bubbles: true }));
+    click('[data-act="up"]'); // any redraw keeps what was typed
+    assert.match(d.getElementById('cp-' + key).value, /never speak of it/);
     click('[data-act="confirmHero"]');
     const [r] = records();
     assert.match(r.subject, /^pilot:[A-Z0-9]+$/);
     assert.equal(r.kind, 'answer');
-    assert.equal(r.prompt, 'hook');
+    assert.ok(
+      T.CANON_PROMPTS.some((p) => r.prompt.split(':')[0] === p.id),
+      r.prompt,
+    );
     assert.equal(r.context.hero, 'Cavitt');
-    assert.ok(T.CANON_HOOKS.includes(r.claim));
+    assert.match(r.claim, /never speak of it\.$/);
+    assert.ok(r.shown.endsWith('?'), 'the detail and the question travel with the answer');
     // skipping is answering nothing
     click('[data-act="prebuilt"][data-arg="marish"]');
     click('[data-act="confirmHero"]');
@@ -203,6 +297,74 @@ test(
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="ossa"]');
     assert.ok(!d.querySelector('.canon-ask'), 'no question once turned off');
+    assert.deepEqual(errors, []);
+  },
+);
+
+test(
+  'canon UI: the end of a mission asks what a moment meant to the pilot it happened to',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { w, d, click, errors, records } = await page();
+    const U = w.T.UI;
+    const heroes = [w.T.makeHero(w.T.PREBUILTS[0]), w.T.makeHero(w.T.PREBUILTS[1])];
+    heroes.forEach((h, i) => (h.uid = i + 1));
+    heroes[1].hp = 0;
+    heroes[1].downed = true;
+    const m = { won: false, page: 'quarry', title: 'x', round: 5, heroes, fx: [{ t: 'down', ent: 2 }] };
+    U.openModal(U.momentQuestion(m));
+    const a = U.pilotOf(heroes[1]);
+    assert.match(d.querySelector('.canon-ask').textContent, new RegExp(a.name + ' went down'));
+    click('[data-act="canonAngle"][data-arg="moment|0"]');
+    const box = d.getElementById('cp-moment');
+    box.value += 'turned back for anyone.';
+    click('[data-act="canonPromptSend"]');
+    const [r] = records();
+    assert.equal(r.subject, 'pilot:' + a.key);
+    assert.equal(r.where, 'mission:moment');
+    assert.equal(r.prompt, 'moment.fell:pilot:' + a.key);
+    assert.equal(r.context.moment, 'fell');
+    assert.equal(r.context.result, 'lost');
+    assert.match(r.claim, /^After .+, .+ never again turned back for anyone\.$/);
+    // nothing worth asking: no panel
+    U.canonFlush();
+    heroes.forEach((h) => ((h.hp = 12), (h.downed = false)));
+    assert.equal(
+      U.momentQuestion({
+        won: true,
+        heroes,
+        fx: [
+          { t: 'dmg', ent: 1 },
+          { t: 'dmg', ent: 2 },
+        ],
+      }),
+      '',
+    );
+    assert.deepEqual(errors, []);
+  },
+);
+
+test(
+  'canon UI: the end of a mission asks about its place, and Send keeps the answer once',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { w, d, click, errors, records } = await page();
+    const U = w.T.UI;
+    U.openModal(U.placeQuestion({ page: 'lagoon' }));
+    assert.match(d.querySelector('.canon-ask').textContent, /Kelp Lagoon/);
+    click('[data-act="canonPromptSend"]');
+    assert.equal(records().length, 0, 'nothing typed, nothing sent');
+    const box = d.querySelector('.canon-ask textarea');
+    box.value = 'A song about the floats.';
+    click('[data-act="canonPromptSend"]');
+    const [r] = records();
+    assert.equal(r.subject, 'place:lagoon');
+    assert.equal(r.where, 'mission:end');
+    assert.ok(d.querySelector('.canon-ask.sent'), 'the panel says it was sent');
+    U.render();
+    assert.ok(d.querySelector('.canon-ask.sent'), 'and still does after a redraw');
+    U.canonFlush();
+    assert.equal(records().length, 1, 'sent once');
     assert.deepEqual(errors, []);
   },
 );

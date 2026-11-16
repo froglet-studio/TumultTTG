@@ -985,6 +985,7 @@
     shown = U.screen;
     if (U.screen === 'mission') U.afterMissionRender();
     if (U.modal && U.modal.onMount) U.modal.onMount();
+    if (U.canonRestore) U.canonRestore();
   };
 
   /* ───────────── ACTION DISPATCH (event delegation) ───────────── */
