@@ -1,6 +1,6 @@
 # 11 · Clades for every painted animal
 
-*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), the Dogs and hyenas and Weasel kin (2.49.0), the Sea mammals (2.50.0), the Hoofed animals (2.51.0), and the Gnawers (2.52.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
+*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), the Dogs and hyenas and Weasel kin (2.49.0), the Sea mammals (2.50.0), the Hoofed animals (2.51.0), the Gnawers (2.52.0), and the Armoured and slow (2.53.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
 
 ## The rule
 
@@ -27,7 +27,7 @@ One pull request per branch, each with its audit and simulation numbers.
 | Sea mammals (2.50) | orca, narwhal, walrus |
 | Hoofed animals (2.51) | bison, yak, ram, moose, deer, oryx, zebra |
 | Gnawers and hares (2.52) | mouse, porcupine, hare, black_hare |
-| Armoured and slow | armadillo, pangolin, hedgehog, sloth |
+| Armoured and slow (2.53) | armadillo, pangolin, hedgehog, sloth |
 | Pouched and egg-laying | kangaroo, opossum, platypus |
 | Birds of prey and owls | eagle, hawk, owl |
 | Waders | crane, heron, egret, ibis, flamingo, shoebill |
