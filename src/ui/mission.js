@@ -10,7 +10,16 @@
   const esc = U.esc;
   const EL = T.ETHERIONS;
   const $ = (s, r) => (r || document).querySelector(s);
-  const OBJ_ICON = { vault: '🏛️', lever: '🕹️', beacon: '📡', cache: '❓', valve: '🔧', crate: '📦', dock: '⚓' };
+  const OBJ_ICON = {
+    vault: '🏛️',
+    lever: '🕹️',
+    beacon: '📡',
+    cache: '❓',
+    valve: '🔧',
+    crate: '📦',
+    dock: '⚓',
+    mark: '📍',
+  };
   const NS = 'http://www.w3.org/2000/svg';
   const svgEl = (tag, attrs, parent) => {
     const e = document.createElementNS(NS, tag);
@@ -322,6 +331,14 @@
           : 'A cache — search it by stepping on it, or reveal it from range.';
       case 'valve':
         return `The valve. Channel ×${ob.need} (${ob.done}/${ob.need}).`;
+      case 'crate':
+        return 'A crate. Interact on or beside it to pick it up, then carry it to the near edge (A).';
+      case 'mark': {
+        const el = { M: 'Mass', C: 'Charge', S: 'Space', T: 'Time' }[o.el];
+        return o.veiled
+          ? `A veiled survey mark (${el}). Sight it first: stand within 1 of it, or reach it with a reveal.`
+          : `A survey mark (${el}). Tag it by Interacting while standing on it: 2 AP, or one ${el} or Omni die (${ob.done}/${ob.need}).`;
+      }
     }
     return '';
   }
@@ -640,7 +657,8 @@
       <div class="fold-sum small dim"><span>${h.cards.length} cards · ${ready} playable now${onTrack ? ` · ${onTrack} on the track` : ''}${h.gear.length ? ` · ${h.gear.length} gear` : ''}</span><button class="ghost sm peek" data-act="peek" data-arg="${i}">Show cards ▾</button></div>
     </div>`;
     }
-    const canInteract = !h.downed && interactNode(m, h) != null && T.apValue(h) >= 2;
+    const inode = h.downed ? null : interactNode(m, h);
+    const canInteract = inode != null && (T.apValue(h) >= 2 || !!T.markPay(h, m.board.nodes[inode].objective));
     const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
     return `<div class="hero ${sel ? 'active' : 'peeking'} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
@@ -657,7 +675,7 @@
           const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
           return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
         }).join('')}
-        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP). Height objectives require standing on the node.">⚙ Interact (2)</button>
+        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
         <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>
         <button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>
@@ -677,6 +695,7 @@
       if (k === 'cache' && (!m.objective.found || !nd.objective.real) && n !== h.pos) continue;
       if (k === 'cache' && nd.objective.searched && !nd.objective.real) continue;
       if (k === 'lever' && m.board.ramp) continue;
+      if (k === 'mark' && (nd.objective.veiled || n !== h.pos)) continue;
       return n;
     }
     return null;
@@ -760,12 +779,24 @@
         const o = n.objective;
         let ic = OBJ_ICON[o.kind];
         if (o.kind === 'cache') ic = o.searched ? (o.real ? '💎' : '✖') : '❓';
-        const key = o.kind === 'cache' ? (o.searched ? (o.real ? 'cons.shard' : null) : 'obj.cache') : 'obj.' + o.kind;
+        const key =
+          o.kind === 'cache'
+            ? o.searched
+              ? o.real
+                ? 'cons.shard'
+                : null
+              : 'obj.cache'
+            : o.kind === 'mark' && o.veiled
+              ? 'obj.veiled'
+              : 'obj.' + o.kind;
         const ps = key && U.iconPaths(key);
         if (ps) {
           const og = svgEl(
             'g',
-            { class: 'objmark-ic k-' + o.kind, transform: `translate(${x - 11},${y - 11}) scale(0.92)` },
+            {
+              class: 'objmark-ic k-' + o.kind + (o.el ? ' mk-' + o.el : ''),
+              transform: `translate(${x - 11},${y - 11}) scale(0.92)`,
+            },
             mk,
           );
           ps.forEach((d) => svgEl('path', { d }, og));
@@ -1414,7 +1445,7 @@
       .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
       .join('');
     U.openModal(
-      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
+      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}${U.momentQuestion ? U.momentQuestion(m) : ''}${U.placeQuestion ? U.placeQuestion(m) : ''}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
     );
   }
 
@@ -1767,6 +1798,7 @@
         return true;
       }
       case 'missionDone': {
+        if (U.canonFlush) U.canonFlush();
         U.closeModal();
         T.missionRewards(U.run, m);
         T.applyMissionResult(U.run);

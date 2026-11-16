@@ -324,7 +324,7 @@
     run.nodeId = nodeId;
     run.map.current = nodeId;
     let type = node.type;
-    if (run.nextElite && ['swarm', 'vault', 'hidden', 'cascade', 'salvage'].includes(type)) {
+    if (run.nextElite && ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey'].includes(type)) {
       node.type = type = 'elite';
       run.nextElite = false;
     }

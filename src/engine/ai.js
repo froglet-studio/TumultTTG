@@ -434,6 +434,10 @@
       const c = Object.values(m.board.nodes).find((n) => n.objective && n.objective.kind === 'crate');
       return c ? c.id : ob.docks[1];
     }
+    if (ob.kind === 'survey') {
+      const k = Object.values(m.board.nodes).find((n) => n.objective && n.objective.kind === 'mark');
+      return k ? k.id : null;
+    }
     if (ob.kind === 'find') {
       if (ob.found) return ob.real;
       const un = ob.candidates.filter((c) => !m.board.nodes[c].objective.searched);
@@ -469,6 +473,17 @@
           .map((n) => n.id),
       );
       return c == null ? null : { node: c, needOn: false };
+    }
+    if (ob.kind === 'survey') {
+      // the nearest mark nobody else is nearer to: two pilots split the board
+      const ally = T.liveHeroes(m).find((x) => x !== h);
+      const d = (a, n) => B.dist(m.board, a.pos, n, true);
+      const marks = Object.values(m.board.nodes)
+        .filter((n) => n.objective && n.objective.kind === 'mark')
+        .map((n) => n.id)
+        .sort((a, b) => d(h, a) - d(h, b) || a - b);
+      const mine = marks.find((n) => !ally || d(h, n) <= d(ally, n)) ?? marks[0];
+      return mine == null ? null : { node: mine, needOn: true };
     }
     if (ob.kind === 'vault') {
       const canReach =
@@ -541,7 +556,7 @@
         // 2. interact
         const ob = m.objective;
         let didInteract = false;
-        if (ob && T.apValue(h) >= 2) {
+        if (ob && (T.apValue(h) >= 2 || ob.kind === 'survey')) {
           const nodes = [h.pos].concat(B.walkNeighbors(m.board, h.pos));
           for (const n of nodes) {
             const nd = m.board.nodes[n];
@@ -553,6 +568,7 @@
             if (k === 'cache' && !ob.found && n !== h.pos) continue;
             if (k === 'vault' && n !== h.pos) continue;
             if (k === 'lever' && m.board.ramp) continue;
+            if (k === 'mark' && (nd.objective.veiled || n !== h.pos)) continue;
             const r = T.doInteract(m, h, n, false);
             if (r.ok) {
               didInteract = true;

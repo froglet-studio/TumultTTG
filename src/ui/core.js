@@ -446,7 +446,7 @@
 
   /* ───────────── MAP ───────────── */
   const NODE_ICON = {};
-  ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'elite', 'haven', 'event', 'boss'].forEach(
+  ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey', 'elite', 'haven', 'event', 'boss'].forEach(
     (k) => (NODE_ICON[k] = U.icNode(k)),
   );
   const NODE_NAME = {
@@ -455,6 +455,7 @@
     hidden: 'The Sought',
     cascade: 'Cascade',
     salvage: 'Salvage',
+    survey: 'Survey',
     elite: 'Elite',
     haven: 'Haven',
     event: 'Event',
@@ -984,6 +985,7 @@
     shown = U.screen;
     if (U.screen === 'mission') U.afterMissionRender();
     if (U.modal && U.modal.onMount) U.modal.onMount();
+    if (U.canonRestore) U.canonRestore();
   };
 
   /* ───────────── ACTION DISPATCH (event delegation) ───────────── */

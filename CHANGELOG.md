@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.44.0 — 2026-11-16 — the cats
+## 2.47.0 — 2026-11-16 — the cats
 
 Garrett: "cats are going to share many of those 9 traits, but hyperspeed (travel exactly 4 spaces) should be unique to a cheetah."
 
@@ -22,7 +22,37 @@ The second branch of the tree: five painted cats, each with nine traits.
 - Each cat has a voice in the passages between stops.
 - Tests for both movement changes.
 
-Audit: 272 faces, 0 narrow (Throat Bite became a strike plus a finishing bite after the first pass flagged it), 0 hard-counter candidates, 0 collapsed gate cells. Simulation, `node tools/sim.js 40`, 2.43 → 2.44: heuristic run wins 5/40 → 7/40, mission win 72% → 73%; look-ahead 14/40 → 12/40, 83% → 83%. Within noise.
+Audit: 272 faces, 0 narrow (Throat Bite became a strike plus a finishing bite after the first pass flagged it), 0 hard-counter candidates, 0 collapsed gate cells. Simulation, `node tools/sim.js 40`, before and after the cats (on 2.43): heuristic run wins 5/40 → 7/40, mission win 72% → 73%; look-ahead 14/40 → 12/40, 83% → 83%. Within noise.
+## 2.46.0 — 2026-11-16 — Survey, a second mission that is not a fight
+
+The next non-combat mission from the plan for two-player runs (`docs/design/03-missions.md`), aimed at turns where one move is clearly best.
+
+- **Survey — Before Nightfall.** Survey marks lie across the whole board, two more than you need, with at least one in every column past the start. Tag 4/5/6 of them (+ the tide) before night falls (6/6/5 rounds, less the tide's round). To tag a mark you stand on it and Interact.
+- **A mark takes 2 AP or one die of its element.** Each mark is Mass, Charge, Space or Time, shown by its colour, and Omni counts. So a rolled element always has a use, and spending it on a mark or a card is a real choice.
+- **Veiled marks.** Half the marks, the farthest first, start veiled (a ringed ! on the board). A veiled mark can't be tagged until a pilot stands within 1 of it or a reveal reaches it, which gives information verbs real work. A few foes wander between the marks, and a lurker joins from tier 2.
+- **On the route** it takes Cascade's place in the middle row (tier 2). Cascade still opens the run.
+- The look-ahead player sees both ways to pay. The heuristic heads for the nearest mark its partner is not nearer to, so the two split the board.
+- **Balance** (`node tools/sim.js 80 runs`, main → 2.46.0): heuristic 18 → 17, look-ahead 32 → 33. Survey cells over 40 missions, heuristic / look-ahead: t1 100/100%, t2 80/100%, t3 33/90%.
+- **Dull turns** (`node tools/turns.js 10`): Survey t1/t2/t3 31/24/35%, against 38/42/31% for the Cascade it replaces at tier 2. It started at 43% at tier 2 when marks took AP only and could be tagged from beside them.
+- No mission needs an ability: squads with no cards at all win Survey 100% at tier 1 and 94% at tier 2 (`ABILITY_AUDIT.md`).
+## 2.45.0 — 2026-11-16 — canon from play: defining moments
+
+A step of design 06: when something dramatic happens to a pilot, the game says what happened and asks what it meant.
+
+- **At the end of a mission**, above the question about the place, the panel names one moment that happened to a pilot whose painting a hero wears and asks about it, in the same shape as other questions: the facts from play, a question, three openings. ("… went down on the Quarry, and … got them back on their feet. What does … owe … now?")
+- **Five kinds, most dramatic first** (`T.CANON_MOMENTS`): went down and stayed down; went down and was rallied; should have gone down and did not (a seeded return or a second wind); won on 3 vitality or less; won without taking a hit. They are read from the finished mission alone (`T.canonMoments(m)`, from its effects list), so nothing new is saved.
+- Answers are proposals about the pilot (`pilot:<callsign>`, `where: mission:moment`), with the kind and the result in their context.
+- Design 06 ties each moment to a small permanent change on a trait card. That is left out: these moments change no rules, dice or missions.
+
+## 2.44.0 — 2026-11-16 — canon from play: questions to embellish
+
+Garrett: "more canon is better, but guide them into an interesting question where they can provide details on the details you provide. make them feel like they are embellishing. more than ad lib, less than a blank canvas."
+
+- **Every question now has three parts**: a **detail** the game already shows (from the atlas's field notes), a **question** about it, and three **openings**, the first words of an answer for the player to carry on ("It is ground down and…"). Picking an opening puts it in the box; it never overwrites words the player wrote. Answers may also start from nothing. Nothing in a question is new canon: each detail restates its page.
+- **After every mission**, the mission-over panel asks one question about the page it was played on ("While the dust settles"). 27 questions, three for each of the nine places. A question answered on this device is not asked again until its place's others have been.
+- **At the draft**, the question about the Cosmic Shore pilot whose painting the hero wears takes the same shape: the nine pilots whose world is an atlas page get their own question first ("Who taught Brikon to carry it alone…?"), then five every pilot shares, filled with their name and clades. It replaces the "why do they guide?" choices of 2.20.
+- Optional as before: *Send* on the panel, or *Continue* sends what was typed; turning questions off under Canon hides them. What is typed survives the screen redrawing. Answers carry the question and detail they answer (`prompt`, `shown`).
+- No rules, dice or missions change.
 
 ## 2.43.0 — 2026-11-16 — the primates
 

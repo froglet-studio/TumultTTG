@@ -339,6 +339,18 @@ Tried along the way (`node tools/turns.js 6`; dull = idle + forced):
 | new dice, 3 a turn | 41% | 41 of 80 | no change to dull turns |
 | new dice, 4 a turn, no retune | 37% | 54 of 80 | far easier |
 
+## v2.46.0 — Survey
+
+Survey (`MISSIONS_AND_BESTIARY.md`) went through three versions, each measured with `node tools/turns.js 10 survey` (dull = idle + forced) and 40 missions a cell:
+
+| Version | Dull turns t2 | Look-ahead t2 / t3 | Why not |
+|---|---|---|---|
+| tag from on or beside a mark for 2 AP | 43% | 100 / 100%, 3.6 rounds of 6 | the best move was nearly always clear: walk to the nearest mark and tag it |
+| … or for a die of the mark's element | 29% | 100 / 100%, 2.5 rounds | far too quick: two tags a pilot a round |
+| … standing on the mark (built) | 24% | 100 / 90%, 3.4 rounds | |
+
+Need 4/5/6 and clock 6/6/5, both before the tide. It takes Cascade's place in the middle row of the route. Full runs over 80 match main within noise: heuristic 18 → 17, look-ahead 32 → 33.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.
