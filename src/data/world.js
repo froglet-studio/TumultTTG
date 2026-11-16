@@ -25,7 +25,7 @@
                              // must be awakened (Garrett, 2026-11-12). 0 is the v2.0 rule, kept as a switch.
     START_AWAKE: 2,          // a new hero begins with this many cards awakened (E 1), paid from START_UP
     START_UP: 6, START_CARDS: 6, MAX_PER_SPECIES: 3, MAX_CARDS: 9,
-    DOUBLE_UP: 2,            // a trait two of a hero's clades share may be taken a second time: as this many UP for it alone
+    DOUBLE_UP: 1,            // a trait two of a hero's clades share may be taken a second time: as this many UP for it alone
     GEAR_SLOTS: 2,
   };
 

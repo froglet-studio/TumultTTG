@@ -43,9 +43,13 @@ test("a trait only one of the hero's clades carries is never offered twice", () 
 });
 
 test('bound points are spent on their card first, never on another, and come back last', () => {
+  // the accounting, with two points bound (whatever RULES.DOUBLE_UP is today)
   const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
   h.upUnspent = 1;
+  const was = R.DOUBLE_UP;
+  R.DOUBLE_UP = 2;
   T.addCard(h, 'hum_tool');
+  R.DOUBLE_UP = was;
   assert.ok(T.adjustUp(h, 'hum_tool', 'E', 1).ok);
   assert.ok(T.adjustUp(h, 'hum_tool', 'P', 1).ok);
   assert.equal(h.upUnspent, 1, "both points came from the card's own");
@@ -61,7 +65,7 @@ test('bound points are spent on their card first, never on another, and come bac
   assert.equal(h.upUnspent, 0, 'another card pays from the free pool');
   T.respecHero(h);
   assert.equal(h.upUnspent, 1, 'a respec gives back only free points');
-  assert.equal(T.boundLeft(h, 'hum_tool'), R.DOUBLE_UP);
+  assert.equal(T.boundLeft(h, 'hum_tool'), 2);
   T.autoAllocate(h);
   assert.equal(T.boundLeft(h, 'hum_tool'), 0, 'auto-allocate spends what is bound');
 });

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.48.0 — 2026-11-16 — a trait taken twice: 1 UP, and it counts
+
+Garrett: "lets also consider the right number on upgrading from a second card, so another card and more upgrade power result in comparable win rates".
+
+- **Fix.** In 2.42, the points already on a card counted against the points bound to it. So a trait that held points gained few or none of them when taken a second time: Stalk at P 2, taken again for 3, gained 1. Bound points now keep their own count (`hero.bound[id] = [n, spent]`). They add to what is on the card, are spent there first, and still never go to another card.
+- **A second pick is worth 1 UP** (`RULES.DOUBLE_UP` 2 → 1). Over whole runs, 1 UP wins about as often as taking a different card, and 2 UP clearly more (look-ahead 48 / 58 / 68 runs of 120 for card / 1 / 2; heuristic 85 / 88 / 102 of 400). Within single missions no value could be told apart (`tools/double-up.js`, new). Numbers in `docs/reference/BALANCE.md`.
+- Saves go to version 16; a 2.47 save keeps its bound points, counted as on the card the way 2.42 counted them (fixture `save-2.47.json`).
+
 ## 2.47.0 — 2026-11-16 — the cats
 
 Garrett: "cats are going to share many of those 9 traits, but hyperspeed (travel exactly 4 spaces) should be unique to a cheetah."

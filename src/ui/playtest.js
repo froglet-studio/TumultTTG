@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.47.0',
+    version: '2.48.0',
     items: [
+      {
+        text: 'A trait your two clades share can be taken a second time, and that pick is now 1 Upgrade Point for that card alone (it was 2, and often gave nothing at all because of a bug, now fixed). Over whole runs that is about as strong as taking a different card. When you are offered a trait you already hold, which do you take, and does it feel like a real choice?',
+      },
       {
         text: 'Five cats join: Eurasian Lynx, Caracal, Ocelot, Tiger and Cheetah. Cats share Pounce, Stalk, Killing Bite and Land on Your Feet (and all but the cheetah share Retractable Claws and Night Eyes). The cheetah alone has Hyperspeed: a run of exactly 4, past foes. Does each cat feel like itself? Is an exact run fun to plan around?',
       },
@@ -34,7 +37,7 @@
         text: 'The game now asks you to embellish the world. When a mission ends, a panel gives you one detail of the place you just crossed and an open question about it, with three openings to carry on from (or start from nothing); the draft does the same for the pilot you picked. Answers go to Garrett as proposals. Were the questions ones you wanted to answer? Which opening did you take, and which question fell flat?',
       },
       {
-        text: 'Three new clades, the first of the animals painted on Cosmic Shore pilots: Orangutan, Ring-Tailed Lemur and Mandrill. Primates share some traits with Humans and with each other (Grooming, Canopy Leap, Troop Call), and each has four of its own. A human-orangutan pilot can take Tool Use twice: the second time it is 2 UP for that card. Do the three feel different from each other, and from a Human?',
+        text: 'Three new clades, the first of the animals painted on Cosmic Shore pilots: Orangutan, Ring-Tailed Lemur and Mandrill. Primates share some traits with Humans and with each other (Grooming, Canopy Leap, Troop Call), and each has four of its own. A human-orangutan pilot can take Tool Use twice: the second time it is UP for that card. Do the three feel different from each other, and from a Human?',
       },
       {
         text: 'Dice look like dice again, in their real shapes: the plain die is a d20 (an icosahedron), an element’s die a d8 (an octahedron) and the ethereal die a d12 (a dodecahedron), with the face it shows in the middle. The same shapes tumble in the roll tray. Your abilities are now cards: each has art showing what its two faces do, the Physical side in steel on the left and the Ethereal side in its etherion’s colour on the right, over the clade it comes from, and each face button carries the same picture. Can you tell what a card does from its art? Do the dice read at a glance?',
