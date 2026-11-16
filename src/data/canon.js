@@ -202,4 +202,33 @@
       ask: 'Which way is {name} drifting, and who would be disappointed by it?',
       angles: ['Toward Gold, which their', 'Toward Jade, since', 'Nowhere: {name} stays Ruby because'] },
   ];
+
+  /*
+   * Defining moments (design/06): when a mission ends on something that happened to a pilot, the game says
+   * what happened and asks what it meant. Only the facts come from play; what they meant is the player's.
+   * Tokens: {name} the pilot, {other} their squadmate, {place} where it was, {hp} vitality left, {a} a clade.
+   * Most dramatic first: the order here is the order a moment is chosen in (T.canonMoments).
+   */
+  T.CANON_MOMENTS = [
+    { kind: 'fell',
+      detail: '{name} went down on {place}, and was still down when it ended.',
+      ask: 'What did that day change in {name}?',
+      angles: ['After {place}, {name} never again', 'The last thing {name} saw before the dark was', '{name} still will not talk about'] },
+    { kind: 'rallied',
+      detail: '{name} went down on {place}, and {other} got them back on their feet.',
+      ask: 'What does {name} owe {other} now, and will they ever pay it?',
+      angles: ['{name} has never told {other} that', 'Since {place}, {name} always', 'They did not speak of it until'] },
+    { kind: 'spared',
+      detail: '{name} should have gone down on {place}, and got back up on their own.',
+      ask: 'What kept them standing?',
+      angles: ['A promise to', 'Something the {a} in them knows:', 'Plain stubbornness, because'] },
+    { kind: 'clutch',
+      detail: '{name} finished {place} on {hp} vitality, one blow from the end.',
+      ask: 'What did they think about on the way out?',
+      angles: ['{name} laughed, because', 'Their hands did not stop shaking until', 'From that day, {name} keeps'] },
+    { kind: 'untouched',
+      detail: '{name} came through {place} without a scratch.',
+      ask: 'Luck, skill, or someone else taking the hits: how does {name} tell it?',
+      angles: ['{name} tells it as', '{other} tells it differently:', 'Nobody saw how. {name} only says'] },
+  ];
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

@@ -85,6 +85,8 @@ Garrett (2026-11-16): "guide them into an interesting question where they can pr
 
 `T.canonPrompt(subject, { answered, turn, who })` picks one: a question already answered on this device is skipped while its subject has others. Places have three questions each and are asked when a mission on that page ends. A pilot whose world is an atlas page has their own question, asked first at the draft; after it, five questions every pilot shares, filled with the pilot's name and clades (their id names the pilot, `pilot.keepsake:pilot:ANVIL`, so each is answered once per pilot). An answer's record carries the question's id in `prompt` and its detail and question in `shown`.
 
+**Defining moments** (2.45.0, design 06). When a mission ends, `T.canonMoments(m)` reads what happened to each hero from the mission's effects list and state: `fell` (down at the end), `rallied` (went down, an ally got them up), `spared` (a seeded return or second wind kept them up), `clutch` (won on 3 vitality or less), `untouched` (won without a hit). The most dramatic one that happened to a hero wearing a Cosmic Shore pilot's painting is asked about on the mission-over panel, above the place question, with `T.canonMomentPrompt`: the facts, a question about what they meant, three openings. Its id is `moment.<kind>:pilot:<callsign>`; a moment is asked each time it happens. Moments change nothing in play.
+
 ## Still to come
 
 The plan has four steps.
@@ -92,4 +94,4 @@ The plan has four steps.
 1. ✓ Records, ✎ marks, the draft question, Canon list (2.20.0).
 2. ✓ The test page sends each record to a private inbox, and the lore lead approves, edits, rejects and marks public (2.21.0).
 3. ✓ The storyteller pack and the repository's copy of public canon (2.22.0, below).
-4. More questions at natural pauses. ✓ Embellishing questions about places after every mission and about pilots at the draft (2.44.0). Still to build: defining moments after a mission, and the end-of-run dossier ([design 06](../design/06-pilots-and-backstory.md)).
+4. More questions at natural pauses. ✓ Embellishing questions about places after every mission and about pilots at the draft (2.44.0), and defining moments after a mission (2.45.0). Still to build: the end-of-run dossier ([design 06](../design/06-pilots-and-backstory.md)).

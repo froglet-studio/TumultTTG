@@ -215,6 +215,49 @@
     return promptHTML(key);
   };
 
+  /**
+   * The end of a mission: if something happened to a painted pilot (down, rallied, a close call...), say what
+   * happened and ask what it meant to them. One moment per mission, the most dramatic.
+   */
+  U.momentQuestion = function (m) {
+    if (!m || !U.canonAsks() || !U.pilotOf) return '';
+    const key = 'moment';
+    const place = (m.page && T.PAGE_BY[m.page] && T.PAGE_BY[m.page].name) || m.title || 'the route';
+    const clade = (c) => String(c).replace(/_/g, ' ');
+    const nameOf = (h) => {
+      const a = h && U.pilotOf(h);
+      return a ? a.name : h ? h.name : 'the squad';
+    };
+    for (const mo of T.canonMoments(m)) {
+      const hero = m.heroes[mo.hero];
+      const a = U.pilotOf(hero);
+      if (!a) continue;
+      const subject = 'pilot:' + a.key;
+      const q = U.canonPrompts[key];
+      if (!q || q.subject !== subject || q.kind !== mo.kind) {
+        const other = m.heroes.length === 2 ? m.heroes[1 - mo.hero] : null;
+        const p = T.canonMomentPrompt(subject, mo, {
+          name: a.name,
+          other: nameOf(other),
+          place,
+          a: clade(a.clades[0]),
+        });
+        if (!p) continue;
+        U.canonPrompts[key] = {
+          p,
+          subject,
+          kind: mo.kind,
+          where: 'mission:moment',
+          text: '',
+          context: { hero: hero.name, moment: mo.kind, round: m.round, result: m.won ? 'won' : 'lost' },
+          head: `<div class="row">${U.portrait(hero, 'xs')}<span class="kick">A moment on ${esc(place)}</span></div>`,
+        };
+      }
+      return promptHTML(key);
+    }
+    return '';
+  };
+
   /* ───────────── the list, from the title ───────────── */
   let clearing = false;
   function listHTML() {

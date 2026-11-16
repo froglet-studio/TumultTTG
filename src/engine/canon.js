@@ -109,7 +109,7 @@
     } catch (e) {}
   };
 
-  const fill = (str, w) => String(str).replace(/\{(name|a|b)\}/g, (m, k) => (w[k] != null ? w[k] : m));
+  const fill = (str, w) => String(str).replace(/\{(name|a|b|other|place|hp)\}/g, (m, k) => (w[k] != null ? w[k] : m));
 
   /**
    * The question to ask about a subject now, or null. `subject` is 'place:<page>' or 'pilot:<callsign>';
@@ -135,6 +135,58 @@
     const id = p.subject === 'pilot' ? p.id + ':' + subject : p.id;
     return {
       id,
+      subject,
+      detail: fill(p.detail, w),
+      ask: fill(p.ask, w),
+      angles: p.angles.map((x) => fill(x, w)),
+    };
+  };
+
+  /** Vitality left at the end of a won mission that counts as a close call. */
+  const CLUTCH = 3;
+  /**
+   * What happened to each hero in a finished mission that is worth a question, read from the mission alone
+   * (its effects list and the heroes' state): [{ kind, hero, hp }], most dramatic first, at most one per hero.
+   * fell: down at the end. rallied: went down and an ally got them up. spared: a seeded return or second
+   * wind kept them up. clutch: a win on CLUTCH vitality or less. untouched: a win without a hit taken.
+   */
+  T.canonMoments = function (m) {
+    const order = T.CANON_MOMENTS.map((x) => x.kind);
+    const out = [];
+    (m.heroes || []).forEach((h, i) => {
+      let down = false;
+      let rallied = false;
+      let spared = false;
+      let hit = false;
+      for (const f of m.fx || []) {
+        if (f.ent !== h.uid) continue;
+        if (f.t === 'down') down = true;
+        else if (f.t === 'revive') {
+          if (down) rallied = true;
+          else spared = true;
+          down = false;
+        } else if (f.t === 'dmg') hit = true;
+      }
+      let kind = null;
+      if (h.downed) kind = 'fell';
+      else if (rallied) kind = 'rallied';
+      else if (spared) kind = 'spared';
+      else if (m.won && h.hp <= CLUTCH) kind = 'clutch';
+      else if (m.won && !hit) kind = 'untouched';
+      if (kind) out.push({ kind, hero: i, hp: Math.max(0, h.hp) });
+    });
+    return out.sort((a, b) => order.indexOf(a.kind) - order.indexOf(b.kind));
+  };
+  /**
+   * The question for one moment about `subject` ('pilot:<callsign>'), with `who` = { name, other, place, hp, a }
+   * filled in. Its id names the kind and the pilot; a moment is asked each time it happens.
+   */
+  T.canonMomentPrompt = function (subject, moment, who) {
+    const p = T.CANON_MOMENTS.find((x) => x.kind === moment.kind);
+    if (!p || !T.isCanonSubject(subject)) return null;
+    const w = Object.assign({ hp: moment.hp }, who || {});
+    return {
+      id: 'moment.' + p.kind + ':' + subject,
       subject,
       detail: fill(p.detail, w),
       ask: fill(p.ask, w),

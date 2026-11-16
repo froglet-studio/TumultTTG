@@ -117,6 +117,59 @@ test('canon: every question gives a detail, asks about it, and offers three open
   }
 });
 
+test('canon: a finished mission names its defining moments, most dramatic first, from the mission alone', () => {
+  const hero = (uid, hp, downed) => ({ uid, hp, maxHp: 26, downed: !!downed });
+  const kinds = (m) => T.canonMoments(m).map((x) => x.kind + x.hero);
+  // down at the end beats a close call
+  assert.deepEqual(kinds({ won: false, heroes: [hero(1, 2), hero(2, 0, true)], fx: [{ t: 'down', ent: 2 }] }), [
+    'fell1',
+  ]);
+  // went down, got up: rallied; got up without going down (a seeded return): spared
+  const m = {
+    won: true,
+    heroes: [hero(1, 9), hero(2, 14)],
+    fx: [
+      { t: 'dmg', ent: 1 },
+      { t: 'down', ent: 1 },
+      { t: 'revive', ent: 1 },
+      { t: 'dmg', ent: 2 },
+      { t: 'revive', ent: 2 },
+    ],
+  };
+  assert.deepEqual(kinds(m), ['rallied0', 'spared1']);
+  // a win on 3 vitality or less is a close call; a win without a hit is untouched; neither on a loss
+  assert.deepEqual(kinds({ won: true, heroes: [hero(1, 26), hero(2, 3)], fx: [{ t: 'dmg', ent: 2 }] }), [
+    'clutch1',
+    'untouched0',
+  ]);
+  assert.deepEqual(kinds({ won: false, heroes: [hero(1, 26)], fx: [] }), []);
+  assert.deepEqual(kinds({ won: true, heroes: [hero(1, 12)], fx: [{ t: 'dmg', ent: 1 }] }), [], 'an ordinary day');
+  // every kind has a question with a detail, a question and three openings, its tokens filled
+  for (const k of T.CANON_MOMENTS) {
+    const p = T.canonMomentPrompt(
+      'pilot:ANVIL',
+      { kind: k.kind, hp: 2 },
+      { name: 'Anvil', other: 'Doe', place: 'the Quarry', a: 'ant' },
+    );
+    assert.equal(p.id, 'moment.' + k.kind + ':pilot:ANVIL');
+    assert.ok(p.ask.endsWith('?') && p.angles.length === 3, k.kind);
+    assert.doesNotMatch(p.detail + p.ask + p.angles.join(''), /\{/, k.kind);
+  }
+  assert.equal(T.canonMomentPrompt('nobody', { kind: 'fell' }, {}), null);
+});
+
+test('canon: a real mission played to its end can be read for moments without changing it', () => {
+  const heroes = [T.makeHero(T.PREBUILTS[0]), T.makeHero(T.PREBUILTS[1])];
+  const m = { won: true, heroes, fx: [] };
+  heroes.forEach((h, i) => (h.uid = i + 1));
+  const before = JSON.stringify(m);
+  assert.deepEqual(
+    T.canonMoments(m).map((x) => x.kind),
+    ['untouched', 'untouched'],
+  );
+  assert.equal(JSON.stringify(m), before);
+});
+
 test('canon: a place question is not asked again on a device until its others are answered', () => {
   const first = T.canonPrompt('place:quarry', { turn: 0 });
   assert.equal(first.subject, 'place:quarry');
@@ -244,6 +297,49 @@ test(
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="ossa"]');
     assert.ok(!d.querySelector('.canon-ask'), 'no question once turned off');
+    assert.deepEqual(errors, []);
+  },
+);
+
+test(
+  'canon UI: the end of a mission asks what a moment meant to the pilot it happened to',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { w, d, click, errors, records } = await page();
+    const U = w.T.UI;
+    const heroes = [w.T.makeHero(w.T.PREBUILTS[0]), w.T.makeHero(w.T.PREBUILTS[1])];
+    heroes.forEach((h, i) => (h.uid = i + 1));
+    heroes[1].hp = 0;
+    heroes[1].downed = true;
+    const m = { won: false, page: 'quarry', title: 'x', round: 5, heroes, fx: [{ t: 'down', ent: 2 }] };
+    U.openModal(U.momentQuestion(m));
+    const a = U.pilotOf(heroes[1]);
+    assert.match(d.querySelector('.canon-ask').textContent, new RegExp(a.name + ' went down'));
+    click('[data-act="canonAngle"][data-arg="moment|0"]');
+    const box = d.getElementById('cp-moment');
+    box.value += 'turned back for anyone.';
+    click('[data-act="canonPromptSend"]');
+    const [r] = records();
+    assert.equal(r.subject, 'pilot:' + a.key);
+    assert.equal(r.where, 'mission:moment');
+    assert.equal(r.prompt, 'moment.fell:pilot:' + a.key);
+    assert.equal(r.context.moment, 'fell');
+    assert.equal(r.context.result, 'lost');
+    assert.match(r.claim, /^After .+, .+ never again turned back for anyone\.$/);
+    // nothing worth asking: no panel
+    U.canonFlush();
+    heroes.forEach((h) => ((h.hp = 12), (h.downed = false)));
+    assert.equal(
+      U.momentQuestion({
+        won: true,
+        heroes,
+        fx: [
+          { t: 'dmg', ent: 1 },
+          { t: 'dmg', ent: 2 },
+        ],
+      }),
+      '',
+    );
     assert.deepEqual(errors, []);
   },
 );
