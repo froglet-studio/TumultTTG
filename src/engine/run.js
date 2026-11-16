@@ -73,35 +73,89 @@
     h.upUnspent = R().START_UP;
     return h;
   };
+  /**
+   * Which of a hero's clades each held trait counts toward, so that no clade holds more than
+   * MAX_PER_SPECIES: a trait two of the hero's clades carry counts toward either. Null when no way fits.
+   */
+  T.cladeSlots = function (h, cards) {
+    const cap = R().MAX_PER_SPECIES;
+    const load = {};
+    const slot = {};
+    const ids = cards.slice().sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
+    const place = (i) => {
+      if (i === ids.length) return true;
+      for (const sp of T.CARD[ids[i]].clades) {
+        if (!h.species.includes(sp) || (load[sp] || 0) >= cap) continue;
+        load[sp] = (load[sp] || 0) + 1;
+        slot[ids[i]] = sp;
+        if (place(i + 1)) return true;
+        load[sp]--;
+      }
+      return false;
+    };
+    return place(0) ? slot : null;
+  };
+  /** How many of a hero's traits count toward one clade. */
+  T.cladeCount = (h, sp) => Object.values(T.cladeSlots(h, h.cards) || {}).filter((s) => s === sp).length;
+  /**
+   * Can this hero take this trait? A trait two of their clades carry may be taken a second time, once:
+   * the second copy is not a card but DOUBLE_UP upgrade points bound to the first ({ ok, double: true }).
+   */
   T.canAddCard = function (h, cardId) {
     const c = T.CARD[cardId];
     if (!c) return { ok: false, why: 'unknown' };
-    if (!h.species.includes(c.sp)) return { ok: false, why: 'not your bloodline' };
-    if (h.cards.includes(cardId)) return { ok: false, why: 'already held' };
+    const mine = c.clades.filter((sp) => h.species.includes(sp));
+    if (!mine.length) return { ok: false, why: 'not your bloodline' };
+    if (h.cards.includes(cardId)) {
+      if (mine.length < 2) return { ok: false, why: 'already held' };
+      if (h.bound && h.bound[cardId] != null) return { ok: false, why: 'already taken twice' };
+      const u = h.up[cardId] || [0, 0];
+      if (u[0] + u[1] + R().DOUBLE_UP > R().P_CAP + R().E_CAP) return { ok: false, why: 'already fully upgraded' };
+      return { ok: true, double: true };
+    }
     if (h.cards.length >= R().MAX_CARDS) return { ok: false, why: 'kit is full (9)' };
-    const n = h.cards.filter((id) => T.CARD[id].sp === c.sp).length;
-    if (n >= R().MAX_PER_SPECIES) return { ok: false, why: `already 3 of 9 from ${T.SPECIES[c.sp].name}` };
+    if (!T.cladeSlots(h, h.cards.concat(cardId)))
+      return { ok: false, why: `already 3 of 9 from ${mine.map((sp) => T.SPECIES[sp].name).join(' and ')}` };
     return { ok: true };
   };
   T.addCard = function (h, cardId) {
     const r = T.canAddCard(h, cardId);
     if (!r.ok) return r;
+    if (r.double) {
+      h.bound = h.bound || {};
+      h.bound[cardId] = R().DOUBLE_UP;
+      return { ok: true, double: true };
+    }
     h.cards.push(cardId);
     h.up[cardId] = [0, 0];
     return { ok: true };
   };
+  /** Points spent on a card beyond what is bound to it: those came from (and go back to) the free pool. */
+  const freeSpent = (h, cardId) => {
+    const u = h.up[cardId] || [0, 0];
+    return Math.max(0, u[0] + u[1] - ((h.bound && h.bound[cardId]) || 0));
+  };
+  /** Upgrade points bound to this card and not yet spent on it. */
+  T.boundLeft = (h, cardId) => {
+    const u = h.up[cardId] || [0, 0];
+    return Math.max(0, ((h.bound && h.bound[cardId]) || 0) - u[0] - u[1]);
+  };
   T.removeCard = function (h, cardId) {
+    h.upUnspent += freeSpent(h, cardId);
     h.cards = h.cards.filter((c) => c !== cardId);
-    const up = h.up[cardId] || [0, 0];
-    h.upUnspent += up[0] + up[1];
     delete h.up[cardId];
+    if (h.bound) delete h.bound[cardId];
   };
   T.draftPack = function (run, h, size) {
     size = size || 4;
-    // pool: every card of the hero's species they don't hold and could still take; weighted so each species shows up
+    // pool: every card of the hero's clades they could still take (a trait two of them share, a second
+    // time); weighted so each clade shows up
     const pool = T.CARDS.filter((c) => T.canAddCard(h, c.id).ok);
     const bySp = {};
-    pool.forEach((c) => (bySp[c.sp] = bySp[c.sp] || []).push(c));
+    pool.forEach((c) => {
+      const sp = c.clades.find((x) => h.species.includes(x));
+      (bySp[sp] = bySp[sp] || []).push(c);
+    });
     const rng = T.runStream(run, 'squad');
     const sps = rng.shuffle(Object.keys(bySp));
     const pack = [];
@@ -139,15 +193,18 @@
     const i = which === 'E' ? 1 : 0;
     const cap = which === 'E' ? R().E_CAP : R().P_CAP;
     const cur = h.up[cardId] || [0, 0];
+    // a point bound to this card (a trait taken twice) is spent before a free one, and comes back last
     if (delta > 0) {
-      if (h.upUnspent < delta) return { ok: false, why: 'no UP' };
       if (cur[i] + delta > cap) return { ok: false, why: 'cap' };
+      const fromBound = Math.min(delta, T.boundLeft(h, cardId));
+      if (h.upUnspent < delta - fromBound) return { ok: false, why: 'no UP' };
       cur[i] += delta;
-      h.upUnspent -= delta;
+      h.upUnspent -= delta - fromBound;
     } else {
       if (cur[i] + delta < 0) return { ok: false };
+      const toFree = Math.min(-delta, freeSpent(h, cardId));
       cur[i] += delta;
-      h.upUnspent -= delta;
+      h.upUnspent += toFree;
     }
     h.up[cardId] = cur;
     return { ok: true };
@@ -169,6 +226,15 @@
     }
   };
   T.autoAllocate = function (h) {
+    // points bound to a card go on that card: E until it is awake, then P and E in turn
+    for (const cid of h.cards) {
+      let guard = 0;
+      while (T.boundLeft(h, cid) > 0 && guard++ < 6) {
+        const u = h.up[cid];
+        const which = u[1] < 1 || u[1] < u[0] ? 'E' : 'P';
+        if (!T.adjustUp(h, cid, which, 1).ok && !T.adjustUp(h, cid, which === 'E' ? 'P' : 'E', 1).ok) break;
+      }
+    }
     T.awaken(h);
     // spend on signatures first: E for capability cards, P for cheap strikes
     const order = h.cards.slice().sort((a, b) => T.CARD[b].sig - T.CARD[a].sig);
@@ -188,8 +254,7 @@
   };
   T.respecHero = function (h) {
     h.cards.forEach((c) => {
-      const u = h.up[c];
-      h.upUnspent += u[0] + u[1];
+      h.upUnspent += freeSpent(h, c);
       h.up[c] = [0, 0];
     });
   };
@@ -621,9 +686,11 @@
   };
   T.tradeCard = function (run, heroIdx, dropId) {
     const h = run.heroes[heroIdx];
-    const sp = T.CARD[dropId].sp;
+    const sp = T.CARD[dropId].clades.find((x) => h.species.includes(x)) || T.CARD[dropId].sp;
     T.removeCard(h, dropId);
-    const cands = T.cardsOf(sp).filter((c) => T.canAddCard(h, c.id).ok);
+    const cands = T.cardsOf(sp).filter(
+      (c) => c.id !== dropId && !T.canAddCard(h, c.id).double && T.canAddCard(h, c.id).ok,
+    );
     const nc = T.runStream(run, 'event').pick(cands);
     if (nc) T.addCard(h, nc.id);
     return nc ? nc.id : null;
@@ -636,7 +703,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 14;
+  T.SAVE_VERSION = 15;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -751,6 +818,12 @@
       const rw = r.lastReward;
       if (rw && !rw.purse) rw.purse = rw.lifeline ? Array(n).fill(0) : T.splitCrystals(rw.crystals || 0, n);
       r.v = 14;
+    },
+    // 2.42 lets a trait two of a hero's clades share be taken twice, the second time as upgrade points bound
+    // to it. Nobody in an older save has taken one twice.
+    14(r) {
+      (r.heroes || []).forEach((h) => h && !h.bound && (h.bound = {}));
+      r.v = 15;
     },
   };
   T.deserializeRun = function (json) {

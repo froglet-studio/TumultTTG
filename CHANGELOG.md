@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.42.0 — 2026-11-16 — traits shared across clades
+
+Garrett: "as you work your way up the taxonomical structure then you share traits", and "a peregrine falcon cheetah that pick both only has one card but picking it a second time converts to upgrade points for either the physical or ethereal upgrades but only for that card. it is the only way for it to appear a second time as well."
+
+The first step towards a bloodline for every animal on a Cosmic Shore pilot: the rule that lets one trait belong to several clades.
+
+- **A trait can belong to several clades** (`card.clades`, `T.shareTrait`, `T.cardsOf`). It counts toward whichever of the hero's clades has room under the three-per-clade cap (`T.cladeSlots`, `T.cladeCount`).
+- **Taken twice, it becomes upgrade points.** A hero whose two clades share a trait holds it once. It can be offered once more (in a pack, a reward or an event), and taking it gives 2 UP bound to that card (`RULES.DOUBLE_UP`, `hero.bound`): spent on its P or E before any free point, never elsewhere. The card says so before you take it, and shows what is still bound. In the opening draft such a pick does not use up one of the six cards.
+- Saves go to version 15 (`hero.bound`); a 2.41 save loads with nothing bound.
+- No trait is shared yet, so nothing plays differently today. The bloodlines that use it come next.
+
 ## 2.41.0 — 2026-11-15 — dice like dice, abilities like cards
 
 Garrett, on 2.40: "the abilities should look like cards that dice shoud look like dice", and "the dice should look like the 20 sided dice that they are and the 12 sides should look 12 sided, etc."

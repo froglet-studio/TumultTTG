@@ -21,10 +21,10 @@ function createHarness(T = loadTumult()) {
     for (let k = 0; k < 2; k++) {
       const species = rng.shuffle(T.SPECIES_ORDER.filter((s) => s !== 'human')).slice(0, 2);
       const h = T.newDraftHero(run, 'Drafted' + k, 'the drafted', species);
-      for (let p = 0; p < T.RULES.START_CARDS; p++) {
+      for (let p = 0; p < 3 * T.RULES.START_CARDS && h.cards.length < T.RULES.START_CARDS; p++) {
         const pack = T.draftPack(run, h, 4);
         if (!pack.length) break;
-        T.addCard(h, pack[rng.int(pack.length)]);
+        T.addCard(h, pack[rng.int(pack.length)]); // a trait taken twice is UP, not a card: keep drafting
       }
       T.autoAllocate(h);
       run.heroes.push(h);

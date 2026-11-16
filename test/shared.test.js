@@ -1,0 +1,90 @@
+'use strict';
+/**
+ * Traits shared across clades (Garrett, 2026-11-16): a trait is written once for a branch of the tree and
+ * carried by every clade under it. A pilot whose two clades share a trait holds it once; taking it a second
+ * time gives DOUBLE_UP upgrade points bound to that card, and that is the only way a card comes up twice.
+ */
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const { createHarness } = require('../tools/harness');
+
+const H = createHarness();
+const { T } = H;
+const R = T.RULES;
+
+// A test-only share: Tool Use is carried by Barn Owls too, so a Human-and-Owl pilot has it from two clades.
+T.shareTrait('hum_tool', 'owl');
+
+const hero = (species, cards) => {
+  const run = T.newRun(7);
+  const h = T.newDraftHero(run, 'Test', 'the tested', species);
+  cards.forEach((id) => assert.ok(T.addCard(h, id).ok, id));
+  return h;
+};
+
+test('a shared trait is held once, and a second pick binds upgrade points to it instead', () => {
+  const h = hero(['owl', 'gecko'], ['hum_tool']);
+  assert.deepEqual(T.CARD.hum_tool.clades, ['human', 'owl']);
+  assert.ok(T.cardsOf('owl').some((c) => c.id === 'hum_tool'));
+  assert.deepEqual(T.canAddCard(h, 'hum_tool'), { ok: true, double: true });
+  const free = h.upUnspent;
+  assert.deepEqual(T.addCard(h, 'hum_tool'), { ok: true, double: true });
+  assert.deepEqual(h.cards, ['hum_tool'], 'still one card');
+  assert.equal(h.bound.hum_tool, R.DOUBLE_UP);
+  assert.equal(h.upUnspent, free, 'the free pool is untouched');
+  assert.equal(T.canAddCard(h, 'hum_tool').ok, false, 'never a third time');
+});
+
+test("a trait only one of the hero's clades carries is never offered twice", () => {
+  const h = hero(['gecko', 'eel'], ['hum_tool', 'gec_hide']);
+  assert.equal(T.canAddCard(h, 'hum_tool').ok, false);
+  assert.equal(T.canAddCard(h, 'gec_hide').ok, false);
+  const run = T.newRun(9);
+  for (let i = 0; i < 20; i++) assert.ok(T.draftPack(run, h, 4).every((id) => !h.cards.includes(id)));
+});
+
+test('bound points are spent on their card first, never on another, and come back last', () => {
+  const h = hero(['owl', 'gecko'], ['hum_tool', 'gec_hide']);
+  h.upUnspent = 1;
+  T.addCard(h, 'hum_tool');
+  assert.ok(T.adjustUp(h, 'hum_tool', 'E', 1).ok);
+  assert.ok(T.adjustUp(h, 'hum_tool', 'P', 1).ok);
+  assert.equal(h.upUnspent, 1, "both points came from the card's own");
+  assert.equal(T.boundLeft(h, 'hum_tool'), 0);
+  assert.ok(T.adjustUp(h, 'hum_tool', 'P', 1).ok);
+  assert.equal(h.upUnspent, 0, 'the third came from the free pool');
+  assert.ok(T.adjustUp(h, 'hum_tool', 'P', -1).ok);
+  assert.equal(h.upUnspent, 1, 'a free point goes back to the free pool');
+  assert.ok(T.adjustUp(h, 'hum_tool', 'P', -1).ok);
+  assert.equal(h.upUnspent, 1, 'a bound point goes back to the card');
+  assert.equal(T.boundLeft(h, 'hum_tool'), 1);
+  assert.equal(T.adjustUp(h, 'gec_hide', 'P', 1).ok, true);
+  assert.equal(h.upUnspent, 0, 'another card pays from the free pool');
+  T.respecHero(h);
+  assert.equal(h.upUnspent, 1, 'a respec gives back only free points');
+  assert.equal(T.boundLeft(h, 'hum_tool'), R.DOUBLE_UP);
+  T.autoAllocate(h);
+  assert.equal(T.boundLeft(h, 'hum_tool'), 0, 'auto-allocate spends what is bound');
+});
+
+test('a shared trait counts toward whichever of its clades has room', () => {
+  const h = hero(['owl', 'gecko'], ['hum_mind', 'hum_grip', 'hum_coop']);
+  assert.equal(T.cladeCount(h, 'human'), 3);
+  assert.ok(T.canAddCard(h, 'hum_tool').ok, 'a fourth Human trait fits when the owl has room');
+  T.addCard(h, 'hum_tool');
+  assert.equal(T.cladeCount(h, 'owl'), 1);
+  ['owl_talon', 'owl_sound'].forEach((id) => T.addCard(h, id));
+  assert.equal(T.canAddCard(h, 'owl_soar').ok, false, 'the owl is full: Tool Use took its third place');
+  assert.equal(T.canAddCard(h, 'hum_lang').ok, false);
+});
+
+test('a save from 2.41 loads with nothing bound and plays on', () => {
+  const old = require('./fixtures/save-2.41.json');
+  assert.equal(old.v, 14, 'the fixture is a version-14 save');
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  run.heroes.forEach((h) => assert.deepEqual(h.bound, {}));
+  assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run));
+  H.playRun(run);
+  assert.ok(run.over);
+});
