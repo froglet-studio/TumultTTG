@@ -102,15 +102,45 @@ test('canon: the device keeps at most the newest T.CANON_MAX_RECORDS', () => {
   });
 });
 
-test('canon: the pilot question offers three different hooks from the pool, and they change between runs', () => {
-  const seen = new Set();
-  for (let run = 0; run < 8; run++) {
-    const h = T.canonHooks('ANVIL', run);
-    assert.equal(new Set(h).size, 3);
-    h.forEach((x) => assert.ok(T.CANON_HOOKS.includes(x)));
-    seen.add(h.join('|'));
+test('canon: every question gives a detail, asks about it, and offers three openings', () => {
+  const ids = new Set();
+  for (const p of T.CANON_PROMPTS) {
+    assert.ok(!ids.has(p.id), 'unique id ' + p.id);
+    ids.add(p.id);
+    assert.ok(p.subject === 'pilot' || T.isCanonSubject(p.subject), p.id);
+    assert.ok(p.detail.length > 20 && p.ask.endsWith('?'), p.id);
+    assert.equal(p.angles.length, 3, p.id);
   }
-  assert.ok(seen.size > 1);
+  for (const page of T.ATLAS) {
+    const n = T.CANON_PROMPTS.filter((p) => p.subject === 'place:' + page.id).length;
+    assert.ok(n >= 3, `${page.id} has ${n} questions`);
+  }
+});
+
+test('canon: a place question is not asked again on a device until its others are answered', () => {
+  const first = T.canonPrompt('place:quarry', { turn: 0 });
+  assert.equal(first.subject, 'place:quarry');
+  const seen = new Set([first.id]);
+  let answered = [first.id];
+  for (let k = 0; k < 2; k++) {
+    const p = T.canonPrompt('place:quarry', { turn: 0, answered });
+    assert.ok(!seen.has(p.id), 'a new question');
+    seen.add(p.id);
+    answered = answered.concat(p.id);
+  }
+  assert.ok(T.canonPrompt('place:quarry', { answered }), 'all answered: ask again rather than nothing');
+  assert.equal(T.canonPrompt('place:nowhere', {}), null);
+});
+
+test('canon: a pilot gets their own question first, then shared ones with their name and clades', () => {
+  const who = { name: 'Brikon Copperwright', a: 'yak', b: 'beetle' };
+  const own = T.canonPrompt('pilot:ANVIL', { who });
+  assert.equal(own.id, 'pilot.ANVIL');
+  const next = T.canonPrompt('pilot:ANVIL', { who, answered: ['pilot.ANVIL'], turn: 1 });
+  assert.match(next.id, /^pilot\.[a-z]+:pilot:ANVIL$/);
+  assert.ok(!/\{(name|a|b)\}/.test(next.detail + next.ask + next.angles.join('')), 'tokens filled');
+  const other = T.canonPrompt('pilot:ZODIAC', { who: { name: 'Ivelia Starreach', a: 'ocelot', b: 'heron' } });
+  assert.match(other.id, /:pilot:ZODIAC$/, 'a pilot with no page gets a shared question');
 });
 
 /* ───────────── through the real page ───────────── */
@@ -175,21 +205,32 @@ test(
 );
 
 test(
-  'canon UI: the draft asks why the pilot guides, keeps an answer, and asks nothing once turned off',
+  'canon UI: the draft asks about the pilot, keeps an embellished answer, and asks nothing once turned off',
   { skip, timeout: 60_000 },
   async () => {
     const { d, click, errors, records } = await page();
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
-    assert.ok(d.querySelector('.canon-ask'), 'the question sits under the upgrades');
-    click('[data-act="canonHook"][data-arg="1"]');
+    assert.ok(d.querySelector('.canon-ask .canon-detail'), 'the question sits under the upgrades');
+    const key = 'draft0';
+    click(`[data-act="canonAngle"][data-arg="${key}|1"]`);
+    const box = d.getElementById('cp-' + key);
+    assert.ok(box.value.length > 3, 'an opening is put in the box');
+    box.value += 'they never speak of it.';
+    box.dispatchEvent(new d.defaultView.Event('input', { bubbles: true }));
+    click('[data-act="up"]'); // any redraw keeps what was typed
+    assert.match(d.getElementById('cp-' + key).value, /never speak of it/);
     click('[data-act="confirmHero"]');
     const [r] = records();
     assert.match(r.subject, /^pilot:[A-Z0-9]+$/);
     assert.equal(r.kind, 'answer');
-    assert.equal(r.prompt, 'hook');
+    assert.ok(
+      T.CANON_PROMPTS.some((p) => r.prompt.split(':')[0] === p.id),
+      r.prompt,
+    );
     assert.equal(r.context.hero, 'Cavitt');
-    assert.ok(T.CANON_HOOKS.includes(r.claim));
+    assert.match(r.claim, /never speak of it\.$/);
+    assert.ok(r.shown.endsWith('?'), 'the detail and the question travel with the answer');
     // skipping is answering nothing
     click('[data-act="prebuilt"][data-arg="marish"]');
     click('[data-act="confirmHero"]');
@@ -203,6 +244,31 @@ test(
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="ossa"]');
     assert.ok(!d.querySelector('.canon-ask'), 'no question once turned off');
+    assert.deepEqual(errors, []);
+  },
+);
+
+test(
+  'canon UI: the end of a mission asks about its place, and Send keeps the answer once',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { w, d, click, errors, records } = await page();
+    const U = w.T.UI;
+    U.openModal(U.placeQuestion({ page: 'lagoon' }));
+    assert.match(d.querySelector('.canon-ask').textContent, /Kelp Lagoon/);
+    click('[data-act="canonPromptSend"]');
+    assert.equal(records().length, 0, 'nothing typed, nothing sent');
+    const box = d.querySelector('.canon-ask textarea');
+    box.value = 'A song about the floats.';
+    click('[data-act="canonPromptSend"]');
+    const [r] = records();
+    assert.equal(r.subject, 'place:lagoon');
+    assert.equal(r.where, 'mission:end');
+    assert.ok(d.querySelector('.canon-ask.sent'), 'the panel says it was sent');
+    U.render();
+    assert.ok(d.querySelector('.canon-ask.sent'), 'and still does after a redraw');
+    U.canonFlush();
+    assert.equal(records().length, 1, 'sent once');
     assert.deepEqual(errors, []);
   },
 );

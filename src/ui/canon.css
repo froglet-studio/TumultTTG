@@ -73,3 +73,11 @@
 .canon-inbox {
   max-height: 60vh;
 }
+.canon-detail {
+  font-family: var(--serif);
+  font-style: italic;
+}
+.canon-ask .row .ghost {
+  white-space: normal;
+  text-align: left;
+}

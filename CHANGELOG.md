@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.44.0 — 2026-11-16 — canon from play: questions to embellish
+
+Garrett: "more canon is better, but guide them into an interesting question where they can provide details on the details you provide. make them feel like they are embellishing. more than ad lib, less than a blank canvas."
+
+- **Every question now has three parts**: a **detail** the game already shows (from the atlas's field notes), a **question** about it, and three **openings**, the first words of an answer for the player to carry on ("It is ground down and…"). Picking an opening puts it in the box; it never overwrites words the player wrote. Answers may also start from nothing. Nothing in a question is new canon: each detail restates its page.
+- **After every mission**, the mission-over panel asks one question about the page it was played on ("While the dust settles"). 27 questions, three for each of the nine places. A question answered on this device is not asked again until its place's others have been.
+- **At the draft**, the question about the Cosmic Shore pilot whose painting the hero wears takes the same shape: the nine pilots whose world is an atlas page get their own question first ("Who taught Brikon to carry it alone…?"), then five every pilot shares, filled with their name and clades. It replaces the "why do they guide?" choices of 2.20.
+- Optional as before: *Send* on the panel, or *Continue* sends what was typed; turning questions off under Canon hides them. What is typed survives the screen redrawing. Answers carry the question and detail they answer (`prompt`, `shown`).
+- No rules, dice or missions change.
+
 ## 2.43.0 — 2026-11-16 — the primates
 
 Garrett: "every pilot is 1/3 human but other primates might have some of the same abilities as humans."

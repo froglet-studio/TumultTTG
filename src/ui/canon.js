@@ -88,44 +88,131 @@
   }
   const typed = () => ($('#canonText') ? $('#canonText').value : '');
 
-  /* ───────────── the pilot question, on the draft ───────────── */
-  /** The question about the pilot whose painting a hero wears, or '' when there is no painting or no asking. */
+  /* ───────────── questions: a detail, a question, three ways in ───────────── */
+  /**
+   * Open questions on screen, by key: { p (T.canonPrompt), subject, where, context, text, sent }.
+   * The text typed is kept here as it is typed, so a screen that redraws keeps it.
+   */
+  U.canonPrompts = {};
+  /** Prompt ids already answered on this device (a shared pilot question counts once per pilot). */
+  const answered = () =>
+    T.loadCanon()
+      .map((r) => r.prompt)
+      .filter(Boolean);
+
+  /** One question as a panel: the detail, the question, three openings, a box and Send. */
+  function promptHTML(key) {
+    const q = U.canonPrompts[key];
+    if (q.sent)
+      return `<div class="canon-ask sent" id="cpw-${key}"><span class="small dim">Sent to the lore lead. Thank you.</span></div>`;
+    const p = q.p;
+    const angles = p.angles
+      .map((a, i) => `<button class="sm ghost" data-act="canonAngle" data-arg="${key}|${i}">${esc(a)}…</button>`)
+      .join('');
+    return `<div class="canon-ask" id="cpw-${key}">
+      ${q.head || ''}
+      <div class="canon-detail">${esc(p.detail)}</div>
+      <b>${esc(p.ask)}</b>
+      <div class="row">${angles}</div>
+      <textarea id="cp-${key}" class="canon-text" rows="2" maxlength="1000" data-canon="${key}" placeholder="Start from an opening above, or from nothing">${esc(q.text || '')}</textarea>
+      <div class="row"><button class="sm" data-act="canonPromptSend" data-arg="${key}">Send</button><span class="mute small">Optional. It goes to the lore lead as a proposal.</span></div></div>`;
+  }
+  /** Keep what was typed in one question, if anything and not yet sent. */
+  function sendPrompt(key) {
+    const q = U.canonPrompts[key];
+    if (!q || q.sent) return false;
+    const box = $('#cp-' + key);
+    const text = ((box ? box.value : q.text) || '').trim();
+    if (!text || q.p.angles.some((a) => a === text)) return false;
+    const ok = keep({
+      subject: q.subject,
+      kind: 'answer',
+      prompt: q.p.id,
+      shown: q.p.detail + ' ' + q.p.ask,
+      where: q.where,
+      claim: text,
+      context: Object.assign(context(), q.context || {}),
+    });
+    if (ok) q.sent = true;
+    return ok;
+  }
+  /** After any redraw: questions show what was typed in them, or that they were sent. */
+  U.canonRestore = function () {
+    Object.keys(U.canonPrompts).forEach((key) => {
+      const q = U.canonPrompts[key];
+      const wrap = $('#cpw-' + key);
+      if (!wrap) return;
+      if (q.sent && !wrap.classList.contains('sent')) wrap.outerHTML = promptHTML(key);
+      const box = $('#cp-' + key);
+      if (box && q.text && box.value !== q.text) box.value = q.text;
+    });
+  };
+  /** Send whatever is typed and unsent (a screen is being left), and forget the questions. */
+  U.canonFlush = function () {
+    Object.keys(U.canonPrompts).forEach(sendPrompt);
+    U.canonPrompts = {};
+  };
+  // what is typed survives a redraw of the screen under it
+  if (typeof document !== 'undefined')
+    document.addEventListener('input', (e) => {
+      const key = e.target && e.target.getAttribute && e.target.getAttribute('data-canon');
+      if (key && U.canonPrompts[key]) U.canonPrompts[key].text = e.target.value;
+    });
+
+  /** The draft: a question about the Cosmic Shore pilot whose painting this hero wears. */
   U.pilotQuestion = function (hero, d) {
     const a = U.pilotOf && U.pilotOf(hero);
     if (!a || !U.canonAsks()) return '';
-    const hooks = T.canonHooks(a.key, T.loadMeta().runs + d.heroIdx);
-    const pick = d.hook ? d.hook.pick : null;
-    const chips = hooks
-      .map(
-        (h, i) =>
-          `<button class="sm ${pick === i ? 'primary' : 'ghost'}" data-act="canonHook" data-arg="${i}">${esc(h)}</button>`,
-      )
-      .join('');
-    return `<div class="canon-ask"><div class="row">${U.portrait(hero, 'xs')}<b>Why does ${esc(a.name)} guide?</b><span class="dim small">${esc(a.key)} · optional</span></div>
-      <div class="row">${chips}</div>
-      <input id="canonHookText" class="canon-line" maxlength="300" placeholder="…or in your own words" value="${esc((d.hook && d.hook.text) || '')}">
-      <div class="mute small">Your answer goes to the lore lead as a proposal about ${esc(a.name)}. Skip it if nothing comes to mind.</div></div>`;
+    const key = 'draft' + d.heroIdx;
+    const subject = 'pilot:' + a.key;
+    let q = U.canonPrompts[key];
+    if (!q || q.subject !== subject) {
+      const clade = (c) => String(c).replace(/_/g, ' ');
+      const p = T.canonPrompt(subject, {
+        answered: answered(),
+        turn: T.loadMeta().runs + d.heroIdx,
+        who: { name: a.name, a: clade(a.clades[0]), b: clade(a.clades[1]) },
+      });
+      if (!p) return '';
+      q = U.canonPrompts[key] = {
+        p,
+        subject,
+        where: 'draft:question',
+        text: '',
+        context: { hero: hero.name, painting: U.isExact(a, hero) ? 'exact' : 'stand-in' },
+        head: `<div class="row">${U.portrait(hero, 'xs')}<b>${esc(a.name)}</b><span class="dim small">${esc(a.key)} · tell us about them</span></div>`,
+      };
+    }
+    return promptHTML(key);
   };
-  /** On confirming a hero: keep their answer, if they gave one. */
+  /** On confirming a hero: keep their answer, if one was typed and not sent. */
   U.savePilotAnswer = function (d) {
-    const a = d.hero && U.pilotOf && U.pilotOf(d.hero);
-    if (!a || !U.canonAsks()) return;
-    const own = $('#canonHookText') ? $('#canonHookText').value.trim() : (d.hook && d.hook.text) || '';
-    const hooks = T.canonHooks(a.key, T.loadMeta().runs + d.heroIdx);
-    const claim = own || (d.hook && d.hook.pick != null ? hooks[d.hook.pick] : '');
-    if (!claim) return;
-    keep({
-      subject: 'pilot:' + a.key,
-      kind: 'answer',
-      prompt: 'hook',
-      shown: `Why does ${a.name} guide?` + (own ? '' : ' Offered: ' + hooks.join(' / ')),
-      where: 'draft:hook',
-      claim,
-      context: Object.assign(context(), {
-        hero: d.hero.name,
-        painting: U.isExact(a, d.hero) ? 'exact' : 'stand-in',
-      }),
-    });
+    sendPrompt('draft' + d.heroIdx);
+    delete U.canonPrompts['draft' + d.heroIdx];
+  };
+
+  /** The end of a mission: a question about the place it was played on. */
+  U.placeQuestion = function (m) {
+    const page = m && m.page && T.PAGE_BY[m.page];
+    if (!page || !U.canonAsks()) return '';
+    const key = 'place';
+    const subject = 'place:' + page.id;
+    if (!U.canonPrompts[key] || U.canonPrompts[key].subject !== subject) {
+      const run = U.run;
+      const p = T.canonPrompt(subject, {
+        answered: answered(),
+        turn: T.loadMeta().runs + ((run && run.history && run.history.length) || 0),
+      });
+      if (!p) return '';
+      U.canonPrompts[key] = {
+        p,
+        subject,
+        where: 'mission:end',
+        text: '',
+        head: `<div class="kick">While the dust settles · ${esc(page.name)}</div>`,
+      };
+    }
+    return promptHTML(key);
   };
 
   /* ───────────── the list, from the title ───────────── */
@@ -187,13 +274,28 @@
         }
         return true;
       }
-      case 'canonHook': {
-        const d = U.draft;
-        if (!d) return true;
-        const i = parseInt(arg, 10);
-        const text = $('#canonHookText') ? $('#canonHookText').value : '';
-        d.hook = { pick: d.hook && d.hook.pick === i ? null : i, text };
-        U.render();
+      case 'canonAngle': {
+        const [key, i] = String(arg).split('|');
+        const q = U.canonPrompts[key];
+        const box = $('#cp-' + key);
+        if (!q || !box) return true;
+        const cur = box.value.trim();
+        // an opening replaces another opening, never words the player wrote
+        if (!cur || q.p.angles.some((a) => cur === a)) box.value = q.p.angles[+i] + ' ';
+        else box.value = q.p.angles[+i] + ' ' + cur;
+        q.text = box.value;
+        box.focus();
+        return true;
+      }
+      case 'canonPromptSend': {
+        const q = U.canonPrompts[arg];
+        if (!q) return true;
+        if (!sendPrompt(arg)) {
+          U.toast('Write a little more first: carry on from an opening, or start your own.');
+          return true;
+        }
+        const wrap = $('#cpw-' + arg);
+        if (wrap) wrap.outerHTML = promptHTML(arg);
         return true;
       }
       case 'canonList':

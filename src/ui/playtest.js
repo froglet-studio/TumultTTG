@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.43.0',
+    version: '2.44.0',
     items: [
+      {
+        text: 'The game now asks you to embellish the world. When a mission ends, a panel gives you one detail of the place you just crossed and an open question about it, with three openings to carry on from (or start from nothing); the draft does the same for the pilot you picked. Answers go to Garrett as proposals. Were the questions ones you wanted to answer? Which opening did you take, and which question fell flat?',
+      },
       {
         text: 'Three new clades, the first of the animals painted on Cosmic Shore pilots: Orangutan, Ring-Tailed Lemur and Mandrill. Primates share some traits with Humans and with each other (Grooming, Canopy Leap, Troop Call), and each has four of its own. A human-orangutan pilot can take Tool Use twice: the second time it is 2 UP for that card. Do the three feel different from each other, and from a Human?',
       },
