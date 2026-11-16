@@ -305,6 +305,34 @@
       onward: ['"{PLACE} at night," {A} says. "Only at night."', '{A} melts toward {PLACE}. "{THREAT} will look for me. Let it."'],
       reply: ['{A} blinks, slowly.', '"Mm," {A} says, from the dark.', '{A}\'s ears tilt back.'],
     },
+    sloth: {
+      win: ['{A} finishes turning their head toward {B}, eventually. "Did... we win?"', '"Slow," {A} says, "is not the same as late."'],
+      close: ['{A} hangs from a branch for a very long time, not talking.', '"That was... a lot," {A} says, an hour later.'],
+      quiet: ['{A} sleeps through supper and breakfast and does not seem to miss either.', '{A} smiles at {B}, very slowly, which takes most of the evening.'],
+      onward: ['"{PLACE}," {A} says, eventually. "Mm. All right."', '"{THREAT} can wait," {A} says. "Everything can wait."'],
+      reply: ['{A} blinks, very slowly.', '"Mm," {A} says, after a while.', '{A} raises one claw, halfway.'],
+    },
+    armadillo: {
+      win: ['{A} uncurls, sniffs the air, and trundles off to look for beetles. "Done."', '"It hit the shell," {A} says. "Everyone hits the shell."'],
+      close: ['{A} stays curled up long after the fight, just to be sure.', '"I jumped," {A} says, embarrassed. "Straight up. Again."'],
+      quiet: ['{A} snuffles through the leaf litter by camp, grunting happily.', '{A} digs three holes and sleeps in the second one.'],
+      onward: ['"Can I dig in {PLACE}?" {A} asks.', '"{THREAT}," {A} says, and taps their banded shell. "Let it try."'],
+      reply: ['{A} grunts.', '"Mm-hm," {A} says, nose in the dirt.', '{A} snuffles.'],
+    },
+    pangolin: {
+      win: ['{A} uncurls one scale at a time. "Is it gone? Good."', '"It could not get in," {A} says. "Nothing gets in."'],
+      close: ['{A} stays rolled up until {B} says it is safe, twice.', '"It found an edge," {A} says quietly. "I do not have edges. I have scales."'],
+      quiet: ['{A} walks about the camp on their hind legs, tail out for balance, very dignified.', '{A} licks up a whole line of ants with great care.'],
+      onward: ['"{PLACE}," {A} says, and rises up to look.', '"{THREAT}," {A} says. "I will roll up. It will give up."'],
+      reply: ['{A} tucks their nose away.', '"Yes," {A} says softly.', '{A} rustles their scales.'],
+    },
+    hedgehog: {
+      win: ['{A} uncurls with a pleased little snort. "Prickly. That is the whole plan."', '"It tried to bite me," {A} says. "It will not try that again."'],
+      close: ['{A} stays in a tight ball by the fire, huffing at anyone who comes near.', '"Too many feet," {A} says. "I could not watch them all."'],
+      quiet: ['{A} snuffles round the camp in the dark, grunting at beetles.', '{A} chews something bitter and froths it over their spines. Nobody asks.'],
+      onward: ['"{PLACE} at night?" {A} asks. "Good. Night is when I work."', '{A} huffs. "{THREAT}. Fine. I will curl up and see."'],
+      reply: ['{A} huffs.', '"Mm," {A} snorts.', '{A} raises their spines, then lowers them.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

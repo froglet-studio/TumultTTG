@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.53.0 — 2026-11-16 — the armoured and slow
+
+The eighth branch of the tree (`docs/design/11-clades.md`): four painted animals, each with nine traits.
+
+- **Three-Toed Sloth, Armadillo, Pangolin and Hedgehog.**
+- Shared traits:
+  - **Slow Metabolism**: sloth, armadillo and pangolin
+  - **Curl Up**: the armoured three (armadillo, pangolin and hedgehog)
+  - **Dig Claws** and **Long Tongue**: armadillo and pangolin
+- Traits of each one's own:
+  - sloth: Algae Fur, Hook Claws, Unhurried, Hang On, Slow Swim, Neck Turn, Sleep Anywhere and Sudden Swipe
+  - armadillo: Bands, Startle Jump, Breath Crossing, Night Snuffle and Armour Shove
+  - pangolin: Overlapping Scales, Tail Shield, Sharp Edges, Walk Upright and Ant Armour
+  - hedgehog: Venom Shrug, Spines, Snuffle, Hibernate, Anointing, Night Forage, Spine Burst and Huff
+  - Venom Shrug is the hedgehog's for now; the opossum will share it when the pouched animals arrive.
+- Each has a voice in the passages between stops. The audit reports no narrow faces (Venom Shrug's Immune also heals).
+- Balance: 240 drafted runs, look-ahead player, the same seeds on both. Main wins 73 and this release 74. Runs with an armoured clade win 26%, runs without one 33%.
+
 ## 2.52.0 — 2026-11-16 — the gnawers
 
 The seventh branch of the tree (`docs/design/11-clades.md`): four painted gnawers, each with nine traits.

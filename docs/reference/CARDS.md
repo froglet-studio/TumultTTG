@@ -2016,3 +2016,199 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Graze* · 1 AP · CD 2 — Heal 1, and reveal within 2. *(P3: Heal 4, and reveal within 2.)*
 - *Eth — Moonless Field* · 1 AP + 1 Charge · CD 4 — Both heroes heal 2; you and an ally beside you are Hidden 1. *(P3/E3: Both heroes heal 4; you and an ally beside you are Hidden 1.)*
+
+## 41 · Three-Toed Sloth — leans T/C
+
+*Hangs on, takes its time, and is never, ever in a hurry.*
+
+**Slow Metabolism** · Time · `arm_slow`
+
+- *Phys — Conserve* · 1 AP · CD 2 — Shield 1 this round, and heal 1 at the start of each turn for 2 rounds. *(P3: Shield 1 this round, and heal 1 at the start of each turn for 3 rounds.)*
+- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and gain 1 AP next turn. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and gain 1 AP next turn.)*
+
+**Algae Fur** · Time · `slo_algae`
+
+- *Phys — Green Coat* · 1 AP · CD 2 — Hidden 1 in your green coat, and heal 1. *(P3: Hidden 2 in your green coat, and heal 1.)*
+- *Eth — A Whole Garden* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 3 rounds; you are Hidden 1. *(P3/E3: Both heroes heal 1 at the start of each turn for 5 rounds; you are Hidden 1.)*
+
+**Hook Claws** · Mass · `slo_hook`
+
+- *Phys — Hook* · 1 AP · CD 1 — Melee 3, and hook it: Anchored 1. *(P3: Melee 6, and hook it: Anchored 1.)*
+- *Eth — Never Let Go* · 1 AP + 1 Mass · CD 3 — Melee 4; it is held, Anchored 1, and Weakened 1 for 2 rounds. *(P3/E3: Melee 6; it is held, Anchored 2, and Weakened 1 for 2 rounds.)*
+
+**Unhurried** · Time · `slo_unhurried`
+
+- *Phys — Take Your Time* · 1 AP · CD 1 — Your track returns 1 column sooner, and the next hit on you is 1 less.
+- *Eth — Slow Hand* · 1 AP + 1 Time · CD 4 — The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 1 round. *(P3/E3: The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 2 rounds.)*
+
+**Hang On** · Space · `slo_hang`
+
+- *Phys — Hang* · 1 AP · CD 1 — Climb 1; nothing can push or pull you this round. *(P3: Climb 4; nothing can push or pull you this round.)*
+- *Eth — Upside Down* · 1 AP + 1 Space · CD 3 — Climb 3 and hold Shield 2 this round. *(P3/E3: Climb 5, carrying an ally beside you, and hold Shield 2 this round.)*
+
+**Slow Swim** · Space · `slo_swim`
+
+- *Phys — Paddle* · 1 AP · CD 1 — Move 2, ignoring hazards this round. *(P3: Move 5, ignoring hazards this round.)*
+- *Eth — Float* · 1 AP + 1 Space · CD 3 — Drift 3, passing foes; Hidden 1, and ignore hazards for 2 rounds. *(P3/E3: Drift 5, passing foes; Hidden 1, and ignore hazards for 2 rounds.)*
+
+**Neck Turn** · Space · `slo_neck`
+
+- *Phys — Look Back* · 1 AP · CD 1 — Reveal within 2; Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less. *(P3: Reveal within 5; Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less.)*
+- *Eth — All the Way Round* · 1 AP + 1 Space · CD 4 — See the whole board for 2 rounds; your next hit deals +2. *(P3/E3: See the whole board for 2 rounds; your next hit deals +4.)*
+
+**Sleep Anywhere** · Time · `slo_sleep`
+
+- *Phys — Nap* · 1 AP · CD 2 — Heal 2; the next hit on you is 1 less. *(P3: Heal 5; the next hit on you is 1 less.)*
+- *Eth — Deep Sleep* · 1 AP + 1 Time · CD 4 — Heal 2, then sleep: nothing can touch you until your next turn. *(P3/E3: Heal 4, then sleep: nothing can touch you until your next turn.)*
+
+**Sudden Swipe** · Mass · `slo_swipe`
+
+- *Phys — Swipe* · 1 AP · CD 1 — Melee 3. *(P3: Melee 6.)*
+- *Eth — Out of Nowhere* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield, and push it 1. *(P3/E3: Melee 7 that ignores Shield, and push it 1.)*
+
+## 42 · Armadillo — leans M/S
+
+*Banded armour, digging claws, and a startled leap straight up.*
+
+**Slow Metabolism** · Time · `arm_slow`
+
+- *Phys — Conserve* · 1 AP · CD 2 — Shield 1 this round, and heal 1 at the start of each turn for 2 rounds. *(P3: Shield 1 this round, and heal 1 at the start of each turn for 3 rounds.)*
+- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and gain 1 AP next turn. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and gain 1 AP next turn.)*
+
+**Curl Up** · Time · `arm_curl`
+
+- *Phys — Curl* · 1 AP · CD 1 — Curl into a ball: Shield 2 this round, nothing can push or pull you, and any foe that hits you in melee takes 1. *(P3: Curl into a ball: Shield 5 this round, nothing can push or pull you, and any foe that hits you in melee takes 1.)*
+- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and you can't be Weakened or Rooted for 2. *(P3/E3: Shield 6 for 2 rounds, and you can't be Weakened or Rooted for 2.)*
+
+**Dig Claws** · Mass · `arm_dig`
+
+- *Phys — Rip* · 1 AP · CD 1 — Tear 1 Shield off a foe beside you, then melee 3. *(P3: Tear 1 Shield off a foe beside you, then melee 6.)*
+- *Eth — Dig Down* · 1 AP + 1 Mass · CD 3 — Dig down and come up anywhere within 3: Hidden 1, and Shield 1 this round. *(P3/E3: Dig down and come up anywhere within 5: Hidden 1, and Shield 1 this round.)*
+
+**Long Tongue** · Charge · `arm_tongue`
+
+- *Phys — Lick Up* · 1 AP · CD 1 — A foe within 2 takes 2, and you heal 1. *(P3: A foe within 2 takes 5, and you heal 1.)*
+- *Eth — Into the Nest* · 1 AP + 1 Charge · CD 3 — Draw a foe within 3 up to 2 toward you; it takes 3 and is Weakened 1 this round. *(P3/E3: Draw a foe within 3 up to 4 toward you; it takes 5 and is Weakened 1 this round.)*
+
+**Bands** · Mass · `adi_bands`
+
+- *Phys — Plated* · 1 AP · CD 1 — Shield 1 this round; any foe that hits you in melee takes 1. *(P3: Shield 2 this round; any foe that hits you in melee takes 1.)*
+- *Eth — Band Together* · 1 AP + 1 Mass · CD 4 — You and an ally beside you hold Shield 3 this round, and the next hit on each hero is 1 less. *(P3/E3: You and an ally beside you hold Shield 5 this round, and the next hit on each hero is 1 less.)*
+
+**Startle Jump** · Space · `adi_jump`
+
+- *Phys — Jump* · 1 AP · CD 1 — Leap straight up and away to any node within 1, height included; the next hit on you is 1 less. *(P3: Leap straight up and away to any node within 2, height included; the next hit on you is 1 less.)*
+- *Eth — Up and Away* · 1 AP + 1 Space · CD 3 — Burst upward: every foe beside you takes 3 and is pushed 1, then step 1. *(P3/E3: Burst upward: every foe beside you takes 5 and is pushed 1, then step 1.)*
+
+**Breath Crossing** · Space · `adi_breath`
+
+- *Phys — Walk the Bottom* · 1 AP · CD 1 — Move 2, and ignore hazards for 2 rounds. *(P3: Move 5, and ignore hazards for 2 rounds.)*
+- *Eth — Gulp Air* · 1 AP + 1 Space · CD 4 — Both heroes heal 1 and ignore hazards for 3 rounds. *(P3/E3: Both heroes heal 1 and ignore hazards for 5 rounds.)*
+
+**Night Snuffle** · Charge · `adi_snuffle`
+
+- *Phys — Snuffle* · 1 AP · CD 1 — Reveal within 1, Mark the nearest foe (the next hit on it deals +2), and heal 1. *(P3: Reveal within 4, Mark the nearest foe (the next hit on it deals +2), and heal 1.)*
+- *Eth — Root Out* · 1 AP + 1 Charge · CD 3 — Root out any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Root out any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+
+**Armour Shove** · Mass · `adi_shove`
+
+- *Phys — Barge* · 1 AP · CD 1 — Melee 2, push it 2, and hold Shield 1 this round. *(P3: Melee 5, push it 2, and hold Shield 1 this round.)*
+- *Eth — Rolling Charge* · 1 AP + 1 Mass · CD 3 — Roll up to 3 toward a foe within 3; if you end beside it, melee 4 and push it 2. *(P3/E3: Roll up to 3 toward a foe within 3; if you end beside it, melee 6 and push it 2.)*
+
+## 43 · Pangolin — leans M/T
+
+*A walking pine cone of sharp scales that rolls into a fortress.*
+
+**Slow Metabolism** · Time · `arm_slow`
+
+- *Phys — Conserve* · 1 AP · CD 2 — Shield 1 this round, and heal 1 at the start of each turn for 2 rounds. *(P3: Shield 1 this round, and heal 1 at the start of each turn for 3 rounds.)*
+- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and gain 1 AP next turn. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and gain 1 AP next turn.)*
+
+**Curl Up** · Time · `arm_curl`
+
+- *Phys — Curl* · 1 AP · CD 1 — Curl into a ball: Shield 2 this round, nothing can push or pull you, and any foe that hits you in melee takes 1. *(P3: Curl into a ball: Shield 5 this round, nothing can push or pull you, and any foe that hits you in melee takes 1.)*
+- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and you can't be Weakened or Rooted for 2. *(P3/E3: Shield 6 for 2 rounds, and you can't be Weakened or Rooted for 2.)*
+
+**Dig Claws** · Mass · `arm_dig`
+
+- *Phys — Rip* · 1 AP · CD 1 — Tear 1 Shield off a foe beside you, then melee 3. *(P3: Tear 1 Shield off a foe beside you, then melee 6.)*
+- *Eth — Dig Down* · 1 AP + 1 Mass · CD 3 — Dig down and come up anywhere within 3: Hidden 1, and Shield 1 this round. *(P3/E3: Dig down and come up anywhere within 5: Hidden 1, and Shield 1 this round.)*
+
+**Long Tongue** · Charge · `arm_tongue`
+
+- *Phys — Lick Up* · 1 AP · CD 1 — A foe within 2 takes 2, and you heal 1. *(P3: A foe within 2 takes 5, and you heal 1.)*
+- *Eth — Into the Nest* · 1 AP + 1 Charge · CD 3 — Draw a foe within 3 up to 2 toward you; it takes 3 and is Weakened 1 this round. *(P3/E3: Draw a foe within 3 up to 4 toward you; it takes 5 and is Weakened 1 this round.)*
+
+**Overlapping Scales** · Time · `pan_scales`
+
+- *Phys — Scale Up* · 1 AP · CD 1 — The next hit on you is 2 less, and hold Shield 1 this round. *(P3: The next hit on you is 3 less, and hold Shield 1 this round.)*
+- *Eth — Unbroken* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds; any foe that hits you in melee takes 1. *(P3/E3: Shield 6 for 2 rounds; any foe that hits you in melee takes 2.)*
+
+**Tail Shield** · Time · `pan_tail`
+
+- *Phys — Cover* · 1 AP · CD 1 — Hold Shield 2 this round; wrap your tail round an ally beside you and they hold it too. *(P3: Hold Shield 3 this round; wrap your tail round an ally beside you and they hold it too.)*
+- *Eth — Wrapped Round* · 1 AP + 1 Time · CD 4 — The next hit on each hero is 3 less, and each hero's next hit deals +1. *(P3/E3: The next hit on each hero is 5 less, and each hero's next hit deals +1.)*
+
+**Sharp Edges** · Mass · `pan_edges`
+
+- *Phys — Scale Slash* · 1 AP · CD 1 — Melee 3. *(P3: Melee 6.)*
+- *Eth — Saw* · 1 AP + 1 Mass · CD 3 — Every foe beside you takes 3, then 1 at the start of its next 2 turns. *(P3/E3: Every foe beside you takes 5, then 1 at the start of its next 2 turns.)*
+
+**Walk Upright** · Space · `pan_upright`
+
+- *Phys — Stride* · 1 AP · CD 1 — Move 2, and reveal within 2 of where you stop. *(P3: Move 5, and reveal within 2 of where you stop.)*
+- *Eth — Tall and Wary* · 1 AP + 1 Space · CD 3 — Reveal within 4 for 2 rounds; your next hit deals +2. *(P3/E3: Reveal within 6 for 2 rounds; your next hit deals +4.)*
+
+**Ant Armour** · Charge · `pan_ants`
+
+- *Phys — Ant Bath* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time; Shield 1 this round, and heal 1. *(P3: Shed Anchored, Weakened and damage over time; Shield 2 this round, and heal 1.)*
+- *Eth — Stinging Shield* · 1 AP + 1 Charge · CD 4 — For 2 rounds you can't be Weakened or Rooted, and the next foe to hit you in melee takes 3. *(P3/E3: For 2 rounds you can't be Weakened or Rooted, and the next foe to hit you in melee takes 5.)*
+
+## 44 · Hedgehog — leans T/M
+
+*A snuffling night forager in a coat of spines. Curls up and waits.*
+
+**Curl Up** · Time · `arm_curl`
+
+- *Phys — Curl* · 1 AP · CD 1 — Curl into a ball: Shield 2 this round, nothing can push or pull you, and any foe that hits you in melee takes 1. *(P3: Curl into a ball: Shield 5 this round, nothing can push or pull you, and any foe that hits you in melee takes 1.)*
+- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and you can't be Weakened or Rooted for 2. *(P3/E3: Shield 6 for 2 rounds, and you can't be Weakened or Rooted for 2.)*
+
+**Venom Shrug** · Time · `hed_venom`
+
+- *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; you can't be Weakened or Rooted for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; you can't be Weakened or Rooted for 4 rounds.)*
+
+**Spines** · Mass · `heh_spines`
+
+- *Phys — Prickle* · 1 AP · CD 1 — Shield 1 this round; any foe that hits you in melee takes 1. *(P3: Shield 1 this round; any foe that hits you in melee takes 4.)*
+- *Eth — Bristling Ball* · 1 AP + 1 Mass · CD 3 — For 2 rounds any foe that hits you in melee takes 3; every foe beside you is Weakened 1 this round. *(P3/E3: For 2 rounds any foe that hits you in melee takes 5; every foe beside you is Weakened 1 this round.)*
+
+**Snuffle** · Space · `heh_snuffle`
+
+- *Phys — Sniff About* · 1 AP · CD 1 — Snuffle 2, and reveal within 1 of where you stop. *(P3: Snuffle 5, and reveal within 1 of where you stop.)*
+- *Eth — Under the Hedge* · 1 AP + 1 Space · CD 3 — Move 3 under cover, setting off no traps; Hidden 1. *(P3/E3: Move 5 under cover, setting off no traps; Hidden 2.)*
+
+**Hibernate** · Time · `heh_hibernate`
+
+- *Phys — Drowse* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Eth — Winter Nest* · 1 AP + 1 Time · CD 4 — Sleep in your nest: nothing can touch you until your next turn, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Sleep in your nest: nothing can touch you until your next turn, and heal 2 at the start of each turn for 2 rounds.)*
+
+**Anointing** · Charge · `heh_anoint`
+
+- *Phys — Froth* · 1 AP · CD 1 — Melee 2; it is Weakened 1 for 2 rounds. *(P3: Melee 5; it is Weakened 1 for 2 rounds.)*
+- *Eth — Self-Anoint* · 1 AP + 1 Charge · CD 4 — Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes 2, and you can't be Weakened or Rooted. *(P3/E3: Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes 4, and you can't be Weakened or Rooted.)*
+
+**Night Forage** · Charge · `heh_forage`
+
+- *Phys — Beetle Hunt* · 1 AP · CD 2 — Heal 1, and gain 1 AP next turn. *(P3: Heal 4, and gain 1 AP next turn.)*
+- *Eth — Garden Rounds* · 1 AP + 1 Charge · CD 4 — Both heroes heal 2, and reveal within 3. *(P3/E3: Both heroes heal 4, and reveal within 3.)*
+
+**Spine Burst** · Mass · `heh_burst`
+
+- *Phys — Unroll* · 1 AP · CD 1 — Uncurl with a snap: every foe beside you takes 1. *(P3: Uncurl with a snap: every foe beside you takes 4.)*
+- *Eth — Pop* · 1 AP + 1 Mass · CD 3 — Every foe beside you takes 3 and is pushed 1; hold Shield 1 this round. *(P3/E3: Every foe beside you takes 5 and is pushed 1; hold Shield 1 this round.)*
+
+**Huff** · Charge · `heh_huff`
+
+- *Phys — Huff* · 1 AP · CD 1 — Huff at a foe within 2: it takes 1, is Weakened 1 this round, and is pushed 1.
+- *Eth — Snort and Pop* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 1 round; the next hit on you is 1 less. *(P3/E3: Every foe within 4 is Weakened 1 for 2 rounds; the next hit on you is 1 less.)*

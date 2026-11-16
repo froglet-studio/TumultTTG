@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.52.0',
+    version: '2.53.0',
     items: [
+      {
+        text: 'Four armoured and slow animals join: Three-Toed Sloth, Armadillo, Pangolin and Hedgehog. The three armoured ones share Curl Up; sloth, armadillo and pangolin share Slow Metabolism; armadillo and pangolin share Dig Claws and Long Tongue. They are hard to hurt and heal over time, with spines, scales and sudden swipes to hit back. Are they fun, or just slow?',
+      },
       {
         text: 'Four gnawers join: Field Mouse, Porcupine, Brown Hare and Black Hare. They share the jerboa’s traits: every gnawer has Gnawing Incisors, the mouse and porcupine its Vibrissae, the hares its Leap, and the hares and mouse its Erratic Bounding. The two hares also share Long Ears, Boxing and Lie Low. Is the porcupine’s prickly defence fun to play, and do the hares feel different from each other?',
       },
