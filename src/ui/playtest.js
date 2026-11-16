@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.46.0',
+    version: '2.47.0',
     items: [
+      {
+        text: 'Five cats join: Eurasian Lynx, Caracal, Ocelot, Tiger and Cheetah. Cats share Pounce, Stalk, Killing Bite and Land on Your Feet (and all but the cheetah share Retractable Claws and Night Eyes). The cheetah alone has Hyperspeed: a run of exactly 4, past foes. Does each cat feel like itself? Is an exact run fun to plan around?',
+      },
       {
         text: 'A new mission that is not a fight: Survey. Survey marks lie across the whole board and night is coming. Stand on one and Interact to tag it, for 2 AP or one die of the mark’s colour (Omni counts). The far ones start veiled (a ringed ! on the board): stand within 1 of one, or reach it with a reveal, to sight it first. It sits in the middle of the route, in place of the second Cascade. Did the two of you split up? Did a rolled element ever go to a mark instead of a card, and was that a real choice? Use the panel to start one: Survey, any tier.',
       },

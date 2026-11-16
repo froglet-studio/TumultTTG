@@ -1,6 +1,6 @@
 # 11 · Clades for every painted animal
 
-*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates are built (2.43.0). Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
+*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0) and the Cats (2.44.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
 
 ## The rule
 
@@ -20,7 +20,7 @@ One pull request per branch, each with its audit and simulation numbers.
 | Branch | Painted animals |
 |---|---|
 | Primates (2.43) | orangutan, lemur, mandrill |
-| Cats | cheetah, tiger, lynx, caracal, ocelot |
+| Cats (2.44) | cheetah, tiger, lynx, caracal, ocelot |
 | Dogs and hyenas | fox, fennec, coyote, jackal, hyena |
 | Weasels, badgers, red panda | otter, badger, red_panda |
 | Sea mammals | orca, narwhal, walrus |
