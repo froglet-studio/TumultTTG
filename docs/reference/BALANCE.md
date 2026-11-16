@@ -349,7 +349,7 @@ Survey (`MISSIONS_AND_BESTIARY.md`) went through three versions, each measured w
 | … or for a die of the mark's element | 29% | 100 / 100%, 2.5 rounds | far too quick: two tags a pilot a round |
 | … standing on the mark (built) | 24% | 100 / 90%, 3.4 rounds | |
 
-Need 4/5/6 and clock 6/6/5, both before the tide. It takes Cascade's place in the middle row of the route. Full runs over 80 are the same as main (heuristic 17, look-ahead 29).
+Need 4/5/6 and clock 6/6/5, both before the tide. It takes Cascade's place in the middle row of the route. Full runs over 80 match main within noise: heuristic 18 → 17, look-ahead 32 → 33.
 
 ## What the tuning fixed along the way
 
