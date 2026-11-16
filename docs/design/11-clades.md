@@ -1,6 +1,6 @@
 # 11 · Clades for every painted animal
 
-*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), and the Dogs and hyenas and Weasel kin (2.49.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
+*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), the Dogs and hyenas and Weasel kin (2.49.0), and the Sea mammals (2.50.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
 
 ## The rule
 
@@ -24,7 +24,7 @@ One pull request per branch, each with its audit and simulation numbers.
 | Cats (2.47) | cheetah, tiger, lynx, caracal, ocelot |
 | Dogs and hyenas (2.49) | fox, fennec, coyote, jackal, hyena |
 | Weasel kin (2.49) | otter, badger, red_panda |
-| Sea mammals | orca, narwhal, walrus |
+| Sea mammals (2.50) | orca, narwhal, walrus |
 | Hoofed animals | bison, yak, ram, moose, deer, oryx, zebra |
 | Gnawers and hares | mouse, porcupine, hare, black_hare |
 | Armoured and slow | armadillo, pangolin, hedgehog, sloth |

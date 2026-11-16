@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.50.0 — 2026-11-16 — the sea mammals
+
+The fifth branch of the tree (`docs/design/11-clades.md`): three painted sea mammals, each with nine traits.
+
+- **Walrus, Orca and Narwhal.**
+- All three carry **Blubber** and **Breath Hold**. The two whales share **Echolocation** and **Pod Song**; the walrus and the narwhal share **Tusk**.
+- Traits of each one's own:
+  - walrus: Haul Out, Whisker Feel, Herd Bellow, Suction Feed, Ice Haul and Ton of Weight
+  - orca: Breach, Pod Tactics, Wave Wash, Apex and Beach Charge
+  - narwhal: Sense Tusk, Ice Lead, Deep Dive and Pale Ghost
+- Each has a voice in the passages between stops.
+- The audit reports no narrow faces.
+- Balance: 240 drafted runs, look-ahead player, the same seeds on both: main wins 85, this release 86. The narwhal first won 3 of its 31 runs, so Pale Ghost, Deep Dive and Sense Tusk hit a little harder (9 of 31 after).
+
 ## 2.49.0 — 2026-11-16 — dogs, hyenas and weasel kin
 
 The third and fourth branches of the tree (`docs/design/11-clades.md`): eight painted animals, each with nine traits.

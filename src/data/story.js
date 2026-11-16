@@ -207,6 +207,27 @@
       onward: ['"Trees in {PLACE}?" {A} asks hopefully.', '{A} rears up to look bigger. "{THREAT}. I am ready."'],
       reply: ['{A} squeaks.', '"Okay," {A} says, from a branch.', '{A} curls their tail around {B}\'s ankle.'],
     },
+    walrus: {
+      win: ['{A} settles their whole weight down on the warm ground and sighs. "Good."', '"It moved," {A} says. "I did not. That is how it goes."'],
+      close: ['{A} lies very still, breathing slow and deep, until the shaking stops.', '"Too many of them, too fast," {A} grumbles through their whiskers.'],
+      quiet: ['{A} sleeps in a heap against {B}, snoring like a storm.', '{A} combs the ground with their whiskers, looking for something only they understand.'],
+      onward: ['"{PLACE}," {A} says. "Is it cold? Good."', '{A} sets their tusks. "{THREAT} can try to move me."'],
+      reply: ['{A} grunts, deep and loud.', '"Mm," {A} rumbles.', '{A} bellows, happily.'],
+    },
+    orca: {
+      win: ['{A} circles back to {B}, grinning. "That is how a pod does it."', '"We drove it into the corner," {A} says. "We, not me."'],
+      close: ['{A} goes quiet and won\'t sing, which worries everyone.', '"It knew our plan," {A} says, unsettled. "Things do not usually know our plan."'],
+      quiet: ['{A} teaches {B} a whistle, then a second, then a sentence.', '{A} hums, a long falling note, and stares at the dark.'],
+      onward: ['"{PLACE}. We go in together," {A} says.', '"{THREAT} hunts alone," {A} says. "That is its mistake."'],
+      reply: ['{A} clicks, approving.', '"Together," {A} says.', '{A} whistles a short phrase back.'],
+    },
+    narwhal: {
+      win: ['{A} tilts their head as if listening to something under the floor. "It is quiet now."', '"I felt it come," {A} says. "So I was not there."'],
+      close: ['{A} is pale even for {A}, and very still.', '"The water lied to me," {A} says softly. "It does not do that."'],
+      quiet: ['{A} sits alone by the cold edge of camp and seems content there.', '{A} lets {B} touch the spiral of their tusk, once.'],
+      onward: ['"{PLACE}," {A} says. "There will be a way through. There always is."', '{A} turns their tusk toward the dark. "{THREAT}. I can feel it from here."'],
+      reply: ['{A} nods, slowly.', '"Yes," {A} says, from far away.', '{A} hums, very low.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

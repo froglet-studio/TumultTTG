@@ -780,4 +780,181 @@
       fx:[{v:'stasis', dur:1},{v:'engine', kind:'regen', val:1, dur:(P,E)=>1+E}],
       txt:(P,E)=>`Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for ${1+E} rounds.` },
     'When it is cold, it simply slows down.');
+  /* ───────────────────────── SEA MAMMALS ─────────────────────────
+     walrus · orca · narwhal. All three carry Blubber and Breath Hold; the two whales Echolocation and
+     Pod Song; the two tuskers Tusk. */
+  const SEA = ['walrus','orca','narwhal'];
+  S('walrus', { name: 'Walrus', lean: 'M/T', branch: 'Sea mammals', icon: '🦭',
+    tagline: 'A ton of whiskers, blubber and tusk. Loud, sociable, immovable.' });
+  S('orca', { name: 'Orca', lean: 'M/C', branch: 'Sea mammals', icon: '🐋',
+    tagline: 'The ocean’s pack hunter. Clever, coordinated, and never alone.' });
+  S('narwhal', { name: 'Narwhal', lean: 'S/T', branch: 'Sea mammals', icon: '🐋',
+    tagline: 'A pale whale of the ice, with a long spiral tusk that feels the water.' });
+
+  K(SEA,'sea_blubber','Blubber','M',0,
+    { n:'Insulate', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1}],
+      txt:(P,E)=>`Shield ${2+h(P)} this round.` },
+    { n:'Thick Layer', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+E, dur:2},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Shield ${2+E} for 2 rounds, and you can't be Weakened or Rooted this round.` },
+    'Warm inside, whatever the water.', 'Sea mammals');
+  K(SEA,'sea_breath','Breath Hold','T',0,
+    { n:'Hold', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'hazardImmune', dur:2},{v:'heal', n:(P,E)=>1+h(P)}],
+      txt:(P,E)=>`Ignore hazards for 2 rounds, and heal ${1+h(P)}.` },
+    { n:'Long Dive', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hazardImmune', dur:(P,E)=>2+E},{v:'heal', n:(P,E)=>2+E},{v:'cleanse'}],
+      txt:(P,E)=>`Ignore hazards for ${2+E} rounds, heal ${2+E}, and shed Anchored, Weakened and damage over time.` },
+    'One breath, a long way down.', 'Sea mammals');
+  K(['orca','narwhal'],'sea_echo','Echolocation','S',0,
+    { n:'Click', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Click: reveal within ${2+P} this round, and your next hit deals +1.` },
+    { n:'Sound the Deep', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:99, dur:2},{v:'mark', area:true, radius:(P,E)=>1+E}],
+      txt:(P,E)=>`Reveal the whole board for 2 rounds, and Mark every foe within ${1+E} (the next hit on each deals +2).` },
+    'The water answers in echoes.', 'Sea mammals');
+  K(['orca','narwhal'],'sea_song','Pod Song','C',0,
+    { n:'Call the Pod', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'empower', val:1, uses:1, dur:2, party:true},{v:'heal', n:1, target:'ally'}],
+      txt:(P,E)=>`Both heroes' next hit deals +1; your ally heals 1.` },
+    { n:'Chorus', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true}],
+      txt:(P,E)=>`Both heroes gain 1 AP at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
+    'Every pod sings its own dialect.', 'Sea mammals');
+  K(['walrus','narwhal'],'sea_tusk','Tusk','M',0,
+    { n:'Hook', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:2},{v:'strike', kind:'melee', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`Hook a foe beside you: 2 of its Shield comes off, then melee ${2+P}.` },
+    { n:'Spear', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E, pierce:true},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Melee ${4+E} that ignores Shield, and push it 1.` },
+    'A tooth grown long enough to lean on.', 'Sea mammals');
+
+  // Walrus: blubber, breath, tusk, and these six
+  K(['walrus'],'wal_haul','Haul Out','S',0,
+    { n:'Flop Ashore', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Move ${1+P}, then hold Shield ${1+h(P)} this round.` },
+    { n:'Bask', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'shield', val:2, dur:1}],
+      txt:(P,E)=>`Shield 2 this round, and heal 1 at the start of each turn for ${2+E} rounds.` },
+    'Out of the water, onto the ice, and asleep.');
+  K(['walrus'],'wal_whisker','Whisker Feel','S',0,
+    { n:'Feel the Floor', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'mark', nearest:true},{v:'heal', n:1}],
+      txt:(P,E)=>`Reveal within ${1+P}, Mark the nearest foe (the next hit on it deals +2), and heal 1.` },
+    { n:'Read the Current', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and your hits on it deal +${1+E}.` },
+    'Four hundred whiskers, all of them listening.');
+  K(['walrus'],'wal_bellow','Herd Bellow','C',0,
+    { n:'Bellow', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+h(P), dur:1, party:true},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+h(P)} this round, and every foe beside you is Weakened 1.` },
+    { n:'Herd Up', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'preempt', val:(P,E)=>1+E, reflect:0, party:true},{v:'cleanse', party:true}],
+      txt:(P,E)=>`Both heroes shed Anchored, Weakened and damage over time, and the next hit on each is ${1+E} less.` },
+    'Heard for a mile across the floe.');
+  K(['walrus'],'wal_suction','Suction Feed','M',0,
+    { n:'Suck In', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'force', kind:'pull', n:2},{v:'strike', kind:'los', dmg:(P,E)=>1+P}],
+      txt:(P,E)=>`Pull a foe within 2 up to 2 toward you, and it takes ${1+P}.` },
+    { n:'Feast', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'heal', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Melee ${2+E}, and heal ${1+E}.` },
+    'It eats clams by sucking them out of the shell.');
+  K(['walrus'],'wal_ice','Ice Haul','T',0,
+    { n:'Tusk Up', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Haul yourself up on your tusks: climb ${1+P}, and hold Shield 1 this round.` },
+    { n:'Break the Ice', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'zone', kind:'ice', radius:1, dur:2, weaken:1},{v:'hazardImmune', dur:2}],
+      txt:(P,E)=>`Smash the ice around you: for 2 rounds every foe within 1 of you is Weakened 1, and you ignore hazards.` },
+    'Its Latin name means tooth-walker.');
+  K(['walrus'],'wal_ton','Ton of Weight','M',0,
+    { n:'Lean In', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Melee ${3+P}, and push it 1.` },
+    { n:'Belly Flop', ap:2, el:1, cd:3, dur:0, tgt:'foe_adj_all',
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Every foe beside you takes ${2+E} and is Weakened 1 this round.` },
+    'Nobody asks a walrus to move.');
+
+  // Orca: blubber, breath, echolocation, pod song, and these five
+  K(['orca'],'orc_breach','Breach','S',0,
+    { n:'Breach', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
+      txt:(P,E)=>`Surge up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
+    { n:'Spyhop', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Burst out beside a foe within ${3+E}, melee ${3+E}, and push it 1.` },
+    'Up out of the water, all eight tons of it.');
+  K(['orca'],'orc_tactics','Pod Tactics','C',0,
+    { n:'Herd the Prey', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
+      fx:[{v:'mark'},{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Mark a foe (the next hit on it deals +2), and your ally's next hit deals +${1+h(P)}.` },
+    { n:'Wave Hunt', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'}],
+      txt:(P,E)=>`Both heroes' next hit deals +${1+E}, and your ally gains 1 AP next turn.` },
+    'They plan, and they teach the plan to their young.');
+  K(['orca'],'orc_wave','Wave Wash','S',0,
+    { n:'Wash', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'force', kind:'push', n:(P,E)=>1+h(P)}],
+      txt:(P,E)=>`A foe within 2 takes ${1+P} and is pushed ${1+h(P)}.` },
+    { n:'Wall of Water', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'radius', radius:(P,E)=>1+E},{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+E}],
+      txt:(P,E)=>`Every foe within ${1+E} is Weakened 1 this round and pushed 1.` },
+    'They wash seals off the ice together.');
+  K(['orca'],'orc_apex','Apex','M',0,
+    { n:'Take Down', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'execute', threshold:(P,E)=>2+P}],
+      txt:(P,E)=>`Melee ${2+P}; a foe left at ${2+P} or less is finished.` },
+    { n:'Top of the Sea', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E, pierce:true},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Melee ${4+E} that ignores Shield, and you can't be Weakened or Rooted this round.` },
+    'Nothing in the sea hunts an orca.');
+  K(['orca'],'orc_beach','Beach Charge','M',0,
+    { n:'Ride the Surf', ap:1, el:0, cd:2, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Move ${2+P}, passing foes, and your next hit this turn deals +1.` },
+    { n:'Strand', ap:2, el:1, cd:4, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'pull', n:1},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Melee ${3+E}, drag it 1 toward you, and pin it: Anchored ${1+h(E)}.` },
+    'It throws itself up the beach, and back.');
+
+  // Narwhal: blubber, breath, echolocation, pod song, tusk, and these four
+  K(['narwhal'],'nar_sense','Sense Tusk','S',0,
+    { n:'Taste the Water', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:(P,E)=>1+h(P), reflect:0},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Reveal within ${2+P}; the next hit on you is ${1+h(P)} less, and your next hit this turn deals +1.` },
+    { n:'Read the Sea', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'preempt', val:(P,E)=>1+E, reflect:0, party:true},{v:'hazardImmune', dur:2, party:true}],
+      txt:(P,E)=>`The next hit on each hero is ${1+E} less, and both ignore hazards for 2 rounds.` },
+    'The tusk is a tooth that feels the sea.');
+  K(['narwhal'],'nar_lead','Ice Lead','T',0,
+    { n:'Show the Way', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+P}],
+      txt:(P,E)=>`Your ally moves ${1+P}.` },
+    { n:'Open Water', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hazardImmune', dur:(P,E)=>1+E, party:true},{v:'engine', kind:'ap', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Both heroes ignore hazards for ${1+E} ${1+E > 1 ? 'rounds' : 'round'} and gain 1 AP next turn.` },
+    'It knows where the ice will open.');
+  K(['narwhal'],'nar_dive','Deep Dive','T',0,
+    { n:'Sound', ap:1, el:0, cd:2, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'hidden', dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Move ${2+P}, Hidden 1, and your next hit this turn deals +1.` },
+    { n:'Surface Far Off', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Dive and come up anywhere within ${2+E}, Hidden 1.` },
+    'A mile down, in the dark, all winter.');
+  K(['narwhal'],'nar_ghost','Pale Ghost','C',0,
+    { n:'Unsettle', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'strike', kind:'los', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`A foe within 3 takes ${2+P} and is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}.` },
+    { n:'Vanish', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:1, party:true, radius:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`You and an ally within 2 are Hidden 1, and your next hit deals +${1+E}.` },
+    'The unicorn of the sea, seen mostly as a shape under the ice.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
