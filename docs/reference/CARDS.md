@@ -693,3 +693,248 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Rush* · 1 AP · CD 0 — Rush 1 toward a foe, melee 2, and shove it 1. *(P3: Rush 1 toward a foe, melee 5, and shove it 1.)*
 - *Eth — Bowl Over* · 2 AP + 1 Mass · CD 3 — Charge 2 toward a foe within 3, melee 3, and shove it 2. *(P3/E3: Charge 2 toward a foe within 3, melee 6, and shove it 4.)*
+
+## 14 · Eurasian Lynx — leans S/T
+
+*Snow-country ghost. Hears everything, leaves no track, strikes once.*
+
+**Pounce** · Mass · `cat_pounce`
+
+- *Phys — Pounce* · 1 AP · CD 1 — Run up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Run up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Leap* · 1 AP + 1 Mass · CD 3 — Leap beside a foe within 3, height included, melee 4, and pin it: Anchored 1. *(P3/E3: Leap beside a foe within 5, height included, melee 6, and pin it: Anchored 1.)*
+
+**Retractable Claws** · Mass · `cat_claws`
+
+- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+
+**Night Eyes** · Space · `cat_eyes`
+
+- *Phys — Eyeshine* · 1 AP · CD 1 — See in the dark within 2 this round, and Mark the nearest foe. *(P3: See in the dark within 5 this round, and Mark the nearest foe.)*
+- *Eth — Night Hunt* · 1 AP + 1 Space · CD 3 — Light up everything within 3 for 2 rounds; both heroes' next two strikes deal +1. *(P3/E3: Light up everything within 5 for 2 rounds; both heroes' next two strikes deal +1.)*
+
+**Stalk** · Time · `cat_stalk`
+
+- *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+
+**Killing Bite** · Mass · `cat_bite`
+
+- *Phys — Throat Bite* · 1 AP · CD 1 — Melee 2; if that leaves it at 6 HP or less, bite again for 2. *(P3: Melee 5; if that leaves it at 6 HP or less, bite again for 2.)*
+- *Eth — Finish* · 1 AP + 1 Mass · CD 3 — Melee 3; if that leaves it at 4 HP or less, it falls (not a boss). *(P3/E3: Melee 5; if that leaves it at 6 HP or less, it falls (not a boss).)*
+
+**Land on Your Feet** · Space · `cat_feet`
+
+- *Phys — Twist* · 1 AP · CD 1 — The next hit on you is 1 less, and hazards don't touch you this round. *(P3: The next hit on you is 2 less, and hazards don't touch you this round.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1.)*
+
+**Tufted Ears** · Space · `cat_tufts`
+
+- *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +1. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +2.)*
+- *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear the whole field for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear the whole field for 4 rounds; every foe within 4 is Marked.)*
+
+**Snowshoe Paws** · Space · `lyn_snowshoe`
+
+- *Phys — Snowshoe* · 1 AP · CD 1 — Move 2; hazards don't touch you for 2 rounds. *(P3: Move 5; hazards don't touch you for 2 rounds.)*
+- *Eth — Deep Snow* · 1 AP + 1 Space · CD 3 — Both heroes ignore hazards for 2 rounds; every foe beside either of you is Weakened 1 for 2. *(P3/E3: Both heroes ignore hazards for 4 rounds; every foe beside either of you is Weakened 1 for 4.)*
+
+**Snow Ghost** ★ · Time · `lyn_ghost`
+
+- *Phys — Fade* · 1 AP · CD 2 — Hide for 1 round, moving freely; your next strike deals +1. *(P3: Hide for 2 rounds, moving freely; your next strike deals +1.)*
+- *Eth — Ghost Strike* · 1 AP + 1 Time · CD 3 — Appear beside a foe within 3, melee 4 through its Shield, and vanish again: Hidden 1. *(P3/E3: Appear beside a foe within 5, melee 6 through its Shield, and vanish again: Hidden 1.)*
+
+## 15 · Caracal — leans S/M
+
+*Desert leaper. Swats birds out of the air from a standing jump.*
+
+**Pounce** · Mass · `cat_pounce`
+
+- *Phys — Pounce* · 1 AP · CD 1 — Run up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Run up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Leap* · 1 AP + 1 Mass · CD 3 — Leap beside a foe within 3, height included, melee 4, and pin it: Anchored 1. *(P3/E3: Leap beside a foe within 5, height included, melee 6, and pin it: Anchored 1.)*
+
+**Retractable Claws** · Mass · `cat_claws`
+
+- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+
+**Night Eyes** · Space · `cat_eyes`
+
+- *Phys — Eyeshine* · 1 AP · CD 1 — See in the dark within 2 this round, and Mark the nearest foe. *(P3: See in the dark within 5 this round, and Mark the nearest foe.)*
+- *Eth — Night Hunt* · 1 AP + 1 Space · CD 3 — Light up everything within 3 for 2 rounds; both heroes' next two strikes deal +1. *(P3/E3: Light up everything within 5 for 2 rounds; both heroes' next two strikes deal +1.)*
+
+**Stalk** · Time · `cat_stalk`
+
+- *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+
+**Killing Bite** · Mass · `cat_bite`
+
+- *Phys — Throat Bite* · 1 AP · CD 1 — Melee 2; if that leaves it at 6 HP or less, bite again for 2. *(P3: Melee 5; if that leaves it at 6 HP or less, bite again for 2.)*
+- *Eth — Finish* · 1 AP + 1 Mass · CD 3 — Melee 3; if that leaves it at 4 HP or less, it falls (not a boss). *(P3/E3: Melee 5; if that leaves it at 6 HP or less, it falls (not a boss).)*
+
+**Land on Your Feet** · Space · `cat_feet`
+
+- *Phys — Twist* · 1 AP · CD 1 — The next hit on you is 1 less, and hazards don't touch you this round. *(P3: The next hit on you is 2 less, and hazards don't touch you this round.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1.)*
+
+**Tufted Ears** · Space · `cat_tufts`
+
+- *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +1. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +2.)*
+- *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear the whole field for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear the whole field for 4 rounds; every foe within 4 is Marked.)*
+
+**Sky Swat** ★ · Charge · `car_swat`
+
+- *Phys — Swat* · 1 AP · CD 0 — Spring and swat a foe within 2 for 2; it is Weakened 1 this round. *(P3: Spring and swat a foe within 2 for 5; it is Weakened 1 this round.)*
+- *Eth — Snatch* · 1 AP + 1 Charge · CD 3 — Hook a foe within 3 and drag it 2 toward you; if it lands beside you, melee 3. It is Anchored 1. *(P3/E3: Hook a foe within 3 and drag it 4 toward you; if it lands beside you, melee 5. It is Anchored 1.)*
+
+**Vertical Leap** · Space · `car_leap`
+
+- *Phys — Spring* · 1 AP · CD 1 — Jump to any node within 2, height included; the next hit on you is 1 less. *(P3: Jump to any node within 5, height included; the next hit on you is 1 less.)*
+- *Eth — Sky Leap* · 1 AP + 1 Space · CD 3 — Leap to any node within 3, height included, landing on every foe beside it for 2. *(P3/E3: Leap to any node within 5, height included, landing on every foe beside it for 4.)*
+
+## 16 · Ocelot — leans T/S
+
+*Dappled night-walker of the forest floor and the branches over it.*
+
+**Pounce** · Mass · `cat_pounce`
+
+- *Phys — Pounce* · 1 AP · CD 1 — Run up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Run up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Leap* · 1 AP + 1 Mass · CD 3 — Leap beside a foe within 3, height included, melee 4, and pin it: Anchored 1. *(P3/E3: Leap beside a foe within 5, height included, melee 6, and pin it: Anchored 1.)*
+
+**Retractable Claws** · Mass · `cat_claws`
+
+- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+
+**Night Eyes** · Space · `cat_eyes`
+
+- *Phys — Eyeshine* · 1 AP · CD 1 — See in the dark within 2 this round, and Mark the nearest foe. *(P3: See in the dark within 5 this round, and Mark the nearest foe.)*
+- *Eth — Night Hunt* · 1 AP + 1 Space · CD 3 — Light up everything within 3 for 2 rounds; both heroes' next two strikes deal +1. *(P3/E3: Light up everything within 5 for 2 rounds; both heroes' next two strikes deal +1.)*
+
+**Stalk** · Time · `cat_stalk`
+
+- *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+
+**Killing Bite** · Mass · `cat_bite`
+
+- *Phys — Throat Bite* · 1 AP · CD 1 — Melee 2; if that leaves it at 6 HP or less, bite again for 2. *(P3: Melee 5; if that leaves it at 6 HP or less, bite again for 2.)*
+- *Eth — Finish* · 1 AP + 1 Mass · CD 3 — Melee 3; if that leaves it at 4 HP or less, it falls (not a boss). *(P3/E3: Melee 5; if that leaves it at 6 HP or less, it falls (not a boss).)*
+
+**Land on Your Feet** · Space · `cat_feet`
+
+- *Phys — Twist* · 1 AP · CD 1 — The next hit on you is 1 less, and hazards don't touch you this round. *(P3: The next hit on you is 2 less, and hazards don't touch you this round.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1.)*
+
+**Rosette Cloak** ★ · Time · `oce_rosette`
+
+- *Phys — Dapple* · 1 AP · CD 2 — Melt into broken light: Hidden 1, moving freely, and the next hit on you is 1 less. *(P3: Melt into broken light: Hidden 2, moving freely, and the next hit on you is 1 less.)*
+- *Eth — Leaf Light* · 1 AP + 1 Time · CD 4 — You and an ally within 2 are Hidden for 2 rounds; both heroes' next strike deals +1. *(P3/E3: You and an ally within 2 are Hidden for 4 rounds; both heroes' next strike deals +1.)*
+
+**Headfirst Descent** · Space · `oce_descent`
+
+- *Phys — Descend* · 1 AP · CD 1 — Climb up to 1, height included, and drop on every foe beside where you land for 1. *(P3: Climb up to 4, height included, and drop on every foe beside where you land for 2.)*
+- *Eth — Branch Drop* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3, melee 4, and it is Weakened 1. *(P3/E3: Drop beside a foe within 5, melee 6, and it is Weakened 1.)*
+
+**Night Prowl** · Time · `oce_prowl`
+
+- *Phys — Prowl* · 1 AP · CD 1 — Move 2 without setting off traps, and end Hidden 1. *(P3: Move 5 without setting off traps, and end Hidden 1.)*
+- *Eth — Night Shift* · 1 AP + 1 Time · CD 4 — Every card on your track returns 2 columns sooner; see within 2 this round. *(P3/E3: Every card on your track returns 4 columns sooner; see within 2 this round.)*
+
+## 17 · Tiger — leans M/C
+
+*The largest cat. Swims, stalks in stripes, and roars the field still.*
+
+**Pounce** · Mass · `cat_pounce`
+
+- *Phys — Pounce* · 1 AP · CD 1 — Run up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Run up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Leap* · 1 AP + 1 Mass · CD 3 — Leap beside a foe within 3, height included, melee 4, and pin it: Anchored 1. *(P3/E3: Leap beside a foe within 5, height included, melee 6, and pin it: Anchored 1.)*
+
+**Retractable Claws** · Mass · `cat_claws`
+
+- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+
+**Night Eyes** · Space · `cat_eyes`
+
+- *Phys — Eyeshine* · 1 AP · CD 1 — See in the dark within 2 this round, and Mark the nearest foe. *(P3: See in the dark within 5 this round, and Mark the nearest foe.)*
+- *Eth — Night Hunt* · 1 AP + 1 Space · CD 3 — Light up everything within 3 for 2 rounds; both heroes' next two strikes deal +1. *(P3/E3: Light up everything within 5 for 2 rounds; both heroes' next two strikes deal +1.)*
+
+**Stalk** · Time · `cat_stalk`
+
+- *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+
+**Killing Bite** · Mass · `cat_bite`
+
+- *Phys — Throat Bite* · 1 AP · CD 1 — Melee 2; if that leaves it at 6 HP or less, bite again for 2. *(P3: Melee 5; if that leaves it at 6 HP or less, bite again for 2.)*
+- *Eth — Finish* · 1 AP + 1 Mass · CD 3 — Melee 3; if that leaves it at 4 HP or less, it falls (not a boss). *(P3/E3: Melee 5; if that leaves it at 6 HP or less, it falls (not a boss).)*
+
+**Land on Your Feet** · Space · `cat_feet`
+
+- *Phys — Twist* · 1 AP · CD 1 — The next hit on you is 1 less, and hazards don't touch you this round. *(P3: The next hit on you is 2 less, and hazards don't touch you this round.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1.)*
+
+**Roar** ★ · Charge · `tig_roar`
+
+- *Phys — Roar* · 1 AP · CD 1 — Every foe beside you is Weakened 1 this round and knocked back 1. *(P3: Every foe beside you is Weakened 2 this round and knocked back 1.)*
+- *Eth — Thunder* · 2 AP + 1 Charge · CD 4 — Every foe in sight is Weakened 1 for 2 rounds; both heroes' next strike deals +1. *(P3/E3: Every foe in sight is Weakened 1 for 4 rounds; both heroes' next strike deals +1.)*
+
+**Strong Swimmer** · Space · `tig_swim`
+
+- *Phys — Swim* · 1 AP · CD 1 — Move 1; hazards don't touch you this round, and you shake off Anchored and Weakened. *(P3: Move 4; hazards don't touch you this round, and you shake off Anchored and Weakened.)*
+- *Eth — Undertow* · 1 AP + 1 Space · CD 3 — Drag a foe within 3 toward you 2 and hold it under: Anchored 1. Hazards don't touch you this round. *(P3/E3: Drag a foe within 3 toward you 4 and hold it under: Anchored 2. Hazards don't touch you this round.)*
+
+**Stripes** · Time · `tig_stripes`
+
+- *Phys — Stripes* · 1 AP · CD 2 — Watch a foe within 3 from the grass: your hits on it deal +1, and you are Hidden 1. *(P3: Watch a foe within 3 from the grass: your hits on it deal +2, and you are Hidden 1.)*
+- *Eth — Tall Grass* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely; your next strike deals +3 through Shield. *(P3/E3: Hide for 4 rounds, moving freely; your next strike deals +5 through Shield.)*
+
+## 18 · Cheetah — leans S/T
+
+*The fastest runner alive. Claws like cleats, eyes for the long view.*
+
+**Pounce** · Mass · `cat_pounce`
+
+- *Phys — Pounce* · 1 AP · CD 1 — Run up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Run up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Leap* · 1 AP + 1 Mass · CD 3 — Leap beside a foe within 3, height included, melee 4, and pin it: Anchored 1. *(P3/E3: Leap beside a foe within 5, height included, melee 6, and pin it: Anchored 1.)*
+
+**Stalk** · Time · `cat_stalk`
+
+- *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+
+**Killing Bite** · Mass · `cat_bite`
+
+- *Phys — Throat Bite* · 1 AP · CD 1 — Melee 2; if that leaves it at 6 HP or less, bite again for 2. *(P3: Melee 5; if that leaves it at 6 HP or less, bite again for 2.)*
+- *Eth — Finish* · 1 AP + 1 Mass · CD 3 — Melee 3; if that leaves it at 4 HP or less, it falls (not a boss). *(P3/E3: Melee 5; if that leaves it at 6 HP or less, it falls (not a boss).)*
+
+**Land on Your Feet** · Space · `cat_feet`
+
+- *Phys — Twist* · 1 AP · CD 1 — The next hit on you is 1 less, and hazards don't touch you this round. *(P3: The next hit on you is 2 less, and hazards don't touch you this round.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Root you and hazards don't touch you; heal 1.)*
+
+**Hyperspeed** ★ · Space · `che_hyper`
+
+- *Phys — Hyperspeed* · 1 AP · CD 1 — Run exactly 4, past foes. *(P3: Run exactly 4, past foes; your next strike this turn deals +3.)*
+- *Eth — Top Speed* · 1 AP + 1 Space · CD 3 — Run exactly 4, past foes; your next strike this turn deals +3, and the next hit on you is 1 less. *(P3/E3: Run exactly 4, past foes; your next strike this turn deals +5, and the next hit on you is 1 less.)*
+
+**Tail Rudder** · Space · `che_rudder`
+
+- *Phys — Swerve* · 1 AP · CD 1 — Cut 1 sideways; the next hit on you is 1 less. *(P3: Cut 4 sideways; the next hit on you is 1 less.)*
+- *Eth — Hairpin* · 1 AP + 1 Space · CD 3 — Ready to turn on a tail: the next hit on you is 3 less and you dodge a step away from it. Step 1 now. *(P3/E3: Ready to turn on a tail: the next hit on you is 5 less and you dodge a step away from it. Step 1 now.)*
+
+**Tear Marks** · Charge · `che_tear`
+
+- *Phys — Focus* · 1 AP · CD 1 — Fix a foe in sight: it is Located for 2 rounds and your hits on it deal +1. *(P3: Fix a foe in sight: it is Located for 2 rounds and your hits on it deal +2.)*
+- *Eth — Long Look* · 1 AP + 1 Charge · CD 3 — Pick out any foe: Located for 3 rounds, Marked, and your hits on it deal +2. *(P3/E3: Pick out any foe: Located for 5 rounds, Marked, and your hits on it deal +4.)*
+
+**Sprinter's Claws** · Mass · `che_claws`
+
+- *Phys — Kick Off* · 1 AP · CD 1 — Move 2; your next strike this turn deals +1. *(P3: Move 5; your next strike this turn deals +1.)*
+- *Eth — Dig In* · 1 AP + 1 Mass · CD 3 — Claws in: you can't be pushed or pulled for 2 rounds, hold Shield 2 this round, and draw 1 die as AP. *(P3/E3: Claws in: you can't be pushed or pulled for 4 rounds, hold Shield 4 this round, and draw 1 die as AP.)*
+
+**Trip** · Mass · `che_trip`
+
+- *Phys — Trip* · 1 AP · CD 0 — Hook a leg: melee 1, and it cannot move next round. *(P3: Hook a leg: melee 4, and it cannot move next round.)*
+- *Eth — Tumble* · 1 AP + 1 Mass · CD 3 — Melee 3; it cannot move and is Weakened 1 for 1 round. *(P3/E3: Melee 5; it cannot move and is Weakened 1 for 2 rounds.)*

@@ -116,6 +116,41 @@
       onward: ['{A} walks ahead into {PLACE} as if it were already theirs.', '"{THREAT} will look at me first," {A} says. "Let it."'],
       reply: ['{A} grunts. It is a yes.', '"Hm," {A} says, and shows a tooth.', '{A} slaps the ground once, approving.'],
     },
+    lynx: {
+      win: ['{A} is already sitting somewhere high, watching the quiet. Nobody saw them get there.', '"One," {A} says. "That was all it needed."'],
+      close: ['{A} licks a torn paw and says nothing at all.', '"I heard it late," {A} says, ear-tufts flat. "I do not hear things late."'],
+      quiet: ['{A} sits at the edge of the camp in the cold and seems to prefer it.', '{A} turns their ears toward a sound nobody else can hear, and keeps them there.'],
+      onward: ['{A} listens to {PLACE} for a long time. "It is not empty."', '"{THREAT} will not hear me," {A} says. "That is the whole plan."'],
+      reply: ['{A}\'s ear-tufts turn toward {B}, then away.', '"Yes," {A} says, very quietly.', '{A} blinks once, slowly, which is a lot from {A}.'],
+    },
+    caracal: {
+      win: ['{A} springs straight up for no reason and lands lightly. "Good."', '"Did you see how high?" {A} asks. "Higher than it."'],
+      close: ['{A} paces in short, angry lines. "It kept low. I hate low."', '"I jumped early," {A} says. "Next time I wait."'],
+      quiet: ['{A} bats at moths in the lamplight, missing none of them.', '{A} sleeps in a ball, ears still standing, black tips twitching.'],
+      onward: ['"Anything flying in {PLACE}?" {A} asks, too hopefully.', '{A} crouches, rear end wiggling. "{THREAT}. Point me at it."'],
+      reply: ['{A}\'s ears flick: yes.', '"Fine. Fine," {A} says, already crouching.', '{A} hisses, cheerfully.'],
+    },
+    ocelot: {
+      win: ['{A} appears out of the shadows beside {B}, as if they had been there the whole time. "Done."', '"They never looked up," {A} says, pleased.'],
+      close: ['{A} has gone very still and very dappled. It takes a while to find them.', '"Too much light," {A} says. "I need less light."'],
+      quiet: ['{A} sleeps all afternoon in the branches and wakes at dusk, bright and chatty.', '{A} watches {B} cook with frank, unblinking interest.'],
+      onward: ['"{PLACE} at night," {A} says. "Please. At night."', '{A} slips ahead into {PLACE} and is gone between one blink and the next.'],
+      reply: ['{A} purrs, which is surprising.', '"Mm," {A} says, from somewhere.', '{A}\'s tail curls, considering.'],
+    },
+    tiger: {
+      win: ['{A} stretches the whole long length of themselves and yawns. "Is that all of them?"', '"They heard me first," {A} says. "That is usually enough."'],
+      close: ['{A} washes a wound in the nearest water and lets nobody near it.', '"I was too big for that place," {A} says. "I will be smaller next time. No. I will not."'],
+      quiet: ['{A} lies half in the stream with only their head out, entirely at peace.', '{A} lets {B} lean against their side, as if allowing a favour.'],
+      onward: ['{A} walks into {PLACE} without hurrying, which is somehow worse.', '"{THREAT}," {A} says, and the word comes out as a low rumble.'],
+      reply: ['{A} chuffs, a soft, friendly sound.', '"Yes," {A} rumbles.', '{A} flicks one ear, unbothered.'],
+    },
+    cheetah: {
+      win: ['{A} is breathing hard and grinning. "Again. Faster."', '"I was there before it knew I had left," {A} says.'],
+      close: ['{A} lies flat, ribs heaving. "Too long. I can\'t run that long."', '"I needed a straight line," {A} says. "There wasn\'t one."'],
+      quiet: ['{A} sits on the highest rock in camp, scanning the horizon until dark.', '{A} chirps at {B}, a small bird-sound that does not fit them at all.'],
+      onward: ['"{PLACE}. Open?" {A} asks. "Tell me it is open."', '{A} is already on their toes. "{THREAT}. Let me run at it."'],
+      reply: ['{A} chirps.', '"Yes, yes, go," {A} says.', '{A} is already looking at the horizon again.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

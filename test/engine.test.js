@@ -421,3 +421,45 @@ test('at level 0, with no AP and no awakened card, every crystal still opens an 
       `${el} has a channelled action that needs no foe`,
     );
 });
+
+test('an exact run (Hyperspeed) offers only nodes whose shortest walk is exactly that far, and lands there', () => {
+  const scene = H.arena('che_hyper');
+  const { m, h } = scene;
+  const all = T.reachableWalk(m, h, 4, true);
+  const exact = T.reachableWalk(m, h, 4, true, true);
+  assert.ok(exact.length > 0, 'the arena has a node four steps off');
+  assert.ok(exact.every((n) => all.includes(n)));
+  const three = new Set(T.reachableWalk(m, h, 3, true));
+  assert.ok(
+    exact.every((n) => !three.has(n)),
+    'nothing nearer than four is offered',
+  );
+  const tg = T.canPlay(m, h, 'che_hyper', 'P').tg;
+  assert.deepEqual(tg.options.slice().sort(), exact.slice().sort(), 'the face offers the same nodes');
+  const near = all.find((n) => !exact.includes(n));
+  if (near != null) {
+    assert.ok(T.playFace(m, h, 'che_hyper', 'P', { node: near }).ok);
+    assert.notEqual(h.pos, near, 'a nearer node is refused');
+  }
+  const scene2 = H.arena('che_hyper');
+  assert.ok(H.playIn(scene2, 'che_hyper', 'P').ok);
+  assert.ok(exact.includes(scene2.h.pos), 'it lands four steps away');
+});
+
+test('a run toward a foe goes up to its full length and stops beside it (Pounce)', () => {
+  const scene = H.arena('cat_pounce');
+  const { m, h, zone } = scene;
+  const B = T.Board;
+  // a foe three steps off along open ground
+  const three = Object.values(m.board.nodes)
+    .map((n) => n.id)
+    .find((id) => !T.occupied(m, id) && B.dist(m.board, h.pos, id, true) === 3 && !m.board.nodes[id].height);
+  assert.ok(three != null, 'the arena has a node three away');
+  m.enemies.forEach((e) => e !== zone && (e.pos = -1));
+  zone.pos = three;
+  const hp = zone.hp;
+  const r = T.playFace(m, h, 'cat_pounce', 'P', { target: zone.uid });
+  assert.ok(r.ok, r.why);
+  assert.ok(B.adjacent(m.board, h.pos, zone.pos), 'two steps bring the hero beside it');
+  assert.ok(zone.hp < hp, 'and the bite lands');
+});

@@ -1129,7 +1129,7 @@
       case 'node_move': {
         const mv = face.fx.find((x) => x.v === 'move');
         const n = num(mv.n, P, E);
-        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes) };
+        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact) };
       }
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'teleport');
@@ -1151,7 +1151,8 @@
         return { need: 'none' };
     }
   };
-  T.reachableWalk = function (m, h, n, ignoreFoes) {
+  /** The empty nodes a hero can walk to in n steps or fewer; with `exact`, only those whose shortest walk is n. */
+  T.reachableWalk = function (m, h, n, ignoreFoes, exact) {
     const bd = m.board;
     const out = [];
     const seen = new Set([h.pos]);
@@ -1166,7 +1167,7 @@
         const occ = T.entityAt(m, y);
         if (occ && !(ignoreFoes || occ.kind === 'hero')) continue; // can't pass through foes unless ignoring
         seen.add(y);
-        if (!occ) out.push(y);
+        if (!occ && (!exact || d + 1 === n)) out.push(y);
         q.push([y, d + 1]);
       }
     }
@@ -1407,7 +1408,8 @@
                   .map((e) => e.pos),
               ),
             );
-            if (p && p.length > 2) dest = p[1];
+            // up to n steps along the way to it, stopping beside it
+            if (p && p.length > 2) dest = p[Math.min(n, p.length - 2)];
           }
         } else if (f.free && ctx.node == null) {
           dest = null;
@@ -1420,7 +1422,7 @@
           }
           break;
         }
-        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes);
+        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes, f.exact);
         if (!opts.includes(dest)) {
           if (f.free) {
             ctx.pendingFreeMove = n;

@@ -1,5 +1,29 @@
 # Changelog
 
+## 2.44.0 — 2026-11-16 — the cats
+
+Garrett: "cats are going to share many of those 9 traits, but hyperspeed (travel exactly 4 spaces) should be unique to a cheetah."
+
+The second branch of the tree: five painted cats, each with nine traits.
+
+- **Eurasian Lynx, Caracal, Ocelot, Tiger and Cheetah.**
+- **Six cat traits:**
+  - Pounce, Stalk, Killing Bite and Land on Your Feet are carried by every cat.
+  - Retractable Claws and Night Eyes are carried by every cat except the cheetah, whose claws never sheathe.
+- **Tufted Ears** is shared by the lynx and the caracal.
+- **Traits of each cat's own:**
+  - lynx: Snowshoe Paws and Snow Ghost
+  - caracal: Sky Swat and Vertical Leap
+  - ocelot: Rosette Cloak, Headfirst Descent and Night Prowl
+  - tiger: Roar, Strong Swimmer and Stripes
+  - cheetah: five, among them **Hyperspeed**, a run of exactly 4 that passes foes
+- **An exact run.** A move can require that its destination be exactly that many steps away, by its shortest walk (`exact` on `move`; `T.reachableWalk(m, h, n, ignoreFoes, exact)`).
+- **A run toward a foe goes its full length.** A move `toward` a foe with n steps now walks up to n steps and stops beside the foe; before, it always took one step. Pounce uses this. The mandrill's Bowl Over already said "charge 2" and now does.
+- Each cat has a voice in the passages between stops.
+- Tests for both movement changes.
+
+Audit: 272 faces, 0 narrow (Throat Bite became a strike plus a finishing bite after the first pass flagged it), 0 hard-counter candidates, 0 collapsed gate cells. Simulation, `node tools/sim.js 40`, 2.43 → 2.44: heuristic run wins 5/40 → 7/40, mission win 72% → 73%; look-ahead 14/40 → 12/40, 83% → 83%. Within noise.
+
 ## 2.43.0 — 2026-11-16 — the primates
 
 Garrett: "every pilot is 1/3 human but other primates might have some of the same abilities as humans."
