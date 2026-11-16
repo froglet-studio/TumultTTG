@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.46.0 — 2026-11-16 — Survey, a second mission that is not a fight
+
+The next non-combat mission from the plan for two-player runs (`docs/design/03-missions.md`), aimed at turns where one move is clearly best.
+
+- **Survey — Before Nightfall.** Survey marks lie across the whole board, two more than you need, with at least one in every column past the start. Tag 4/5/6 of them (+ the tide) before night falls (6/6/5 rounds, less the tide's round). To tag a mark you stand on it and Interact.
+- **A mark takes 2 AP or one die of its element.** Each mark is Mass, Charge, Space or Time, shown by its colour, and Omni counts. So a rolled element always has a use, and spending it on a mark or a card is a real choice.
+- **Veiled marks.** Half the marks, the farthest first, start veiled (a ringed ! on the board). A veiled mark can't be tagged until a pilot stands within 1 of it or a reveal reaches it, which gives information verbs real work. A few foes wander between the marks, and a lurker joins from tier 2.
+- **On the route** it takes Cascade's place in the middle row (tier 2). Cascade still opens the run.
+- The look-ahead player sees both ways to pay. The heuristic heads for the nearest mark its partner is not nearer to, so the two split the board.
+- **Balance** (`node tools/sim.js 80 runs`, main → 2.46.0): heuristic 18 → 17, look-ahead 32 → 33. Survey cells over 40 missions, heuristic / look-ahead: t1 100/100%, t2 80/100%, t3 33/90%.
+- **Dull turns** (`node tools/turns.js 10`): Survey t1/t2/t3 31/24/35%, against 38/42/31% for the Cascade it replaces at tier 2. It started at 43% at tier 2 when marks took AP only and could be tagged from beside them.
+- No mission needs an ability: squads with no cards at all win Survey 100% at tier 1 and 94% at tier 2 (`ABILITY_AUDIT.md`).
 ## 2.45.0 — 2026-11-16 — canon from play: defining moments
 
 A step of design 06: when something dramatic happens to a pilot, the game says what happened and asks what it meant.

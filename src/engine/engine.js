@@ -1025,6 +1025,7 @@
         breakHidden(m, e, 'located');
         addTimed(m, e, 'Located', dur || 1);
       }
+    sightMarks(m, nodes, actor.name || 'A reveal');
     // hidden objective caches
     if (m.objective && m.objective.kind === 'find') {
       for (const c of m.objective.candidates) {
@@ -2046,7 +2047,22 @@
     }
   };
 
+  /** Survey: a veiled mark within `radius` of a node is sighted, and can be tagged from then on. */
+  function sightMarks(m, nodes, who) {
+    if (!m.objective || m.objective.kind !== 'survey') return;
+    for (const n of nodes) {
+      const o = m.board.nodes[n] && m.board.nodes[n].objective;
+      if (o && o.kind === 'mark' && o.veiled) {
+        o.veiled = false;
+        say(m, `${who} sights a survey mark on node ${n}.`, 'sys');
+      }
+    }
+  }
+  T.sightAround = function (m, h) {
+    sightMarks(m, [h.pos].concat(B.within(m.board, h.pos, 1, true)), h.name);
+  };
   function onHeroEnter(m, h, node) {
+    T.sightAround(m, h);
     // cache search on foot
     if (m.objective && m.objective.kind === 'find') {
       const nd = m.board.nodes[node];
@@ -2097,7 +2113,19 @@
     T.afterAction(m);
     return { ok: true };
   };
-  T.doInteract = function (m, h, node, viaAbility) {
+  /**
+   * Survey marks can be tagged with a die of their own element (Omni counts) instead of 2 AP.
+   * 'el' when that is the payment asked for, or the only one the hero can make; else 'ap'.
+   */
+  const MARK_EL = { M: 'Mass', C: 'Charge', S: 'Space', T: 'Time' };
+  T.markPay = function (h, o, pay) {
+    const el = o && o.kind === 'mark' && o.el && T.elCount(h, o.el) + T.omniCount(h) > 0;
+    const ap = T.apValue(h) >= R().INTERACT_AP;
+    if (pay === 'el') return el ? 'el' : null;
+    if (pay === 'ap') return ap ? 'ap' : null;
+    return ap ? 'ap' : el ? 'el' : null;
+  };
+  T.doInteract = function (m, h, node, viaAbility, pay) {
     const bd = m.board;
     const nd = bd.nodes[node];
     const ob = m.objective;
@@ -2106,11 +2134,21 @@
       adj = B.adjacent(bd, h.pos, node);
     if (nd.objective.kind === 'crate' && h.carrying) return { ok: false, why: 'already carrying a crate' };
     if (nd.objective.kind === 'dock') return { ok: false, why: 'carry a crate here: it is delivered as you arrive' };
+    if (nd.objective.kind === 'mark' && nd.objective.veiled)
+      return { ok: false, why: 'veiled: sight it first (stand within 1, or reveal it)' };
     if (!viaAbility) {
+      if (nd.objective.kind === 'mark' && !here) return { ok: false, why: 'stand on the mark to tag it' };
       if (!(here || (adj && !nd.height)))
         return { ok: false, why: nd.height ? 'must stand on the ledge (or use a Reach verb)' : 'not adjacent' };
-      if (T.apValue(h) < R().INTERACT_AP) return { ok: false, why: 'need 2 AP' };
-      T.pay(h, R().INTERACT_AP);
+      if (nd.objective.kind === 'mark') {
+        const how = T.markPay(h, nd.objective, pay);
+        if (!how) return { ok: false, why: `need 2 AP or a ${MARK_EL[nd.objective.el]} die` };
+        if (how === 'el') T.pay(h, 0, nd.objective.el, 1);
+        else T.pay(h, R().INTERACT_AP);
+      } else {
+        if (T.apValue(h) < R().INTERACT_AP) return { ok: false, why: 'need 2 AP' };
+        T.pay(h, R().INTERACT_AP);
+      }
     }
     const k = nd.objective.kind;
     if (k === 'vault' && ob.kind === 'vault') {
@@ -2157,6 +2195,14 @@
       delete nd.objective;
       h.carrying = 1;
       say(m, `${h.name} shoulders a crate.`, 'sys');
+    } else if (k === 'mark' && ob.kind === 'survey') {
+      delete nd.objective;
+      ob.done++;
+      say(m, `${h.name} tags a survey mark (${ob.done}/${ob.need}).`, 'sys');
+      if (ob.done >= ob.need) {
+        m.won = true;
+        say(m, 'The survey is done before nightfall.', 'sys');
+      }
     } else if (k === 'dock') {
       return { ok: false, why: 'carry a crate here: it is delivered as you arrive' };
     } else if (k === 'beacon') {
@@ -2268,6 +2314,7 @@
       h.freeMove = 0;
       h.roundFlags = { struck: false }; // downed heroes too: one rallied mid-round has not struck yet
       if (h.downed) continue;
+      T.sightAround(m, h);
       T.heroTurnStart(m, h);
     }
     m.fx.push({ t: 'round', round: m.round });

@@ -10,7 +10,7 @@
   const U = T.UI;
   const esc = U.esc;
   const KEY = 'tumult_v2_playtest';
-  const TYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'elite', 'boss'];
+  const TYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey', 'elite', 'boss'];
   const LOG_MAX = 40;
 
   /**
@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.45.0',
+    version: '2.46.0',
     items: [
+      {
+        text: 'A new mission that is not a fight: Survey. Survey marks lie across the whole board and night is coming. Stand on one and Interact to tag it, for 2 AP or one die of the mark’s colour (Omni counts). The far ones start veiled (a ringed ! on the board): stand within 1 of one, or reach it with a reveal, to sight it first. It sits in the middle of the route, in place of the second Cascade. Did the two of you split up? Did a rolled element ever go to a mark instead of a card, and was that a real choice? Use the panel to start one: Survey, any tier.',
+      },
       {
         text: 'When a mission ends on something that happened to one of your pilots (they went down, a partner got them back up, they finished on 3 vitality or less, or they came through without a scratch), the panel now says what happened and asks what it meant to them, with three openings ("After the Quarry, … never again"). One moment per mission, the most dramatic. Did the moment it picked feel like the one that mattered?',
       },
