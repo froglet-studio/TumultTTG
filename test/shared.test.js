@@ -34,6 +34,25 @@ test('a shared trait is held once, and a second pick binds upgrade points to it 
   assert.equal(T.canAddCard(h, 'hum_tool').ok, false, 'never a third time');
 });
 
+test('a second copy is worth DOUBLE_UP whether or not the card already has points', () => {
+  for (const spent of [0, 1, 3]) {
+    const h = hero(['orangutan', 'gecko'], ['hum_tool']);
+    h.upUnspent = spent;
+    for (let i = 0; i < spent; i++) assert.ok(T.adjustUp(h, 'hum_tool', i % 2 ? 'P' : 'E', 1).ok);
+    const before = h.upUnspent + T.boundLeft(h, 'hum_tool');
+    assert.equal(h.upUnspent, 0);
+    assert.ok(T.addCard(h, 'hum_tool').double);
+    assert.equal(h.upUnspent + T.boundLeft(h, 'hum_tool'), before + R.DOUBLE_UP, `${spent} spent before`);
+    assert.deepEqual(
+      h.up.hum_tool.reduce((a, b) => a + b),
+      spent,
+      'nothing taken off the card',
+    );
+    T.respecHero(h);
+    assert.equal(h.upUnspent + T.boundLeft(h, 'hum_tool'), spent + R.DOUBLE_UP, 'a respec gives the same back');
+  }
+});
+
 test("a trait only one of the hero's clades carries is never offered twice", () => {
   const h = hero(['gecko', 'eel'], ['hum_tool', 'gec_hide']);
   assert.equal(T.canAddCard(h, 'hum_tool').ok, false);
@@ -46,15 +65,14 @@ test('bound points are spent on their card first, never on another, and come bac
   const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
   h.upUnspent = 1;
   T.addCard(h, 'hum_tool');
-  assert.ok(T.adjustUp(h, 'hum_tool', 'E', 1).ok);
-  assert.ok(T.adjustUp(h, 'hum_tool', 'P', 1).ok);
-  assert.equal(h.upUnspent, 1, "both points came from the card's own");
+  for (let i = 0; i < R.DOUBLE_UP; i++) assert.ok(T.adjustUp(h, 'hum_tool', i % 2 ? 'P' : 'E', 1).ok);
+  assert.equal(h.upUnspent, 1, "the first points came from the card's own");
   assert.equal(T.boundLeft(h, 'hum_tool'), 0);
   assert.ok(T.adjustUp(h, 'hum_tool', 'P', 1).ok);
-  assert.equal(h.upUnspent, 0, 'the third came from the free pool');
+  assert.equal(h.upUnspent, 0, 'the next came from the free pool');
   assert.ok(T.adjustUp(h, 'hum_tool', 'P', -1).ok);
   assert.equal(h.upUnspent, 1, 'a free point goes back to the free pool');
-  assert.ok(T.adjustUp(h, 'hum_tool', 'P', -1).ok);
+  assert.ok(T.adjustUp(h, 'hum_tool', 'E', -1).ok);
   assert.equal(h.upUnspent, 1, 'a bound point goes back to the card');
   assert.equal(T.boundLeft(h, 'hum_tool'), 1);
   assert.equal(T.adjustUp(h, 'gec_hide', 'P', 1).ok, true);

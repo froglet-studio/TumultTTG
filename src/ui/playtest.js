@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.46.0',
+    version: '2.47.0',
     items: [
+      {
+        text: 'Taking a shared trait a second time now gives 1 Upgrade Point for that card (it was 2), and it gives that point even when the card already has upgrades (before, it could give nothing). In simulated runs 1 point does about as much as a new card. Pilots who are human and a primate meet this most. When it was offered, did you take it, or a new card? Did it feel worth it?',
+      },
       {
         text: 'A new mission that is not a fight: Survey. Survey marks lie across the whole board and night is coming. Stand on one and Interact to tag it, for 2 AP or one die of the mark’s colour (Omni counts). The far ones start veiled (a ringed ! on the board): stand within 1 of one, or reach it with a reveal, to sight it first. It sits in the middle of the route, in place of the second Cascade. Did the two of you split up? Did a rolled element ever go to a mark instead of a card, and was that a real choice? Use the panel to start one: Survey, any tier.',
       },

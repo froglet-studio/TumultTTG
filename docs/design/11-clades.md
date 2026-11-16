@@ -11,7 +11,7 @@ Garrett: "the full 9 card bloodline is correct but that is for a species, as you
 - **Each clade has at least one trait that no clade on its branch carries.** The cheetah's Hyperspeed (travel exactly 4 spaces) is the cheetah's alone among cats. `test/data.test.js` holds this.
 - **Unrelated animals may carry a variant** of a trait for their own surroundings: a falcon's or a marlin's take on Hyperspeed is a separate card with its own text, not the cheetah's card.
 - **Primates share some of Human's traits**, since every pilot is a third human. Human's own nine stay as they are.
-- **A pilot whose two clades share a trait holds it once.** Taking it again gives 2 UP bound to that card (`RULES.DOUBLE_UP`); that is the only way a card comes up twice.
+- **A pilot whose two clades share a trait holds it once.** Taking it again gives 1 UP bound to that card (`RULES.DOUBLE_UP`; 2 before 2.47, when simulated runs showed 1 is about what a new card is worth); that is the only way a card comes up twice.
 
 ## The branches, in the order they are built
 

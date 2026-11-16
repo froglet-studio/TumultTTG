@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.47.0 — 2026-11-16 — a second copy is worth one point
+
+Garrett: "lets also consider the right number on upgrading from a second card, so another card and more upgrade power result in comparable win rates".
+
+- **Taking a shared trait a second time gives 1 UP bound to it** (`RULES.DOUBLE_UP`, was 2).
+- **Fix: a second copy always pays.** Bound points count first among a card's points. A card that already had points from the free pool used to absorb the second copy, so the pick gave nothing. Now as many free points as are bound go back to the free pool, so the pick is worth `DOUBLE_UP` however far the card is upgraded.
+- **How the number was chosen.** Whole runs, 120 per variant with the look-ahead player and 400 with the heuristic. Every trait reward was taken either as the offered card, as today, or as N UP bound to a held card:
+
+  | Reward taken as | Look-ahead runs won | Heuristic runs won |
+  |---|---|---|
+  | a new card | 48 / 120 | 85 / 400 |
+  | 1 bound UP | 58 / 120 | 88 / 400 |
+  | 2 bound UP | 68 / 120 | 102 / 400 |
+  | 3 bound UP | 69 / 120 | 109 / 400 |
+
+  One point is within noise of a card for both players. Two points was clearly better than any card, so with 2 a second copy was always the pick. The simulated players take the first card offered, not the best, so a card is worth a little more in real play. That leans towards 1 as well.
+- **Balance** (`node tools/sim.js 40`, main → 2.47.0): identical. Heuristic 5/40, look-ahead 15/40 runs; missions 72% and 85%. The simulated squads rarely meet a shared trait twice.
+
 ## 2.46.0 — 2026-11-16 — Survey, a second mission that is not a fight
 
 The next non-combat mission from the plan for two-player runs (`docs/design/03-missions.md`), aimed at turns where one move is clearly best.

@@ -351,6 +351,10 @@ Survey (`MISSIONS_AND_BESTIARY.md`) went through three versions, each measured w
 
 Need 4/5/6 and clock 6/6/5, both before the tide. It takes Cascade's place in the middle row of the route. Full runs over 80 match main within noise: heuristic 18 → 17, look-ahead 32 → 33.
 
+## v2.47.0 — what a second copy is worth
+
+A trait taken a second time gives `DOUBLE_UP` points bound to it (2.42). To set the number, whole runs (`H.playRun`, the sim's squads) were played with every trait reward taken either as the card offered first, or as N points bound to a random held card with room. Look-ahead player, 120 runs each: card 48, 1 UP 58, 2 UP 68, 3 UP 69, 4 UP 65. Heuristic, 400 each: card 85, 1 UP 88, 2 UP 102, 3 UP 109, 4 UP 108. One point is within noise of a card for both players, so `DOUBLE_UP` is 1. A seventh, eighth or ninth card arrives with no points and its Ethereal face asleep, and that is why it is worth so little. Single missions at tiers 2 and 3 (`kit: 'tier'`, 24 squads a cell) could not tell any of these apart: 92–95% for the look-ahead player.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.

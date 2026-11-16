@@ -122,6 +122,10 @@
     const r = T.canAddCard(h, cardId);
     if (!r.ok) return r;
     if (r.double) {
+      // Bound points count first among a card's points. Points already spent on it from the free pool
+      // become its own, and as many come back to the free pool: the hero is DOUBLE_UP better off either way.
+      const u = h.up[cardId] || [0, 0];
+      h.upUnspent += Math.min(u[0] + u[1], R().DOUBLE_UP);
       h.bound = h.bound || {};
       h.bound[cardId] = R().DOUBLE_UP;
       return { ok: true, double: true };
