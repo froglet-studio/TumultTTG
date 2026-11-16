@@ -29,7 +29,7 @@ test('a shared trait is held once, and a second pick binds upgrade points to it 
   const free = h.upUnspent;
   assert.deepEqual(T.addCard(h, 'hum_tool'), { ok: true, double: true });
   assert.deepEqual(h.cards, ['hum_tool'], 'still one card');
-  assert.equal(h.bound.hum_tool, R.DOUBLE_UP);
+  assert.deepEqual(h.bound.hum_tool, [R.DOUBLE_UP, 0]);
   assert.equal(h.upUnspent, free, 'the free pool is untouched');
   assert.equal(T.canAddCard(h, 'hum_tool').ok, false, 'never a third time');
 });
@@ -83,6 +83,36 @@ test('a save from 2.41 loads with nothing bound and plays on', () => {
   const run = T.deserializeRun(JSON.stringify(old));
   assert.equal(run.v, T.SAVE_VERSION);
   run.heroes.forEach((h) => assert.deepEqual(h.bound, {}));
+  assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run));
+  H.playRun(run);
+  assert.ok(run.over);
+});
+
+test('taken twice, a trait with points already on it still gains every bound point (the 2.42 rule lost them)', () => {
+  const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
+  h.upUnspent = 2;
+  assert.ok(T.adjustUp(h, 'hum_tool', 'P', 2).ok);
+  assert.equal(h.upUnspent, 0);
+  T.addCard(h, 'hum_tool');
+  assert.equal(T.boundLeft(h, 'hum_tool'), R.DOUBLE_UP, 'the points already on it were free ones');
+  T.autoAllocate(h);
+  const u = h.up.hum_tool;
+  assert.equal(u[0] + u[1], 2 + R.DOUBLE_UP, 'it ends with all of them');
+  T.respecHero(h);
+  assert.equal(h.upUnspent, 2, 'a respec gives back the two free points');
+  assert.equal(T.boundLeft(h, 'hum_tool'), R.DOUBLE_UP, 'and keeps the bound ones for the card');
+  T.removeCard(h, 'hum_tool');
+  assert.equal(h.upUnspent, 2, 'dropping the card loses only what was bound to it');
+});
+
+test('a 2.47 save keeps its bound points, counted as spent on the card the way 2.42 counted them', () => {
+  const old = require('./fixtures/save-2.47.json');
+  assert.equal(old.v, 15, 'the fixture is a version-15 save');
+  const n = old.heroes[0].bound.cat_stalk;
+  const u = old.heroes[0].up.cat_stalk;
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  assert.deepEqual(run.heroes[0].bound.cat_stalk, [n, Math.min(n, u[0] + u[1])]);
   assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run));
   H.playRun(run);
   assert.ok(run.over);

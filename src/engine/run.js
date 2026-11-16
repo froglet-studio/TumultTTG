@@ -123,22 +123,27 @@
     if (!r.ok) return r;
     if (r.double) {
       h.bound = h.bound || {};
-      h.bound[cardId] = R().DOUBLE_UP;
+      h.bound[cardId] = [R().DOUBLE_UP, 0]; // [bound to it, of those spent on it]
       return { ok: true, double: true };
     }
     h.cards.push(cardId);
     h.up[cardId] = [0, 0];
     return { ok: true };
   };
-  /** Points spent on a card beyond what is bound to it: those came from (and go back to) the free pool. */
+  /**
+   * A trait taken twice carries h.bound[id] = [n, spent]: n points that only it may use, of which `spent`
+   * are on it now. The rest of the points on it came from (and go back to) the free pool.
+   */
+  const boundOf = (h, cardId) => (h.bound && h.bound[cardId]) || null;
   const freeSpent = (h, cardId) => {
     const u = h.up[cardId] || [0, 0];
-    return Math.max(0, u[0] + u[1] - ((h.bound && h.bound[cardId]) || 0));
+    const b = boundOf(h, cardId);
+    return u[0] + u[1] - (b ? b[1] : 0);
   };
   /** Upgrade points bound to this card and not yet spent on it. */
   T.boundLeft = (h, cardId) => {
-    const u = h.up[cardId] || [0, 0];
-    return Math.max(0, ((h.bound && h.bound[cardId]) || 0) - u[0] - u[1]);
+    const b = boundOf(h, cardId);
+    return b ? b[0] - b[1] : 0;
   };
   T.removeCard = function (h, cardId) {
     h.upUnspent += freeSpent(h, cardId);
@@ -200,11 +205,13 @@
       if (h.upUnspent < delta - fromBound) return { ok: false, why: 'no UP' };
       cur[i] += delta;
       h.upUnspent -= delta - fromBound;
+      if (fromBound) boundOf(h, cardId)[1] += fromBound;
     } else {
       if (cur[i] + delta < 0) return { ok: false };
       const toFree = Math.min(-delta, freeSpent(h, cardId));
       cur[i] += delta;
       h.upUnspent += toFree;
+      if (-delta > toFree) boundOf(h, cardId)[1] -= -delta - toFree;
     }
     h.up[cardId] = cur;
     return { ok: true };
@@ -256,6 +263,7 @@
     h.cards.forEach((c) => {
       h.upUnspent += freeSpent(h, c);
       h.up[c] = [0, 0];
+      if (boundOf(h, c)) boundOf(h, c)[1] = 0;
     });
   };
   /**
@@ -703,7 +711,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 15;
+  T.SAVE_VERSION = 16;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -824,6 +832,19 @@
     14(r) {
       (r.heroes || []).forEach((h) => h && !h.bound && (h.bound = {}));
       r.v = 15;
+    },
+    // 2.48 keeps how many of a card's bound points are on it ([n, spent]): 2.42 counted every point on the
+    // card as bound first, so a trait that already had points gained nothing from being taken twice.
+    15(r) {
+      (r.heroes || []).forEach((h) => {
+        if (!h || !h.bound) return;
+        for (const [id, n] of Object.entries(h.bound)) {
+          if (Array.isArray(n)) continue;
+          const u = (h.up && h.up[id]) || [0, 0];
+          h.bound[id] = [n, Math.min(n, u[0] + u[1])];
+        }
+      });
+      r.v = 16;
     },
   };
   T.deserializeRun = function (json) {
