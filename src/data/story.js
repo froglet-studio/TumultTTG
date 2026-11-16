@@ -277,6 +277,34 @@
       onward: ['"{PLACE}," {A} says. "We go as a herd, or not at all."', '"{THREAT}," {A} says. "Let it try to pick one of us out."'],
       reply: ['{A} brays.', '"Together," {A} says.', '{A} flicks their tail.'],
     },
+    mouse: {
+      win: ['{A} pops up from somewhere nobody was looking. "Did we win? We won."', '"Small things get everywhere," {A} says, very pleased.'],
+      close: ['{A} hides in {B}\'s pack and won\'t come out until dark.', '"It was so big," {A} says. "Everything is so big."'],
+      quiet: ['{A} has found crumbs nobody knew were there.', '{A} washes their whiskers, then their ears, then their whiskers again.'],
+      onward: ['"I can get into {PLACE}," {A} says. "I can get into anywhere."', '"{THREAT} won\'t even see me," {A} squeaks.'],
+      reply: ['{A} squeaks.', '"Yes yes," {A} says.', '{A}\'s whiskers twitch.'],
+    },
+    porcupine: {
+      win: ['{A} rattles their quills, satisfied. "It learned."', '"It touched me," {A} says. "It will not do that again."'],
+      close: ['{A} sits pulling stray quills out of their own side, grumbling.', '"Too many to face at once," {A} says. "I only have one back."'],
+      quiet: ['{A} chews a branch, slowly, with great seriousness.', '{A} lets {B} sit close, carefully, on the smooth side.'],
+      onward: ['"{PLACE}," {A} says. "Fine. I will go slowly."', '"{THREAT}," {A} says, and turns their back toward it, ready.'],
+      reply: ['{A}\'s quills lift and settle.', '"Hm," {A} says.', '{A} chatters their teeth.'],
+    },
+    hare: {
+      win: ['{A} leaps straight up for joy and lands running. "Again!"', '"It had to catch me first," {A} says. "It never did."'],
+      close: ['{A} lies flat in a hollow, heart going like a drum.', '"I zigged," {A} says. "It zagged. Nobody zags."'],
+      quiet: ['{A} boxes the air in the moonlight for no reason anyone can see.', '{A} sits up tall, ears turning, keeping watch for all of you.'],
+      onward: ['"Open ground in {PLACE}?" {A} asks. "Good. Mine."', '"{THREAT}," {A} says, already on their toes.'],
+      reply: ['{A}\'s ears swivel.', '"Yes!" {A} says.', '{A} thumps a foot.'],
+    },
+    black_hare: {
+      win: ['{A} steps out of the dark beside {B}. "It never saw me."', '"Gone, and back," {A} says. "Like I was never there."'],
+      close: ['{A} keeps to the shadows at the edge of camp, quiet and watchful.', '"Too much light," {A} says. "Always too much light."'],
+      quiet: ['{A} grazes by moonlight, a darker shape against the dark.', '{A} sleeps in the deepest shade they can find.'],
+      onward: ['"{PLACE} at night," {A} says. "Only at night."', '{A} melts toward {PLACE}. "{THREAT} will look for me. Let it."'],
+      reply: ['{A} blinks, slowly.', '"Mm," {A} says, from the dark.', '{A}\'s ears tilt back.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */
