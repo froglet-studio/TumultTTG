@@ -41,8 +41,8 @@ function createHarness(T = loadTumult()) {
    */
   function playMission(m, { player = 'weak', maxRounds = 40 } = {}) {
     const phase = player === 'strong' ? T.smartHeroPhase : T.autoHeroPhase;
-    let guard = 0;
-    while (!m.over && guard++ < maxRounds) {
+    // the cap counts the mission's own rounds, so a mission resumed from a save stops where it would have
+    while (!m.over && m.round <= maxRounds) {
       phase(m);
       if (m.over) break;
       T.endHeroPhase(m);

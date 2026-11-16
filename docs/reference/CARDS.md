@@ -1477,3 +1477,346 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Unsettle* · 1 AP · CD 1 — A foe within 3 takes 2 and is Weakened 1 for 1 round. *(P3: A foe within 3 takes 5 and is Weakened 1 for 2 rounds.)*
 - *Eth — Vanish* · 1 AP + 1 Charge · CD 4 — You and an ally within 2 are Hidden 1, and your next hit deals +2. *(P3/E3: You and an ally within 2 are Hidden 1, and your next hit deals +4.)*
+
+## 30 · Yak — leans T/M
+
+*A shaggy load-carrier of the high cold, steady where the air runs thin.*
+
+**Hooves** · Space · `hoof_hooves`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+
+**Herd Ring** · Time · `hoof_ring`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Horn Charge** · Mass · `hoof_horn`
+
+- *Phys — Lower Horns* · 1 AP · CD 1 — Charge up to 2 toward a foe within 3; if you end beside it, melee 2 and push it 1. *(P3: Charge up to 2 toward a foe within 3; if you end beside it, melee 5 and push it 1.)*
+- *Eth — Gore* · 1 AP + 1 Mass · CD 3 — Melee 4 that ignores Shield, and push it 2. *(P3/E3: Melee 6 that ignores Shield, and push it 2.)*
+
+**Ruminate** · Time · `hoof_chew`
+
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+
+**Thick Coat** · Time · `yak_coat`
+
+- *Phys — Shaggy* · 1 AP · CD 1 — Shield 2 and ignore hazards this round. *(P3: Shield 3 and ignore hazards this round.)*
+- *Eth — Winter Fleece* · 1 AP + 1 Time · CD 4 — You and an ally beside you hold Shield 2 for 2 rounds; you can't be Weakened or Rooted this round. *(P3/E3: You and an ally beside you hold Shield 4 for 2 rounds; you can't be Weakened or Rooted this round.)*
+
+**Pack Bearer** · Charge · `yak_bearer`
+
+- *Phys — Carry* · 1 AP · CD 1 — Your ally moves 1; if they end beside you, you both hold Shield 1 this round. *(P3: Your ally moves 4; if they end beside you, you both hold Shield 1 this round.)*
+- *Eth — Supplies* · 1 AP + 1 Charge · CD 4 — Both heroes heal 1, and your ally gains 1 AP at the start of each turn for 2 rounds. *(P3/E3: Both heroes heal 1, and your ally gains 1 AP at the start of each turn for 4 rounds.)*
+
+**Thin Air** · Space · `yak_air`
+
+- *Phys — Steady Breath* · 1 AP · CD 2 — Gain 1 AP next turn, and heal 1.
+- *Eth — High Pass* · 1 AP + 1 Space · CD 3 — Climb 2 and hold Shield 2 this round. *(P3/E3: Climb 4, carrying an ally beside you, and hold Shield 2 this round.)*
+
+## 31 · Bison — leans M/T
+
+*A ton of shoulder and fur that faces the storm head-on.*
+
+**Hooves** · Space · `hoof_hooves`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+
+**Herd Ring** · Time · `hoof_ring`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Horn Charge** · Mass · `hoof_horn`
+
+- *Phys — Lower Horns* · 1 AP · CD 1 — Charge up to 2 toward a foe within 3; if you end beside it, melee 2 and push it 1. *(P3: Charge up to 2 toward a foe within 3; if you end beside it, melee 5 and push it 1.)*
+- *Eth — Gore* · 1 AP + 1 Mass · CD 3 — Melee 4 that ignores Shield, and push it 2. *(P3/E3: Melee 6 that ignores Shield, and push it 2.)*
+
+**Ruminate** · Time · `hoof_chew`
+
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+
+**Stampede** · Mass · `bis_stampede`
+
+- *Phys — Thunder* · 1 AP · CD 2 — Move 2, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1. *(P3: Move 5, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1.)*
+- *Eth — Run Them Down* · 2 AP + 1 Mass · CD 4 — Every foe beside you takes 3 and is pushed 1. *(P3/E3: Every foe beside you takes 5 and is pushed 1.)*
+
+**Wallow** · Time · `bis_wallow`
+
+- *Phys — Dust Bath* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time; Shield 1 this round, and heal 1. *(P3: Shed Anchored, Weakened and damage over time; Shield 2 this round, and heal 1.)*
+- *Eth — Mud Coat* · 1 AP + 1 Time · CD 4 — Shield 2 for 2 rounds, and any foe that hits you in melee takes 2. *(P3/E3: Shield 2 for 2 rounds, and any foe that hits you in melee takes 4.)*
+
+**Shoulder Hump** · Mass · `bis_hump`
+
+- *Phys — Shoulder* · 1 AP · CD 1 — Melee 3, and push it 1. *(P3: Melee 6, and push it 1.)*
+- *Eth — Plough the Snow* · 1 AP + 1 Mass · CD 3 — Melee 5, push it 1, and you can't be Weakened or Rooted this round. *(P3/E3: Melee 7, push it 2, and you can't be Weakened or Rooted this round.)*
+
+## 32 · Oryx — leans S/T
+
+*A desert antelope with horns like rapiers and water saved for later.*
+
+**Hooves** · Space · `hoof_hooves`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+
+**Herd Ring** · Time · `hoof_ring`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Horn Charge** · Mass · `hoof_horn`
+
+- *Phys — Lower Horns* · 1 AP · CD 1 — Charge up to 2 toward a foe within 3; if you end beside it, melee 2 and push it 1. *(P3: Charge up to 2 toward a foe within 3; if you end beside it, melee 5 and push it 1.)*
+- *Eth — Gore* · 1 AP + 1 Mass · CD 3 — Melee 4 that ignores Shield, and push it 2. *(P3/E3: Melee 6 that ignores Shield, and push it 2.)*
+
+**Ruminate** · Time · `hoof_chew`
+
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+
+**Rapier Horns** · Mass · `ory_rapier`
+
+- *Phys — Thrust* · 1 AP · CD 1 — Strike a foe within 2 for 2. *(P3: Strike a foe within 2 for 5.)*
+- *Eth — Skewer* · 1 AP + 1 Mass · CD 3 — Strike a foe within 2 for 4 that ignores Shield, and 2 of its Shield comes off. *(P3/E3: Strike a foe within 2 for 6 that ignores Shield, and 2 of its Shield comes off.)*
+
+**Desert Store** · Time · `ory_store`
+
+- *Phys — Make Do* · 1 AP · CD 2 — Heal 1, and ignore hazards for 2 rounds. *(P3: Heal 4, and ignore hazards for 2 rounds.)*
+- *Eth — Saved Water* · 1 AP + 1 Time · CD 4 — Both heroes heal 2, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes heal 4, and heal 1 at the start of each turn for 2 rounds.)*
+
+**Mirage Walk** · Space · `ory_mirage`
+
+- *Phys — Shimmer* · 1 AP · CD 1 — Move 2; the next hit on you is 1 less, and you dodge a step from it. *(P3: Move 5; the next hit on you is 2 less, and you dodge a step from it.)*
+- *Eth — Heat Haze* · 1 AP + 1 Space · CD 4 — A shimmer draws foes to a node within 3 for 2 rounds, and you are Hidden 1 even if you move. *(P3/E3: A shimmer draws foes to a node within 3 for 4 rounds, and you are Hidden 1 even if you move.)*
+
+## 33 · Bighorn Ram — leans M/S
+
+*Cliff-walker with curled horns and a skull built for collisions.*
+
+**Hooves** · Space · `hoof_hooves`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+
+**Herd Ring** · Time · `hoof_ring`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Horn Charge** · Mass · `hoof_horn`
+
+- *Phys — Lower Horns* · 1 AP · CD 1 — Charge up to 2 toward a foe within 3; if you end beside it, melee 2 and push it 1. *(P3: Charge up to 2 toward a foe within 3; if you end beside it, melee 5 and push it 1.)*
+- *Eth — Gore* · 1 AP + 1 Mass · CD 3 — Melee 4 that ignores Shield, and push it 2. *(P3/E3: Melee 6 that ignores Shield, and push it 2.)*
+
+**Ruminate** · Time · `hoof_chew`
+
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+
+**Headbutt** · Mass · `ram_butt`
+
+- *Phys — Butt* · 1 AP · CD 1 — Melee 3, and push it 1. *(P3: Melee 6, and push it 1.)*
+- *Eth — Clash* · 1 AP + 1 Mass · CD 3 — Charge up to 3 toward a foe within 3; if you end beside it, melee 5 and push it 2. *(P3/E3: Charge up to 3 toward a foe within 3; if you end beside it, melee 7 and push it 2.)*
+
+**Sure Hooves** · Space · `ram_sure`
+
+- *Phys — Ledge Walk* · 1 AP · CD 1 — Climb 2; nothing can push or pull you this round. *(P3: Climb 5; nothing can push or pull you this round.)*
+- *Eth — Cliff Run* · 1 AP + 1 Space · CD 3 — Spring to anywhere within 3, height included; your next hit this turn deals +2. *(P3/E3: Spring to anywhere within 5, height included; your next hit this turn deals +4.)*
+
+**Curled Horns** · Time · `ram_curl`
+
+- *Phys — Brace* · 1 AP · CD 1 — The next hit on you is 2 less, and its attacker takes 1. *(P3: The next hit on you is 3 less, and its attacker takes 1.)*
+- *Eth — Hard Head* · 1 AP + 1 Time · CD 4 — Shield 2 this round; for 2 rounds, the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Shield 2 this round; for 2 rounds, the next foe to hit you in melee takes 5 and is pushed 1.)*
+
+## 34 · Moose — leans M/C
+
+*Tall, solitary and wading. Gentle until it very suddenly is not.*
+
+**Hooves** · Space · `hoof_hooves`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+
+**Herd Ring** · Time · `hoof_ring`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Antlers** · Mass · `hoof_antlers`
+
+- *Phys — Rake* · 1 AP · CD 1 — Melee 3; it is Weakened 1 this round. *(P3: Melee 6; it is Weakened 1 this round.)*
+- *Eth — Lock Antlers* · 1 AP + 1 Mass · CD 3 — Melee 4, and lock it in place: Anchored 1 and Weakened 1 for 1 round. *(P3/E3: Melee 6, and lock it in place: Anchored 1 and Weakened 1 for 2 rounds.)*
+
+**Bound Away** · Space · `hoof_bound`
+
+- *Phys — Bound* · 1 AP · CD 1 — Bound 2, passing foes; the next hit on you is 1 less. *(P3: Bound 5, passing foes; the next hit on you is 1 less.)*
+- *Eth — Over the Fence* · 1 AP + 1 Space · CD 3 — Leap to anywhere within 3, height included, and you are Hidden 1. *(P3/E3: Leap to anywhere within 5, height included, and you are Hidden 1.)*
+
+**Wade Deep** · Space · `moo_wade`
+
+- *Phys — Wade* · 1 AP · CD 1 — Move 2, and ignore hazards for 2 rounds. *(P3: Move 5, and ignore hazards for 2 rounds.)*
+- *Eth — Dive for Weed* · 1 AP + 1 Space · CD 4 — Duck under: Hidden 1, heal 3, and ignore hazards for 2 rounds. *(P3/E3: Duck under: Hidden 1, heal 5, and ignore hazards for 2 rounds.)*
+
+**Bellow** · Charge · `moo_bellow`
+
+- *Phys — Grunt* · 1 AP · CD 1 — Every foe within 2 is Weakened 1 for 1 round. *(P3: Every foe within 2 is Weakened 1 for 2 rounds.)*
+- *Eth — Rut Call* · 1 AP + 1 Charge · CD 4 — Every foe within 3 is drawn 1 toward you; the next to hit you in melee takes 2 and is pushed 1. *(P3/E3: Every foe within 5 is drawn 1 toward you; the next to hit you in melee takes 4 and is pushed 1.)*
+
+**Stand Ground** · Mass · `moo_stand`
+
+- *Phys — Plant* · 1 AP · CD 1 — Melee 3, and hold Shield 1 this round. *(P3: Melee 6, and hold Shield 1 this round.)*
+- *Eth — Trample* · 1 AP + 1 Mass · CD 3 — Melee 5, pin it (Anchored 1), and you can't be Weakened or Rooted this round. *(P3/E3: Melee 7, pin it (Anchored 1), and you can't be Weakened or Rooted this round.)*
+
+## 35 · Deer — leans S/C
+
+*All ears and spring. Gone before you knew it had seen you.*
+
+**Hooves** · Space · `hoof_hooves`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+
+**Herd Ring** · Time · `hoof_ring`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Antlers** · Mass · `hoof_antlers`
+
+- *Phys — Rake* · 1 AP · CD 1 — Melee 3; it is Weakened 1 this round. *(P3: Melee 6; it is Weakened 1 this round.)*
+- *Eth — Lock Antlers* · 1 AP + 1 Mass · CD 3 — Melee 4, and lock it in place: Anchored 1 and Weakened 1 for 1 round. *(P3/E3: Melee 6, and lock it in place: Anchored 1 and Weakened 1 for 2 rounds.)*
+
+**Bound Away** · Space · `hoof_bound`
+
+- *Phys — Bound* · 1 AP · CD 1 — Bound 2, passing foes; the next hit on you is 1 less. *(P3: Bound 5, passing foes; the next hit on you is 1 less.)*
+- *Eth — Over the Fence* · 1 AP + 1 Space · CD 3 — Leap to anywhere within 3, height included, and you are Hidden 1. *(P3/E3: Leap to anywhere within 5, height included, and you are Hidden 1.)*
+
+**Alert Ears** · Space · `dee_ears`
+
+- *Phys — Ears Up* · 1 AP · CD 1 — Reveal within 2, and step 1. *(P3: Reveal within 5, and step 1.)*
+- *Eth — Warning Snort* · 1 AP + 1 Space · CD 4 — Reveal within 3; the next hit on each hero is 2 less, and they dodge a step from it. *(P3/E3: Reveal within 3; the next hit on each hero is 4 less, and they dodge a step from it.)*
+
+**Dapple** · Time · `dee_dapple`
+
+- *Phys — Freeze* · 1 AP · CD 2 — Freeze in the light and shade: Hidden 1, and Shield 1 this round. *(P3: Freeze in the light and shade: Hidden 2, and Shield 1 this round.)*
+- *Eth — Fawn Spots* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 2; both heroes heal 1. *(P3/E3: You and an ally beside you are Hidden 4; both heroes heal 1.)*
+
+**Spring Away** · Space · `dee_spring`
+
+- *Phys — Pronk* · 1 AP · CD 1 — Melee 1, then spring 2 away. *(P3: Melee 4, then spring 2 away.)*
+- *Eth — White Flag* · 1 AP + 1 Space · CD 3 — Flash your tail: a decoy draws foes to a node within 3 for 2 rounds, and you spring 2. *(P3/E3: Flash your tail: a decoy draws foes to a node within 3 for 4 rounds, and you spring 2.)*
+
+## 36 · Zebra — leans C/S
+
+*A herd in stripes that bites, kicks and never stands alone.*
+
+**Hooves** · Space · `hoof_hooves`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+
+**Herd Ring** · Time · `hoof_ring`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Dazzle Stripes** · Charge · `zeb_dazzle`
+
+- *Phys — Dazzle* · 1 AP · CD 1 — A foe within 2 is Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: A foe within 2 is Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
+- *Eth — Moving Stripes* · 1 AP + 1 Charge · CD 4 — Every foe within 2 is Weakened 1 for 1 round, and you are Hidden 1 even if you move. *(P3/E3: Every foe within 4 is Weakened 1 for 2 rounds, and you are Hidden 1 even if you move.)*
+
+**Herd Bolt** · Space · `zeb_bolt`
+
+- *Phys — Bolt* · 1 AP · CD 1 — Your ally moves 1, and you step 1. *(P3: Your ally moves 4, and you step 1.)*
+- *Eth — All Together* · 1 AP + 1 Space · CD 4 — Both heroes gain 1 AP next turn, and the next hit on each is 2 less. *(P3/E3: Both heroes gain 1 AP next turn, and the next hit on each is 4 less.)*
+
+**Bite Fight** · Mass · `zeb_bite`
+
+- *Phys — Nip* · 1 AP · CD 1 — Melee 2; it is Weakened 1 this round. *(P3: Melee 5; it is Weakened 1 this round.)*
+- *Eth — Rear and Bite* · 1 AP + 1 Mass · CD 3 — Rear up: melee 4, then melee 1. *(P3/E3: Rear up: melee 6, then melee 2.)*
+
+**Waterhole** · Time · `zeb_water`
+
+- *Phys — Drink* · 1 AP · CD 2 — Heal 1, and shed Anchored, Weakened and damage over time. *(P3: Heal 4, and shed Anchored, Weakened and damage over time.)*
+- *Eth — Drink in Turns* · 1 AP + 1 Time · CD 4 — Both heroes heal 2 and hold Shield 1 this round. *(P3/E3: Both heroes heal 4 and hold Shield 1 this round.)*
+
+**Stripe Wall** · Time · `zeb_wall`
+
+- *Phys — Shoulder to Shoulder* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
+- *Eth — Wall of Stripes* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 1; both heroes hold Shield 2 this round. *(P3/E3: You and an ally beside you are Hidden 1; both heroes hold Shield 4 this round.)*

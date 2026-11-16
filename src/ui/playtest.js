@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.50.0',
+    version: '2.51.0',
     items: [
+      {
+        text: 'Seven hoofed animals join: Yak, Bison, Oryx, Bighorn Ram, Moose, Deer and Zebra. All seven share Hooves, Herd Ring, Wide Eyes and Kick; the horned four share Horn Charge and Ruminate; moose and deer share Antlers and Bound Away. Each has three to five traits of its own. Do the seven feel different from each other, or does the shared half drown them out?',
+      },
       {
         text: 'Three sea mammals join: Walrus, Orca and Narwhal. All three share Blubber and Breath Hold; the two whales share Echolocation and Pod Song; the walrus and narwhal share Tusk. The walrus is a slow, heavy anchor, the orca a pack hunter that sets up its partner, the narwhal a scout that slips under the ice. Does each feel like itself?',
       },

@@ -228,6 +228,55 @@
       onward: ['"{PLACE}," {A} says. "There will be a way through. There always is."', '{A} turns their tusk toward the dark. "{THREAT}. I can feel it from here."'],
       reply: ['{A} nods, slowly.', '"Yes," {A} says, from far away.', '{A} hums, very low.'],
     },
+    yak: {
+      win: ['{A} breathes out a long cloud of steam. "Up, and over. Good."', '"It tired before I did," {A} says. "They always do, up here."'],
+      close: ['{A} lies down where they stand and will not move for an hour.', '"Heavy day," {A} says, and nothing more.'],
+      quiet: ['{A} lets {B} lean into their shaggy side against the wind.', '{A} chews slowly, watching the far peaks go pink.'],
+      onward: ['"Is {PLACE} high?" {A} asks. "Then I go first."', '"{THREAT}," {A} says. "One step, then the next. Same as any mountain."'],
+      reply: ['{A} grunts, a low, contented sound.', '"Mm," {A} says.', '{A} flicks an ear.'],
+    },
+    bison: {
+      win: ['{A} shakes the dust out of their great shaggy head. "Again, if it wants."', '"It got out of my way," {A} says. "Eventually."'],
+      close: ['{A} rolls in the dirt for a long time, as if to rub the fight off.', '"I faced it," {A} says. "That is the whole of it. I faced it."'],
+      quiet: ['{A} stands facing the wind, the way they always do.', '{A} rumbles at {B}, which seems to be a joke.'],
+      onward: ['"Into {PLACE}," {A} says. "Straight in. Through the storm, not round it."', '{A} lowers their head. "{THREAT}. Good."'],
+      reply: ['{A} snorts.', '"Yes," {A} rumbles.', '{A} paws the ground once.'],
+    },
+    oryx: {
+      win: ['{A} stands very straight, horns catching the light. "Finished."', '"I kept my distance," {A} says. "It never got close enough to matter."'],
+      close: ['{A} rests in the shade without drinking and says they are fine.', '"Too long in the open," {A} says. "Even I can thirst."'],
+      quiet: ['{A} licks the dew off a stone at dawn, perfectly content.', '{A} watches the heat-shimmer on the horizon as if reading it.'],
+      onward: ['"{PLACE} is dry?" {A} asks. "Then I know how to cross it."', '"{THREAT}," {A} says, and points both long horns that way.'],
+      reply: ['{A} dips their horns.', '"Agreed," {A} says.', '{A} looks at {B} steadily.'],
+    },
+    ram: {
+      win: ['{A} shakes their head as if to clear a ringing. "That one I felt. Good."', '"Head first," {A} says. "It is the only way I know."'],
+      close: ['{A} sits at the top of the highest rock and refuses help getting down.', '"It hit back," {A} says, offended. "Things don\'t hit back."'],
+      quiet: ['{A} climbs something nobody else could climb, just to sit on it.', '{A} butts {B}\'s shoulder, gently, as a greeting.'],
+      onward: ['"Cliffs in {PLACE}?" {A} asks. "Please."', '{A} lowers their curled horns. "{THREAT}. Let me knock."'],
+      reply: ['{A} stamps.', '"Ha," {A} says.', '{A} tosses their horns.'],
+    },
+    moose: {
+      win: ['{A} wades into the nearest water up to their shoulders and closes their eyes. "Done."', '"It thought I was slow," {A} says. "I am not slow."'],
+      close: ['{A} stands in the shallows a long time, alone, which is how they like it.', '"I stood my ground," {A} says. "The ground did not stand with me."'],
+      quiet: ['{A} dunks their whole head underwater and comes up chewing weed.', '{A} lets {B} sit nearby without comment, which is a great honour.'],
+      onward: ['"Water in {PLACE}?" {A} asks. "Then I will be fine."', '"{THREAT}," {A} says. "I will wait for it to come to me."'],
+      reply: ['{A} grunts.', '"Hm," {A} says, from the lake.', '{A} swings their great head round to look.'],
+    },
+    deer: {
+      win: ['{A} is back beside {B} before anyone saw them leave. "Is it over?"', '"I was gone before it turned," {A} says, a little breathless.'],
+      close: ['{A} trembles for a while, ears swivelling at every sound.', '"I heard it too late," {A} says. "I never hear things too late."'],
+      quiet: ['{A} sleeps lightly at the edge of the light, ears never quite still.', '{A} nibbles at the green shoots by camp, delicately.'],
+      onward: ['"I\'ll listen ahead in {PLACE}," {A} says.', '{A}\'s ears turn toward {PLACE}. "{THREAT} is there. It is breathing."'],
+      reply: ['{A}\'s ears flick toward {B}.', '"Yes," {A} says softly.', '{A} stamps a forefoot, once.'],
+    },
+    zebra: {
+      win: ['{A} kicks up their heels and brays at the sky. "Together! See?"', '"It could not tell which of us was which," {A} says, delighted.'],
+      close: ['{A} nips at {B}\'s shoulder, worried, then pretends they didn\'t.', '"Never alone," {A} says. "I was alone for a moment. I hated it."'],
+      quiet: ['{A} grooms {B}\'s hair with their teeth, whether {B} wants it or not.', '{A} stands nose to tail with {B}, swishing flies off both of you.'],
+      onward: ['"{PLACE}," {A} says. "We go as a herd, or not at all."', '"{THREAT}," {A} says. "Let it try to pick one of us out."'],
+      reply: ['{A} brays.', '"Together," {A} says.', '{A} flicks their tail.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */
