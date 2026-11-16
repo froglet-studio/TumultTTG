@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.45.0 — 2026-11-16 — canon from play: defining moments
+
+A step of design 06: when something dramatic happens to a pilot, the game says what happened and asks what it meant.
+
+- **At the end of a mission**, above the question about the place, the panel names one moment that happened to a pilot whose painting a hero wears and asks about it, in the same shape as other questions: the facts from play, a question, three openings. ("… went down on the Quarry, and … got them back on their feet. What does … owe … now?")
+- **Five kinds, most dramatic first** (`T.CANON_MOMENTS`): went down and stayed down; went down and was rallied; should have gone down and did not (a seeded return or a second wind); won on 3 vitality or less; won without taking a hit. They are read from the finished mission alone (`T.canonMoments(m)`, from its effects list), so nothing new is saved.
+- Answers are proposals about the pilot (`pilot:<callsign>`, `where: mission:moment`), with the kind and the result in their context.
+- Design 06 ties each moment to a small permanent change on a trait card. That is left out: these moments change no rules, dice or missions.
+
 ## 2.44.0 — 2026-11-16 — canon from play: questions to embellish
 
 Garrett: "more canon is better, but guide them into an interesting question where they can provide details on the details you provide. make them feel like they are embellishing. more than ad lib, less than a blank canvas."

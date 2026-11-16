@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.44.0',
+    version: '2.45.0',
     items: [
+      {
+        text: 'When a mission ends on something that happened to one of your pilots (they went down, a partner got them back up, they finished on 3 vitality or less, or they came through without a scratch), the panel now says what happened and asks what it meant to them, with three openings ("After the Quarry, … never again"). One moment per mission, the most dramatic. Did the moment it picked feel like the one that mattered?',
+      },
       {
         text: 'The game now asks you to embellish the world. When a mission ends, a panel gives you one detail of the place you just crossed and an open question about it, with three openings to carry on from (or start from nothing); the draft does the same for the pilot you picked. Answers go to Garrett as proposals. Were the questions ones you wanted to answer? Which opening did you take, and which question fell flat?',
       },

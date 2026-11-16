@@ -1,6 +1,6 @@
 # 06 · Pilots and backstory — the dossier
 
-**Status: Proposed.** This is the second goal of the project and nothing of it is built yet. v2.0 keeps a score; it does not keep a person.
+**Status: Proposed.** This is the second goal of the project. Built so far: the creation question at the draft, and defining moments asked about at the end of a mission, without their card changes (2.45.0; [reference/CANON.md](../reference/CANON.md)). v2.0 keeps a score; it does not keep a person.
 
 ## The idea
 
