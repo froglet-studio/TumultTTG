@@ -12,7 +12,8 @@ Nothing here changes the rules. Answering, skipping or correcting never costs or
 | Title screen: the pilot in the painting | ✎ as above | `pilot:<callsign>` |
 | Codex: a foe's flavour | ✎ as above | `foe:<bestiary key>` |
 | Event text | ✎ as above | `event:<id>` |
-| Draft, upgrade step | *Why does this pilot guide?* Three hooks or your own words; optional | `pilot:<callsign>` of the painting the hero wears |
+| Draft, upgrade step | A question about the pilot whose painting the hero wears; optional | `pilot:<callsign>` of that painting |
+| Mission over | A question about the page the mission was played on; optional | `place:<page id>` |
 
 The marks never pop up. The question can be turned off under **Canon** on the title screen.
 
@@ -74,11 +75,21 @@ The pack can hold private canon, so it stays under `dist/` and is never committe
 
 `--public` also updates `docs/canon/public.jsonl`, the repository's copy of canon marked public (`docs/canon/README.md`).
 
+## Questions that ask the player to embellish
+
+Garrett (2026-11-16): "guide them into an interesting question where they can provide details on the details you provide … more than ad lib, less than a blank canvas." Every question (`T.CANON_PROMPTS`, `src/data/canon.js`) has three parts:
+
+- a **detail** the game already shows, restated from the atlas's field notes, never new canon;
+- a **question** about it, open enough to have many answers;
+- three **openings**, the first words of an answer ("Children sort it by colour, because…"), which put themselves in the box for the player to carry on. A player may also start from nothing.
+
+`T.canonPrompt(subject, { answered, turn, who })` picks one: a question already answered on this device is skipped while its subject has others. Places have three questions each and are asked when a mission on that page ends. A pilot whose world is an atlas page has their own question, asked first at the draft; after it, five questions every pilot shares, filled with the pilot's name and clades (their id names the pilot, `pilot.keepsake:pilot:ANVIL`, so each is answered once per pilot). An answer's record carries the question's id in `prompt` and its detail and question in `shown`.
+
 ## Still to come
 
-The plan has four steps; this is the first.
+The plan has four steps.
 
 1. ✓ Records, ✎ marks, the draft question, Canon list (2.20.0).
 2. ✓ The test page sends each record to a private inbox, and the lore lead approves, edits, rejects and marks public (2.21.0).
 3. ✓ The storyteller pack and the repository's copy of public canon (2.22.0, below).
-4. More questions at natural pauses: a detail of each place on arrival, defining moments after a mission, the end-of-run dossier ([design 06](../design/06-pilots-and-backstory.md)).
+4. More questions at natural pauses. ✓ Embellishing questions about places after every mission and about pilots at the draft (2.44.0). Still to build: defining moments after a mission, and the end-of-run dossier ([design 06](../design/06-pilots-and-backstory.md)).

@@ -109,11 +109,37 @@
     } catch (e) {}
   };
 
-  /** Three hooks to offer for a pilot: a rotation of the pool, so each pilot and each run see a different three. */
-  T.canonHooks = function (pilotKey, turn) {
-    const pool = T.CANON_HOOKS;
-    const start = (parseInt(hash(String(pilotKey)), 36) + (turn | 0)) % pool.length;
-    return [0, 1, 2].map((i) => pool[(start + i * 3) % pool.length]);
+  const fill = (str, w) => String(str).replace(/\{(name|a|b)\}/g, (m, k) => (w[k] != null ? w[k] : m));
+
+  /**
+   * The question to ask about a subject now, or null. `subject` is 'place:<page>' or 'pilot:<callsign>';
+   * `answered` is the prompt ids this device has already answered (they are not asked again while others
+   * remain); `turn` rotates the choice; for a pilot, `who` is { name, a, b } (their two clades) and the
+   * pilot's own question, when there is one, comes before the questions every pilot shares.
+   * Returns { id, subject, detail, ask, angles } with the pilot's words filled in.
+   */
+  T.canonPrompt = function (subject, opts = {}) {
+    const answered = new Set(opts.answered || []);
+    const turn = opts.turn | 0;
+    const pool = T.CANON_PROMPTS.filter((p) => p.subject === subject);
+    let pick = pool.filter((p) => !answered.has(p.id));
+    if (subject.startsWith('pilot:')) {
+      const shared = T.CANON_PROMPTS.filter((p) => p.subject === 'pilot');
+      if (!pick.length) pick = shared.filter((p) => !answered.has(p.id + ':' + subject));
+      if (!pick.length) pick = pool.concat(shared);
+    } else if (!pick.length) pick = pool;
+    if (!pick.length) return null;
+    const p = pick[((turn % pick.length) + pick.length) % pick.length];
+    const w = opts.who || {};
+    // a shared pilot question is answered once per pilot, so its id names the pilot
+    const id = p.subject === 'pilot' ? p.id + ':' + subject : p.id;
+    return {
+      id,
+      subject,
+      detail: fill(p.detail, w),
+      ask: fill(p.ask, w),
+      angles: p.angles.map((x) => fill(x, w)),
+    };
   };
   T.CANON_MAX_RECORDS = MAX_RECORDS;
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
