@@ -2235,3 +2235,8 @@ hr {
   width: 70px;
   height: 70px;
 }
+
+.double-note {
+  color: var(--gold);
+  margin-top: 6px;
+}
