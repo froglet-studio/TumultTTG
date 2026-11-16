@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.43.0 — 2026-11-16 — the primates
+
+Garrett: "every pilot is 1/3 human but other primates might have some of the same abilities as humans."
+
+The first branch of the tree: three primates painted on Cosmic Shore pilots join as clades, each with nine traits. Traits are written once for the branch they belong to (`src/data/clades.js`, plan in `docs/design/11-clades.md`).
+
+- **Orangutan, Ring-Tailed Lemur and Mandrill.** Each carries Human's Opposable Grip, plus other Human traits: the orangutan has Theory of Mind and Tool Use, the lemur and the mandrill Cooperative Instinct, the mandrill Pattern Recognition. A pilot who is human and orangutan holds Tool Use once, and taking it again gives 2 UP bound to it (2.42).
+- **Three primate traits.** Grooming (every primate: heal an ally and cleanse both; ethereal, both heal and hold Shield 1), Canopy Leap (the climbers: a climb that sets up a strike; ethereal, a leap with a shield for you and a neighbour) and Troop Call (the troop-livers: rally and empower an ally; ethereal, the whole squad hits harder and holds Shield 1).
+- **Four traits of each one's own**, so no primate is another with a new name: the orangutan's Long Reach, Leaf Shelter, Patient Study and Fruit Memory; the lemur's Sun Salute, Stink Fight, Scent Mark and Tail Signal; the mandrill's War Paint, Fang Yawn, Cheek Pouches and Ground Charge.
+- Each has a voice in the passages between stops.
+- A test holds the rule that every clade has a trait no clade on its branch carries.
+
+Audit: 228 faces, 0 narrow (two reveal faces were given a second use before merging), 0 hard-counter candidates, 0 collapsed gate cells. Simulation, `node tools/sim.js 40`, before and after: heuristic run wins 7/40 → 5/40, mission win 74% → 72%; look-ahead 13/40 → 14/40, 84% → 83%. Within noise; nothing got easier.
+
 ## 2.42.0 — 2026-11-16 — traits shared across clades
 
 Garrett: "as you work your way up the taxonomical structure then you share traits", and "a peregrine falcon cheetah that pick both only has one card but picking it a second time converts to upgrade points for either the physical or ethereal upgrades but only for that card. it is the only way for it to appear a second time as well."

@@ -546,3 +546,150 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Cling* · 1 AP · CD 1 — Cling fast: immune to push/pull for 1 rounds. *(P3: Cling fast: immune to push/pull for 4 rounds.)*
 - *Eth — Anchor Space* · 1 AP + 1 Space · CD 3 — Anchor to a point in space for 2 rounds: you and an adjacent ally cannot be moved. *(P3/E3: Anchor to a point in space for 4 rounds: you and an adjacent ally cannot be moved, and both ignore hazards.)*
+
+## 11 · Orangutan — leans T/C
+
+*Thoughtful canopy giant. Long arms, longer patience, clever hands.*
+
+**Theory of Mind** ★ · Time · `hum_mind`
+
+- *Phys — Read* · 1 AP · CD 0 — Mark a foe: the next hit on it deals +2.
+- *Eth — Pre-empt* · 2 AP + 1 Time · CD 3 · Dur 2 — Pre-arm: the next hit on you is reduced by 3. Dur 2. *(P3/E3: Pre-arm: the next hit on you is reduced by 7 and reflects 3 back. Dur 2.)*
+
+**Tool Use** ★ · Space · `hum_tool`
+
+- *Phys — Improvise* · 1 AP · CD 1 — Your next strike this turn deals +1. *(P3: Your next strike this turn deals +4.)*
+- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away — even on a height node. *(P3/E3: Interact with an objective up to 4 nodes away — even on a height node.)*
+
+**Opposable Grip** · Mass · `hum_grip`
+
+- *Phys — Manipulate* · 1 AP · CD 1 — Melee 1 and Weaken 1 (its next hit deals −1). *(P3: Melee 4 and Weaken 1 (its next hit deals −1).)*
+- *Eth — Leverage* · 2 AP + 1 Mass · CD 3 — Melee 2 and Anchor the foe for 2 rounds (it cannot move). *(P3/E3: Melee 5 and Anchor the foe for 4 rounds (it cannot move).)*
+
+**Grooming** · Charge · `pri_groom`
+
+- *Phys — Groom* · 1 AP · CD 1 — You and your ally shake off Anchored and Weakened; your ally heals 1. *(P3: You and your ally shake off Anchored and Weakened; your ally heals 4.)*
+- *Eth — Bond* · 1 AP + 1 Charge · CD 3 — Both heroes heal 2 and hold Shield 1 for 2 rounds. *(P3/E3: Both heroes heal 4 and hold Shield 1 for 2 rounds.)*
+
+**Canopy Leap** · Space · `pri_canopy`
+
+- *Phys — Swing* · 1 AP · CD 1 — Move 1, height nodes included; your next strike this turn deals +1. *(P3: Move 4, height nodes included; your next strike this turn deals +1.)*
+- *Eth — Treetops* · 1 AP + 1 Space · CD 3 — Leap to any node within 3, height included; you and an adjacent ally hold Shield 1 this round. *(P3/E3: Leap to any node within 5, height included; you and an adjacent ally hold Shield 1 this round.)*
+
+**Long Reach** ★ · Space · `ora_reach`
+
+- *Phys — Reach* · 1 AP · CD 1 — Pull a foe within 2 one node closer; if it arrives beside you, strike it for 2. *(P3: Pull a foe within 2 one node closer; if it arrives beside you, strike it for 5.)*
+- *Eth — Arm Span* · 1 AP + 1 Space · CD 3 — For 2 rounds your melee reaches 2 nodes and your strikes deal +1. *(P3/E3: For 4 rounds your melee reaches 2 nodes and your strikes deal +1.)*
+
+**Leaf Shelter** · Time · `ora_leaf`
+
+- *Phys — Leaf Roof* · 1 AP · CD 1 — You and an adjacent ally hold Shield 1 this round. *(P3: You and an adjacent ally hold Shield 4 this round.)*
+- *Eth — Rain Shelter* · 1 AP + 1 Time · CD 3 — Both heroes ignore hazards for 2 rounds and heal 1. *(P3/E3: Both heroes ignore hazards for 4 rounds and heal 1.)*
+
+**Patient Study** · Time · `ora_study`
+
+- *Phys — Watch* · 1 AP · CD 2 — Study a foe: your hits on it deal +1 from now on, and the next hit on it deals +2. *(P3: Study a foe: your hits on it deal +2 from now on, and the next hit on it deals +2.)*
+- *Eth — Outthink* · 1 AP + 1 Time · CD 3 · Dur 2 — The next hit on you is −3, and you slip 1 node when it lands. Dur 2. *(P3/E3: The next hit on you is −5, and you slip 1 node when it lands. Dur 2.)*
+
+**Fruit Memory** · Charge · `ora_memory`
+
+- *Phys — Recall* · 1 AP · CD 2 — Remember where everything was: reveal everything within 1 nodes for 2 rounds, and heal 1 from a remembered meal. *(P3: Remember where everything was: reveal everything within 4 nodes for 2 rounds, and heal 1 from a remembered meal.)*
+- *Eth — Mental Map* · 1 AP + 1 Charge · CD 4 — Draw 1 pool die as AP, and every card on your track returns 2 columns sooner. *(P3/E3: Draw 1 pool die as AP, and every card on your track returns 4 columns sooner.)*
+
+## 12 · Ring-Tailed Lemur — leans C/S
+
+*Sun-lover and leaper. Fights with scent and with its troop.*
+
+**Opposable Grip** · Mass · `hum_grip`
+
+- *Phys — Manipulate* · 1 AP · CD 1 — Melee 1 and Weaken 1 (its next hit deals −1). *(P3: Melee 4 and Weaken 1 (its next hit deals −1).)*
+- *Eth — Leverage* · 2 AP + 1 Mass · CD 3 — Melee 2 and Anchor the foe for 2 rounds (it cannot move). *(P3/E3: Melee 5 and Anchor the foe for 4 rounds (it cannot move).)*
+
+**Cooperative Instinct** · Charge · `hum_coop`
+
+- *Phys — Assist* · 1 AP · CD 1 — Your ally's next strike deals +2. *(P3: Your ally's next strike deals +5.)*
+- *Eth — Unity* · 2 AP + 1 Charge · CD 4 — Pool your effort: your ally mints 3 temporary AP this turn. *(P3/E3: Pool your effort: your ally mints 5 temporary AP this turn.)*
+
+**Grooming** · Charge · `pri_groom`
+
+- *Phys — Groom* · 1 AP · CD 1 — You and your ally shake off Anchored and Weakened; your ally heals 1. *(P3: You and your ally shake off Anchored and Weakened; your ally heals 4.)*
+- *Eth — Bond* · 1 AP + 1 Charge · CD 3 — Both heroes heal 2 and hold Shield 1 for 2 rounds. *(P3/E3: Both heroes heal 4 and hold Shield 1 for 2 rounds.)*
+
+**Canopy Leap** · Space · `pri_canopy`
+
+- *Phys — Swing* · 1 AP · CD 1 — Move 1, height nodes included; your next strike this turn deals +1. *(P3: Move 4, height nodes included; your next strike this turn deals +1.)*
+- *Eth — Treetops* · 1 AP + 1 Space · CD 3 — Leap to any node within 3, height included; you and an adjacent ally hold Shield 1 this round. *(P3/E3: Leap to any node within 5, height included; you and an adjacent ally hold Shield 1 this round.)*
+
+**Troop Call** · Charge · `pri_troop`
+
+- *Phys — Hoot* · 1 AP · CD 1 — Step your ally 1 node, where you choose; their next strike deals +1. *(P3: Step your ally 1 node, where you choose; their next strike deals +4.)*
+- *Eth — Troop* · 2 AP + 1 Charge · CD 3 · Dur 2 — Party strikes +1 for 2 rounds, and both heroes hold Shield 1. *(P3/E3: Party strikes +2 for 2 rounds, and both heroes hold Shield 1.)*
+
+**Sun Salute** ★ · Charge · `lem_sun`
+
+- *Phys — Warm Up* · 1 AP · CD 1 — Arms open to the light: draw 1 pool die as AP and shake off Anchored and Weakened. *(P3: Arms open to the light: draw 2 pool dice as AP and shake off Anchored and Weakened.)*
+- *Eth — Sunrise* · 1 AP + 1 Charge · CD 4 — Both heroes mint 1 AP at the start of their turns for 2 rounds. *(P3/E3: Both heroes mint 1 AP at the start of their turns for 4 rounds.)*
+
+**Stink Fight** · Charge · `lem_stink`
+
+- *Phys — Tail Waft* · 1 AP · CD 1 — Adjacent foes are Weakened 1. *(P3: Adjacent foes are Weakened 2.)*
+- *Eth — Stink Cloud* · 2 AP + 1 Charge · CD 3 — Foul a node within 3 and its neighbours for 2 rounds: foes ending there take 1 and are Weakened 1. *(P3/E3: Foul a node within 5 and its neighbours for 2 rounds: foes ending there take 1 and are Weakened 1.)*
+
+**Scent Mark** · Space · `lem_scent`
+
+- *Phys — Mark Ground* · 1 AP · CD 1 — Reveal within 1 for 2 rounds; the nearest foe is Marked and can't Hide for 2 rounds. *(P3: Reveal within 4 for 2 rounds; the nearest foe is Marked and can't Hide for 2 rounds.)*
+- *Eth — Territory* · 1 AP + 1 Space · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds.)*
+
+**Tail Signal** · Time · `lem_tail`
+
+- *Phys — Wave* · 1 AP · CD 2 — Every card on your track returns 1 column sooner, and reroll 1 banked die. *(P3: Every card on your track returns 1 column sooner, and reroll 2 banked dice.)*
+- *Eth — Rally Flag* · 1 AP + 1 Time · CD 4 · Dur 2 — Tail high, the troop braces: both heroes' next hit taken is −3. Dur 2. *(P3/E3: Tail high, the troop braces: both heroes' next hit taken is −5. Dur 2.)*
+
+## 13 · Mandrill — leans C/M
+
+*Painted face, long fangs, the leader of a great troop.*
+
+**Pattern Recognition** · Space · `hum_pattern`
+
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
+- *Eth — Weak Point* · 1 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
+
+**Opposable Grip** · Mass · `hum_grip`
+
+- *Phys — Manipulate* · 1 AP · CD 1 — Melee 1 and Weaken 1 (its next hit deals −1). *(P3: Melee 4 and Weaken 1 (its next hit deals −1).)*
+- *Eth — Leverage* · 2 AP + 1 Mass · CD 3 — Melee 2 and Anchor the foe for 2 rounds (it cannot move). *(P3/E3: Melee 5 and Anchor the foe for 4 rounds (it cannot move).)*
+
+**Cooperative Instinct** · Charge · `hum_coop`
+
+- *Phys — Assist* · 1 AP · CD 1 — Your ally's next strike deals +2. *(P3: Your ally's next strike deals +5.)*
+- *Eth — Unity* · 2 AP + 1 Charge · CD 4 — Pool your effort: your ally mints 3 temporary AP this turn. *(P3/E3: Pool your effort: your ally mints 5 temporary AP this turn.)*
+
+**Grooming** · Charge · `pri_groom`
+
+- *Phys — Groom* · 1 AP · CD 1 — You and your ally shake off Anchored and Weakened; your ally heals 1. *(P3: You and your ally shake off Anchored and Weakened; your ally heals 4.)*
+- *Eth — Bond* · 1 AP + 1 Charge · CD 3 — Both heroes heal 2 and hold Shield 1 for 2 rounds. *(P3/E3: Both heroes heal 4 and hold Shield 1 for 2 rounds.)*
+
+**Troop Call** · Charge · `pri_troop`
+
+- *Phys — Hoot* · 1 AP · CD 1 — Step your ally 1 node, where you choose; their next strike deals +1. *(P3: Step your ally 1 node, where you choose; their next strike deals +4.)*
+- *Eth — Troop* · 2 AP + 1 Charge · CD 3 · Dur 2 — Party strikes +1 for 2 rounds, and both heroes hold Shield 1. *(P3/E3: Party strikes +2 for 2 rounds, and both heroes hold Shield 1.)*
+
+**War Paint** ★ · Charge · `man_paint`
+
+- *Phys — Flush* · 1 AP · CD 1 — Colours flare: adjacent foes are Weakened 1, and your next strike this turn deals +1. *(P3: Colours flare: adjacent foes are Weakened 1, and your next strike this turn deals +4.)*
+- *Eth — Blaze* · 2 AP + 1 Charge · CD 3 — For 2 rounds your strikes deal +2; every foe within 2 is Weakened 1 now. *(P3/E3: For 4 rounds your strikes deal +2; every foe within 2 is Weakened 1 now.)*
+
+**Fang Yawn** · Mass · `man_fang`
+
+- *Phys — Fangs* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Gape* · 2 AP + 1 Mass · CD 3 — Melee 3; it is Weakened 2 for 2 rounds. *(P3/E3: Melee 6; it is Weakened 4 for 2 rounds.)*
+
+**Cheek Pouches** · Time · `man_cheek`
+
+- *Phys — Pouch* · 1 AP · CD 2 — Draw 1 pool die straight into your bank as AP. *(P3: Draw 2 pool dice straight into your bank as AP.)*
+- *Eth — Hoard* · 1 AP + 1 Time · CD 4 — Mint 1 temporary Omni and 2 temporary AP. *(P3/E3: Mint 1 temporary Omni and 4 temporary AP.)*
+
+**Ground Charge** · Mass · `man_charge`
+
+- *Phys — Rush* · 1 AP · CD 0 — Rush 1 toward a foe, melee 2, and shove it 1. *(P3: Rush 1 toward a foe, melee 5, and shove it 1.)*
+- *Eth — Bowl Over* · 2 AP + 1 Mass · CD 3 — Charge 2 toward a foe within 3, melee 3, and shove it 2. *(P3/E3: Charge 2 toward a foe within 3, melee 6, and shove it 4.)*

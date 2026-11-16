@@ -95,6 +95,27 @@
       onward: ['"{PLACE}," {A} says. "Heavy? Cold? Fine."', '"{THREAT} can push," {A} says. "I don\'t move."'],
       reply: ['{A} does not move, approvingly.', '"Mm," {A} says, a long, slow sound.', '{A} shrugs, very slowly.'],
     },
+    orangutan: {
+      win: ['{A} sits back and peels something to eat, unhurried. "It went the way I thought it would."', '"You moved well," {A} tells {B}. "I watched."'],
+      close: ['{A} turns a bruise toward the light and studies it, the way they study everything.', '"I waited one breath too long," {A} says. "Waiting is usually right. Not then."'],
+      quiet: ['{A} builds a nest of folded cloth for the night, the same careful way each time.', '{A} takes {B}\'s broken buckle, says nothing, and hands it back mended.'],
+      onward: ['{A} looks a long while at {PLACE} before saying anything. "Up. We go up."', '"{THREAT} is in a hurry," {A} says. "We are not."'],
+      reply: ['{A} considers that for a long, comfortable time.', '"Mm. Yes," {A} says, eventually.', '{A} reaches over and pats {B}\'s shoulder, once.'],
+    },
+    lemur: {
+      win: ['{A} sits up with arms spread to whatever sun there is. "Warm. Won. Good."', '"Did you hear me call it? I called it," {A} says, tail high.'],
+      close: ['{A} is grooming the same patch of fur over and over. "Fine. I\'m fine."', '"Too cold back there," {A} says. "I fight badly cold."'],
+      quiet: ['{A} curls against {B} for warmth without asking, and is asleep at once.', '{A} marks the doorway with their scent, so the place is theirs.'],
+      onward: ['"Is there sun in {PLACE}?" {A} asks. "Tell me there is sun."', '{A}\'s tail goes straight up like a flag. "{THREAT}. Everybody stay together."'],
+      reply: ['{A} chatters, agreeing loudly.', '"Yes, yes," {A} says, already leaning on {B}.', '{A} flicks the striped tail, once.'],
+    },
+    mandrill: {
+      win: ['{A} bares every long tooth in a yawn that is not a yawn. "Mine."', '"They saw the colours and broke," {A} says. "Good."'],
+      close: ['{A}\'s face has gone dull, which on {A} means bad.', '"I should have been in front," {A} says. "I am always in front."'],
+      quiet: ['{A} sits at the edge of the light, facing out, between {B} and the dark.', '{A} lets {B} take the first share of food, and watches that nobody else does.'],
+      onward: ['{A} walks ahead into {PLACE} as if it were already theirs.', '"{THREAT} will look at me first," {A} says. "Let it."'],
+      reply: ['{A} grunts. It is a yes.', '"Hm," {A} says, and shows a tooth.', '{A} slaps the ground once, approving.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */
