@@ -36,7 +36,7 @@ The rules this checks:
 | The clock | every objective mission, the flood | 119 | 113 |
 | Hazards and being dragged | flood tiles, undertow, the Heart’s pull | 42 | 34 |
 | One big telegraphed hit | Slam, Ambush, Phase Lance, Crush | 225 | 198 |
-| Attrition | vitality carried from mission to mission | 45 | 41 |
+| Attrition | vitality carried from mission to mission | 44 | 40 |
 | Control on you | Rooted, Weakened, pushed and pulled | 45 | 39 |
 
 A problem with few answers is a gate waiting to happen; a problem with very many is not really a problem. Both are design smells.
@@ -50,7 +50,7 @@ Win rate of two random legal heroes (no gear, no boons) played by the look-ahead
 | any cards (baseline) | 180 | 100% | 100% | 88% | 94% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 31% |
 | no way up | 164 | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 31% |
 | no shield-breakers | 163 | 100% | 100% | 88% | 81% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 94% | 31% |
-| no reveals | 152 | 100% | 100% | 81% | 94% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 38% |
+| no reveals | 152 | 100% | 100% | 81% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 44% |
 | no area damage | 166 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 94% | 13% |
 | no shields or wards | 106 | 100% | 100% | 88% | 94% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 50% |
 | no healing | 150 | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 88% | 38% |
@@ -182,7 +182,7 @@ The look-ahead player held these faces in at least 8 missions and never found th
 - **Pin Down — Hold Down (Eth)** `dog_pin.E` — Melee 2; hold it down: Anchored, unable to blink, and Weakened 1, for 1 round. *(held in 21 missions)*
 - **Big Ears — Under the Sand (Eth)** `fen_ears.E` — Hear the whole field for 2 rounds; the next hit on you is 1 less. *(held in 24 missions)*
 - **Desert Thrift — Long Dry (Eth)** `fen_thrift.E` — For 2 rounds you gain 1 AP at the start of each turn; heal 1. *(held in 15 missions)*
-- **Magnetic Sense — Line Up (Phys)** `fox_magnet.P` — Line up on any foe: it can't Hide for 2 rounds, and your hits on it deal +1. *(held in 23 missions)*
+- **Magnetic Sense — Line Up (Phys)** `fox_magnet.P` — Line up on any foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(held in 23 missions)*
 - **Scavenger's Luck — Scrounge (Phys)** `jac_luck.P` — Draw 1 pool die as AP, and reroll 1 banked die. *(held in 15 missions)*
 - **Adapt Anywhere — Make Do (Eth)** `coy_adapt.E` — Heal 1 at the start of each turn for 3 rounds; no foe can Weaken or Root you for 2. *(held in 15 missions)*
 - **Endurance — Run It Down (Eth)** `hye_endure.E` — For 3 rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner. *(held in 16 missions)*
@@ -592,7 +592,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Pin Down — Hold Down (Eth) | staple | One tough foe, One big telegraphed hit | 0/21 (0.00) |  |
 | Mousing Pounce — Snow Dive (Phys) | staple | One tough foe, The unseen | 20/15 (1.33) |  |
 | Mousing Pounce — High Arc (Eth) | staple | One tough foe, Height, The unseen, The clock, One big telegraphed hit | 15/14 (1.07) |  |
-| Den — Go to Ground (Phys) | staple | One big telegraphed hit, Attrition | 4/16 (0.25) |  |
+| Den — Go to Ground (Phys) | staple | One big telegraphed hit | 4/16 (0.25) |  |
 | Den — Earth (Eth) | staple | Hazards and being dragged, One big telegraphed hit, Attrition | 0/6 (0.00) |  |
 | Big Ears — Cool Down (Phys) | tool | The unseen, Hazards and being dragged | 1/24 (0.04) |  |
 | Big Ears — Under the Sand (Eth) | staple | The unseen, One big telegraphed hit | 0/24 (0.00) | reveals the whole board |
@@ -609,7 +609,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Magnetic Sense — North Leap (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 23/20 (1.15) |  |
 | Cunning — Read It (Phys) | staple | One tough foe, One big telegraphed hit | 1/17 (0.06) |  |
 | Cunning — Outfox (Eth) | staple | The clock, One big telegraphed hit | 6/17 (0.35) |  |
-| Brush Feint — Brush (Phys) | staple | The clock, One big telegraphed hit | 8/26 (0.31) |  |
+| Brush Feint — Brush (Phys) | staple | The clock, One big telegraphed hit | 7/26 (0.27) |  |
 | Brush Feint — Tail Flag (Eth) | tool | A crowd, One big telegraphed hit | 0/2 (0.00) |  |
 
 ### Golden Jackal

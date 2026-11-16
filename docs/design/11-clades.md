@@ -1,6 +1,6 @@
 # 11 · Clades for every painted animal
 
-*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0) and the Cats (2.44.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
+*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), and the Dogs and hyenas and Weasel kin (2.49.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
 
 ## The rule
 
@@ -9,6 +9,7 @@ Garrett: "the full 9 card bloodline is correct but that is for a species, as you
 - **Nine traits per clade, as before.** A clade's nine are drawn from the branches of the tree it sits on, plus traits of its own.
 - **Traits are written once, at the branch they belong to.** Every cat carries the cat traits; every primate carries Grooming. A trait written for a branch names it (`kin` in `src/data/clades.js`).
 - **Each clade has at least one trait that no clade on its branch carries.** The cheetah's Hyperspeed (travel exactly 4 spaces) is the cheetah's alone among cats. `test/data.test.js` holds this.
+- **A branch may be kin to a second branch** (`alsoKin`): the hyena carries the cats' Killing Bite.
 - **Unrelated animals may carry a variant** of a trait for their own surroundings: a falcon's or a marlin's take on Hyperspeed is a separate card with its own text, not the cheetah's card.
 - **Primates share some of Human's traits**, since every pilot is a third human. Human's own nine stay as they are.
 - **A pilot whose two clades share a trait holds it once.** Taking it again gives 2 UP bound to that card (`RULES.DOUBLE_UP`); that is the only way a card comes up twice.
@@ -20,9 +21,9 @@ One pull request per branch, each with its audit and simulation numbers.
 | Branch | Painted animals |
 |---|---|
 | Primates (2.43) | orangutan, lemur, mandrill |
-| Cats (2.44) | cheetah, tiger, lynx, caracal, ocelot |
-| Dogs and hyenas | fox, fennec, coyote, jackal, hyena |
-| Weasels, badgers, red panda | otter, badger, red_panda |
+| Cats (2.47) | cheetah, tiger, lynx, caracal, ocelot |
+| Dogs and hyenas (2.49) | fox, fennec, coyote, jackal, hyena |
+| Weasel kin (2.49) | otter, badger, red_panda |
 | Sea mammals | orca, narwhal, walrus |
 | Hoofed animals | bison, yak, ram, moose, deer, oryx, zebra |
 | Gnawers and hares | mouse, porcupine, hare, black_hare |

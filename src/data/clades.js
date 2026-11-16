@@ -436,8 +436,8 @@
     'Up, over, and straight down through the snow.');
   K(['fennec','fox'],'fox_den','Den','T',0,
     { n:'Go to Ground', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'heal', n:1}],
-      txt:(P,E)=>`Go to ground: Hidden 1, Shield ${1+h(P)} this round, and heal 1.` },
+      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Go to ground: Hidden 1 and Shield ${1+h(P)} this round.` },
     { n:'Earth', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hidden', dur:(P,E)=>1+E, party:true, radius:1},{v:'heal', n:1, party:true},{v:'hazardImmune', dur:1, party:true}],
       txt:(P,E)=>`You and an ally beside you are Hidden for ${1+E} rounds; both heroes heal 1 and ignore hazards this round.` },
@@ -490,8 +490,8 @@
   // Red fox: the dogs' four, the foxes' two, and these three
   K(['fox'],'fox_magnet','Magnetic Sense','S',0,
     { n:'Line Up', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`Line up on any foe: it can't Hide for 2 rounds, and your hits on it deal +${1+h(P)}.` },
+      fx:[{v:'locate', dur:(P,E)=>2+P},{v:'studied', n:1}],
+      txt:(P,E)=>`Line up on any foe: it can't Hide for ${2+P} rounds, and your hits on it deal +1.` },
     { n:'North Leap', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E}],
       txt:(P,E)=>`Leap the long way to beside a foe within ${3+E}, and land on it for ${2+E}.` },

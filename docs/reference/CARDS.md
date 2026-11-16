@@ -970,7 +970,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Den** · Time · `fox_den`
 
-- *Phys — Go to Ground* · 1 AP · CD 2 — Go to ground: Hidden 1, Shield 1 this round, and heal 1. *(P3: Go to ground: Hidden 1, Shield 2 this round, and heal 1.)*
+- *Phys — Go to Ground* · 1 AP · CD 2 — Go to ground: Hidden 1 and Shield 1 this round. *(P3: Go to ground: Hidden 1 and Shield 2 this round.)*
 - *Eth — Earth* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden for 2 rounds; both heroes heal 1 and ignore hazards this round. *(P3/E3: You and an ally beside you are Hidden for 4 rounds; both heroes heal 1 and ignore hazards this round.)*
 
 **Big Ears** ★ · Space · `fen_ears`
@@ -1019,12 +1019,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Den** · Time · `fox_den`
 
-- *Phys — Go to Ground* · 1 AP · CD 2 — Go to ground: Hidden 1, Shield 1 this round, and heal 1. *(P3: Go to ground: Hidden 1, Shield 2 this round, and heal 1.)*
+- *Phys — Go to Ground* · 1 AP · CD 2 — Go to ground: Hidden 1 and Shield 1 this round. *(P3: Go to ground: Hidden 1 and Shield 2 this round.)*
 - *Eth — Earth* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden for 2 rounds; both heroes heal 1 and ignore hazards this round. *(P3/E3: You and an ally beside you are Hidden for 4 rounds; both heroes heal 1 and ignore hazards this round.)*
 
 **Magnetic Sense** · Space · `fox_magnet`
 
-- *Phys — Line Up* · 1 AP · CD 1 — Line up on any foe: it can't Hide for 2 rounds, and your hits on it deal +1. *(P3: Line up on any foe: it can't Hide for 2 rounds, and your hits on it deal +2.)*
+- *Phys — Line Up* · 1 AP · CD 1 — Line up on any foe: it can't Hide for 2 rounds, and your hits on it deal +1. *(P3: Line up on any foe: it can't Hide for 5 rounds, and your hits on it deal +1.)*
 - *Eth — North Leap* · 1 AP + 1 Space · CD 3 — Leap the long way to beside a foe within 4, and land on it for 3. *(P3/E3: Leap the long way to beside a foe within 6, and land on it for 5.)*
 
 **Cunning** ★ · Time · `fox_cunning`
