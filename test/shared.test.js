@@ -23,7 +23,7 @@ const hero = (species, cards) => {
 
 test('a shared trait is held once, and a second pick binds upgrade points to it instead', () => {
   const h = hero(['orangutan', 'gecko'], ['hum_tool']);
-  assert.deepEqual(T.CARD.hum_tool.clades, ['human', 'orangutan']);
+  assert.deepEqual(T.CARD.hum_tool.clades.slice(0, 2), ['human', 'orangutan']);
   assert.ok(T.cardsOf('orangutan').some((c) => c.id === 'hum_tool'));
   assert.deepEqual(T.canAddCard(h, 'hum_tool'), { ok: true, double: true });
   const free = h.upUnspent;

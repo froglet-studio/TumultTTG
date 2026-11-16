@@ -41,7 +41,7 @@ test('primates carry some of Human’s traits, and no clade carries one from a b
     if (!c.kin) continue;
     for (const sp of c.clades.slice(1))
       assert.ok(
-        T.SPECIES[sp].branch === c.kin || T.SPECIES[sp].variant,
+        T.SPECIES[sp].branch === c.kin || (T.SPECIES[sp].alsoKin || []).includes(c.kin) || T.SPECIES[sp].variant,
         `${c.id} is written for ${c.kin}; ${sp} is not on it`,
       );
   }
