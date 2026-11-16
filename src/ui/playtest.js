@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.49.0',
+    version: '2.50.0',
     items: [
+      {
+        text: 'Three sea mammals join: Walrus, Orca and Narwhal. All three share Blubber and Breath Hold; the two whales share Echolocation and Pod Song; the walrus and narwhal share Tusk. The walrus is a slow, heavy anchor, the orca a pack hunter that sets up its partner, the narwhal a scout that slips under the ice. Does each feel like itself?',
+      },
       {
         text: 'Eight more clades: Fennec Fox, Red Fox, Golden Jackal, Coyote and Spotted Hyena, then Sea Otter, Honey Badger and Red Panda. The dogs and the hyena share Keen Nose, Pack Howl and Long Trot (the hyena also shares the cats’ Killing Bite, since hyenas sit nearer the cats). The otter, badger and red panda share Musk and Dense Fur. Does each feel like itself? Which shared trait did you take twice?',
       },

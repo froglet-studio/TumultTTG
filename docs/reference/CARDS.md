@@ -1330,3 +1330,150 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Slow Down* · 1 AP · CD 2 — Shield 1 this round, ignore hazards for 2, and your track returns 1 column sooner. *(P3: Shield 2 this round, ignore hazards for 2, and your track returns 1 column sooner.)*
 - *Eth — Torpor* · 1 AP + 1 Time · CD 4 — Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for 2 rounds. *(P3/E3: Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for 4 rounds.)*
+
+## 27 · Walrus — leans M/T
+
+*A ton of whiskers, blubber and tusk. Loud, sociable, immovable.*
+
+**Blubber** · Mass · `sea_blubber`
+
+- *Phys — Insulate* · 1 AP · CD 1 — Shield 2 this round. *(P3: Shield 3 this round.)*
+- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and you can't be Weakened or Rooted this round. *(P3/E3: Shield 5 for 2 rounds, and you can't be Weakened or Rooted this round.)*
+
+**Breath Hold** · Time · `sea_breath`
+
+- *Phys — Hold* · 1 AP · CD 2 — Ignore hazards for 2 rounds, and heal 1. *(P3: Ignore hazards for 2 rounds, and heal 2.)*
+- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and shed Anchored, Weakened and damage over time. *(P3/E3: Ignore hazards for 5 rounds, heal 5, and shed Anchored, Weakened and damage over time.)*
+
+**Tusk** · Mass · `sea_tusk`
+
+- *Phys — Hook* · 1 AP · CD 1 — Hook a foe beside you: 2 of its Shield comes off, then melee 2. *(P3: Hook a foe beside you: 2 of its Shield comes off, then melee 5.)*
+- *Eth — Spear* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield, and push it 1. *(P3/E3: Melee 7 that ignores Shield, and push it 1.)*
+
+**Haul Out** · Space · `wal_haul`
+
+- *Phys — Flop Ashore* · 1 AP · CD 1 — Move 1, then hold Shield 1 this round. *(P3: Move 4, then hold Shield 2 this round.)*
+- *Eth — Bask* · 1 AP + 1 Space · CD 4 — Shield 2 this round, and heal 1 at the start of each turn for 3 rounds. *(P3/E3: Shield 2 this round, and heal 1 at the start of each turn for 5 rounds.)*
+
+**Whisker Feel** · Space · `wal_whisker`
+
+- *Phys — Feel the Floor* · 1 AP · CD 1 — Reveal within 1, Mark the nearest foe (the next hit on it deals +2), and heal 1. *(P3: Reveal within 4, Mark the nearest foe (the next hit on it deals +2), and heal 1.)*
+- *Eth — Read the Current* · 1 AP + 1 Space · CD 3 — Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and your hits on it deal +2. *(P3/E3: Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and your hits on it deal +4.)*
+
+**Herd Bellow** · Charge · `wal_bellow`
+
+- *Phys — Bellow* · 1 AP · CD 1 — Both heroes hold Shield 1 this round, and every foe beside you is Weakened 1. *(P3: Both heroes hold Shield 2 this round, and every foe beside you is Weakened 1.)*
+- *Eth — Herd Up* · 1 AP + 1 Charge · CD 4 — Both heroes shed Anchored, Weakened and damage over time, and the next hit on each is 2 less. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time, and the next hit on each is 4 less.)*
+
+**Suction Feed** · Mass · `wal_suction`
+
+- *Phys — Suck In* · 1 AP · CD 1 — Pull a foe within 2 up to 2 toward you, and it takes 1. *(P3: Pull a foe within 2 up to 2 toward you, and it takes 4.)*
+- *Eth — Feast* · 1 AP + 1 Mass · CD 3 — Melee 3, and heal 2. *(P3/E3: Melee 5, and heal 4.)*
+
+**Ice Haul** · Time · `wal_ice`
+
+- *Phys — Tusk Up* · 1 AP · CD 1 — Haul yourself up on your tusks: climb 1, and hold Shield 1 this round. *(P3: Haul yourself up on your tusks: climb 4, and hold Shield 1 this round.)*
+- *Eth — Break the Ice* · 1 AP + 1 Time · CD 4 — Smash the ice around you: for 2 rounds every foe within 1 of you is Weakened 1, and you ignore hazards.
+
+**Ton of Weight** · Mass · `wal_ton`
+
+- *Phys — Lean In* · 1 AP · CD 1 — Melee 3, and push it 1. *(P3: Melee 6, and push it 1.)*
+- *Eth — Belly Flop* · 2 AP + 1 Mass · CD 3 — Every foe beside you takes 3 and is Weakened 1 this round. *(P3/E3: Every foe beside you takes 5 and is Weakened 1 this round.)*
+
+## 28 · Orca — leans M/C
+
+*The ocean’s pack hunter. Clever, coordinated, and never alone.*
+
+**Blubber** · Mass · `sea_blubber`
+
+- *Phys — Insulate* · 1 AP · CD 1 — Shield 2 this round. *(P3: Shield 3 this round.)*
+- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and you can't be Weakened or Rooted this round. *(P3/E3: Shield 5 for 2 rounds, and you can't be Weakened or Rooted this round.)*
+
+**Breath Hold** · Time · `sea_breath`
+
+- *Phys — Hold* · 1 AP · CD 2 — Ignore hazards for 2 rounds, and heal 1. *(P3: Ignore hazards for 2 rounds, and heal 2.)*
+- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and shed Anchored, Weakened and damage over time. *(P3/E3: Ignore hazards for 5 rounds, heal 5, and shed Anchored, Weakened and damage over time.)*
+
+**Echolocation** · Space · `sea_echo`
+
+- *Phys — Click* · 1 AP · CD 1 — Click: reveal within 2 this round, and your next hit deals +1. *(P3: Click: reveal within 5 this round, and your next hit deals +1.)*
+- *Eth — Sound the Deep* · 1 AP + 1 Space · CD 3 — Reveal the whole board for 2 rounds, and Mark every foe within 2 (the next hit on each deals +2). *(P3/E3: Reveal the whole board for 2 rounds, and Mark every foe within 4 (the next hit on each deals +2).)*
+
+**Pod Song** · Charge · `sea_song`
+
+- *Phys — Call the Pod* · 1 AP · CD 1 — Both heroes' next hit deals +1; your ally heals 1.
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — Both heroes gain 1 AP at the start of each turn for 2 rounds. *(P3/E3: Both heroes gain 1 AP at the start of each turn for 4 rounds.)*
+
+**Breach** · Space · `orc_breach`
+
+- *Phys — Breach* · 1 AP · CD 1 — Surge up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Surge up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Spyhop* · 1 AP + 1 Space · CD 3 — Burst out beside a foe within 4, melee 4, and push it 1. *(P3/E3: Burst out beside a foe within 6, melee 6, and push it 1.)*
+
+**Pod Tactics** · Charge · `orc_tactics`
+
+- *Phys — Herd the Prey* · 1 AP · CD 1 — Mark a foe (the next hit on it deals +2), and your ally's next hit deals +1. *(P3: Mark a foe (the next hit on it deals +2), and your ally's next hit deals +2.)*
+- *Eth — Wave Hunt* · 1 AP + 1 Charge · CD 4 — Both heroes' next hit deals +2, and your ally gains 1 AP next turn. *(P3/E3: Both heroes' next hit deals +4, and your ally gains 1 AP next turn.)*
+
+**Wave Wash** · Space · `orc_wave`
+
+- *Phys — Wash* · 1 AP · CD 1 — A foe within 2 takes 1 and is pushed 1. *(P3: A foe within 2 takes 4 and is pushed 2.)*
+- *Eth — Wall of Water* · 1 AP + 1 Space · CD 3 — Every foe within 2 is Weakened 1 this round and pushed 1. *(P3/E3: Every foe within 4 is Weakened 1 this round and pushed 1.)*
+
+**Apex** · Mass · `orc_apex`
+
+- *Phys — Take Down* · 1 AP · CD 1 — Melee 2; a foe left at 2 or less is finished. *(P3: Melee 5; a foe left at 5 or less is finished.)*
+- *Eth — Top of the Sea* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield, and you can't be Weakened or Rooted this round. *(P3/E3: Melee 7 that ignores Shield, and you can't be Weakened or Rooted this round.)*
+
+**Beach Charge** · Mass · `orc_beach`
+
+- *Phys — Ride the Surf* · 1 AP · CD 2 — Move 2, passing foes, and your next hit this turn deals +1. *(P3: Move 5, passing foes, and your next hit this turn deals +1.)*
+- *Eth — Strand* · 2 AP + 1 Mass · CD 4 — Melee 4, drag it 1 toward you, and pin it: Anchored 1. *(P3/E3: Melee 6, drag it 1 toward you, and pin it: Anchored 2.)*
+
+## 29 · Narwhal — leans S/T
+
+*A pale whale of the ice, with a long spiral tusk that feels the water.*
+
+**Blubber** · Mass · `sea_blubber`
+
+- *Phys — Insulate* · 1 AP · CD 1 — Shield 2 this round. *(P3: Shield 3 this round.)*
+- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and you can't be Weakened or Rooted this round. *(P3/E3: Shield 5 for 2 rounds, and you can't be Weakened or Rooted this round.)*
+
+**Breath Hold** · Time · `sea_breath`
+
+- *Phys — Hold* · 1 AP · CD 2 — Ignore hazards for 2 rounds, and heal 1. *(P3: Ignore hazards for 2 rounds, and heal 2.)*
+- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and shed Anchored, Weakened and damage over time. *(P3/E3: Ignore hazards for 5 rounds, heal 5, and shed Anchored, Weakened and damage over time.)*
+
+**Echolocation** · Space · `sea_echo`
+
+- *Phys — Click* · 1 AP · CD 1 — Click: reveal within 2 this round, and your next hit deals +1. *(P3: Click: reveal within 5 this round, and your next hit deals +1.)*
+- *Eth — Sound the Deep* · 1 AP + 1 Space · CD 3 — Reveal the whole board for 2 rounds, and Mark every foe within 2 (the next hit on each deals +2). *(P3/E3: Reveal the whole board for 2 rounds, and Mark every foe within 4 (the next hit on each deals +2).)*
+
+**Pod Song** · Charge · `sea_song`
+
+- *Phys — Call the Pod* · 1 AP · CD 1 — Both heroes' next hit deals +1; your ally heals 1.
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — Both heroes gain 1 AP at the start of each turn for 2 rounds. *(P3/E3: Both heroes gain 1 AP at the start of each turn for 4 rounds.)*
+
+**Tusk** · Mass · `sea_tusk`
+
+- *Phys — Hook* · 1 AP · CD 1 — Hook a foe beside you: 2 of its Shield comes off, then melee 2. *(P3: Hook a foe beside you: 2 of its Shield comes off, then melee 5.)*
+- *Eth — Spear* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield, and push it 1. *(P3/E3: Melee 7 that ignores Shield, and push it 1.)*
+
+**Sense Tusk** · Space · `nar_sense`
+
+- *Phys — Taste the Water* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Read the Sea* · 1 AP + 1 Space · CD 4 — The next hit on each hero is 2 less, and both ignore hazards for 2 rounds. *(P3/E3: The next hit on each hero is 4 less, and both ignore hazards for 2 rounds.)*
+
+**Ice Lead** · Time · `nar_lead`
+
+- *Phys — Show the Way* · 1 AP · CD 1 — Your ally moves 1. *(P3: Your ally moves 4.)*
+- *Eth — Open Water* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards for 2 rounds and gain 1 AP next turn. *(P3/E3: Both heroes ignore hazards for 4 rounds and gain 1 AP next turn.)*
+
+**Deep Dive** · Time · `nar_dive`
+
+- *Phys — Sound* · 1 AP · CD 2 — Move 2, Hidden 1, and your next hit this turn deals +1. *(P3: Move 5, Hidden 1, and your next hit this turn deals +1.)*
+- *Eth — Surface Far Off* · 1 AP + 1 Time · CD 3 — Dive and come up anywhere within 3, Hidden 1. *(P3/E3: Dive and come up anywhere within 5, Hidden 1.)*
+
+**Pale Ghost** · Charge · `nar_ghost`
+
+- *Phys — Unsettle* · 1 AP · CD 1 — A foe within 3 takes 2 and is Weakened 1 for 1 round. *(P3: A foe within 3 takes 5 and is Weakened 1 for 2 rounds.)*
+- *Eth — Vanish* · 1 AP + 1 Charge · CD 4 — You and an ally within 2 are Hidden 1, and your next hit deals +2. *(P3/E3: You and an ally within 2 are Hidden 1, and your next hit deals +4.)*
