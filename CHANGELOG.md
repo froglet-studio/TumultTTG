@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.52.0 — 2026-11-16 — the gnawers
+
+The seventh branch of the tree (`docs/design/11-clades.md`): four painted gnawers, each with nine traits.
+
+- **Field Mouse, Porcupine, Brown Hare and Black Hare.** The jerboa joins their branch and shares its traits:
+  - Gnawing Incisors with all four
+  - Vibrissae Sense with the mouse and the porcupine
+  - Burrowing with the mouse
+  - Saltatorial Leap with both hares
+  - Erratic Bounding with both hares and the mouse
+- The two hares also share **Long Ears**, **Boxing** and **Lie Low**.
+- Traits of each one's own:
+  - mouse: Scurry, Through the Gap, Seed Stash, Tiny Target, Squeak
+  - porcupine: Quills, Quill Rattle, Tree Climb, Back Turn, Quill Shed, Bark Eater, Waddle
+  - brown hare: Mad March, White Winter, Thump
+  - black hare: Shadow Bolt, Night Kick, Midnight Forage
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- Balance: in 240 drafted runs (look-ahead player, the same seeds on both), main wins 70 and this release 73. Runs with a gnawer win 37%; runs without one win 27%.
+
 ## 2.51.0 — 2026-11-16 — the hoofed animals
 
 The sixth branch of the tree (`docs/design/11-clades.md`): seven painted hoofed animals, each with nine traits.

@@ -1820,3 +1820,199 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Shoulder to Shoulder* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
 - *Eth — Wall of Stripes* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 1; both heroes hold Shield 2 this round. *(P3/E3: You and an ally beside you are Hidden 1; both heroes hold Shield 4 this round.)*
+
+## 37 · Field Mouse — leans S/T
+
+*Small, quick and everywhere. Through the gap before you saw the gap.*
+
+**Erratic Bounding** · Time · `jer_erratic`
+
+- *Phys — Zigzag* · 1 AP · CD 1 · Dur 1 — Step 1 and Shield 2 against the next hit. *(P3: Step 1 and Shield 5 against the next hit.)*
+- *Eth — Stutter-step* · 1 AP + 1 Time · CD 3 — Blur 2 nodes through foes and Shield 2. *(P3/E3: Blur 4 nodes through foes and Shield 2.)*
+
+**Gnawing Incisors** · Mass · `jer_gnaw`
+
+- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+
+**Vibrissae Sense** · Mass · `jer_vibrissae`
+
+- *Phys — Feel* · 1 AP · CD 1 — Feel ground vibration: reveal everything within 1, and Shield 1 against what is coming. *(P3: Feel ground vibration: reveal everything within 4, and Shield 1 against what is coming.)*
+- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal the whole board and Weaken all foes 1 this round.
+
+**Burrowing** · Space · `jer_burrow`
+
+- *Phys — Dig* · 2 AP · CD 2 — Dig in: Hidden 1 and Shield 1. *(P3: Dig in: Hidden 2 and Shield 1.)*
+- *Eth — Phase-tunnel* · 2 AP + 1 Space · CD 4 — Tunnel through anything to a node within 3 and surface Hidden. *(P3/E3: Tunnel through anything to a node within 5 and surface Hidden.)*
+
+**Scurry** · Space · `mou_scurry`
+
+- *Phys — Scurry* · 1 AP · CD 0 — Move 2, setting off no traps. *(P3: Move 5, setting off no traps.)*
+- *Eth — Every Which Way* · 1 AP + 1 Space · CD 3 — Move 4, through foes and past traps; the next hit on you is 2 less. *(P3/E3: Move 6, through foes and past traps; the next hit on you is 4 less.)*
+
+**Through the Gap** · Space · `mou_gap`
+
+- *Phys — Squeeze* · 1 AP · CD 1 — Squeeze through to any node within 1, and hold Shield 1 this round. *(P3: Squeeze through to any node within 2, and hold Shield 1 this round.)*
+- *Eth — Under the Door* · 1 AP + 1 Space · CD 3 — Slip to any node within 3 and you are Hidden 1. *(P3/E3: Slip to any node within 5, bringing an ally beside you, and you are Hidden 1.)*
+
+**Seed Stash** · Charge · `mou_stash`
+
+- *Phys — Nibble* · 1 AP · CD 2 — Heal 1, and gain 1 AP next turn. *(P3: Heal 4, and gain 1 AP next turn.)*
+- *Eth — Winter Store* · 1 AP + 1 Charge · CD 4 — Both heroes heal 2 and gain 1 AP next turn. *(P3/E3: Both heroes heal 4 and gain 1 AP next turn.)*
+
+**Tiny Target** · Time · `mou_tiny`
+
+- *Phys — Duck* · 1 AP · CD 1 — The next hit on you is 2 less, and you dodge a step from it. *(P3: The next hit on you is 3 less, and you dodge a step from it.)*
+- *Eth — Too Small to See* · 1 AP + 1 Time · CD 4 — Hidden 2 even if you move, and the next hit on you is 2 less. *(P3/E3: Hidden 4 even if you move, and the next hit on you is 2 less.)*
+
+**Squeak** · Charge · `mou_squeak`
+
+- *Phys — Alarm* · 1 AP · CD 1 — The next hit on each hero is 1 less, and your ally's next hit deals +1.
+- *Eth — Ultrasound* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 1 round, and the nearest is Marked (the next hit on it deals +2). *(P3/E3: Every foe within 2 is Weakened 1 for 2 rounds, and the nearest is Marked (the next hit on it deals +2).)*
+
+## 38 · Porcupine — leans M/T
+
+*A slow climber in a coat of thirty thousand quills. Best left alone.*
+
+**Gnawing Incisors** · Mass · `jer_gnaw`
+
+- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+
+**Vibrissae Sense** · Mass · `jer_vibrissae`
+
+- *Phys — Feel* · 1 AP · CD 1 — Feel ground vibration: reveal everything within 1, and Shield 1 against what is coming. *(P3: Feel ground vibration: reveal everything within 4, and Shield 1 against what is coming.)*
+- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal the whole board and Weaken all foes 1 this round.
+
+**Quills** · Mass · `por_quills`
+
+- *Phys — Bristle* · 1 AP · CD 1 — Shield 1 this round, and any foe that hits you in melee takes 1. *(P3: Shield 1 this round, and any foe that hits you in melee takes 4.)*
+- *Eth — Quill Coat* · 1 AP + 1 Mass · CD 4 — Shield 2 for 2 rounds, and any foe that hits you in melee takes 3. *(P3/E3: Shield 2 for 2 rounds, and any foe that hits you in melee takes 5.)*
+
+**Quill Rattle** · Charge · `por_rattle`
+
+- *Phys — Rattle* · 1 AP · CD 1 — Every foe beside you is Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: Every foe beside you is Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
+- *Eth — Warning Display* · 1 AP + 1 Charge · CD 4 — Every foe within 1 is pushed 1, and every foe within 2 is Weakened 1 for 2 rounds. *(P3/E3: Every foe within 2 is pushed 1, and every foe within 2 is Weakened 1 for 4 rounds.)*
+
+**Tree Climb** · Space · `por_climb`
+
+- *Phys — Climb* · 1 AP · CD 1 — Climb 1, and hold Shield 1 this round. *(P3: Climb 4, and hold Shield 1 this round.)*
+- *Eth — High Fork* · 1 AP + 1 Space · CD 3 — Climb 3 and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Climb 5, carrying an ally beside you, and heal 1 at the start of each turn for 2 rounds.)*
+
+**Back Turn** · Time · `por_back`
+
+- *Phys — Turn Away* · 1 AP · CD 1 — Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes 1. *(P3: Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes 4.)*
+- *Eth — Back into It* · 1 AP + 1 Time · CD 3 — Back into a foe beside you: it takes 4, is Weakened 1 for 2 rounds, and takes 1 at the start of its next 2 turns. *(P3/E3: Back into a foe beside you: it takes 6, is Weakened 1 for 2 rounds, and takes 1 at the start of its next 2 turns.)*
+
+**Quill Shed** · Mass · `por_shed`
+
+- *Phys — Flick* · 1 AP · CD 1 — A quill stuck in a foe within 2: it takes 2. *(P3: A quill stuck in a foe within 2: it takes 5.)*
+- *Eth — Quill Spray* · 1 AP + 1 Mass · CD 3 — Every foe in your zone takes 2. *(P3/E3: Every foe in your zone takes 4.)*
+
+**Bark Eater** · Time · `por_bark`
+
+- *Phys — Gnaw Bark* · 1 AP · CD 2 — Heal 1, and hold Shield 1 this round. *(P3: Heal 4, and hold Shield 1 this round.)*
+- *Eth — Salt Lick* · 1 AP + 1 Time · CD 4 — Shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 3 rounds. *(P3/E3: Shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 5 rounds.)*
+
+**Waddle** · Space · `por_waddle`
+
+- *Phys — Amble* · 1 AP · CD 1 — Move 1; any foe that hits you in melee this round takes 1. *(P3: Move 4; any foe that hits you in melee this round takes 1.)*
+- *Eth — Unbothered* · 1 AP + 1 Space · CD 3 — Move 3, straight past foes, and you can't be Weakened or Rooted this round. *(P3/E3: Move 5, straight past foes, and you can't be Weakened or Rooted this round.)*
+
+## 39 · Brown Hare — leans S/M
+
+*Long ears, long legs, and a temper in spring.*
+
+**Saltatorial Leap** ★ · Space · `jer_leap`
+
+- *Phys — Spring* · 1 AP · CD 0 — Move 2, leaping over foes. *(P3: Move 5, leaping over foes.)*
+- *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
+
+**Erratic Bounding** · Time · `jer_erratic`
+
+- *Phys — Zigzag* · 1 AP · CD 1 · Dur 1 — Step 1 and Shield 2 against the next hit. *(P3: Step 1 and Shield 5 against the next hit.)*
+- *Eth — Stutter-step* · 1 AP + 1 Time · CD 3 — Blur 2 nodes through foes and Shield 2. *(P3/E3: Blur 4 nodes through foes and Shield 2.)*
+
+**Gnawing Incisors** · Mass · `jer_gnaw`
+
+- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+
+**Long Ears** · Space · `har_ears`
+
+- *Phys — Listen* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and you dodge a step from it. *(P3: Reveal within 5; the next hit on you is 1 less, and you dodge a step from it.)*
+- *Eth — Ears Back* · 1 AP + 1 Space · CD 3 — Hear the whole board this round, slip 2, and you are Hidden 1 even if you move. *(P3/E3: Hear the whole board this round, slip 4, and you are Hidden 1 even if you move.)*
+
+**Boxing** · Mass · `har_box`
+
+- *Phys — Jab* · 1 AP · CD 1 — Melee 3, and shove it 1. *(P3: Melee 6, and shove it 1.)*
+- *Eth — Flurry* · 1 AP + 1 Mass · CD 3 — Melee 3 twice, then shove it 1. *(P3/E3: Melee 5 twice, then shove it 1.)*
+
+**Lie Low** · Time · `har_low`
+
+- *Phys — Form* · 1 AP · CD 2 — Flatten into a hollow: Hidden 1, and heal 1. *(P3: Flatten into a hollow: Hidden 2, and heal 1.)*
+- *Eth — Still as Earth* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 2; both heroes hold Shield 1 this round. *(P3/E3: You and an ally beside you are Hidden 4; both heroes hold Shield 1 this round.)*
+
+**Mad March** · Mass · `har_march`
+
+- *Phys — Spar* · 1 AP · CD 1 — Melee 2, then hop 1. *(P3: Melee 5, then hop 1.)*
+- *Eth — Spring Fever* · 1 AP + 1 Mass · CD 4 — Every hit you deal for 2 rounds deals +1, and gain 1 AP next turn. *(P3/E3: Every hit you deal for 4 rounds deals +1, and gain 1 AP next turn.)*
+
+**White Winter** · Time · `har_winter`
+
+- *Phys — Snow Coat* · 1 AP · CD 2 — Hidden 1, Shield 1 this round, and ignore hazards for 2 rounds.
+- *Eth — Whiteout* · 1 AP + 1 Time · CD 4 — You and an ally within 2 are Hidden 1, and both ignore hazards for 2 rounds. *(P3/E3: You and an ally within 2 are Hidden 1, and both ignore hazards for 4 rounds.)*
+
+**Thump** · Charge · `har_thump`
+
+- *Phys — Thump* · 1 AP · CD 1 — Thump a warning: the next hit on each hero is 1 less. *(P3: Thump a warning: the next hit on each hero is 2 less.)*
+- *Eth — Ground Drum* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 this round, and your ally gains 1 AP next turn. *(P3/E3: Every foe within 4 is Weakened 1 this round, and your ally gains 1 AP next turn.)*
+
+## 40 · Black Hare — leans S/C
+
+*A night-coloured hare that runs where the moon doesn’t reach.*
+
+**Saltatorial Leap** ★ · Space · `jer_leap`
+
+- *Phys — Spring* · 1 AP · CD 0 — Move 2, leaping over foes. *(P3: Move 5, leaping over foes.)*
+- *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
+
+**Erratic Bounding** · Time · `jer_erratic`
+
+- *Phys — Zigzag* · 1 AP · CD 1 · Dur 1 — Step 1 and Shield 2 against the next hit. *(P3: Step 1 and Shield 5 against the next hit.)*
+- *Eth — Stutter-step* · 1 AP + 1 Time · CD 3 — Blur 2 nodes through foes and Shield 2. *(P3/E3: Blur 4 nodes through foes and Shield 2.)*
+
+**Gnawing Incisors** · Mass · `jer_gnaw`
+
+- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+
+**Long Ears** · Space · `har_ears`
+
+- *Phys — Listen* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and you dodge a step from it. *(P3: Reveal within 5; the next hit on you is 1 less, and you dodge a step from it.)*
+- *Eth — Ears Back* · 1 AP + 1 Space · CD 3 — Hear the whole board this round, slip 2, and you are Hidden 1 even if you move. *(P3/E3: Hear the whole board this round, slip 4, and you are Hidden 1 even if you move.)*
+
+**Boxing** · Mass · `har_box`
+
+- *Phys — Jab* · 1 AP · CD 1 — Melee 3, and shove it 1. *(P3: Melee 6, and shove it 1.)*
+- *Eth — Flurry* · 1 AP + 1 Mass · CD 3 — Melee 3 twice, then shove it 1. *(P3/E3: Melee 5 twice, then shove it 1.)*
+
+**Lie Low** · Time · `har_low`
+
+- *Phys — Form* · 1 AP · CD 2 — Flatten into a hollow: Hidden 1, and heal 1. *(P3: Flatten into a hollow: Hidden 2, and heal 1.)*
+- *Eth — Still as Earth* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 2; both heroes hold Shield 1 this round. *(P3/E3: You and an ally beside you are Hidden 4; both heroes hold Shield 1 this round.)*
+
+**Shadow Bolt** · Space · `bha_bolt`
+
+- *Phys — Bolt* · 1 AP · CD 1 — Move 2, passing foes, and you are Hidden 1 even if you move. *(P3: Move 5, passing foes, and you are Hidden 1 even if you move.)*
+- *Eth — Into the Dark* · 1 AP + 1 Space · CD 3 — Vanish to any node within 4, Hidden 1 even if you move. *(P3/E3: Vanish to any node within 6, Hidden 2 even if you move.)*
+
+**Night Kick** · Mass · `bha_kick`
+
+- *Phys — Kick* · 1 AP · CD 1 — Melee 2, and kick it back 2. *(P3: Melee 5, and kick it back 2.)*
+- *Eth — From Nowhere* · 1 AP + 1 Mass · CD 3 — Melee 4 that ignores Shield, then spring 2 away. *(P3/E3: Melee 6 that ignores Shield, then spring 2 away.)*
+
+**Midnight Forage** · Charge · `bha_forage`
+
+- *Phys — Graze* · 1 AP · CD 2 — Heal 1, and reveal within 2. *(P3: Heal 4, and reveal within 2.)*
+- *Eth — Moonless Field* · 1 AP + 1 Charge · CD 4 — Both heroes heal 2; you and an ally beside you are Hidden 1. *(P3/E3: Both heroes heal 4; you and an ally beside you are Hidden 1.)*

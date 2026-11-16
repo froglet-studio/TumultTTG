@@ -1240,4 +1240,200 @@
       fx:[{v:'hidden', dur:1, party:true, radius:1},{v:'shield', val:(P,E)=>1+E, dur:1, party:true}],
       txt:(P,E)=>`You and an ally beside you are Hidden 1; both heroes hold Shield ${1+E} this round.` },
     'Stand close and the herd becomes one blur.');
+  /* ───────────────────────── GNAWERS ─────────────────────────
+     mouse · porcupine · hare · black hare, with the jerboa. The jerboa's Gnawing Incisors are every
+     gnawer's; its Vibrissae the mouse's and porcupine's; its Burrowing the mouse's; its Leap the hares';
+     its Erratic Bounding the hares' and the mouse's. Long Ears, Boxing and Lie Low are both hares'. */
+  T.SPECIES.jerboa.branch = 'Gnawers';
+  S('mouse', { name: 'Field Mouse', lean: 'S/T', branch: 'Gnawers', icon: '🐭',
+    tagline: 'Small, quick and everywhere. Through the gap before you saw the gap.' });
+  S('porcupine', { name: 'Porcupine', lean: 'M/T', branch: 'Gnawers', icon: '🦔',
+    tagline: 'A slow climber in a coat of thirty thousand quills. Best left alone.' });
+  S('hare', { name: 'Brown Hare', lean: 'S/M', branch: 'Gnawers', icon: '🐇',
+    tagline: 'Long ears, long legs, and a temper in spring.' });
+  S('black_hare', { name: 'Black Hare', lean: 'S/C', branch: 'Gnawers', icon: '🐇',
+    tagline: 'A night-coloured hare that runs where the moon doesn’t reach.' });
+  T.shareTrait('jer_gnaw', 'mouse', 'porcupine', 'hare', 'black_hare');
+  T.shareTrait('jer_vibrissae', 'mouse', 'porcupine');
+  T.shareTrait('jer_burrow', 'mouse');
+  T.shareTrait('jer_leap', 'hare', 'black_hare');
+  T.shareTrait('jer_erratic', 'mouse', 'hare', 'black_hare');
+  const HARES = ['hare','black_hare'];
+
+  K(HARES,'har_ears','Long Ears','S',0,
+    { n:'Listen', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:1, reflect:0, reposition:1}],
+      txt:(P,E)=>`Reveal within ${2+P}; the next hit on you is 1 less, and you dodge a step from it.` },
+    { n:'Ears Back', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:99, dur:1},{v:'move', n:(P,E)=>1+E, free:true},{v:'hidden', dur:1, canMove:true}],
+      txt:(P,E)=>`Hear the whole board this round, slip ${1+E}, and you are Hidden 1 even if you move.` },
+    'Each ear turns on its own.', 'Gnawers');
+  K(HARES,'har_box','Boxing','M',0,
+    { n:'Jab', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Melee ${3+P}, and shove it 1.` },
+    { n:'Flurry', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Melee ${2+E} twice, then shove it 1.` },
+    'Up on the hind legs, forepaws flying.', 'Gnawers');
+  K(HARES,'har_low','Lie Low','T',0,
+    { n:'Form', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'heal', n:1}],
+      txt:(P,E)=>`Flatten into a hollow: Hidden ${1+h(P)}, and heal 1.` },
+    { n:'Still as Earth', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:(P,E)=>1+E, party:true, radius:1},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`You and an ally beside you are Hidden ${1+E}; both heroes hold Shield 1 this round.` },
+    'Ears flat, eyes open, not a whisker moving.', 'Gnawers');
+
+  // Mouse
+  K(['mouse'],'mou_scurry','Scurry','S',0,
+    { n:'Scurry', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, noTrap:true}],
+      txt:(P,E)=>`Move ${2+P}, setting off no traps.` },
+    { n:'Every Which Way', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+E, ignoreFoes:true, noTrap:true},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
+      txt:(P,E)=>`Move ${3+E}, through foes and past traps; the next hit on you is ${1+E} less.` },
+    'Along the wall, never across the floor.');
+  K(['mouse'],'mou_gap','Through the Gap','S',0,
+    { n:'Squeeze', ap:1, el:0, cd:1, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Squeeze through to any node within ${1+h(P)}, and hold Shield 1 this round.` },
+    { n:'Under the Door', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, carryAlly:(P,E)=>E>=2},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Slip to any node within ${2+E}${E>=2?', bringing an ally beside you,':''} and you are Hidden 1.` },
+    'If its head fits, the rest follows.');
+  K(['mouse'],'mou_stash','Seed Stash','C',0,
+    { n:'Nibble', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'engine', kind:'ap', val:1, dur:1}],
+      txt:(P,E)=>`Heal ${1+P}, and gain 1 AP next turn.` },
+    { n:'Winter Store', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'engine', kind:'ap', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Both heroes heal ${1+E} and gain 1 AP next turn.` },
+    'Seeds in every corner of the house.');
+  K(['mouse'],'mou_tiny','Tiny Target','T',0,
+    { n:'Duck', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'preempt', val:(P,E)=>2+h(P), reflect:0, reposition:1}],
+      txt:(P,E)=>`The next hit on you is ${2+h(P)} less, and you dodge a step from it.` },
+    { n:'Too Small to See', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+E, canMove:true},{v:'preempt', val:2, reflect:0}],
+      txt:(P,E)=>`Hidden ${1+E} even if you move, and the next hit on you is 2 less.` },
+    'The claw comes down where it was.');
+  K(['mouse'],'mou_squeak','Squeak','C',0,
+    { n:'Alarm', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'preempt', val:1, reflect:0, party:true},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`The next hit on each hero is 1 less, and your ally's next hit deals +1.` },
+    { n:'Ultrasound', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(E), area:'radius', radius:2},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Every foe within 2 is Weakened 1 for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}, and the nearest is Marked (the next hit on it deals +2).` },
+    'A sound too high for most ears.');
+
+  // Porcupine
+  K(['porcupine'],'por_quills','Quills','M',0,
+    { n:'Bristle', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+P, dur:1},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Shield 1 this round, and any foe that hits you in melee takes ${1+P}.` },
+    { n:'Quill Coat', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>2+E, dur:2},{v:'shield', val:2, dur:2}],
+      txt:(P,E)=>`Shield 2 for 2 rounds, and any foe that hits you in melee takes ${2+E}.` },
+    'Thirty thousand reasons to look elsewhere.');
+  K(['porcupine'],'por_rattle','Quill Rattle','C',0,
+    { n:'Rattle', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P), area:'adj'},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Every foe beside you is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}; the next hit on you is 1 less.` },
+    { n:'Warning Display', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:(P,E)=>1+E, area:'radius', radius:2}],
+      txt:(P,E)=>`Every foe within ${1+h(E)} is pushed 1, and every foe within 2 is Weakened 1 for ${1+E} rounds.` },
+    'It shakes its tail like a box of knives.');
+  K(['porcupine'],'por_climb','Tree Climb','S',0,
+    { n:'Climb', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Climb ${1+P}, and hold Shield 1 this round.` },
+    { n:'High Fork', ap:1, el:1, cd:3, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>2+E, carryAlly:(P,E)=>E>=2},{v:'engine', kind:'regen', val:1, dur:2}],
+      txt:(P,E)=>`Climb ${2+E}${E>=2?', carrying an ally beside you,':''} and heal 1 at the start of each turn for 2 rounds.` },
+    'Slow up the trunk, and nobody follows.');
+  K(['porcupine'],'por_back','Back Turn','T',0,
+    { n:'Turn Away', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'counter', dmg:(P,E)=>1+P, push:0, dur:1},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes ${1+P}.` },
+    { n:'Back into It', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:2},{v:'dot', kind:'quill', val:1, dur:2}],
+      txt:(P,E)=>`Back into a foe beside you: it takes ${3+E}, is Weakened 1 for 2 rounds, and takes 1 at the start of its next 2 turns.` },
+    'It charges backwards.');
+  K(['porcupine'],'por_shed','Quill Shed','M',0,
+    { n:'Flick', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`A quill stuck in a foe within 2: it takes ${2+P}.` },
+    { n:'Quill Spray', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'strike', kind:'zone_all', dmg:(P,E)=>1+E}],
+      txt:(P,E)=>`Every foe in your zone takes ${1+E}.` },
+    'They come loose, and stay in.');
+  K(['porcupine'],'por_bark','Bark Eater','T',0,
+    { n:'Gnaw Bark', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Heal ${1+P}, and hold Shield 1 this round.` },
+    { n:'Salt Lick', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'cleanse'},{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E}],
+      txt:(P,E)=>`Shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for ${2+E} rounds.` },
+    'It eats what nothing else will.');
+  K(['porcupine'],'por_waddle','Waddle','S',0,
+    { n:'Amble', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'thorns', val:1, dur:1}],
+      txt:(P,E)=>`Move ${1+P}; any foe that hits you in melee this round takes 1.` },
+    { n:'Unbothered', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Move ${2+E}, straight past foes, and you can't be Weakened or Rooted this round.` },
+    'In no hurry. Nothing makes it hurry.');
+
+  // Brown hare
+  K(['hare'],'har_march','Mad March','M',0,
+    { n:'Spar', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Melee ${2+P}, then hop 1.` },
+    { n:'Spring Fever', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'empower', val:1, uses:99, dur:(P,E)=>1+E},{v:'engine', kind:'ap', val:1, dur:1}],
+      txt:(P,E)=>`Every hit you deal for ${1+E} ${1+E > 1 ? 'rounds' : 'round'} deals +1, and gain 1 AP next turn.` },
+    'In spring, every hare goes a little mad.');
+  K(['hare'],'har_winter','White Winter','T',0,
+    { n:'Snow Coat', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'hazardImmune', dur:2},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Hidden 1, Shield 1 this round, and ignore hazards for 2 rounds.` },
+    { n:'Whiteout', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:1, party:true, radius:2},{v:'hazardImmune', dur:(P,E)=>1+E, party:true}],
+      txt:(P,E)=>`You and an ally within 2 are Hidden 1, and both ignore hazards for ${1+E} rounds.` },
+    'Brown in summer, white by the first snow.');
+  K(['hare'],'har_thump','Thump','C',0,
+    { n:'Thump', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'preempt', val:(P,E)=>1+h(P), reflect:0, party:true}],
+      txt:(P,E)=>`Thump a warning: the next hit on each hero is ${1+h(P)} less.` },
+    { n:'Ground Drum', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'radius', radius:(P,E)=>1+E},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'}],
+      txt:(P,E)=>`Every foe within ${1+E} is Weakened 1 this round, and your ally gains 1 AP next turn.` },
+    'A back foot on the ground: danger.');
+
+  // Black hare
+  K(['black_hare'],'bha_bolt','Shadow Bolt','S',0,
+    { n:'Bolt', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'hidden', dur:1, canMove:true}],
+      txt:(P,E)=>`Move ${2+P}, passing foes, and you are Hidden 1 even if you move.` },
+    { n:'Into the Dark', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true}],
+      txt:(P,E)=>`Vanish to any node within ${3+E}, Hidden ${1+h(E)} even if you move.` },
+    'A dark shape, and then no shape.');
+  K(['black_hare'],'bha_kick','Night Kick','M',0,
+    { n:'Kick', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:2}],
+      txt:(P,E)=>`Melee ${2+P}, and kick it back 2.` },
+    { n:'From Nowhere', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'move', n:2, free:true}],
+      txt:(P,E)=>`Melee ${3+E} that ignores Shield, then spring 2 away.` },
+    'You feel it before you see it.');
+  K(['black_hare'],'bha_forage','Midnight Forage','C',0,
+    { n:'Graze', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Heal ${1+P}, and reveal within 2.` },
+    { n:'Moonless Field', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'hidden', dur:1, party:true, radius:1}],
+      txt:(P,E)=>`Both heroes heal ${1+E}; you and an ally beside you are Hidden 1.` },
+    'It eats when nothing else can see it eat.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

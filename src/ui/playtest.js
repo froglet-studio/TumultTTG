@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.51.0',
+    version: '2.52.0',
     items: [
+      {
+        text: 'Four gnawers join: Field Mouse, Porcupine, Brown Hare and Black Hare. They share the jerboa’s traits: every gnawer has Gnawing Incisors, the mouse and porcupine its Vibrissae, the hares its Leap, and the hares and mouse its Erratic Bounding. The two hares also share Long Ears, Boxing and Lie Low. Is the porcupine’s prickly defence fun to play, and do the hares feel different from each other?',
+      },
       {
         text: 'Seven hoofed animals join: Yak, Bison, Oryx, Bighorn Ram, Moose, Deer and Zebra. All seven share Hooves, Herd Ring, Wide Eyes and Kick; the horned four share Horn Charge and Ruminate; moose and deer share Antlers and Bound Away. Each has three to five traits of its own. Do the seven feel different from each other, or does the shared half drown them out?',
       },
