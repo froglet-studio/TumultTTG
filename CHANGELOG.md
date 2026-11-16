@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.51.0 — 2026-11-16 — the hoofed animals
+
+The sixth branch of the tree (`docs/design/11-clades.md`): seven painted hoofed animals, each with nine traits.
+
+- **Yak, Bison, Oryx, Bighorn Ram, Moose, Deer and Zebra.**
+- All seven carry **Hooves**, **Herd Ring**, **Wide Eyes** and **Kick**. The horned four (yak, bison, oryx, ram) share **Horn Charge** and **Ruminate**; moose and deer share **Antlers** and **Bound Away**.
+- Traits of each one's own:
+  - yak: Thick Coat, Pack Bearer, Thin Air
+  - bison: Stampede, Wallow, Shoulder Hump
+  - oryx: Rapier Horns, Desert Store, Mirage Walk
+  - ram: Headbutt, Sure Hooves, Curled Horns
+  - moose: Wade Deep, Bellow, Stand Ground
+  - deer: Alert Ears, Dapple, Spring Away
+  - zebra: Dazzle Stripes, Herd Bolt, Bite Fight, Waterhole, Stripe Wall
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Test harness:** a simulated mission now stops at its 40th round by the mission's own count. It used to count calls, so a mission resumed from a save ran three rounds longer than the same mission played straight, and the save-replay test failed whenever a mission reached the cap.
+- Balance: 240 drafted runs, look-ahead player, the same seeds on both: main wins 86, this release 70. Runs with a hoofed clade win 27%, runs without 32%. On a first pass the hoofed clades won less, so Kick, Antlers and Stand Ground hit 1 harder, Herd Ring shields 1 more, and Wide Eyes and Stampede add +1 to the next hit. Main gets harder, not easier.
+
 ## 2.50.0 — 2026-11-16 — the sea mammals
 
 The fifth branch of the tree (`docs/design/11-clades.md`): three painted sea mammals, each with nine traits.

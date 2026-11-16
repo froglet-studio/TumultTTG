@@ -957,4 +957,287 @@
       fx:[{v:'hidden', dur:1, party:true, radius:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
       txt:(P,E)=>`You and an ally within 2 are Hidden 1, and your next hit deals +${1+E}.` },
     'The unicorn of the sea, seen mostly as a shape under the ice.');
+  /* ───────────────────────── HOOFED ANIMALS ─────────────────────────
+     yak · bison · oryx · bighorn ram · moose · deer · zebra. Every hoofed animal carries Hooves, Herd Ring,
+     Wide Eyes and Kick; the horned four Horn Charge and Ruminate; moose and deer Antlers and Bound Away. */
+  const HOOVED = ['yak','bison','oryx','ram','moose','deer','zebra'];
+  const HORNED = ['yak','bison','oryx','ram'];
+  const ANTLERED = ['moose','deer'];
+  S('yak', { name: 'Yak', lean: 'T/M', branch: 'Hoofed animals', icon: '🐂',
+    tagline: 'A shaggy load-carrier of the high cold, steady where the air runs thin.' });
+  S('bison', { name: 'Bison', lean: 'M/T', branch: 'Hoofed animals', icon: '🦬',
+    tagline: 'A ton of shoulder and fur that faces the storm head-on.' });
+  S('oryx', { name: 'Oryx', lean: 'S/T', branch: 'Hoofed animals', icon: '🐐',
+    tagline: 'A desert antelope with horns like rapiers and water saved for later.' });
+  S('ram', { name: 'Bighorn Ram', lean: 'M/S', branch: 'Hoofed animals', icon: '🐏',
+    tagline: 'Cliff-walker with curled horns and a skull built for collisions.' });
+  S('moose', { name: 'Moose', lean: 'M/C', branch: 'Hoofed animals', icon: '🫎',
+    tagline: 'Tall, solitary and wading. Gentle until it very suddenly is not.' });
+  S('deer', { name: 'Deer', lean: 'S/C', branch: 'Hoofed animals', icon: '🦌',
+    tagline: 'All ears and spring. Gone before you knew it had seen you.' });
+  S('zebra', { name: 'Zebra', lean: 'C/S', branch: 'Hoofed animals', icon: '🦓',
+    tagline: 'A herd in stripes that bites, kicks and never stands alone.' });
+
+  K(HOOVED,'hoof_hooves','Hooves','S',0,
+    { n:'Trot', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+P}],
+      txt:(P,E)=>`Move ${3+P}.` },
+    { n:'Gallop', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+E, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Move ${3+E}, passing foes and ignoring hazards this round; your next hit this turn deals +1.` },
+    'Built for ground, and lots of it.', 'Hoofed animals');
+  K(HOOVED,'hoof_ring','Herd Ring','T',0,
+    { n:'Close Ranks', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1, party:true, allyRange:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${2+h(P)} this round.` },
+    { n:'Ring of Horns', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:1, party:true},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:1}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+E} this round; the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+    'Young in the middle, everyone else facing out.', 'Hoofed animals');
+  K(HOOVED,'hoof_eyes','Wide Eyes','S',0,
+    { n:'Look Around', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:(P,E)=>1+h(P), reflect:0},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Reveal within ${2+P}; the next hit on you is ${1+h(P)} less, and your next hit this turn deals +1.` },
+    { n:'Nothing Behind Me', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'reveal', radius:99, dur:1},{v:'preempt', val:(P,E)=>1+E, reflect:0, party:true}],
+      txt:(P,E)=>`Reveal the whole board this round; the next hit on each hero is ${1+E} less.` },
+    'Eyes on the sides of the head: it sees almost all the way round.', 'Hoofed animals');
+  K(HOOVED,'hoof_kick','Kick','M',0,
+    { n:'Back Kick', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:2}],
+      txt:(P,E)=>`Melee ${3+P}, and push it 2.` },
+    { n:'Double Barrel', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:(P,E)=>2+h(E)},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${3+E}, push it ${2+h(E)}, and it is Weakened 1 this round.` },
+    'Both hind feet, all at once.', 'Hoofed animals');
+  K(HORNED,'hoof_horn','Horn Charge','M',0,
+    { n:'Lower Horns', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Charge up to 2 toward a foe within 3; if you end beside it, melee ${2+P} and push it 1.` },
+    { n:'Gore', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'force', kind:'push', n:2}],
+      txt:(P,E)=>`Melee ${3+E} that ignores Shield, and push it 2.` },
+    'Head down, and go.', 'Hoofed animals');
+  K(HORNED,'hoof_chew','Ruminate','T',0,
+    { n:'Chew the Cud', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(P)},{v:'hasten', n:1}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+h(P)} rounds, and your track returns 1 column sooner.` },
+    { n:'Four Stomachs', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>2+E},{v:'cleanse'},{v:'engine', kind:'regen', val:1, dur:2}],
+      txt:(P,E)=>`Heal ${2+E}, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.` },
+    'It eats now and digests later.', 'Hoofed animals');
+  K(ANTLERED,'hoof_antlers','Antlers','M',0,
+    { n:'Rake', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${3+P}; it is Weakened 1 this round.` },
+    { n:'Lock Antlers', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:1},{v:'weaken', val:1, dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Melee ${3+E}, and lock it in place: Anchored 1 and Weakened 1 for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
+    'Grown fresh every year, and dropped every winter.', 'Hoofed animals');
+  K(ANTLERED,'hoof_bound','Bound Away','S',0,
+    { n:'Bound', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Bound ${2+P}, passing foes; the next hit on you is 1 less.` },
+    { n:'Over the Fence', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Leap to anywhere within ${2+E}, height included, and you are Hidden 1.` },
+    'One spring and it is over the hedge.', 'Hoofed animals');
+
+  // Yak
+  K(['yak'],'yak_coat','Thick Coat','T',0,
+    { n:'Shaggy', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Shield ${2+h(P)} and ignore hazards this round.` },
+    { n:'Winter Fleece', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true, allyRange:1},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+E} for 2 rounds; you can't be Weakened or Rooted this round.` },
+    'Wool that keeps out a mountain night.');
+  K(['yak'],'yak_bearer','Pack Bearer','C',0,
+    { n:'Carry', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+P},{v:'shield', val:1, dur:1, party:true, allyRange:1}],
+      txt:(P,E)=>`Your ally moves ${1+P}; if they end beside you, you both hold Shield 1 this round.` },
+    { n:'Supplies', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, target:'ally'},{v:'heal', n:1, party:true}],
+      txt:(P,E)=>`Both heroes heal 1, and your ally gains 1 AP at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
+    'It carries the camp up the mountain.');
+  K(['yak'],'yak_air','Thin Air','S',0,
+    { n:'Steady Breath', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Gain 1 AP next turn, and heal 1.` },
+    { n:'High Pass', ap:1, el:1, cd:3, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+E, carryAlly:(P,E)=>E>=2},{v:'shield', val:2, dur:1}],
+      txt:(P,E)=>`Climb ${1+E}${E>=2?', carrying an ally beside you,':''} and hold Shield 2 this round.` },
+    'Where other lungs give out, it keeps walking.');
+
+  // Bison
+  K(['bison'],'bis_stampede','Stampede','M',0,
+    { n:'Thunder', ap:1, el:0, cd:2, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Move ${2+P}, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1.` },
+    { n:'Run Them Down', ap:2, el:1, cd:4, dur:0, tgt:'foe_adj_all',
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1, area:true}],
+      txt:(P,E)=>`Every foe beside you takes ${2+E} and is pushed 1.` },
+    'The ground shakes before you see them.');
+  K(['bison'],'bis_wallow','Wallow','T',0,
+    { n:'Dust Bath', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'cleanse'},{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Shed Anchored, Weakened and damage over time; Shield ${1+h(P)} this round, and heal 1.` },
+    { n:'Mud Coat', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'shield', val:2, dur:2}],
+      txt:(P,E)=>`Shield 2 for 2 rounds, and any foe that hits you in melee takes ${1+E}.` },
+    'Roll in it. It keeps the flies off.');
+  K(['bison'],'bis_hump','Shoulder Hump','M',0,
+    { n:'Shoulder', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Melee ${3+P}, and push it 1.` },
+    { n:'Plough the Snow', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E},{v:'force', kind:'push', n:(P,E)=>1+h(E)},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Melee ${4+E}, push it ${1+h(E)}, and you can't be Weakened or Rooted this round.` },
+    'Its head is a snowplough, and so is the rest of it.');
+
+  // Oryx
+  K(['oryx'],'ory_rapier','Rapier Horns','M',0,
+    { n:'Thrust', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`Strike a foe within 2 for ${2+P}.` },
+    { n:'Skewer', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>3+E, pierce:true},{v:'stripShield', amount:2}],
+      txt:(P,E)=>`Strike a foe within 2 for ${3+E} that ignores Shield, and 2 of its Shield comes off.` },
+    'A metre of straight, sharp horn.');
+  K(['oryx'],'ory_store','Desert Store','T',0,
+    { n:'Make Do', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'hazardImmune', dur:2}],
+      txt:(P,E)=>`Heal ${1+P}, and ignore hazards for 2 rounds.` },
+    { n:'Saved Water', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
+      txt:(P,E)=>`Both heroes heal ${1+E}, and heal 1 at the start of each turn for 2 rounds.` },
+    'It drinks from the dew, and needs little else.');
+  K(['oryx'],'ory_mirage','Mirage Walk','S',0,
+    { n:'Shimmer', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'preempt', val:(P,E)=>1+h(P), reflect:0, reposition:1}],
+      txt:(P,E)=>`Move ${2+P}; the next hit on you is ${1+h(P)} less, and you dodge a step from it.` },
+    { n:'Heat Haze', ap:1, el:1, cd:4, dur:0, tgt:'node_r3',
+      fx:[{v:'decoy', dur:(P,E)=>1+E},{v:'hidden', dur:1, canMove:true}],
+      txt:(P,E)=>`A shimmer draws foes to a node within 3 for ${1+E} rounds, and you are Hidden 1 even if you move.` },
+    'Out there, in the heat, nothing is quite where it seems.');
+
+  // Bighorn ram
+  K(['ram'],'ram_butt','Headbutt','M',0,
+    { n:'Butt', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Melee ${3+P}, and push it 1.` },
+    { n:'Clash', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:3, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>4+E, ifAdjacent:true},{v:'force', kind:'push', n:2}],
+      txt:(P,E)=>`Charge up to 3 toward a foe within 3; if you end beside it, melee ${4+E} and push it 2.` },
+    'The crack can be heard a mile off.');
+  K(['ram'],'ram_sure','Sure Hooves','S',0,
+    { n:'Ledge Walk', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>2+P},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Climb ${2+P}; nothing can push or pull you this round.` },
+    { n:'Cliff Run', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:1}],
+      txt:(P,E)=>`Spring to anywhere within ${2+E}, height included; your next hit this turn deals +${1+E}.` },
+    'A ledge the width of a hoof is plenty.');
+  K(['ram'],'ram_curl','Curled Horns','T',0,
+    { n:'Brace', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'preempt', val:(P,E)=>2+h(P), reflect:1}],
+      txt:(P,E)=>`The next hit on you is ${2+h(P)} less, and its attacker takes 1.` },
+    { n:'Hard Head', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:2, dur:1}],
+      txt:(P,E)=>`Shield 2 this round; for 2 rounds, the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+    'A skull built to take what it gives.');
+
+  // Moose
+  K(['moose'],'moo_wade','Wade Deep','S',0,
+    { n:'Wade', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'hazardImmune', dur:2}],
+      txt:(P,E)=>`Move ${2+P}, and ignore hazards for 2 rounds.` },
+    { n:'Dive for Weed', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'heal', n:(P,E)=>2+E},{v:'hazardImmune', dur:2}],
+      txt:(P,E)=>`Duck under: Hidden 1, heal ${2+E}, and ignore hazards for 2 rounds.` },
+    'It feeds with its whole head under the lake.');
+  K(['moose'],'moo_bellow','Bellow','C',0,
+    { n:'Grunt', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P), area:'radius', radius:2}],
+      txt:(P,E)=>`Every foe within 2 is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}.` },
+    { n:'Rut Call', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'pull', n:1, area:true, radius:(P,E)=>2+E},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:1}],
+      txt:(P,E)=>`Every foe within ${2+E} is drawn 1 toward you; the next to hit you in melee takes ${1+E} and is pushed 1.` },
+    'A low call across the bog, and something answers.');
+  K(['moose'],'moo_stand','Stand Ground','M',0,
+    { n:'Plant', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${3+P}, and hold Shield 1 this round.` },
+    { n:'Trample', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E},{v:'anchor', who:'foe', dur:1},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Melee ${4+E}, pin it (Anchored 1), and you can't be Weakened or Rooted this round.` },
+    'It does not run from wolves. It waits for them.');
+
+  // Deer
+  K(['deer'],'dee_ears','Alert Ears','S',0,
+    { n:'Ears Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Reveal within ${2+P}, and step 1.` },
+    { n:'Warning Snort', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'preempt', val:(P,E)=>1+E, reflect:0, reposition:1, party:true},{v:'reveal', radius:3, dur:1}],
+      txt:(P,E)=>`Reveal within 3; the next hit on each hero is ${1+E} less, and they dodge a step from it.` },
+    'Every ear turns before the twig snaps.');
+  K(['deer'],'dee_dapple','Dapple','T',0,
+    { n:'Freeze', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Freeze in the light and shade: Hidden ${1+h(P)}, and Shield 1 this round.` },
+    { n:'Fawn Spots', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:(P,E)=>1+E, party:true, radius:1},{v:'heal', n:1, party:true}],
+      txt:(P,E)=>`You and an ally beside you are Hidden ${1+E}; both heroes heal 1.` },
+    'Spots that look exactly like sunlight through leaves.');
+  K(['deer'],'dee_spring','Spring Away','S',0,
+    { n:'Pronk', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'move', n:2, free:true}],
+      txt:(P,E)=>`Melee ${1+P}, then spring 2 away.` },
+    { n:'White Flag', ap:1, el:1, cd:3, dur:0, tgt:'node_r3',
+      fx:[{v:'decoy', dur:(P,E)=>1+E},{v:'move', n:2, free:true}],
+      txt:(P,E)=>`Flash your tail: a decoy draws foes to a node within 3 for ${1+E} rounds, and you spring 2.` },
+    'Straight up, all four feet, as if on springs.');
+
+  // Zebra
+  K(['zebra'],'zeb_dazzle','Dazzle Stripes','C',0,
+    { n:'Dazzle', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`A foe within 2 is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}; the next hit on you is 1 less.` },
+    { n:'Moving Stripes', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(E), area:'radius', radius:(P,E)=>1+E},{v:'hidden', dur:1, canMove:true}],
+      txt:(P,E)=>`Every foe within ${1+E} is Weakened 1 for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}, and you are Hidden 1 even if you move.` },
+    'Hard to count, harder to pick out.');
+  K(['zebra'],'zeb_bolt','Herd Bolt','S',0,
+    { n:'Bolt', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+P},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Your ally moves ${1+P}, and you step 1.` },
+    { n:'All Together', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'ap', val:1, dur:1, party:true},{v:'preempt', val:(P,E)=>1+E, reflect:0, party:true}],
+      txt:(P,E)=>`Both heroes gain 1 AP next turn, and the next hit on each is ${1+E} less.` },
+    'When one runs, they all run.');
+  K(['zebra'],'zeb_bite','Bite Fight','M',0,
+    { n:'Nip', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${2+P}; it is Weakened 1 this round.` },
+    { n:'Rear and Bite', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'strike', kind:'melee', dmg:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Rear up: melee ${3+E}, then melee ${1+h(E)}.` },
+    'It fights with its teeth as much as its feet.');
+  K(['zebra'],'zeb_water','Waterhole','T',0,
+    { n:'Drink', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'cleanse'}],
+      txt:(P,E)=>`Heal ${1+P}, and shed Anchored, Weakened and damage over time.` },
+    { n:'Drink in Turns', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Both heroes heal ${1+E} and hold Shield 1 this round.` },
+    'One drinks; the others watch.');
+  K(['zebra'],'zeb_wall','Stripe Wall','T',0,
+    { n:'Shoulder to Shoulder', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1, party:true, allyRange:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${2+h(P)} this round.` },
+    { n:'Wall of Stripes', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:1, party:true, radius:1},{v:'shield', val:(P,E)=>1+E, dur:1, party:true}],
+      txt:(P,E)=>`You and an ally beside you are Hidden 1; both heroes hold Shield ${1+E} this round.` },
+    'Stand close and the herd becomes one blur.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
