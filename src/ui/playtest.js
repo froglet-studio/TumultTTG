@@ -19,10 +19,37 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.34.0',
+    version: '2.44.0',
     items: [
       {
         text: 'A new mission that is not a fight: Survey. Survey marks lie across the whole board and night is coming. Stand on one and Interact to tag it, for 2 AP or one die of the mark’s colour (Omni counts). The far ones start veiled (a ringed ! on the board): stand within 1 of one, or reach it with a reveal, to sight it first. It sits in the middle of the route, in place of the second Cascade. Did the two of you split up? Did a rolled element ever go to a mark instead of a card, and was that a real choice? Use the panel to start one: Survey, any tier.',
+      },
+      {
+        text: 'Three new clades, the first of the animals painted on Cosmic Shore pilots: Orangutan, Ring-Tailed Lemur and Mandrill. Primates share some traits with Humans and with each other (Grooming, Canopy Leap, Troop Call), and each has four of its own. A human-orangutan pilot can take Tool Use twice: the second time it is 2 UP for that card. Do the three feel different from each other, and from a Human?',
+      },
+      {
+        text: 'Dice look like dice again, in their real shapes: the plain die is a d20 (an icosahedron), an element’s die a d8 (an octahedron) and the ethereal die a d12 (a dodecahedron), with the face it shows in the middle. The same shapes tumble in the roll tray. Your abilities are now cards: each has art showing what its two faces do, the Physical side in steel on the left and the Ethereal side in its etherion’s colour on the right, over the clade it comes from, and each face button carries the same picture. Can you tell what a card does from its art? Do the dice read at a glance?',
+      },
+      {
+        text: 'The dice got a new look. Your dice are now held like a hand of cards: each one is a small card with its symbol in the corner, a picture of what it does (Mass shows Strike and Shove, Charge Arc and Reach, Space Scramble, Time Brace, Omni pays for anything, AP shows its number), and its size (d20 plain, d8 element, d12 ethereal). Hover one and it lifts. Omni now uses the omnicrystal symbol from Cosmic Shore. When a new round begins, each pilot’s dice tumble across a tray at the foot of the board in their own shapes, land one after another on what they rolled, and are dealt into your hand. The story line under End Round is now readable (it was dark text on a dark box). Is the tray ever in the way? Can you read what each die does at a glance?',
+      },
+      {
+        text: 'Two players now have a purse each. The 6 ◇ you start with are shared out (3 each), and so is what a mission earns. Your pilot buys, sells and fuels its gear from your own purse, and a skipped trait pays you. The haven’s full repair and event prices come from the fuller purse first. Each screen now shows only your own Buy, Sell and Train buttons; your partner’s upgrade shows "… is choosing" until they are done. Both purses show at the top, named, with yours in gold. Solo play is unchanged: one player, one purse. Did you miss being able to pool crystals? Would a "give ◇" button help?',
+      },
+      {
+        text: 'Moving the objective forward is now celebrated. Breaking a seal, turning the winch or the valve, holding the beacon, checking a cache or lifting a crate brings up a gold card on the board ("A seal breaks", "The valve turns"…) with a bar that fills from where the objective was to where it is now, gold rings where it happened, and a rising chime (with the sound on). The objective pill in the top bar fills with gold as you go. You can also see beforehand what will count: Interact glows gold when it would count, a play that would move the objective gets a gold ◎, and hovering it says "◎ moves the objective forward". Do you now know when you are doing the right thing? Is the card ever in the way?',
+      },
+      {
+        text: 'The mission screen now folds away what you are not using, so the board is much bigger. The pilot you are not playing folds to its vitality and dice, above the one you are; click it to switch, or "Show cards" to see its hand without switching. The log folds to its last lines (▾ opens it), the enemy intents fold to the forecast (click their heading), and a long objective folds to two lines (click it to read it all). Your choices are remembered on this computer. Clicks should also answer faster: panels redraw only when something in them changed, the ✦ hints are worked out just after the screen updates, and online, your own moves show on your screen at once instead of waiting for the host. Does anything feel slow still? Did you ever miss something that was folded away?',
+      },
+      {
+        text: 'The same player now goes first every round (Player 1, then Player 2, then the foes). Nobody takes two turns in a row any more, so you can plan your next turn while your partner takes theirs, knowing nothing new will land on you before you act. Does the wait feel like planning time now?',
+      },
+      {
+        text: 'Combos are now shown. A play the world would add to gets a gold ✦: a shove under heavy gravity (the foe slams down for extra damage), a hit on a foe your partner Marked (the Mark is spent for +2), or anything that breaks a foe’s guard. Hover it and the line above the board says what the world adds, worked out exactly on a copy of the mission. A catch shows as ⚠, for example a foe that holds fast against a shove, or a blow that finds an afterimage. Did a ✦ make you try something you would not have? Did one ever promise something that did not happen?',
+      },
+      {
+        text: 'A mission now has a time of day. A day on Tumult lasts about an hour, so six rounds make one: the board brightens at dawn and noon, goes rose at dusk and blue at night, and the top bar says which. It changes nothing in play. Windy places blow gusts across the board toward the edge the wind pushes to, and fog drifts low. As each round begins the Terminal types a readout (the place, its pull and weather at the start; then the round, the hour and what is left on the clock). Plays, hits, shields, heals and falls now flash on the board, a state you gain floats up by its keyword, and each etherion has its own sound (Mass deep, Charge buzzing, Space airy, Time a bell). Turn the sound on with the speaker button. Is anything too much, or too quiet? Does night ever make the board hard to read?',
       },
       {
         text: 'The route is redrawn as the climb it is. Each leg lies over its painting and says how it is travelled (by land, by sea, by air), with what that ground’s guides would tell you. Each stop is a painted roundel of the place it is played in, with its name, its kind, its tier and its pull: ▲ heavy (uphill) or ▼ light (downhill). Hover a stop to see the place. The road you took is lit gold, the next choices glow, stops you passed by fade, and your two pilots stand where you last stopped. Does the route help you choose where to go? Does it feel like a journey?',
@@ -58,7 +85,7 @@
         text: 'After every won mission each pilot now gets an upgrade of their own: a trait offer of three cards that fit that pilot (or skip for +2 ◇), and after an elite a boon each. With two players, each picks for their own pilot. Did both of you have a pick you cared about? Was one offer always better than the other?',
       },
       {
-        text: 'Two players now take turns. In each round one player flies their pilot and presses End turn, then the other does the same, and the foes act once both are done. Who goes first swaps every round. This applies on one screen and online. Does waiting for your partner feel like planning together, or like dead time?',
+        text: 'Two players now take turns. In each round one player flies their pilot and presses End turn, then the other does the same, and the foes act once both are done. The same player goes first every round, so nobody takes two turns in a row. This applies on one screen and online. Does waiting for your partner feel like planning together, or like dead time?',
       },
       {
         text: 'Online play now says why when it cannot connect. A partner who only has view access to the page (a share link) cannot write to the game, so the title tells them to ask for an email invite as Editor. Play online on the separate invite-only Tumult Online page. Did joining work first time?',

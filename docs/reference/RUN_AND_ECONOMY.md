@@ -4,6 +4,8 @@
 
 A hero is **Human + two bloodlines**, **6 trait cards** to start, **6 Upgrade Points** spent, **26 vitality**, a **15-die pool**. Over a run a hero grows to at most **9 cards, never more than 3 of 9 from one bloodline** (the v1.0 cap, kept verbatim — it is the draft's balance lever).
 
+**Shared traits (2.42).** A trait can be carried by several clades: written once for a branch of the tree (every primate, every cat) or as a variant in an unrelated animal (Garrett, 2026-11-16). A card lists them in `clades` (`T.shareTrait` adds one). A shared trait counts toward whichever of the hero's clades has room under the cap (`T.cladeSlots`). A hero whose two clades both carry a trait holds it once; it can be offered and taken once more, and that second pick is not a card but **2 Upgrade Points bound to it** (`DOUBLE_UP`, kept in `hero.bound`): spent on that card's P or E before any free point, never on another card, and given back to the card, not the free pool, when taken off. It is the only way a card can come up twice. A pick of it in the opening draft does not count toward the six cards.
+
 **Two ways to build.** *Quick Build* takes one of six pre-made heroes (Cavitt the Brawler-in-the-Cloud, Marish the Tidewarden, Ossa the Bulwark, Veil the Nightwing, Mycel the Network, Kess the Catapult). *Draft* opens packs of 4 cards drawn across your three pools, pick 1, six times; you may pass a pack. Then spend 6 UP on P/E tracks (caps 3/3 per card). Unspent UP carries over.
 
 **P vs E (the v1.0 grammar, unchanged).** P deepens the Physical face's numbers — reliable, AP-fed. E awakens the Ethereal face — it cannot be played until its card has E 1 — and then scales its *capability*, something P can never buy at any level. A new hero sets out with at least two cards awakened (`T.RULES.START_AWAKE`): the pre-made heroes are written that way, and a drafted hero's first two E points go to its strongest signatures from the starting six UP (the player can move them; Confirm tops the count back up to two if UP is left). Hover a face to see its exact numbers at the hero's current P/E.
@@ -51,6 +53,8 @@ Once per run, losing a **non-boss** mission does not end the run: no rewards, bo
 ## Omnicrystals and gear
 
 ◇ is the **managed economy** (v1.0: "etherions = weather, omnicrystals = supply"). It is both currency and **fuel**: gear abilities cost ◇ per use and have their own small cooldown (not the track). Each hero carries up to **2 gear**; Havens stock 3 at a time (prices 4–7 ◇), and you may sell for half.
+
+**A purse per player** (since 2.39; Garrett, 2026-11-15). One player keeps one purse for both pilots, so a solo run plays exactly as before. Two players keep one each (`run.purses`, `src/engine/party.js`). The 6 ◇ a squad starts with are shared out when the route opens. A pilot buys gear and consumables, sells gear and fuels its gear in a mission from its own player's purse, and a skipped trait (+2 ◇) or a Deep Pockets boon (+2 ◇) pays its own player. What the squad earns together (a mission's crystals, an event's) is shared out evenly, the odd crystal to the emptier purse. What it pays together (a haven's full repair, an event's price) comes from the fuller purse first. The audit reads the crystals together and halves every purse. Each screen shows only its own player's buy, sell and train buttons; the partner's purse and choices are shown, never offered.
 
 | Gear | Price | Verbs it grants |
 |---|---|---|

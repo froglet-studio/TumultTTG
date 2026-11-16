@@ -23,6 +23,9 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 - **Element symbols** (Mass, Charge, Space, Time) are Cosmic Shore's element petals (`froglet-studio/cosmic-shore`, MIT,
   © Froglet Inc., `Assets/Resources/ElementPetals/<element>_petal.png`), traced to SVG paths in `src/ui/icons.js`
   (2.29). Garrett, 2026-11-14: Froglet's Hypersea games share their resources freely.
+- **The Omni symbol** is Cosmic Shore's omnicrystal (`froglet-studio/cosmic-shore`, MIT, © Froglet Inc.,
+  `Assets/_Graphics/ElementIcons/OmniCrystal_Active.png`), redrawn as an SVG path in `src/ui/icons.js` (2.40;
+  Garrett, 2026-11-15).
 - **Chakra Petch** is © 2018 The Chakra Petch Project Authors, under the SIL Open Font License 1.1
   (`fonts/OFL.txt`). It is Cosmic Shore's display face. Subset with
   `pyftsubset ChakraPetch-SemiBold.ttf --unicodes=U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201D,U+2026,U+2022,U+2190-2193,U+00D7 --flavor=woff2`.

@@ -103,7 +103,7 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
     assert.ok(said.includes(h.name), `the forecast names ${h.name}`);
     if (h.after < h.hp) assert.ok(said.includes(`takes ${h.hp - h.after} (${h.after} left)`), said);
   }
-  const heading = Array.from(p.d.querySelectorAll('#mside .hero .hp')).map((el) => el.textContent);
+  const heading = f.heroes.map((h, i) => p.d.querySelector(`#mside .hero[data-arg="${i}"] .hp`).textContent);
   f.heroes.forEach((h, i) => assert.equal(heading[i].includes('→ ' + h.after), h.after !== h.hp, heading[i]));
 
   // "Copy save" hands over this exact moment. Where the page may not use the clipboard (as here),
@@ -235,7 +235,7 @@ test(
       JSON.stringify({
         round: m.round,
         rngs: m.rngs,
-        crystals: m.crystals,
+        purses: m.purses,
         heroes: m.heroes.map((h) => [h.uid, h.hp, h.pos, h.held, h.pool, h.track, h.states]),
         foes: m.enemies.map((e) => [e.uid, e.type, e.hp, e.pos, e.alive, e.intent]),
         log: m.log.length,

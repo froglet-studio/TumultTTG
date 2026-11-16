@@ -202,12 +202,22 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
   const to = B.T.reachableWalk(mB(), mB().heroes[1], B.T.apValue(mB().heroes[1]), false)[0];
   assert.ok(to != null, 'the guest has somewhere to walk');
   B.U.exec({ op: 'walk', hero: 1, node: to });
+  assert.equal(mB().heroes[1].pos, to, "the guest's screen moves at once, ahead of the host's answer");
+  // a state the host wrote before it reached the walk: the walk is played again on top, never undone
+  B.U.net.receive({
+    rev: B.U.net.rev + 0.5,
+    run: A.T.serializeRun(A.U.run),
+    fx: JSON.stringify(mA().fx),
+    results: '{}',
+    names: A.U.net.names,
+  });
+  assert.equal(mB().heroes[1].pos, to, 'an older state from the host does not undo the walk');
   await until(() => mA().heroes[1].pos === to && mB().heroes[1].pos === to, 'the walk on both screens');
   // and cannot act for the host's pilot, even by sending the command itself
   const pos0 = mA().heroes[0].pos;
-  const rev = A.U.net.rev;
-  B.U.exec({ op: 'walk', hero: 0, node: mA().heroes[0].pos === to ? pos0 : to });
-  await until(() => A.U.net.rev > rev, 'the host to answer');
+  const forged = { op: 'walk', hero: 0, node: mA().heroes[0].pos === to ? pos0 : to };
+  assert.equal(B.U.exec(forged).ok, false, "the guest's own screen refuses it at once");
+  A.U.net.carryOut('forged1', forged, [1]);
   assert.equal(mA().heroes[0].pos, pos0, "the host refuses a guest's command for the host's pilot");
 
   // the guest's turn is the last: ending it ends the round

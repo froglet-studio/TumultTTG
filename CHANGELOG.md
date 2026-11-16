@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.34.0 — 2026-11-14 — Survey, a second mission that is not a fight
+## 2.44.0 — 2026-11-16 — Survey, a second mission that is not a fight
 
 The next non-combat mission from the plan for two-player runs (`docs/design/03-missions.md`), aimed at turns where one move is clearly best.
 
@@ -9,9 +9,137 @@ The next non-combat mission from the plan for two-player runs (`docs/design/03-m
 - **Veiled marks.** Half the marks, the farthest first, start veiled (a ringed ! on the board). A veiled mark can't be tagged until a pilot stands within 1 of it or a reveal reaches it, which gives information verbs real work. A few foes wander between the marks, and a lurker joins from tier 2.
 - **On the route** it takes Cascade's place in the middle row (tier 2). Cascade still opens the run.
 - The look-ahead player sees both ways to pay. The heuristic heads for the nearest mark its partner is not nearer to, so the two split the board.
-- **Balance** (`node tools/sim.js 80 runs`, main → 2.34.0): heuristic 17 → 17, look-ahead 29 → 29. Survey cells over 40 missions, heuristic / look-ahead: t1 100/100%, t2 80/100%, t3 33/90%.
+- **Balance** (`node tools/sim.js 80 runs`, main → 2.44.0): heuristic 17 → 17, look-ahead 29 → 29. Survey cells over 40 missions, heuristic / look-ahead: t1 100/100%, t2 80/100%, t3 33/90%.
 - **Dull turns** (`node tools/turns.js 10`): Survey t1/t2/t3 31/24/35%, against 38/42/31% for the Cascade it replaces at tier 2. It started at 43% at tier 2 when marks took AP only and could be tagged from beside them.
 - No mission needs an ability: squads with no cards at all win Survey 100% at tier 1 and 94% at tier 2 (`ABILITY_AUDIT.md`).
+## 2.43.0 — 2026-11-16 — the primates
+
+Garrett: "every pilot is 1/3 human but other primates might have some of the same abilities as humans."
+
+The first branch of the tree: three primates painted on Cosmic Shore pilots join as clades, each with nine traits. Traits are written once for the branch they belong to (`src/data/clades.js`, plan in `docs/design/11-clades.md`).
+
+- **Orangutan, Ring-Tailed Lemur and Mandrill.** Each carries Human's Opposable Grip, plus other Human traits: the orangutan has Theory of Mind and Tool Use, the lemur and the mandrill Cooperative Instinct, the mandrill Pattern Recognition. A pilot who is human and orangutan holds Tool Use once, and taking it again gives 2 UP bound to it (2.42).
+- **Three primate traits.** Grooming (every primate: heal an ally and cleanse both; ethereal, both heal and hold Shield 1), Canopy Leap (the climbers: a climb that sets up a strike; ethereal, a leap with a shield for you and a neighbour) and Troop Call (the troop-livers: rally and empower an ally; ethereal, the whole squad hits harder and holds Shield 1).
+- **Four traits of each one's own**, so no primate is another with a new name: the orangutan's Long Reach, Leaf Shelter, Patient Study and Fruit Memory; the lemur's Sun Salute, Stink Fight, Scent Mark and Tail Signal; the mandrill's War Paint, Fang Yawn, Cheek Pouches and Ground Charge.
+- Each has a voice in the passages between stops.
+- A test holds the rule that every clade has a trait no clade on its branch carries.
+
+Audit: 228 faces, 0 narrow (two reveal faces were given a second use before merging), 0 hard-counter candidates, 0 collapsed gate cells. Simulation, `node tools/sim.js 40`, before and after: heuristic run wins 7/40 → 5/40, mission win 74% → 72%; look-ahead 13/40 → 14/40, 84% → 83%. Within noise; nothing got easier.
+
+## 2.42.0 — 2026-11-16 — traits shared across clades
+
+Garrett: "as you work your way up the taxonomical structure then you share traits", and "a peregrine falcon cheetah that pick both only has one card but picking it a second time converts to upgrade points for either the physical or ethereal upgrades but only for that card. it is the only way for it to appear a second time as well."
+
+The first step towards a bloodline for every animal on a Cosmic Shore pilot: the rule that lets one trait belong to several clades.
+
+- **A trait can belong to several clades** (`card.clades`, `T.shareTrait`, `T.cardsOf`). It counts toward whichever of the hero's clades has room under the three-per-clade cap (`T.cladeSlots`, `T.cladeCount`).
+- **Taken twice, it becomes upgrade points.** A hero whose two clades share a trait holds it once. It can be offered once more (in a pack, a reward or an event), and taking it gives 2 UP bound to that card (`RULES.DOUBLE_UP`, `hero.bound`): spent on its P or E before any free point, never elsewhere. The card says so before you take it, and shows what is still bound. In the opening draft such a pick does not use up one of the six cards.
+- Saves go to version 15 (`hero.bound`); a 2.41 save loads with nothing bound.
+- No trait is shared yet, so nothing plays differently today. The bloodlines that use it come next.
+
+## 2.41.0 — 2026-11-15 — dice like dice, abilities like cards
+
+Garrett, on 2.40: "the abilities should look like cards that dice shoud look like dice", and "the dice should look like the 20 sided dice that they are and the 12 sides should look 12 sided, etc."
+
+- **Dice in their real shapes.** A banked die is drawn as its polyhedron. The plain die is a d20, an icosahedron seen down a corner: a hexagon with the front face in the middle. An element's die is a d8, an octahedron. The ethereal die is a d12, a dodecahedron seen face on: a decagon round a pentagon. The face the die shows sits in the middle, in its etherion's colour (AP shows its number). The roll tray uses the same shapes (`U.DIE_SHAPE`, `U.dieSVG`). Each die lies a little turned, the same way every time it is drawn. The tooltip still names the Channel an etherion is on its own.
+- **Abilities as cards.** Each ability in the hand is a card framed in its etherion's colour. At the top is art showing what its two faces do: the Physical side in steel on the left and the Ethereal side in its colour on the right, each face's verb drawn large, over the silhouette of the clade it comes from (`U.cardArt`, verb pictures from `U.verbIconKey`). The Ethereal side dims until the card is awakened. Each face button carries its picture. The large trait cards in the draft and rewards show the same art.
+- No rule or balance changes.
+
+## 2.40.0 — 2026-11-15 — dice like a hand of cards
+
+Garrett: "The typed text under the end round is black on dark. very hard to read. lets steadily upgrade the look. start with the dice. the omni could use the symbol from cosmic shore. it could also animate 4 d20s rolling at the end of your turn. it could feel more like a hand of cards with art depicting the actions."
+
+- **Readable story line.** The text you type under End Round was drawn in the page's background colour. It is now the light text colour.
+- **Dice as a hand of cards.** Each banked die is a small card: its face's symbol in the corner, the action it pays for as its picture (AP shows its number; Mass shows Strike and Shove, Charge Arc and Reach, Space Scramble, Time Brace, taken from the Channel basic actions; Omni shows "Any"), a caption, and its size (20, 8 or 12). The hand fans gently, overlaps a little once it holds more than seven, and a card lifts on hover. The tooltip names the Channels too.
+- **Cosmic Shore's Omni symbol.** Omni is drawn as Cosmic Shore's omnicrystal (`OmniCrystal_Active.png`, MIT), redrawn as an SVG path, wherever an etherion symbol is shown, including the dice key.
+- **The roll, shown.** When a round begins (and when dice are rerolled), each pilot's new dice tumble across a tray at the foot of the board in their own shapes (a d20, an element's d8, the ethereal d12), flicker through faces they could show and land one by one on the rolled faces, with a knock as the last one lands. Then each is dealt into the hand. The roll effect now says each die's kind and where it was banked (`kinds`, `at`). The effects queue is not saved, so saves do not change. Reduced-motion settings skip the tumbling.
+- No rule or balance changes.
+
+## 2.39.0 — 2026-11-15 — a purse each
+
+Garrett, after a two-player playtest: "the money that we spend in the shop. we should each have our own. we should have our own buttons instead of looking like we can upgrade or buy things for each other." He chose a purse per player, with one player keeping one purse.
+
+- **A purse per player.** Two players keep their omnicrystals apart (`run.purses`). A solo run keeps one purse and plays exactly as before.
+  - The starting 6 ◇ are shared out when the route opens: 3 each.
+  - A pilot buys gear and consumables, sells gear, and fuels its gear in a mission from its own player's purse. A skipped trait and Deep Pockets pay their own player. A finishing blow's salvage goes to whoever struck it.
+  - What the squad earns together (a mission's crystals, an event's) is shared out evenly; the odd crystal goes to the emptier purse.
+  - What the squad pays together (the haven's full repair, an event's price) comes from the fuller purse first. The audit halves every purse.
+- **Your own buttons.** Each screen offers only its own pilot's Buy, Sell and Train buttons, and its own trait and boon choices. The partner's upgrade shows "… is choosing" until it is done. Both purses are shown, named, with this screen's own marked in gold. The mission's top bar shows them as one pill (yours in bold).
+- **Saves.** `T.SAVE_VERSION` is 14. An older save's crystals are shared out among its players, and so are a mission's and an open reward's (fixture `save-2.38.json`).
+- No change for one player: the simulators play solo, and `node tools/sim.js 40` gives the same tables as before.
+
+## 2.38.0 — 2026-11-15 — the objective answers back
+
+Garrett, after a two-player playtest: "we need more juice when you get objectives so you know you are doing the right things."
+
+- **When the objective moves forward, the board says so.**
+  - A gold card names what was done: a seal breaks, the winch turns, the valve turns, the beacon holds, not this one (a decoy cache), the real cache, a crate lifted or brought home. It has a bar that fills from where the objective was to where it is now.
+  - Gold rings go out from where it happened, with a rising chime (a longer one when the objective is complete).
+  - The objective's pill in the top bar pulses, and it now fills with gold as the objective comes along.
+  - This works for every kind of objective, because it compares `T.objectiveProgress` before and after each update. It answers a partner's progress online as well, and the beacon counted at the end of a round. Hits on a kill target are not announced, because the hit already shows.
+- **What will count, shown beforehand.**
+  - Interact glows gold whenever it can be used: it is always the objective's own action.
+  - A card, basic action or gear ability that would move the objective gets a gold ◎. Like the ✦ hints, this is worked out on a copy (`T.imagine`).
+  - Hovering it adds "◎ moves the objective forward" to the line above the board.
+- No rule or balance changes. Nothing here writes to the mission (a test checks it).
+
+## 2.37.0 — 2026-11-15 — faster clicks, and a screen that folds
+
+Garrett, after a two-player playtest: "the interface should be more dynamic, collapsible, and use space better. it should also update faster when selections are made."
+
+- **Folding.** The mission screen folds away what you are not using:
+  - The pilot not selected folds to its vitality, states and dice, with a line saying how many of its cards are playable. It sits above the selected pilot, so both are in view without scrolling. Click it to select it, or "Show cards" to open its hand without selecting it.
+  - The log folds to its last two lines (▾ opens it).
+  - The enemy intents fold to the forecast; the intents are still drawn on the board.
+  - A long objective folds to two lines; click it to read it all.
+  - An empty cooldown track is not drawn. The place, clock, hour, round and crystal pills share two rows, so the top bar stays on one line at 1280 px.
+  - The log, intents and objective choices are kept in this browser (`localStorage` key `tumult_v2_ui`). At 1280×800 the board is about 40% taller (568 px instead of 408).
+- **Faster.**
+  - The top bar, side panel and log are redrawn only when what they show has changed, so hover and focus survive a click.
+  - The ✦ combo hints (2.35) are worked out just after the click has been drawn, not before.
+  - Online, a guest's command is carried out on the guest's own screen at once, then sent to the host. The engine is deterministic, so the host gets the same result. The host's state still wins: each state it writes is taken as it comes, and commands it has not reached yet are played again on top. A command the guest's screen refuses is not sent, and the reason shows at once.
+  - The host no longer writes the game after keystrokes in a text box.
+- No rule or balance changes.
+
+## 2.36.0 — 2026-11-15 — the same player goes first every round
+
+Garrett, after a two-player playtest: "we should not switch who goes first because it is confusing to take two turns in a row and it defeats the purpose of rolling at the end of the turn and thinking about your turn ahead of time if you have to take another turn with new information immediately."
+
+- **Turn order is fixed.** Seat 0 (the host) goes first in every round, then seat 1, then the foes. The lead no longer swaps, so a player never ends one round's turn and starts the next round's straight away. Each player can plan their next turn while the others play. `T.turnSeat` changes; a player whose pilots are all down is still skipped.
+- One player, or the simulators: no change (turns apply only with two players).
+
+## 2.35.0 — 2026-11-14 — combos you can see
+
+Garrett: "I want these character to feel like they have fun toys that can be played with in interesting and expressive ways. they should combine to create emergent effects."
+
+- **✦ on plays the world adds to.** After every action, each play you could make is tried on a copy of the mission (`T.imagine`) against each target it could pick, and against up to ten of the nodes it could pick. If the world would add to it, its button gets a gold ✦, and the ✦'s tooltip says what. Things the world adds:
+  - The engine's own narration: a body slamming down under heavy gravity, a guard broken.
+  - Setups paid off: a Mark or Exposed spent, an Empower used.
+- **What it adds, in the preview.** The "Would:" line above the board now ends with what the world adds (✦) and the catches (⚠): a foe that holds fast against a shove, a blow that finds an afterimage, one that passes through a foe in Stasis or is fully blunted. A play that only meets a catch still shows its line. States a play would spend or break are struck through.
+- Partner combos come out of this as well: once Kess Marks a foe, Cavitt's hits on it carry a ✦ that says the Mark will be spent.
+- Nothing is guessed. Every ✦ comes from the exact result on a copy, and looking never changes the mission (a test checks it).
+- No rule or balance changes.
+
+## 2.34.0 — 2026-11-14 — the hour, the wind, and the board answering back
+
+Garrett: "Get everything polished and more pleasant to play. think animations, effect, sound … bring that world to life."
+
+- **The hour-long day** (`docs/LORE.md`: "A day lasts about an hour. Night is never far away, and never long."). Each round is about ten minutes, so six rounds make a day: dawn, morning, noon, afternoon, dusk, night. The light washes over the painting under the board, which stays readable at night, and the top bar names the hour. Where in the day a mission starts follows from its seed. Nothing in play reads the time of day.
+- **Weather on the board.** Wind is drawn as gusts blowing toward the edge it pushes to, and fog drifts low.
+- **The Terminal's readout.** As a round begins, a line types in at the top of the board. Round 1 gives the guide log: the place, its pull (uphill or downhill), the weather and the hour. After that, each round gives the round, the hour, and what is left on the clock.
+- **The board answers.**
+  - A card played rings its pilot in its etherion's colour.
+  - A hit flashes the token and bursts, and a shield flares cyan.
+  - A fall collapses, a heal glows, and a decoy, zone or trap set out marks its node.
+  - A state gained floats up, coloured by its keyword.
+- **Sound.** The small synth grew (still WebAudio, no files, no network).
+  - Dice rattle, blows thump, and shields ring.
+  - Forced moves whoosh, falls drop, and turns chime.
+  - Each etherion has its own voice: Mass deep, Charge buzzing, Space airy, Time a bell.
+  - A windy place has a very quiet wind under it, which stops when you leave the board or turn sound off.
+- **Built for all players.** All of it lives in `src/ui/feel.js` and `feel.css`. It reads the mission and its effects queue and never writes to them (a test checks this). Reduced-motion settings turn off the gusts, the flashes and the type-in.
+- No rule or balance changes.
+
 ## 2.33.0 — 2026-11-14 — the route, painted
 
 Garrett: "make the ladder up the rogue like adventure look better and more representative of the artwork."

@@ -339,7 +339,7 @@ Tried along the way (`node tools/turns.js 6`; dull = idle + forced):
 | new dice, 3 a turn | 41% | 41 of 80 | no change to dull turns |
 | new dice, 4 a turn, no retune | 37% | 54 of 80 | far easier |
 
-## v2.34.0 — Survey
+## v2.44.0 — Survey
 
 Survey (`MISSIONS_AND_BESTIARY.md`) went through three versions, each measured with `node tools/turns.js 10 survey` (dull = idle + forced) and 40 missions a cell:
 

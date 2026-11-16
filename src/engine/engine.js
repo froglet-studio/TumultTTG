@@ -216,6 +216,7 @@
       consumables: [],
       downed: false,
       upUnspent: 0,
+      bound: {}, // card id → upgrade points that may be spent on that card alone (a trait picked twice)
       stats: { dmgDealt: 0, dmgTaken: 0, kills: 0 },
       boons: [],
       faces: null,
@@ -352,7 +353,7 @@
   /* ───────────────────────────── MISSION SETUP ───────────────────────────── */
   /**
    * A mission is plain data and nothing in it points back at the run: it can be copied (T.clone),
-   * saved and resumed. What it needs from the run it takes in here — the squad, the crystals, the
+   * saved and resumed. What it needs from the run it takes in here — the squad, the players' purses, the
    * once-a-run Second Wind — and T.applyMissionResult hands the last two back.
    * `seed` names its dice and its opposition; the board in `spec` was drawn before it began.
    */
@@ -382,7 +383,9 @@
       over: false,
       won: false,
       lost: false,
-      crystals: run.crystals,
+      // each player's crystals, and whose purse each hero spends from (src/engine/party.js)
+      purses: run.purses.slice(),
+      owner: run.heroes.map((h, i) => T.ownerOf(run, i)),
       secondWindUsed: !!run.secondWindUsed,
       stats: { kills: 0, lowHp: false, ambushDmg: 0, hazardDmg: 0, foundRound: null },
       isBoss: !!spec.isBoss,
@@ -460,15 +463,20 @@
     const dice = T.stream(m.rngs, 'dice');
     const left = T.poolDice(h);
     const out = [];
+    const kinds = [];
+    const at = [];
     for (let i = 0; i < k; i++) {
       const kind = left.splice(dice.int(left.length), 1)[0];
       const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
+      kinds.push(kind);
+      at.push(h.held.length);
       bank(h, f, kind);
     }
     h.pool -= k;
     if (h.pool + h.held.length !== R().POOL) throw new Error('dice invariant broken for ' + h.name);
-    fx(m, { t: 'roll', hero: h.uid, faces: out });
+    // which dice were rolled, and where they were banked, so the screen can roll them (feel.js)
+    fx(m, { t: 'roll', hero: h.uid, faces: out, kinds, at });
     return out;
   };
   T.apValue = (h) => h.held.concat(h.temp).reduce((s, f) => s + (f === 'AP' ? 1 : f === 'AP2' ? 2 : 0), 0);
@@ -550,7 +558,8 @@
     indices.forEach((i) => {
       if (i >= 0 && i < h.held.length) h.held[i] = dice.pick(T.dieFaces(h, T.heldKind(h, i)));
     });
-    fx(m, { t: 'roll', hero: h.uid, faces: indices.map((i) => h.held[i]) });
+    const at = indices.filter((i) => i >= 0 && i < h.held.length);
+    fx(m, { t: 'roll', hero: h.uid, faces: at.map((i) => h.held[i]), kinds: at.map((i) => T.heldKind(h, i)), at });
   };
 
   /* ───────────────────────────── TRACK ───────────────────────────── */
@@ -1332,7 +1341,8 @@
           t.hp = 0;
           checkEnemyDeath(m, t, actor);
           if (f.salvage) {
-            m.crystals += f.salvage;
+            const hi = m.heroes.indexOf(actor);
+            m.purses[hi >= 0 ? T.purseSeat(m, hi) : 0] += f.salvage;
             say(m, `Salvaged ${f.salvage} ◇.`, 'sys');
           }
         } else say(m, `${t.name} is not yet dying (${t.hp} > ${th}).`, 'sys');
@@ -2247,10 +2257,11 @@
     const ab = def.abilities[ai];
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
-    if (m.crystals < ab.cost) return { ok: false, why: 'need ◇' };
+    const seat = T.purseSeat(m, m.heroes.indexOf(h));
+    if (m.purses[seat] < ab.cost) return { ok: false, why: 'need ◇' };
     const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no target' };
-    m.crystals -= ab.cost;
+    m.purses[seat] -= ab.cost;
     g.cds[ai] = ab.cd;
     say(m, `${h.name} uses ${def.name} — ${ab.n} (${ab.cost} ◇).`, 'hero');
     fx(m, { t: 'gear', hero: h.uid });

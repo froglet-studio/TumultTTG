@@ -228,13 +228,13 @@ test('a finished mission leaves the run; what the reward screen shows is kept wi
   assert.deepEqual(H.plainProblems(run), []);
   // crystals and the once-a-run Second Wind are the mission's while it lasts, and come home with it
   const purse = mission(2);
-  purse.mission.crystals += 5;
+  purse.mission.purses[0] += 5;
   purse.mission.secondWindUsed = true;
-  const had = purse.crystals;
+  const had = T.totalCrystals(purse);
   Object.assign(purse.mission, { over: true, won: false, lost: true });
   T.missionRewards(purse, purse.mission);
   T.applyMissionResult(purse);
-  assert.equal(purse.crystals, had + 5, 'salvage is kept even when the mission is lost');
+  assert.equal(T.totalCrystals(purse), had + 5, 'salvage is kept even when the mission is lost');
   assert.equal(purse.secondWindUsed, true);
 });
 
@@ -264,7 +264,7 @@ test('a save from 2.0 still loads, and its Tide can be finished', () => {
     assert.equal(run.v, T.SAVE_VERSION);
     assert.deepEqual([run.phase, run.mission], ['map', null], '2.0 never kept a mission: back to the map');
     assert.deepEqual(
-      [run.seed, run.crystals, run.heroes.map((h) => h.cards.join())],
+      [run.seed, T.totalCrystals(run), run.heroes.map((h) => h.cards.join())],
       [old[key].seed, old[key].crystals, old[key].heroes.map((h) => h.cards.join())],
     );
     assert.ok(run.available.length && run.available.every((id) => run.map.all[id]));

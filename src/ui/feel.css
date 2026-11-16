@@ -1,0 +1,570 @@
+/* ───── feel (src/ui/feel.js): the day over the board, its weather, the readout, flashes ───── */
+
+/* the hour: a wash over the ground under the board, eased from one round to the next */
+.board > svg {
+  position: relative;
+  z-index: 1;
+}
+.board .sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  transition:
+    background 2.4s ease,
+    opacity 2.4s ease;
+  mix-blend-mode: soft-light;
+}
+.board .sky-dawn {
+  background: linear-gradient(180deg, rgba(255, 150, 120, 0.55), rgba(255, 200, 150, 0.15) 60%, transparent);
+}
+.board .sky-morning {
+  background: linear-gradient(180deg, rgba(255, 240, 200, 0.35), transparent 70%);
+}
+.board .sky-noon {
+  background: radial-gradient(ellipse at 50% 0%, rgba(255, 255, 235, 0.45), transparent 70%);
+}
+.board .sky-afternoon {
+  background: linear-gradient(200deg, rgba(255, 210, 140, 0.4), transparent 70%);
+}
+.board .sky-dusk {
+  mix-blend-mode: multiply;
+  background: linear-gradient(180deg, rgba(150, 70, 140, 0.55), rgba(230, 120, 80, 0.4) 70%, rgba(80, 40, 90, 0.5));
+}
+.board .sky-night {
+  mix-blend-mode: multiply;
+  background:
+    radial-gradient(ellipse at 50% 45%, rgba(70, 90, 170, 0.5), rgba(14, 20, 60, 0.85) 90%),
+    linear-gradient(180deg, rgba(30, 40, 100, 0.4), rgba(30, 40, 100, 0.4));
+}
+.pill.day {
+  border-color: rgba(242, 193, 78, 0.45);
+}
+.pill.day-dusk,
+.pill.day-dawn {
+  color: #ffc7a8;
+}
+.pill.day-night {
+  color: #b9c7ff;
+  border-color: rgba(150, 170, 255, 0.45);
+}
+
+/* weather: wind streaks blowing across, toward the edge it blows to; fog drifting low */
+.board .wx {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+.board .wx-wind i {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, rgba(225, 240, 255, 0.9) 60%, transparent);
+  animation: gust-e linear infinite;
+}
+.board .wx-wind.to-a i {
+  animation-name: gust-a;
+  background: linear-gradient(270deg, transparent, rgba(225, 240, 255, 0.9) 60%, transparent);
+}
+@keyframes gust-e {
+  from {
+    transform: translateX(-260px);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+@keyframes gust-a {
+  from {
+    transform: translateX(110vw);
+  }
+  to {
+    transform: translateX(-260px);
+  }
+}
+.board .wx-fog {
+  background:
+    radial-gradient(ellipse 60% 40% at 30% 70%, rgba(200, 215, 230, 0.22), transparent 70%),
+    radial-gradient(ellipse 50% 35% at 75% 40%, rgba(200, 215, 230, 0.18), transparent 70%);
+  background-size: 160% 100%;
+  animation: fog-drift 18s ease-in-out infinite alternate;
+}
+@keyframes fog-drift {
+  to {
+    background-position: 60% 0;
+  }
+}
+
+/* the Terminal's readout, typed in at the top of the board as a round begins */
+.board .readout {
+  position: absolute;
+  z-index: 3;
+  left: 12px;
+  top: 10px;
+  max-width: calc(100% - 24px);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--cyan);
+  background: rgba(7, 16, 32, 0.72);
+  border: 1px solid rgba(94, 200, 216, 0.35);
+  border-radius: 6px;
+  padding: 4px 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+.board .readout.show {
+  animation:
+    readout-type 0.9s steps(var(--chars, 30)) both,
+    readout-fade 5.5s ease forwards;
+}
+@keyframes readout-type {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@keyframes readout-fade {
+  0%,
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.35;
+  }
+}
+
+/* the board answers: a ring where a card is played (in its etherion's colour), a hit, a fall, a heal */
+#fxlayer .burst {
+  fill: none;
+  stroke-width: 3;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: burst 0.8s ease-out forwards;
+  pointer-events: none;
+}
+#fxlayer .burst.play {
+  stroke: var(--AP);
+}
+#fxlayer .burst.el-M {
+  stroke: var(--M);
+}
+#fxlayer .burst.el-C {
+  stroke: var(--C);
+}
+#fxlayer .burst.el-S {
+  stroke: var(--S);
+}
+#fxlayer .burst.el-T {
+  stroke: var(--T);
+}
+#fxlayer .burst.el-O {
+  stroke: var(--O);
+}
+#fxlayer .burst.dmg {
+  stroke: #ff7a9a;
+  stroke-width: 4;
+  animation-duration: 0.5s;
+}
+#fxlayer .burst.heal {
+  stroke: var(--green);
+}
+#fxlayer .burst.set {
+  stroke: var(--violet);
+  stroke-dasharray: 4 5;
+}
+#fxlayer .burst.death {
+  stroke: #fff;
+  fill: rgba(255, 255, 255, 0.25);
+  animation: fall 1s ease-out forwards;
+}
+@keyframes burst {
+  from {
+    opacity: 1;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.2);
+  }
+}
+@keyframes fall {
+  from {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.2);
+  }
+}
+.token.hit .body {
+  animation: tok-hit 0.45s ease-out;
+}
+.token.blocked .body {
+  animation: tok-block 0.5s ease-out;
+}
+@keyframes tok-hit {
+  0% {
+    filter: brightness(2.2) drop-shadow(0 0 6px #ff4d6d);
+  }
+  100% {
+    filter: none;
+  }
+}
+@keyframes tok-block {
+  0% {
+    filter: brightness(1.8) drop-shadow(0 0 8px var(--cyan));
+  }
+  100% {
+    filter: none;
+  }
+}
+.floater.state {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--txt);
+}
+.floater.state.kw-good {
+  color: #9ff0b4;
+}
+.floater.state.kw-bad {
+  color: #ffb3c7;
+}
+
+/* the objective answering back (feel.js objectiveCheck): a gold card on the board with a bar that fills from
+   where the objective stood to where it stands, gold rings where it happened, and the top bar's pill pulsing */
+.board .goal {
+  position: absolute;
+  z-index: 4;
+  left: 50%;
+  top: 18%;
+  transform: translate(-50%, -8px) scale(0.92);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease;
+}
+.board .goal.show {
+  opacity: 1;
+  transform: translate(-50%, 0) scale(1);
+}
+.goal-card {
+  min-width: 240px;
+  text-align: center;
+  padding: 10px 22px 12px;
+  border-radius: 12px;
+  background: rgba(10, 17, 32, 0.9);
+  border: 1px solid rgba(242, 193, 78, 0.75);
+  box-shadow:
+    0 0 0 1px rgba(242, 193, 78, 0.25),
+    0 0 32px rgba(242, 193, 78, 0.35);
+}
+.goal-kick {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+.goal-txt {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 24px;
+  color: #fff;
+  margin: 2px 0 8px;
+  text-shadow: 0 0 14px rgba(242, 193, 78, 0.55);
+}
+.goal-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(242, 193, 78, 0.35);
+  overflow: hidden;
+}
+.goal-bar i {
+  display: block;
+  height: 100%;
+  width: var(--to);
+  background: linear-gradient(90deg, #f2c14e, #fff2c4);
+  box-shadow: 0 0 10px rgba(242, 193, 78, 0.8);
+}
+.board .goal.show .goal-bar i {
+  animation: goal-fill 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) 0.15s both;
+}
+@keyframes goal-fill {
+  from {
+    width: var(--from);
+  }
+  to {
+    width: var(--to);
+  }
+}
+.goal-pct {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--gold);
+  margin-top: 4px;
+}
+.board .goal.done .goal-card {
+  border-color: #9ff0b4;
+  box-shadow: 0 0 36px rgba(127, 208, 138, 0.45);
+}
+#fxlayer .burst.goal {
+  stroke: var(--gold);
+  stroke-width: 4;
+  fill: rgba(242, 193, 78, 0.12);
+  animation: burst-goal 1.1s ease-out forwards;
+}
+#fxlayer .burst.goal-2 {
+  fill: none;
+  stroke-width: 2;
+}
+@keyframes burst-goal {
+  from {
+    opacity: 1;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+.floater.goal {
+  font-size: 22px;
+  color: var(--gold);
+  text-shadow: 0 0 10px rgba(242, 193, 78, 0.8);
+}
+.topbar .obj .obj-prog {
+  background: linear-gradient(90deg, rgba(242, 193, 78, 0.26) var(--p, 0%), var(--panel2) var(--p, 0%));
+}
+.topbar .obj .obj-prog.just {
+  border-color: var(--gold);
+  animation: prog-pop 1.2s ease-out;
+}
+@keyframes prog-pop {
+  0% {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 0 rgba(242, 193, 78, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(242, 193, 78, 0);
+  }
+}
+/* where the objective can be moved forward now */
+.pv-goal {
+  color: var(--gold);
+  font-weight: 600;
+}
+.combo-mark.goal-mark {
+  color: var(--gold);
+}
+button.goal-act:not(:disabled) {
+  border-color: rgba(242, 193, 78, 0.8);
+  color: #ffe6a6;
+  box-shadow: 0 0 10px rgba(242, 193, 78, 0.35);
+  animation: goal-glow 1.8s ease-in-out infinite;
+}
+@keyframes goal-glow {
+  50% {
+    box-shadow: 0 0 16px rgba(242, 193, 78, 0.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board .wx-wind i {
+    display: none;
+  }
+  .board .wx-fog,
+  .board .readout.show {
+    animation: none;
+    opacity: 1;
+  }
+  .board .sky {
+    transition: none;
+  }
+  .board .goal,
+  .board .goal.show .goal-bar i,
+  .topbar .obj .obj-prog.just,
+  button.goal-act:not(:disabled) {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* the dice rolling (feel.js rollTray): a tray at the foot of the board where each pilot's new dice tumble in
+   their own shapes and land, one after another, on what they rolled */
+.board .rolltray {
+  position: absolute;
+  z-index: 5;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  width: max-content;
+  max-width: 96%;
+  pointer-events: none;
+}
+.rollrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px 14px 12px;
+  border-radius: 14px;
+  background: rgba(8, 12, 22, 0.82);
+  border: 1px solid rgba(151, 166, 186, 0.35);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  animation: tray-in 0.25s ease-out both;
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+.rollrow.gone {
+  opacity: 0;
+  transform: translateY(12px);
+}
+.rollrow .who {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--dim);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  max-height: 48px;
+  overflow: hidden;
+}
+.rdie {
+  --c: #c9d4e3;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--c);
+  animation: die-tumble 0.62s cubic-bezier(0.25, 0.6, 0.35, 1) calc(var(--j) * 0.14s) both;
+}
+.rdie .dbody {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.rdie .o {
+  fill: #121b2e;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: miter;
+}
+.rdie .l {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.8;
+  opacity: 0.45;
+}
+.rdie .rf {
+  position: relative;
+  font-style: normal;
+  margin-top: 4px;
+  line-height: 1;
+}
+.rdie .rf .icn {
+  width: 15px;
+  height: 15px;
+}
+.rdie .rf b {
+  font-family: var(--mono);
+  font-size: 14px;
+  color: #eef3f8;
+}
+.rdie .rs {
+  position: absolute;
+  bottom: -11px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 8px;
+  color: var(--dim);
+}
+.rdie.k-M,
+.rdie.k-C,
+.rdie.k-S,
+.rdie.k-T,
+.rdie.k-eth {
+  --c: #e6ecf5;
+}
+.rdie.landed {
+  animation: die-land 0.35s ease-out both;
+}
+.rdie.landed.f-M {
+  --c: var(--M);
+}
+.rdie.landed.f-C {
+  --c: var(--C);
+}
+.rdie.landed.f-S {
+  --c: var(--S);
+}
+.rdie.landed.f-T {
+  --c: var(--T);
+}
+.rdie.landed.f-O {
+  --c: #fff;
+}
+.rdie.landed .o {
+  fill: color-mix(in srgb, var(--c) 18%, #121b2e);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--c) 70%, transparent));
+}
+@keyframes tray-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes die-tumble {
+  0% {
+    transform: translate(-90px, -40px) rotate(-320deg) scale(0.7);
+    opacity: 0;
+  }
+  45% {
+    transform: translate(-20px, 4px) rotate(-90deg) scale(1);
+    opacity: 1;
+  }
+  70% {
+    transform: translate(4px, -8px) rotate(20deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes die-land {
+  0% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .die.fresh,
+  .rdie {
+    animation: none;
+  }
+}

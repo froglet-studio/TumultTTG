@@ -861,5 +861,12 @@
 
   T.CARDS = CARDS;
   T.CARD = {}; CARDS.forEach(c => T.CARD[c.id] = c);
-  T.cardsOf = (sp) => CARDS.filter(c => c.sp === sp);
+  /**
+   * A trait can be carried by several clades: one written for a whole branch of the tree (every cat, every
+   * primate) or a variant of the same verb in an unrelated animal. `sp` is the clade it is shown under;
+   * `clades` is every clade that carries it. Later data files add clades with T.shareTrait.
+   */
+  CARDS.forEach(c => (c.clades = c.clades || [c.sp]));
+  T.shareTrait = (id, ...sps) => sps.forEach(sp => T.CARD[id].clades.includes(sp) || T.CARD[id].clades.push(sp));
+  T.cardsOf = (sp) => T.CARDS.filter(c => c.clades.includes(sp));
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

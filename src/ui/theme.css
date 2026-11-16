@@ -307,8 +307,7 @@ button.ghost {
 }
 
 /* ---------- cards: a frame per etherion ---------- */
-.card,
-.hcard {
+.card {
   border-radius: 4px !important;
   background: linear-gradient(180deg, rgba(99, 211, 226, 0.04), transparent 50%), var(--panel2) !important;
 }

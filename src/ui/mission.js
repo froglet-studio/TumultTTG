@@ -43,6 +43,42 @@
   const M = () => U.run.mission;
   const hero = () => M().heroes[U.ms.heroIdx];
 
+  /**
+   * Which parts of the mission screen are folded away: the log (folded to its last lines), the enemy
+   * intents (folded to the forecast), the objective (folded to two lines), and, for a pilot not selected,
+   * whether its cards are shown anyway. Kept for this browser in tumult_v2_ui; a page without storage
+   * starts from the defaults.
+   */
+  const LAYOUT_KEY = 'tumult_v2_ui';
+  U.layout = (() => {
+    const base = { log: false, intents: true, obj: false, peek: {} };
+    try {
+      return Object.assign(base, JSON.parse(localStorage.getItem(LAYOUT_KEY) || '{}'), { peek: {} });
+    } catch {
+      return base;
+    }
+  })();
+  function saveLayout() {
+    try {
+      const { log, intents, obj } = U.layout;
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj }));
+    } catch {
+      /* no storage: the choice lasts for this page */
+    }
+  }
+  /** The small button that folds a part of the screen away or opens it out. */
+  function foldBtn(key, what) {
+    const open = !!U.layout[key];
+    return `<button class="fold ghost sm" data-act="fold" data-arg="${key}" aria-expanded="${open}" data-tip="${open ? 'Fold ' + what + ' away' : 'Show all of ' + what}">${open ? '▴' : '▾'}</button>`;
+  }
+  /** Write a panel's HTML only when it changed: no work for the browser, and hover and focus survive. */
+  function setHTML(el, html) {
+    if (!el || el._html === html) return false;
+    el.innerHTML = html;
+    el._html = html;
+    return true;
+  }
+
   /* ───────────── geometry ───────────── */
   function geom(m) {
     const ns = Object.values(m.board.nodes);
@@ -79,7 +115,7 @@
       <div class="top panel tight" id="mtop"></div>
       <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div></div>
       <div class="side" id="mside"></div>
-      <div class="bottom"><div class="log" id="mlog"></div></div>
+      <div class="bottom">${foldBtn('log', 'the log')}<div class="log${U.layout.log ? '' : ' folded'}" id="mlog"></div></div>
     </div>`;
   };
   U.afterMissionRender = function () {
@@ -327,14 +363,18 @@
           if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
         }
         U.toast(turn.here && U.seats ? 'Your turn.' : `${esc(turn.name)}'s turn.`);
+        if (U.sfx.turn) U.sfx.turn();
       }
     }
+    if (U.objectiveCheck) U.objectiveCheck(m);
     renderTop(m);
     renderTargetBar(m);
     renderSide(m);
     renderLog(m);
     updateBoard(m);
+    scheduleCombos();
     playFx(m);
+    if (U.feelUpdate) U.feelUpdate(m);
     if (m.over && !U.ms.overShown) {
       U.ms.overShown = true;
       setTimeout(() => showMissionOver(m), U.MISSION_OVER_DELAY);
@@ -372,13 +412,15 @@
         : '');
     const ae = document.activeElement;
     const typing = ae && ae.id === 'turnNote' ? [ae.selectionStart, ae.selectionEnd] : null;
-    $('#mtop').innerHTML =
+    const changed = setHTML(
+      $('#mtop'),
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
-      <div class="obj"><b>Objective:</b> ${esc(ob.text)} <span class="pill">${prog}</span><div class="small dim">${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
-      ${place}${clock}<span class="pill mono">Round ${m.round}</span><span class="pill">◇ ${m.crystals}</span>
+      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
+      <div class="tpills">${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span>${U.purseHTML(m, true)}</div>
       <div class="endgrp"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${noteBox(m)}</div>
-      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`;
-    const box = typing && $('#turnNote');
+      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`,
+    );
+    const box = changed && typing && $('#turnNote');
     if (box) {
       box.focus();
       box.setSelectionRange(typing[0], typing[1]);
@@ -473,13 +515,23 @@
             `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
-    $('#mside').innerHTML =
-      `<div class="panel tight"><div class="row"><b>Enemy intents</b><span class="dim small right">declared — they adapt only to close distance</span></div><div class="intents" style="margin-top:6px">${intents}</div>${forecastHTML(m)}</div>` +
-      m.heroes.map((h, i) => heroPanel(m, h, i)).join('');
+    const open = U.layout.intents;
+    const foes = T.liveEnemies(m).length;
+    const changed = setHTML(
+      $('#mside'),
+      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b>Enemy intents</b><span class="dim small right">${open ? 'declared — they adapt only to close distance' : `${foes} foe${foes === 1 ? '' : 's'} · shown on the board`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}${forecastHTML(m)}</div>` +
+        // the pilots not selected, folded, above the one being played: all of them in view at once
+        m.heroes
+          .map((h, i) => i)
+          .sort((a, b) => (a === U.ms.heroIdx) - (b === U.ms.heroIdx) || a - b)
+          .map((i) => heroPanel(m, m.heroes[i], i))
+          .join(''),
+    );
     // tooltips on intents are computed lazily
-    document
-      .querySelectorAll('#mside [data-tipid]')
-      .forEach((el) => el.setAttribute('data-tip', tipFor(el.getAttribute('data-tipid'))));
+    if (changed)
+      document
+        .querySelectorAll('#mside [data-tipid]')
+        .forEach((el) => el.setAttribute('data-tip', tipFor(el.getAttribute('data-tipid'))));
   }
   /** Beside a hero's vitality: where it will stand if the round ends now, when that is somewhere else. */
   function heading(i) {
@@ -528,6 +580,8 @@
         .map((k) => `${n(k)} ${T.DICE[k].n} (d${T.DICE[k].sides})`);
       return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn, drawn at random from the pool; pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
     };
+    // dice lie as they fell: each a little turned, the same way each time it is drawn
+    const tilt = (j) => `style="--r:${(((j * 37 + 11) % 13) - 6) * 2}deg"`;
     const dice =
       h.held
         .map((f, di) =>
@@ -535,9 +589,10 @@
             f,
             (canPickDie && sel ? 'pick' : '') + (U.ms.rerollPicked.includes(di) && sel ? ' rolled' : ''),
             T.heldKind(h, di),
-          ).replace('<span class="die', `<span data-act="die" data-arg="${i}|${di}" class="die`),
+            `data-act="die" data-arg="${i}|${di}" ${tilt(di)}`,
+          ),
         )
-        .join('') + h.temp.map((f) => U.dieHTML(f, 'temp')).join('');
+        .join('') + h.temp.map((f, j) => U.dieHTML(f, 'temp', '', tilt(h.held.length + j))).join('');
     const trackCols = [];
     for (let c = 1; c <= T.RULES.TRACK; c++) {
       const items = h.track.filter((t) => t.left === c);
@@ -551,16 +606,19 @@
         const P = T.heroP(h, cid),
           E = T.heroE(h, cid);
         const onTrack = h.track.find((t) => t.card === cid);
+        const asleep = E < T.RULES.ETHEREAL_MIN_E;
+        const elC = EL[(c.E && c.E.elt) || c.el].color;
+        const title = `<div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>`;
         if (onTrack)
-          return `<div class="hcard cooling"><div class="hn">${esc(c.name)}<span class="pe">P${P} E${E}</span></div><div class="small dim">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
+          return `<div class="hcard cooling" style="--c:${elC}">${U.cardArt(c, asleep)}${title}<div class="small dim back">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
         const fb = (fk) => {
           const f = c[fk];
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
           const elt = f.elt || c.el;
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
-          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${fk === 'E' ? '◆' : '•'}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
+          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
-        return `<div class="hcard"><div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span style="color:var(--gold);font-size:10px">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>${fb('P')}${fb('E')}</div>`;
+        return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep)}${title}${fb('P')}${fb('E')}</div>`;
       })
       .join('');
     const gear = h.gear
@@ -568,7 +626,7 @@
         const def = T.GEAR_BY[g.id];
         return def.abilities
           .map((a, ai) => {
-            const ok = !m.over && !h.downed && g.cds[ai] <= 0 && m.crystals >= a.cost;
+            const ok = !m.over && !h.downed && g.cds[ai] <= 0 && T.crystalsFor(m, i) >= a.cost;
             return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="${esc(`<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${a.cost} ◇ · cd ${a.cd}</div>${U.kwGloss(a.txt())}`)}" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${a.cost}◇${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
           })
           .join('');
@@ -580,16 +638,32 @@
           `<button class="gbtn" data-act="cons" data-arg="${i}|${ci}" data-tip="${esc(T.CONSUMABLE_BY[c].txt)}" ${m.over || h.downed ? 'disabled' : ''}>${U.icCons(c)} ${esc(T.CONSUMABLE_BY[c].name)}</button>`,
       )
       .join('');
+    const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
+      <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
+      <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>`;
+    const diceRow = `<div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span><span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>`;
+    // a pilot not selected folds to its vitality and dice; its cards open on request
+    if (!sel && !U.layout.peek[i]) {
+      const ready = h.cards.filter(
+        (cid) =>
+          !h.track.some((t) => t.card === cid) &&
+          !m.over &&
+          !h.downed &&
+          (T.canPlay(m, h, cid, 'P').ok || T.canPlay(m, h, cid, 'E').ok),
+      ).length;
+      const onTrack = h.track.length;
+      return `<div class="hero folded ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
+      ${head}${diceRow}
+      <div class="fold-sum small dim"><span>${h.cards.length} cards · ${ready} playable now${onTrack ? ` · ${onTrack} on the track` : ''}${h.gear.length ? ` · ${h.gear.length} gear` : ''}</span><button class="ghost sm peek" data-act="peek" data-arg="${i}">Show cards ▾</button></div>
+    </div>`;
+    }
     const inode = h.downed ? null : interactNode(m, h);
     const canInteract = inode != null && (T.apValue(h) >= 2 || !!T.markPay(h, m.board.nodes[inode].objective));
     const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
-    return `<div class="hero ${sel ? 'active' : ''} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
-      <div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
-      <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
-      <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>
-      <div class="dice">${dice || '<span class="dim small">no dice banked</span>'}<span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>${sel ? U.diceKey() : ''}
-      <div class="track">${trackCols.join('')}</div>
+    return `<div class="hero ${sel ? 'active' : 'peeking'} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
+      ${head}${diceRow}${sel ? U.diceKey() : `<div class="fold-sum small dim"><span>Not selected: click to select ${esc(h.name)}</span><button class="ghost sm peek" data-act="peek" data-arg="${i}">Hide cards ▴</button></div>`}
+      ${h.track.length ? `<div class="track">${trackCols.join('')}</div>` : ''}
       <div class="hand">${hand}</div>
       <div class="actions">
         ${T.BASIC.map((b) => {
@@ -601,7 +675,7 @@
           const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
           return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
         }).join('')}
-        <button class="sm" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact (2)</button>
+        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact (2)</button>
         <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
         <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>
         <button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>
@@ -629,15 +703,18 @@
 
   function renderLog(m) {
     const el = $('#mlog');
-    el.innerHTML = m.log
-      .slice(-60)
-      .map((l) =>
-        l.who === 'note'
-          ? `<div class="l note">${U.portrait && m.heroes[l.hero] ? U.portrait(m.heroes[l.hero], 'xs') : ''}<span>“${esc(l.text)}”</span> <span class="dim small">— ${esc(m.heroes[l.hero] ? m.heroes[l.hero].name : '')}</span></div>`
-          : `<div class="l ${l.who}">${U.kw(esc(l.text))}</div>`,
-      )
-      .join('');
-    el.scrollTop = el.scrollHeight;
+    const changed = setHTML(
+      el,
+      m.log
+        .slice(-60)
+        .map((l) =>
+          l.who === 'note'
+            ? `<div class="l note">${U.portrait && m.heroes[l.hero] ? U.portrait(m.heroes[l.hero], 'xs') : ''}<span>“${esc(l.text)}”</span> <span class="dim small">— ${esc(m.heroes[l.hero] ? m.heroes[l.hero].name : '')}</span></div>`
+            : `<div class="l ${l.who}">${U.kw(esc(l.text))}</div>`,
+        )
+        .join(''),
+    );
+    if (changed) el.scrollTop = el.scrollHeight;
   }
 
   /* ───────────── board update ───────────── */
@@ -990,15 +1067,45 @@
       const fell = (o.kind === 'enemy' ? o.alive && !u.alive : !o.downed && u.downed) || (hpNow > 0 && hpThen <= 0);
       const before = new Set(unitBadges(o).map((b) => b.k + ':' + b.v));
       const added = unitBadges(u).filter((b) => !before.has(b.k + ':' + b.v));
+      // a state gone entirely: a setup paid off (Marked, Exposed, Empower spent) or a guard broken
+      const after = new Set(unitBadges(u).map((b) => b.k));
+      const removed = unitBadges(o).filter((b) => !after.has(b.k));
       const moved = u.pos !== o.pos && m.board.nodes[u.pos] ? u.pos : null;
-      if (hpThen !== hpNow || fell || added.length || moved != null)
-        out.push({ o, u, d: hpThen - hpNow, fell, added, moved });
+      if (hpThen !== hpNow || fell || added.length || removed.length || moved != null)
+        out.push({ o, u, d: hpThen - hpNow, fell, added, removed, moved });
     }
+    return out;
+  }
+  /**
+   * What the world adds to a play: the lines the engine narrates in its own voice (a body slamming down under
+   * heavy gravity, a foe that holds fast, a blow that finds an afterimage), and the setups it pays off (a Mark
+   * or an Exposed spent, an Empower used). Each is { tone: 'good' | 'bad' | 'neutral', text }.
+   */
+  const ROUTINE = [/ strikes a .* for \d+\.$/, / collapses\.$/];
+  const CATCH = [/holds fast/, /afterimage/, /outside time/, /fully blunted/, /is seared by/];
+  function combosOf(m, copy, diffs) {
+    const out = [];
+    for (const l of copy.log) {
+      // (a copy starts with an empty log: T.imagine; everything in it is the play's)
+      if (l.who !== 'dm' || ROUTINE.some((re) => re.test(l.text))) continue;
+      out.push({ tone: CATCH.some((re) => re.test(l.text)) ? 'bad' : 'good', text: l.text });
+    }
+    for (const x of diffs)
+      for (const b of x.removed || []) {
+        const foe = x.o.kind === 'enemy';
+        if (foe && b.kw.tone === 'bad') out.push({ tone: 'good', text: `${x.o.name}'s ${b.k} is spent on this` });
+        else if (!foe && b.k === 'Empower') out.push({ tone: 'good', text: `${x.o.name}'s Empower is spent on this` });
+        else if (foe && b.kw.tone === 'good') out.push({ tone: 'good', text: `${x.o.name} loses ${b.k}` });
+        else if (!foe && b.kw.tone === 'good') out.push({ tone: 'bad', text: `${x.o.name} loses ${b.k}` });
+      }
     return out;
   }
   function previewFor(p, ctxs, i = U.ms.heroIdx) {
     const m = M();
     const all = [];
+    const combos = [];
+    const p0 = T.objectiveProgress(m);
+    let goal = 0;
     for (const ctx of ctxs) {
       const copy = T.imagine(m);
       let r;
@@ -1007,10 +1114,17 @@
       } catch (e) {
         r = null;
       }
-      if (r && r.ok) all.push(...diffPlay(m, copy));
+      if (!r || !r.ok) continue;
+      const d = diffPlay(m, copy);
+      all.push(...d);
+      goal = Math.max(goal, T.objectiveProgress(copy) - p0);
+      for (const c of combosOf(m, copy, d)) if (!combos.some((x) => x.text === c.text)) combos.push(c);
     }
+    all.combos = combos;
+    all.goal = goal > 1e-6 && !(m.objective && m.objective.kind === 'kill') ? goal : 0; // a hit on the target says so itself
     return all;
   }
+  U.previewFor = previewFor;
   function drawPreview(diffs, note) {
     const svg = U.ms.svg;
     const g = U.ms.g;
@@ -1065,17 +1179,23 @@
         ),
       );
       if (x.moved != null) bits.push('→ ' + esc(N[x.moved].label || x.moved));
+      (x.removed || []).forEach((b) => bits.push(`<s class="dim">${esc(b.k)}</s>`));
       words.push(`<b>${esc(name)}</b> ${bits.join(' ')}`);
     }
     const bar = $('#mtarget');
-    if (bar && (words.length || note)) {
+    if (diffs.goal) words.unshift('<span class="pv-goal">◎ moves the objective forward</span>');
+    if (bar && (words.length || note || (diffs.combos && diffs.combos.length))) {
       let el = bar.querySelector('.pv-line');
       if (!el) {
         el = document.createElement('div');
         el.className = 'pv-line';
         bar.appendChild(el);
       }
-      el.innerHTML = `<span class="dim">Would:</span> ${words.join(' · ') || ''}${note ? ` <span class="dim">${note}</span>` : ''}`;
+      const combos = (diffs.combos || [])
+        .slice(0, 4)
+        .map((c) => `<span class="pv-combo ${c.tone}">${c.tone === 'bad' ? '⚠' : '✦'} ${U.kw(esc(c.text))}</span>`)
+        .join(' ');
+      el.innerHTML = `<span class="dim">Would:</span> ${words.join(' · ') || ''}${note ? ` <span class="dim">${note}</span>` : ''}${combos ? `<div class="pv-combos">${combos}</div>` : ''}`;
     }
   }
   function clearPreview() {
@@ -1116,6 +1236,55 @@
     if (tg.need === 'none') return [{}];
     if (tg.need === 'foe' || tg.need === 'foeOrAlly') return (tg.options || []).map((target) => ({ target }));
     return [];
+  }
+  /**
+   * Light a ✦ on every play the player could make now that the world would add to: try it on a copy for each
+   * target it could pick (and for a few of the nodes it could pick), and keep what the world adds (combosOf).
+   * The mark's tip says what; hovering the play shows it on the board.
+   */
+  let comboJob = 0;
+  /**
+   * The ✦ marks are worked out after the click has been drawn: each one tries plays on a copy, which is the
+   * slowest thing on this screen, and the player should see what they did first. A newer update cancels an
+   * older job.
+   */
+  function scheduleCombos() {
+    const job = ++comboJob;
+    const run = () => {
+      if (job !== comboJob || U.screen !== 'mission' || !U.run || !U.run.mission) return;
+      markCombos(U.run.mission);
+    };
+    if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => setTimeout(run, 0));
+    else setTimeout(run, 0);
+  }
+  function markCombos(m) {
+    if (m.over || U.ms.mode !== 'idle') {
+      document.querySelectorAll('#mside .combo-mark').forEach((x) => x.remove());
+      return;
+    }
+    for (const btn of document.querySelectorAll(
+      '#mside [data-act="face"], #mside [data-act="basic"], #mside [data-act="gear"]',
+    )) {
+      btn.querySelectorAll('.combo-mark').forEach((x) => x.remove()); // the panel is kept when it did not change: work the marks out afresh
+      if (btn.disabled) continue;
+      const pk = pendingOf(btn);
+      if (!pk) continue;
+      let ctxs = ctxsFor(pk.tg);
+      if (pk.tg.need === 'node') ctxs = (pk.tg.options || []).slice(0, 10).map((node) => ({ node }));
+      const pv = previewFor(pk.p, ctxs, pk.i);
+      if (pv.goal)
+        btn.insertAdjacentHTML(
+          'beforeend',
+          `<span class="combo-mark goal-mark" data-tip="${esc('<b>◎ This play moves the objective forward</b><div class="dim small">Hover it to see how on the board.</div>')}">◎</span>`,
+        );
+      const good = (pv.combos || []).filter((c) => c.tone === 'good');
+      if (!good.length) continue;
+      const tip = `<b>✦ The world adds to this play</b>${good
+        .slice(0, 4)
+        .map((c) => `<div>${esc(c.text)}</div>`)
+        .join('')}<div class="dim small">Hover the play to see it on the board.</div>`;
+      btn.insertAdjacentHTML('beforeend', `<span class="combo-mark" data-tip="${esc(tip)}">✦</span>`);
+    }
   }
   document.addEventListener('mouseover', (e) => {
     if (U.screen !== 'mission' || !U.ms || !U.ms.built || M().over) return;
@@ -1195,6 +1364,7 @@
       setTimeout(() => d.remove(), 1200);
     }, delay || 0);
   }
+  U.floater = floater;
   function banner(text) {
     const b = $('#banner');
     if (!b) return;
@@ -1216,6 +1386,7 @@
             m.decoys.find((d) => d.uid === f.ent)
           : null;
       const node = f.pos != null ? f.pos : ent ? ent.pos : null;
+      if (U.feelFx) U.feelFx(m, f, ent, node, delay);
       switch (f.t) {
         case 'dmg':
           if (node != null) floater(node, '−' + f.amount, 'dmg', delay);
@@ -1353,7 +1524,7 @@
     const g = h.gear[gi];
     const def = T.GEAR_BY[g.id];
     const ab = def.abilities[ai];
-    if (g.cds[ai] > 0 || m.crystals < ab.cost) return;
+    if (g.cds[ai] > 0 || T.crystalsFor(m, i) < ab.cost) return;
     const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) {
       U.toast('No valid target.');
@@ -1442,6 +1613,26 @@
     const m = M();
     const ms = U.ms;
     switch (act) {
+      case 'fold': {
+        if (!['log', 'intents', 'obj'].includes(arg)) return true;
+        U.layout[arg] = !U.layout[arg];
+        saveLayout();
+        if (arg === 'log') {
+          const log = $('#mlog');
+          if (log) {
+            log.classList.toggle('folded', !U.layout.log);
+            log.scrollTop = log.scrollHeight;
+          }
+          const btn = $('.mission .bottom .fold');
+          if (btn) btn.outerHTML = foldBtn('log', 'the log');
+        }
+        U.updateMission();
+        return true;
+      }
+      case 'peek':
+        U.layout.peek[arg] = !U.layout.peek[arg];
+        U.updateMission();
+        return true;
       case 'selHero':
         if (ms.mode === 'idle') {
           ms.heroIdx = +arg;

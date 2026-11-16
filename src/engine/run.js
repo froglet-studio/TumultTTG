@@ -16,7 +16,7 @@
       rngs: {}, // one number per random stream, made the first time it is asked for (T.runStream)
       launched: 0,
       heroes: [],
-      crystals: 6,
+      crystals: 6, // the squad's starting crystals; they become the players' purses when the route opens (T.settlePurses)
       boons: [],
       map: null,
       nodeId: null,
@@ -73,35 +73,89 @@
     h.upUnspent = R().START_UP;
     return h;
   };
+  /**
+   * Which of a hero's clades each held trait counts toward, so that no clade holds more than
+   * MAX_PER_SPECIES: a trait two of the hero's clades carry counts toward either. Null when no way fits.
+   */
+  T.cladeSlots = function (h, cards) {
+    const cap = R().MAX_PER_SPECIES;
+    const load = {};
+    const slot = {};
+    const ids = cards.slice().sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
+    const place = (i) => {
+      if (i === ids.length) return true;
+      for (const sp of T.CARD[ids[i]].clades) {
+        if (!h.species.includes(sp) || (load[sp] || 0) >= cap) continue;
+        load[sp] = (load[sp] || 0) + 1;
+        slot[ids[i]] = sp;
+        if (place(i + 1)) return true;
+        load[sp]--;
+      }
+      return false;
+    };
+    return place(0) ? slot : null;
+  };
+  /** How many of a hero's traits count toward one clade. */
+  T.cladeCount = (h, sp) => Object.values(T.cladeSlots(h, h.cards) || {}).filter((s) => s === sp).length;
+  /**
+   * Can this hero take this trait? A trait two of their clades carry may be taken a second time, once:
+   * the second copy is not a card but DOUBLE_UP upgrade points bound to the first ({ ok, double: true }).
+   */
   T.canAddCard = function (h, cardId) {
     const c = T.CARD[cardId];
     if (!c) return { ok: false, why: 'unknown' };
-    if (!h.species.includes(c.sp)) return { ok: false, why: 'not your bloodline' };
-    if (h.cards.includes(cardId)) return { ok: false, why: 'already held' };
+    const mine = c.clades.filter((sp) => h.species.includes(sp));
+    if (!mine.length) return { ok: false, why: 'not your bloodline' };
+    if (h.cards.includes(cardId)) {
+      if (mine.length < 2) return { ok: false, why: 'already held' };
+      if (h.bound && h.bound[cardId] != null) return { ok: false, why: 'already taken twice' };
+      const u = h.up[cardId] || [0, 0];
+      if (u[0] + u[1] + R().DOUBLE_UP > R().P_CAP + R().E_CAP) return { ok: false, why: 'already fully upgraded' };
+      return { ok: true, double: true };
+    }
     if (h.cards.length >= R().MAX_CARDS) return { ok: false, why: 'kit is full (9)' };
-    const n = h.cards.filter((id) => T.CARD[id].sp === c.sp).length;
-    if (n >= R().MAX_PER_SPECIES) return { ok: false, why: `already 3 of 9 from ${T.SPECIES[c.sp].name}` };
+    if (!T.cladeSlots(h, h.cards.concat(cardId)))
+      return { ok: false, why: `already 3 of 9 from ${mine.map((sp) => T.SPECIES[sp].name).join(' and ')}` };
     return { ok: true };
   };
   T.addCard = function (h, cardId) {
     const r = T.canAddCard(h, cardId);
     if (!r.ok) return r;
+    if (r.double) {
+      h.bound = h.bound || {};
+      h.bound[cardId] = R().DOUBLE_UP;
+      return { ok: true, double: true };
+    }
     h.cards.push(cardId);
     h.up[cardId] = [0, 0];
     return { ok: true };
   };
+  /** Points spent on a card beyond what is bound to it: those came from (and go back to) the free pool. */
+  const freeSpent = (h, cardId) => {
+    const u = h.up[cardId] || [0, 0];
+    return Math.max(0, u[0] + u[1] - ((h.bound && h.bound[cardId]) || 0));
+  };
+  /** Upgrade points bound to this card and not yet spent on it. */
+  T.boundLeft = (h, cardId) => {
+    const u = h.up[cardId] || [0, 0];
+    return Math.max(0, ((h.bound && h.bound[cardId]) || 0) - u[0] - u[1]);
+  };
   T.removeCard = function (h, cardId) {
+    h.upUnspent += freeSpent(h, cardId);
     h.cards = h.cards.filter((c) => c !== cardId);
-    const up = h.up[cardId] || [0, 0];
-    h.upUnspent += up[0] + up[1];
     delete h.up[cardId];
+    if (h.bound) delete h.bound[cardId];
   };
   T.draftPack = function (run, h, size) {
     size = size || 4;
-    // pool: every card of the hero's species they don't hold and could still take; weighted so each species shows up
+    // pool: every card of the hero's clades they could still take (a trait two of them share, a second
+    // time); weighted so each clade shows up
     const pool = T.CARDS.filter((c) => T.canAddCard(h, c.id).ok);
     const bySp = {};
-    pool.forEach((c) => (bySp[c.sp] = bySp[c.sp] || []).push(c));
+    pool.forEach((c) => {
+      const sp = c.clades.find((x) => h.species.includes(x));
+      (bySp[sp] = bySp[sp] || []).push(c);
+    });
     const rng = T.runStream(run, 'squad');
     const sps = rng.shuffle(Object.keys(bySp));
     const pack = [];
@@ -139,15 +193,18 @@
     const i = which === 'E' ? 1 : 0;
     const cap = which === 'E' ? R().E_CAP : R().P_CAP;
     const cur = h.up[cardId] || [0, 0];
+    // a point bound to this card (a trait taken twice) is spent before a free one, and comes back last
     if (delta > 0) {
-      if (h.upUnspent < delta) return { ok: false, why: 'no UP' };
       if (cur[i] + delta > cap) return { ok: false, why: 'cap' };
+      const fromBound = Math.min(delta, T.boundLeft(h, cardId));
+      if (h.upUnspent < delta - fromBound) return { ok: false, why: 'no UP' };
       cur[i] += delta;
-      h.upUnspent -= delta;
+      h.upUnspent -= delta - fromBound;
     } else {
       if (cur[i] + delta < 0) return { ok: false };
+      const toFree = Math.min(-delta, freeSpent(h, cardId));
       cur[i] += delta;
-      h.upUnspent -= delta;
+      h.upUnspent += toFree;
     }
     h.up[cardId] = cur;
     return { ok: true };
@@ -169,6 +226,15 @@
     }
   };
   T.autoAllocate = function (h) {
+    // points bound to a card go on that card: E until it is awake, then P and E in turn
+    for (const cid of h.cards) {
+      let guard = 0;
+      while (T.boundLeft(h, cid) > 0 && guard++ < 6) {
+        const u = h.up[cid];
+        const which = u[1] < 1 || u[1] < u[0] ? 'E' : 'P';
+        if (!T.adjustUp(h, cid, which, 1).ok && !T.adjustUp(h, cid, which === 'E' ? 'P' : 'E', 1).ok) break;
+      }
+    }
     T.awaken(h);
     // spend on signatures first: E for capability cards, P for cheap strikes
     const order = h.cards.slice().sort((a, b) => T.CARD[b].sig - T.CARD[a].sig);
@@ -188,8 +254,7 @@
   };
   T.respecHero = function (h) {
     h.cards.forEach((c) => {
-      const u = h.up[c];
-      h.upUnspent += u[0] + u[1];
+      h.upUnspent += freeSpent(h, c);
       h.up[c] = [0, 0];
     });
   };
@@ -244,6 +309,7 @@
 
   /* ───────────────────────────── MAP ───────────────────────────── */
   T.startMap = function (run) {
+    T.settlePurses(run);
     run.map = T.genTideMap(T.runStream(run, 'map'));
     run.phase = 'map';
     run.available = run.map.rows[0].slice();
@@ -274,6 +340,7 @@
     return { ok: true, type };
   };
   T.launchMission = function (run, type, tier, pageId) {
+    T.settlePurses(run);
     const gen = T.MISSIONS[type];
     const seed = T.missionSeed(run, type, tier);
     run.launched++;
@@ -332,17 +399,22 @@
     const boss = m.isBoss;
     let up = 2 + bonusHit + (elite ? 1 : 0);
     let crystals = 4 + m.tier + bonusHit * 2 + (elite ? 4 : 0) + (boss ? 10 : 0);
-    for (const h of run.heroes)
+    // the mission's crystals are shared out among the purses; a pilot's own boon pays its own player
+    const purse = T.splitCrystals(crystals, run.purses.length);
+    run.heroes.forEach((h, i) => {
       for (const v of T.boonVals(h, 'reward')) {
         up += v.up || 0;
         crystals += v.crystals || 0;
+        purse[T.purseSeat(run, i)] += v.crystals || 0;
       }
+    });
     // every pilot gets an upgrade of their own: a trait offer each, and on an elite a boon offer each
     const offers = T.cardOffers(run, 3);
     const boons = elite ? T.boonOffers(run, 2) : null;
     run.lastReward = {
       up,
       crystals,
+      purse,
       offers,
       boons,
       bonus: m.bonus.map((b) => Object.assign({}, b)),
@@ -411,7 +483,7 @@
     const m = run.mission;
     const rw = run.lastReward;
     run.mission = null;
-    run.crystals = m.crystals;
+    run.purses = m.purses.slice();
     run.secondWindUsed = m.secondWindUsed;
     run.stats.missions++;
     run.stats.kills += m.stats.kills;
@@ -436,7 +508,7 @@
       notes: T.notesOf(m), // the players' own lines of story, for the chronicle
     });
     if (m.won) {
-      run.crystals += rw.crystals;
+      rw.purse.forEach((n, s) => (run.purses[s] += n));
       run.heroes.forEach((h) => (h.upUnspent += rw.up));
     }
     if (m.isBoss && m.won) run.won = true;
@@ -447,6 +519,7 @@
         rw.lifeline = true;
         rw.up = 0;
         rw.crystals = 0;
+        rw.purse = run.purses.map(() => 0);
         rw.offers = run.heroes.map(() => []);
         rw.boons = null;
         rw.picked = run.heroes.map(() => true);
@@ -485,12 +558,12 @@
     if (r.ok) rw.picked[heroIdx] = true;
     return r;
   };
-  /** A hero passes on their trait offer, for 2 ◇ to the squad. */
+  /** A hero passes on their trait offer, for 2 ◇ to its player's purse. */
   T.skipOfferedCard = function (run, heroIdx) {
     const rw = run.lastReward;
     if (rw.picked[heroIdx]) return { ok: false, why: 'already chosen' };
     rw.picked[heroIdx] = true;
-    run.crystals += 2;
+    run.purses[T.purseSeat(run, heroIdx)] += 2;
     return { ok: true };
   };
   /** A hero takes a boon from their own offer. */
@@ -520,9 +593,10 @@
   T.buyGear = function (run, gearId, heroIdx) {
     const g = T.GEAR_BY[gearId];
     const h = run.heroes[heroIdx];
-    if (run.crystals < g.price) return { ok: false, why: 'not enough ◇' };
+    const s = T.purseSeat(run, heroIdx);
+    if (run.purses[s] < g.price) return { ok: false, why: 'not enough ◇' };
     if (h.gear.length >= R().GEAR_SLOTS) return { ok: false, why: 'gear slots full (2)' };
-    run.crystals -= g.price;
+    run.purses[s] -= g.price;
     h.gear.push({ id: gearId, cds: [0, 0] });
     run.haven.gear = run.haven.gear.filter((x) => x !== gearId);
     run.haven.bought.push(gearId);
@@ -531,21 +605,22 @@
   T.sellGear = function (run, heroIdx, gi) {
     const h = run.heroes[heroIdx];
     const g = h.gear.splice(gi, 1)[0];
-    if (g) run.crystals += Math.floor(T.GEAR_BY[g.id].price / 2);
+    if (g) run.purses[T.purseSeat(run, heroIdx)] += Math.floor(T.GEAR_BY[g.id].price / 2);
   };
   T.buyConsumable = function (run, cid, heroIdx) {
     const c = T.CONSUMABLE_BY[cid];
     const h = run.heroes[heroIdx];
-    if (run.crystals < c.price) return { ok: false, why: 'not enough ◇' };
+    const s = T.purseSeat(run, heroIdx);
+    if (run.purses[s] < c.price) return { ok: false, why: 'not enough ◇' };
     if (h.consumables.length >= 3) return { ok: false, why: 'pack full (3)' };
-    run.crystals -= c.price;
+    run.purses[s] -= c.price;
     h.consumables.push(cid);
     return { ok: true };
   };
   T.havenRest = function (run, full) {
     if (full) {
-      if (run.crystals < 3) return { ok: false, why: 'need 3 ◇' };
-      run.crystals -= 3;
+      // the squad's repair: paid from the fullest purse first
+      if (!T.payShared(run, 3)) return { ok: false, why: 'need 3 ◇' };
       run.heroes.forEach((h) => (h.hp = h.maxHp));
     } else run.heroes.forEach((h) => (h.hp = Math.min(h.maxHp, h.hp + Math.ceil((h.maxHp - h.hp) / 2))));
     run.haven.healed = true;
@@ -566,11 +641,13 @@
     const ev = run.event.def;
     const opt = ev.options[optIdx];
     const fx = opt.fx || {};
-    if (opt.cost && opt.cost.crystals && run.crystals < opt.cost.crystals) return { ok: false, why: 'not enough ◇' };
-    if (opt.cost && opt.cost.crystals) run.crystals -= opt.cost.crystals;
+    // an event's price is the squad's, paid from the fullest purse first; what it gives is shared out
+    if (opt.cost && opt.cost.crystals && T.totalCrystals(run) < opt.cost.crystals)
+      return { ok: false, why: 'not enough ◇' };
+    if (opt.cost && opt.cost.crystals) T.payShared(run, opt.cost.crystals);
     const hero = run.heroes[heroIdx != null ? heroIdx : T.runStream(run, 'event').int(run.heroes.length)];
     let followup = null;
-    if (fx.crystals) run.crystals += fx.crystals;
+    if (fx.crystals) T.gainShared(run, fx.crystals);
     if (fx.up) run.heroes.forEach((h) => (h.upUnspent += fx.up));
     if (fx.healAll === 'full') run.heroes.forEach((h) => (h.hp = h.maxHp));
     else if (fx.healAll === 'half')
@@ -592,8 +669,9 @@
       followup = { kind: 'boonGiven', boon: aff, hero: hero.name };
     }
     if (fx.audit) {
-      if (run.crystals >= 10) run.crystals = Math.ceil(run.crystals / 2);
-      else run.crystals += 4;
+      // the audit reads the squad's crystals together, and halves every purse alike
+      if (T.totalCrystals(run) >= 10) run.purses = run.purses.map((n) => Math.ceil(n / 2));
+      else T.gainShared(run, 4);
     }
     if (fx.respec) {
       T.respecHero(hero);
@@ -608,9 +686,11 @@
   };
   T.tradeCard = function (run, heroIdx, dropId) {
     const h = run.heroes[heroIdx];
-    const sp = T.CARD[dropId].sp;
+    const sp = T.CARD[dropId].clades.find((x) => h.species.includes(x)) || T.CARD[dropId].sp;
     T.removeCard(h, dropId);
-    const cands = T.cardsOf(sp).filter((c) => T.canAddCard(h, c.id).ok);
+    const cands = T.cardsOf(sp).filter(
+      (c) => c.id !== dropId && !T.canAddCard(h, c.id).double && T.canAddCard(h, c.id).ok,
+    );
     const nc = T.runStream(run, 'event').pick(cands);
     if (nc) T.addCard(h, nc.id);
     return nc ? nc.id : null;
@@ -623,7 +703,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 13;
+  T.SAVE_VERSION = 15;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -719,6 +799,31 @@
     12(r) {
       for (const x of r.history || []) if (!x.notes) x.notes = [];
       r.v = 13;
+    },
+    // 2.39 gives each player a purse of their own. An older run's crystals are shared out among its players
+    // (one player keeps them all), and so are a mission's and an open reward's. A squad still being drafted
+    // keeps its starting crystals until the route opens.
+    13(r) {
+      const n = r.party && r.party.players ? r.party.players.length : 1;
+      if (r.phase !== 'draft' && typeof r.crystals === 'number') {
+        r.purses = T.splitCrystals(r.crystals, n);
+        delete r.crystals;
+      }
+      const m = r.mission;
+      if (m && typeof m.crystals === 'number') {
+        m.purses = T.splitCrystals(m.crystals, n);
+        m.owner = (r.heroes || []).map((h, i) => (r.party && r.party.owner ? r.party.owner[i] || 0 : 0));
+        delete m.crystals;
+      }
+      const rw = r.lastReward;
+      if (rw && !rw.purse) rw.purse = rw.lifeline ? Array(n).fill(0) : T.splitCrystals(rw.crystals || 0, n);
+      r.v = 14;
+    },
+    // 2.42 lets a trait two of a hero's clades share be taken twice, the second time as upgrade points bound
+    // to it. Nobody in an older save has taken one twice.
+    14(r) {
+      (r.heroes || []).forEach((h) => h && !h.bound && (h.bound = {}));
+      r.v = 15;
     },
   };
   T.deserializeRun = function (json) {

@@ -52,16 +52,83 @@ test('the round ends only when every player is ready', () => {
   assert.equal(T.setReady(solo, [0]), true, 'a solo player is ready alone');
 });
 
-test('the number of players never changes how a run plays', () => {
+test('the number of players changes only whose crystals are whose: one purse each (Garrett, 2026-11-15)', () => {
   const a = T.newRun(77);
   const b = T.newRun(77);
   b.party = T.newParty(2);
   for (const run of [a, b]) {
     H.prebuiltSquad(run, 2, 5);
-    H.playRun(run);
+    T.startMap(run);
+    for (let g = 0; g < 10 && run.phase !== 'mission'; g++) T.chooseNode(run, run.available[0]);
+    H.playMission(run.mission);
   }
-  const strip = (run) => T.serializeRun(Object.assign({}, run, { party: null }));
+  assert.deepEqual(a.purses, [6], 'one player keeps one purse');
+  assert.deepEqual(b.purses, [3, 3], 'two players share the starting crystals out');
+  assert.equal(T.totalCrystals(b.mission), T.totalCrystals(a.mission), 'the same crystals in all');
+  // the mission itself plays the same
+  const strip = (run) =>
+    T.serializeRun(
+      Object.assign({}, run, {
+        party: null,
+        purses: null,
+        mission: Object.assign({}, run.mission, { purses: null, owner: null }),
+      }),
+    );
   assert.equal(strip(b), strip(a));
+});
+
+test('each player buys, sells and fuels gear from their own purse; what the squad earns or pays is shared', () => {
+  const run = T.newRun(91);
+  run.party = T.newParty(2);
+  H.prebuiltSquad(run, 0, 3);
+  run.crystals = 20;
+  T.startMap(run);
+  assert.deepEqual(run.purses, [10, 10]);
+  run.haven = T.havenStock(run);
+  const g = T.GEAR.find((x) => x.price <= 10 && x.price > 0);
+  run.purses = [g.price - 1, 10];
+  assert.equal(T.buyGear(run, g.id, 0).ok, false, "a pilot can't spend its partner's crystals");
+  assert.ok(T.buyGear(run, g.id, 1).ok);
+  assert.deepEqual(run.purses, [g.price - 1, 10 - g.price]);
+  const gi = run.heroes[1].gear.findIndex((x) => x.id === g.id);
+  T.sellGear(run, 1, gi);
+  assert.equal(run.purses[1], 10 - g.price + Math.floor(g.price / 2), 'selling pays the seller');
+  // the squad's repair comes from the fullest purse first
+  run.purses = [5, 1];
+  assert.ok(T.havenRest(run, true).ok);
+  assert.deepEqual(run.purses, [2, 1]);
+  // what the squad earns together is shared out evenly, the odd one to the emptier purse
+  T.gainShared(run, 5);
+  assert.deepEqual(run.purses, [4, 4]);
+  // a trait skipped pays its own player
+  run.lastReward = { picked: [false, false], offers: [[], []] };
+  T.skipOfferedCard(run, 1);
+  assert.deepEqual(run.purses, [4, 6]);
+  // in a mission, gear is fuelled from its player's purse
+  T.launchMission(run, 'swarm', 1);
+  const m = run.mission;
+  assert.deepEqual(m.purses, [4, 6]);
+  assert.deepEqual(m.owner, [0, 1]);
+  assert.equal(T.crystalsFor(m, 1), 6);
+  assert.deepEqual(H.plainProblems(m), []);
+});
+
+test('a save from 2.38 (one purse for the squad) loads with the crystals shared out among its players', () => {
+  const old = require('./fixtures/save-2.38.json');
+  assert.equal(old.v, 13, 'the fixture is a version-13 save');
+  assert.equal(old.party.players.length, 2);
+  assert.equal(old.mission.crystals, 13);
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  assert.equal(run.crystals, undefined);
+  assert.deepEqual(run.purses, [3, 3]);
+  assert.deepEqual(run.mission.purses, [7, 6]);
+  assert.deepEqual(run.mission.owner, [0, 1]);
+  assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run), 'it saves again unchanged');
+  assert.ok(H.playMission(run.mission).over);
+  T.missionRewards(run, run.mission);
+  T.applyMissionResult(run);
+  assert.equal(run.purses.length, 2);
 });
 
 test('a save from 2.11 (mid-mission, before players) loads with one player and plays on', () => {
@@ -151,7 +218,28 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
   ready();
   assert.ok(m.round > round || m.over, "the last player's turn ends the round");
   assert.equal(JSON.stringify(U.run.party.ready), '[false,false]', 'and the next round starts with nobody done');
-  if (!m.over) assert.equal(w.T.turnSeat(U.run), 1, 'and the other player goes first');
+  if (!m.over)
+    assert.equal(w.T.turnSeat(U.run), 0, 'and the same player goes first again: nobody takes two turns in a row');
+
+  // a purse each, and each screen shows only its own player's buttons in the shop and the upgrades
+  const T = w.T;
+  assert.equal(JSON.stringify(U.run.purses), '[3,3]', 'the starting crystals are shared out');
+  U.run.mission = null;
+  U.run.phase = 'haven';
+  U.run.haven = T.havenStock(U.run);
+  U.run.purses[0] = 40;
+  U.screen = 'haven';
+  U.render();
+  const buys = () =>
+    [...d.querySelectorAll('[data-act="buyGear"]')].map((b) => b.getAttribute('data-arg').split('|')[1]);
+  assert.ok(buys().length && buys().every((i) => i === '1'), "the guest's screen offers to buy only for its own pilot");
+  assert.ok(d.querySelector('[data-act="buyGear"]').disabled, 'and from its own purse (3 ◇)');
+  assert.match(d.body.textContent, /Player 1/, 'both purses are shown, named');
+  assert.ok(!d.querySelector('[data-act="train"][data-arg="0"]'), "nor can it train the host's pilot");
+  U.seats = [0];
+  U.render();
+  assert.ok(buys().every((i) => i === '0'));
+  assert.ok(!d.querySelector('[data-act="buyGear"]').disabled, "the host's 40 ◇ are the host's to spend");
   assert.deepEqual(errors, []);
 });
 
@@ -183,7 +271,7 @@ test('a command does what the direct call does, and only for its own player', ()
   const round = b.mission.round;
   assert.ok(T.execCommand(b, { op: 'ready' }, [1]).ended);
   assert.ok(b.mission.round > round || b.mission.over);
-  if (!b.mission.over) assert.equal(T.turnSeat(b), 1, 'the lead changes hands each round');
+  if (!b.mission.over) assert.equal(T.turnSeat(b), 0, 'the host leads every round');
   assert.equal(T.execCommand(b, { op: 'nonsense', hero: 0 }, null).ok, false);
 });
 

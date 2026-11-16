@@ -21,10 +21,10 @@ function createHarness(T = loadTumult()) {
     for (let k = 0; k < 2; k++) {
       const species = rng.shuffle(T.SPECIES_ORDER.filter((s) => s !== 'human')).slice(0, 2);
       const h = T.newDraftHero(run, 'Drafted' + k, 'the drafted', species);
-      for (let p = 0; p < T.RULES.START_CARDS; p++) {
+      for (let p = 0; p < 3 * T.RULES.START_CARDS && h.cards.length < T.RULES.START_CARDS; p++) {
         const pack = T.draftPack(run, h, 4);
         if (!pack.length) break;
-        T.addCard(h, pack[rng.int(pack.length)]);
+        T.addCard(h, pack[rng.int(pack.length)]); // a trait taken twice is UP, not a card: keep drafting
       }
       T.autoAllocate(h);
       run.heroes.push(h);
@@ -108,10 +108,10 @@ function createHarness(T = loadTumult()) {
         run.heroes.forEach((h) => T.autoAllocate(h));
         T.finishNode(run);
       } else if (run.phase === 'haven') {
-        T.havenRest(run, run.crystals >= 6);
+        T.havenRest(run, T.totalCrystals(run) >= 6);
         for (const g of run.haven.gear.slice()) {
           const hi = run.heroes.findIndex((h) => h.gear.length < 2);
-          if (hi >= 0 && run.crystals >= T.GEAR_BY[g].price) T.buyGear(run, g, hi);
+          if (hi >= 0 && T.crystalsFor(run, hi) >= T.GEAR_BY[g].price) T.buyGear(run, g, hi);
         }
         T.finishNode(run);
       } else if (run.phase === 'event') {

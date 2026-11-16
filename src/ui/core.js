@@ -126,14 +126,59 @@
       return `<div class="face ${fk} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk === 'P' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${U.kw(esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E)))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
     };
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
-      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp">${U.icClade(c.sp)} ${esc(sp.name)}</span></div>
-      ${face('P')}${face('E')}
+      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : ''}>${U.icClade(c.sp)} ${esc(c.kin || sp.name)}</span></div>
+      ${U.cardArt(c)}${face('P')}${face('E')}
+      ${o.double ? `<div class="small double-note">Already held: taking it again gives ${T.RULES.DOUBLE_UP} UP to spend on this card alone.</div>` : ''}
+      ${o.bound ? `<div class="small double-note">${o.bound} UP bound to this card</div>` : ''}
       ${o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button> &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button></div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P} · E${E}</div>` : ''}
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div>`;
   };
-  /** A die showing face `f`. `kind` (a key of T.DICE) marks a special die with its size in the corner. */
-  const dieHTML = (f, extra, kind) => {
+  /**
+   * The dice are drawn as dice, each in its own shape (Garrett, 2026-11-15: "dice should look like dice"): the
+   * plain die a d20, an element's die a d8, the ethereal die a d12. Outline and facet lines on a 40-unit grid.
+   */
+  U.DIE_SHAPE = {
+    // an icosahedron seen down a corner: a hexagon, the front face in the middle, three faces round it
+    d20: {
+      out: 'M20 1.5 36 10.8 36 29.2 20 38.5 4 29.2 4 10.8z',
+      lines:
+        'M20 10.5 29.5 27 10.5 27zM20 10.5 20 1.5M20 10.5 36 10.8M20 10.5 4 10.8M29.5 27 36 29.2M29.5 27 36 10.8M29.5 27 20 38.5M10.5 27 4 29.2M10.5 27 20 38.5M10.5 27 4 10.8',
+    },
+    // a dodecahedron seen face on: a decagon, the front pentagon and five faces round it
+    d12: {
+      out: 'M20 1.5 30.9 5 37.6 14.3 37.6 25.7 30.9 35 20 38.5 9.1 35 2.4 25.7 2.4 14.3 9.1 5z',
+      lines:
+        'M20 11.5 28.6 17.7 25.3 27.8 14.7 27.8 11.4 17.7zM20 11.5 20 1.5M28.6 17.7 37.6 14.3M25.3 27.8 30.9 35M14.7 27.8 9.1 35M11.4 17.7 2.4 14.3',
+    },
+    // an octahedron turned a little: a diamond with its front corner nearer the eye
+    d8: { out: 'M20 1.5 36.5 19 20 38.5 3.5 19z', lines: 'M3.5 19 23 24 36.5 19M20 1.5 23 24 20 38.5' },
+  };
+  /** The sides of a die of `kind` (a key of T.DICE; anything else is the plain d20). */
+  U.dieSides = (kind) => (T.DICE[kind] && T.DICE[kind].sides) || 20;
+  /** A die's body as SVG, in its own shape, for its kind. */
+  U.dieSVG = (kind) => {
+    const sh = U.DIE_SHAPE['d' + U.dieSides(kind)] || U.DIE_SHAPE.d20;
+    return `<svg class="dbody" viewBox="0 0 40 40" aria-hidden="true"><path class="o" d="${sh.out}"/><path class="l" d="${sh.lines}"/></svg>`;
+  };
+  /** What shows on a rolled face: AP its number, an etherion its symbol. */
+  U.faceGlyph = (f) => (f === 'AP' ? '<b>1</b>' : f === 'AP2' ? '<b>2</b>' : U.ic('el.' + f, f));
+  /**
+   * The art at the top of an ability card: what its two faces do, in pictures. The card is cut on a diagonal,
+   * the Physical side in steel on the left and the Ethereal side in its etherion's colour on the right, each
+   * with its face's verb drawn large, over the silhouette of the clade the trait comes from. `asleep` dims the
+   * Ethereal side of a card not yet awakened.
+   */
+  U.cardArt = (c, asleep) => {
+    const elt = (c.E && c.E.elt) || c.el;
+    return `<div class="hart${asleep ? ' asleep' : ''}" style="--c:${EL[elt].color}" aria-hidden="true"><i class="clade">${U.icClade(c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E, c.el)}</i></div>`;
+  };
+  /**
+   * A die showing face `f`. `kind` is a key of T.DICE (the plain die when left out); `attrs` adds attributes to
+   * the element (the mission screen's click target). The tooltip says what the face pays for, the Channel an
+   * etherion is on its own, and which die it was rolled on.
+   */
+  const dieHTML = (f, extra, kind, attrs) => {
     const k = kind && kind !== 'plain' && T.DICE[kind] ? kind : '';
     const what =
       f === 'AP'
@@ -143,12 +188,17 @@
           : f === 'O'
             ? 'Omni — spends as any etherion.'
             : EL[f].name + ' — ' + EL[f].surface;
-    const from = k ? ` Rolled on your ${T.DICE[k].n} (d${T.DICE[k].sides}).` : '';
-    return `<span class="die ${f} ${k ? 'kind k-' + k : ''} ${extra || ''}" data-tip="${esc(what + from)}">${f === 'AP2' ? '2' : f === 'AP' ? '·' : U.ic('el.' + f, f)}${k ? `<i class="dk">${T.DICE[k].sides}</i>` : ''}</span>`;
+    const acts = (T.BASIC || []).filter((b) => b.el === f);
+    const chan = acts.length
+      ? ` Or spend it alone as a Channel: ${acts.map((b) => b.n + (b.ap ? ` (+${b.ap} AP)` : '')).join(', ')}.`
+      : '';
+    const sides = U.dieSides(k || 'plain');
+    const from = ` Rolled on your ${k ? T.DICE[k].n : 'plain die'} (d${sides}).`;
+    return `<span class="die ${f} d${sides} ${k ? 'kind k-' + k : ''} ${extra || ''}" ${attrs || ''} data-tip="${esc(what + chan + from)}">${U.dieSVG(k || 'plain')}<i class="face">${U.faceGlyph(f)}</i></span>`;
   };
   /** The key to the die symbols, always beside a pilot's dice. */
   U.diceKey = () =>
-    `<div class="dicekey small dim" aria-label="Dice key">${['M', 'C', 'S', 'T'].map((e) => `<span>${U.ic('el.' + e, e)} ${esc(EL[e].name)}</span>`).join('')}<span>◇ Omni</span><span>· AP</span></div>`;
+    `<div class="dicekey small dim" aria-label="Dice key">${['M', 'C', 'S', 'T', 'O'].map((e) => `<span>${U.ic('el.' + e, e)} ${esc(EL[e].name)}</span>`).join('')}<span>${U.ic('ap', '·')} AP</span><span class="dk-sz">d20 plain · d8 element · d12 ethereal</span></div>`;
   U.dieHTML = dieHTML;
 
   /* ───────────── header strip ───────────── */
@@ -275,9 +325,9 @@
         <div class="row" style="margin-top:12px"><button class="primary" data-act="openPacks" ${d.species.length === 2 ? '' : 'disabled'}>Open the first pack</button><button class="ghost" data-act="draftBack">Back</button></div></div>`;
     } else if (d.step === 'packs') {
       const h = d.hero;
-      body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${h.cards.filter((c) => T.CARD[c].sp === s).length}/3`).join(' ')}</span></div>
+      body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' ')}</span></div>
         <p class="dim small">Each pack mixes your three bloodlines. ★ marks a species' signature traits. Hover any face for exact numbers at your current P/E.</p>
-        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard' })).join('')}</div>
+        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', double: h.cards.includes(cid) })).join('')}</div>
         <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button></div>
         ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
     } else if (d.step === 'wait') {
@@ -287,7 +337,7 @@
       const h = d.hero;
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
         <p class="dim small">P deepens the physical face's numbers (reliable, AP-fed). E awakens the ethereal face — it cannot be played until its card has E 1 — and scales its <i>capability</i>, something P can never buy. Every hero sets out with at least ${T.RULES.START_AWAKE} cards awakened. Caps: P 3, E 3 per card.</p>
-        <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true })).join('')}</div>
+        <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, bound: T.boundLeft(h, cid) })).join('')}</div>
         ${U.pilotQuestion ? U.pilotQuestion(h, d) : ''}
         <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set out'}</button><button class="ghost" data-act="draftBack" data-tip="Build this pilot another way: a different pre-made pilot, or a fresh draft.">Back</button></div></div>`;
     }
@@ -343,7 +393,9 @@
         return;
       }
       U.sfx.click();
-      d.picks++;
+      // a trait taken a second time is upgrade points on it, not a card: the kit still needs its six
+      if (r.double) U.toast(`${T.CARD[arg].name} taken twice: ${T.RULES.DOUBLE_UP} UP to spend on it alone.`);
+      d.picks = d.hero.cards.length;
       if (d.picks >= T.RULES.START_CARDS) {
         T.awaken(d.hero);
         d.step = 'up';
@@ -411,6 +463,30 @@
   };
   U.NODE_ICON = NODE_ICON;
   U.NODE_NAME = NODE_NAME;
+  /** May this screen act for hero i? Everyone may with one player; with two, each for their own pilot. */
+  const own = (i) => !U.run || T.mayActFor(U.run, U.seats, i);
+  U.own = own;
+  /**
+   * The omnicrystals, as pills: one purse for one player; with two players, a purse each, named, this
+   * screen's own marked (T.splitCrystals and friends, src/engine/party.js). `x` is the run or the mission.
+   */
+  U.purseHTML = function (x, compact) {
+    const run = U.run;
+    const purses = x && x.purses ? x.purses : [T.totalCrystals(x || {})];
+    const ic = U.ic('crystal', '◇', 'tiny');
+    if (purses.length < 2)
+      return `<span class="pill purse" data-tip="Omnicrystals: buy gear at a haven and fuel it in a mission.">${ic} ${purses[0]}</span>`;
+    const nameOf = (s) => (run && run.party && run.party.players[s] ? run.party.players[s].name : 'Player ' + (s + 1));
+    if (compact)
+      return `<span class="pill purse" data-tip="${esc(`<b>Omnicrystals, a purse each</b><div>${purses.map((n, s) => `${esc(nameOf(s))}: ${n} ◇`).join(' · ')}</div><div class='dim small'>Your pilot fuels its gear from your own purse.</div>`)}">${ic} ${purses.map((n, s) => (U.seats && U.seats.includes(s) ? `<b>${n}</b>` : n)).join(' · ')}</span>`;
+    return purses
+      .map((n, s) => {
+        const name = nameOf(s);
+        const mine = U.seats && U.seats.includes(s);
+        return `<span class="pill purse seat-${s}${mine ? ' mine' : ''}" data-tip="${esc(`<b>${esc(name)}'s omnicrystals</b><div>Each player has their own: your pilot buys, sells and fuels gear from yours. What the squad earns is shared out evenly; what it pays together comes from the fuller purse first.</div>`)}">${ic} ${n} <span class="dim small">${esc(name)}</span></span>`;
+      })
+      .join('');
+  };
   function partyBar(run) {
     return `<div class="partybar">${run.heroes
       .map(
@@ -419,7 +495,7 @@
           i,
         ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b>${U.seatTag ? U.seatTag(i) : ''}<span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
       <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc)}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}${h.consumables.map((c) => `<span class="pill">${U.icCons(c)}</span>`).join('')}</div>
-      <div class="row" style="margin-top:6px"><button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button><button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button></div></div>`,
+      <div class="row" style="margin-top:6px">${own(i) ? `<button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button>` : ''}<button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button>${T.playerCount(run) > 1 && run.purses ? `<span class="right pill small" data-tip="${esc(T.ownerName(run, i))}'s omnicrystals">${U.ic('crystal', '◇', 'tiny')} ${T.crystalsFor(run, i)}</span>` : ''}</div></div>`,
       )
       .join('')}</div>`;
   }
@@ -601,7 +677,7 @@
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    return `<div class="wrap">${header('The Route', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${titleBtn()}`)}
+    return `<div class="wrap">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${titleBtn()}`)}
       ${renderPassage(run)}
       ${partyBar(run)}
       <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">${expeditionLine(run)}Pick the next stop. Glowing stops are reachable. ${esc(T.threatTitle(run))} waits at the end of the route.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
@@ -611,13 +687,13 @@
   U.openTrain = function (i) {
     const h = U.run.heroes[i];
     U.openModal(
-      `<div class="row"><h3>${esc(h.name)} — Train</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUpRun" data-arg="${i}">Auto</button><button class="sm" data-act="closeModal">Done</button></div><p class="dim small">Spend UP on P (physical magnitude) or E (awakens the ethereal face at E 1, then scales its capability). Caps 3/3.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, flavor: false }).replace(/data-act="up"/g, `data-act="upRun" data-hero="${i}"`)).join('')}</div>`,
+      `<div class="row"><h3>${esc(h.name)} — Train</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUpRun" data-arg="${i}">Auto</button><button class="sm" data-act="closeModal">Done</button></div><p class="dim small">Spend UP on P (physical magnitude) or E (awakens the ethereal face at E 1, then scales its capability). Caps 3/3.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, flavor: false, bound: T.boundLeft(h, cid) }).replace(/data-act="up"/g, `data-act="upRun" data-hero="${i}"`)).join('')}</div>`,
     );
   };
   U.openKit = function (i) {
     const h = U.run.heroes[i];
     U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => U.icClade(s) + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
-    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} <button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half">sell</button></span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
+    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} ${own(i) ? `<button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half, to your own purse">sell</button>` : ''}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
     <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false })).join('')}</div>`);
   };
 
@@ -634,12 +710,15 @@
       : run.heroes
           .map((h, i) => {
             const cards = rw.offers[i];
+            // a partner's upgrade is theirs to choose: shown, never offered to this screen
+            if (!own(i))
+              return `<hr><h3>${esc(h.name)}'s upgrade</h3><p class="dim small">${rw.picked[i] && (!rw.boons || rw.boonPicked[i]) ? '✓ Chosen.' : `${esc(T.ownerName(run, i))} is choosing…`}</p>`;
             const trait = rw.picked[i]
               ? `<p class="dim small">✓ Trait chosen.</p>`
               : `<p class="dim small">Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.</p><div class="pack">${cards
                   .map(
                     (cid) =>
-                      `<div class="offer">${U.cardHTML(cid, { flavor: false })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
+                      `<div class="offer">${U.cardHTML(cid, { flavor: false, double: h.cards.includes(cid) })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
                   )
                   .join(
                     '',
@@ -654,7 +733,7 @@
           .join('');
     const ready = T.rewardSettled(rw);
     return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete', titleBtn())}<div class="panel">
-      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill">+${rw.crystals} ◇</span></div>${bonus}`}
+      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill" ${rw.purse && rw.purse.length > 1 ? `data-tip="${esc(rw.purse.map((n, s) => `${esc(run.party.players[s].name)}: +${n}`).join(' · '))}"` : ''}>+${rw.crystals} ◇${rw.purse && rw.purse.length > 1 ? ` (${rw.purse.map((n) => '+' + n).join(' / ')})` : ''}</span></div>${bonus}`}
       ${perHero}
       <div class="row" style="margin-top:14px"><button class="primary" data-act="rewardDone" ${ready ? '' : 'disabled'}>Continue to the map</button></div></div></div>`;
   }
@@ -687,15 +766,21 @@
   function renderHaven() {
     const run = U.run;
     const hv = run.haven;
-    return `<div class="wrap">${header('Haven', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${titleBtn()}`)}
+    return `<div class="wrap">${header('Haven', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${titleBtn()}`)}
       ${partyBar(run)}
-      ${U.sceneCard(U.EVENT_SCENES.haven, `<h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || run.crystals < 3 ? 'disabled' : ''}>Full repair — 3 ◇</button></div><p class="story-text small">Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.</p>`, 'haven-rest')}
+      ${U.sceneCard(U.EVENT_SCENES.haven, `<h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || T.totalCrystals(run) < 3 ? 'disabled' : ''} data-tip="The squad's repair: both pilots back to full.${T.playerCount(run) > 1 ? ' Paid from the fuller purse first.' : ''}">Full repair — 3 ◇</button></div><p class="story-text small">Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.</p>`, 'haven-rest')}
       <div class="panel" style="margin-top:12px"><h3>Gear <span class="dim small" style="font-weight:400">— fueled by ◇ per use; 2 slots per hero. Gear grants general verbs, never keyed counters.</span></h3>
         <div class="shop-grid">${
           hv.gear
             .map((gid) => {
               const g = T.GEAR_BY[gid];
-              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm ${run.crystals >= g.price && h.gear.length < 2 ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${run.crystals >= g.price && h.gear.length < 2 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
+              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes
+                .map((h, i) => {
+                  if (!own(i)) return '';
+                  const can = T.crystalsFor(run, i) >= g.price && h.gear.length < 2;
+                  return `<button class="sm ${can ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${can ? '' : 'disabled'}>Buy for ${esc(h.name)}</button>`;
+                })
+                .join('')}</div></div>`;
             })
             .join('') || '<span class="dim small">Sold out.</span>'
         }</div>
@@ -703,7 +788,13 @@
         <div class="shop-grid">${hv.cons
           .map((cid) => {
             const c = T.CONSUMABLE_BY[cid];
-            return `<div class="panel tight"><b>${U.icCons(c.id)} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes.map((h, i) => `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${run.crystals >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>→ ${esc(h.name)}</button>`).join('')}</div></div>`;
+            return `<div class="panel tight"><b>${U.icCons(c.id)} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes
+              .map((h, i) =>
+                own(i)
+                  ? `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${T.crystalsFor(run, i) >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>Buy for ${esc(h.name)}</button>`
+                  : '',
+              )
+              .join('')}</div></div>`;
           })
           .join('')}</div>
       </div>
@@ -720,7 +811,7 @@
       body = `<div class="col">${def.options
         .map((o, i) => {
           const cost = o.cost && o.cost.crystals;
-          const can = !cost || run.crystals >= cost;
+          const can = !cost || T.totalCrystals(run) >= cost;
           return `<button data-act="eventOpt" data-arg="${i}" ${can ? '' : 'disabled'} style="text-align:left;padding:10px 14px">${esc(o.label)}${!can ? ' <span class="dim small">(not enough ◇)</span>' : ''}</button>`;
         })
         .join('')}</div>`;
@@ -751,7 +842,7 @@
       const ready = !f || f.done || !['cardPick', 'tradeCard'].includes(f.kind);
       body = `<p style="font-family:var(--serif);font-size:15px">${esc(ev.result)}</p>${fu}<div class="row" style="margin-top:12px"><button class="primary" data-act="leaveEvent" ${ready ? '' : 'disabled'}>Continue</button></div>`;
     }
-    return `<div class="wrap">${header('Event', `<span class="pill" style="margin-left:6px">${U.ic('crystal', '◇', 'tiny')} ${run.crystals}</span>${titleBtn()}`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
+    return `<div class="wrap">${header('Event', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${titleBtn()}`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
   }
 
   /* ───────────── SUMMARY ───────────── */
@@ -766,7 +857,7 @@
     const won = run.won;
     return `<div class="wrap">${header(won ? T.threatTitle(run) + ' Is Ended' : 'The Expedition Is Lost')}<div class="panel" style="max-width:760px;margin:0 auto">
       <p style="font-family:var(--serif);font-size:16px;line-height:1.5">${esc(T.fillTokens(won ? T.FLAVOR.win[0] : T.FLAVOR.lose[0], { THREAT: T.threatName(run) }))}</p>
-      <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${run.crystals} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
+      <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${T.totalCrystals(run)} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
       <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
       <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}
       ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}${lastWords(run)}</div>` : ''}
@@ -846,6 +937,7 @@
   let shown = null;
   U.render = function () {
     const root = app();
+    if (U.screen !== 'mission' && U.windBed) U.windBed(false); // the wind stays on the board
     let html = '';
     switch (U.screen) {
       case 'title':
