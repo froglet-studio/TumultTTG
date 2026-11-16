@@ -20,5 +20,7 @@ Every document carries a status line:
 | 07 | [Art and UX](07-art-and-ux.md) | Proposed | art direction, layout, forecasts, accessibility |
 | 08 | [Tabletop edition](08-tabletop-edition.md) | Proposed | print-and-play components generated from the same data |
 | 09 | [Engineering](09-engineering.md) | Proposed | cloneable state, the look-ahead player, replays, modules |
+| 10 | [Dice](10-dice.md) | Built (2.29) | a plain d20, an ethereal d12, a d8 for each element |
+| 11 | [Clades](11-clades.md) | Partly built | a clade for every painted pilot animal; traits shared along the tree |
 
 When a proposal is built, update its status line, move the description of what now exists into `docs/reference/`, and leave here only what is still intent.

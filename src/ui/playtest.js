@@ -19,10 +19,10 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.42.0',
+    version: '2.43.0',
     items: [
       {
-        text: 'Groundwork for more clades: one trait can now belong to several clades (every primate, every cat), and a pilot whose two clades share a trait can take it a second time as 2 Upgrade Points that only that card can use. No trait is shared yet, so nothing plays differently in this build. Saves from 2.41 still load.',
+        text: 'Three new clades, the first of the animals painted on Cosmic Shore pilots: Orangutan, Ring-Tailed Lemur and Mandrill. Primates share some traits with Humans and with each other (Grooming, Canopy Leap, Troop Call), and each has four of its own. A human-orangutan pilot can take Tool Use twice: the second time it is 2 UP for that card. Do the three feel different from each other, and from a Human?',
       },
       {
         text: 'Dice look like dice again, in their real shapes: the plain die is a d20 (an icosahedron), an element’s die a d8 (an octahedron) and the ethereal die a d12 (a dodecahedron), with the face it shows in the middle. The same shapes tumble in the roll tray. Your abilities are now cards: each has art showing what its two faces do, the Physical side in steel on the left and the Ethereal side in its etherion’s colour on the right, over the clade it comes from, and each face button carries the same picture. Can you tell what a card does from its art? Do the dice read at a glance?',

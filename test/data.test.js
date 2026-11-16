@@ -6,10 +6,45 @@ const { createHarness } = require('../tools/harness');
 const H = createHarness();
 const { T } = H;
 
-test('catalog: 11 bloodlines × 9 cards, unique ids', () => {
-  assert.equal(T.CARDS.length, 99);
-  assert.equal(new Set(T.CARDS.map((c) => c.id)).size, 99);
-  for (const sp of T.SPECIES_ORDER) assert.equal(T.cardsOf(sp).length, 9, `${sp} should have 9 cards`);
+test('catalog: every clade carries nine traits, ids are unique', () => {
+  assert.equal(new Set(T.CARDS.map((c) => c.id)).size, T.CARDS.length);
+  assert.equal(new Set(T.SPECIES_ORDER).size, T.SPECIES_ORDER.length, 'no clade listed twice');
+  for (const sp of T.SPECIES_ORDER) {
+    assert.ok(T.SPECIES[sp], `${sp} is described`);
+    assert.equal(T.cardsOf(sp).length, 9, `${sp} should have 9 cards`);
+  }
+  for (const c of T.CARDS) {
+    assert.equal(c.clades[0], c.sp, `${c.id}: shown under its first clade`);
+    for (const sp of c.clades) assert.ok(T.SPECIES[sp], `${c.id}: unknown clade ${sp}`);
+  }
+});
+
+test('taxonomy: every clade has a trait of its own that no clade on its branch carries (Garrett, 2026-11-16)', () => {
+  const branch = (sp) => T.SPECIES[sp].branch || sp;
+  for (const sp of T.SPECIES_ORDER) {
+    const kin = T.SPECIES_ORDER.filter((x) => x !== sp && branch(x) === branch(sp));
+    if (!kin.length) continue;
+    const own = T.cardsOf(sp).filter((c) => !c.clades.some((x) => kin.includes(x)));
+    assert.ok(own.length >= 1, `${sp} needs a trait its kin (${kin.join(', ')}) do not carry`);
+  }
+});
+
+test('primates carry some of Human’s traits, and no clade carries one from a branch it is not on', () => {
+  for (const sp of ['orangutan', 'lemur', 'mandrill']) {
+    assert.equal(T.SPECIES[sp].branch, 'Primates');
+    assert.ok(
+      T.cardsOf(sp).some((c) => c.sp === 'human'),
+      `${sp} shares a Human trait`,
+    );
+  }
+  for (const c of T.CARDS) {
+    if (!c.kin) continue;
+    for (const sp of c.clades.slice(1))
+      assert.ok(
+        T.SPECIES[sp].branch === c.kin || T.SPECIES[sp].variant,
+        `${c.id} is written for ${c.kin}; ${sp} is not on it`,
+      );
+  }
 });
 
 test('every face is well-formed and its text resolves at every P/E level', () => {

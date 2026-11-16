@@ -12,8 +12,7 @@ const H = createHarness();
 const { T } = H;
 const R = T.RULES;
 
-// A test-only share: Tool Use is carried by Barn Owls too, so a Human-and-Owl pilot has it from two clades.
-T.shareTrait('hum_tool', 'owl');
+// Tool Use is carried by Humans and Orangutans, so every orangutan pilot has it from two clades.
 
 const hero = (species, cards) => {
   const run = T.newRun(7);
@@ -23,9 +22,9 @@ const hero = (species, cards) => {
 };
 
 test('a shared trait is held once, and a second pick binds upgrade points to it instead', () => {
-  const h = hero(['owl', 'gecko'], ['hum_tool']);
-  assert.deepEqual(T.CARD.hum_tool.clades, ['human', 'owl']);
-  assert.ok(T.cardsOf('owl').some((c) => c.id === 'hum_tool'));
+  const h = hero(['orangutan', 'gecko'], ['hum_tool']);
+  assert.deepEqual(T.CARD.hum_tool.clades, ['human', 'orangutan']);
+  assert.ok(T.cardsOf('orangutan').some((c) => c.id === 'hum_tool'));
   assert.deepEqual(T.canAddCard(h, 'hum_tool'), { ok: true, double: true });
   const free = h.upUnspent;
   assert.deepEqual(T.addCard(h, 'hum_tool'), { ok: true, double: true });
@@ -44,7 +43,7 @@ test("a trait only one of the hero's clades carries is never offered twice", () 
 });
 
 test('bound points are spent on their card first, never on another, and come back last', () => {
-  const h = hero(['owl', 'gecko'], ['hum_tool', 'gec_hide']);
+  const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
   h.upUnspent = 1;
   T.addCard(h, 'hum_tool');
   assert.ok(T.adjustUp(h, 'hum_tool', 'E', 1).ok);
@@ -68,14 +67,14 @@ test('bound points are spent on their card first, never on another, and come bac
 });
 
 test('a shared trait counts toward whichever of its clades has room', () => {
-  const h = hero(['owl', 'gecko'], ['hum_mind', 'hum_grip', 'hum_coop']);
+  const h = hero(['orangutan', 'gecko'], ['hum_persist', 'hum_throw', 'hum_lang']);
   assert.equal(T.cladeCount(h, 'human'), 3);
-  assert.ok(T.canAddCard(h, 'hum_tool').ok, 'a fourth Human trait fits when the owl has room');
+  assert.ok(T.canAddCard(h, 'hum_tool').ok, 'a fourth Human trait fits when the orangutan has room');
   T.addCard(h, 'hum_tool');
-  assert.equal(T.cladeCount(h, 'owl'), 1);
-  ['owl_talon', 'owl_sound'].forEach((id) => T.addCard(h, id));
-  assert.equal(T.canAddCard(h, 'owl_soar').ok, false, 'the owl is full: Tool Use took its third place');
-  assert.equal(T.canAddCard(h, 'hum_lang').ok, false);
+  assert.equal(T.cladeCount(h, 'orangutan'), 1);
+  ['ora_reach', 'ora_leaf'].forEach((id) => T.addCard(h, id));
+  assert.equal(T.canAddCard(h, 'ora_study').ok, false, 'the orangutan is full: Tool Use took its third place');
+  assert.equal(T.canAddCard(h, 'hum_general').ok, false);
 });
 
 test('a save from 2.41 loads with nothing bound and plays on', () => {
