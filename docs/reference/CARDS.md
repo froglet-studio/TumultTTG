@@ -3143,3 +3143,101 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Shimmer* · 1 AP · CD 1 — Shimmer from blue to green: the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Shimmer from blue to green: the next hit on you is 4 less, and your next hit this turn deals +1.)*
 - *Eth — Shift the Light* · 1 AP + 1 Charge · CD 3 — Leave your shimmer behind as a decoy for 2 rounds, move 2, and stay Hidden 1. *(P3/E3: Leave your shimmer behind as a decoy for 4 rounds, move 2, and stay Hidden 1.)*
+
+## 64 · Ostrich — leans S/M
+
+*The biggest bird alive. Cannot fly, does not need to. Outruns horses, kicks like one.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Wide Eyes** · Space · `hoof_eyes`
+
+- *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+
+**Kick** · Mass · `hoof_kick`
+
+- *Phys — Back Kick* · 1 AP · CD 1 — Melee 3, and push it 2. *(P3: Melee 6, and push it 2.)*
+- *Eth — Double Barrel* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Melee 6, push it 3, and it is Weakened 1 this round.)*
+
+**Ground Sprint** · Space · `gbd_sprint`
+
+- *Phys — Dash* · 1 AP · CD 1 — Run 3; your next hit this turn deals +1. *(P3: Run 4; your next hit this turn deals +1.)*
+- *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; your track slides 2 extra, and your next hit this turn deals +1.)*
+
+**Stride** · Space · `ost_stride`
+
+- *Phys — Five Metres* · 1 AP · CD 1 — Stride 2, over foes; your next hit this turn deals +1. *(P3: Stride 5, over foes; your next hit this turn deals +2.)*
+- *Eth — Top Gear* · 1 AP + 1 Space · CD 3 — Stride 4, over foes and hazards; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3/E3: Stride 6, over foes and hazards; the next hit on you is 1 less, and your next hit this turn deals +2.)*
+
+**Head Low** · Time · `ost_head`
+
+- *Phys — Head Down* · 1 AP · CD 1 — Lie flat with your neck along the ground: Hidden 1, and Shield 1 this round. *(P3: Lie flat with your neck along the ground: Hidden 1, and Shield 4 this round.)*
+- *Eth — Just a Bush* · 1 AP + 1 Time · CD 4 — From far off you are only a bush: Hidden 1, heal 2, and your next hit within 3 rounds deals +2. *(P3/E3: From far off you are only a bush: Hidden 2, heal 4, and your next hit within 3 rounds deals +4.)*
+
+**Wing Fan** · Charge · `ost_wing`
+
+- *Phys — Flare* · 1 AP · CD 1 — Flare your wings: foes beside you are Weakened 1, and you and an ally beside you hold Shield 1 this round.
+- *Eth — Distraction* · 1 AP + 1 Charge · CD 3 — Flap and stagger as if hurt, leaving a decoy for 2 rounds; move 2, and both heroes' next hit deals +1. *(P3/E3: Flap and stagger as if hurt, leaving a decoy for 4 rounds; move 2, and both heroes' next hit deals +1.)*
+
+**Stone Gizzard** · Mass · `ost_gizzard`
+
+- *Phys — Swallow Stones* · 1 AP · CD 1 — Swallow a few stones: heal 1, and you are too heavy to push or pull this round. *(P3: Swallow a few stones: heal 4, and you are too heavy to push or pull this round.)*
+- *Eth — Grind* · 1 AP + 1 Mass · CD 4 — Heal 1 at the start of each turn for 3 rounds, and you can't be Weakened or Rooted for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds, and you can't be Weakened or Rooted for 2 rounds.)*
+
+**Nest Ring** · Time · `ost_nest`
+
+- *Phys — Guard the Ring* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round, and the first foe to hit you in melee takes 1. *(P3: You and an ally beside you hold Shield 4 this round, and the first foe to hit you in melee takes 2.)*
+- *Eth — Shared Nest* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 for 2 rounds and heal 1; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 for 2 rounds and heal 1; the next foe to hit you in melee takes 2 and is pushed 1.)*
+
+## 65 · Wild Turkey — leans C/T
+
+*Wary, fast on foot, roosts high. Gobbles at thunder.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Display Fan** · Charge · `bir_fan`
+
+- *Phys — Fan Out* · 1 AP · CD 1 — Spread the fan: a foe within 3 is drawn 1 toward you and Weakened 1 this round; you hold Shield 1. *(P3: Spread the fan: a foe within 3 is drawn 1 toward you and Weakened 1 this round; you hold Shield 2.)*
+- *Eth — Shiver the Train* · 1 AP + 1 Charge · CD 3 — Rattle the whole fan: every foe within 3 is drawn 1 toward you; you hold Shield 2 this round, and your ally's next hit deals +1. *(P3/E3: Rattle the whole fan: every foe within 5 is drawn 1 toward you; you hold Shield 4 this round, and your ally's next hit deals +1.)*
+
+**Alarm Call** · Time · `bir_alarm`
+
+- *Phys — Alarm* · 1 AP · CD 1 — Raise the alarm: see within 2, and both heroes hold Shield 1 this round. *(P3: Raise the alarm: see within 5, and both heroes hold Shield 1 this round.)*
+- *Eth — Whole Forest* · 1 AP + 1 Time · CD 3 — Wake the whole forest: see the whole board for 1 round, and each hero's next hit taken is 2 less. *(P3/E3: Wake the whole forest: see the whole board for 2 rounds, and each hero's next hit taken is 4 less.)*
+
+**Spur** · Mass · `bir_spur`
+
+- *Phys — Spur* · 1 AP · CD 1 — Melee 2, and it is Weakened 1 this round. *(P3: Melee 5, and it is Weakened 1 this round.)*
+- *Eth — Flying Spurs* · 1 AP + 1 Mass · CD 3 — Leap and kick with both feet: melee 3, then melee 1; it is Weakened 1 for 2 rounds. *(P3/E3: Leap and kick with both feet: melee 5, then melee 2; it is Weakened 1 for 2 rounds.)*
+
+**Ground Sprint** · Space · `gbd_sprint`
+
+- *Phys — Dash* · 1 AP · CD 1 — Run 3; your next hit this turn deals +1. *(P3: Run 4; your next hit this turn deals +1.)*
+- *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; your track slides 2 extra, and your next hit this turn deals +1.)*
+
+**Gobble** · Charge · `tur_gobble`
+
+- *Phys — Gobble* · 1 AP · CD 1 — Gobble at everything: see within 2, Mark the nearest foe, and your ally's next hit deals +1. *(P3: Gobble at everything: see within 5, Mark the nearest foe, and your ally's next hit deals +1.)*
+- *Eth — Shock Gobble* · 1 AP + 1 Charge · CD 3 — Gobble like thunder: every foe beside you falls back 1 and is Weakened 1 for 2 rounds; your next hit deals +2. *(P3/E3: Gobble like thunder: every foe beside you falls back 1 and is Weakened 1 for 2 rounds; your next hit deals +4.)*
+
+**Flock Watch** · Time · `tur_watch`
+
+- *Phys — Heads Up* · 1 AP · CD 1 — See within 2; each hero's next hit taken is 1 less. *(P3: See within 2; each hero's next hit taken is 2 less.)*
+- *Eth — Sentinels* · 1 AP + 1 Time · CD 4 — Someone always has their head up: see the whole board for 2 rounds; both heroes hold Shield 2 this round and take half damage from ambushes for 2 rounds. *(P3/E3: Someone always has their head up: see the whole board for 2 rounds; both heroes hold Shield 4 this round and take half damage from ambushes for 2 rounds.)*
+
+**Roost Flight** · Space · `tur_roost`
+
+- *Phys — Flush* · 1 AP · CD 1 — Burst up onto any node within 1, height included; the next hit on you is 1 less. *(P3: Burst up onto any node within 4, height included; the next hit on you is 1 less.)*
+- *Eth — Up for the Night* · 1 AP + 1 Space · CD 4 — Fly up to any node within 3, height included; heal 2, and Hidden 1. *(P3/E3: Fly up to any node within 5, height included; heal 4, and Hidden 1.)*
+
+**Wattle Flush** · Charge · `tur_wattle`
+
+- *Phys — Go Red* · 1 AP · CD 1 — Flush red, white and blue at a foe within 2: it takes 1 and is Weakened 1 this round. *(P3: Flush red, white and blue at a foe within 2: it takes 4 and is Weakened 2 this round.)*
+- *Eth — Full Colour* · 1 AP + 1 Charge · CD 3 — Go full colour: both heroes shake off Anchored and Weakened, and their next hit deals +2. *(P3/E3: Go full colour: both heroes shake off Anchored and Weakened, and their next hit deals +4.)*

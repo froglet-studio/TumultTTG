@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.58.0',
+    version: '2.59.0',
     items: [
+      {
+        text: 'The last two birds join: Ostrich and Wild Turkey. Both share Ground Sprint; the turkey shares the peacock’s Display Fan, Alarm Call and Spur, and the ostrich kicks and watches like the hoofed animals (Kick and Wide Eyes). The ostrich hides flat and guards a shared nest; the turkey gobbles, keeps watch and flies up to roost. Do the ground birds feel like birds?',
+      },
       {
         text: 'Five bright birds join: Raven, Parrot, Toucan, Hummingbird and Peacock. The raven and parrot share Mimicry and Human’s Pattern Recognition, and the parrot has Opposable Grip and Long Life (get up again if downed). The toucan shares Big Bill; the hummingbird has eight traits of its own (Hover, Thousand Beats, Night Torpor and more); the peacock fans, screams and kicks with its spurs. Which one plays most like the animal?',
       },
