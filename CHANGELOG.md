@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.54.0 — 2026-11-17 — the pouched and egg-laying
+
+The ninth branch of the tree (`docs/design/11-clades.md`): three painted animals, each with nine traits.
+
+- **Red Kangaroo, Opossum and Platypus.**
+- The kangaroo and the opossum share **Pouch**. Its two faces:
+  - your ally heals and gains AP;
+  - you swap places with your ally anywhere on the board, and both hold Shield.
+- Traits shared from earlier branches:
+  - the opossum carries the hedgehog's **Venom Shrug**;
+  - the platypus carries the jerboa's **Burrowing**.
+- Traits of each one's own:
+  - kangaroo: Hop, Tail Kick, Box, Tail Prop, Mob Lead, Long Hop, Kick Off and Desert Lick
+  - opossum: Play Dead, Prehensile Tail, Fifty-Tooth Hiss, Clean Groom, Thumb Feet, Night Wander and Scavenger's Nose
+  - platypus: Electroreception, Venom Spur, Duck Dive, Cheek Store, Eyes-Shut Hunt, Webbed Fold, Egg Clutch and Odd One Out
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (240 drafted runs, look-ahead player, on both builds):
+  - Main wins 74 and this release 87.
+  - The drafted squads are not the same on the two builds: they are drawn from the clade list, and the list is longer here.
+  - The like-for-like figure is inside this release. Runs with one of the three new clades win 29%; runs without one win 38%. The new clades are not what makes runs easier.
+
 ## 2.53.0 — 2026-11-16 — the armoured and slow
 
 The eighth branch of the tree (`docs/design/11-clades.md`): four painted animals, each with nine traits.

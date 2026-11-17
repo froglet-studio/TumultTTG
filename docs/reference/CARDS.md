@@ -2212,3 +2212,150 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Huff* · 1 AP · CD 1 — Huff at a foe within 2: it takes 1, is Weakened 1 this round, and is pushed 1.
 - *Eth — Snort and Pop* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 1 round; the next hit on you is 1 less. *(P3/E3: Every foe within 4 is Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
+
+## 45 · Red Kangaroo — leans S/M
+
+*Tail like a third leg, legs like springs, and a boxer’s stance.*
+
+**Pouch** · Charge · `pou_pouch`
+
+- *Phys — Tuck In* · 1 AP · CD 1 — Your ally heals 1 and gains 1 AP next turn. *(P3: Your ally heals 4 and gains 1 AP next turn.)*
+- *Eth — Carry Them Out* · 1 AP + 1 Charge · CD 4 — Swap places with your ally, wherever they are; both of you hold Shield 2 this round. *(P3/E3: Swap places with your ally, wherever they are; both of you hold Shield 4 this round.)*
+
+**Hop** · Space · `kan_hop`
+
+- *Phys — Hop* · 1 AP · CD 0 — Hop 2, over foes. *(P3: Hop 5, over foes.)*
+- *Eth — Bound Across* · 1 AP + 1 Space · CD 3 — Bound to any node within 4, height included; your next hit this turn deals +1. *(P3/E3: Bound to any node within 6, height included; your next hit this turn deals +1.)*
+
+**Tail Kick** · Mass · `kan_tailkick`
+
+- *Phys — Lean Back and Kick* · 1 AP · CD 1 — Rock back on your tail and kick: melee 3, and push it 2. *(P3: Rock back on your tail and kick: melee 6, and push it 2.)*
+- *Eth — Gut Rake* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield; it takes 1 at the start of its next 2 turns. *(P3/E3: Melee 7 that ignores Shield; it takes 1 at the start of its next 2 turns.)*
+
+**Box** · Mass · `kan_box`
+
+- *Phys — Jab* · 1 AP · CD 1 — Melee 2; it is Weakened 1 this round. *(P3: Melee 5; it is Weakened 1 this round.)*
+- *Eth — Clinch* · 1 AP + 1 Mass · CD 3 — Melee 3 and hold it (Anchored 1); your next hit this turn deals +2. *(P3/E3: Melee 5 and hold it (Anchored 1); your next hit this turn deals +4.)*
+
+**Tail Prop** · Time · `kan_prop`
+
+- *Phys — Prop* · 1 AP · CD 1 — Brace on your tail: Shield 2 this round, and nothing can push or pull you. *(P3: Brace on your tail: Shield 3 this round, and nothing can push or pull you.)*
+- *Eth — Five Legs* · 1 AP + 1 Time · CD 4 — For 2 rounds you can't be Weakened or Rooted, and the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: For 2 rounds you can't be Weakened or Rooted, and the next foe to hit you in melee takes 5 and is pushed 1.)*
+
+**Mob Lead** · Charge · `kan_mob`
+
+- *Phys — Thump the Mob* · 1 AP · CD 1 — Your ally moves 1, and their next hit deals +1. *(P3: Your ally moves 4, and their next hit deals +1.)*
+- *Eth — Whole Mob* · 1 AP + 1 Charge · CD 4 — Each hero's next hit deals +2, and your ally gains 1 AP next turn. *(P3/E3: Each hero's next hit deals +4, and your ally gains 1 AP next turn.)*
+
+**Long Hop** · Space · `kan_long`
+
+- *Phys — Stretch Out* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Eth — Nine Metres* · 1 AP + 1 Space · CD 3 — Move 5, passing foes and ignoring hazards this round; the next hit on you is 1 less. *(P3/E3: Move 7, passing foes and ignoring hazards this round; the next hit on you is 1 less.)*
+
+**Kick Off** · Space · `kan_kickoff`
+
+- *Phys — Push Off* · 1 AP · CD 1 — Melee 2, then spring 2 away. *(P3: Melee 5, then spring 2 away.)*
+- *Eth — Off the Wall* · 1 AP + 1 Space · CD 3 — Bound up to 3 toward a foe within 3; if you end beside it, melee 4 and push it 2. *(P3/E3: Bound up to 3 toward a foe within 3; if you end beside it, melee 6 and push it 2.)*
+
+**Desert Lick** · Time · `kan_lick`
+
+- *Phys — Lick Forearms* · 1 AP · CD 2 — Cool down: heal 1, and ignore hazards for 2 rounds. *(P3: Cool down: heal 4, and ignore hazards for 2 rounds.)*
+- *Eth — Rest in the Shade* · 1 AP + 1 Time · CD 4 — Shed Anchored, Weakened and damage over time; both heroes heal 1 at the start of each turn for 3 rounds. *(P3/E3: Shed Anchored, Weakened and damage over time; both heroes heal 1 at the start of each turn for 5 rounds.)*
+
+## 46 · Opossum — leans T/C
+
+*A night wanderer that shrugs off venom and plays dead convincingly.*
+
+**Venom Shrug** · Time · `hed_venom`
+
+- *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; you can't be Weakened or Rooted for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; you can't be Weakened or Rooted for 4 rounds.)*
+
+**Pouch** · Charge · `pou_pouch`
+
+- *Phys — Tuck In* · 1 AP · CD 1 — Your ally heals 1 and gains 1 AP next turn. *(P3: Your ally heals 4 and gains 1 AP next turn.)*
+- *Eth — Carry Them Out* · 1 AP + 1 Charge · CD 4 — Swap places with your ally, wherever they are; both of you hold Shield 2 this round. *(P3/E3: Swap places with your ally, wherever they are; both of you hold Shield 4 this round.)*
+
+**Play Dead** · Time · `opo_dead`
+
+- *Phys — Flop* · 1 AP · CD 2 — Flop over: Hidden 1, and the next hit on you is 2 less. *(P3: Flop over: Hidden 1, and the next hit on you is 3 less.)*
+- *Eth — Very Convincing* · 1 AP + 1 Time · CD 4 — Play dead: nothing can touch you until your next turn, foes are drawn to where you lie for 2 rounds, and you heal 1. *(P3/E3: Play dead: nothing can touch you until your next turn, foes are drawn to where you lie for 4 rounds, and you heal 1.)*
+
+**Prehensile Tail** · Space · `opo_tail`
+
+- *Phys — Hang* · 1 AP · CD 1 — Climb 1, and hold Shield 1 this round. *(P3: Climb 4, and hold Shield 1 this round.)*
+- *Eth — Swing Down* · 1 AP + 1 Space · CD 3 — Swing to any node within 3, height included; your next hit this turn deals +2. *(P3/E3: Swing to any node within 5, height included; your next hit this turn deals +4.)*
+
+**Fifty-Tooth Hiss** · Mass · `opo_hiss`
+
+- *Phys — Gape* · 1 AP · CD 1 — Show all fifty teeth and bite: melee 2, and it is Weakened 1 this round. *(P3: Show all fifty teeth and bite: melee 5, and it is Weakened 1 this round.)*
+- *Eth — Hiss and Drool* · 1 AP + 1 Mass · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and every foe beside you is pushed 1. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and every foe beside you is pushed 1.)*
+
+**Clean Groom** · Time · `opo_groom`
+
+- *Phys — Groom* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
+- *Eth — Groom Each Other* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time, and heal 2. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time, and heal 4.)*
+
+**Thumb Feet** · Space · `opo_thumb`
+
+- *Phys — Grip* · 1 AP · CD 1 — Move 2; nothing can push or pull you this round. *(P3: Move 5; nothing can push or pull you this round.)*
+- *Eth — Grab and Go* · 1 AP + 1 Space · CD 3 — Snatch 2 Shield off a foe beside you, melee 3, and step 1. *(P3/E3: Snatch 2 Shield off a foe beside you, melee 5, and step 1.)*
+
+**Night Wander** · Space · `opo_wander`
+
+- *Phys — Wander* · 1 AP · CD 1 — Wander 2, setting off no traps, and reveal within 1 of where you stop. *(P3: Wander 5, setting off no traps, and reveal within 1 of where you stop.)*
+- *Eth — Under Cover of Night* · 1 AP + 1 Space · CD 3 — Move 3, passing foes; Hidden 1 even if you move. *(P3/E3: Move 5, passing foes; Hidden 2 even if you move.)*
+
+**Scavenger’s Nose** · Charge · `opo_nose`
+
+- *Phys — Sniff Out* · 1 AP · CD 1 — Reveal within 2, Mark the nearest foe (the next hit on it deals +2), and heal 1. *(P3: Reveal within 5, Mark the nearest foe (the next hit on it deals +2), and heal 1.)*
+- *Eth — Leftovers* · 1 AP + 1 Charge · CD 4 — Draw a Charge die from your pool, and heal 2. *(P3/E3: Draw a Charge die from your pool, and heal 4.)*
+
+## 47 · Platypus — leans C/T
+
+*Duck bill, otter feet, venom spurs. Hunts with its eyes shut.*
+
+**Burrowing** · Space · `jer_burrow`
+
+- *Phys — Dig* · 2 AP · CD 2 — Dig in: Hidden 1 and Shield 1. *(P3: Dig in: Hidden 2 and Shield 1.)*
+- *Eth — Phase-tunnel* · 2 AP + 1 Space · CD 4 — Tunnel through anything to a node within 3 and surface Hidden. *(P3/E3: Tunnel through anything to a node within 5 and surface Hidden.)*
+
+**Electroreception** · Charge · `pla_electro`
+
+- *Phys — Sense the Current* · 1 AP · CD 1 — Feel the electric field: reveal within 2, Mark the nearest foe (the next hit on it deals +2), and your next hit this turn deals +1. *(P3: Feel the electric field: reveal within 5, Mark the nearest foe (the next hit on it deals +2), and your next hit this turn deals +1.)*
+- *Eth — Every Heartbeat* · 1 AP + 1 Charge · CD 4 — Feel every heartbeat on the board for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Feel every heartbeat on the board for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+
+**Venom Spur** · Mass · `pla_spur`
+
+- *Phys — Spur* · 1 AP · CD 1 — Melee 2; it takes 1 at the start of its next 2 turns. *(P3: Melee 5; it takes 1 at the start of its next 2 turns.)*
+- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Melee 3; it takes 2 at the start of its next 3 turns and is Weakened 1 for 2 rounds. *(P3/E3: Melee 5; it takes 4 at the start of its next 3 turns and is Weakened 1 for 2 rounds.)*
+
+**Duck Dive** · Space · `pla_dive`
+
+- *Phys — Dive* · 1 AP · CD 1 — Move 2, Hidden 1, and ignore hazards this round. *(P3: Move 5, Hidden 1, and ignore hazards this round.)*
+- *Eth — Bottom Run* · 1 AP + 1 Space · CD 3 — Come up anywhere within 3, Hidden 1, and ignore hazards for 2 rounds. *(P3/E3: Come up anywhere within 5, Hidden 1, and ignore hazards for 2 rounds.)*
+
+**Cheek Store** · Time · `pla_cheek`
+
+- *Phys — Fill Cheeks* · 1 AP · CD 2 — Gain 1 AP next turn, and heal 1.
+- *Eth — Surface to Eat* · 1 AP + 1 Time · CD 4 — Heal 3, and gain 1 AP at the start of each turn for 1 round. *(P3/E3: Heal 5, and gain 1 AP at the start of each turn for 2 rounds.)*
+
+**Eyes-Shut Hunt** · Charge · `pla_shut`
+
+- *Phys — Blind Strike* · 1 AP · CD 1 — Strike a foe within 2 for 2, hidden or not. *(P3: Strike a foe within 2 for 5, hidden or not.)*
+- *Eth — Find by Feel* · 1 AP + 1 Charge · CD 3 — Find any foe by feel: it takes 3, can't Hide for 2 rounds, and your hits on it deal +1. *(P3/E3: Find any foe by feel: it takes 5, can't Hide for 2 rounds, and your hits on it deal +1.)*
+
+**Webbed Fold** · Space · `pla_web`
+
+- *Phys — Paddle* · 1 AP · CD 1 — Move 2, and hold Shield 1 this round. *(P3: Move 5, and hold Shield 1 this round.)*
+- *Eth — Fold and Dig* · 1 AP + 1 Space · CD 4 — Fold back the webbing and dig in: Shield 3 for 2 rounds, nothing can push or pull you this round, and heal 1. *(P3/E3: Fold back the webbing and dig in: Shield 5 for 2 rounds, nothing can push or pull you this round, and heal 1.)*
+
+**Egg Clutch** · Time · `pla_egg`
+
+- *Phys — Guard the Nest* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round. *(P3: You and an ally beside you hold Shield 4 this round.)*
+- *Eth — Sealed Burrow* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 1; both heroes heal 1 at the start of each turn for 2 rounds. *(P3/E3: You and an ally beside you are Hidden 2; both heroes heal 1 at the start of each turn for 2 rounds.)*
+
+**Odd One Out** · Charge · `pla_odd`
+
+- *Phys — Confuse* · 1 AP · CD 1 — A foe within 3 takes 1 and is Weakened 1 for 1 round. *(P3: A foe within 3 takes 1 and is Weakened 1 for 2 rounds.)*
+- *Eth — Nothing Like It* · 1 AP + 1 Charge · CD 3 — Leave a puzzle where you stood (a decoy for 2 rounds), slip to a node within 2, and your next hit deals +2. *(P3/E3: Leave a puzzle where you stood (a decoy for 4 rounds), slip to a node within 2, and your next hit deals +4.)*
