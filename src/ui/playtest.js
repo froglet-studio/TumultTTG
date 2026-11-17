@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.61.0',
+    version: '2.62.0',
     items: [
+      {
+        text: 'Newt and Tree Frog join the axolotl on its branch. All three share Toxic Secretion and External Gills; the newt also shares Regeneration and Lateral Line, and the tree frog’s sticky toes are the gecko’s Adhesive Setae. The newt wanders bright and poisonous and heads home to the pond; the tree frog leaps leaf to leaf, flashes red eyes and calls the rain. Do they feel different from the axolotl?',
+      },
       {
         text: 'Crocodile and Giant Tortoise join. Both share Armoured Hide and Slow Heart (which can stop your heart long enough that nothing can target you), and every reptile’s Solar Basking; the tortoise also has the parrot’s Long Life. The crocodile lurks, lunges and rolls; the tortoise shells up, plans ahead and plods through anything. Are they too hard to kill, or just right?',
       },
