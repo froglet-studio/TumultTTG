@@ -2433,4 +2433,315 @@
       fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'mark'},{v:'studied', n:1}],
       txt:(P,E)=>`A foe within 3 is Weakened ${1+h(E)} for 2 rounds and Marked, and your hits on it deal +1.` },
     'They named it for a fool. It was not the fool.');
+  /* ───────────────────────── PERCHING AND BRIGHT BIRDS ─────────────────────────
+     raven · parrot · toucan · hummingbird · peacock. Every bird's Hollow Bones. The raven and the parrot share
+     Mimicry and Human's Pattern Recognition; the parrot also has Human's Opposable Grip, and Long Life (the koi,
+     tortoise and lobster will share it). The toucan carries the shoebill's Big Bill. Display Fan, Alarm Call
+     and Spur are the peacock's, and the turkey will share them. */
+  const BRIGHT = ['raven','parrot','toucan','hummingbird','peacock'];
+  S('raven', { name: 'Raven', lean: 'T/C', branch: 'Perching and bright birds', icon: '🐦‍⬛',
+    tagline: 'Clever, playful, never forgets a face. Hunts with wolves and slides down snow for fun.' });
+  S('parrot', { name: 'Parrot', lean: 'C/T', branch: 'Perching and bright birds', icon: '🦜',
+    tagline: 'Loud, bright, long-lived, and holds its food in one foot while it talks back.' });
+  S('toucan', { name: 'Toucan', lean: 'S/C', branch: 'Perching and bright birds', icon: '🐦',
+    tagline: 'All bill and bluff. The bill is light as foam and the croak carries a mile.' });
+  S('hummingbird', { name: 'Hummingbird', lean: 'S/T', branch: 'Perching and bright birds', icon: '🐦',
+    tagline: 'The smallest bird there is, and the fiercest. Hovers, flies backwards, never stops.' });
+  S('peacock', { name: 'Peacock', lean: 'C/M', branch: 'Perching and bright birds', icon: '🦚',
+    tagline: 'A hundred eyes in its tail and a scream like a cat. Eats snakes.' });
+  T.shareTrait('owl_bones', ...BRIGHT);
+  T.shareTrait('hum_pattern', 'raven', 'parrot');
+  T.shareTrait('hum_grip', 'parrot');
+  T.shareTrait('bil_big', 'toucan');
+
+  K(['raven','parrot'],'bir_mimic','Mimicry','C',0,
+    { n:'Sound Like', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'decoy', dur:1, here:true},{v:'move', n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:2}],
+      txt:(P,E)=>`Throw your voice: leave a decoy where you stood for 1 round, move ${1+P}, and your next hit deals +1.` },
+    { n:'Its Own Voice', ap:2, el:1, cd:4, dur:0, tgt:'foe_r3',
+      fx:[{v:'redirect'},{v:'weaken', val:1, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>E}],
+      txt:(P,E)=>`Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round${E ? `; it takes ${E}` : ''}.` },
+    'It says your name better than you do.', 'Perching and bright birds');
+  K(['parrot'],'bir_life','Long Life','T',0,
+    { n:'Old Bird', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'cleanse'},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Heal ${1+P}, shake off Anchored and Weakened, and hold Shield 1 this round.` },
+    { n:'Outlive It', ap:1, el:1, cd:5, dur:3, tgt:'self',
+      fx:[{v:'phoenix', hp:(P,E)=>3+2*E, dur:3},{v:'heal', n:1}],
+      txt:(P,E)=>`Heal 1; if you are downed within 3 rounds, you get up where you stand now with ${3+2*E} hp.` },
+    'It will outlive the person who bought it, and their children.');
+  K(['peacock'],'bir_fan','Display Fan','C',0,
+    { n:'Fan Out', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'force', kind:'pull', n:1},{v:'weaken', val:1, dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Spread the fan: a foe within 3 is drawn 1 toward you and Weakened 1 this round; you hold Shield ${1+h(P)}.` },
+    { n:'Shiver the Train', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'pull', n:1, area:true, radius:(P,E)=>2+E},{v:'shield', val:(P,E)=>1+E, dur:1},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Rattle the whole fan: every foe within ${2+E} is drawn 1 toward you; you hold Shield ${1+E} this round, and your ally's next hit deals +1.` },
+    'Everyone looks. That is the point.');
+  K(['peacock'],'bir_alarm','Alarm Call','T',0,
+    { n:'Alarm', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Raise the alarm: see within ${2+P}, and both heroes hold Shield 1 this round.` },
+    { n:'Whole Forest', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'reveal', radius:99, dur:(P,E)=>1+h(E)},{v:'preempt', val:(P,E)=>1+E, reflect:0, party:true}],
+      txt:(P,E)=>`Wake the whole forest: see the whole board for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}, and each hero's next hit taken is ${1+E} less.` },
+    'The first to see, and the loudest to say so.');
+  K(['peacock'],'bir_spur','Spur','M',0,
+    { n:'Spur', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${2+P}, and it is Weakened 1 this round.` },
+    { n:'Flying Spurs', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'strike', kind:'melee', dmg:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2}],
+      txt:(P,E)=>`Leap and kick with both feet: melee ${2+E}, then melee ${1+h(E)}; it is Weakened 1 for 2 rounds.` },
+    'A blunt horn on the back of each leg.');
+
+  // Raven: Hollow Bones, Mimicry, Pattern Recognition, and these six
+  K(['raven'],'rav_cache','Shiny Cache','T',0,
+    { n:'Stash', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Stash something for later: gain 1 AP next turn, and hold Shield 1 this round.` },
+    { n:'Dig It Up', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'draw', face:'T', val:1},{v:'reroll', n:(P,E)=>1+h(E)},{v:'heal', n:1}],
+      txt:(P,E)=>`Draw a Time die from your pool, reroll up to ${1+h(E)} banked dice, and heal 1.` },
+    'A hundred hiding places, and it remembers every one.');
+  K(['raven'],'rav_mob','Mob','C',0,
+    { n:'Harry', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'weaken', val:1, dur:1},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Harry a foe within 2: it takes ${1+P} and is Weakened 1 this round, and your ally's next hit deals +1.` },
+    { n:'Call the Mob', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'mark'},{v:'studied', n:(P,E)=>1+h(E)},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Point the mob at a foe within 3: it is Marked, your hits on it deal +${1+h(E)}, and both heroes' next hit deals +${1+h(E)}.` },
+    'Every raven in the valley, at the owl, at once.');
+  K(['raven'],'rav_carrion','Carrion Wing','S',0,
+    { n:'Circle Down', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'reveal', radius:1, dur:1}],
+      txt:(P,E)=>`Circle down ${2+P}, over foes, and see everything beside where you land.` },
+    { n:'Pick the Weak', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'execute', threshold:(P,E)=>1+E}],
+      txt:(P,E)=>`Drop beside a foe within ${2+E} and peck it for ${2+E}; if that leaves it at ${1+E} hp or less, it falls.` },
+    'It knows a fight is coming before the fighters do.');
+  K(['raven'],'rav_memory','Raven Memory','T',0,
+    { n:'I Know You', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'locate', dur:(P,E)=>2+P},{v:'mark'}],
+      txt:(P,E)=>`Remember a foe within 3: it can't Hide for ${2+P} rounds and is Marked (the next hit on it deals +2).` },
+    { n:'Old Grudge', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Name any foe: it can't Hide for 3 rounds, your hits on it deal +${1+E}, and the next hit on you is 1 less.` },
+    'It remembers a face for years, and tells its children.');
+  K(['raven'],'rav_wolf','Wolf Guide','C',0,
+    { n:'This Way', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+P},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Call your ally on: they move ${1+P} where you choose, and you see within 2.` },
+    { n:'Lead the Hunt', ap:1, el:1, cd:4, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'mark'},{v:'empower', val:(P,E)=>2+E, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Lead your ally to any foe: it can't Hide for 2 rounds and is Marked, and your ally's next hit deals +${2+E}.` },
+    'It finds the meal; the wolves open it.');
+  K(['raven'],'rav_snow','Snow Slide','S',0,
+    { n:'Slide', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'heal', n:1}],
+      txt:(P,E)=>`Slide ${1+P} for the fun of it, and heal 1.` },
+    { n:'Roll Down', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'cleanse'},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2}],
+      txt:(P,E)=>`Roll ${2+E} down the slope, past foes; shake off Anchored and Weakened, and your next hit deals +${1+h(E)}.` },
+    'Down the roof on its back, then up to do it again.');
+
+  // Parrot: Hollow Bones, Mimicry, Pattern Recognition, Opposable Grip, Long Life, and these four
+  K(['parrot'],'par_crack','Beak Crack','M',0,
+    { n:'Crack', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:1},{v:'strike', kind:'melee', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`Peel 1 Shield off a foe beside you, then melee ${2+P}.` },
+    { n:'Nutcracker', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'expose', bonus:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Melee ${3+E} that ignores Shield, and open a weak point: its next hit taken deals +${1+h(E)}.` },
+    'It opens nuts a hammer would bounce off.');
+  K(['parrot'],'par_chatter','Flock Chatter','C',0,
+    { n:'Chatter', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'},{v:'heal', n:1, target:'ally'}],
+      txt:(P,E)=>`Keep up the chatter: your ally heals 1 and their next hit deals +${1+h(P)}.` },
+    { n:'Roost Roar', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:1, uses:99, dur:2, party:true},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'}],
+      txt:(P,E)=>`The whole roost at dusk: both heroes' hits deal +1 for 2 rounds, and your ally gains 1 AP next turn.` },
+    'Noise is how the flock knows it is a flock.');
+  K(['parrot'],'par_colours','Bright Colours','C',0,
+    { n:'Flash Wings', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1},{v:'mark'}],
+      txt:(P,E)=>`Flash red and blue at a foe within 2: Weakened ${1+h(P)} this round and Marked (the next hit on it deals +2).` },
+    { n:'Rainbow', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'hidden', dur:1, canMove:true},{v:'heal', n:1}],
+      txt:(P,E)=>`Leave a flash of colour as a decoy for ${1+E} rounds and vanish into the leaves: Hidden 1, even if you move; heal 1.` },
+    'In the canopy, bright is the best hiding.');
+  K(['parrot'],'par_clay','Clay Lick','T',0,
+    { n:'Lick', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Eat the bank's clay: heal ${1+P}, and you can't be Weakened or Rooted this round.` },
+    { n:'Settle the Stomach', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'cleanse', party:true},{v:'heal', n:(P,E)=>1+E, party:true},{v:'statusImmune', dur:2}],
+      txt:(P,E)=>`Both heroes shake off Anchored and Weakened and heal ${1+E}; you can't be Weakened or Rooted for 2 rounds.` },
+    'Clay first, then the bitter seeds.');
+
+  // Toucan: Hollow Bones, Big Bill, and these seven
+  K(['toucan'],'tou_bluff','Bright Bluff','C',0,
+    { n:'Bluff', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Wave the bill at a foe within 2: it backs off 1 and is Weakened ${1+h(P)} this round.` },
+    { n:'All Bill', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:2, area:'adj'},{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+h(E)},{v:'shield', val:(P,E)=>1+E, dur:1}],
+      txt:(P,E)=>`Every foe within ${1+h(E)} falls back 1; foes beside you are Weakened 1 for 2 rounds, and you hold Shield ${1+E} this round.` },
+    'It looks dangerous. It is mostly air.');
+  K(['toucan'],'tou_toss','Fruit Toss','C',0,
+    { n:'Toss', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'heal', n:1, target:'ally'}],
+      txt:(P,E)=>`Toss fruit: a foe within 3 takes ${1+P}, and your ally catches the next one and heals 1.` },
+    { n:'Catch!', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+E, target:'ally'},{v:'mint', face:'AP', n:1, target:'ally'},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Throw your ally a fruit: they heal ${1+E}, gain 1 AP to spend this turn, and their next hit deals +1.` },
+    'Up, back, open, gone.');
+  K(['toucan'],'tou_hop','Canopy Hop','S',0,
+    { n:'Hop', ap:1, el:0, cd:0, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P}],
+      txt:(P,E)=>`Hop onto any node within ${1+P}, height included.` },
+    { n:'Branch to Branch', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'empower', val:1, uses:1, dur:1},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Hop to any node within ${2+E}, height included; see within 2, and your next hit this turn deals +1.` },
+    'It hops more than it flies.');
+  K(['toucan'],'tou_cool','Bill Cool','T',0,
+    { n:'Shed Heat', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Shed heat through your bill: heal ${1+P}, and hazards can't touch you this round.` },
+    { n:'Radiator', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'hazardImmune', dur:2},{v:'shield', val:1, dur:2}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; ignore hazards and hold Shield 1 for 2 rounds.` },
+    'The bill is a radiator, and the toucan the engine.');
+  K(['toucan'],'tou_raid','Nest Raider','M',0,
+    { n:'Raid', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P},{v:'stripShield', amount:1}],
+      txt:(P,E)=>`Reach into cover: a foe within 2 takes ${2+P} and loses 1 Shield.` },
+    { n:'Snatch the Egg', ap:1, el:1, cd:3, dur:0, tgt:'node_r2',
+      fx:[{v:'interact', range:2, height:true},{v:'heal', n:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Work an objective up to 2 away, height included; heal 1, and your next hit deals +${1+E}.` },
+    'The long bill reaches into holes nothing else can.');
+  K(['toucan'],'tou_fold','Fold Sleep','T',0,
+    { n:'Tuck In', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Tuck bill under wing and tail over head: Shield ${1+P}, and Hidden 1.` },
+    { n:'Ball of Feathers', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>2+E},{v:'shield', val:2, dur:1},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Fold into a ball: heal ${2+E}, Shield 2 this round, and Hidden 1.` },
+    'Folded, it is a feathered ball with no bill at all.');
+  K(['toucan'],'tou_croak','Loud Croak','C',0,
+    { n:'Croak', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Croak across the canopy: see within ${2+P}, and Mark the nearest foe (the next hit on it deals +2).` },
+    { n:'Chorus', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Croak together: both heroes' next hit deals +${1+E}, and foes beside you are Weakened 1 this round.` },
+    'A frog’s voice in a bird’s throat.');
+
+  // Hummingbird: Hollow Bones, and these eight
+  K(['hummingbird'],'hmb_hover','Hover','S',0,
+    { n:'Hold Still', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'hazardImmune', dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Dart ${1+P} and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1.` },
+    { n:'Hang in the Air', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hover', dur:(P,E)=>1+E},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Hover for ${1+E} rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; Shield 1 this round.` },
+    'Wings in a figure eight, and it does not move an inch.');
+  K(['hummingbird'],'hmb_beats','Thousand Beats','T',0,
+    { n:'Blur', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Wings to a blur: gain 1 AP next turn, and the next hit on you is 1 less.` },
+    { n:'Overdrive', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'mint', face:'AP', n:(P,E)=>1+h(E)},{v:'hasten', n:1}],
+      txt:(P,E)=>`Gain ${1+h(E)} AP to spend this turn, and your track slides 1 extra.` },
+    'Seventy beats a second, all day.');
+  K(['hummingbird'],'hmb_torpor','Night Torpor','T',0,
+    { n:'Slow Down', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>2+P},{v:'rest'}],
+      txt:(P,E)=>`Heal ${2+P} and go still (no further actions with this hero this turn).` },
+    { n:'Deep Torpor', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:(P,E)=>1+h(E), dur:2},{v:'shield', val:(P,E)=>1+E, dur:1},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Go cold and still: heal ${1+h(E)} at the start of each turn for 2 rounds, Shield ${1+E} this round, and Hidden 1.` },
+    'At night its heart slows from a thousand beats to fifty.');
+  K(['hummingbird'],'hmb_needle','Needle Bill','M',0,
+    { n:'Needle', ap:1, el:0, cd:0, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P, pierce:true}],
+      txt:(P,E)=>`Melee ${1+P} that ignores Shield.` },
+    { n:'Stab and Stab', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+E, pierce:true},{v:'strike', kind:'melee', dmg:(P,E)=>1+E, pierce:true},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${1+E} twice, each ignoring Shield; it is Weakened 1 this round.` },
+    'A bill made for flowers, used on rivals.');
+  K(['hummingbird'],'hmb_back','Backward Flight','S',0,
+    { n:'Back Off', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Fly ${1+P} backwards out of reach, past foes, and hold Shield 1 this round.` },
+    { n:'Hit and Back', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:(P,E)=>1+h(E)},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Melee ${2+E} and back away: it is pushed ${1+h(E)}, and the next hit on you is 1 less.` },
+    'The only bird that flies backwards.');
+  K(['hummingbird'],'hmb_nectar','Nectar Rush','C',0,
+    { n:'Sip', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Sip nectar: heal ${1+P}, and your next hit this turn deals +1.` },
+    { n:'Sugar High', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'draw', face:'C', val:1},{v:'heal', n:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Draw a Charge die from your pool, heal 1, and your next hit deals +${1+E}.` },
+    'Half its weight in sugar every day.');
+  K(['hummingbird'],'hmb_fury','Tiny Fury','M',0,
+    { n:'Dive Bomb', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
+      txt:(P,E)=>`Dive up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
+    { n:'Chase It Off', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:2},{v:'weaken', val:(P,E)=>1+h(E), dur:2}],
+      txt:(P,E)=>`Melee ${2+E} and chase it off: push 2, and it is Weakened ${1+h(E)} for 2 rounds.` },
+    'It chases hawks. The hawks leave.');
+  K(['hummingbird'],'hmb_memory','Flower Memory','T',0,
+    { n:'Route', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reroll', n:(P,E)=>1+h(P)},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Remember the route: reroll up to ${1+h(P)} banked dice, and see within 2.` },
+    { n:'Every Flower', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'reveal', radius:99, dur:1},{v:'hasten', n:1},{v:'hasten', n:1, who:'ally'}],
+      txt:(P,E)=>`Remember every flower on the board: see the whole board this round, and both heroes' tracks slide 1 extra.` },
+    'Which flowers, and when they refill, to the minute.');
+
+  // Peacock: Hollow Bones, Display Fan, Alarm Call, Spur, and these five
+  K(['peacock'],'pea_eyes','Hundred Eyes','C',0,
+    { n:'Stare', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'strike', kind:'los', dmg:1}],
+      txt:(P,E)=>`A hundred eyes on one foe within 3: it takes 1 and is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}.` },
+    { n:'All Eyes', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:2, area:'adj'},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Every eye open: see within ${2+E}, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +${1+h(E)}.` },
+    'Every eye is looking at you.');
+  K(['peacock'],'pea_sweep','Train Sweep','M',0,
+    { n:'Sweep', ap:1, el:0, cd:1, dur:0, tgt:'foe_adj_all',
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>1+h(P)}],
+      txt:(P,E)=>`Swing the train: every foe beside you takes ${1+h(P)}.` },
+    { n:'Great Sweep', ap:1, el:1, cd:3, dur:0, tgt:'foe_adj_all',
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>1+E},{v:'force', kind:'push', n:1, area:true, radius:1}],
+      txt:(P,E)=>`Every foe beside you takes ${1+E} and is swept back 1.` },
+    'Six feet of tail, and it is heavier than it looks.');
+  K(['peacock'],'pea_snake','Snake Eater','M',0,
+    { n:'Peck', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Melee ${2+P}; you can't be Weakened or Rooted this round.` },
+    { n:'Venom Proof', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'cleanse'},{v:'statusImmune', dur:2}],
+      txt:(P,E)=>`Melee ${3+E}, shake off Anchored and Weakened, and you can't be Weakened or Rooted for 2 rounds.` },
+    'It eats cobras, and shrugs off the bite.');
+  K(['peacock'],'pea_roost','Jungle Roost','S',0,
+    { n:'Flap Up', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Flap up onto any node within ${1+P}, height included, and hold Shield 1 this round.` },
+    { n:'High Roost', ap:1, el:1, cd:4, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+E},{v:'heal', n:(P,E)=>1+E},{v:'engine', kind:'regen', val:1, dur:2}],
+      txt:(P,E)=>`Roost on any node within ${1+E}, height included: heal ${1+E} now, and 1 at the start of each turn for 2 rounds.` },
+    'High up, out of reach, all night.');
+  K(['peacock'],'pea_iris','Iridescence','C',0,
+    { n:'Shimmer', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'preempt', val:(P,E)=>1+P, reflect:0},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Shimmer from blue to green: the next hit on you is ${1+P} less, and your next hit this turn deals +1.` },
+    { n:'Shift the Light', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'move', n:2},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Leave your shimmer behind as a decoy for ${1+E} rounds, move 2, and stay Hidden 1.` },
+    'No pigment at all: just the light, bent.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
