@@ -2744,4 +2744,103 @@
       fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'move', n:2},{v:'hidden', dur:1}],
       txt:(P,E)=>`Leave your shimmer behind as a decoy for ${1+E} rounds, move 2, and stay Hidden 1.` },
     'No pigment at all: just the light, bent.');
+  /* ───────────────────────── GROUND BIRDS ─────────────────────────
+     ostrich · wild turkey. Every bird's Hollow Bones; Ground Sprint is both of theirs. The turkey shares the
+     peacock's Display Fan, Alarm Call and Spur. The ostrich carries the hoofed animals' Kick and Wide Eyes:
+     not kin, but the same answer to the same open plain (a variant). */
+  S('ostrich', { name: 'Ostrich', lean: 'S/M', branch: 'Ground birds', variant: true, icon: '🐦',
+    tagline: 'The biggest bird alive. Cannot fly, does not need to. Outruns horses, kicks like one.' });
+  S('turkey', { name: 'Wild Turkey', lean: 'C/T', branch: 'Ground birds', icon: '🦃',
+    tagline: 'Wary, fast on foot, roosts high. Gobbles at thunder.' });
+  T.shareTrait('owl_bones', 'ostrich', 'turkey');
+  T.shareTrait('hoof_kick', 'ostrich');
+  T.shareTrait('hoof_eyes', 'ostrich');
+  T.shareTrait('bir_fan', 'turkey');
+  T.shareTrait('bir_alarm', 'turkey');
+  T.shareTrait('bir_spur', 'turkey');
+
+  K(['ostrich','turkey'],'gbd_sprint','Ground Sprint','S',0,
+    { n:'Dash', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+h(P)},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Run ${3+h(P)}; your next hit this turn deals +1.` },
+    { n:'Flat Out', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'hasten', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Run ${2+E}, past foes; your track slides ${1+h(E)} extra, and your next hit this turn deals +1.` },
+    'Legs, and nothing but legs.', 'Ground birds');
+
+  // Ostrich: Hollow Bones, Ground Sprint, Kick, Wide Eyes, and these five
+  K(['ostrich'],'ost_stride','Stride','S',0,
+    { n:'Five Metres', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:1}],
+      txt:(P,E)=>`Stride ${2+P}, over foes; your next hit this turn deals +${1+h(P)}.` },
+    { n:'Top Gear', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+E, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'preempt', val:1, reflect:0},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:1}],
+      txt:(P,E)=>`Stride ${3+E}, over foes and hazards; the next hit on you is 1 less, and your next hit this turn deals +${1+h(E)}.` },
+    'Five metres a step, and two toes to land on.');
+  K(['ostrich'],'ost_head','Head Low','T',0,
+    { n:'Head Down', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Lie flat with your neck along the ground: Hidden 1, and Shield ${1+P} this round.` },
+    { n:'Just a Bush', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(E)},{v:'heal', n:(P,E)=>1+E},{v:'empower', val:(P,E)=>1+E, uses:1, dur:3}],
+      txt:(P,E)=>`From far off you are only a bush: Hidden ${1+h(E)}, heal ${1+E}, and your next hit within 3 rounds deals +${1+E}.` },
+    'It does not bury its head. It lies very, very flat.');
+  K(['ostrich'],'ost_wing','Wing Fan','C',0,
+    { n:'Flare', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'shield', val:1, dur:1, party:true, allyRange:1}],
+      txt:(P,E)=>`Flare your wings: foes beside you are Weakened 1, and you and an ally beside you hold Shield 1 this round.` },
+    { n:'Distraction', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'move', n:2},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Flap and stagger as if hurt, leaving a decoy for ${1+E} rounds; move 2, and both heroes' next hit deals +1.` },
+    'Wings it cannot fly with, put to every other use.');
+  K(['ostrich'],'ost_gizzard','Stone Gizzard','M',0,
+    { n:'Swallow Stones', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Swallow a few stones: heal ${1+P}, and you are too heavy to push or pull this round.` },
+    { n:'Grind', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:2}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds, and you can't be Weakened or Rooted for 2 rounds.` },
+    'A kilo of pebbles inside, grinding.');
+  K(['ostrich'],'ost_nest','Nest Ring','T',0,
+    { n:'Guard the Ring', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1},{v:'counter', dmg:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round, and the first foe to hit you in melee takes ${1+h(P)}.` },
+    { n:'Shared Nest', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true},{v:'heal', n:1, party:true},{v:'counter', dmg:2, push:1, dur:2}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+E} for 2 rounds and heal 1; the next foe to hit you in melee takes 2 and is pushed 1.` },
+    'Many hens lay in one nest, and the pair guard all of it.');
+
+  // Wild turkey: Hollow Bones, Display Fan, Alarm Call, Spur, Ground Sprint, and these four
+  K(['turkey'],'tur_gobble','Gobble','C',0,
+    { n:'Gobble', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:2, target:'ally'},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Gobble at everything: see within ${2+P}, Mark the nearest foe, and your ally's next hit deals +1.` },
+    { n:'Shock Gobble', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:2, area:'adj'},{v:'force', kind:'push', n:1, area:true, radius:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Gobble like thunder: every foe beside you falls back 1 and is Weakened 1 for 2 rounds; your next hit deals +${1+E}.` },
+    'It gobbles at owls, at thunder, at slammed doors.');
+  K(['turkey'],'tur_watch','Flock Watch','T',0,
+    { n:'Heads Up', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'preempt', val:(P,E)=>1+h(P), reflect:0, party:true},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`See within 2; each hero's next hit taken is ${1+h(P)} less.` },
+    { n:'Sentinels', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'reveal', radius:99, dur:2},{v:'guard', dur:2, party:true},{v:'shield', val:(P,E)=>1+E, dur:1, party:true}],
+      txt:(P,E)=>`Someone always has their head up: see the whole board for 2 rounds; both heroes hold Shield ${1+E} this round and take half damage from ambushes for 2 rounds.` },
+    'One feeds while another looks.');
+  K(['turkey'],'tur_roost','Roost Flight','S',0,
+    { n:'Flush', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Burst up onto any node within ${1+P}, height included; the next hit on you is 1 less.` },
+    { n:'Up for the Night', ap:1, el:1, cd:4, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'heal', n:(P,E)=>1+E},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Fly up to any node within ${2+E}, height included; heal ${1+E}, and Hidden 1.` },
+    'It runs from most things, and flies from the rest.');
+  K(['turkey'],'tur_wattle','Wattle Flush','C',0,
+    { n:'Go Red', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1},{v:'strike', kind:'los', dmg:(P,E)=>1+P}],
+      txt:(P,E)=>`Flush red, white and blue at a foe within 2: it takes ${1+P} and is Weakened ${1+h(P)} this round.` },
+    { n:'Full Colour', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'cleanse', party:true}],
+      txt:(P,E)=>`Go full colour: both heroes shake off Anchored and Weakened, and their next hit deals +${1+E}.` },
+    'Its head changes colour with its mood.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

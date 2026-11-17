@@ -466,6 +466,20 @@
       onward: ["\"{PLACE},\" {A} says. \"Will anyone there see me?\"", "\"{THREAT},\" {A} says. \"I will make sure it sees us coming.\""],
       reply: ["{A} screams, briefly.", "\"Mm,\" {A} says, adjusting a feather.", "{A} rattles their train at {B}."],
     },
+    ostrich: {
+      win: ["{A} stands over what is left, very tall. \"It should have run. I would have caught it, but it should have run.\"", "\"One kick,\" {A} says. \"It was a good kick.\""],
+      close: ["{A} lies flat in the dust with their neck along the ground, and does not get up for a while.", "\"It was faster than I thought,\" {A} says. \"Nothing is faster than I think.\""],
+      quiet: ["{A} swallows a pebble, thoughtfully, then another.", "{A} races {B} across the flat and waits at the far end, not even breathing hard."],
+      onward: ["\"Is {PLACE} open ground?\" {A} asks. \"I like to see a long way.\"", "\"{THREAT},\" {A} says. \"Can it outrun me? No.\""],
+      reply: ["{A} booms, low.", "\"Yes,\" {A} says, from very high up.", "{A} blinks long lashes at {B}."],
+    },
+    turkey: {
+      win: ["{A} fans their tail and gobbles at the sky. \"Ha!\"", "\"It came close,\" {A} says. \"Then it heard me.\""],
+      close: ["{A} roosts as high as they can get and will not come down till morning.", "\"I did not see it in time,\" {A} says, and keeps looking."],
+      quiet: ["{A} scratches in the leaves beside camp, always with one eye up.", "{A} gobbles at a distant thunderclap, and {B} jumps."],
+      onward: ["\"{PLACE},\" {A} says. \"Somewhere high to roost, I hope.\"", "\"{THREAT},\" {A} says, and their head flushes red."],
+      reply: ["{A} gobbles.", "\"Putt,\" {A} says.", "{A} turns one eye on {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

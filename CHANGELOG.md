@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.59.0 — 2026-11-17 — the ground birds
+
+The fourteenth branch of the tree (`docs/design/11-clades.md`): the last two painted birds, each with nine traits.
+
+- **Ostrich and Wild Turkey.**
+- Shared traits:
+  - **Hollow Bones** (every bird) and **Ground Sprint** (both)
+  - the turkey carries the peacock's **Display Fan**, **Alarm Call** and **Spur**
+  - the ostrich carries the hoofed animals' **Kick** and **Wide Eyes**. It is not their kin, but it gives the same answer to the same open plain (a *variant*, `docs/design/11-clades.md`).
+- Traits of each one's own:
+  - ostrich: Stride, Head Low, Wing Fan, Stone Gizzard and Nest Ring
+  - turkey: Gobble, Flock Watch, Roost Flight and Wattle Flush
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (look-ahead player):
+  - In 240 drafted runs, only 23 had an ostrich or a turkey, and they won 2 of them (35% for the rest).
+  - With a forced squad (one hero is the clade plus a random second, 60 runs each), the ostrich wins 25%, the turkey 32%, the crane 30% and the eagle 40%.
+  - Ground Sprint's Dash, Wattle Flush's Go Red and the ostrich's Stride were raised a little.
+  - Both are on the low side of the birds and make no run easier.
+
 ## 2.58.0 — 2026-11-17 — the perching and bright birds
 
 The thirteenth branch of the tree (`docs/design/11-clades.md`): five painted birds, each with nine traits.
