@@ -3555,4 +3555,130 @@
       fx:[{v:'phoenix', hp:(P,E)=>3+2*E, dur:3}],
       txt:(P,E)=>`Ready to turn young: if you are downed within 3 rounds, you re-form at once with ${3+2*E} hp.` },
     'One kind, when it is dying, simply starts over.');
+  // ── Crustaceans (2.65): the lobster and the mantis shrimp. Both molt and wear a carapace;
+  // the lobster also has the parrot's Long Life, and the mantis shrimp the chameleon's Turret Eyes.
+  S('lobster', { name: 'Lobster', lean: 'M/T', branch: 'Crustaceans', icon: '🦞',
+    tagline: 'Two claws, one for crushing and one for cutting, and it never quite stops growing.' });
+  S('mantis_shrimp', { name: 'Mantis Shrimp', lean: 'M/C', branch: 'Crustaceans', icon: '🦐',
+    tagline: 'Punches hard enough to boil the water, and sees colours nobody else has names for.' });
+  const CRUST = ['lobster','mantis_shrimp'];
+  T.shareTrait('bir_life', 'lobster');
+  T.shareTrait('cha_turret', 'mantis_shrimp');
+
+  K(CRUST,'crs_molt','Molt','T',0,
+    { n:'Shrug Off', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'cleanse'},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield ${1+h(P)} this round.` },
+    { n:'New Shell', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>2+E},{v:'statusImmune', dur:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Step out of the old shell: heal ${2+E}, no Weaken or Root for 2 rounds, and your next hit deals +${1+E}.` },
+    'Too big for its own skin, so it leaves it behind.', 'Crustaceans');
+  K(CRUST,'crs_carapace','Carapace','M',0,
+    { n:'Plate Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+P, dur:1}],
+      txt:(P,E)=>`Turn your plates to the blow: Shield ${2+P} this round.` },
+    { n:'Spiked Plates', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2},{v:'thorns', val:(P,E)=>1+E, dur:2}],
+      txt:(P,E)=>`Bristle every spine on the shell: for 2 rounds hold Shield ${1+E}, and anything that hits you in melee takes ${1+E}.` },
+    'Armour on the outside, all of it.', 'Crustaceans');
+
+  // Lobster: Molt, Carapace, Long Life, and these six
+  K(['lobster'],'lob_crusher','Crusher Claw','M',2,
+    { n:'Crush', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:1},{v:'strike', kind:'melee', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`Crack it like a shell: strip 1 Shield, then melee ${2+P}.` },
+    { n:'Break Open', ap:1, el:1, cd:4, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:2},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'execute', threshold:(P,E)=>2+E}],
+      txt:(P,E)=>`Strip 2 Shield and melee ${3+E}; if that leaves it at ${2+E} hp or less, it breaks.` },
+    'The big claw, slow and certain.');
+  K(['lobster'],'lob_pincer','Pincer Claw','C',0,
+    { n:'Nip', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Snip and hold: melee ${1+P}, and it is Anchored 1.` },
+    { n:'Hold Fast', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'anchor', who:'foe', dur:2},{v:'weaken', val:1, dur:2},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Clamp on: melee ${2+E}, it is Anchored and Weakened 1 for 2 rounds, and both heroes' next hit deals +1.` },
+    'The quick claw, for holding and cutting.');
+  K(['lobster'],'lob_flip','Tail Flip','S',0,
+    { n:'Flip Back', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true}],
+      txt:(P,E)=>`Snap your tail and shoot backwards ${2+P}, through foes if need be.` },
+    { n:'Gone', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
+      txt:(P,E)=>`One flick and you are elsewhere: go to any node within ${2+E}, Hidden 1, and the next hit on you is ${1+E} less.` },
+    'Forwards is for walking. Backwards is for getting away.');
+  K(['lobster'],'lob_march','Long March','T',0,
+    { n:'Single File', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'shield', val:1, dur:1, party:true, allyRange:2}],
+      txt:(P,E)=>`Walk ${1+P} in line: you and an ally within 2 hold Shield 1 this round.` },
+    { n:'March On', ap:1, el:1, cd:4, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+E},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
+      txt:(P,E)=>`Lead the march: move your ally ${1+E}, and both heroes heal 1 at the start of their next 2 turns.` },
+    'In autumn they walk the sea floor in long lines, each touching the one ahead.');
+  K(['lobster'],'lob_feelers','Long Feelers','C',0,
+    { n:'Feel Out', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Sweep your feelers: see within ${2+P} (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.` },
+    { n:'Taste the Water', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Taste one foe on the water: it can't Hide for 2 rounds, and your hits on it deal +${1+E}.` },
+    'Feelers longer than its body, never still.');
+  K(['lobster'],'lob_den','Rock Den','M',0,
+    { n:'Back In', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:1},{v:'preempt', val:(P,E)=>1+P, reflect:0}],
+      txt:(P,E)=>`Back into a crack: nothing can push or pull you this round, and the next hit on you is ${1+P} less.` },
+    { n:'Hold the Den', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:2},{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:(P,E)=>1+E, dur:2}],
+      txt:(P,E)=>`Claws out at the door: for 2 rounds hold Shield ${1+E} and nothing can push or pull you; the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+    'Every lobster has a hole in the rock, and will fight for it.');
+
+  // Mantis Shrimp: Molt, Carapace, Turret Eyes, and these six
+  K(['mantis_shrimp'],'msh_punch','Smasher Punch','M',2,
+    { n:'Punch', ap:1, el:0, cd:2, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P}],
+      txt:(P,E)=>`Club it faster than a bullet: melee ${3+P}.` },
+    { n:'Cavitation', ap:1, el:1, cd:4, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'strike', kind:'area', dmg:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Punch so fast the water boils: melee ${3+E}, then the shock hits every foe beside you for ${1+h(E)}.` },
+    'Two strikes from one punch: the club, then the bubble.');
+  K(['mantis_shrimp'],'msh_spear','Spearer Arms','S',0,
+    { n:'Spear', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P}],
+      txt:(P,E)=>`Shoot out a barbed arm at a foe within 2 for ${1+P}.` },
+    { n:'Ambush Spear', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+E, revealTarget:true},{v:'force', kind:'pull', n:1}],
+      txt:(P,E)=>`From the burrow, spear a foe within 2 for ${2+E}, hidden or not, and drag it 1 toward you.` },
+    'Some of its kind smash. Others stab.');
+  K(['mantis_shrimp'],'msh_colours','Sixteen Colours','C',0,
+    { n:'See It', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`See in colours no one else can: see within ${2+P}, and Mark the nearest foe (the next hit on it deals +2).` },
+    { n:'Weak Spot', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'expose', bonus:(P,E)=>1+E}],
+      txt:(P,E)=>`Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +${1+E}.` },
+    'Sixteen kinds of colour cell. We have three.');
+  K(['mantis_shrimp'],'msh_burrow','Burrow','T',0,
+    { n:'Dig In', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Back into your burrow: Hidden 1 and Shield ${1+h(P)} this round.` },
+    { n:'Door Stone', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'hidden', dur:1, canMove:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Plug the burrow with a stone and slip out the back: a decoy holds your spot for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, you are Hidden 1 even if you move, and your next hit deals +${1+E}.` },
+    'A U-shaped burrow, and it knows both doors.');
+  K(['mantis_shrimp'],'msh_glow','Fluoresce','C',0,
+    { n:'Signal', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Flash a colour only kin can read: your ally's next hit deals +${1+h(P)}, and the next hit on you is 1 less.` },
+    { n:'Warning Glow', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+E, area:'adj'},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Glow a warning: foes beside you are Weakened 1 for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and both heroes' next hit deals +1.` },
+    'A patch that glows, for talking and for warning.');
+  K(['mantis_shrimp'],'msh_ritual','Ritual Fight','M',0,
+    { n:'Square Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:1, dur:1},{v:'counter', dmg:(P,E)=>1+P, push:0, dur:2}],
+      txt:(P,E)=>`Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes ${1+P}.` },
+    { n:'Tail Shield', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'preempt', val:(P,E)=>2+E, reflect:(P,E)=>E},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
+      txt:(P,E)=>`Take it on the tail plate: the next hit on you is ${2+E} less and ${E} of it bounces back; the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+    'They fight by taking turns to hit each other on the tail, and the tail can take it.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

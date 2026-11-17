@@ -3878,3 +3878,101 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Shed* · 1 AP · CD 2 — Shed the damaged layer: escape every hold and condition, and heal 1. *(P3: Shed the damaged layer: escape every hold and condition, and heal 4.)*
 - *Eth — Young Again* · 1 AP + 1 Time · CD 5 · Dur 3 — Ready to turn young: if you are downed within 3 rounds, you re-form at once with 5 hp. *(P3/E3: Ready to turn young: if you are downed within 3 rounds, you re-form at once with 9 hp.)*
+
+## 79 · Lobster — leans M/T
+
+*Two claws, one for crushing and one for cutting, and it never quite stops growing.*
+
+**Long Life** · Time · `bir_life`
+
+- *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+
+**Molt** · Time · `crs_molt`
+
+- *Phys — Shrug Off* · 1 AP · CD 1 — Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 1 this round. *(P3: Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 2 this round.)*
+- *Eth — New Shell* · 1 AP + 1 Time · CD 4 — Step out of the old shell: heal 3, no Weaken or Root for 2 rounds, and your next hit deals +2. *(P3/E3: Step out of the old shell: heal 5, no Weaken or Root for 2 rounds, and your next hit deals +4.)*
+
+**Carapace** · Mass · `crs_carapace`
+
+- *Phys — Plate Up* · 1 AP · CD 1 — Turn your plates to the blow: Shield 2 this round. *(P3: Turn your plates to the blow: Shield 5 this round.)*
+- *Eth — Spiked Plates* · 1 AP + 1 Mass · CD 3 — Bristle every spine on the shell: for 2 rounds hold Shield 2, and anything that hits you in melee takes 2. *(P3/E3: Bristle every spine on the shell: for 2 rounds hold Shield 4, and anything that hits you in melee takes 4.)*
+
+**Crusher Claw** ★ · Mass · `lob_crusher`
+
+- *Phys — Crush* · 1 AP · CD 1 — Crack it like a shell: strip 1 Shield, then melee 2. *(P3: Crack it like a shell: strip 1 Shield, then melee 5.)*
+- *Eth — Break Open* · 1 AP + 1 Mass · CD 4 — Strip 2 Shield and melee 4; if that leaves it at 3 hp or less, it breaks. *(P3/E3: Strip 2 Shield and melee 6; if that leaves it at 5 hp or less, it breaks.)*
+
+**Pincer Claw** · Charge · `lob_pincer`
+
+- *Phys — Nip* · 1 AP · CD 1 — Snip and hold: melee 1, and it is Anchored 1. *(P3: Snip and hold: melee 4, and it is Anchored 1.)*
+- *Eth — Hold Fast* · 1 AP + 1 Charge · CD 3 — Clamp on: melee 3, it is Anchored and Weakened 1 for 2 rounds, and both heroes' next hit deals +1. *(P3/E3: Clamp on: melee 5, it is Anchored and Weakened 1 for 2 rounds, and both heroes' next hit deals +1.)*
+
+**Tail Flip** · Space · `lob_flip`
+
+- *Phys — Flip Back* · 1 AP · CD 1 — Snap your tail and shoot backwards 2, through foes if need be. *(P3: Snap your tail and shoot backwards 5, through foes if need be.)*
+- *Eth — Gone* · 1 AP + 1 Space · CD 3 — One flick and you are elsewhere: go to any node within 3, Hidden 1, and the next hit on you is 2 less. *(P3/E3: One flick and you are elsewhere: go to any node within 5, Hidden 1, and the next hit on you is 4 less.)*
+
+**Long March** · Time · `lob_march`
+
+- *Phys — Single File* · 1 AP · CD 1 — Walk 1 in line: you and an ally within 2 hold Shield 1 this round. *(P3: Walk 4 in line: you and an ally within 2 hold Shield 1 this round.)*
+- *Eth — March On* · 1 AP + 1 Time · CD 4 — Lead the march: move your ally 2, and both heroes heal 1 at the start of their next 2 turns. *(P3/E3: Lead the march: move your ally 4, and both heroes heal 1 at the start of their next 2 turns.)*
+
+**Long Feelers** · Charge · `lob_feelers`
+
+- *Phys — Feel Out* · 1 AP · CD 1 — Sweep your feelers: see within 2 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1. *(P3: Sweep your feelers: see within 5 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.)*
+- *Eth — Taste the Water* · 1 AP + 1 Charge · CD 3 — Taste one foe on the water: it can't Hide for 2 rounds, and your hits on it deal +2. *(P3/E3: Taste one foe on the water: it can't Hide for 2 rounds, and your hits on it deal +4.)*
+
+**Rock Den** · Mass · `lob_den`
+
+- *Phys — Back In* · 1 AP · CD 1 — Back into a crack: nothing can push or pull you this round, and the next hit on you is 1 less. *(P3: Back into a crack: nothing can push or pull you this round, and the next hit on you is 4 less.)*
+- *Eth — Hold the Den* · 1 AP + 1 Mass · CD 4 — Claws out at the door: for 2 rounds hold Shield 2 and nothing can push or pull you; the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Claws out at the door: for 2 rounds hold Shield 4 and nothing can push or pull you; the next foe to hit you in melee takes 5 and is pushed 1.)*
+
+## 80 · Mantis Shrimp — leans M/C
+
+*Punches hard enough to boil the water, and sees colours nobody else has names for.*
+
+**Turret Eyes** · Time · `cha_turret`
+
+- *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+
+**Molt** · Time · `crs_molt`
+
+- *Phys — Shrug Off* · 1 AP · CD 1 — Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 1 this round. *(P3: Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 2 this round.)*
+- *Eth — New Shell* · 1 AP + 1 Time · CD 4 — Step out of the old shell: heal 3, no Weaken or Root for 2 rounds, and your next hit deals +2. *(P3/E3: Step out of the old shell: heal 5, no Weaken or Root for 2 rounds, and your next hit deals +4.)*
+
+**Carapace** · Mass · `crs_carapace`
+
+- *Phys — Plate Up* · 1 AP · CD 1 — Turn your plates to the blow: Shield 2 this round. *(P3: Turn your plates to the blow: Shield 5 this round.)*
+- *Eth — Spiked Plates* · 1 AP + 1 Mass · CD 3 — Bristle every spine on the shell: for 2 rounds hold Shield 2, and anything that hits you in melee takes 2. *(P3/E3: Bristle every spine on the shell: for 2 rounds hold Shield 4, and anything that hits you in melee takes 4.)*
+
+**Smasher Punch** ★ · Mass · `msh_punch`
+
+- *Phys — Punch* · 1 AP · CD 2 — Club it faster than a bullet: melee 3. *(P3: Club it faster than a bullet: melee 6.)*
+- *Eth — Cavitation* · 1 AP + 1 Mass · CD 4 — Punch so fast the water boils: melee 4, then the shock hits every foe beside you for 1. *(P3/E3: Punch so fast the water boils: melee 6, then the shock hits every foe beside you for 2.)*
+
+**Spearer Arms** · Space · `msh_spear`
+
+- *Phys — Spear* · 1 AP · CD 1 — Shoot out a barbed arm at a foe within 2 for 1. *(P3: Shoot out a barbed arm at a foe within 2 for 4.)*
+- *Eth — Ambush Spear* · 1 AP + 1 Space · CD 3 — From the burrow, spear a foe within 2 for 3, hidden or not, and drag it 1 toward you. *(P3/E3: From the burrow, spear a foe within 2 for 5, hidden or not, and drag it 1 toward you.)*
+
+**Sixteen Colours** · Charge · `msh_colours`
+
+- *Phys — See It* · 1 AP · CD 1 — See in colours no one else can: see within 2, and Mark the nearest foe (the next hit on it deals +2). *(P3: See in colours no one else can: see within 5, and Mark the nearest foe (the next hit on it deals +2).)*
+- *Eth — Weak Spot* · 1 AP + 1 Charge · CD 3 — Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +2. *(P3/E3: Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +4.)*
+
+**Burrow** · Time · `msh_burrow`
+
+- *Phys — Dig In* · 1 AP · CD 1 — Back into your burrow: Hidden 1 and Shield 1 this round. *(P3: Back into your burrow: Hidden 1 and Shield 2 this round.)*
+- *Eth — Door Stone* · 1 AP + 1 Time · CD 4 — Plug the burrow with a stone and slip out the back: a decoy holds your spot for 2 rounds, you are Hidden 1 even if you move, and your next hit deals +2. *(P3/E3: Plug the burrow with a stone and slip out the back: a decoy holds your spot for 4 rounds, you are Hidden 1 even if you move, and your next hit deals +4.)*
+
+**Fluoresce** · Charge · `msh_glow`
+
+- *Phys — Signal* · 1 AP · CD 1 — Flash a colour only kin can read: your ally's next hit deals +1, and the next hit on you is 1 less. *(P3: Flash a colour only kin can read: your ally's next hit deals +2, and the next hit on you is 1 less.)*
+- *Eth — Warning Glow* · 1 AP + 1 Charge · CD 3 — Glow a warning: foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1. *(P3/E3: Glow a warning: foes beside you are Weakened 1 for 4 rounds, and both heroes' next hit deals +1.)*
+
+**Ritual Fight** · Mass · `msh_ritual`
+
+- *Phys — Square Up* · 1 AP · CD 1 — Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes 1. *(P3: Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes 4.)*
+- *Eth — Tail Shield* · 1 AP + 1 Mass · CD 3 — Take it on the tail plate: the next hit on you is 3 less and 1 of it bounces back; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Take it on the tail plate: the next hit on you is 5 less and 3 of it bounces back; the next foe to hit you in melee takes 4 and is pushed 1.)*

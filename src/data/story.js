@@ -571,6 +571,20 @@
       onward: ["\"{PLACE}? I'll drift there,\" {A} says.", "\"{THREAT},\" {A} says, and every sting coils."],
       reply: ["{A} pulses.", "\"Mm,\" {A} says, glowing.", "{A} drifts close to {B}, then away."],
     },
+    lobster: {
+      win: ["{A} clacks both claws, once each, very loud.", "\"Slow and armoured,\" {A} says. \"Works every time.\""],
+      close: ["{A} backs into a crack and will not come out.", "\"I need a bigger shell,\" {A} says, sore."],
+      quiet: ["{A} walks round camp in a slow line, feelers out.", "{A} tells {B} they are a hundred years old. Maybe."],
+      onward: ["\"Rocks in {PLACE}?\" {A} asks. \"I want a den.\"", "\"{THREAT},\" {A} says, and opens the big claw."],
+      reply: ["{A} clicks.", "\"Hm,\" {A} says, feelers twitching.", "{A} taps {B} with a feeler."],
+    },
+    mantis_shrimp: {
+      win: ["{A} flashes a colour {B} has never seen.", "\"One punch,\" {A} says. \"I told you.\""],
+      close: ["{A} sits in their burrow, glowing angrily.", "\"It moved,\" {A} says. \"Things don't move that fast.\""],
+      quiet: ["{A} tells {B} what colour the stars really are.", "{A} rearranges the stones at the burrow door twice."],
+      onward: ["\"{PLACE}? Is there sand to dig?\" {A} asks.", "\"{THREAT},\" {A} says, and cocks the club."],
+      reply: ["{A} flashes.", "\"Obviously,\" {A} says.", "{A} swivels one eye toward {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

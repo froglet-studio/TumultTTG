@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.64.0',
+    version: '2.65.0',
     items: [
+      {
+        text: 'Two crustaceans start a new branch: Lobster and Mantis Shrimp. Both Molt (shrug off holds, or step out of the shell healed) and wear a Carapace; the lobster also has the parrot’s Long Life, and the mantis shrimp the chameleon’s Turret Eyes. The lobster crushes with one claw, holds with the other, flips away backwards and guards its den; the mantis shrimp punches hard enough to hit twice, spears from its burrow and sees the weak spot. Which claw did you reach for most?',
+      },
       {
         text: 'Snail and Jellyfish join the Mimic Octopus on a new branch. All three share Boneless Squeeze; the snail also tastes with Chemo-Suckers, carries the tortoise’s Shell and regrows like the axolotl, and the jellyfish drifts with the eel’s Buoyancy Control and regrows too. The snail glides up walls, seals itself in and rasps; the jellyfish stings, trails tentacles, glows, blooms and can turn young again when downed. Do they feel soft-bodied and strange?',
       },

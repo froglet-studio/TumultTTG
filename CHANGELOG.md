@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.65.0 — 2026-11-17 — the crustaceans
+
+The twentieth branch of the tree (`docs/design/11-clades.md`): two painted crustaceans, each with nine traits.
+
+- **Lobster and Mantis Shrimp.**
+- Shared traits:
+  - **Molt** and **Carapace**, written for the branch: both
+  - the lobster also has the parrot's **Long Life**, and the mantis shrimp the chameleon's **Turret Eyes**
+- Traits of each one's own:
+  - lobster: Crusher Claw, Pincer Claw, Tail Flip, Long March, Long Feelers and Rock Den
+  - mantis shrimp: Smasher Punch, Spearer Arms, Sixteen Colours, Burrow, Fluoresce and Ritual Fight
+- Each has a voice in the passages between stops. The audit reports no narrow faces; Square Up gained Shield 1 so it does more than answer one telegraphed hit.
+- **Balance** (look-ahead player, forced squad: one hero is the clade plus a random second, 60 runs): lobster 28%, mantis shrimp 35%. Earlier branches range from 18% to 40%.
+
 ## 2.64.0 — 2026-11-17 — the molluscs and jellies
 
 The nineteenth branch of the tree (`docs/design/11-clades.md`): two painted soft bodies join the Mimic Octopus, each with nine traits.
