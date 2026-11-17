@@ -35,7 +35,7 @@
   },
   "art": {
     "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",
-    "images": ["assets/pilots", "assets/scenes"],
+    "images": ["assets/pilots", "assets/scenes", "assets/portraits"],
     "fonts": [
       {
         "family": "Chakra Petch",

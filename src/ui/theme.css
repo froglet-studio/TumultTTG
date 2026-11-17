@@ -370,6 +370,13 @@ button.ghost {
   fill-rule: evenodd;
   flex: none;
 }
+.icn.por {
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-color: #0d1a33;
+  border-radius: 28%;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
 .icn.tiny {
   width: 0.95em;
   height: 0.95em;
