@@ -281,7 +281,7 @@ test(
       T.CANON_PROMPTS.some((p) => r.prompt.split(':')[0] === p.id),
       r.prompt,
     );
-    assert.equal(r.context.hero, 'Cavitt');
+    assert.equal(r.context.hero, 'Rosh');
     assert.match(r.claim, /never speak of it\.$/);
     assert.ok(r.shown.endsWith('?'), 'the detail and the question travel with the answer');
     // skipping is answering nothing

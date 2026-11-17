@@ -2,16 +2,16 @@
 
 ## 2.67.0 — 2026-11-17 — the pre-made heroes are painted pilots
 
-With all 21 branches built, each pre-made hero now plays a painted Cosmic Shore pilot's pair of clades and shows that pilot's art. Names, titles, roles and ids are unchanged.
+With all 21 branches built, each pre-made hero is now a painted Cosmic Shore pilot: that pilot's name, pair of clades and art (Garrett chose the pilots' names). Each keeps the old hero's title and role; the ids stay the old names so saved canon notes still match.
 
-| Hero | Was | Now (painting) |
+| Was | Now (painting) | Clades |
 |---|---|---|
-| Cavitt, the Brawler-in-the-Cloud | octopus, grasshopper | octopus, raven (BANDIT) |
-| Marish, the Tidewarden | eel, flytrap | otter, eel (FLUME) |
-| Ossa, the Bulwark | tardigrade, gecko | hedgehog, tortoise (CITADEL) |
-| Veil, the Nightwing | owl, jerboa | mouse, owl (ECHO) |
-| Mycel, the Network | cordyceps, axolotl | axolotl, koi (VOLT) |
-| Kess, the Catapult | grasshopper, eel | flamingo, mantis shrimp (SLINGSHOT) |
+| Cavitt, the Brawler-in-the-Cloud (octopus, grasshopper) | Rosh (BANDIT) | octopus, raven |
+| Marish, the Tidewarden (eel, flytrap) | Ekora (FLUME) | otter, eel |
+| Ossa, the Bulwark (tardigrade, gecko) | Nedira (CITADEL) | hedgehog, tortoise |
+| Veil, the Nightwing (owl, jerboa) | Echo (ECHO) | mouse, owl |
+| Mycel, the Network (cordyceps, axolotl) | Karenth (VOLT) | axolotl, koi |
+| Kess, the Catapult (grasshopper, eel) | Slingshot (SLINGSHOT) | flamingo, mantis shrimp |
 
 - Each kit keeps six cards, at most three per bloodline, and six UP with two cards awakened.
 - **Balance** (`node tools/sim.js 40`, before → after):

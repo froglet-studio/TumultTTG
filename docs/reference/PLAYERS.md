@@ -29,7 +29,7 @@ An action is a plain object. `hero` is an index into `m.heroes`.
 
 - `T.legalActions(m)` lists every action the squad could take next. Every playable face is in it once for each way it can be resolved, and everything in it works.
 - `T.applyAction(m, action)` does one, and returns what the engine returns.
-- `T.describeAction(m, action)` says it in a few words: `Cavitt: Jet Propulsion — Jet → node 7`.
+- `T.describeAction(m, action)` says it in a few words: `Rosh: Jet Propulsion — Jet → node 7`.
 
 **A game is its seed and its list of actions.** Apply the same actions in the same order to the same mission, ending each round with `T.endHeroPhase`, and the same game comes out — the test replays three. That is what a replay, a bug report or an undo needs.
 
