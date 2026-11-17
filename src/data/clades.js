@@ -3681,4 +3681,275 @@
       fx:[{v:'preempt', val:(P,E)=>2+E, reflect:(P,E)=>E},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
       txt:(P,E)=>`Take it on the tail plate: the next hit on you is ${2+E} less and ${E} of it bounces back; the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
     'They fight by taking turns to hit each other on the tail, and the tail can take it.');
+  // ── Insects and arachnids (2.66): the Grasshopper (an unpainted clade) moves onto the branch and lends
+  // its Exoskeleton, Compound Eyes, Molt and Glide Wings; every insect here also has Antennae.
+  T.SPECIES.hopper.branch = 'Insects and arachnids';
+  S('beetle', { name: 'Beetle', lean: 'M/T', branch: 'Insects and arachnids', icon: '🪲',
+    tagline: 'Armoured wing cases, a horn for lifting, and strength far past its size.' });
+  S('butterfly', { name: 'Butterfly', lean: 'S/T', branch: 'Insects and arachnids', icon: '🦋',
+    tagline: 'Eyes painted on its wings, dust that slips any grip, and a journey longer than its life.' });
+  S('firefly', { name: 'Firefly', lean: 'C/S', branch: 'Insects and arachnids', icon: '✨',
+    tagline: 'Cold light in the dark, flashing in time with the others, and bitter to anything that bites.' });
+  S('mantis', { name: 'Praying Mantis', lean: 'M/C', branch: 'Insects and arachnids', icon: '🦗',
+    tagline: 'Still as a leaf, turns its head to watch you, and strikes before you see it move.' });
+  S('scorpion', { name: 'Scorpion', lean: 'M/C', branch: 'Insects and arachnids', icon: '🦂',
+    tagline: 'Pincers in front, a sting overhead, and it glows under the right light.' });
+  const BUGS = ['beetle','butterfly','firefly','mantis'];
+  T.shareTrait('hop_exo', 'beetle', 'firefly', 'mantis', 'scorpion');
+  T.shareTrait('hop_eyes', ...BUGS);
+  T.shareTrait('hop_glide', 'butterfly');
+  T.shareTrait('hop_molt', 'scorpion');
+  T.shareTrait('cra_migrate', 'butterfly');
+  T.shareTrait('hed_venom', 'scorpion');
+
+  K(BUGS,'ins_antennae','Antennae','C',0,
+    { n:'Feel the Air', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Feel the air: see within ${1+P} (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.` },
+    { n:'Scent Trail', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +${1+h(E)}, and your ally's next hit deals +1.` },
+    'Two feelers that taste, smell and listen all at once.', 'Insects and arachnids');
+
+  // Beetle: Exoskeleton, Compound Eyes, Antennae, and these six
+  K(['beetle'],'btl_horn','Horn Lift','M',2,
+    { n:'Lever', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Get your horn under it: melee ${2+P}, and push it 1.` },
+    { n:'Flip', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2}],
+      txt:(P,E)=>`Flip it on its back: melee ${2+E}, push it ${1+h(E)}, and it is Weakened 1 for 2 rounds.` },
+    'It lifts a hundred times its weight, and then it throws it.');
+  K(['beetle'],'btl_elytra','Wing Cases','T',0,
+    { n:'Close Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Snap your wing cases shut: Shield ${1+P}, and no Weaken or Root this round.` },
+    { n:'Lift Off', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Open the cases and fly, clumsily, to any node within ${2+E}, height included; Shield 1 this round.` },
+    'Hard wings over soft ones.');
+  K(['beetle'],'btl_roll','Ball Roller','S',0,
+    { n:'Roll', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:1},{v:'move', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Shove your ball through: foes beside you are pushed back 1, then you roll ${1+P}.` },
+    { n:'By the Stars', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>3+E, dur:1},{v:'engine', kind:'ap', val:1, dur:1},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Steer by the stars: see within ${3+E}, gain 1 AP at the start of your next turn, and hazards can't touch you this round.` },
+    'It rolls in a straight line, steering by the Milky Way.');
+  K(['beetle'],'btl_spray','Bombardier Spray','C',0,
+    { n:'Pop', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Spray boiling chemicals at a foe within 2: ${1+P}, and it is Weakened 1.` },
+    { n:'Boiling Burst', ap:1, el:1, cd:4, dur:0, tgt:'node_r2',
+      fx:[{v:'dot', kind:'scald', val:(P,E)=>1+h(E), dur:2, area:'nodeArea'},{v:'weaken', val:1, dur:2, area:'adj'}],
+      txt:(P,E)=>`Burst at a node within 2: every foe on or beside it is scalded, ${1+h(E)} a round for 2 rounds; foes beside you are Weakened 1 for 2 rounds.` },
+    'Two chemicals, mixed at the last moment, at boiling point.');
+  K(['beetle'],'btl_strong','Strong Back','M',0,
+    { n:'Dig In', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:1},{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:1}],
+      txt:(P,E)=>`Set your six legs: nothing can push or pull you this round, and your next hit this turn deals +${1+h(P)}.` },
+    { n:'Carry', ap:1, el:1, cd:3, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+E},{v:'shield', val:(P,E)=>1+E, dur:1, party:true}],
+      txt:(P,E)=>`Shoulder your ally: move them ${1+E}, and both heroes hold Shield ${1+E} this round.` },
+    'Pound for pound, nothing alive is stronger.');
+  K(['beetle'],'btl_dead','Play Dead','T',0,
+    { n:'Drop', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'preempt', val:(P,E)=>1+P, reflect:0}],
+      txt:(P,E)=>`Fall over, legs up: Hidden 1, and the next hit on you is ${1+P} less.` },
+    { n:'Not Dead Yet', ap:1, el:1, cd:5, dur:3, tgt:'self',
+      fx:[{v:'phoenix', hp:(P,E)=>2+2*E, dur:3}],
+      txt:(P,E)=>`You were only pretending: if you are downed within 3 rounds, get up at once with ${2+2*E} hp.` },
+    'Lie still long enough and the bird goes away.');
+
+  // Butterfly: Compound Eyes, Antennae, Glide Wings, Migration, and these five
+  K(['butterfly'],'but_eyespots','Eyespots','C',2,
+    { n:'Flash Eyes', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
+      txt:(P,E)=>`Open your wings on two great eyes: foes beside you are Weakened 1, and the next hit on you is ${1+h(P)} less.` },
+    { n:'Owl Face', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2, area:'adj'},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Show the face of an owl: foes within ${1+h(E)} flinch back 1, foes beside you are Weakened 1 for 2 rounds, and your ally's next hit deals +1.` },
+    'Two eyes that are not eyes, and they work anyway.');
+  K(['butterfly'],'but_scales','Dust Scales','S',0,
+    { n:'Slip', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'cleanse'},{v:'move', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Leave a puff of dust in its grip: escape every hold and condition, and move ${1+P}.` },
+    { n:'Dust Cloud', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1, party:true, radius:1},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
+      txt:(P,E)=>`Shake out a cloud of scales: heroes on or beside your node are Hidden 1, and the next hit on you is ${1+E} less.` },
+    'Wings made of tiny tiles, and they come off in your fingers.');
+  K(['butterfly'],'but_sip','Proboscis','T',0,
+    { n:'Sip', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Uncoil your tongue and drink: heal ${1+P}.` },
+    { n:'Nectar Share', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>1+E, party:true},{v:'cleanse'}],
+      txt:(P,E)=>`Find a flower for two: both heroes heal 1 at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and you shake off every condition.` },
+    'A drinking straw, coiled like a watch spring.');
+  K(['butterfly'],'but_flutter','Erratic Flight','S',0,
+    { n:'Flutter', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true, noTrap:true}],
+      txt:(P,E)=>`Flit ${2+P} this way and that, past foes and over traps.` },
+    { n:'Zigzag', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'preempt', val:(P,E)=>2+E, reflect:0}],
+      txt:(P,E)=>`Zigzag where no one can follow: go to any node within ${2+E}, and the next hit on you is ${2+E} less.` },
+    'No bird can guess where it will be next.');
+  K(['butterfly'],'but_morph','Metamorphosis','T',0,
+    { n:'Change', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'shield', val:1, dur:1},{v:'empower', val:(P,E)=>1+P, uses:1, dur:2}],
+      txt:(P,E)=>`Feel the change coming: Shield 1 this round, and your next hit deals +${1+P}.` },
+    { n:'Chrysalis', ap:1, el:1, cd:5, dur:0, tgt:'self',
+      fx:[{v:'stasis', dur:1},{v:'heal', n:(P,E)=>2+E},{v:'empower', val:(P,E)=>2+E, uses:1, dur:3}],
+      txt:(P,E)=>`Seal yourself in a chrysalis: heal ${2+E}, nothing can touch you until your next turn, and you come out with +${2+E} on your next hit.` },
+    'Go in one thing, come out another.');
+
+  // Firefly: Exoskeleton, Compound Eyes, Antennae, and these six
+  K(['firefly'],'ffl_flash','Flash','C',2,
+    { n:'Blink', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Flash your light: see within ${2+P}, and Mark the nearest foe (the next hit on it deals +2).` },
+    { n:'Dazzle', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2, area:'adj'},{v:'reveal', radius:(P,E)=>2+E, dur:1}],
+      txt:(P,E)=>`Flare bright: foes beside you are Weakened ${1+h(E)} for 2 rounds, and you see within ${2+E}.` },
+    'A light with no heat in it.');
+  K(['firefly'],'ffl_sync','Synchrony','T',0,
+    { n:'In Time', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Flash in time with your ally: both heroes' next hit deals +1.` },
+    { n:'All at Once', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'ap', val:1, dur:1, party:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`The whole field flashes at once: both heroes gain 1 AP at the start of their next turn, and both heroes' next hit deals +${1+E}.` },
+    'Thousands of them, blinking together, all night.');
+  K(['firefly'],'ffl_lure','False Signal','S',0,
+    { n:'Wrong Code', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'force', kind:'pull', n:1},{v:'strike', kind:'melee', dmg:(P,E)=>1+P, ifAdjacent:true}],
+      txt:(P,E)=>`Flash the wrong code at a foe within 2 and draw it 1 closer; if it ends beside you, it takes ${1+P}.` },
+    { n:'Lantern', ap:1, el:1, cd:3, dur:0, tgt:'node_r3',
+      fx:[{v:'decoy', dur:(P,E)=>1+E},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Hang a false light on a node within 3: foes treat it as a hero for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and you go dark (Hidden 1).` },
+    'Some fireflies copy another kind\'s signal, and eat whoever answers.');
+  K(['firefly'],'ffl_bitter','Bitter Blood','M',0,
+    { n:'Bad Taste', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Taste foul: anything that hits you in melee this round takes ${1+P}.` },
+    { n:'Reflex Bleed', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'weaken', val:1, dur:2, area:'adj'},{v:'shield', val:1, dur:2}],
+      txt:(P,E)=>`Bleed bitter from the joints: for 2 rounds hold Shield 1, anything that hits you in melee takes ${1+E}, and foes beside you are Weakened 1.` },
+    'Birds learn quickly what a firefly tastes like.');
+  K(['firefly'],'ffl_larva','Glow-Worm Bite','M',0,
+    { n:'Bite', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`Bite with the jaws you had as a larva: melee ${2+P}.` },
+    { n:'Numbing Bite', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'dot', kind:'venom', val:1, dur:2},{v:'weaken', val:1, dur:2}],
+      txt:(P,E)=>`Bite and numb: melee ${2+E}; it takes 1 at the start of its next 2 turns and is Weakened 1 for 2 rounds.` },
+    'As a grub it hunts snails, and it numbs them first.');
+  K(['firefly'],'ffl_dark','Cold Light','S',0,
+    { n:'Go Dark', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Switch off and drift ${1+P}: Hidden 1.` },
+    { n:'Night Field', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1, party:true, radius:2},{v:'reveal', radius:(P,E)=>2+E, dur:1}],
+      txt:(P,E)=>`Among a thousand lights no one can pick yours out: heroes within 2 of you are Hidden 1, and you see within ${2+E}.` },
+    'When every light blinks, none of them is the one.');
+
+  // Praying Mantis: Exoskeleton, Compound Eyes, Antennae, and these six
+  K(['mantis'],'man_strike','Raptorial Strike','M',2,
+    { n:'Snatch', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Snatch it in spiked arms: melee ${2+P}, and it is Anchored 1.` },
+    { n:'Lightning Grab', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'force', kind:'pull', n:1},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, ifAdjacent:true},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Reach out faster than it can blink: draw a foe within 2 one closer; if it ends beside you it takes ${3+E} and is Anchored ${1+h(E)}.` },
+    'Arms folded as if in prayer, and lined with spikes.');
+  K(['mantis'],'man_still','Hold Still','T',0,
+    { n:'Wait', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'empower', val:1, uses:1, dur:2}],
+      txt:(P,E)=>`Do nothing at all: Hidden 1, and your next hit within 2 rounds deals +1.` },
+    { n:'Patience', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'empower', val:(P,E)=>2+E, uses:1, dur:2},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Wait as long as it takes: Hidden 1, the next hit on you is 1 less, and your next hit within 2 rounds deals +${2+E}.` },
+    'It can wait all day. It usually does.');
+  K(['mantis'],'man_sway','Leaf Sway','S',0,
+    { n:'Sway', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Rock like a leaf in the wind and step ${1+P}; the next hit on you is 1 less.` },
+    { n:'Just a Twig', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true}],
+      txt:(P,E)=>`Move ${1+E} like a twig in a breeze: Hidden ${1+h(E)}, even if you move again.` },
+    'It sways, so it looks like the leaves around it.');
+  K(['mantis'],'man_head','Swivel Head','C',0,
+    { n:'Turn and Look', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
+      fx:[{v:'studied', n:1},{v:'reveal', radius:1, dur:1}],
+      txt:(P,E)=>`Turn your head to watch one foe: your hits on it deal +1, and you see beside you.` },
+    { n:'Measure', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'expose', bonus:(P,E)=>1+E}],
+      txt:(P,E)=>`Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +${1+E}.` },
+    'The only insect that looks over its shoulder.');
+  K(['mantis'],'man_wings','Startle Display','C',0,
+    { n:'Rear Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Rear up and spread your arms: foes beside you are Weakened 1, and you hold Shield 1 this round.` },
+    { n:'Wings Wide', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:1},{v:'weaken', val:1, dur:2, area:'adj'},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Throw open bright wings: foes beside you are pushed back 1 and Weakened 1 for 2 rounds, and your next hit deals +${1+E}.` },
+    'Suddenly much bigger, and much brighter.');
+  K(['mantis'],'man_flower','Flower Lure','S',0,
+    { n:'Bloom', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'force', kind:'pull', n:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Look like a flower: draw a foe within 2 one closer, and your next hit this turn deals +1.` },
+    { n:'Orchid', ap:1, el:1, cd:4, dur:0, tgt:'node_r3',
+      fx:[{v:'decoy', dur:(P,E)=>1+E},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Become an orchid, or seem to, at a node within 3: foes treat it as a hero for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and both heroes' next hit deals +${1+E}.` },
+    'Some mantises are flowers. Insects come to them.');
+
+  // Scorpion: Exoskeleton, Molt, Venom Shrug, and these six
+  K(['scorpion'],'sco_sting','Tail Sting','M',2,
+    { n:'Sting', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'dot', kind:'venom', val:1, dur:2}],
+      txt:(P,E)=>`Arch your tail and sting: melee ${1+P}; it takes 1 at the start of its next 2 turns.` },
+    { n:'Full Dose', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'dot', kind:'venom', val:(P,E)=>1+h(E), dur:2},{v:'weaken', val:1, dur:2}],
+      txt:(P,E)=>`Spend the venom: melee ${2+E}; it takes ${1+h(E)} at the start of its next 2 turns and is Weakened 1 for 2 rounds.` },
+    'The tail is the last thing it uses, and the worst.');
+  K(['scorpion'],'sco_pincers','Pincers','M',0,
+    { n:'Grab', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Grab it with both claws: melee ${1+P}, and it is Anchored 1.` },
+    { n:'Hold and Sting', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'anchor', who:'foe', dur:2},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Pin it in the claws: it is Anchored 2, takes ${2+E} in melee, and your next hit deals +${1+E}.` },
+    'Hold it still first.');
+  K(['scorpion'],'sco_glow','Moonglow','C',0,
+    { n:'Glint', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Your shell catches the moonlight: see within ${1+P}, and hold Shield 1 this round.` },
+    { n:'Moon Sense', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>3+E, dur:1},{v:'hazardImmune', dur:2},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Your whole shell drinks the light: see within ${3+E}, hazards can't touch you for 2 rounds, and both heroes' next hit deals +1.` },
+    'Under the moon its shell glows blue-green, and no one knows quite why.');
+  K(['scorpion'],'sco_sense','Sand Sense','C',0,
+    { n:'Feel the Ground', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'mark', nearest:true},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less.` },
+    { n:'Every Step', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:1},{v:'redirect'}],
+      txt:(P,E)=>`Read one foe through the ground: it can't Hide for ${2+E} rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is).` },
+    'Tiny slits in its legs hear the sand move.');
+  K(['scorpion'],'sco_burrow','Burrow','T',0,
+    { n:'Under', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Wriggle under the sand: Hidden 1 and Shield ${1+h(P)} this round.` },
+    { n:'Ambush', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Wait under the sand: Hidden ${1+h(E)} even if you move, hazards can't touch you this round, and your next hit deals +${1+E}.` },
+    'Only the claws show, and only just.');
+  K(['scorpion'],'sco_brood','Brood Carry','T',0,
+    { n:'Shelter', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+h(P), dur:1, party:true, allyRange:1}],
+      txt:(P,E)=>`Shelter what is close: you and an ally beside you hold Shield ${1+h(P)} this round.` },
+    { n:'Carry Them', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true, allyRange:2},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
+      txt:(P,E)=>`Carry them on your back: for 2 rounds you and an ally within 2 hold Shield ${1+E}, and both heroes heal 1 at the start of each turn.` },
+    'The young ride on their mother\'s back until their first molt.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

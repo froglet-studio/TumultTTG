@@ -585,6 +585,41 @@
       onward: ["\"{PLACE}? Is there sand to dig?\" {A} asks.", "\"{THREAT},\" {A} says, and cocks the club."],
       reply: ["{A} flashes.", "\"Obviously,\" {A} says.", "{A} swivels one eye toward {B}."],
     },
+    beetle: {
+      win: ["{A} lifts the last stone clear and sets it down neatly.", "\"Heavier than it looked,\" {A} says. \"Not heavy enough.\""],
+      close: ["{A} lies on their back, legs waving, until {B} helps.", "\"I'll get up in a minute,\" {A} says, upside down."],
+      quiet: ["{A} rolls a ball of something across camp. {B} doesn't ask.", "{A} folds their wing cases and polishes them."],
+      onward: ["\"Anything to carry in {PLACE}?\" {A} asks.", "\"{THREAT},\" {A} says, and lowers their horn."],
+      reply: ["{A} clicks their wing cases.", "\"Fine,\" {A} says.", "{A} nudges {B} with their horn."],
+    },
+    butterfly: {
+      win: ["{A} opens their wings in the sun and lets them dry.", "\"They looked at the eyes,\" {A} says. \"They always do.\""],
+      close: ["{A} has lost some scales and is quietly upset about it.", "\"I nearly didn't make it,\" {A} says. \"I always nearly don't.\""],
+      quiet: ["{A} sips at something sweet and offers {B} a turn.", "{A} tells {B} where their grandparents flew. It was far."],
+      onward: ["\"Flowers in {PLACE}?\" {A} asks. \"I have a long way to go.\"", "\"{THREAT},\" {A} says, and shows the eyes."],
+      reply: ["{A} flutters.", "\"Oh,\" {A} says, landing.", "{A} settles on {B}'s knee."],
+    },
+    firefly: {
+      win: ["{A} blinks a pattern only {B} seems to understand.", "\"Lights out for that one,\" {A} says, glowing."],
+      close: ["{A} dims to almost nothing and sulks in the grass.", "\"Too bright,\" {A} says. \"I was much too bright.\""],
+      quiet: ["{A} flashes slowly by {B}'s bedroll so it isn't dark.", "{A} answers every light on the horizon, one by one."],
+      onward: ["\"Is {PLACE} dark?\" {A} asks. \"Good.\"", "\"{THREAT},\" {A} says, and blinks twice."],
+      reply: ["{A} blinks.", "\"Yes,\" {A} says, softly lit.", "{A} flashes at {B}, then waits."],
+    },
+    mantis: {
+      win: ["{A} cleans each arm slowly, one spike at a time.", "\"I waited,\" {A} says. \"That is the whole trick.\""],
+      close: ["{A} turns their head away from {B} and stays still.", "\"It moved before I did,\" {A} says. \"Rare.\""],
+      quiet: ["{A} stands perfectly still all night, watching.", "{A} turns their head to look at {B} over a shoulder."],
+      onward: ["\"{PLACE},\" {A} says, and does not move at all.", "\"{THREAT},\" {A} says, folding their arms."],
+      reply: ["{A} tilts their head.", "\"Mm,\" {A} says, without moving.", "{A} turns to look at {B}."],
+    },
+    scorpion: {
+      win: ["{A} lowers their tail, slowly, as if putting it away.", "\"Claws first,\" {A} says. \"Then the rest.\""],
+      close: ["{A} digs under the sand and stays there a while.", "\"I wasted the venom,\" {A} says. \"I hate that.\""],
+      quiet: ["{A} glows faintly under the moon, and {B} watches.", "{A} sits at the edge of camp, claws open, listening."],
+      onward: ["\"Sand in {PLACE}?\" {A} asks. \"I like sand.\"", "\"{THREAT},\" {A} says, and the tail rises."],
+      reply: ["{A} clicks a claw.", "\"Hm,\" {A} says, tail up.", "{A} taps the ground near {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */
