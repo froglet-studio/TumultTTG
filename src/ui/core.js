@@ -114,20 +114,25 @@
     const face = card[fk];
     return `<b>${esc(card.name)} — ${esc(face.n)}</b> <span class="dim">(${fk === 'P' ? 'Physical' : EL[face.elt || card.el].name} face)</span><div style="margin:4px 0" class="mono small">${costStr(card, face, fk)}</div><div>${esc(face.txt(P, E))}</div>${U.kwGloss(face.txt(P, E))}${fk === 'E' ? `<div class="mute small" style="margin-top:4px">E unlocks and scales this capability; P ${face.txt(1, 0) !== face.txt(0, 0) ? 'also scales a physical sub-part' : 'does not substitute for it'}.</div>` : ''}`;
   };
+  /** The clade a pilot with these clades carries card `c` through: its own bloodline first, else a clade that shares it. */
+  U.cladeIn = (c, clades) =>
+    (clades && (clades.find((x) => x === c.sp) || clades.find((x) => c.clades.includes(x)))) || c.sp;
   U.cardHTML = function (cardId, o) {
     o = o || {};
     const c = T.CARD[cardId];
     const P = o.P || 0,
       E = o.E || 0;
-    const sp = T.SPECIES[c.sp];
+    // A shared trait names the clade that carries it for this pilot (o.clades), not the one it was first written for.
+    const shownSp = U.cladeIn(c, o.clades);
+    const sp = T.SPECIES[shownSp];
     const face = (fk) => {
       const f = c[fk];
       const asleep = fk === 'E' && (o.up || o.showUp) && E < T.RULES.ETHEREAL_MIN_E;
       return `<div class="face ${fk} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk === 'P' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${U.kw(esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E)))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
     };
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
-      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : ''}>${U.icClade(c.sp)} ${esc(c.kin || sp.name)}</span></div>
-      ${U.cardArt(c)}${face('P')}${face('E')}
+      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : ''}>${U.icClade(shownSp)} ${esc(c.kin || sp.name)}</span></div>
+      ${U.cardArt(c, false, shownSp)}${face('P')}${face('E')}
       ${o.double ? `<div class="small double-note">Already held: taking it again gives ${T.RULES.DOUBLE_UP} UP to spend on this card alone.</div>` : ''}
       ${o.bound ? `<div class="small double-note">${o.bound} UP bound to this card</div>` : ''}
       ${o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button> &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button></div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P} · E${E}</div>` : ''}
@@ -169,9 +174,9 @@
    * with its face's verb drawn large, over the silhouette of the clade the trait comes from. `asleep` dims the
    * Ethereal side of a card not yet awakened.
    */
-  U.cardArt = (c, asleep) => {
+  U.cardArt = (c, asleep, sp) => {
     const elt = (c.E && c.E.elt) || c.el;
-    return `<div class="hart${asleep ? ' asleep' : ''}" style="--c:${EL[elt].color}" aria-hidden="true"><i class="clade">${U.icClade(c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E, c.el)}</i></div>`;
+    return `<div class="hart${asleep ? ' asleep' : ''}" style="--c:${EL[elt].color}" aria-hidden="true"><i class="clade">${U.icClade(sp || c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E, c.el)}</i></div>`;
   };
   /**
    * A die showing face `f`. `kind` is a key of T.DICE (the plain die when left out); `attrs` adds attributes to
@@ -327,7 +332,7 @@
       const h = d.hero;
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' ')}</span></div>
         <p class="dim small">Each pack mixes your three bloodlines. ★ marks a species' signature traits. Hover any face for exact numbers at your current P/E.</p>
-        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', double: h.cards.includes(cid) })).join('')}</div>
+        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', double: h.cards.includes(cid), clades: h.species })).join('')}</div>
         <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button></div>
         ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
     } else if (d.step === 'wait') {
@@ -337,7 +342,7 @@
       const h = d.hero;
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
         <p class="dim small">P deepens the physical face's numbers (reliable, AP-fed). E awakens the ethereal face — it cannot be played until its card has E 1 — and scales its <i>capability</i>, something P can never buy. Every hero sets out with at least ${T.RULES.START_AWAKE} cards awakened. Caps: P 3, E 3 per card.</p>
-        <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, bound: T.boundLeft(h, cid) })).join('')}</div>
+        <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, bound: T.boundLeft(h, cid), clades: h.species })).join('')}</div>
         ${U.pilotQuestion ? U.pilotQuestion(h, d) : ''}
         <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set out'}</button><button class="ghost" data-act="draftBack" data-tip="Build this pilot another way: a different pre-made pilot, or a fresh draft.">Back</button></div></div>`;
     }
@@ -687,14 +692,14 @@
   U.openTrain = function (i) {
     const h = U.run.heroes[i];
     U.openModal(
-      `<div class="row"><h3>${esc(h.name)} — Train</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUpRun" data-arg="${i}">Auto</button><button class="sm" data-act="closeModal">Done</button></div><p class="dim small">Spend UP on P (physical magnitude) or E (awakens the ethereal face at E 1, then scales its capability). Caps 3/3.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, flavor: false, bound: T.boundLeft(h, cid) }).replace(/data-act="up"/g, `data-act="upRun" data-hero="${i}"`)).join('')}</div>`,
+      `<div class="row"><h3>${esc(h.name)} — Train</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUpRun" data-arg="${i}">Auto</button><button class="sm" data-act="closeModal">Done</button></div><p class="dim small">Spend UP on P (physical magnitude) or E (awakens the ethereal face at E 1, then scales its capability). Caps 3/3.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, flavor: false, bound: T.boundLeft(h, cid), clades: h.species }).replace(/data-act="up"/g, `data-act="upRun" data-hero="${i}"`)).join('')}</div>`,
     );
   };
   U.openKit = function (i) {
     const h = U.run.heroes[i];
     U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => U.icClade(s) + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
     <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} ${own(i) ? `<button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half, to your own purse">sell</button>` : ''}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
-    <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false })).join('')}</div>`);
+    <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false, clades: h.species })).join('')}</div>`);
   };
 
   /* ───────────── REWARD ───────────── */
@@ -718,7 +723,7 @@
               : `<p class="dim small">Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.</p><div class="pack">${cards
                   .map(
                     (cid) =>
-                      `<div class="offer">${U.cardHTML(cid, { flavor: false, double: h.cards.includes(cid) })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
+                      `<div class="offer">${U.cardHTML(cid, { flavor: false, double: h.cards.includes(cid), clades: h.species })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
                   )
                   .join(
                     '',
@@ -832,7 +837,7 @@
           .join('')}</div><button class="ghost sm" data-act="evSkipCard" style="margin-top:6px">Take nothing</button>`;
       else if (f && f.kind === 'tradeCard' && !f.done) {
         const h = run.heroes[f.heroIdx];
-        fu = `<hr><h3>${esc(h.name)} — choose a trait to shed</h3><p class="dim small">A random trait of the same bloodline replaces it.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { pickable: true, act: 'evTrade', flavor: false })).join('')}</div><button class="ghost sm" data-act="evSkipCard" style="margin-top:6px">Keep everything</button>`;
+        fu = `<hr><h3>${esc(h.name)} — choose a trait to shed</h3><p class="dim small">A random trait of the same bloodline replaces it.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { pickable: true, act: 'evTrade', flavor: false, clades: h.species })).join('')}</div><button class="ghost sm" data-act="evSkipCard" style="margin-top:6px">Keep everything</button>`;
       } else if (f && f.kind === 'tradeCard' && f.done)
         fu = `<p class="small">${esc(run.heroes[f.heroIdx].name)} sheds <b>${esc(T.CARD[f.dropped].name)}</b> and grows <b>${f.gained ? esc(T.CARD[f.gained].name) : 'nothing — the bloodline is exhausted'}</b>.</p>`;
       else if (f && f.kind === 'boonGiven')
@@ -874,7 +879,7 @@
       body = `<div class="codex-nav" style="margin-bottom:10px">${T.SPECIES_ORDER.map((s) => `<button class="sm ${c.sp === s ? 'primary' : ''}" data-act="codexSp" data-arg="${s}">${U.icClade(s)} ${esc(T.SPECIES[s].name)}</button>`).join('')}</div>
         <div class="row"><h3>${U.icClade(c.sp)} ${esc(sp.name)} <span class="dim small" style="font-weight:400">leans ${sp.lean} — ${esc(sp.tagline)}</span></h3><span class="right row small">Preview at P <button class="sm" data-act="codexPE" data-arg="P|-1">−</button><b>${c.P}</b><button class="sm" data-act="codexPE" data-arg="P|1">+</button> E <button class="sm" data-act="codexPE" data-arg="E|-1">−</button><b>${c.E}</b><button class="sm" data-act="codexPE" data-arg="E|1">+</button></span></div>
         <div class="pack" style="margin-top:8px">${T.cardsOf(c.sp)
-          .map((cd) => U.cardHTML(cd.id, { P: c.P, E: c.E }))
+          .map((cd) => U.cardHTML(cd.id, { P: c.P, E: c.E, clades: [c.sp] }))
           .join('')}</div>`;
     } else if (c.tab === 'bestiary') {
       body = `<div class="shop-grid">${Object.entries(T.ENEMIES)

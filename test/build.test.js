@@ -93,3 +93,15 @@ test('every pilot has a portrait and a scene in the build, and every pre-made he
   g.T.UI.run = null;
   for (const pb of T.PREBUILTS) assert.ok(U.pilotOf({ id: pb.id, species: pb.species }), `${pb.name} has a painting`);
 });
+
+test('every clade has a drawn icon, so no card or codex entry falls back to an emoji', () => {
+  const T = require(path.join(root, 'tools', 'load.js'))();
+  const g = { T: { UI: {} } };
+  vm.runInNewContext(require('node:fs').readFileSync(path.join(root, 'src', 'ui', 'icons.js'), 'utf8'), { window: g });
+  const U = g.T.UI;
+  for (const sp of T.SPECIES_ORDER) {
+    const ps = U.iconPaths('clade.' + sp);
+    assert.ok(ps && ps.length, `${sp} has no drawn icon`);
+    for (const d of ps) assert.match(d, /^M[^"<>]+$/, `${sp}: path data`);
+  }
+});
