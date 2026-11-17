@@ -3006,4 +3006,122 @@
       fx:[{v:'shield', val:(P,E)=>2+E, dur:1},{v:'force', kind:'push', n:1, area:true, radius:1},{v:'empower', val:1, uses:1, dur:2}],
       txt:(P,E)=>`Swell to twice your size: Shield ${2+E} this round, every foe beside you is shoved back 1, and your next hit deals +1.` },
     'Twice the size, all of a sudden, and all spikes.');
+  /* ───────────────────────── CROCODILES AND TORTOISES ─────────────────────────
+     crocodile · tortoise. Both carry the gecko's Solar Basking (every reptile's), and Armoured Hide and Slow
+     Heart. The tortoise carries the parrot's Long Life. */
+  S('crocodile', { name: 'Crocodile', lean: 'M/T', branch: 'Crocodiles and tortoises', icon: '🐊',
+    tagline: 'Two hundred million years of waiting under the surface. Then the roll.' });
+  S('tortoise', { name: 'Giant Tortoise', lean: 'T/M', branch: 'Crocodiles and tortoises', icon: '🐢',
+    tagline: 'Slow, steady, and older than anyone it meets. Its house goes where it goes.' });
+  T.shareTrait('gec_basking', 'crocodile', 'tortoise');
+  T.shareTrait('bir_life', 'tortoise');
+
+  K(['crocodile','tortoise'],'rep_hide','Armoured Hide','M',0,
+    { n:'Plates', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+P, dur:1},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Bone plates in the skin: Shield ${2+P} this round, and nothing can push or pull you.` },
+    { n:'Osteoderms', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+E, dur:2},{v:'thorns', val:1, dur:2},{v:'heal', n:1}],
+      txt:(P,E)=>`Shield ${2+E} for 2 rounds; anything that hits you in melee takes 1 meanwhile, and heal 1.` },
+    'Armour grown, not worn.', 'Crocodiles and tortoises');
+  K(['crocodile','tortoise'],'rep_heart','Slow Heart','T',0,
+    { n:'Slow Down', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'engine', kind:'ap', val:1, dur:1}],
+      txt:(P,E)=>`Slow your heart: heal ${1+P}, and gain 1 AP next turn.` },
+    { n:'Two Beats a Minute', ap:1, el:1, cd:5, dur:1, tgt:'self',
+      fx:[{v:'stasis', dur:1},{v:'heal', n:(P,E)=>2+E}],
+      txt:(P,E)=>`Slow your heart almost to a stop: nothing can target you through the next enemy phase, and heal ${2+E}.` },
+    'A heart that can wait an hour between beats.', 'Crocodiles and tortoises');
+
+  // Crocodile: Solar Basking, Armoured Hide, Slow Heart, and these six
+  K(['crocodile'],'cro_roll','Death Roll','M',2,
+    { n:'Grab', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:1, held:true}],
+      txt:(P,E)=>`Melee ${2+P}, and hold on: Anchored 1.` },
+    { n:'Roll', ap:2, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E, pierce:true},{v:'weaken', val:(P,E)=>1+h(E), dur:2}],
+      txt:(P,E)=>`Roll with it in your jaws: melee ${4+E} that ignores Shield, and it is Weakened ${1+h(E)} for 2 rounds.` },
+    'Clamp, then spin, and nothing holds together.');
+  K(['crocodile'],'cro_lurk','Lurk','T',0,
+    { n:'Sink', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'empower', val:(P,E)=>1+P, uses:1, dur:2}],
+      txt:(P,E)=>`Sink until only your eyes show: Hidden 1, and your next hit within 2 rounds deals +${1+P}.` },
+    { n:'Log in the River', ap:1, el:1, cd:4, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'empower', val:(P,E)=>2+E, uses:1, dur:3}],
+      txt:(P,E)=>`Drift ${1+E} like a log: Hidden ${1+h(E)} even if you move, and your next hit within 3 rounds deals +${2+E}.` },
+    'It looks like a log. It is not a log.');
+  K(['crocodile'],'cro_jaws','Ambush Jaws','M',0,
+    { n:'Lunge', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'move', n:1, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+P, ifAdjacent:true}],
+      txt:(P,E)=>`Lunge 1 toward a foe within 2; if you end beside it, melee ${3+P}.` },
+    { n:'Out of the Water', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, revealTarget:true},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Burst from the water beside a foe within ${2+E}, hidden or not: melee ${3+E}, and it is Anchored 1.` },
+    'Faster over two metres than anything that drinks.');
+  K(['crocodile'],'cro_tail','Tail Sweep','M',0,
+    { n:'Sweep', ap:1, el:0, cd:1, dur:0, tgt:'foe_adj_all',
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>1+h(P)},{v:'force', kind:'push', n:1, area:true, radius:1}],
+      txt:(P,E)=>`Swing your tail: every foe beside you takes ${1+h(P)} and is knocked back 1.` },
+    { n:'Club Tail', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:2},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Club one foe with your tail: melee ${3+E}, push it 2, and it is Weakened 1 this round.` },
+    'Half its length is tail, and all of it is muscle.');
+  K(['crocodile'],'cro_gape','Gape','T',0,
+    { n:'Gape', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:1},{v:'weaken', val:1, dur:1, area:'adj'},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Lie with your jaws wide in the sun: heal 1, hold Shield ${1+h(P)}, and foes beside you are Weakened 1 at the sight.` },
+    { n:'Open Wide', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'counter', dmg:(P,E)=>2+E, dur:2}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; the next foe to hit you in melee takes ${2+E}.` },
+    'Mouth open on the bank, to cool off. Nobody comes closer.');
+  K(['crocodile'],'cro_king','River King','C',0,
+    { n:'Bellow', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Bellow across the water: see within ${2+P}, foes beside you are Weakened 1, and your next hit this turn deals +1.` },
+    { n:'My River', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'hazardImmune', dur:2, party:true},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`This is your river: both heroes deal +${1+E} on their next hit, ignore hazards for 2 rounds, and hold Shield 1 this round.` },
+    'The biggest male owns the river, and everyone knows it.');
+
+  // Giant tortoise: Solar Basking, Armoured Hide, Slow Heart, Long Life, and these five
+  K(['tortoise'],'tor_shell','Shell','M',2,
+    { n:'Shell Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+P, dur:1},{v:'statusImmune', dur:1}],
+      txt:(P,E)=>`Shield ${2+P} this round, and you can't be Weakened or Rooted.` },
+    { n:'House on Your Back', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>3+E, dur:2},{v:'shield', val:1, dur:1, party:true, allyRange:1},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
+      txt:(P,E)=>`Shield ${3+E} for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+    'A house, a fortress and a back, all one bone.');
+  K(['tortoise'],'tor_sure','Slow and Sure','T',0,
+    { n:'Plan Ahead', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reroll', n:(P,E)=>1+h(P)},{v:'engine', kind:'ap', val:1, dur:1}],
+      txt:(P,E)=>`Reroll up to ${1+h(P)} banked dice, and gain 1 AP next turn.` },
+    { n:'In Good Time', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>2+h(E)},{v:'preempt', val:(P,E)=>1+E, reflect:0},{v:'empower', val:(P,E)=>1+E, uses:1, dur:3}],
+      txt:(P,E)=>`Gain 1 AP at the start of each turn for ${2+h(E)} rounds; the next hit on you is ${1+E} less, and your next hit within 3 rounds deals +${1+E}.` },
+    'It wins races. Ask anyone.');
+  K(['tortoise'],'tor_beak','Beak Snap','M',0,
+    { n:'Snap', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:1},{v:'strike', kind:'melee', dmg:(P,E)=>3+P}],
+      txt:(P,E)=>`Snap: it loses 1 Shield, then melee ${3+P}.` },
+    { n:'Shear', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Shear with the beak's edge: melee ${3+E} that ignores Shield, and it is Weakened 1 this round.` },
+    'No teeth, just an edge like shears.');
+  K(['tortoise'],'tor_withdraw','Withdraw','T',0,
+    { n:'Pull In', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>3+P, dur:1},{v:'heal', n:1},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Pull everything in: Shield ${3+P} this round, heal 1, and nothing can push or pull you.` },
+    { n:'Wait It Out', ap:1, el:1, cd:5, dur:1, tgt:'self',
+      fx:[{v:'stasis', dur:1},{v:'heal', n:(P,E)=>2+E},{v:'cleanse'}],
+      txt:(P,E)=>`Wait it out inside: nothing can target you through the next enemy phase; heal ${2+E} and shake off Anchored and Weakened.` },
+    'Head, legs and tail, all inside, and the door shut.');
+  K(['tortoise'],'tor_plod','Steady Plod','S',0,
+    { n:'Plod', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Plod ${2+P}, and hold Shield 1 this round.` },
+    { n:'Through Anything', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E, noTrap:true},{v:'hazardImmune', dur:2},{v:'statusImmune', dur:2}],
+      txt:(P,E)=>`Plod ${2+E} through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted.` },
+    'It goes where it is going, and it gets there.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
