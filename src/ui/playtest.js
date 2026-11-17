@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.53.0',
+    version: '2.54.0',
     items: [
+      {
+        text: 'Three pouched and egg-laying animals join: Red Kangaroo, Opossum and Platypus. The kangaroo and opossum share Pouch, which heals your partner or swaps places with them anywhere on the board. The opossum shares the hedgehog’s Venom Shrug and the platypus the jerboa’s Burrowing. Does swapping places open up new plays for two?',
+      },
       {
         text: 'Four armoured and slow animals join: Three-Toed Sloth, Armadillo, Pangolin and Hedgehog. The three armoured ones share Curl Up; sloth, armadillo and pangolin share Slow Metabolism; armadillo and pangolin share Dig Claws and Long Tongue. They are hard to hurt and heal over time, with spines, scales and sudden swipes to hit back. Are they fun, or just slow?',
       },

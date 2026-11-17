@@ -333,6 +333,27 @@
       onward: ['"{PLACE} at night?" {A} asks. "Good. Night is when I work."', '{A} huffs. "{THREAT}. Fine. I will curl up and see."'],
       reply: ['{A} huffs.', '"Mm," {A} snorts.', '{A} raises their spines, then lowers them.'],
     },
+    kangaroo: {
+      win: ['{A} rocks back on their tail, arms folded, very pleased. "Next."', '"It wanted a boxing match," {A} says. "It got one."'],
+      close: ['{A} lies stretched out in the shade, licking their forearms, not talking.', '"It got inside my reach," {A} says. "Nobody gets inside my reach."'],
+      quiet: ['{A} grazes at dusk with long, slow hops between mouthfuls.', '{A} spars with {B}, gently, and lets {B} win once.'],
+      onward: ['"{PLACE}. Flat? I hope it is flat," {A} says.', '{A} raises their fists. "{THREAT}. Let it come."'],
+      reply: ['{A} thumps their tail.', '"Right," {A} says.', '{A} twitches an ear.'],
+    },
+    opossum: {
+      win: ['{A} sits up as if nothing ever happened. "Oh. Is it over?"', '"I was dead," {A} says. "Then I was not. It got very confused."'],
+      close: ['{A} lies very still for a long while, and nobody is sure whether it is on purpose.', '"I fainted," {A} admits. "I always faint. It works, though."'],
+      quiet: ['{A} grooms themselves for an hour, very thoroughly.', '{A} hangs from a branch by their tail, eating something unidentifiable.'],
+      onward: ['"Is there food in {PLACE}?" {A} asks. "There is always food."', '"{THREAT}," {A} says. "I will hiss at it. Then we will see."'],
+      reply: ['{A} hisses, mildly.', '"Mm-hm," {A} says.', '{A} shows all fifty teeth in a grin.'],
+    },
+    platypus: {
+      win: ['{A} surfaces, shakes their bill, and looks pleased with themselves. "Found it."', '"I did that with my eyes shut," {A} says. "Literally."'],
+      close: ['{A} curls up in a burrow and seals the door behind them.', '"It moved too quietly," {A} says. "I felt nothing until it was there."'],
+      quiet: ['{A} dabbles in the shallows for hours, cheeks slowly filling.', '{A} sits with {B} and does not explain anything about themselves, as usual.'],
+      onward: ['"Water in {PLACE}?" {A} asks. "Then I can feel everything."', '"{THREAT}," {A} says. "It has a heartbeat. I will find it."'],
+      reply: ['{A} clicks their bill.', '"Hm," {A} says.', '{A} paddles a webbed foot.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */
