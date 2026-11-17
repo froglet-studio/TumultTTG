@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.65.0',
+    version: '2.66.0',
     items: [
+      {
+        text: 'The last branch: Beetle, Butterfly, Firefly, Praying Mantis and Scorpion, with the Grasshopper moved onto it. The insects share the grasshopper’s Compound Eyes and their own Antennae; all but the butterfly wear its Exoskeleton, the butterfly glides on its wings and migrates like the crane, and the scorpion molts like it and shrugs off venom like the hedgehog. The beetle lifts and plays dead, the butterfly flashes eyespots and turns in a chrysalis, the firefly flashes in time, the mantis waits and grabs, the scorpion holds and stings. Which bug surprised you?',
+      },
       {
         text: 'Two crustaceans start a new branch: Lobster and Mantis Shrimp. Both Molt (shrug off holds, or step out of the shell healed) and wear a Carapace; the lobster also has the parrot’s Long Life, and the mantis shrimp the chameleon’s Turret Eyes. The lobster crushes with one claw, holds with the other, flips away backwards and guards its den; the mantis shrimp punches hard enough to hit twice, spears from its burrow and sees the weak spot. Which claw did you reach for most?',
       },

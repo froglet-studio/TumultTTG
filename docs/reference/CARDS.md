@@ -3976,3 +3976,248 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Square Up* · 1 AP · CD 1 — Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes 1. *(P3: Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes 4.)*
 - *Eth — Tail Shield* · 1 AP + 1 Mass · CD 3 — Take it on the tail plate: the next hit on you is 3 less and 1 of it bounces back; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Take it on the tail plate: the next hit on you is 5 less and 3 of it bounces back; the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+## 81 · Beetle — leans M/T
+
+*Armoured wing cases, a horn for lifting, and strength far past its size.*
+
+**Chitinous Exoskeleton** · Mass · `hop_exo`
+
+- *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+
+**Compound Eyes** · Space · `hop_eyes`
+
+- *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+
+**Antennae** · Charge · `ins_antennae`
+
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+
+**Horn Lift** ★ · Mass · `btl_horn`
+
+- *Phys — Lever* · 1 AP · CD 1 — Get your horn under it: melee 2, and push it 1. *(P3: Get your horn under it: melee 5, and push it 1.)*
+- *Eth — Flip* · 1 AP + 1 Mass · CD 3 — Flip it on its back: melee 3, push it 1, and it is Weakened 1 for 2 rounds. *(P3/E3: Flip it on its back: melee 5, push it 2, and it is Weakened 1 for 2 rounds.)*
+
+**Wing Cases** · Time · `btl_elytra`
+
+- *Phys — Close Up* · 1 AP · CD 1 — Snap your wing cases shut: Shield 1, and no Weaken or Root this round. *(P3: Snap your wing cases shut: Shield 4, and no Weaken or Root this round.)*
+- *Eth — Lift Off* · 1 AP + 1 Time · CD 3 — Open the cases and fly, clumsily, to any node within 3, height included; Shield 1 this round. *(P3/E3: Open the cases and fly, clumsily, to any node within 5, height included; Shield 1 this round.)*
+
+**Ball Roller** · Space · `btl_roll`
+
+- *Phys — Roll* · 1 AP · CD 1 — Shove your ball through: foes beside you are pushed back 1, then you roll 1. *(P3: Shove your ball through: foes beside you are pushed back 1, then you roll 4.)*
+- *Eth — By the Stars* · 1 AP + 1 Space · CD 4 — Steer by the stars: see within 4, gain 1 AP at the start of your next turn, and hazards can't touch you this round. *(P3/E3: Steer by the stars: see within 6, gain 1 AP at the start of your next turn, and hazards can't touch you this round.)*
+
+**Bombardier Spray** · Charge · `btl_spray`
+
+- *Phys — Pop* · 1 AP · CD 1 — Spray boiling chemicals at a foe within 2: 1, and it is Weakened 1. *(P3: Spray boiling chemicals at a foe within 2: 4, and it is Weakened 1.)*
+- *Eth — Boiling Burst* · 1 AP + 1 Charge · CD 4 — Burst at a node within 2: every foe on or beside it is scalded, 1 a round for 2 rounds; foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Burst at a node within 2: every foe on or beside it is scalded, 2 a round for 2 rounds; foes beside you are Weakened 1 for 2 rounds.)*
+
+**Strong Back** · Mass · `btl_strong`
+
+- *Phys — Dig In* · 1 AP · CD 1 — Set your six legs: nothing can push or pull you this round, and your next hit this turn deals +1. *(P3: Set your six legs: nothing can push or pull you this round, and your next hit this turn deals +2.)*
+- *Eth — Carry* · 1 AP + 1 Mass · CD 3 — Shoulder your ally: move them 2, and both heroes hold Shield 2 this round. *(P3/E3: Shoulder your ally: move them 4, and both heroes hold Shield 4 this round.)*
+
+**Play Dead** · Time · `btl_dead`
+
+- *Phys — Drop* · 1 AP · CD 2 — Fall over, legs up: Hidden 1, and the next hit on you is 1 less. *(P3: Fall over, legs up: Hidden 1, and the next hit on you is 4 less.)*
+- *Eth — Not Dead Yet* · 1 AP + 1 Time · CD 5 · Dur 3 — You were only pretending: if you are downed within 3 rounds, get up at once with 4 hp. *(P3/E3: You were only pretending: if you are downed within 3 rounds, get up at once with 8 hp.)*
+
+## 82 · Butterfly — leans S/T
+
+*Eyes painted on its wings, dust that slips any grip, and a journey longer than its life.*
+
+**Compound Eyes** · Space · `hop_eyes`
+
+- *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+
+**Glide Wings** · Space · `hop_glide`
+
+- *Phys — Buzz* · 1 AP · CD 0 — Glide 2, over foes. *(P3: Glide 5, over foes.)*
+- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn.)*
+
+**Migration** · Space · `cra_migrate`
+
+- *Phys — Long Haul* · 1 AP · CD 1 — Fly 3; hazards can't touch you this round. *(P3: Fly 4; hazards can't touch you this round.)*
+- *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; your track slides 2 extra (your cards come back sooner).)*
+
+**Antennae** · Charge · `ins_antennae`
+
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+
+**Eyespots** ★ · Charge · `but_eyespots`
+
+- *Phys — Flash Eyes* · 1 AP · CD 1 — Open your wings on two great eyes: foes beside you are Weakened 1, and the next hit on you is 1 less. *(P3: Open your wings on two great eyes: foes beside you are Weakened 1, and the next hit on you is 2 less.)*
+- *Eth — Owl Face* · 1 AP + 1 Charge · CD 3 — Show the face of an owl: foes within 1 flinch back 1, foes beside you are Weakened 1 for 2 rounds, and your ally's next hit deals +1. *(P3/E3: Show the face of an owl: foes within 2 flinch back 1, foes beside you are Weakened 1 for 2 rounds, and your ally's next hit deals +1.)*
+
+**Dust Scales** · Space · `but_scales`
+
+- *Phys — Slip* · 1 AP · CD 1 — Leave a puff of dust in its grip: escape every hold and condition, and move 1. *(P3: Leave a puff of dust in its grip: escape every hold and condition, and move 4.)*
+- *Eth — Dust Cloud* · 1 AP + 1 Space · CD 3 — Shake out a cloud of scales: heroes on or beside your node are Hidden 1, and the next hit on you is 2 less. *(P3/E3: Shake out a cloud of scales: heroes on or beside your node are Hidden 1, and the next hit on you is 4 less.)*
+
+**Proboscis** · Time · `but_sip`
+
+- *Phys — Sip* · 1 AP · CD 1 — Uncoil your tongue and drink: heal 1. *(P3: Uncoil your tongue and drink: heal 4.)*
+- *Eth — Nectar Share* · 1 AP + 1 Time · CD 3 — Find a flower for two: both heroes heal 1 at the start of each turn for 2 rounds, and you shake off every condition. *(P3/E3: Find a flower for two: both heroes heal 1 at the start of each turn for 4 rounds, and you shake off every condition.)*
+
+**Erratic Flight** · Space · `but_flutter`
+
+- *Phys — Flutter* · 1 AP · CD 1 — Flit 2 this way and that, past foes and over traps. *(P3: Flit 5 this way and that, past foes and over traps.)*
+- *Eth — Zigzag* · 1 AP + 1 Space · CD 3 — Zigzag where no one can follow: go to any node within 3, and the next hit on you is 3 less. *(P3/E3: Zigzag where no one can follow: go to any node within 5, and the next hit on you is 5 less.)*
+
+**Metamorphosis** · Time · `but_morph`
+
+- *Phys — Change* · 1 AP · CD 2 — Feel the change coming: Shield 1 this round, and your next hit deals +1. *(P3: Feel the change coming: Shield 1 this round, and your next hit deals +4.)*
+- *Eth — Chrysalis* · 1 AP + 1 Time · CD 5 — Seal yourself in a chrysalis: heal 3, nothing can touch you until your next turn, and you come out with +3 on your next hit. *(P3/E3: Seal yourself in a chrysalis: heal 5, nothing can touch you until your next turn, and you come out with +5 on your next hit.)*
+
+## 83 · Firefly — leans C/S
+
+*Cold light in the dark, flashing in time with the others, and bitter to anything that bites.*
+
+**Chitinous Exoskeleton** · Mass · `hop_exo`
+
+- *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+
+**Compound Eyes** · Space · `hop_eyes`
+
+- *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+
+**Antennae** · Charge · `ins_antennae`
+
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+
+**Flash** ★ · Charge · `ffl_flash`
+
+- *Phys — Blink* · 1 AP · CD 1 — Flash your light: see within 2, and Mark the nearest foe (the next hit on it deals +2). *(P3: Flash your light: see within 5, and Mark the nearest foe (the next hit on it deals +2).)*
+- *Eth — Dazzle* · 1 AP + 1 Charge · CD 3 — Flare bright: foes beside you are Weakened 1 for 2 rounds, and you see within 3. *(P3/E3: Flare bright: foes beside you are Weakened 2 for 2 rounds, and you see within 5.)*
+
+**Synchrony** · Time · `ffl_sync`
+
+- *Phys — In Time* · 1 AP · CD 1 — Flash in time with your ally: both heroes' next hit deals +1.
+- *Eth — All at Once* · 1 AP + 1 Time · CD 4 — The whole field flashes at once: both heroes gain 1 AP at the start of their next turn, and both heroes' next hit deals +2. *(P3/E3: The whole field flashes at once: both heroes gain 1 AP at the start of their next turn, and both heroes' next hit deals +4.)*
+
+**False Signal** · Space · `ffl_lure`
+
+- *Phys — Wrong Code* · 1 AP · CD 1 — Flash the wrong code at a foe within 2 and draw it 1 closer; if it ends beside you, it takes 1. *(P3: Flash the wrong code at a foe within 2 and draw it 1 closer; if it ends beside you, it takes 4.)*
+- *Eth — Lantern* · 1 AP + 1 Space · CD 3 — Hang a false light on a node within 3: foes treat it as a hero for 2 rounds, and you go dark (Hidden 1). *(P3/E3: Hang a false light on a node within 3: foes treat it as a hero for 4 rounds, and you go dark (Hidden 1).)*
+
+**Bitter Blood** · Mass · `ffl_bitter`
+
+- *Phys — Bad Taste* · 1 AP · CD 1 — Taste foul: anything that hits you in melee this round takes 1. *(P3: Taste foul: anything that hits you in melee this round takes 4.)*
+- *Eth — Reflex Bleed* · 1 AP + 1 Mass · CD 3 — Bleed bitter from the joints: for 2 rounds hold Shield 1, anything that hits you in melee takes 2, and foes beside you are Weakened 1. *(P3/E3: Bleed bitter from the joints: for 2 rounds hold Shield 1, anything that hits you in melee takes 4, and foes beside you are Weakened 1.)*
+
+**Glow-Worm Bite** · Mass · `ffl_larva`
+
+- *Phys — Bite* · 1 AP · CD 1 — Bite with the jaws you had as a larva: melee 2. *(P3: Bite with the jaws you had as a larva: melee 5.)*
+- *Eth — Numbing Bite* · 1 AP + 1 Mass · CD 3 — Bite and numb: melee 3; it takes 1 at the start of its next 2 turns and is Weakened 1 for 2 rounds. *(P3/E3: Bite and numb: melee 5; it takes 1 at the start of its next 2 turns and is Weakened 1 for 2 rounds.)*
+
+**Cold Light** · Space · `ffl_dark`
+
+- *Phys — Go Dark* · 1 AP · CD 1 — Switch off and drift 1: Hidden 1. *(P3: Switch off and drift 4: Hidden 1.)*
+- *Eth — Night Field* · 1 AP + 1 Space · CD 4 — Among a thousand lights no one can pick yours out: heroes within 2 of you are Hidden 1, and you see within 3. *(P3/E3: Among a thousand lights no one can pick yours out: heroes within 2 of you are Hidden 1, and you see within 5.)*
+
+## 84 · Praying Mantis — leans M/C
+
+*Still as a leaf, turns its head to watch you, and strikes before you see it move.*
+
+**Chitinous Exoskeleton** · Mass · `hop_exo`
+
+- *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+
+**Compound Eyes** · Space · `hop_eyes`
+
+- *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+
+**Antennae** · Charge · `ins_antennae`
+
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+
+**Raptorial Strike** ★ · Mass · `man_strike`
+
+- *Phys — Snatch* · 1 AP · CD 1 — Snatch it in spiked arms: melee 2, and it is Anchored 1. *(P3: Snatch it in spiked arms: melee 5, and it is Anchored 1.)*
+- *Eth — Lightning Grab* · 1 AP + 1 Mass · CD 3 — Reach out faster than it can blink: draw a foe within 2 one closer; if it ends beside you it takes 4 and is Anchored 1. *(P3/E3: Reach out faster than it can blink: draw a foe within 2 one closer; if it ends beside you it takes 6 and is Anchored 2.)*
+
+**Hold Still** · Time · `man_still`
+
+- *Phys — Wait* · 1 AP · CD 1 — Do nothing at all: Hidden 1, and your next hit within 2 rounds deals +1.
+- *Eth — Patience* · 1 AP + 1 Time · CD 4 — Wait as long as it takes: Hidden 1, the next hit on you is 1 less, and your next hit within 2 rounds deals +3. *(P3/E3: Wait as long as it takes: Hidden 1, the next hit on you is 1 less, and your next hit within 2 rounds deals +5.)*
+
+**Leaf Sway** · Space · `man_sway`
+
+- *Phys — Sway* · 1 AP · CD 1 — Rock like a leaf in the wind and step 1; the next hit on you is 1 less. *(P3: Rock like a leaf in the wind and step 4; the next hit on you is 1 less.)*
+- *Eth — Just a Twig* · 1 AP + 1 Space · CD 3 — Move 2 like a twig in a breeze: Hidden 1, even if you move again. *(P3/E3: Move 4 like a twig in a breeze: Hidden 2, even if you move again.)*
+
+**Swivel Head** · Charge · `man_head`
+
+- *Phys — Turn and Look* · 1 AP · CD 1 — Turn your head to watch one foe: your hits on it deal +1, and you see beside you.
+- *Eth — Measure* · 1 AP + 1 Charge · CD 3 — Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +2. *(P3/E3: Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +4.)*
+
+**Startle Display** · Charge · `man_wings`
+
+- *Phys — Rear Up* · 1 AP · CD 1 — Rear up and spread your arms: foes beside you are Weakened 1, and you hold Shield 1 this round.
+- *Eth — Wings Wide* · 1 AP + 1 Charge · CD 3 — Throw open bright wings: foes beside you are pushed back 1 and Weakened 1 for 2 rounds, and your next hit deals +2. *(P3/E3: Throw open bright wings: foes beside you are pushed back 1 and Weakened 1 for 2 rounds, and your next hit deals +4.)*
+
+**Flower Lure** · Space · `man_flower`
+
+- *Phys — Bloom* · 1 AP · CD 1 — Look like a flower: draw a foe within 2 one closer, and your next hit this turn deals +1.
+- *Eth — Orchid* · 1 AP + 1 Space · CD 4 — Become an orchid, or seem to, at a node within 3: foes treat it as a hero for 2 rounds, and both heroes' next hit deals +2. *(P3/E3: Become an orchid, or seem to, at a node within 3: foes treat it as a hero for 4 rounds, and both heroes' next hit deals +4.)*
+
+## 85 · Scorpion — leans M/C
+
+*Pincers in front, a sting overhead, and it glows under the right light.*
+
+**Chitinous Exoskeleton** · Mass · `hop_exo`
+
+- *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+
+**Molt** · Space · `hop_molt`
+
+- *Phys — Shed* · 2 AP · CD 2 — Slip every hold and dot; Shield 1. *(P3: Slip every hold and dot; Shield 4.)*
+- *Eth — Husk* · 1 AP + 1 Space · CD 3 — Leave a hollow husk (decoy, 2 rounds) and blink up to 2 away. *(P3/E3: Leave a hollow husk (decoy, 4 rounds) and blink up to 4 away.)*
+
+**Venom Shrug** · Time · `hed_venom`
+
+- *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; you can't be Weakened or Rooted for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; you can't be Weakened or Rooted for 4 rounds.)*
+
+**Tail Sting** ★ · Mass · `sco_sting`
+
+- *Phys — Sting* · 1 AP · CD 1 — Arch your tail and sting: melee 1; it takes 1 at the start of its next 2 turns. *(P3: Arch your tail and sting: melee 4; it takes 1 at the start of its next 2 turns.)*
+- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Spend the venom: melee 3; it takes 1 at the start of its next 2 turns and is Weakened 1 for 2 rounds. *(P3/E3: Spend the venom: melee 5; it takes 2 at the start of its next 2 turns and is Weakened 1 for 2 rounds.)*
+
+**Pincers** · Mass · `sco_pincers`
+
+- *Phys — Grab* · 1 AP · CD 1 — Grab it with both claws: melee 1, and it is Anchored 1. *(P3: Grab it with both claws: melee 4, and it is Anchored 1.)*
+- *Eth — Hold and Sting* · 1 AP + 1 Mass · CD 3 — Pin it in the claws: it is Anchored 2, takes 3 in melee, and your next hit deals +2. *(P3/E3: Pin it in the claws: it is Anchored 2, takes 5 in melee, and your next hit deals +4.)*
+
+**Moonglow** · Charge · `sco_glow`
+
+- *Phys — Glint* · 1 AP · CD 1 — Your shell catches the moonlight: see within 1, and hold Shield 1 this round. *(P3: Your shell catches the moonlight: see within 4, and hold Shield 1 this round.)*
+- *Eth — Moon Sense* · 1 AP + 1 Charge · CD 3 — Your whole shell drinks the light: see within 4, hazards can't touch you for 2 rounds, and both heroes' next hit deals +1. *(P3/E3: Your whole shell drinks the light: see within 6, hazards can't touch you for 2 rounds, and both heroes' next hit deals +1.)*
+
+**Sand Sense** · Charge · `sco_sense`
+
+- *Phys — Feel the Ground* · 1 AP · CD 1 — Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less.
+- *Eth — Every Step* · 1 AP + 1 Charge · CD 3 — Read one foe through the ground: it can't Hide for 3 rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is). *(P3/E3: Read one foe through the ground: it can't Hide for 5 rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is).)*
+
+**Burrow** · Time · `sco_burrow`
+
+- *Phys — Under* · 1 AP · CD 1 — Wriggle under the sand: Hidden 1 and Shield 1 this round. *(P3: Wriggle under the sand: Hidden 1 and Shield 2 this round.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 4 — Wait under the sand: Hidden 1 even if you move, hazards can't touch you this round, and your next hit deals +2. *(P3/E3: Wait under the sand: Hidden 2 even if you move, hazards can't touch you this round, and your next hit deals +4.)*
+
+**Brood Carry** · Time · `sco_brood`
+
+- *Phys — Shelter* · 1 AP · CD 1 — Shelter what is close: you and an ally beside you hold Shield 1 this round. *(P3: Shelter what is close: you and an ally beside you hold Shield 2 this round.)*
+- *Eth — Carry Them* · 1 AP + 1 Time · CD 4 — Carry them on your back: for 2 rounds you and an ally within 2 hold Shield 2, and both heroes heal 1 at the start of each turn. *(P3/E3: Carry them on your back: for 2 rounds you and an ally within 2 hold Shield 4, and both heroes heal 1 at the start of each turn.)*

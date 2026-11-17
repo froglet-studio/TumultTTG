@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.66.0 — 2026-11-17 — the insects and arachnids
+
+The twenty-first and last branch of the tree (`docs/design/11-clades.md`): five painted bugs, each with nine traits. The Grasshopper (not painted) moves onto the branch and keeps its nine.
+
+- **Beetle, Butterfly, Firefly, Praying Mantis and Scorpion.**
+- Shared traits:
+  - **Antennae**, written for the branch: the four insects
+  - the grasshopper's **Compound Eyes**: the four insects
+  - the grasshopper's **Chitinous Exoskeleton**: all but the butterfly
+  - the butterfly also has the grasshopper's **Glide Wings** and the crane's **Migration**
+  - the scorpion also has the grasshopper's **Molt** and the hedgehog's **Venom Shrug**
+- Traits of each one's own:
+  - beetle: Horn Lift, Wing Cases, Ball Roller, Bombardier Spray, Strong Back and Play Dead
+  - butterfly: Eyespots, Dust Scales, Proboscis, Erratic Flight and Metamorphosis
+  - firefly: Flash, Synchrony, False Signal, Bitter Blood, Glow-Worm Bite and Cold Light
+  - mantis: Raptorial Strike, Hold Still, Leaf Sway, Swivel Head, Startle Display and Flower Lure
+  - scorpion: Tail Sting, Pincers, Moonglow, Sand Sense, Burrow and Brood Carry
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (look-ahead player, forced squad: one hero is the clade plus a random second, 60 runs):
+  - Results: beetle 23%, butterfly 25%, firefly 22%, mantis 22%, scorpion 33%.
+  - The scorpion was at 37% before Grab hit 1 softer and Ambush's bonus dropped by 1.
+
 ## 2.65.0 — 2026-11-17 — the crustaceans
 
 The twentieth branch of the tree (`docs/design/11-clades.md`): two painted crustaceans, each with nine traits.

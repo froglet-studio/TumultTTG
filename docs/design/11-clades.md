@@ -1,6 +1,6 @@
 # 11 · Clades for every painted animal
 
-*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), the Dogs and hyenas and Weasel kin (2.49.0), the Sea mammals (2.50.0), the Hoofed animals (2.51.0), the Gnawers (2.52.0), the Armoured and slow (2.53.0), the Pouched and egg-laying (2.54.0), the Birds of prey and owls (2.55.0), the Waders (2.56.0), the Seabirds (2.57.0), the Perching and bright birds (2.58.0), the Ground birds (2.59.0), the Lizards (2.60.0), the Crocodiles and tortoises (2.61.0), the Amphibians (2.62.0), the Fish (2.63.0), the Molluscs and jellies (2.64.0), and the Crustaceans (2.65.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
+*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), the Dogs and hyenas and Weasel kin (2.49.0), the Sea mammals (2.50.0), the Hoofed animals (2.51.0), the Gnawers (2.52.0), the Armoured and slow (2.53.0), the Pouched and egg-laying (2.54.0), the Birds of prey and owls (2.55.0), the Waders (2.56.0), the Seabirds (2.57.0), the Perching and bright birds (2.58.0), the Ground birds (2.59.0), the Lizards (2.60.0), the Crocodiles and tortoises (2.61.0), the Amphibians (2.62.0), the Fish (2.63.0), the Molluscs and jellies (2.64.0), the Crustaceans (2.65.0), and the Insects and arachnids (2.66.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
 
 ## The rule
 
@@ -40,7 +40,7 @@ One pull request per branch, each with its audit and simulation numbers.
 | Fish (2.63) | koi, clownfish, lionfish, seahorse, eel |
 | Molluscs and jellies (2.64) | octopus, snail, jellyfish |
 | Crustaceans (2.65) | lobster, mantis_shrimp |
-| Insects and arachnids | beetle, butterfly, firefly, mantis, scorpion |
+| Insects and arachnids (2.66) | beetle, butterfly, firefly, mantis, scorpion |
 
 The five painted animals that are already clades (octopus, eel, axolotl, owl, gecko) keep their nine and gain kin as their branch is built. The five unpainted clades (jerboa, hopper, flytrap, cordyceps, tardigrade) stay until Garrett decides otherwise; the jerboa sits on the Gnawers branch and lends the gnawers five of its traits.
 
