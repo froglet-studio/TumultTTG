@@ -1,5 +1,24 @@
 # Changelog
 
+## 2.67.0 — 2026-11-17 — the pre-made heroes are painted pilots
+
+With all 21 branches built, each pre-made hero now plays a painted Cosmic Shore pilot's pair of clades and shows that pilot's art. Names, titles, roles and ids are unchanged.
+
+| Hero | Was | Now (painting) |
+|---|---|---|
+| Cavitt, the Brawler-in-the-Cloud | octopus, grasshopper | octopus, raven (BANDIT) |
+| Marish, the Tidewarden | eel, flytrap | otter, eel (FLUME) |
+| Ossa, the Bulwark | tardigrade, gecko | hedgehog, tortoise (CITADEL) |
+| Veil, the Nightwing | owl, jerboa | mouse, owl (ECHO) |
+| Mycel, the Network | cordyceps, axolotl | axolotl, koi (VOLT) |
+| Kess, the Catapult | grasshopper, eel | flamingo, mantis shrimp (SLINGSHOT) |
+
+- Each kit keeps six cards, at most three per bloodline, and six UP with two cards awakened.
+- **Balance** (`node tools/sim.js 40`, before → after):
+  - Full runs: heuristic 7/40 → 6/40, look-ahead 21/40 → 24/40. The boss: heuristic 18% → 13%, look-ahead 40% → 40%.
+  - Vault missions got harder for both players (heuristic t3 55% → 40%); hidden and salvage got a little easier for the heuristic.
+  - Mission win rate overall: 75% → 72% (heuristic), 88% → 88% (look-ahead).
+
 ## 2.66.0 — 2026-11-17 — the insects and arachnids
 
 The twenty-first and last branch of the tree (`docs/design/11-clades.md`): five painted bugs, each with nine traits. The Grasshopper (not painted) moves onto the branch and keeps its nine.

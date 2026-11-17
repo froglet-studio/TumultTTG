@@ -46,4 +46,4 @@ The five painted animals that are already clades (octopus, eel, axolotl, owl, ge
 
 ## After the branches
 
-The pre-made pilots are remapped to painted Cosmic Shore pilots once their clades exist, and the draft gains a way to start from a painted pilot.
+The pre-made heroes are remapped to painted Cosmic Shore pilots' pairs (2.67.0): Cavitt is octopus and raven (BANDIT), Marish otter and eel (FLUME), Ossa hedgehog and tortoise (CITADEL), Veil mouse and owl (ECHO), Mycel axolotl and koi (VOLT), Kess flamingo and mantis shrimp (SLINGSHOT). They keep their names for now. Still a proposal: the draft gains a way to start from a painted pilot.

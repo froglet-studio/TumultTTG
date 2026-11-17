@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.66.0',
+    version: '2.67.0',
     items: [
+      {
+        text: 'Every pre-made hero is now a painted pilot’s pair of clades, with that pilot’s art: Cavitt is octopus and raven, Marish otter and eel, Ossa hedgehog and tortoise, Veil mouse and owl, Mycel axolotl and koi, and Kess flamingo and mantis shrimp. Names and roles are the same. Does each one still play the role its title promises?',
+        cards: ['rav_mob', 'wea_musk', 'heh_spines', 'mou_tiny', 'koi_gold', 'msh_punch'],
+      },
       {
         text: 'The last branch: Beetle, Butterfly, Firefly, Praying Mantis and Scorpion, with the Grasshopper moved onto it. The insects share the grasshopper’s Compound Eyes and their own Antennae; all but the butterfly wear its Exoskeleton, the butterfly glides on its wings and migrates like the crane, and the scorpion molts like it and shrugs off venom like the hedgehog. The beetle lifts and plays dead, the butterfly flashes eyespots and turns in a chrysalis, the firefly flashes in time, the mantis waits and grabs, the scorpion holds and stings. Which bug surprised you?',
       },
