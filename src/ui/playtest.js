@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.62.0',
+    version: '2.63.0',
     items: [
+      {
+        text: 'Four fish join the eel on its branch: Koi, Clownfish, Lionfish and Seahorse. All five share Buoyancy and the axolotl’s Lateral Line; the koi and clownfish share Schooling, the koi also has the parrot’s Long Life, and the seahorse shares the pouched animals’ Pouch and the chameleon’s turret eyes. The koi climbs upstream and turns gold, the clownfish hides in its anemone and darts out, the lionfish corners prey with its spines, the seahorse anchors by its tail and snaps. Which fish feels most like itself?',
+      },
       {
         text: 'Newt and Tree Frog join the axolotl on its branch. All three share Toxic Secretion and External Gills; the newt also shares Regeneration and Lateral Line, and the tree frog’s sticky toes are the gecko’s Adhesive Setae. The newt wanders bright and poisonous and heads home to the pond; the tree frog leaps leaf to leaf, flashes red eyes and calls the rain. Do they feel different from the axolotl?',
       },

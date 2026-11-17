@@ -3584,3 +3584,199 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Flick* · 1 AP · CD 1 — Flick your tongue at a foe within 2 for 2. *(P3: Flick your tongue at a foe within 2 for 5.)*
 - *Eth — Snatch and Swallow* · 1 AP + 1 Mass · CD 3 — Snatch a foe within 2: it takes 3 and is pulled 1 toward you, and you heal 1. *(P3/E3: Snatch a foe within 2: it takes 5 and is pulled 1 toward you, and you heal 1.)*
+
+## 73 · Koi — leans T/C
+
+*Gold and patient, lives for centuries. Swims upstream, and the story says it becomes a dragon.*
+
+**Lateral Line** · Charge · `axo_lateral`
+
+- *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+
+**Buoyancy Control** · Mass · `eel_buoyancy`
+
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+
+**Long Life** · Time · `bir_life`
+
+- *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+
+**Schooling** · Space · `fis_school`
+
+- *Phys — Swim Together* · 1 AP · CD 1 — Turn as one: your ally moves 1 where you choose, and you take a free step. *(P3: Turn as one: your ally moves 4 where you choose, and you take a free step.)*
+- *Eth — Bait Ball* · 1 AP + 1 Space · CD 3 — Close up tight: both heroes hold Shield 2 this round, and each one's next hit taken is 1 less. *(P3/E3: Close up tight: both heroes hold Shield 4 this round, and each one's next hit taken is 1 less.)*
+
+**Dragon Gate** ★ · Space · `koi_gate`
+
+- *Phys — Leap the Falls* · 1 AP · CD 1 — Leap up the falls onto any node within 1, height included; your next hit this turn deals +1. *(P3: Leap up the falls onto any node within 4, height included; your next hit this turn deals +1.)*
+- *Eth — Become the Dragon* · 1 AP + 1 Space · CD 4 — For 2 rounds your strikes deal +1; heal 2. *(P3/E3: For 4 rounds your strikes deal +2; heal 4.)*
+
+**Upstream** · Space · `koi_up`
+
+- *Phys — Against the Current* · 1 AP · CD 1 — Swim 2 against the current; nothing can push or pull you this round. *(P3: Swim 5 against the current; nothing can push or pull you this round.)*
+- *Eth — Never Turn Back* · 1 AP + 1 Space · CD 3 — Swim 3, past foes; you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1. *(P3/E3: Swim 5, past foes; you can't be Weakened or Rooted for 2 rounds, and your next hit deals +2.)*
+
+**Shimmer Scales** · Charge · `koi_shimmer`
+
+- *Phys — Flash* · 1 AP · CD 1 — Flash your scales at a foe within 2: Weakened 1 for 1 round, and you hold Shield 1 this round. *(P3: Flash your scales at a foe within 2: Weakened 1 for 2 rounds, and you hold Shield 1 this round.)*
+- *Eth — Mirror Scales* · 1 AP + 1 Charge · CD 3 — The next hit on you is 3 less and reflects 1. *(P3/E3: The next hit on you is 5 less and reflects 3.)*
+
+**Pond Calm** · Time · `koi_calm`
+
+- *Phys — Still Water* · 1 AP · CD 1 — Still the water: both heroes heal 1, and reroll 1 banked die. *(P3: Still the water: both heroes heal 2, and reroll 1 banked die.)*
+- *Eth — Garden Pond* · 1 AP + 1 Time · CD 4 — Both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for 3 rounds.)*
+
+**Gold Gleam** · Charge · `koi_gold`
+
+- *Phys — Gleam* · 1 AP · CD 1 — Catch the light: your ally's next hit deals +1, and both heroes hold Shield 1 this round. *(P3: Catch the light: your ally's next hit deals +2, and both heroes hold Shield 1 this round.)*
+- *Eth — Lucky Fish* · 1 AP + 1 Charge · CD 4 — For luck: your ally gains 1 AP next turn, you reroll up to 1 banked dice, and both heroes' next hit deals +1. *(P3/E3: For luck: your ally gains 1 AP next turn, you reroll up to 2 banked dice, and both heroes' next hit deals +1.)*
+
+## 74 · Clownfish — leans C/T
+
+*Lives in a stinging anemone that never stings it, with a partner it never leaves.*
+
+**Lateral Line** · Charge · `axo_lateral`
+
+- *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+
+**Buoyancy Control** · Mass · `eel_buoyancy`
+
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+
+**Schooling** · Space · `fis_school`
+
+- *Phys — Swim Together* · 1 AP · CD 1 — Turn as one: your ally moves 1 where you choose, and you take a free step. *(P3: Turn as one: your ally moves 4 where you choose, and you take a free step.)*
+- *Eth — Bait Ball* · 1 AP + 1 Space · CD 3 — Close up tight: both heroes hold Shield 2 this round, and each one's next hit taken is 1 less. *(P3/E3: Close up tight: both heroes hold Shield 4 this round, and each one's next hit taken is 1 less.)*
+
+**Anemone Home** ★ · Time · `clo_anemone`
+
+- *Phys — Back Home* · 1 AP · CD 1 — Back among the tentacles: Shield 1 this round, and anything that hits you in melee takes 1. *(P3: Back among the tentacles: Shield 4 this round, and anything that hits you in melee takes 1.)*
+- *Eth — Sting Garden* · 1 AP + 1 Time · CD 4 — Lead foes into the anemone at a node within 2: every foe on or beside it is stung, 1 a round for 2 rounds; both heroes hold Shield 1 for 2 rounds. *(P3/E3: Lead foes into the anemone at a node within 2: every foe on or beside it is stung, 2 a round for 2 rounds; both heroes hold Shield 1 for 2 rounds.)*
+
+**Dart** · Space · `clo_dart`
+
+- *Phys — Dart* · 1 AP · CD 0 — Dart 1. *(P3: Dart 4.)*
+- *Eth — Dart Out, Dart Back* · 1 AP + 1 Space · CD 3 — Dart up to 2 toward a foe within 3 and nip it for 3 if you reach it; the next hit on you is 1 less. *(P3/E3: Dart up to 2 toward a foe within 3 and nip it for 5 if you reach it; the next hit on you is 1 less.)*
+
+**Mucus Coat** · Time · `clo_mucus`
+
+- *Phys — Coat* · 1 AP · CD 1 — A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Rooted this round, and heal 1.
+- *Eth — Share the Coat* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards for 3 rounds, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3/E3: Both heroes ignore hazards for 5 rounds, shake off Anchored and Weakened, and hold Shield 1 this round.)*
+
+**Pair Bond** · Charge · `clo_pair`
+
+- *Phys — Stay Close* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round; your next hit this turn deals +1. *(P3: You and an ally beside you hold Shield 4 this round; your next hit this turn deals +1.)*
+- *Eth — Together Always* · 1 AP + 1 Charge · CD 4 — Swap places with your partner, wherever they are, and both heroes heal 2. *(P3/E3: Swap places with your partner, wherever they are, and both heroes heal 4.)*
+
+**Change Role** · Time · `clo_role`
+
+- *Phys — Step Up* · 1 AP · CD 2 — Take the lead: heal 1, and your next hit within 2 rounds deals +1. *(P3: Take the lead: heal 1, and your next hit within 2 rounds deals +4.)*
+- *Eth — New Leader* · 1 AP + 1 Time · CD 4 — Hand the lead to your partner: they heal 1, gain 1 AP next turn, and their next hit deals +2. *(P3/E3: Hand the lead to your partner: they heal 1, gain 1 AP next turn, and their next hit deals +4.)*
+
+**Pop** · Charge · `clo_pop`
+
+- *Phys — Pop* · 1 AP · CD 1 — Pop and click at a foe within 2: it takes 1 and is Weakened 1 this round. *(P3: Pop and click at a foe within 2: it takes 4 and is Weakened 1 this round.)*
+- *Eth — Chatter Off* · 1 AP + 1 Charge · CD 3 — Pop like mad: foes within 1 back off 1, foes beside you are Weakened 1 for 2 rounds, and you hold Shield 1 this round. *(P3/E3: Pop like mad: foes within 2 back off 1, foes beside you are Weakened 1 for 2 rounds, and you hold Shield 1 this round.)*
+
+## 75 · Lionfish — leans M/C
+
+*All fans and venom spines. Corners its prey and swallows it whole.*
+
+**Lateral Line** · Charge · `axo_lateral`
+
+- *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+
+**Buoyancy Control** · Mass · `eel_buoyancy`
+
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+
+**Venom Spines** ★ · Mass · `lio_spines`
+
+- *Phys — Spine* · 1 AP · CD 1 — Melee 2; it takes 1 at the start of its next 2 turns. *(P3: Melee 5; it takes 1 at the start of its next 2 turns.)*
+- *Eth — Full Spines* · 1 AP + 1 Mass · CD 3 — Raise every spine: for 2 rounds you hold Shield 1, and anything that hits you in melee takes 3. *(P3/E3: Raise every spine: for 2 rounds you hold Shield 1, and anything that hits you in melee takes 5.)*
+
+**Fan Corral** · Charge · `lio_corral`
+
+- *Phys — Herd* · 1 AP · CD 1 — Spread your fans and herd a foe within 2 one node toward you; it is Anchored 1.
+- *Eth — Corner It* · 1 AP + 1 Charge · CD 3 — Corner a foe within 2: draw it 1 closer, Anchored 1 and Weakened 1 for 2 rounds; your next hit deals +1. *(P3/E3: Corner a foe within 2: draw it 1 closer, Anchored 2 and Weakened 1 for 2 rounds; your next hit deals +3.)*
+
+**Hover Stalk** · Time · `lio_hover`
+
+- *Phys — Drift Closer* · 1 AP · CD 1 — Drift 2, setting off no traps. *(P3: Drift 5, setting off no traps.)*
+- *Eth — Hang Still* · 1 AP + 1 Time · CD 3 — Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +3. *(P3/E3: Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +5.)*
+
+**Gulp** · Mass · `lio_gulp`
+
+- *Phys — Gulp* · 1 AP · CD 2 — Swallow at it: melee 3, and heal 1. *(P3: Swallow at it: melee 6, and heal 1.)*
+- *Eth — Whole* · 1 AP + 1 Mass · CD 4 — Melee 4; if that leaves it at 3 hp or less it is swallowed whole. Heal 2. *(P3/E3: Melee 6; if that leaves it at 5 hp or less it is swallowed whole. Heal 4.)*
+
+**Invader** · Space · `lio_invader`
+
+- *Phys — Settle In* · 1 AP · CD 1 — Move 2 into new water, and heal 1. *(P3: Move 5 into new water, and heal 1.)*
+- *Eth — Take Over* · 1 AP + 1 Space · CD 4 — Make it yours: gain 1 AP at the start of your next turn; Shield 1 and no Weaken or Root for 2 rounds.
+
+**Warning Fins** · Charge · `lio_warn`
+
+- *Phys — Fan Out* · 1 AP · CD 1 — Fan out stripes and spines: foes beside you are Weakened 1, and the next hit on you is 1 less. *(P3: Fan out stripes and spines: foes beside you are Weakened 1, and the next hit on you is 2 less.)*
+- *Eth — Back Off* · 1 AP + 1 Charge · CD 3 — Spines first: foes within 1 back off 1, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1. *(P3/E3: Spines first: foes within 2 back off 1, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1.)*
+
+**Night Hunt** · Time · `lio_night`
+
+- *Phys — Dusk* · 1 AP · CD 1 — Hunt at dusk: see within 2, and Mark the nearest foe (the next hit on it deals +2). *(P3: Hunt at dusk: see within 5, and Mark the nearest foe (the next hit on it deals +2).)*
+- *Eth — Dark Reef* · 1 AP + 1 Time · CD 4 — Choose prey on the dark reef: it can't Hide for 2 rounds, your hits on it deal +2, and you are Hidden 1. *(P3/E3: Choose prey on the dark reef: it can't Hide for 2 rounds, your hits on it deal +4, and you are Hidden 1.)*
+
+## 76 · Seahorse — leans T/S
+
+*Holds on with its tail, looks two ways at once, and the father carries the young.*
+
+**Lateral Line** · Charge · `axo_lateral`
+
+- *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+
+**Buoyancy Control** · Mass · `eel_buoyancy`
+
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+
+**Pouch** · Charge · `pou_pouch`
+
+- *Phys — Tuck In* · 1 AP · CD 1 — Your ally heals 1 and gains 1 AP next turn. *(P3: Your ally heals 4 and gains 1 AP next turn.)*
+- *Eth — Carry Them Out* · 1 AP + 1 Charge · CD 4 — Swap places with your ally, wherever they are; both of you hold Shield 2 this round. *(P3/E3: Swap places with your ally, wherever they are; both of you hold Shield 4 this round.)*
+
+**Turret Eyes** · Time · `cha_turret`
+
+- *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+
+**Tail Anchor** ★ · Time · `sea_anchor`
+
+- *Phys — Hold On* · 1 AP · CD 1 — Wrap your tail round something: Shield 1 this round, and nothing can push or pull you. *(P3: Wrap your tail round something: Shield 4 this round, and nothing can push or pull you.)*
+- *Eth — Moored* · 1 AP + 1 Time · CD 4 — Moor yourself: for 2 rounds hold Shield 2, heal 1 at the start of each turn, and nothing can push or pull you. *(P3/E3: Moor yourself: for 2 rounds hold Shield 4, heal 1 at the start of each turn, and nothing can push or pull you.)*
+
+**Snout Snap** · Mass · `sea_snap`
+
+- *Phys — Snap* · 1 AP · CD 0 — Snap at a foe within 2 for 1. *(P3: Snap at a foe within 2 for 4.)*
+- *Eth — Fastest Mouth* · 1 AP + 1 Mass · CD 3 — Snap faster than it can flinch: a foe within 2 takes 4, hidden or not; your next hit this turn deals +1. *(P3/E3: Snap faster than it can flinch: a foe within 2 takes 6, hidden or not; your next hit this turn deals +1.)*
+
+**Drift Camouflage** · Time · `sea_drift`
+
+- *Phys — Weed* · 1 AP · CD 1 — Look like weed: Hidden 1, and heal 1.
+- *Eth — Grow Filaments* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 1; your next hit within 3 rounds deals +2. *(P3/E3: You and an ally beside you are Hidden 2; your next hit within 3 rounds deals +4.)*
+
+**Bony Plates** · Mass · `sea_plates`
+
+- *Phys — Plates* · 1 AP · CD 1 — Shield 2 this round, and the next hit on you is 1 less. *(P3: Shield 3 this round, and the next hit on you is 1 less.)*
+- *Eth — Armoured Ring* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds; the next foe to hit you in melee takes 2. *(P3/E3: Shield 5 for 2 rounds; the next foe to hit you in melee takes 4.)*
+
+**Slow Fin** · Space · `sea_fin`
+
+- *Phys — Flutter* · 1 AP · CD 0 — Flutter 1; hazards can't touch you this round. *(P3: Flutter 4; hazards can't touch you this round.)*
+- *Eth — Ride the Current* · 1 AP + 1 Space · CD 3 — Let the current carry you to any node within 3; Hidden 1, and hazards can't touch you this round. *(P3/E3: Let the current carry you to any node within 5; Hidden 1, and hazards can't touch you this round.)*
