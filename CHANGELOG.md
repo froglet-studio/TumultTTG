@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.64.0 — 2026-11-17 — the molluscs and jellies
+
+The nineteenth branch of the tree (`docs/design/11-clades.md`): two painted soft bodies join the Mimic Octopus, each with nine traits.
+
+- **Snail and Jellyfish.** The Octopus now sits on this branch and keeps its nine.
+- Shared traits:
+  - **Boneless Squeeze** (the octopus's): all three
+  - **Regeneration** (the axolotl's): snail and jellyfish
+  - the snail also has the octopus's **Chemo-Suckers** and the tortoise's **Shell**
+  - the jellyfish drifts with the eel's **Buoyancy Control**. It is no fish, so it is a variant.
+- Traits of each one's own:
+  - snail: Slime Trail, Seal In, Radula, After Rain and Eye Stalks
+  - jellyfish: Nematocysts, Trailing Tentacles, Bell Pulse, Bioluminescence, Bloom and Turn Back (re-form when downed)
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (look-ahead player, forced squad: one hero is the clade plus a random second, 60 runs):
+  - Results: octopus 23% (unchanged), snail 22%, jellyfish 33%.
+  - The jellyfish was at 42% before a trim:
+    - Sting hits for 1+P (was 2+P)
+    - Glow gives +1 to your next hit instead of a Mark
+    - Trail is thorns 1+P with no Weaken
+  - The snail was at 18% before Rasp hit 1 harder and Glide added +1 to your next hit.
+
 ## 2.63.0 — 2026-11-17 — the fish
 
 The eighteenth branch of the tree (`docs/design/11-clades.md`): four painted fish join the Eel, each with nine traits.

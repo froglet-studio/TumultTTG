@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.63.0',
+    version: '2.64.0',
     items: [
+      {
+        text: 'Snail and Jellyfish join the Mimic Octopus on a new branch. All three share Boneless Squeeze; the snail also tastes with Chemo-Suckers, carries the tortoise’s Shell and regrows like the axolotl, and the jellyfish drifts with the eel’s Buoyancy Control and regrows too. The snail glides up walls, seals itself in and rasps; the jellyfish stings, trails tentacles, glows, blooms and can turn young again when downed. Do they feel soft-bodied and strange?',
+      },
       {
         text: 'Four fish join the eel on its branch: Koi, Clownfish, Lionfish and Seahorse. All five share Buoyancy and the axolotl’s Lateral Line; the koi and clownfish share Schooling, the koi also has the parrot’s Long Life, and the seahorse shares the pouched animals’ Pouch and the chameleon’s turret eyes. The koi climbs upstream and turns gold, the clownfish hides in its anemone and darts out, the lionfish corners prey with its spines, the seahorse anchors by its tail and snaps. Which fish feels most like itself?',
       },

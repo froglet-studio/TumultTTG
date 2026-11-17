@@ -3451,4 +3451,108 @@
       fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Let the current carry you to any node within ${2+E}; Hidden 1, and hazards can't touch you this round.` },
     'The slowest fish in the sea, and it gets there anyway.');
+  // ── Molluscs and jellies (2.64): the Mimic Octopus keeps its nine; the snail and jellyfish join it.
+  // Boneless Squeeze is every soft body's; the snail also tastes with Chemo-Suckers and carries the tortoise's Shell.
+  T.SPECIES.octopus.branch = 'Molluscs and jellies';
+  S('snail', { name: 'Snail', lean: 'T/M', branch: 'Molluscs and jellies', icon: '🐌',
+    tagline: 'Carries its house, climbs anything, and seals itself in to wait out the bad weather.' });
+  S('jellyfish', { name: 'Jellyfish', lean: 'C/T', branch: 'Molluscs and jellies', variant: true, icon: '🪼',
+    tagline: 'No brain, no bones, a bell full of stings, and one kind that turns young again instead of dying.' });
+  T.shareTrait('oct_squeeze', 'snail', 'jellyfish');
+  T.shareTrait('oct_chemo', 'snail');
+  T.shareTrait('tor_shell', 'snail');
+  T.shareTrait('axo_regen', 'snail', 'jellyfish');
+  T.shareTrait('eel_buoyancy', 'jellyfish');
+
+  // Snail: Boneless Squeeze, Chemo-Suckers, Shell, Regeneration, and these five
+  K(['snail'],'snl_slime','Slime Trail','T',2,
+    { n:'Glide', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'hazardImmune', dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Glide ${1+P} on your own slime, up walls and over anything sharp: height nodes included, hazards can't touch you this round, and your next hit this turn deals +1.` },
+    { n:'Slick', ap:1, el:1, cd:3, dur:0, tgt:'node_r2',
+      fx:[{v:'dot', kind:'slime', val:1, dur:2, area:'nodeArea'},{v:'weaken', val:1, dur:(P,E)=>1+E, area:'adj'}],
+      txt:(P,E)=>`Lay a slick on a node within 2: foes on or beside it take 1 a round for 2 rounds, and foes beside you are Weakened 1 for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
+    'Where it has been, everything is slippery.');
+  K(['snail'],'snl_seal','Seal In','M',0,
+    { n:'Withdraw', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+P, dur:1},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Pull into your shell: Shield ${2+P} this round, and nothing can push or pull you.` },
+    { n:'Epiphragm', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'stasis', dur:1},{v:'heal', n:(P,E)=>1+E},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`Seal the door with dried slime: heal ${1+E}, nothing can touch you until your next turn, and your next hit deals +${1+E}.` },
+    'A door of dried slime, and the weather can do what it likes.');
+  K(['snail'],'snl_radula','Radula','M',0,
+    { n:'Rasp', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:1},{v:'strike', kind:'melee', dmg:(P,E)=>3+P}],
+      txt:(P,E)=>`Rasp with a tongue of tiny teeth: strip 1 Shield, then melee ${3+P}.` },
+    { n:'File Down', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:2},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'expose', bonus:(P,E)=>1+E}],
+      txt:(P,E)=>`File it down: strip 2 Shield and melee ${2+E}; the next hit on it ignores Shield and deals +${1+E}.` },
+    'Twenty thousand teeth, all very small.');
+  K(['snail'],'snl_rain','After Rain','S',0,
+    { n:'Wet Night', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'heal', n:1}],
+      txt:(P,E)=>`Out after the rain: move ${2+P} and heal 1.` },
+    { n:'Downpour', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:2, party:true},{v:'clearHazard', radius:1},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Everything comes out in the wet: both heroes heal 1 at the start of their next 2 turns and deal +1 with their next hit, and hazards beside you wash away.` },
+    'Snails come out when it rains, and so do their friends.');
+  K(['snail'],'snl_stalks','Eye Stalks','C',0,
+    { n:'Peek', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Raise your eyes on their stalks: see within ${2+P}, and the next hit on you is 1 less.` },
+    { n:'Pull In', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'studied', n:1},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
+      txt:(P,E)=>`Watch one foe, ready to pull in: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is ${1+E} less.` },
+    'Two eyes on stalks, quick to duck.');
+
+  // Jellyfish: Boneless Squeeze, Regeneration, Buoyancy Control (a variant: it drifts like a fish but is none), and these six
+  K(['jellyfish'],'jel_sting','Nematocysts','C',2,
+    { n:'Sting', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'dot', kind:'venom', val:1, dur:2}],
+      txt:(P,E)=>`Melee ${1+P}; it takes 1 at the start of its next 2 turns.` },
+    { n:'Fire All', ap:1, el:1, cd:3, dur:0, tgt:'foe_adj_all',
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>1+E},{v:'dot', kind:'venom', val:1, dur:2, area:'nodeArea'}],
+      txt:(P,E)=>`Every sting fires at once: each foe beside you takes ${1+E}, then 1 a round for 2 rounds.` },
+    'A thousand tiny harpoons, each one coiled and loaded.');
+  K(['jellyfish'],'jel_trail','Trailing Tentacles','M',0,
+    { n:'Trail', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Let your tentacles hang: anything that hits you in melee this round takes ${1+P}.` },
+    { n:'Curtain', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
+      txt:(P,E)=>`Spread a curtain of stings: for 2 rounds anything that hits you in melee takes ${1+E}, and the first to do so takes ${1+E} more and is pushed 1.` },
+    'Metres of tentacle, trailing behind something you can barely see.');
+  K(['jellyfish'],'jel_pulse','Bell Pulse','S',0,
+    { n:'Pulse', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true}],
+      txt:(P,E)=>`Pulse your bell and drift ${2+P}, through foes if need be.` },
+    { n:'Jet', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:1},{v:'move', n:(P,E)=>2+E, free:true}],
+      txt:(P,E)=>`Clench hard: foes beside you are pushed back 1, then you shoot up to ${2+E} wherever you like.` },
+    'Squeeze, drift, squeeze, drift.');
+  K(['jellyfish'],'jel_glow','Bioluminescence','C',0,
+    { n:'Glow', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Light up the water: see within ${2+P} (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.` },
+    { n:'Lure Light', ap:1, el:1, cd:3, dur:0, tgt:'node_r2',
+      fx:[{v:'decoy', dur:(P,E)=>1+E},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Flash a ring of light at a node within 2: foes treat it as a hero for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and you go dark (Hidden 1).` },
+    'Blue light in black water.');
+  K(['jellyfish'],'jel_bloom','Bloom','T',0,
+    { n:'Drift Together', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+h(P), dur:1, party:true, allyRange:2},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Drift close: you and an ally within 2 hold Shield ${1+h(P)} this round, and the ally's next hit deals +1.` },
+    { n:'Swarm', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'hidden', dur:1, party:true, radius:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Become a bloom of thousands: a decoy stands where you are for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, heroes on or beside your node are Hidden 1, and both heroes' next hit deals +${1+E}.` },
+    'One jellyfish is a curiosity. Ten thousand is the weather.');
+  K(['jellyfish'],'jel_reverse','Turn Back','T',0,
+    { n:'Shed', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'cleanse'},{v:'heal', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Shed the damaged layer: escape every hold and condition, and heal ${1+P}.` },
+    { n:'Young Again', ap:1, el:1, cd:5, dur:3, tgt:'self',
+      fx:[{v:'phoenix', hp:(P,E)=>3+2*E, dur:3}],
+      txt:(P,E)=>`Ready to turn young: if you are downed within 3 rounds, you re-form at once with ${3+2*E} hp.` },
+    'One kind, when it is dying, simply starts over.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
