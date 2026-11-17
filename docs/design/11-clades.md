@@ -46,4 +46,4 @@ The five painted animals that are already clades (octopus, eel, axolotl, owl, ge
 
 ## After the branches
 
-The pre-made pilots are remapped to painted Cosmic Shore pilots once their clades exist, and the draft gains a way to start from a painted pilot.
+The pre-made heroes are painted Cosmic Shore pilots (2.67.0; Garrett chose the pilots' names): Rosh is octopus and raven (BANDIT), Ekora otter and eel (FLUME), Nedira hedgehog and tortoise (CITADEL), Echo mouse and owl (ECHO), Karenth axolotl and koi (VOLT), Slingshot flamingo and mantis shrimp (SLINGSHOT). Each keeps the old hero's role and title. Still a proposal: the draft gains a way to start from a painted pilot.

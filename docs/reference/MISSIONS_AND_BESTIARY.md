@@ -50,4 +50,4 @@ Biters called by Spawners and by the Heart are one tier lower than the mission (
 
 ## The DM voice
 
-The log narrates every resolution in plain language ("Cavitt uses Shred on Biter for 4", "Marish is Hidden — the shot strikes a chromatic afterimage", "With its Spawners gone, the Heart's shield gutters out"). The DM never improvises a number: every line is the engine's explicit resolution, which is the v1.0 promise ("the DM narrates; the rules adjudicate").
+The log narrates every resolution in plain language ("Rosh uses Mob on Biter for 2", "Ekora is Hidden — the shot strikes a chromatic afterimage", "With its Spawners gone, the Heart's shield gutters out"). The DM never improvises a number: every line is the engine's explicit resolution, which is the v1.0 promise ("the DM narrates; the rules adjudicate").

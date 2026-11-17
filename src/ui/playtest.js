@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.66.0',
+    version: '2.67.0',
     items: [
+      {
+        text: 'Every pre-made hero is now a painted pilot, with that pilot’s name, clades and art: Rosh (octopus and raven), Ekora (otter and eel), Nedira (hedgehog and tortoise), Echo (mouse and owl), Karenth (axolotl and koi) and Slingshot (flamingo and mantis shrimp). Each keeps the role and title of the hero it replaces. Does each one play the role its title promises?',
+        cards: ['rav_mob', 'wea_musk', 'heh_spines', 'mou_tiny', 'koi_gold', 'msh_punch'],
+      },
       {
         text: 'The last branch: Beetle, Butterfly, Firefly, Praying Mantis and Scorpion, with the Grasshopper moved onto it. The insects share the grasshopper’s Compound Eyes and their own Antennae; all but the butterfly wear its Exoskeleton, the butterfly glides on its wings and migrates like the crane, and the scorpion molts like it and shrugs off venom like the hedgehog. The beetle lifts and plays dead, the butterfly flashes eyespots and turns in a chrysalis, the firefly flashes in time, the mantis waits and grabs, the scorpion holds and stings. Which bug surprised you?',
       },
@@ -121,7 +125,7 @@
         text: 'The route is redrawn as the climb it is. Each leg lies over its painting and says how it is travelled (by land, by sea, by air), with what that ground’s guides would tell you. Each stop is a painted roundel of the place it is played in, with its name, its kind, its tier and its pull: ▲ heavy (uphill) or ▼ light (downhill). Hover a stop to see the place. The road you took is lit gold, the next choices glow, stops you passed by fade, and your two pilots stand where you last stopped. Does the route help you choose where to go? Does it feel like a journey?',
       },
       {
-        text: 'A story box now sits under End turn. On your turn, write what it looked like in a line, as the pilot you have selected (for example: "Kess counts the waves between the gusts, and jumps on the ninth"). Press Enter, or just end your turn. It changes nothing in play. Your line shows in the log, then in your pilot’s words in the passage after the stop, and in the record of the run at the end. Online, each player writes their own. Did you write any? What made you want to?',
+        text: 'A story box now sits under End turn. On your turn, write what it looked like in a line, as the pilot you have selected (for example: "Slingshot counts the waves between the gusts, and jumps on the ninth"). Press Enter, or just end your turn. It changes nothing in play. Your line shows in the log, then in your pilot’s words in the passage after the stop, and in the record of the run at the end. Online, each player writes their own. Did you write any? What made you want to?',
       },
       {
         text: 'Words of art now explain themselves. Hidden, Anchor, Weak, Shield, Push, Zone and the rest are drawn as small chips with an icon in card text, foe intents and the log; hover one for its rule in a sentence. Tokens on the board wear the same icons as badges, with a number where a state counts down. Hover a card face, a basic action or a gear ability and the board shows what it would do, exactly: rings on whoever it would reach, damage numbers, where things would be shoved or pulled, which states they would gain. While choosing a target, hover each one to compare. Was there a word you still had to look up? Did a preview ever show something that then did not happen?',

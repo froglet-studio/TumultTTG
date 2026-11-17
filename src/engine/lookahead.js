@@ -144,7 +144,7 @@
         return { ok: false, why: 'unknown action ' + a.t };
     }
   };
-  /** An action in a few words, for logs and tests: "Cavitt: Jet Propulsion — Jet → node 6". */
+  /** An action in a few words, for logs and tests: "Rosh: Jet Propulsion — Jet → node 6". */
   T.describeAction = function (m, a) {
     const h = m.heroes[a.hero];
     const at = a.node != null ? ` → node ${a.node}` : '';

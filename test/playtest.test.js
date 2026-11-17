@@ -61,7 +61,7 @@ const snap = (m) =>
     foes: m.enemies.map((e) => [e.type, e.pos, e.hp]),
     heroes: m.heroes.map((h) => [h.name, h.pos, h.held.join(''), h.cards.join(',')]),
   });
-/** Pick Elite, tier 2, Veil + Marish, seed 8 on the panel and press Play. */
+/** Pick Elite, tier 2, Echo + Ekora, seed 8 on the panel and press Play. */
 function startElite(p) {
   p.act('pt-type', 'elite');
   p.act('pt-tier', '2');
