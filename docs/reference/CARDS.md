@@ -2457,3 +2457,297 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Weave* · 1 AP · CD 1 — Weave 2 through cover, past foes and setting off no traps; your next hit this turn deals +1. *(P3: Weave 5 through cover, past foes and setting off no traps; your next hit this turn deals +1.)*
 - *Eth — Through the Hedge* · 1 AP + 1 Space · CD 3 — Burst out beside a foe within 3, hidden or not: melee 3, and you are Hidden 1. *(P3/E3: Burst out beside a foe within 5, hidden or not: melee 5, and you are Hidden 1.)*
+
+## 50 · Crane — leans S/C
+
+*Tall, grey and patient, with a dance for every season and a voice that carries for miles.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Wade** · Space · `wad_wade`
+
+- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+
+**Long Legs** · Space · `wad_legs`
+
+- *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+
+**Spear Bill** · Mass · `wad_spear`
+
+- *Phys — Stab* · 1 AP · CD 1 — Melee 2 that ignores Shield. *(P3: Melee 5 that ignores Shield.)*
+- *Eth — Run Through* · 1 AP + 1 Mass · CD 3 — Strike a foe within 2 for 4, ignoring Shield; it is Weakened 1 this round. *(P3/E3: Strike a foe within 2 for 6, ignoring Shield; it is Weakened 1 this round.)*
+
+**Still Hunt** · Time · `wad_still`
+
+- *Phys — Freeze* · 1 AP · CD 1 — Go still: Shield 1 this round, and your next hit within 2 rounds deals +2. *(P3: Go still: Shield 1 this round, and your next hit within 2 rounds deals +5.)*
+- *Eth — Patience* · 1 AP + 1 Time · CD 3 — Hidden 1; your next hit within 2 rounds deals +4, and reroll 1 banked die. *(P3/E3: Hidden 1; your next hit within 2 rounds deals +6, and reroll 1 banked die.)*
+
+**Migration** · Space · `cra_migrate`
+
+- *Phys — Long Haul* · 1 AP · CD 1 — Fly 3; hazards can't touch you this round. *(P3: Fly 4; hazards can't touch you this round.)*
+- *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; your track slides 2 extra (your cards come back sooner).)*
+
+**Courtship Dance** · Charge · `cra_dance`
+
+- *Phys — Dance* · 1 AP · CD 1 — Dance for your partner: their next hit deals +1, and both heroes hold Shield 1 this round. *(P3: Dance for your partner: their next hit deals +4, and both heroes hold Shield 1 this round.)*
+- *Eth — Pair Dance* · 1 AP + 1 Charge · CD 3 — Both heroes shake off Anchored and Weakened, heal 2, and deal +1 on their next hit. *(P3/E3: Both heroes shake off Anchored and Weakened, heal 4, and deal +1 on their next hit.)*
+
+**Long Stride** · Space · `cra_stride`
+
+- *Phys — Stride* · 1 AP · CD 0 — Stride 2. *(P3: Stride 5.)*
+- *Eth — Run-Up* · 1 AP + 1 Space · CD 3 — Run, flap and lift: land on any node within 4, height included; hazards can't touch you this round. *(P3/E3: Run, flap and lift: land on any node within 6, height included; hazards can't touch you this round.)*
+
+**Trumpet** · Charge · `cra_trumpet`
+
+- *Phys — Call* · 1 AP · CD 1 — See within 2; foes beside you are Weakened 1, and both heroes hold Shield 1 this round. *(P3: See within 5; foes beside you are Weakened 1, and both heroes hold Shield 1 this round.)*
+- *Eth — Unison Call* · 1 AP + 1 Charge · CD 3 — Call in unison: both heroes' next hit deals +2, and every foe beside you falls back 1. *(P3/E3: Call in unison: both heroes' next hit deals +4, and every foe beside you falls back 1.)*
+
+## 51 · Heron — leans T/M
+
+*A statue in the shallows until the moment it is not. Uses bait, on purpose.*
+
+**Tool Use** ★ · Space · `hum_tool`
+
+- *Phys — Improvise* · 1 AP · CD 1 — Your next strike this turn deals +1. *(P3: Your next strike this turn deals +4.)*
+- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away — even on a height node. *(P3/E3: Interact with an objective up to 4 nodes away — even on a height node.)*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Wade** · Space · `wad_wade`
+
+- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+
+**Long Legs** · Space · `wad_legs`
+
+- *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+
+**Spear Bill** · Mass · `wad_spear`
+
+- *Phys — Stab* · 1 AP · CD 1 — Melee 2 that ignores Shield. *(P3: Melee 5 that ignores Shield.)*
+- *Eth — Run Through* · 1 AP + 1 Mass · CD 3 — Strike a foe within 2 for 4, ignoring Shield; it is Weakened 1 this round. *(P3/E3: Strike a foe within 2 for 6, ignoring Shield; it is Weakened 1 this round.)*
+
+**Still Hunt** · Time · `wad_still`
+
+- *Phys — Freeze* · 1 AP · CD 1 — Go still: Shield 1 this round, and your next hit within 2 rounds deals +2. *(P3: Go still: Shield 1 this round, and your next hit within 2 rounds deals +5.)*
+- *Eth — Patience* · 1 AP + 1 Time · CD 3 — Hidden 1; your next hit within 2 rounds deals +4, and reroll 1 banked die. *(P3/E3: Hidden 1; your next hit within 2 rounds deals +6, and reroll 1 banked die.)*
+
+**Canopy Shade** · Time · `her_shade`
+
+- *Phys — Wing Canopy* · 1 AP · CD 1 — Spread your wings into a roof: Shield 1, see within 2, and Mark the nearest foe. *(P3: Spread your wings into a roof: Shield 4, see within 2, and Mark the nearest foe.)*
+- *Eth — Deep Shade* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 1; your next hit deals +2. *(P3/E3: You and an ally beside you are Hidden 2; your next hit deals +4.)*
+
+**Neck Spring** · Mass · `her_neck`
+
+- *Phys — Spring* · 1 AP · CD 1 — Strike a foe within 2 for 2. *(P3: Strike a foe within 2 for 5.)*
+- *Eth — Coiled Strike* · 1 AP + 1 Mass · CD 3 — Strike a foe within 2 for 4, hidden or not, and pin it: Anchored 1. *(P3/E3: Strike a foe within 2 for 6, hidden or not, and pin it: Anchored 1.)*
+
+**Rookery** · Charge · `her_rookery`
+
+- *Phys — Colony* · 1 AP · CD 1 — Both heroes hold Shield 1 this round, and your ally heals 1. *(P3: Both heroes hold Shield 2 this round, and your ally heals 1.)*
+- *Eth — Rookery Watch* · 1 AP + 1 Charge · CD 4 — Someone is always watching: see the whole board this round, and both heroes heal 1 at the start of each turn for 2 rounds.
+
+## 52 · Egret — leans C/S
+
+*White plumes, yellow feet, and a habit of riding on bigger animals.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Wade** · Space · `wad_wade`
+
+- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+
+**Long Legs** · Space · `wad_legs`
+
+- *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+
+**Spear Bill** · Mass · `wad_spear`
+
+- *Phys — Stab* · 1 AP · CD 1 — Melee 2 that ignores Shield. *(P3: Melee 5 that ignores Shield.)*
+- *Eth — Run Through* · 1 AP + 1 Mass · CD 3 — Strike a foe within 2 for 4, ignoring Shield; it is Weakened 1 this round. *(P3/E3: Strike a foe within 2 for 6, ignoring Shield; it is Weakened 1 this round.)*
+
+**Still Hunt** · Time · `wad_still`
+
+- *Phys — Freeze* · 1 AP · CD 1 — Go still: Shield 1 this round, and your next hit within 2 rounds deals +2. *(P3: Go still: Shield 1 this round, and your next hit within 2 rounds deals +5.)*
+- *Eth — Patience* · 1 AP + 1 Time · CD 3 — Hidden 1; your next hit within 2 rounds deals +4, and reroll 1 banked die. *(P3/E3: Hidden 1; your next hit within 2 rounds deals +6, and reroll 1 banked die.)*
+
+**Plumes** · Charge · `egr_plumes`
+
+- *Phys — Display* · 1 AP · CD 1 — Flare your plumes and slip away: leave a decoy where you stood for 1 round, and move 1. *(P3: Flare your plumes and slip away: leave a decoy where you stood for 1 round, and move 4.)*
+- *Eth — Dazzle* · 1 AP + 1 Charge · CD 3 — Dazzle a foe within 3: it is Weakened 1 for 2 rounds and Marked, and your hits on it deal +1. *(P3/E3: Dazzle a foe within 3: it is Weakened 2 for 2 rounds and Marked, and your hits on it deal +1.)*
+
+**Foot Stir** · Time · `egr_stir`
+
+- *Phys — Stir* · 1 AP · CD 1 — Stir the mud with a yellow foot: see within 1, Mark the nearest foe, and your next hit this turn deals +1. *(P3: Stir the mud with a yellow foot: see within 4, Mark the nearest foe, and your next hit this turn deals +1.)*
+- *Eth — Flush Out* · 1 AP + 1 Time · CD 3 — Flush out any foe: it takes 1, can't Hide for 2 rounds, and your hits on it deal +1. *(P3/E3: Flush out any foe: it takes 1, can't Hide for 2 rounds, and your hits on it deal +2.)*
+
+**Cattle Rider** · Space · `egr_cattle`
+
+- *Phys — Follow the Herd* · 1 AP · CD 1 — Move 2 and heal 1; your ally's next hit deals +1. *(P3: Move 5 and heal 1; your ally's next hit deals +1.)*
+- *Eth — Ride Along* · 1 AP + 1 Space · CD 4 — Swap places with your ally, wherever they are; both heroes' next hit deals +2. *(P3/E3: Swap places with your ally, wherever they are; both heroes' next hit deals +4.)*
+
+**Graceful Lift** · Space · `egr_lift`
+
+- *Phys — Lift* · 1 AP · CD 1 — Lift onto any node within 1, height included, and hold Shield 1 this round. *(P3: Lift onto any node within 4, height included, and hold Shield 1 this round.)*
+- *Eth — Float* · 1 AP + 1 Space · CD 3 — Float for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes; heal 1, and your next hit deals +1. *(P3/E3: Float for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes; heal 1, and your next hit deals +1.)*
+
+## 53 · Ibis — leans T/C
+
+*A curved bill that finds what is buried, and a flock that flies in a line.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Wade** · Space · `wad_wade`
+
+- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+
+**Long Legs** · Space · `wad_legs`
+
+- *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+
+**Spear Bill** · Mass · `wad_spear`
+
+- *Phys — Stab* · 1 AP · CD 1 — Melee 2 that ignores Shield. *(P3: Melee 5 that ignores Shield.)*
+- *Eth — Run Through* · 1 AP + 1 Mass · CD 3 — Strike a foe within 2 for 4, ignoring Shield; it is Weakened 1 this round. *(P3/E3: Strike a foe within 2 for 6, ignoring Shield; it is Weakened 1 this round.)*
+
+**Still Hunt** · Time · `wad_still`
+
+- *Phys — Freeze* · 1 AP · CD 1 — Go still: Shield 1 this round, and your next hit within 2 rounds deals +2. *(P3: Go still: Shield 1 this round, and your next hit within 2 rounds deals +5.)*
+- *Eth — Patience* · 1 AP + 1 Time · CD 3 — Hidden 1; your next hit within 2 rounds deals +4, and reroll 1 banked die. *(P3/E3: Hidden 1; your next hit within 2 rounds deals +6, and reroll 1 banked die.)*
+
+**Probing Bill** · Charge · `ibi_probe`
+
+- *Phys — Probe* · 1 AP · CD 1 — Melee 2, hidden or not, and see everything beside you. *(P3: Melee 5, hidden or not, and see everything beside you.)*
+- *Eth — Deep Probe* · 1 AP + 1 Charge · CD 3 — Probe a node within 2: work an objective there as if you stood on it; see within 2, and heal 1. *(P3/E3: Probe a node within 2: work an objective there as if you stood on it; see within 2, and heal 3.)*
+
+**Flood Wader** · Time · `ibi_flood`
+
+- *Phys — High Water* · 1 AP · CD 1 — Shield 1 this round, heal 1, and ignore hazards for 2 rounds. *(P3: Shield 4 this round, heal 1, and ignore hazards for 2 rounds.)*
+- *Eth — Flood Plain* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards for 3 rounds and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes ignore hazards for 5 rounds and heal 1 at the start of each turn for 2 rounds.)*
+
+**Scribe’s Eye** · Time · `ibi_scribe`
+
+- *Phys — Read the Signs* · 1 AP · CD 1 — Reroll up to 1 banked dice, and see within 2. *(P3: Reroll up to 2 banked dice, and see within 2.)*
+- *Eth — Write It Down* · 1 AP + 1 Time · CD 4 — Draw a Time die from your pool and reroll 1 banked die; the next hit on you is 2 less. *(P3/E3: Draw a Time die from your pool and reroll 1 banked die; the next hit on you is 4 less.)*
+
+**Flock V** · Space · `ibi_flock`
+
+- *Phys — Formation* · 1 AP · CD 1 — Your ally moves 1, where you choose; both heroes hold Shield 1 this round. *(P3: Your ally moves 4, where you choose; both heroes hold Shield 1 this round.)*
+- *Eth — V-Flight* · 1 AP + 1 Space · CD 4 — Your ally moves 3 in your slipstream; both hold Shield 1 this round, and your ally's track slides 1 extra. *(P3/E3: Your ally moves 5 in your slipstream; both hold Shield 2 this round, and your ally's track slides 1 extra.)*
+
+## 54 · Shoebill — leans M/T
+
+*Stands still for an hour, then falls on its prey with its whole body. Its bill is a clog.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Wade** · Space · `wad_wade`
+
+- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+
+**Long Legs** · Space · `wad_legs`
+
+- *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+
+**Spear Bill** · Mass · `wad_spear`
+
+- *Phys — Stab* · 1 AP · CD 1 — Melee 2 that ignores Shield. *(P3: Melee 5 that ignores Shield.)*
+- *Eth — Run Through* · 1 AP + 1 Mass · CD 3 — Strike a foe within 2 for 4, ignoring Shield; it is Weakened 1 this round. *(P3/E3: Strike a foe within 2 for 6, ignoring Shield; it is Weakened 1 this round.)*
+
+**Still Hunt** · Time · `wad_still`
+
+- *Phys — Freeze* · 1 AP · CD 1 — Go still: Shield 1 this round, and your next hit within 2 rounds deals +2. *(P3: Go still: Shield 1 this round, and your next hit within 2 rounds deals +5.)*
+- *Eth — Patience* · 1 AP + 1 Time · CD 3 — Hidden 1; your next hit within 2 rounds deals +4, and reroll 1 banked die. *(P3/E3: Hidden 1; your next hit within 2 rounds deals +6, and reroll 1 banked die.)*
+
+**Big Bill** · Mass · `bil_big`
+
+- *Phys — Bill Grab* · 1 AP · CD 1 — Grab a foe within 2: it takes 1 and is hauled 1 toward you. *(P3: Grab a foe within 2: it takes 4 and is hauled 1 toward you.)*
+- *Eth — Clamp Bill* · 1 AP + 1 Mass · CD 3 — Clamp a foe within 2: it takes 3, is Anchored 1, and is Weakened 1 this round. *(P3/E3: Clamp a foe within 2: it takes 5, is Anchored 2, and is Weakened 1 this round.)*
+
+**Collapse Strike** · Mass · `sho_collapse`
+
+- *Phys — Collapse* · 1 AP · CD 2 — Fall on a foe beside you with your whole body: melee 4. *(P3: Fall on a foe beside you with your whole body: melee 7.)*
+- *Eth — Full Collapse* · 2 AP + 1 Mass · CD 3 — Melee 6 that ignores Shield; it is Weakened 1 for 2 rounds. *(P3/E3: Melee 8 that ignores Shield; it is Weakened 1 for 2 rounds.)*
+
+**Bill Clatter** · Charge · `sho_clatter`
+
+- *Phys — Clatter* · 1 AP · CD 1 — Clatter your bill like a drum: foes beside you are Weakened 1, and you hold Shield 1 this round. *(P3: Clatter your bill like a drum: foes beside you are Weakened 1, and you hold Shield 2 this round.)*
+- *Eth — Machine-Gun Bill* · 1 AP + 1 Charge · CD 3 — Every foe beside you falls back 1; hold Shield 2 this round, and your next hit deals +1. *(P3/E3: Every foe beside you falls back 1; hold Shield 4 this round, and your next hit deals +1.)*
+
+**Swamp Ghost** · Time · `sho_ghost`
+
+- *Phys — Stand Still* · 1 AP · CD 1 — Hidden 1; your next hit within 2 rounds deals +1. *(P3: Hidden 1; your next hit within 2 rounds deals +4.)*
+- *Eth — In the Reeds* · 1 AP + 1 Time · CD 3 — Move 2; Hidden 1 even if you move, and your next hit deals +2. *(P3/E3: Move 4; Hidden 2 even if you move, and your next hit deals +2.)*
+
+## 55 · Flamingo — leans T/C
+
+*Pink from what it eats, at home in lakes that would burn anyone else. Never alone.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Wade** · Space · `wad_wade`
+
+- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+
+**Long Legs** · Space · `wad_legs`
+
+- *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+
+**One-Leg Rest** · Time · `fla_oneleg`
+
+- *Phys — Rest* · 1 AP · CD 1 — Stand on one leg: heal 1, and hold Shield 1 this round. *(P3: Stand on one leg: heal 4, and hold Shield 1 this round.)*
+- *Eth — Long Rest* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds, and hold Shield 1 for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds, and hold Shield 2 for 2 rounds.)*
+
+**Filter Feed** · Charge · `fla_filter`
+
+- *Phys — Filter* · 1 AP · CD 1 — Sift the shallows: reroll up to 1 banked dice, and heal 1. *(P3: Sift the shallows: reroll up to 2 banked dice, and heal 1.)*
+- *Eth — Strain the Lake* · 1 AP + 1 Charge · CD 4 — Draw a Charge die from your pool, heal 2, and ignore hazards this round. *(P3/E3: Draw a Charge die from your pool, heal 4, and ignore hazards this round.)*
+
+**Flock March** · Space · `fla_march`
+
+- *Phys — March* · 1 AP · CD 1 — March 1; you and an ally beside you hold Shield 1 this round. *(P3: March 4; you and an ally beside you hold Shield 2 this round.)*
+- *Eth — Massed March* · 1 AP + 1 Space · CD 3 — Both heroes hold Shield 2 this round and deal +1 on their next hit; every foe beside you falls back 1. *(P3/E3: Both heroes hold Shield 4 this round and deal +1 on their next hit; every foe beside you falls back 1.)*
+
+**Salt Flats** · Time · `fla_salt`
+
+- *Phys — Salt Feet* · 1 AP · CD 1 — Ignore hazards for 2 rounds, and hold Shield 1 this round. *(P3: Ignore hazards for 2 rounds, and hold Shield 4 this round.)*
+- *Eth — Caustic Lake* · 1 AP + 1 Time · CD 3 — Stir the bitter lake at a node within 2: every foe on or beside it takes 1 at the start of its next 2 turns; both heroes ignore hazards for 2 rounds. *(P3/E3: Stir the bitter lake at a node within 2: every foe on or beside it takes 2 at the start of its next 2 turns; both heroes ignore hazards for 2 rounds.)*
+
+**Crop Milk** · Time · `fla_milk`
+
+- *Phys — Feed* · 1 AP · CD 1 — Your ally heals 2. *(P3: Your ally heals 5.)*
+- *Eth — Nourish* · 1 AP + 1 Time · CD 4 — Your ally heals 3 and gains 1 AP next turn; both heroes shake off Anchored and Weakened. *(P3/E3: Your ally heals 5 and gains 1 AP next turn; both heroes shake off Anchored and Weakened.)*
+
+**Pink Flock** · Charge · `fla_pink`
+
+- *Phys — Blend In* · 1 AP · CD 1 — Lose yourself in the flock: you and an ally beside you are Hidden 1, and you heal 1.
+- *Eth — A Thousand Pink* · 1 AP + 1 Charge · CD 3 — Leave a decoy for 2 rounds; you and an ally beside you are Hidden 1, and your next hit deals +1. *(P3/E3: Leave a decoy for 4 rounds; you and an ally beside you are Hidden 1, and your next hit deals +2.)*

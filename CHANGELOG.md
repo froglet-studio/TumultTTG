@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.56.0 — 2026-11-17 — the waders
+
+The eleventh branch of the tree (`docs/design/11-clades.md`): six painted waders, each with nine traits.
+
+- **Crane, Heron, Egret, Ibis, Shoebill and Flamingo.**
+- Shared traits:
+  - **Hollow Bones** (the owl's): every bird
+  - **Wade** and **Long Legs**: all six
+  - **Spear Bill** and **Still Hunt**: all but the flamingo
+  - the heron carries Human's **Tool Use**
+- Traits of each one's own:
+  - crane: Migration (the butterfly will share it), Courtship Dance, Long Stride and Trumpet
+  - heron: Canopy Shade, Neck Spring and Rookery
+  - egret: Plumes, Foot Stir, Cattle Rider and Graceful Lift
+  - ibis: Probing Bill, Flood Wader, Scribe's Eye and Flock V
+  - shoebill: Big Bill (the toucan and pelican will share it), Collapse Strike, Bill Clatter and Swamp Ghost
+  - flamingo: One-Leg Rest, Filter Feed, Flock March, Salt Flats, Crop Milk and Pink Flock
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (240 drafted runs, look-ahead player):
+  - Inside this release, runs with a wader win 28% and runs without one 36%, so the waders make no run easier.
+  - The flamingo, a healer with no direct strike, is the lowest (2 of 15 runs); too few runs to tune on yet.
+
 ## 2.55.0 — 2026-11-17 — the birds of prey and owls
 
 The tenth branch of the tree (`docs/design/11-clades.md`): two painted raptors join the Barn Owl, each with nine traits.

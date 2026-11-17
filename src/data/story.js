@@ -368,6 +368,48 @@
       onward: ['"Hedges in {PLACE}?" {A} asks. "Good. I like hedges."', '"{THREAT}," {A} says. "Fast? So am I."'],
       reply: ['{A} rouses their feathers.', '"Mm," {A} says.', '{A} flicks their eyes to {B} and back to the sky.'],
     },
+    crane: {
+      win: ["{A} bows, leaps, and bows again. \"That is the dance for winning.\"", "\"I have flown farther than this to do less,\" {A} says."],
+      close: ["{A} stands on the far bank with their head under a wing.", "\"I nearly missed the step,\" {A} says quietly."],
+      quiet: ["{A} dances by the fire, alone, and nobody laughs.", "{A} teaches {B} the first three steps of a dance and will not explain the rest."],
+      onward: ["\"{PLACE},\" {A} says. \"I know the road there. It is in the sky.\"", "{A} lifts their head and calls once. \"{THREAT}. It will have heard that.\""],
+      reply: ["{A} bugles, softly.", "\"Yes,\" {A} says.", "{A} dips their head to {B}."],
+    },
+    heron: {
+      win: ["{A} swallows something whole and looks satisfied. \"Patience.\"", "\"It came to me,\" {A} says. \"They always come to me.\""],
+      close: ["{A} stands in the shallows for a long time, not fishing.", "\"I struck too soon,\" {A} says. \"I never strike too soon.\""],
+      quiet: ["{A} drops a crust on the water and waits for whatever comes to eat it.", "{A} stands beside {B} on one leg until {B} gives up and sits down."],
+      onward: ["\"Is {PLACE} wet?\" {A} asks. \"It should be wet.\"", "\"{THREAT},\" {A} says. \"I will wait for it.\""],
+      reply: ["{A} folds their neck.", "\"Mm,\" {A} says.", "{A} looks at {B} along their bill."],
+    },
+    egret: {
+      win: ["{A} smooths their plumes. \"Not a feather out of place.\"", "\"It never saw my feet,\" {A} says. \"Nobody looks at the feet.\""],
+      close: ["{A} preens a muddy plume, very slowly, in silence.", "\"I got dirty,\" {A} says, with real disgust."],
+      quiet: ["{A} rides on {B}'s shoulder for a while, uninvited.", "{A} stirs the shallows and eats whatever jumps."],
+      onward: ["\"{PLACE},\" {A} says. \"Big animals there? I could use a ride.\"", "\"{THREAT},\" {A} says, and fluffs their plumes."],
+      reply: ["{A} flares their plumes.", "\"Of course,\" {A} says.", "{A} tilts their head at {B}."],
+    },
+    ibis: {
+      win: ["{A} pulls something out of the mud and shows it to {B}. \"Found it.\"", "\"It was buried,\" {A} says. \"Nothing stays buried.\""],
+      close: ["{A} probes the ground for a long time, finding nothing.", "\"I lost the line,\" {A} says. \"We fly in a line. I lost it.\""],
+      quiet: ["{A} draws marks in the mud with their bill, and rubs them out.", "{A} flies at {B}'s shoulder all evening, just behind, just to the side."],
+      onward: ["\"{PLACE},\" {A} says. \"After the flood? Good. Everything comes up.\"", "\"{THREAT},\" {A} says. \"I will write it down.\""],
+      reply: ["{A} clicks their curved bill.", "\"Noted,\" {A} says.", "{A} looks at {B} with one eye."],
+    },
+    shoebill: {
+      win: ["{A} stands over what is left, not moving, for a very long time.", "\"One strike,\" {A} says. \"Always one.\""],
+      close: ["{A} clatters their bill once, quietly, and says nothing else.", "\"I fell on it,\" {A} says. \"It moved.\""],
+      quiet: ["{A} stands in the reeds all evening. {B} forgets they are there, twice.", "{A} stares at {B} until {B} offers them a fish."],
+      onward: ["\"{PLACE},\" {A} says. \"Swamp?\" and waits for the answer.", "\"{THREAT},\" {A} says. \"It will come close. Then.\""],
+      reply: ["{A} stares.", "{A} clatters their bill, once.", "\"Hm,\" {A} says."],
+    },
+    flamingo: {
+      win: ["{A} stands on one leg and lets the others do the talking. \"We won.\"", "\"Pink is a warning colour,\" {A} says. \"They never listen.\""],
+      close: ["{A} sleeps on one leg, head tucked, as far from everyone as they can get.", "\"The water there burned even me,\" {A} says."],
+      quiet: ["{A} marches up and down with {B}, heads turning together.", "{A} sieves the shallows for hours, upside down."],
+      onward: ["\"Salt in {PLACE}?\" {A} asks. \"I can live there. Nobody else can.\"", "\"{THREAT},\" {A} says. \"We go together, or not at all.\""],
+      reply: ["{A} honks.", "\"Yes,\" {A} says, and shifts to the other leg.", "{A} turns their head with {B}'s."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */
