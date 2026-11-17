@@ -2359,3 +2359,101 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Confuse* · 1 AP · CD 1 — A foe within 3 takes 1 and is Weakened 1 for 1 round. *(P3: A foe within 3 takes 1 and is Weakened 1 for 2 rounds.)*
 - *Eth — Nothing Like It* · 1 AP + 1 Charge · CD 3 — Leave a puzzle where you stood (a decoy for 2 rounds), slip to a node within 2, and your next hit deals +2. *(P3/E3: Leave a puzzle where you stood (a decoy for 4 rounds), slip to a node within 2, and your next hit deals +4.)*
+
+## 48 · Bald Eagle — leans M/C
+
+*Broad wings, a voice like a rusty hinge, and a grip nothing breaks.*
+
+**Talon Strike** · Mass · `owl_talon`
+
+- *Phys — Grip* · 1 AP · CD 0 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
+- *Eth — Pin* · 2 AP + 1 Mass · CD 3 — Melee 3 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2. *(P3/E3: Melee 6 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.)*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Keen Sight** · Charge · `rap_sight`
+
+- *Phys — Spot* · 1 AP · CD 1 — See everything within 3, and Mark the nearest foe (the next hit on it deals +2). *(P3: See everything within 6, and Mark the nearest foe (the next hit on it deals +2).)*
+- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See the whole board this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See the whole board this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
+
+**Stoop** · Mass · `rap_stoop`
+
+- *Phys — Drop* · 1 AP · CD 1 — Drop up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Drop up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Plummet* · 1 AP + 1 Mass · CD 3 — Fold the wings and fall beside a foe within 4, height included: melee 4, and it is Weakened 1 this round. *(P3/E3: Fold the wings and fall beside a foe within 6, height included: melee 6, and it is Weakened 1 this round.)*
+
+**Soar** · Space · `eag_soar`
+
+- *Phys — Ride the Wind* · 1 AP · CD 1 — Glide 2, over foes; hazards can't touch you this round. *(P3: Glide 5, over foes; hazards can't touch you this round.)*
+- *Eth — High Circle* · 1 AP + 1 Space · CD 3 — Rise onto any node within 3, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Rise onto any node within 5, height included; see within 5, and your next hit this turn deals +1.)*
+
+**Talon Lock** · Mass · `eag_lock`
+
+- *Phys — Clamp* · 1 AP · CD 1 — Melee 3 and lock on: it and you are both Anchored this round. *(P3: Melee 6 and lock on: it and you are both Anchored this round.)*
+- *Eth — Death Grip* · 1 AP + 1 Mass · CD 3 — Melee 4 and do not let go: it is Anchored 1, and takes 1 at the start of its next 2 turns. *(P3/E3: Melee 6 and do not let go: it is Anchored 2, and takes 1 at the start of its next 2 turns.)*
+
+**Eagle Scream** · Charge · `eag_scream`
+
+- *Phys — Scream* · 1 AP · CD 1 — Every foe beside you is Weakened 1, and both heroes' next hit this round deals +1.
+- *Eth — Rally Cry* · 1 AP + 1 Charge · CD 3 — Both heroes' next hit deals +2 and they hold Shield 1 this round; foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Both heroes' next hit deals +4 and they hold Shield 1 this round; foes beside you are Weakened 1 for 2 rounds.)*
+
+**Fish Snatch** · Space · `eag_fish`
+
+- *Phys — Snatch* · 1 AP · CD 1 — Swoop on a foe within 3: it takes 1 and is dragged 1 toward you. *(P3: Swoop on a foe within 3: it takes 4 and is dragged 1 toward you.)*
+- *Eth — Skim and Lift* · 1 AP + 1 Space · CD 3 — Skim 3, over foes and through hazards, snatching a meal on the way: heal 2. *(P3/E3: Skim 5, over foes and through hazards, snatching a meal on the way: heal 4.)*
+
+**Nest Guard** · Time · `eag_nest`
+
+- *Phys — Over the Nest* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round, and the first foe to hit you in melee takes 1. *(P3: You and an ally beside you hold Shield 4 this round, and the first foe to hit you in melee takes 1.)*
+- *Eth — Eyrie* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 for 2 rounds and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes hold Shield 4 for 2 rounds and heal 1 at the start of each turn for 2 rounds.)*
+
+## 49 · Hawk — leans S/M
+
+*Quick in the hedges, quicker in the open. Hangs on the wind and drops.*
+
+**Talon Strike** · Mass · `owl_talon`
+
+- *Phys — Grip* · 1 AP · CD 0 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
+- *Eth — Pin* · 2 AP + 1 Mass · CD 3 — Melee 3 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2. *(P3/E3: Melee 6 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.)*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Keen Sight** · Charge · `rap_sight`
+
+- *Phys — Spot* · 1 AP · CD 1 — See everything within 3, and Mark the nearest foe (the next hit on it deals +2). *(P3: See everything within 6, and Mark the nearest foe (the next hit on it deals +2).)*
+- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See the whole board this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See the whole board this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
+
+**Stoop** · Mass · `rap_stoop`
+
+- *Phys — Drop* · 1 AP · CD 1 — Drop up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Drop up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Plummet* · 1 AP + 1 Mass · CD 3 — Fold the wings and fall beside a foe within 4, height included: melee 4, and it is Weakened 1 this round. *(P3/E3: Fold the wings and fall beside a foe within 6, height included: melee 6, and it is Weakened 1 this round.)*
+
+**Sky Hyperspeed** · Space · `haw_hyper`
+
+- *Phys — Sky Dash* · 1 AP · CD 1 — Fly exactly 4, over foes and hazards. *(P3: Fly exactly 4, over foes and hazards; your next strike this turn deals +3.)*
+- *Eth — Sky Burst* · 1 AP + 1 Space · CD 3 — Fly exactly 4, over foes and hazards; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +3. *(P3/E3: Fly exactly 4, over foes and hazards; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +5.)*
+
+**Kite** · Space · `haw_kite`
+
+- *Phys — Hang* · 1 AP · CD 1 — Slip 1 and hang on the wind: see within 2, and your next hit this turn deals +1. *(P3: Slip 4 and hang on the wind: see within 2, and your next hit this turn deals +1.)*
+- *Eth — Hold the Wind* · 1 AP + 1 Space · CD 4 — Hover for 2 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; see within 3. *(P3/E3: Hover for 4 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; see within 5.)*
+
+**Talon Bind** · Mass · `haw_bind`
+
+- *Phys — Bind* · 1 AP · CD 1 — Both feet: melee 1, then melee 1. *(P3: Both feet: melee 4, then melee 2.)*
+- *Eth — Tumble* · 1 AP + 1 Mass · CD 3 — Lock feet and tumble: melee 3, push it 2, and it is Weakened 1 for 2 rounds. *(P3/E3: Lock feet and tumble: melee 5, push it 2, and it is Weakened 1 for 2 rounds.)*
+
+**Mantle** · Time · `haw_mantle`
+
+- *Phys — Mantle* · 1 AP · CD 1 — Spread your wings over what you hold: Shield 1, Hidden 1, and heal 1. *(P3: Spread your wings over what you hold: Shield 4, Hidden 1, and heal 1.)*
+- *Eth — Cover the Kill* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 1, and both heroes heal 2. *(P3/E3: You and an ally beside you are Hidden 2, and both heroes heal 4.)*
+
+**Hedge Chase** · Space · `haw_hedge`
+
+- *Phys — Weave* · 1 AP · CD 1 — Weave 2 through cover, past foes and setting off no traps; your next hit this turn deals +1. *(P3: Weave 5 through cover, past foes and setting off no traps; your next hit this turn deals +1.)*
+- *Eth — Through the Hedge* · 1 AP + 1 Space · CD 3 — Burst out beside a foe within 3, hidden or not: melee 3, and you are Hidden 1. *(P3/E3: Burst out beside a foe within 5, hidden or not: melee 5, and you are Hidden 1.)*

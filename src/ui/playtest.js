@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.54.0',
+    version: '2.55.0',
     items: [
+      {
+        text: 'Two birds of prey join the Barn Owl on its branch: Bald Eagle and Hawk. All three share the owl’s Hollow Bones and Talon Strike; the eagle and hawk share Keen Sight and Stoop, a fall from the sky onto a foe. The eagle holds on and calls its partner in; the hawk has Sky Hyperspeed (the cheetah’s exact run of 4, over hazards too), hovers on the wind and chases through cover. Do the two feel different, and does the owl still feel like itself?',
+      },
       {
         text: 'Three pouched and egg-laying animals join: Red Kangaroo, Opossum and Platypus. The kangaroo and opossum share Pouch, which heals your partner or swaps places with them anywhere on the board. The opossum shares the hedgehog’s Venom Shrug and the platypus the jerboa’s Burrowing. Does swapping places open up new plays for two?',
       },

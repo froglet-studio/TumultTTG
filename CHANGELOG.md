@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.55.0 — 2026-11-17 — the birds of prey and owls
+
+The tenth branch of the tree (`docs/design/11-clades.md`): two painted raptors join the Barn Owl, each with nine traits.
+
+- **Bald Eagle and Hawk.** The Barn Owl now sits on this branch and keeps its nine.
+- Shared traits:
+  - **Hollow Bones** and **Talon Strike**: the owl's, now carried by all three
+  - **Keen Sight** (see far, Mark a foe; or pick any foe to hunt) and **Stoop** (drop onto a foe from up to 3+E away): eagle and hawk
+- Traits of each one's own:
+  - eagle: Soar, Talon Lock, Eagle Scream, Fish Snatch and Nest Guard
+  - hawk: Sky Hyperspeed (the cheetah's exact run of 4, over hazards too), Kite, Talon Bind, Mantle and Hedge Chase
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (240 drafted runs, look-ahead player):
+  - Inside this release, runs with an eagle or a hawk win 32% and runs without one 31%.
+  - A first pass had them at 40%, so Keen Sight's Spot lost its +1 and Eagle Scream's party bonus is a flat +1.
+  - Main wins 87 and this release 75; the squads differ between the builds, since they are drawn from the clade list.
+
 ## 2.54.0 — 2026-11-17 — the pouched and egg-laying
 
 The ninth branch of the tree (`docs/design/11-clades.md`): three painted animals, each with nine traits.
