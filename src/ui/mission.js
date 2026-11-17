@@ -610,7 +610,7 @@
         const elC = EL[(c.E && c.E.elt) || c.el].color;
         const title = `<div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>`;
         if (onTrack)
-          return `<div class="hcard cooling" style="--c:${elC}">${U.cardArt(c, asleep)}${title}<div class="small dim back">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
+          return `<div class="hcard cooling" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}<div class="small dim back">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
         const fb = (fk) => {
           const f = c[fk];
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
@@ -618,7 +618,7 @@
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
           return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
-        return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep)}${title}${fb('P')}${fb('E')}</div>`;
+        return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
       })
       .join('');
     const gear = h.gear

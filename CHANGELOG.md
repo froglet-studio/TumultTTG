@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.67.1 — 2026-11-17 — every clade drawn
+
+- **Icons.** The 75 clades added since 2.42 now have drawn icons in the same language as the first twelve: flat, angular silhouettes on the 24-unit grid, with cuts for eyes and markings. Until now they fell back to emoji on cards, in the codex and in draft packs. A build test now requires an icon for every clade.
+- **Shared traits name your clade.** A card shared across clades named the clade it was first written for, so Hollow Bones on a Blue-Footed Booby said "Barn Owl". Cards now name the clade the pilot carries them through, in draft packs, training, the hand and the codex (`U.cladeIn`). Branch traits still name their branch.
+
 ## 2.67.0 — 2026-11-17 — the pre-made heroes are painted pilots
 
 With all 21 branches built, each pre-made hero is now a painted Cosmic Shore pilot: that pilot's name, pair of clades and art (Garrett chose the pilots' names). Each keeps the old hero's title and role; the ids stay the old names so saved canon notes still match.

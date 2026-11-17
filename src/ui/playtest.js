@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.67.0',
+    version: '2.67.1',
     items: [
+      {
+        text: 'Every clade now has a drawn icon in the same flat style as the first twelve, so no card, codex entry or draft pack shows an emoji any more. A shared trait now names the clade your pilot carries it through: Hollow Bones on a Blue-Footed Booby says Booby, not Barn Owl. Does any icon not read as its animal?',
+      },
       {
         text: 'Every pre-made hero is now a painted pilot, with that pilot’s name, clades and art: Rosh (octopus and raven), Ekora (otter and eel), Nedira (hedgehog and tortoise), Echo (mouse and owl), Karenth (axolotl and koi) and Slingshot (flamingo and mantis shrimp). Each keeps the role and title of the hero it replaces. Does each one play the role its title promises?',
         cards: ['rav_mob', 'wea_musk', 'heh_spines', 'mou_tiny', 'koi_gold', 'msh_punch'],
