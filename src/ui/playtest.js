@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.59.0',
+    version: '2.60.0',
     items: [
+      {
+        text: 'Three lizards join the gecko on its branch: Chameleon, Basilisk and Horned Lizard. All four share the gecko’s Tail Autotomy, Scaled Hide and Solar Basking. The chameleon shoots its tongue and watches two ways at once, the basilisk runs across water, and the horned lizard squirts blood, raises spikes and flattens into the sand. Does each one feel like itself?',
+      },
       {
         text: 'The last two birds join: Ostrich and Wild Turkey. Both share Ground Sprint; the turkey shares the peacock’s Display Fan, Alarm Call and Spur, and the ostrich kicks and watches like the hoofed animals (Kick and Wide Eyes). The ostrich hides flat and guards a shared nest; the turkey gobbles, keeps watch and flies up to roost. Do the ground birds feel like birds?',
       },

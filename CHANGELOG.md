@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.60.0 — 2026-11-17 — the lizards
+
+The fifteenth branch of the tree (`docs/design/11-clades.md`): three painted lizards join the Gecko, each with nine traits.
+
+- **Chameleon, Basilisk and Horned Lizard.** The Gecko now sits on this branch and keeps its nine.
+- Shared traits:
+  - all four lizards carry the gecko's **Tail Autotomy**, **Scaled Hide** and **Solar Basking**
+  - Solar Basking will go to every reptile; the crocodile and the tortoise come next
+- Traits of each one's own:
+  - chameleon: Turret Eyes, Colour Shift, Ballistic Tongue, Grip Feet, Slow Sway and Casque
+  - basilisk: Water Run, Crest Flare, Dive, Lizard Sprint, Two-Legged and Branch Drop
+  - horned lizard: Blood Squirt, Spiked Crown, Sand Shimmy, Ant Feast, Flatten and Puff Up
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (240 drafted runs, look-ahead player): inside this release, runs with a new lizard win 34% (44 runs) and runs without one 29%. The gap is within the noise for so few runs.
+
 ## 2.59.0 — 2026-11-17 — the ground birds
 
 The fourteenth branch of the tree (`docs/design/11-clades.md`): the last two painted birds, each with nine traits.
