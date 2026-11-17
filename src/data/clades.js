@@ -2285,4 +2285,152 @@
       fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'hidden', dur:1, party:true, radius:1},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2}],
       txt:(P,E)=>`Leave a decoy for ${1+E} rounds; you and an ally beside you are Hidden 1, and your next hit deals +${1+h(E)}.` },
     'Which one? All of them.');
+  /* ───────────────────────── SEABIRDS ─────────────────────────
+     puffin · pelican · blue-footed booby. Every bird's Hollow Bones; every seabird's Plunge Dive, Waterproof and
+     Salt Gland. The puffin carries the jerboa's Burrowing, the pelican the shoebill's Big Bill. */
+  const SEABIRDS = ['puffin','pelican','booby'];
+  S('puffin', { name: 'Atlantic Puffin', lean: 'S/C', branch: 'Seabirds', icon: '🐧',
+    tagline: 'Flies underwater, digs its own burrow, and carries ten fish at once.' });
+  S('pelican', { name: 'Pelican', lean: 'M/T', branch: 'Seabirds', icon: '🦤',
+    tagline: 'A great glider with a bill that holds more than its belly. Fishes in a line with friends.' });
+  S('booby', { name: 'Blue-Footed Booby', lean: 'C/S', branch: 'Seabirds', icon: '🐦',
+    tagline: 'Clumsy on land, a dart from the sky. Shows off its bright blue feet.' });
+  T.shareTrait('owl_bones', ...SEABIRDS);
+  T.shareTrait('jer_burrow', 'puffin');
+  T.shareTrait('bil_big', 'pelican');
+
+  K(SEABIRDS,'sea_plunge','Plunge Dive','M',0,
+    { n:'Plunge', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Dive on a foe within 2 for ${2+P}, and stay under: Hidden 1.` },
+    { n:'Sky Dart', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Dart down beside a foe within ${3+E}, height included: melee ${3+E}, and hazards can't touch you this round.` },
+    'Wings back, into the water like a thrown spear.', 'Seabirds');
+  K(SEABIRDS,'sea_proof','Waterproof','T',0,
+    { n:'Oil Feathers', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Shield ${1+P} this round, and hazards can't touch you.` },
+    { n:'Sealed Coat', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2},{v:'statusImmune', dur:2},{v:'heal', n:1}],
+      txt:(P,E)=>`Shield ${1+E} for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1.` },
+    'Water runs off, and the cold with it.', 'Seabirds');
+  K(SEABIRDS,'sea_salt','Salt Gland','T',0,
+    { n:'Drink the Sea', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'cleanse'}],
+      txt:(P,E)=>`Heal ${1+P}, and shake off Anchored and Weakened.` },
+    { n:'Brine Out', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>1+E, party:true},{v:'hazardImmune', dur:2, party:true}],
+      txt:(P,E)=>`Both heroes heal 1 at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and ignore hazards for 2 rounds.` },
+    'It drinks the ocean and sneezes out the salt.', 'Seabirds');
+
+  // Puffin: Hollow Bones, Plunge Dive, Waterproof, Salt Gland, Burrowing, and these four
+  K(['puffin'],'puf_wingdive','Wingdive','S',0,
+    { n:'Fly Underwater', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Fly under the surface ${2+P}, and stay Hidden 1.` },
+    { n:'Deep Wingbeat', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'empower', val:1, uses:1, dur:2}],
+      txt:(P,E)=>`Come up anywhere within ${2+E}; Hidden ${1+h(E)} even if you move, and your next hit deals +1.` },
+    'The same wings, in a thicker sky.');
+  K(['puffin'],'puf_beakful','Beakful','C',0,
+    { n:'Catch', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Melee ${1+P} and heal 1; there is room for more: your next hit this turn deals +1.` },
+    { n:'Ten Fish', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'}],
+      txt:(P,E)=>`Share the catch: both heroes heal ${1+E}, and your ally gains 1 AP next turn.` },
+    'A spiny tongue holds the first fish while it catches the tenth.');
+  K(['puffin'],'puf_cliff','Cliff Launch','S',0,
+    { n:'Drop Off', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Drop off the edge and fly ${2+P}, over foes; your next hit this turn deals +1.` },
+    { n:'Cliff Top', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Land on any node within ${3+E}, height included; both heroes hold Shield 1 this round.` },
+    'Too heavy to take off from flat ground, so it lives on cliffs.');
+  K(['puffin'],'puf_bill','Bright Bill','C',0,
+    { n:'Flash', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'mark'}],
+      txt:(P,E)=>`Flash your bill at a foe within 3: it is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'} and Marked (the next hit on it deals +2).` },
+    { n:'Breeding Colours', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'heal', n:1, target:'ally'}],
+      txt:(P,E)=>`Both heroes' next hit deals +${1+E}, and your ally heals 1.` },
+    'Orange for the season, then it falls off.');
+
+  // Pelican: Hollow Bones, Plunge Dive, Waterproof, Salt Gland, Big Bill, and these four
+  K(['pelican'],'pel_scoop','Pouch Scoop','M',0,
+    { n:'Scoop', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${2+P}, and it is tangled in your pouch: Weakened 1 this round.` },
+    { n:'Gulp', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E), held:true},{v:'heal', n:1}],
+      txt:(P,E)=>`Melee ${3+E} and hold it in your pouch: Anchored ${1+h(E)}; heal 1.` },
+    'Three gallons of water and whatever was in it.');
+  K(['pelican'],'pel_line','Fishing Line','C',0,
+    { n:'Line Up', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Your ally moves ${1+P}, where you choose, and their next hit deals +1.` },
+    { n:'Drive the Shoal', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'force', kind:'pull', n:2},{v:'weaken', val:1, dur:1},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Drive a foe within 3 two nodes toward you; it is Weakened 1 this round, and both heroes' next hit deals +${1+h(E)}.` },
+    'A row of pelicans, beating the water, herding the fish.');
+  K(['pelican'],'pel_glide','Long Glide','S',0,
+    { n:'Glide', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+h(P), ignoreFoes:true}],
+      txt:(P,E)=>`Glide ${3+h(P)}, over foes.` },
+    { n:'Wave Ride', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Ride the air over a wave to any node within ${3+E}; see within ${2+E}, and ignore hazards this round.` },
+    'An inch above the swell, and never a wingbeat.');
+  K(['pelican'],'pel_crash','Pelican Crash','M',0,
+    { n:'Crash Down', ap:1, el:0, cd:2, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+P, ifAdjacent:true}],
+      txt:(P,E)=>`Crash down up to 2 toward a foe within 3; if you end beside it, melee ${3+P}.` },
+    { n:'Belly Flop', ap:2, el:1, cd:3, dur:0, tgt:'foe_adj_all',
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1, area:true, radius:1}],
+      txt:(P,E)=>`Land on everything at once: every foe beside you takes ${2+E} and falls back 1.` },
+    'Not graceful. Not meant to be.');
+
+  // Blue-footed booby: Hollow Bones, Plunge Dive, Waterproof, Salt Gland, and these five
+  K(['booby'],'boo_feet','Blue Feet Dance','C',0,
+    { n:'Strut', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:1}],
+      txt:(P,E)=>`Lift each blue foot in turn: foes beside you are Weakened 1, and your next hit this turn deals +${1+h(P)}.` },
+    { n:'Sky Point', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'heal', n:1, party:true}],
+      txt:(P,E)=>`Point your bill at the sky and whistle: both heroes heal 1 and deal +${1+E} on their next hit.` },
+    'The bluer the feet, the better the fisher.');
+  K(['booby'],'boo_shoal','Shoal Chase','S',0,
+    { n:'Chase', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
+      txt:(P,E)=>`Chase up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
+    { n:'Group Dive', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Dive beside a foe within ${3+E} and hit it for ${2+E}; your ally's next hit deals +1.` },
+    'Dozens at once, all into the same shoal.');
+  K(['booby'],'boo_colony','Colony','T',0,
+    { n:'Close Ranks', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round.` },
+    { n:'Ten Thousand Eyes', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true},{v:'reveal', radius:99, dur:1}],
+      txt:(P,E)=>`See the whole board this round, and both heroes hold Shield ${1+E} for 2 rounds.` },
+    'An island white with birds, and every one watching.');
+  K(['booby'],'boo_nest','Ground Nest','T',0,
+    { n:'Ring of Guano', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>2+h(P), dur:1}],
+      txt:(P,E)=>`Sit tight on the nest: Shield ${2+h(P)} this round, and nothing can push or pull you.` },
+    { n:'Hold the Nest', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
+      txt:(P,E)=>`Shield ${1+h(E)} for 2 rounds, and the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+    'No nest at all: a ring on bare ground, defended.');
+  K(['booby'],'boo_charm','Clumsy Charm','C',0,
+    { n:'Pratfall', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Trip over your own feet: a foe within 3 is Weakened ${1+h(P)} this round, laughing, and you heal 1.` },
+    { n:'Disarming', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'mark'},{v:'studied', n:1}],
+      txt:(P,E)=>`A foe within 3 is Weakened ${1+h(E)} for 2 rounds and Marked, and your hits on it deal +1.` },
+    'They named it for a fool. It was not the fool.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

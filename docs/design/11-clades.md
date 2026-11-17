@@ -1,6 +1,6 @@
 # 11 · Clades for every painted animal
 
-*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), the Dogs and hyenas and Weasel kin (2.49.0), the Sea mammals (2.50.0), the Hoofed animals (2.51.0), the Gnawers (2.52.0), the Armoured and slow (2.53.0), the Pouched and egg-laying (2.54.0), the Birds of prey and owls (2.55.0), and the Waders (2.56.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
+*Status: the sharing rule is built (2.42.0, `docs/reference/RUN_AND_ECONOMY.md`); the Primates (2.43.0), the Cats (2.47.0), the Dogs and hyenas and Weasel kin (2.49.0), the Sea mammals (2.50.0), the Hoofed animals (2.51.0), the Gnawers (2.52.0), the Armoured and slow (2.53.0), the Pouched and egg-laying (2.54.0), the Birds of prey and owls (2.55.0), the Waders (2.56.0), and the Seabirds (2.57.0) are built. Every other branch below is a proposal until it ships. Garrett's direction (2026-11-16): every animal painted on a Cosmic Shore pilot becomes a clade, all 80 of them.*
 
 ## The rule
 
@@ -31,7 +31,7 @@ One pull request per branch, each with its audit and simulation numbers.
 | Pouched and egg-laying (2.54) | kangaroo, opossum, platypus |
 | Birds of prey and owls (2.55) | eagle, hawk, owl |
 | Waders (2.56) | crane, heron, egret, ibis, flamingo, shoebill |
-| Seabirds | pelican, puffin, booby |
+| Seabirds (2.57) | pelican, puffin, booby |
 | Perching and bright birds | raven, parrot, toucan, hummingbird, peacock |
 | Ground birds | ostrich, turkey |
 | Lizards | gecko, chameleon, basilisk, horned_lizard |

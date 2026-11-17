@@ -2751,3 +2751,150 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Blend In* · 1 AP · CD 1 — Lose yourself in the flock: you and an ally beside you are Hidden 1, and you heal 1.
 - *Eth — A Thousand Pink* · 1 AP + 1 Charge · CD 3 — Leave a decoy for 2 rounds; you and an ally beside you are Hidden 1, and your next hit deals +1. *(P3/E3: Leave a decoy for 4 rounds; you and an ally beside you are Hidden 1, and your next hit deals +2.)*
+
+## 56 · Atlantic Puffin — leans S/C
+
+*Flies underwater, digs its own burrow, and carries ten fish at once.*
+
+**Burrowing** · Space · `jer_burrow`
+
+- *Phys — Dig* · 2 AP · CD 2 — Dig in: Hidden 1 and Shield 1. *(P3: Dig in: Hidden 2 and Shield 1.)*
+- *Eth — Phase-tunnel* · 2 AP + 1 Space · CD 4 — Tunnel through anything to a node within 3 and surface Hidden. *(P3/E3: Tunnel through anything to a node within 5 and surface Hidden.)*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Plunge Dive** · Mass · `sea_plunge`
+
+- *Phys — Plunge* · 1 AP · CD 1 — Dive on a foe within 2 for 2, and stay under: Hidden 1. *(P3: Dive on a foe within 2 for 5, and stay under: Hidden 1.)*
+- *Eth — Sky Dart* · 1 AP + 1 Mass · CD 3 — Dart down beside a foe within 4, height included: melee 4, and hazards can't touch you this round. *(P3/E3: Dart down beside a foe within 6, height included: melee 6, and hazards can't touch you this round.)*
+
+**Waterproof** · Time · `sea_proof`
+
+- *Phys — Oil Feathers* · 1 AP · CD 1 — Shield 1 this round, and hazards can't touch you. *(P3: Shield 4 this round, and hazards can't touch you.)*
+- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1.)*
+
+**Salt Gland** · Time · `sea_salt`
+
+- *Phys — Drink the Sea* · 1 AP · CD 1 — Heal 1, and shake off Anchored and Weakened. *(P3: Heal 4, and shake off Anchored and Weakened.)*
+- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards for 2 rounds. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards for 2 rounds.)*
+
+**Wingdive** · Space · `puf_wingdive`
+
+- *Phys — Fly Underwater* · 1 AP · CD 1 — Fly under the surface 2, and stay Hidden 1. *(P3: Fly under the surface 5, and stay Hidden 1.)*
+- *Eth — Deep Wingbeat* · 1 AP + 1 Space · CD 3 — Come up anywhere within 3; Hidden 1 even if you move, and your next hit deals +1. *(P3/E3: Come up anywhere within 5; Hidden 2 even if you move, and your next hit deals +1.)*
+
+**Beakful** · Charge · `puf_beakful`
+
+- *Phys — Catch* · 1 AP · CD 1 — Melee 1 and heal 1; there is room for more: your next hit this turn deals +1. *(P3: Melee 4 and heal 1; there is room for more: your next hit this turn deals +1.)*
+- *Eth — Ten Fish* · 1 AP + 1 Charge · CD 4 — Share the catch: both heroes heal 2, and your ally gains 1 AP next turn. *(P3/E3: Share the catch: both heroes heal 4, and your ally gains 1 AP next turn.)*
+
+**Cliff Launch** · Space · `puf_cliff`
+
+- *Phys — Drop Off* · 1 AP · CD 1 — Drop off the edge and fly 2, over foes; your next hit this turn deals +1. *(P3: Drop off the edge and fly 5, over foes; your next hit this turn deals +1.)*
+- *Eth — Cliff Top* · 1 AP + 1 Space · CD 3 — Land on any node within 4, height included; both heroes hold Shield 1 this round. *(P3/E3: Land on any node within 6, height included; both heroes hold Shield 1 this round.)*
+
+**Bright Bill** · Charge · `puf_bill`
+
+- *Phys — Flash* · 1 AP · CD 1 — Flash your bill at a foe within 3: it is Weakened 1 for 1 round and Marked (the next hit on it deals +2). *(P3: Flash your bill at a foe within 3: it is Weakened 1 for 2 rounds and Marked (the next hit on it deals +2).)*
+- *Eth — Breeding Colours* · 1 AP + 1 Charge · CD 3 — Both heroes' next hit deals +2, and your ally heals 1. *(P3/E3: Both heroes' next hit deals +4, and your ally heals 1.)*
+
+## 57 · Pelican — leans M/T
+
+*A great glider with a bill that holds more than its belly. Fishes in a line with friends.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Big Bill** · Mass · `bil_big`
+
+- *Phys — Bill Grab* · 1 AP · CD 1 — Grab a foe within 2: it takes 1 and is hauled 1 toward you. *(P3: Grab a foe within 2: it takes 4 and is hauled 1 toward you.)*
+- *Eth — Clamp Bill* · 1 AP + 1 Mass · CD 3 — Clamp a foe within 2: it takes 3, is Anchored 1, and is Weakened 1 this round. *(P3/E3: Clamp a foe within 2: it takes 5, is Anchored 2, and is Weakened 1 this round.)*
+
+**Plunge Dive** · Mass · `sea_plunge`
+
+- *Phys — Plunge* · 1 AP · CD 1 — Dive on a foe within 2 for 2, and stay under: Hidden 1. *(P3: Dive on a foe within 2 for 5, and stay under: Hidden 1.)*
+- *Eth — Sky Dart* · 1 AP + 1 Mass · CD 3 — Dart down beside a foe within 4, height included: melee 4, and hazards can't touch you this round. *(P3/E3: Dart down beside a foe within 6, height included: melee 6, and hazards can't touch you this round.)*
+
+**Waterproof** · Time · `sea_proof`
+
+- *Phys — Oil Feathers* · 1 AP · CD 1 — Shield 1 this round, and hazards can't touch you. *(P3: Shield 4 this round, and hazards can't touch you.)*
+- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1.)*
+
+**Salt Gland** · Time · `sea_salt`
+
+- *Phys — Drink the Sea* · 1 AP · CD 1 — Heal 1, and shake off Anchored and Weakened. *(P3: Heal 4, and shake off Anchored and Weakened.)*
+- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards for 2 rounds. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards for 2 rounds.)*
+
+**Pouch Scoop** · Mass · `pel_scoop`
+
+- *Phys — Scoop* · 1 AP · CD 1 — Melee 2, and it is tangled in your pouch: Weakened 1 this round. *(P3: Melee 5, and it is tangled in your pouch: Weakened 1 this round.)*
+- *Eth — Gulp* · 1 AP + 1 Mass · CD 3 — Melee 4 and hold it in your pouch: Anchored 1; heal 1. *(P3/E3: Melee 6 and hold it in your pouch: Anchored 2; heal 1.)*
+
+**Fishing Line** · Charge · `pel_line`
+
+- *Phys — Line Up* · 1 AP · CD 1 — Your ally moves 1, where you choose, and their next hit deals +1. *(P3: Your ally moves 4, where you choose, and their next hit deals +1.)*
+- *Eth — Drive the Shoal* · 1 AP + 1 Charge · CD 3 — Drive a foe within 3 two nodes toward you; it is Weakened 1 this round, and both heroes' next hit deals +1. *(P3/E3: Drive a foe within 3 two nodes toward you; it is Weakened 1 this round, and both heroes' next hit deals +2.)*
+
+**Long Glide** · Space · `pel_glide`
+
+- *Phys — Glide* · 1 AP · CD 1 — Glide 3, over foes. *(P3: Glide 4, over foes.)*
+- *Eth — Wave Ride* · 1 AP + 1 Space · CD 3 — Ride the air over a wave to any node within 4; see within 3, and ignore hazards this round. *(P3/E3: Ride the air over a wave to any node within 6; see within 5, and ignore hazards this round.)*
+
+**Pelican Crash** · Mass · `pel_crash`
+
+- *Phys — Crash Down* · 1 AP · CD 2 — Crash down up to 2 toward a foe within 3; if you end beside it, melee 3. *(P3: Crash down up to 2 toward a foe within 3; if you end beside it, melee 6.)*
+- *Eth — Belly Flop* · 2 AP + 1 Mass · CD 3 — Land on everything at once: every foe beside you takes 3 and falls back 1. *(P3/E3: Land on everything at once: every foe beside you takes 5 and falls back 1.)*
+
+## 58 · Blue-Footed Booby — leans C/S
+
+*Clumsy on land, a dart from the sky. Shows off its bright blue feet.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Plunge Dive** · Mass · `sea_plunge`
+
+- *Phys — Plunge* · 1 AP · CD 1 — Dive on a foe within 2 for 2, and stay under: Hidden 1. *(P3: Dive on a foe within 2 for 5, and stay under: Hidden 1.)*
+- *Eth — Sky Dart* · 1 AP + 1 Mass · CD 3 — Dart down beside a foe within 4, height included: melee 4, and hazards can't touch you this round. *(P3/E3: Dart down beside a foe within 6, height included: melee 6, and hazards can't touch you this round.)*
+
+**Waterproof** · Time · `sea_proof`
+
+- *Phys — Oil Feathers* · 1 AP · CD 1 — Shield 1 this round, and hazards can't touch you. *(P3: Shield 4 this round, and hazards can't touch you.)*
+- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1.)*
+
+**Salt Gland** · Time · `sea_salt`
+
+- *Phys — Drink the Sea* · 1 AP · CD 1 — Heal 1, and shake off Anchored and Weakened. *(P3: Heal 4, and shake off Anchored and Weakened.)*
+- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards for 2 rounds. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards for 2 rounds.)*
+
+**Blue Feet Dance** · Charge · `boo_feet`
+
+- *Phys — Strut* · 1 AP · CD 1 — Lift each blue foot in turn: foes beside you are Weakened 1, and your next hit this turn deals +1. *(P3: Lift each blue foot in turn: foes beside you are Weakened 1, and your next hit this turn deals +2.)*
+- *Eth — Sky Point* · 1 AP + 1 Charge · CD 3 — Point your bill at the sky and whistle: both heroes heal 1 and deal +2 on their next hit. *(P3/E3: Point your bill at the sky and whistle: both heroes heal 1 and deal +4 on their next hit.)*
+
+**Shoal Chase** · Space · `boo_shoal`
+
+- *Phys — Chase* · 1 AP · CD 1 — Chase up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Chase up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Group Dive* · 1 AP + 1 Space · CD 3 — Dive beside a foe within 4 and hit it for 3; your ally's next hit deals +1. *(P3/E3: Dive beside a foe within 6 and hit it for 5; your ally's next hit deals +1.)*
+
+**Colony** · Time · `boo_colony`
+
+- *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round. *(P3: You and an ally beside you hold Shield 4 this round.)*
+- *Eth — Ten Thousand Eyes* · 1 AP + 1 Time · CD 4 — See the whole board this round, and both heroes hold Shield 2 for 2 rounds. *(P3/E3: See the whole board this round, and both heroes hold Shield 4 for 2 rounds.)*
+
+**Ground Nest** · Time · `boo_nest`
+
+- *Phys — Ring of Guano* · 1 AP · CD 1 — Sit tight on the nest: Shield 2 this round, and nothing can push or pull you. *(P3: Sit tight on the nest: Shield 3 this round, and nothing can push or pull you.)*
+- *Eth — Hold the Nest* · 1 AP + 1 Time · CD 4 — Shield 1 for 2 rounds, and the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Shield 2 for 2 rounds, and the next foe to hit you in melee takes 5 and is pushed 1.)*
+
+**Clumsy Charm** · Charge · `boo_charm`
+
+- *Phys — Pratfall* · 1 AP · CD 1 — Trip over your own feet: a foe within 3 is Weakened 1 this round, laughing, and you heal 1. *(P3: Trip over your own feet: a foe within 3 is Weakened 2 this round, laughing, and you heal 1.)*
+- *Eth — Disarming* · 1 AP + 1 Charge · CD 3 — A foe within 3 is Weakened 1 for 2 rounds and Marked, and your hits on it deal +1. *(P3/E3: A foe within 3 is Weakened 2 for 2 rounds and Marked, and your hits on it deal +1.)*

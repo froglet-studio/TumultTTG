@@ -410,6 +410,27 @@
       onward: ["\"Salt in {PLACE}?\" {A} asks. \"I can live there. Nobody else can.\"", "\"{THREAT},\" {A} says. \"We go together, or not at all.\""],
       reply: ["{A} honks.", "\"Yes,\" {A} says, and shifts to the other leg.", "{A} turns their head with {B}'s."],
     },
+    puffin: {
+      win: ["{A} lines up a beakful of fish, very neatly. \"Done.\"", "\"I flew under it,\" {A} says. \"It never looks under.\""],
+      close: ["{A} disappears into a burrow and does not come out for a while.", "\"I could not get off the ground,\" {A} says. \"Flat places. I hate flat places.\""],
+      quiet: ["{A} digs a burrow beside camp, just in case.", "{A} brings {B} a fish, then another, then eight more."],
+      onward: ["\"Cliffs in {PLACE}?\" {A} asks hopefully.", "\"{THREAT},\" {A} says. \"Fine. I can go under it.\""],
+      reply: ["{A} waggles their bright bill.", "\"Mm-hm,\" {A} says.", "{A} bobs their head at {B}."],
+    },
+    pelican: {
+      win: ["{A} gulps, and their pouch goes quiet. \"That is that.\"", "\"It fit,\" {A} says, surprised. \"Most things fit.\""],
+      close: ["{A} glides off to sit alone on a post and says nothing.", "\"I crashed,\" {A} says. \"I meant to crash, but not like that.\""],
+      quiet: ["{A} glides along the shore at dusk, one inch above the water.", "{A} offers {B} something from their pouch. {B} declines."],
+      onward: ["\"Water in {PLACE}?\" {A} asks. \"Then we fish in a line.\"", "\"{THREAT},\" {A} says. \"Is it bigger than my bill?\""],
+      reply: ["{A} clacks their bill.", "\"Hm,\" {A} says.", "{A} shakes out their pouch."],
+    },
+    booby: {
+      win: ["{A} lifts one blue foot, then the other, very proud. \"Did you see?\"", "\"Everyone laughs at me,\" {A} says. \"Then I dive.\""],
+      close: ["{A} sits on their ring of ground and will not be moved.", "\"I tripped,\" {A} admits. \"On land I always trip.\""],
+      quiet: ["{A} shows {B} their feet, at length.", "{A} whistles at the sky for an hour."],
+      onward: ["\"{PLACE},\" {A} says. \"Fish there? I bet there are fish there.\"", "\"{THREAT},\" {A} says, and stamps a blue foot."],
+      reply: ["{A} whistles.", "\"Yes!\" {A} says.", "{A} lifts a blue foot at {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

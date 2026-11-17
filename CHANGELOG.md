@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.57.0 — 2026-11-17 — the seabirds
+
+The twelfth branch of the tree (`docs/design/11-clades.md`): three painted seabirds, each with nine traits.
+
+- **Atlantic Puffin, Pelican and Blue-Footed Booby.**
+- Shared traits:
+  - **Hollow Bones**: every bird
+  - **Plunge Dive**, **Waterproof** and **Salt Gland**: all three
+  - the puffin carries the jerboa's **Burrowing**, the pelican the shoebill's **Big Bill**
+- Traits of each one's own:
+  - puffin: Wingdive, Beakful, Cliff Launch and Bright Bill
+  - pelican: Pouch Scoop, Fishing Line, Long Glide and Pelican Crash
+  - booby: Blue Feet Dance, Shoal Chase, Colony, Ground Nest and Clumsy Charm
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (240 drafted runs, look-ahead player): inside this release, runs with a seabird win 23% and runs without one 30%. The seabirds make no run easier.
+
 ## 2.56.0 — 2026-11-17 — the waders
 
 The eleventh branch of the tree (`docs/design/11-clades.md`): six painted waders, each with nine traits.
