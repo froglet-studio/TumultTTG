@@ -480,6 +480,27 @@
       onward: ["\"{PLACE},\" {A} says. \"Somewhere high to roost, I hope.\"", "\"{THREAT},\" {A} says, and their head flushes red."],
       reply: ["{A} gobbles.", "\"Putt,\" {A} says.", "{A} turns one eye on {B}."],
     },
+    chameleon: {
+      win: ["{A} turns one eye to {B} and keeps the other on what is left. \"Done.\"", "\"It never saw me,\" {A} says, and goes green with pleasure."],
+      close: ["{A} goes dark grey and sits very still on a branch.", "\"It looked straight at me,\" {A} says. \"Nobody looks straight at me.\""],
+      quiet: ["{A} sways on a twig at the edge of camp, two eyes going two ways.", "{A} catches a fly with their tongue right past {B}'s ear."],
+      onward: ["\"{PLACE},\" {A} says. \"What colour is it?\"", "\"{THREAT},\" {A} says, and one eye swivels toward the road."],
+      reply: ["{A} shifts colour.", "\"Hm,\" {A} says, with one eye.", "{A} rocks gently, saying nothing."],
+    },
+    basilisk: {
+      win: ["{A} skids to a halt on the far bank, dripping. \"Again?\"", "\"I ran across the river,\" {A} says. \"It did not.\""],
+      close: ["{A} sits in the water up to the eyes and will not come out.", "\"I sank,\" {A} says. \"I never sink.\""],
+      quiet: ["{A} runs across the pond and back, twice, for no reason.", "{A} raises their crests at {B}, then lowers them, a little embarrassed."],
+      onward: ["\"Water in {PLACE}?\" {A} asks. \"Good. I run on water.\"", "\"{THREAT},\" {A} says. \"Can it swim? Can it run on water?\""],
+      reply: ["{A} flicks their crest.", "\"Ha,\" {A} says.", "{A} bobs their head at {B}."],
+    },
+    horned_lizard: {
+      win: ["{A} shakes the sand off their crown. \"It should have read the warnings.\"", "\"It bit,\" {A} says. \"Then it stopped biting.\""],
+      close: ["{A} lies flat in the sand until only their eyes show, and stays there.", "\"I squirted,\" {A} admits. \"I hate squirting.\""],
+      quiet: ["{A} eats ants by the trail for an hour, one at a time.", "{A} sits on a warm stone beside {B}, flat as a leaf."],
+      onward: ["\"Is {PLACE} sandy?\" {A} asks. \"Please.\"", "\"{THREAT},\" {A} says, and puffs up a little."],
+      reply: ["{A} puffs up, briefly.", "\"Mm,\" {A} says.", "{A} blinks slowly at {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

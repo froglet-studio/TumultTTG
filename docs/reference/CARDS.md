@@ -3241,3 +3241,150 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Go Red* · 1 AP · CD 1 — Flush red, white and blue at a foe within 2: it takes 1 and is Weakened 1 this round. *(P3: Flush red, white and blue at a foe within 2: it takes 4 and is Weakened 2 this round.)*
 - *Eth — Full Colour* · 1 AP + 1 Charge · CD 3 — Go full colour: both heroes shake off Anchored and Weakened, and their next hit deals +2. *(P3/E3: Go full colour: both heroes shake off Anchored and Weakened, and their next hit deals +4.)*
+
+## 66 · Chameleon — leans T/C
+
+*Two eyes that look two ways, a tongue longer than its body, and every colour it likes.*
+
+**Tail Autotomy** · Space · `gec_autotomy`
+
+- *Phys — Drop Tail* · 1 AP · CD 2 — Drop a thrashing tail (decoy 1), escape every hold, step 1. *(P3: Drop a thrashing tail (decoy 2), escape every hold, step 1.)*
+- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy while you blink 2 and go Hidden. *(P3/E3: The discarded "you" stays put as a decoy while you blink 4 and go Hidden.)*
+
+**Solar Basking** · Charge · `gec_basking`
+
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
+
+**Scaled Hide** · Mass · `gec_hide`
+
+- *Phys — Scales* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
+- *Eth — Plating* · 1 AP + 1 Mass · CD 3 — Harden into plating: Shield 2 against everything for 2 rounds. *(P3/E3: Harden into plating: Shield 5 against everything for 4 rounds.)*
+
+**Turret Eyes** · Time · `cha_turret`
+
+- *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+
+**Colour Shift** · Charge · `cha_colour`
+
+- *Phys — Fade* · 1 AP · CD 1 — Shift to the colour behind you: Hidden 1, and Shield 1 this round. *(P3: Shift to the colour behind you: Hidden 1, and Shield 2 this round.)*
+- *Eth — Flash Colours* · 1 AP + 1 Charge · CD 3 — Flare dark, then vanish: foes beside you are Weakened 1; Hidden 1 even if you move, and your next hit deals +2. *(P3/E3: Flare dark, then vanish: foes beside you are Weakened 1; Hidden 2 even if you move, and your next hit deals +4.)*
+
+**Ballistic Tongue** ★ · Mass · `cha_tongue`
+
+- *Phys — Tongue* · 1 AP · CD 1 — Shoot your tongue at a foe within 3: it takes 1 and is reeled 1 toward you. *(P3: Shoot your tongue at a foe within 3: it takes 4 and is reeled 1 toward you.)*
+- *Eth — Reel In* · 1 AP + 1 Mass · CD 3 — Reel a foe within 3 two nodes toward you; if it arrives beside you, melee 3, and it is Anchored 1. *(P3/E3: Reel a foe within 3 two nodes toward you; if it arrives beside you, melee 5, and it is Anchored 1.)*
+
+**Grip Feet** · Space · `cha_grip`
+
+- *Phys — Grip* · 1 AP · CD 1 — Climb onto any node within 1, height included, and grip: nothing can push or pull you this round. *(P3: Climb onto any node within 4, height included, and grip: nothing can push or pull you this round.)*
+- *Eth — Branch Hold* · 1 AP + 1 Space · CD 3 — Hold on with all four feet and the tail: Shield 2 for 2 rounds; nothing can push or pull you, Weaken you or Root you for 2 rounds. *(P3/E3: Hold on with all four feet and the tail: Shield 4 for 2 rounds; nothing can push or pull you, Weaken you or Root you for 2 rounds.)*
+
+**Slow Sway** · Time · `cha_sway`
+
+- *Phys — Sway* · 1 AP · CD 1 — Rock like a leaf in the wind: move 1, setting off no traps, Hidden 1. *(P3: Rock like a leaf in the wind: move 4, setting off no traps, Hidden 1.)*
+- *Eth — Leaf in the Wind* · 1 AP + 1 Time · CD 4 — Hidden 2 even if you move, and reroll 1 banked die. *(P3/E3: Hidden 4 even if you move, and reroll 1 banked die.)*
+
+**Casque** · Mass · `cha_casque`
+
+- *Phys — Head Butt* · 1 AP · CD 1 — Butt with your helmet: melee 2, and push it 1. *(P3: Butt with your helmet: melee 5, and push it 1.)*
+- *Eth — Helmet Up* · 1 AP + 1 Mass · CD 3 — Shield 3 this round, and the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 5 this round, and the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+## 67 · Basilisk — leans S/M
+
+*Runs on two legs, and across water, faster than it can sink.*
+
+**Tail Autotomy** · Space · `gec_autotomy`
+
+- *Phys — Drop Tail* · 1 AP · CD 2 — Drop a thrashing tail (decoy 1), escape every hold, step 1. *(P3: Drop a thrashing tail (decoy 2), escape every hold, step 1.)*
+- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy while you blink 2 and go Hidden. *(P3/E3: The discarded "you" stays put as a decoy while you blink 4 and go Hidden.)*
+
+**Solar Basking** · Charge · `gec_basking`
+
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
+
+**Scaled Hide** · Mass · `gec_hide`
+
+- *Phys — Scales* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
+- *Eth — Plating* · 1 AP + 1 Mass · CD 3 — Harden into plating: Shield 2 against everything for 2 rounds. *(P3/E3: Harden into plating: Shield 5 against everything for 4 rounds.)*
+
+**Water Run** ★ · Space · `bas_water`
+
+- *Phys — Skitter* · 1 AP · CD 1 — Run 2, across water and hazards: they can't touch you this round. *(P3: Run 5, across water and hazards: they can't touch you this round.)*
+- *Eth — Walk on Water* · 1 AP + 1 Space · CD 3 — Run 4 across anything, past foes; ignore hazards for 2 rounds, and your next hit this turn deals +1. *(P3/E3: Run 6 across anything, past foes; ignore hazards for 2 rounds, and your next hit this turn deals +1.)*
+
+**Crest Flare** · Charge · `bas_crest`
+
+- *Phys — Flare* · 1 AP · CD 1 — Raise your crest at a foe within 2: Weakened 1 this round, and Marked (the next hit on it deals +2). *(P3: Raise your crest at a foe within 2: Weakened 2 this round, and Marked (the next hit on it deals +2).)*
+- *Eth — Full Sail* · 1 AP + 1 Charge · CD 3 — Raise every crest: both heroes' next hit deals +2, and foes beside you are Weakened 1 this round. *(P3/E3: Raise every crest: both heroes' next hit deals +4, and foes beside you are Weakened 1 this round.)*
+
+**Dive** · Space · `bas_dive`
+
+- *Phys — Plop* · 1 AP · CD 1 — Drop into the water 1 away: Hidden 1, and heal 1. *(P3: Drop into the water 4 away: Hidden 1, and heal 1.)*
+- *Eth — Stay Under* · 1 AP + 1 Space · CD 4 — Come up anywhere within 3; Hidden 1, and heal 2. *(P3/E3: Come up anywhere within 5; Hidden 2, and heal 4.)*
+
+**Lizard Sprint** · Space · `bas_sprint`
+
+- *Phys — Sprint* · 1 AP · CD 0 — Sprint 2. *(P3: Sprint 5.)*
+- *Eth — Burst* · 1 AP + 1 Space · CD 3 — Burst up to 3 toward a foe within 3; if you end beside it, melee 3; your next hit this turn deals +1. *(P3/E3: Burst up to 3 toward a foe within 3; if you end beside it, melee 5; your next hit this turn deals +1.)*
+
+**Two-Legged** · Mass · `bas_two`
+
+- *Phys — Rear Up* · 1 AP · CD 1 — Rear up and claw: melee 2, and the next hit on you is 1 less. *(P3: Rear up and claw: melee 5, and the next hit on you is 1 less.)*
+- *Eth — Run Them Down* · 1 AP + 1 Mass · CD 3 — Melee 4, push it 1, and take one free step. *(P3/E3: Melee 6, push it 1, and take one free step.)*
+
+**Branch Drop** · Time · `bas_drop`
+
+- *Phys — Let Go* · 1 AP · CD 1 — Let go of the branch: drop 1, over foes and hazards, and hold Shield 1 this round. *(P3: Let go of the branch: drop 4, over foes and hazards, and hold Shield 1 this round.)*
+- *Eth — Drop and Run* · 1 AP + 1 Time · CD 3 — Drop to any node within 3, landing running: ignore hazards this round, and gain 1 AP next turn. *(P3/E3: Drop to any node within 5, landing running: ignore hazards this round, and gain 1 AP next turn.)*
+
+## 68 · Horned Lizard — leans M/T
+
+*A flat spiked crown, sand-coloured, and blood it can squirt from its eyes.*
+
+**Tail Autotomy** · Space · `gec_autotomy`
+
+- *Phys — Drop Tail* · 1 AP · CD 2 — Drop a thrashing tail (decoy 1), escape every hold, step 1. *(P3: Drop a thrashing tail (decoy 2), escape every hold, step 1.)*
+- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy while you blink 2 and go Hidden. *(P3/E3: The discarded "you" stays put as a decoy while you blink 4 and go Hidden.)*
+
+**Solar Basking** · Charge · `gec_basking`
+
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
+
+**Scaled Hide** · Mass · `gec_hide`
+
+- *Phys — Scales* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
+- *Eth — Plating* · 1 AP + 1 Mass · CD 3 — Harden into plating: Shield 2 against everything for 2 rounds. *(P3/E3: Harden into plating: Shield 5 against everything for 4 rounds.)*
+
+**Blood Squirt** ★ · Charge · `hor_squirt`
+
+- *Phys — Squirt* · 1 AP · CD 2 — Squirt blood from your eye at a foe within 2: it reels back 1 and is Weakened 1 this round. *(P3: Squirt blood from your eye at a foe within 2: it reels back 1 and is Weakened 4 this round.)*
+- *Eth — Foul Taste* · 1 AP + 1 Charge · CD 4 — Squirt foul blood at a foe within 2: it reels back 2, is Weakened 1 for 2 rounds, and takes 1 at the start of its next 2 turns. *(P3/E3: Squirt foul blood at a foe within 2: it reels back 2, is Weakened 2 for 2 rounds, and takes 1 at the start of its next 2 turns.)*
+
+**Spiked Crown** · Mass · `hor_crown`
+
+- *Phys — Horns* · 1 AP · CD 1 — Melee 2; for this round, anything that hits you in melee takes 1. *(P3: Melee 5; for this round, anything that hits you in melee takes 1.)*
+- *Eth — Unswallowable* · 1 AP + 1 Mass · CD 3 — Raise every spike: for 2 rounds you hold Shield 1, and anything that hits you in melee takes 2. *(P3/E3: Raise every spike: for 2 rounds you hold Shield 2, and anything that hits you in melee takes 4.)*
+
+**Sand Shimmy** · Time · `hor_shimmy`
+
+- *Phys — Shimmy* · 1 AP · CD 1 — Shimmy into the sand: Hidden 1, and Shield 1 this round. *(P3: Shimmy into the sand: Hidden 1, and Shield 4 this round.)*
+- *Eth — Under the Sand* · 1 AP + 1 Time · CD 4 — Wriggle to a node within 2 under the sand: Hidden 1, and ignore hazards for 2 rounds. *(P3/E3: Wriggle to a node within 4 under the sand: Hidden 2, and ignore hazards for 2 rounds.)*
+
+**Ant Feast** · Time · `hor_ants`
+
+- *Phys — Lick Up* · 1 AP · CD 1 — Eat ants by the hundred: heal 1, and gain 1 AP next turn. *(P3: Eat ants by the hundred: heal 4, and gain 1 AP next turn.)*
+- *Eth — Whole Nest* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; the stings don't bother you: you can't be Weakened or Rooted for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; the stings don't bother you: you can't be Weakened or Rooted for 2 rounds.)*
+
+**Flatten** · Time · `hor_flat`
+
+- *Phys — Flatten* · 1 AP · CD 1 — Press flat to the ground: Shield 2 this round, and nothing can push or pull you. *(P3: Press flat to the ground: Shield 3 this round, and nothing can push or pull you.)*
+- *Eth — No Shadow* · 1 AP + 1 Time · CD 4 — So flat you cast no shadow: you and an ally beside you are Hidden 1, and both heroes hold Shield 2 this round. *(P3/E3: So flat you cast no shadow: you and an ally beside you are Hidden 1, and both heroes hold Shield 4 this round.)*
+
+**Puff Up** · Mass · `hor_puff`
+
+- *Phys — Puff* · 1 AP · CD 1 — Gulp air and swell: Shield 1 this round, and foes beside you are Weakened 1. *(P3: Gulp air and swell: Shield 4 this round, and foes beside you are Weakened 1.)*
+- *Eth — Too Big to Bite* · 1 AP + 1 Mass · CD 3 — Swell to twice your size: Shield 3 this round, every foe beside you is shoved back 1, and your next hit deals +1. *(P3/E3: Swell to twice your size: Shield 5 this round, every foe beside you is shoved back 1, and your next hit deals +1.)*

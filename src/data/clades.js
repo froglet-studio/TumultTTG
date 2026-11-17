@@ -2843,4 +2843,167 @@
       fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'cleanse', party:true}],
       txt:(P,E)=>`Go full colour: both heroes shake off Anchored and Weakened, and their next hit deals +${1+E}.` },
     'Its head changes colour with its mood.');
+  /* ───────────────────────── LIZARDS ─────────────────────────
+     gecko · chameleon · basilisk · horned lizard. The gecko's Tail Autotomy and Scaled Hide are every lizard's,
+     and its Solar Basking every reptile's (the crocodile and the tortoise will share it). */
+  T.SPECIES.gecko.branch = 'Lizards';
+  S('chameleon', { name: 'Chameleon', lean: 'T/C', branch: 'Lizards', icon: '🦎',
+    tagline: 'Two eyes that look two ways, a tongue longer than its body, and every colour it likes.' });
+  S('basilisk', { name: 'Basilisk', lean: 'S/M', branch: 'Lizards', icon: '🦎',
+    tagline: 'Runs on two legs, and across water, faster than it can sink.' });
+  S('horned_lizard', { name: 'Horned Lizard', lean: 'M/T', branch: 'Lizards', icon: '🦎',
+    tagline: 'A flat spiked crown, sand-coloured, and blood it can squirt from its eyes.' });
+  T.shareTrait('gec_autotomy', 'chameleon', 'basilisk', 'horned_lizard');
+  T.shareTrait('gec_hide', 'chameleon', 'basilisk', 'horned_lizard');
+  T.shareTrait('gec_basking', 'chameleon', 'basilisk', 'horned_lizard');
+
+  // Chameleon: Tail Autotomy, Scaled Hide, Solar Basking, and these six
+  K(['chameleon'],'cha_turret','Turret Eyes','T',0,
+    { n:'Two Ways', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:1, reflect:0},{v:'mark', nearest:true}],
+      txt:(P,E)=>`One eye forward, one back: see within ${2+P}, Mark the nearest foe, and the next hit on you is 1 less.` },
+    { n:'Lock Both Eyes', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +${1+E}.` },
+    'Each eye on its own turret, each turret on its own errand.');
+  K(['chameleon'],'cha_colour','Colour Shift','C',0,
+    { n:'Fade', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Shift to the colour behind you: Hidden 1, and Shield ${1+h(P)} this round.` },
+    { n:'Flash Colours', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Flare dark, then vanish: foes beside you are Weakened 1; Hidden ${1+h(E)} even if you move, and your next hit deals +${1+E}.` },
+    'Not for hiding, mostly: for talking.');
+  K(['chameleon'],'cha_tongue','Ballistic Tongue','M',2,
+    { n:'Tongue', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'force', kind:'pull', n:1}],
+      txt:(P,E)=>`Shoot your tongue at a foe within 3: it takes ${1+P} and is reeled 1 toward you.` },
+    { n:'Reel In', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'force', kind:'pull', n:2},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, ifAdjacent:true},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Reel a foe within 3 two nodes toward you; if it arrives beside you, melee ${2+E}, and it is Anchored 1.` },
+    'Out and back in a twentieth of a second.');
+  K(['chameleon'],'cha_grip','Grip Feet','S',0,
+    { n:'Grip', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Climb onto any node within ${1+P}, height included, and grip: nothing can push or pull you this round.` },
+    { n:'Branch Hold', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:2},{v:'shield', val:(P,E)=>1+E, dur:2},{v:'statusImmune', dur:2}],
+      txt:(P,E)=>`Hold on with all four feet and the tail: Shield ${1+E} for 2 rounds; nothing can push or pull you, Weaken you or Root you for 2 rounds.` },
+    'Feet like tongs, and a tail that holds on by itself.');
+  K(['chameleon'],'cha_sway','Slow Sway','T',0,
+    { n:'Sway', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'hidden', dur:1, canMove:true}],
+      txt:(P,E)=>`Rock like a leaf in the wind: move ${1+P}, setting off no traps, Hidden 1.` },
+    { n:'Leaf in the Wind', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+E, canMove:true},{v:'reroll', n:1}],
+      txt:(P,E)=>`Hidden ${1+E} even if you move, and reroll 1 banked die.` },
+    'Two steps forward, one back, like a leaf.');
+  K(['chameleon'],'cha_casque','Casque','M',0,
+    { n:'Head Butt', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Butt with your helmet: melee ${2+P}, and push it 1.` },
+    { n:'Helmet Up', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+E, dur:1},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
+      txt:(P,E)=>`Shield ${2+E} this round, and the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+    'A helmet of bone on top of its head.');
+
+  // Basilisk: Tail Autotomy, Scaled Hide, Solar Basking, and these six
+  K(['basilisk'],'bas_water','Water Run','S',2,
+    { n:'Skitter', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Run ${2+P}, across water and hazards: they can't touch you this round.` },
+    { n:'Walk on Water', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+E, ignoreFoes:true},{v:'hazardImmune', dur:2},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Run ${3+E} across anything, past foes; ignore hazards for 2 rounds, and your next hit this turn deals +1.` },
+    'Too fast to sink, for about four metres.');
+  K(['basilisk'],'bas_crest','Crest Flare','C',0,
+    { n:'Flare', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1},{v:'mark'}],
+      txt:(P,E)=>`Raise your crest at a foe within 2: Weakened ${1+h(P)} this round, and Marked (the next hit on it deals +2).` },
+    { n:'Full Sail', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Raise every crest: both heroes' next hit deals +${1+E}, and foes beside you are Weakened 1 this round.` },
+    'Three sails: head, back and tail.');
+  K(['basilisk'],'bas_dive','Dive','S',0,
+    { n:'Plop', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Drop into the water ${1+P} away: Hidden 1, and heal 1.` },
+    { n:'Stay Under', ap:1, el:1, cd:4, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:(P,E)=>1+h(E)},{v:'heal', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Come up anywhere within ${2+E}; Hidden ${1+h(E)}, and heal ${1+E}.` },
+    'Half an hour on one breath.');
+  K(['basilisk'],'bas_sprint','Lizard Sprint','S',0,
+    { n:'Sprint', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P}],
+      txt:(P,E)=>`Sprint ${2+P}.` },
+    { n:'Burst', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:3, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, ifAdjacent:true},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Burst up to 3 toward a foe within 3; if you end beside it, melee ${2+E}; your next hit this turn deals +1.` },
+    'Zero to top speed in one step.');
+  K(['basilisk'],'bas_two','Two-Legged','M',0,
+    { n:'Rear Up', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Rear up and claw: melee ${2+P}, and the next hit on you is 1 less.` },
+    { n:'Run Them Down', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:1},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Melee ${3+E}, push it 1, and take one free step.` },
+    'Up on the back legs, tail out behind.');
+  K(['basilisk'],'bas_drop','Branch Drop','T',0,
+    { n:'Let Go', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Let go of the branch: drop ${1+P}, over foes and hazards, and hold Shield 1 this round.` },
+    { n:'Drop and Run', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hazardImmune', dur:1},{v:'engine', kind:'ap', val:1, dur:1}],
+      txt:(P,E)=>`Drop to any node within ${2+E}, landing running: ignore hazards this round, and gain 1 AP next turn.` },
+    'Off the branch, into the river, across it, gone.');
+
+  // Horned lizard: Tail Autotomy, Scaled Hide, Solar Basking, and these six
+  K(['horned_lizard'],'hor_squirt','Blood Squirt','C',2,
+    { n:'Squirt', ap:1, el:0, cd:2, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:(P,E)=>1+P, dur:1},{v:'force', kind:'push', n:1}],
+      txt:(P,E)=>`Squirt blood from your eye at a foe within 2: it reels back 1 and is Weakened ${1+P} this round.` },
+    { n:'Foul Taste', ap:1, el:1, cd:4, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'dot', kind:'foul', val:1, dur:2},{v:'force', kind:'push', n:2}],
+      txt:(P,E)=>`Squirt foul blood at a foe within 2: it reels back 2, is Weakened ${1+h(E)} for 2 rounds, and takes 1 at the start of its next 2 turns.` },
+    'A metre of blood, from the eye, and it tastes terrible.');
+  K(['horned_lizard'],'hor_crown','Spiked Crown','M',0,
+    { n:'Horns', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'thorns', val:1, dur:1}],
+      txt:(P,E)=>`Melee ${2+P}; for this round, anything that hits you in melee takes 1.` },
+    { n:'Unswallowable', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
+      txt:(P,E)=>`Raise every spike: for 2 rounds you hold Shield ${1+h(E)}, and anything that hits you in melee takes ${1+E}.` },
+    'Snakes that swallow one sometimes die of it.');
+  K(['horned_lizard'],'hor_shimmy','Sand Shimmy','T',0,
+    { n:'Shimmy', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Shimmy into the sand: Hidden 1, and Shield ${1+P} this round.` },
+    { n:'Under the Sand', ap:1, el:1, cd:4, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+h(E)},{v:'hazardImmune', dur:2}],
+      txt:(P,E)=>`Wriggle to a node within ${1+E} under the sand: Hidden ${1+h(E)}, and ignore hazards for 2 rounds.` },
+    'A shuffle of the ribs, and only the eyes show.');
+  K(['horned_lizard'],'hor_ants','Ant Feast','T',0,
+    { n:'Lick Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'engine', kind:'ap', val:1, dur:1}],
+      txt:(P,E)=>`Eat ants by the hundred: heal ${1+P}, and gain 1 AP next turn.` },
+    { n:'Whole Nest', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:2}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; the stings don't bother you: you can't be Weakened or Rooted for 2 rounds.` },
+    'Harvester ants, thousands a day, venom and all.');
+  K(['horned_lizard'],'hor_flat','Flatten','T',0,
+    { n:'Flatten', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Press flat to the ground: Shield ${2+h(P)} this round, and nothing can push or pull you.` },
+    { n:'No Shadow', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:1, party:true, radius:1},{v:'shield', val:(P,E)=>1+E, dur:1, party:true}],
+      txt:(P,E)=>`So flat you cast no shadow: you and an ally beside you are Hidden 1, and both heroes hold Shield ${1+E} this round.` },
+    'Flat as a pancake, edges fringed so it casts no shadow.');
+  K(['horned_lizard'],'hor_puff','Puff Up','M',0,
+    { n:'Puff', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'weaken', val:1, dur:1, area:'adj'}],
+      txt:(P,E)=>`Gulp air and swell: Shield ${1+P} this round, and foes beside you are Weakened 1.` },
+    { n:'Too Big to Bite', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+E, dur:1},{v:'force', kind:'push', n:1, area:true, radius:1},{v:'empower', val:1, uses:1, dur:2}],
+      txt:(P,E)=>`Swell to twice your size: Shield ${2+E} this round, every foe beside you is shoved back 1, and your next hit deals +1.` },
+    'Twice the size, all of a sudden, and all spikes.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
