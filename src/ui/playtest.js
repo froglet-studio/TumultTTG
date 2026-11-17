@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.56.0',
+    version: '2.57.0',
     items: [
+      {
+        text: 'Three seabirds join: Atlantic Puffin, Pelican and Blue-Footed Booby. All three share Plunge Dive, Waterproof and Salt Gland (and every bird’s Hollow Bones). The puffin also burrows like the jerboa, and the pelican shares the shoebill’s Big Bill. The puffin flies underwater, the pelican herds foes for its partner, the booby dances and holds its nest. Which one did you enjoy most?',
+      },
       {
         text: 'Six waders join: Crane, Heron, Egret, Ibis, Shoebill and Flamingo. All six carry Hollow Bones, Wade and Long Legs; all but the flamingo share Spear Bill and Still Hunt. The heron also carries Tool Use, the crane has Migration and the shoebill Big Bill (other birds will share those later). The flamingo is the odd one out: a healer that marches with its partner and thrives in hazards. Do the six feel different from each other?',
       },
