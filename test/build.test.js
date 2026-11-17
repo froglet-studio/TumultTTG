@@ -105,3 +105,26 @@ test('every clade has a drawn icon, so no card or codex entry falls back to an e
     for (const d of ps) assert.match(d, /^M[^"<>]+$/, `${sp}: path data`);
   }
 });
+
+test('every clade but human has a painted head on a portrait sheet in the build', async () => {
+  const { art } = await import(pathToFileURL(path.join(root, 'tools', 'build.mjs')).href);
+  const manifest = require(path.join(root, 'src', 'manifest.json'));
+  const sandbox = { window: { T: {} } };
+  vm.runInNewContext(art(manifest).js, sandbox);
+  const ART = sandbox.window.T.ART;
+  const T = require(path.join(root, 'tools', 'load.js'))();
+  const g = { T: Object.assign({}, T, { UI: {} }) };
+  vm.runInNewContext(require('node:fs').readFileSync(path.join(root, 'src', 'ui', 'icons.js'), 'utf8'), { window: g });
+  const U = g.T.UI;
+  const seen = new Set();
+  U.PORTRAIT_SHEETS.forEach((ids, s) => {
+    assert.match(ART['portrait/sheet-' + (s + 1)] || '', /^data:image\/webp;base64,/, `sheet ${s + 1} is in the build`);
+    assert.ok(ids.length <= 16, `sheet ${s + 1} holds at most 16 heads`);
+    for (const id of ids) {
+      assert.ok(T.SPECIES[id], `${id} is a clade`);
+      assert.ok(!seen.has(id), `${id} has one head`);
+      seen.add(id);
+    }
+  });
+  for (const sp of T.SPECIES_ORDER) if (sp !== 'human') assert.ok(seen.has(sp), `${sp} has a painted head`);
+});

@@ -19,10 +19,10 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.67.1',
+    version: '2.68.0',
     items: [
       {
-        text: 'Every clade now has a drawn icon in the same flat style as the first twelve, so no card, codex entry or draft pack shows an emoji any more. A shared trait now names the clade your pilot carries it through: Hollow Bones on a Blue-Footed Booby says Booby, not Barn Owl. Does any icon not read as its animal?',
+        text: 'Every clade now has a painted head: on cards, in draft packs, the codex and the pilot screens, in place of the flat icons (human keeps its drawn icon). Does any head not read as its animal at small sizes, or clash with the card art?',
       },
       {
         text: 'Every pre-made hero is now a painted pilot, with that pilot’s name, clades and art: Rosh (octopus and raven), Ekora (otter and eel), Nedira (hedgehog and tortoise), Echo (mouse and owl), Karenth (axolotl and koi) and Slingshot (flamingo and mantis shrimp). Each keeps the role and title of the hero it replaces. Does each one play the role its title promises?',

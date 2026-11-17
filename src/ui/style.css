@@ -1718,6 +1718,13 @@ hr {
   color: #fff;
   opacity: 0.13;
 }
+.hart .clade:has(.por) {
+  opacity: 0.32;
+}
+.hart .clade .por {
+  border-radius: 50%;
+  box-shadow: none;
+}
 .hart .clade .icn,
 .hart .clade .ic-fb {
   width: 54px;

@@ -429,6 +429,115 @@
   U.icGear = (id, cls) => U.ic('gear.' + id, T.GEAR_BY[id] && T.GEAR_BY[id].icon, cls);
   U.icCons = (id, cls) => U.ic('cons.' + id, T.CONSUMABLE_BY[id] && T.CONSUMABLE_BY[id].icon, cls);
   U.icBasic = (b, cls) => U.ic('basic.' + b.id.replace(/_[A-Z]$/, ''), b.icon, cls);
-  U.icClade = (sp, cls) => U.ic('clade.' + sp, T.SPECIES[sp] && T.SPECIES[sp].icon, cls);
+  /**
+   * Painted heads (2.68): sprite sheets in assets/portraits, four 128 px tiles to a row, inlined as
+   * T.ART['portrait/sheet-N']. Each list is one sheet, read left to right, top to bottom. A clade with no
+   * head (human), or a page without the art, gets its drawn icon.
+   */
+  U.PORTRAIT_SHEETS = [
+    [
+      'jerboa',
+      'hopper',
+      'owl',
+      'octopus',
+      'gecko',
+      'axolotl',
+      'eel',
+      'flytrap',
+      'cordyceps',
+      'tardigrade',
+      'orangutan',
+      'lemur',
+      'mandrill',
+      'lynx',
+      'caracal',
+      'ocelot',
+    ],
+    [
+      'tiger',
+      'cheetah',
+      'fennec',
+      'fox',
+      'jackal',
+      'coyote',
+      'hyena',
+      'otter',
+      'badger',
+      'red_panda',
+      'walrus',
+      'orca',
+      'narwhal',
+      'yak',
+      'bison',
+      'oryx',
+    ],
+    [
+      'ram',
+      'moose',
+      'deer',
+      'zebra',
+      'mouse',
+      'porcupine',
+      'hare',
+      'black_hare',
+      'sloth',
+      'armadillo',
+      'pangolin',
+      'hedgehog',
+      'kangaroo',
+      'opossum',
+      'platypus',
+      'eagle',
+    ],
+    [
+      'hawk',
+      'crane',
+      'heron',
+      'egret',
+      'ibis',
+      'shoebill',
+      'flamingo',
+      'puffin',
+      'pelican',
+      'booby',
+      'raven',
+      'parrot',
+      'toucan',
+      'hummingbird',
+      'peacock',
+      'ostrich',
+    ],
+    [
+      'turkey',
+      'chameleon',
+      'basilisk',
+      'horned_lizard',
+      'crocodile',
+      'tortoise',
+      'newt',
+      'tree_frog',
+      'koi',
+      'clownfish',
+      'lionfish',
+      'seahorse',
+      'snail',
+      'jellyfish',
+      'lobster',
+      'mantis_shrimp',
+    ],
+    ['beetle', 'butterfly', 'firefly', 'mantis', 'scorpion'],
+  ];
+  const PORTRAIT = {};
+  U.PORTRAIT_SHEETS.forEach((ids, s) => ids.forEach((id, i) => (PORTRAIT[id] = { sheet: s + 1, i, n: ids.length })));
+  U.portraitOf = (sp) => PORTRAIT[sp] || null;
+  U.icClade = (sp, cls) => {
+    const p = PORTRAIT[sp];
+    const art = p && U.artClass ? U.artClass('portrait/sheet-' + p.sheet) : '';
+    if (!art) return U.ic('clade.' + sp, T.SPECIES[sp] && T.SPECIES[sp].icon, cls);
+    const rows = Math.ceil(p.n / 4);
+    const x = ((p.i % 4) * 100) / 3;
+    const y = rows > 1 ? (Math.floor(p.i / 4) * 100) / (rows - 1) : 0;
+    return `<span class="icn por ${art} ${cls || ''}" style="background-size:400% ${rows * 100}%;background-position:${x.toFixed(3)}% ${y.toFixed(3)}%" aria-hidden="true"></span>`;
+  };
   U.icEl = (el, cls) => U.ic('el.' + el, el, cls);
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

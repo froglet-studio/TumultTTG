@@ -8,6 +8,7 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 |---|---|---|---|
 | `pilots/` | a pilot's portrait, 160 px square, JPEG | `pilot/<CALLSIGN>` | ~8 KB each |
 | `scenes/` | the same pilot in their world, 768×432, WebP | `scene/<CALLSIGN>` | ~40–50 KB each |
+| `portraits/` | painted clade heads, 128 px tiles four to a row, WebP | `portrait/sheet-<N>` | ~17–61 KB a sheet |
 | `fonts/` | Chakra Petch SemiBold, Latin subset, WOFF2 | `@font-face` | 8 KB |
 
 ## Where it comes from, and its licence
@@ -26,6 +27,11 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 - **The Omni symbol** is Cosmic Shore's omnicrystal (`froglet-studio/cosmic-shore`, MIT, © Froglet Inc.,
   `Assets/_Graphics/ElementIcons/OmniCrystal_Active.png`), redrawn as an SVG path in `src/ui/icons.js` (2.40;
   Garrett, 2026-11-15).
+- **Clade portraits** were generated for this repository in Figma Weave (Nano Banana Pro, Garrett's workspace,
+  2026-11-17), styled on a test sheet he approved, and approved by him before going in. Garrett chose generated
+  sheets for clade art (2026-11-17). Each 2048 px sheet was cut into equal cells, trimmed 2.5% a side to drop the
+  grid lines, resized to 128 px and repacked four to a row; the scorpion was a single 1024 px image. Which clade
+  sits in which tile is `U.PORTRAIT_SHEETS` in `src/ui/icons.js`.
 - **Chakra Petch** is © 2018 The Chakra Petch Project Authors, under the SIL Open Font License 1.1
   (`fonts/OFL.txt`). It is Cosmic Shore's display face. Subset with
   `pyftsubset ChakraPetch-SemiBold.ttf --unicodes=U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201D,U+2026,U+2022,U+2190-2193,U+00D7 --flavor=woff2`.
