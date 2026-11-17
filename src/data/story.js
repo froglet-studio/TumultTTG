@@ -557,6 +557,20 @@
       onward: ["\"Is {PLACE} calm water?\" {A} asks hopefully.", "\"{THREAT},\" {A} says, and grips tight."],
       reply: ["{A} bobs.", "\"Hold on,\" {A} says.", "{A} snaps at a speck by {B}."],
     },
+    snail: {
+      win: ["{A} comes out of their shell, one eye at a time.", "\"Got there,\" {A} says. \"I always get there.\""],
+      close: ["{A} seals the door and will not talk till morning.", "\"Too fast,\" {A} says. \"Everything was too fast.\""],
+      quiet: ["{A} climbs the tent pole and sleeps upside down.", "{A} leaves a silver trail round {B}'s bedroll."],
+      onward: ["\"Is it wet in {PLACE}?\" {A} asks. \"Say it's wet.\"", "\"{THREAT},\" {A} says, and pulls in a little."],
+      reply: ["{A} waves an eye stalk.", "\"Slowly,\" {A} says.", "{A} peers at {B} from the shell."],
+    },
+    jellyfish: {
+      win: ["{A} pulses once, twice, and glows a soft blue.", "\"I did not think about it,\" {A} says. \"I never do.\""],
+      close: ["{A} drifts off and lets the current decide.", "\"I can start over,\" {A} says. \"Not yet, though.\""],
+      quiet: ["{A} glows in the dark so {B} can read.", "{A} hangs in the shallows and hums with no mouth."],
+      onward: ["\"{PLACE}? I'll drift there,\" {A} says.", "\"{THREAT},\" {A} says, and every sting coils."],
+      reply: ["{A} pulses.", "\"Mm,\" {A} says, glowing.", "{A} drifts close to {B}, then away."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

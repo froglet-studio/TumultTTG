@@ -3780,3 +3780,101 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Flutter* · 1 AP · CD 0 — Flutter 1; hazards can't touch you this round. *(P3: Flutter 4; hazards can't touch you this round.)*
 - *Eth — Ride the Current* · 1 AP + 1 Space · CD 3 — Let the current carry you to any node within 3; Hidden 1, and hazards can't touch you this round. *(P3/E3: Let the current carry you to any node within 5; Hidden 1, and hazards can't touch you this round.)*
+
+## 77 · Snail — leans T/M
+
+*Carries its house, climbs anything, and seals itself in to wait out the bad weather.*
+
+**Boneless Squeeze** · Mass · `oct_squeeze`
+
+- *Phys — Squeeze* · 1 AP · CD 0 — Pour through any gap: escape every hold and step 1.
+- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
+
+**Chemo-Suckers** · Charge · `oct_chemo`
+
+- *Phys — Taste* · 1 AP · CD 1 — Taste by touch: reveal adjacent and Mark the nearest foe.
+- *Eth — Cling-Read* · 1 AP + 1 Charge · CD 3 — Tag a foe for 3 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently. *(P3/E3: Tag a foe for 5 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently.)*
+
+**Regeneration** ★ · Time · `axo_regen`
+
+- *Phys — Knit* · 1 AP · CD 1 — Knit a wound: heal 2. *(P3: Knit a wound: heal 5.)*
+- *Eth — Regrow* · 2 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.)*
+
+**Shell** ★ · Mass · `tor_shell`
+
+- *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and you can't be Weakened or Rooted. *(P3: Shield 5 this round, and you can't be Weakened or Rooted.)*
+- *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Slime Trail** ★ · Time · `snl_slime`
+
+- *Phys — Glide* · 1 AP · CD 1 — Glide 1 on your own slime, up walls and over anything sharp: height nodes included, hazards can't touch you this round, and your next hit this turn deals +1. *(P3: Glide 4 on your own slime, up walls and over anything sharp: height nodes included, hazards can't touch you this round, and your next hit this turn deals +1.)*
+- *Eth — Slick* · 1 AP + 1 Time · CD 3 — Lay a slick on a node within 2: foes on or beside it take 1 a round for 2 rounds, and foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Lay a slick on a node within 2: foes on or beside it take 1 a round for 2 rounds, and foes beside you are Weakened 1 for 4 rounds.)*
+
+**Seal In** · Mass · `snl_seal`
+
+- *Phys — Withdraw* · 1 AP · CD 1 — Pull into your shell: Shield 2 this round, and nothing can push or pull you. *(P3: Pull into your shell: Shield 5 this round, and nothing can push or pull you.)*
+- *Eth — Epiphragm* · 1 AP + 1 Mass · CD 4 — Seal the door with dried slime: heal 2, nothing can touch you until your next turn, and your next hit deals +2. *(P3/E3: Seal the door with dried slime: heal 4, nothing can touch you until your next turn, and your next hit deals +4.)*
+
+**Radula** · Mass · `snl_radula`
+
+- *Phys — Rasp* · 1 AP · CD 1 — Rasp with a tongue of tiny teeth: strip 1 Shield, then melee 3. *(P3: Rasp with a tongue of tiny teeth: strip 1 Shield, then melee 6.)*
+- *Eth — File Down* · 1 AP + 1 Mass · CD 3 — File it down: strip 2 Shield and melee 3; the next hit on it ignores Shield and deals +2. *(P3/E3: File it down: strip 2 Shield and melee 5; the next hit on it ignores Shield and deals +4.)*
+
+**After Rain** · Space · `snl_rain`
+
+- *Phys — Wet Night* · 1 AP · CD 1 — Out after the rain: move 2 and heal 1. *(P3: Out after the rain: move 5 and heal 1.)*
+- *Eth — Downpour* · 1 AP + 1 Space · CD 4 — Everything comes out in the wet: both heroes heal 1 at the start of their next 2 turns and deal +1 with their next hit, and hazards beside you wash away.
+
+**Eye Stalks** · Charge · `snl_stalks`
+
+- *Phys — Peek* · 1 AP · CD 1 — Raise your eyes on their stalks: see within 2, and the next hit on you is 1 less. *(P3: Raise your eyes on their stalks: see within 5, and the next hit on you is 1 less.)*
+- *Eth — Pull In* · 1 AP + 1 Charge · CD 3 — Watch one foe, ready to pull in: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 2 less. *(P3/E3: Watch one foe, ready to pull in: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 4 less.)*
+
+## 78 · Jellyfish — leans C/T
+
+*No brain, no bones, a bell full of stings, and one kind that turns young again instead of dying.*
+
+**Boneless Squeeze** · Mass · `oct_squeeze`
+
+- *Phys — Squeeze* · 1 AP · CD 0 — Pour through any gap: escape every hold and step 1.
+- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
+
+**Regeneration** ★ · Time · `axo_regen`
+
+- *Phys — Knit* · 1 AP · CD 1 — Knit a wound: heal 2. *(P3: Knit a wound: heal 5.)*
+- *Eth — Regrow* · 2 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.)*
+
+**Buoyancy Control** · Mass · `eel_buoyancy`
+
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+
+**Nematocysts** ★ · Charge · `jel_sting`
+
+- *Phys — Sting* · 1 AP · CD 1 — Melee 1; it takes 1 at the start of its next 2 turns. *(P3: Melee 4; it takes 1 at the start of its next 2 turns.)*
+- *Eth — Fire All* · 1 AP + 1 Charge · CD 3 — Every sting fires at once: each foe beside you takes 2, then 1 a round for 2 rounds. *(P3/E3: Every sting fires at once: each foe beside you takes 4, then 1 a round for 2 rounds.)*
+
+**Trailing Tentacles** · Mass · `jel_trail`
+
+- *Phys — Trail* · 1 AP · CD 1 — Let your tentacles hang: anything that hits you in melee this round takes 1. *(P3: Let your tentacles hang: anything that hits you in melee this round takes 4.)*
+- *Eth — Curtain* · 1 AP + 1 Mass · CD 3 — Spread a curtain of stings: for 2 rounds anything that hits you in melee takes 2, and the first to do so takes 2 more and is pushed 1. *(P3/E3: Spread a curtain of stings: for 2 rounds anything that hits you in melee takes 4, and the first to do so takes 4 more and is pushed 1.)*
+
+**Bell Pulse** · Space · `jel_pulse`
+
+- *Phys — Pulse* · 1 AP · CD 1 — Pulse your bell and drift 2, through foes if need be. *(P3: Pulse your bell and drift 5, through foes if need be.)*
+- *Eth — Jet* · 1 AP + 1 Space · CD 3 — Clench hard: foes beside you are pushed back 1, then you shoot up to 3 wherever you like. *(P3/E3: Clench hard: foes beside you are pushed back 1, then you shoot up to 5 wherever you like.)*
+
+**Bioluminescence** · Charge · `jel_glow`
+
+- *Phys — Glow* · 1 AP · CD 1 — Light up the water: see within 2 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1. *(P3: Light up the water: see within 5 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.)*
+- *Eth — Lure Light* · 1 AP + 1 Charge · CD 3 — Flash a ring of light at a node within 2: foes treat it as a hero for 2 rounds, and you go dark (Hidden 1). *(P3/E3: Flash a ring of light at a node within 2: foes treat it as a hero for 4 rounds, and you go dark (Hidden 1).)*
+
+**Bloom** · Time · `jel_bloom`
+
+- *Phys — Drift Together* · 1 AP · CD 1 — Drift close: you and an ally within 2 hold Shield 1 this round, and the ally's next hit deals +1. *(P3: Drift close: you and an ally within 2 hold Shield 2 this round, and the ally's next hit deals +1.)*
+- *Eth — Swarm* · 1 AP + 1 Time · CD 4 — Become a bloom of thousands: a decoy stands where you are for 2 rounds, heroes on or beside your node are Hidden 1, and both heroes' next hit deals +2. *(P3/E3: Become a bloom of thousands: a decoy stands where you are for 4 rounds, heroes on or beside your node are Hidden 1, and both heroes' next hit deals +4.)*
+
+**Turn Back** · Time · `jel_reverse`
+
+- *Phys — Shed* · 1 AP · CD 2 — Shed the damaged layer: escape every hold and condition, and heal 1. *(P3: Shed the damaged layer: escape every hold and condition, and heal 4.)*
+- *Eth — Young Again* · 1 AP + 1 Time · CD 5 · Dur 3 — Ready to turn young: if you are downed within 3 rounds, you re-form at once with 5 hp. *(P3/E3: Ready to turn young: if you are downed within 3 rounds, you re-form at once with 9 hp.)*
