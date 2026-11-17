@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.63.0 — 2026-11-17 — the fish
+
+The eighteenth branch of the tree (`docs/design/11-clades.md`): four painted fish join the Eel, each with nine traits.
+
+- **Koi, Clownfish, Lionfish and Seahorse.** The Eel now sits on this branch and keeps its nine.
+- Shared traits:
+  - **Buoyancy Control** (the eel's) and **Lateral Line** (the axolotl's): all five
+  - **Schooling**: koi and clownfish
+  - the koi also has the parrot's **Long Life**, and the seahorse has the pouched animals' **Pouch** and the chameleon's **Turret Eyes** (variants)
+- Traits of each one's own:
+  - koi: Dragon Gate, Upstream, Shimmer Scales, Pond Calm and Gold Gleam
+  - clownfish: Anemone Home, Dart, Mucus Coat, Pair Bond, Change Role and Pop
+  - lionfish: Venom Spines, Fan Corral, Hover Stalk, Gulp, Invader, Warning Fins and Night Hunt
+  - seahorse: Tail Anchor, Snout Snap, Drift Camouflage, Bony Plates and Slow Fin
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- Fixed: the Mirror Scales text printed raw template code.
+- **Balance** (look-ahead player, forced squad: one hero is the clade plus a random second, 60 runs):
+  - Results: eel 23%, koi 27%, clownfish 35%, lionfish 33%, seahorse 25%.
+  - The lionfish was at 37% before a trim: Corner It's bonus is +E (was +1+E), Take Over gives 1 AP once, and Drift Closer moves 2+P with no damage bonus.
+
 ## 2.62.0 — 2026-11-17 — the amphibians
 
 The seventeenth branch of the tree (`docs/design/11-clades.md`): two painted amphibians join the Axolotl, each with nine traits.

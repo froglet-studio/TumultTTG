@@ -529,6 +529,34 @@
       onward: ["\"Rain in {PLACE}?\" {A} asks. \"I can call it, if not.\"", "\"{THREAT},\" {A} says, and opens their red eyes wide."],
       reply: ["{A} chirps.", "\"Hm,\" {A} says, gulping.", "{A} blinks red eyes at {B}."],
     },
+    koi: {
+      win: ["{A} turns a slow gold circle and calls it done.", "\"Patience,\" {A} says. \"It always comes round.\""],
+      close: ["{A} sinks to the bottom and sulks in the mud.", "\"I am meant to be lucky,\" {A} says, and frowns."],
+      quiet: ["{A} hums under the water till {B} drifts off.", "{A} tells {B} about a waterfall they mean to climb."],
+      onward: ["\"{PLACE},\" {A} says. \"Upstream, then. Always upstream.\"", "\"{THREAT}? I have outlived worse,\" {A} says."],
+      reply: ["{A} blows a bubble.", "\"Mm,\" {A} says, slowly.", "{A} flicks a gold fin at {B}."],
+    },
+    clownfish: {
+      win: ["{A} dives back into the fronds, grinning.", "\"Home is wherever stings for me,\" {A} says."],
+      close: ["{A} hides in the anemone and will not come out.", "\"Too far from home,\" {A} says. \"Much too far.\""],
+      quiet: ["{A} tidies the camp twice and then once more.", "{A} tells {B} who is in charge here. It is {A}."],
+      onward: ["\"Is there cover in {PLACE}?\" {A} asks. \"I need cover.\"", "\"{THREAT},\" {A} says. \"Stay close to me.\""],
+      reply: ["{A} wiggles.", "\"Yes, yes,\" {A} says.", "{A} darts round {B} and back."],
+    },
+    lionfish: {
+      win: ["{A} spreads every spine and lets them look.", "\"I eat what I corner,\" {A} says, quite calm."],
+      close: ["{A} folds their spines and drifts away, cross.", "\"Nothing here knew to fear me,\" {A} says."],
+      quiet: ["{A} hangs still in the dark and watches {B} sleep.", "{A} fans their fins and counts the stars twice."],
+      onward: ["\"{PLACE}? New water,\" {A} says. \"I like new water.\"", "\"{THREAT},\" {A} says, and the spines go up."],
+      reply: ["{A} flares a fin.", "\"Careful,\" {A} says.", "{A} hovers by {B} without a sound."],
+    },
+    seahorse: {
+      win: ["{A} curls their tail round a reed and bobs.", "\"Slow wins,\" {A} says. \"Slow and hold.\""],
+      close: ["{A} clings to the nearest thing and shivers.", "\"The current took me,\" {A} says. \"It always does.\""],
+      quiet: ["{A} wraps their tail round {B}'s wrist to sleep.", "{A} pats their pouch and hums to it."],
+      onward: ["\"Is {PLACE} calm water?\" {A} asks hopefully.", "\"{THREAT},\" {A} says, and grips tight."],
+      reply: ["{A} bobs.", "\"Hold on,\" {A} says.", "{A} snaps at a speck by {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

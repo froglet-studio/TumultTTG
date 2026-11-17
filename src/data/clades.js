@@ -3230,4 +3230,225 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+E},{v:'force', kind:'pull', n:1},{v:'heal', n:1}],
       txt:(P,E)=>`Snatch a foe within 2: it takes ${2+E} and is pulled 1 toward you, and you heal 1.` },
     'Out, stuck, in, before you saw it move.');
+  /* ───────────────────────── FISH ─────────────────────────
+     electric eel · koi · clownfish · lionfish · seahorse. The eel's Buoyancy Control is every fish's, and the
+     axolotl's Lateral Line every new fish's. Koi and clownfish share Schooling; the koi carries Long Life. The
+     seahorse's brood pouch and turret eyes are the kangaroo's Pouch and the chameleon's Turret Eyes, the same
+     answers found again (a variant). */
+  T.SPECIES.eel.branch = 'Fish';
+  S('koi', { name: 'Koi', lean: 'T/C', branch: 'Fish', icon: '🐟',
+    tagline: 'Gold and patient, lives for centuries. Swims upstream, and the story says it becomes a dragon.' });
+  S('clownfish', { name: 'Clownfish', lean: 'C/T', branch: 'Fish', icon: '🐠',
+    tagline: 'Lives in a stinging anemone that never stings it, with a partner it never leaves.' });
+  S('lionfish', { name: 'Lionfish', lean: 'M/C', branch: 'Fish', icon: '🐡',
+    tagline: 'All fans and venom spines. Corners its prey and swallows it whole.' });
+  S('seahorse', { name: 'Seahorse', lean: 'T/S', branch: 'Fish', variant: true, icon: '🐴',
+    tagline: 'Holds on with its tail, looks two ways at once, and the father carries the young.' });
+  const NEW_FISH = ['koi','clownfish','lionfish','seahorse'];
+  T.shareTrait('eel_buoyancy', ...NEW_FISH);
+  T.shareTrait('axo_lateral', ...NEW_FISH);
+  T.shareTrait('bir_life', 'koi');
+  T.shareTrait('pou_pouch', 'seahorse');
+  T.shareTrait('cha_turret', 'seahorse');
+
+  K(['koi','clownfish'],'fis_school','Schooling','S',0,
+    { n:'Swim Together', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+P},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Turn as one: your ally moves ${1+P} where you choose, and you take a free step.` },
+    { n:'Bait Ball', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:1, party:true},{v:'preempt', val:1, reflect:0, party:true}],
+      txt:(P,E)=>`Close up tight: both heroes hold Shield ${1+E} this round, and each one's next hit taken is 1 less.` },
+    'A thousand fish, one mind.', 'Fish');
+
+  // Koi: Buoyancy Control, Lateral Line, Schooling, Long Life, and these five
+  K(['koi'],'koi_gate','Dragon Gate','S',2,
+    { n:'Leap the Falls', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Leap up the falls onto any node within ${1+P}, height included; your next hit this turn deals +1.` },
+    { n:'Become the Dragon', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'morph', bonus:(P,E)=>1+h(E), reach:0, dur:(P,E)=>1+E},{v:'heal', n:(P,E)=>1+E}],
+      txt:(P,E)=>`For ${1+E} rounds your strikes deal +${1+h(E)}; heal ${1+E}.` },
+    'The one that leaps the falls at the Dragon Gate becomes a dragon.');
+  K(['koi'],'koi_up','Upstream','S',0,
+    { n:'Against the Current', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Swim ${2+P} against the current; nothing can push or pull you this round.` },
+    { n:'Never Turn Back', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'statusImmune', dur:2},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2}],
+      txt:(P,E)=>`Swim ${2+E}, past foes; you can't be Weakened or Rooted for 2 rounds, and your next hit deals +${1+h(E)}.` },
+    'Upriver, always.');
+  K(['koi'],'koi_shimmer','Shimmer Scales','C',0,
+    { n:'Flash', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Flash your scales at a foe within 2: Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}, and you hold Shield 1 this round.` },
+    { n:'Mirror Scales', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'preempt', val:(P,E)=>2+E, reflect:(P,E)=>E}],
+      txt:(P,E)=>`The next hit on you is ${2+E} less${E ? ` and reflects ${E}` : ''}.` },
+    'Every scale a little mirror.');
+  K(['koi'],'koi_calm','Pond Calm','T',0,
+    { n:'Still Water', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+h(P), party:true},{v:'reroll', n:1}],
+      txt:(P,E)=>`Still the water: both heroes heal ${1+h(P)}, and reroll 1 banked die.` },
+    { n:'Garden Pond', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(E), party:true},{v:'cleanse', party:true}],
+      txt:(P,E)=>`Both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for ${2+h(E)} rounds.` },
+    'Watching koi is the point of the pond.');
+  K(['koi'],'koi_gold','Gold Gleam','C',0,
+    { n:'Gleam', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Catch the light: your ally's next hit deals +${1+h(P)}, and both heroes hold Shield 1 this round.` },
+    { n:'Lucky Fish', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'ap', val:1, dur:1, target:'ally'},{v:'reroll', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`For luck: your ally gains 1 AP next turn, you reroll up to ${1+h(E)} banked dice, and both heroes' next hit deals +1.` },
+    'Gold for luck, and it is lucky.');
+
+  // Clownfish: Buoyancy Control, Lateral Line, Schooling, and these six
+  K(['clownfish'],'clo_anemone','Anemone Home','T',2,
+    { n:'Back Home', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'thorns', val:1, dur:1}],
+      txt:(P,E)=>`Back among the tentacles: Shield ${1+P} this round, and anything that hits you in melee takes 1.` },
+    { n:'Sting Garden', ap:1, el:1, cd:4, dur:0, tgt:'node_r2',
+      fx:[{v:'dot', kind:'sting', val:(P,E)=>1+h(E), dur:2, area:'nodeArea'},{v:'shield', val:1, dur:2, party:true}],
+      txt:(P,E)=>`Lead foes into the anemone at a node within 2: every foe on or beside it is stung, ${1+h(E)} a round for 2 rounds; both heroes hold Shield 1 for 2 rounds.` },
+    'A house that stings everyone but you.');
+  K(['clownfish'],'clo_dart','Dart','S',0,
+    { n:'Dart', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Dart ${1+P}.` },
+    { n:'Dart Out, Dart Back', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, ifAdjacent:true},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Dart up to 2 toward a foe within 3 and nip it for ${2+E} if you reach it; the next hit on you is 1 less.` },
+    'Out a body length, and straight back.');
+  K(['clownfish'],'clo_mucus','Mucus Coat','T',0,
+    { n:'Coat', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hazardImmune', dur:2},{v:'statusImmune', dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Rooted this round, and heal 1.` },
+    { n:'Share the Coat', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hazardImmune', dur:(P,E)=>2+E, party:true},{v:'cleanse', party:true},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Both heroes ignore hazards for ${2+E} rounds, shake off Anchored and Weakened, and hold Shield 1 this round.` },
+    'The anemone thinks it is touching itself.');
+  K(['clownfish'],'clo_pair','Pair Bond','C',0,
+    { n:'Stay Close', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round; your next hit this turn deals +1.` },
+    { n:'Together Always', ap:1, el:1, cd:4, dur:0, tgt:'ally',
+      fx:[{v:'swap'},{v:'heal', n:(P,E)=>1+E, party:true}],
+      txt:(P,E)=>`Swap places with your partner, wherever they are, and both heroes heal ${1+E}.` },
+    'One pair, one anemone, for life.');
+  K(['clownfish'],'clo_role','Change Role','T',0,
+    { n:'Step Up', ap:1, el:0, cd:2, dur:0, tgt:'self',
+      fx:[{v:'empower', val:(P,E)=>1+P, uses:1, dur:2},{v:'heal', n:1}],
+      txt:(P,E)=>`Take the lead: heal 1, and your next hit within 2 rounds deals +${1+P}.` },
+    { n:'New Leader', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, target:'ally'},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'},{v:'heal', n:1, target:'ally'}],
+      txt:(P,E)=>`Hand the lead to your partner: they heal 1, gain 1 AP next turn, and their next hit deals +${1+E}.` },
+    'When the leader goes, the next in line becomes it.');
+  K(['clownfish'],'clo_pop','Pop','C',0,
+    { n:'Pop', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:1, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>1+P}],
+      txt:(P,E)=>`Pop and click at a foe within 2: it takes ${1+P} and is Weakened 1 this round.` },
+    { n:'Chatter Off', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2, area:'adj'},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Pop like mad: foes within ${1+h(E)} back off 1, foes beside you are Weakened 1 for 2 rounds, and you hold Shield 1 this round.` },
+    'Small fish, loud opinions.');
+
+  // Lionfish: Buoyancy Control, Lateral Line, and these seven
+  K(['lionfish'],'lio_spines','Venom Spines','M',2,
+    { n:'Spine', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'dot', kind:'venom', val:1, dur:2}],
+      txt:(P,E)=>`Melee ${2+P}; it takes 1 at the start of its next 2 turns.` },
+    { n:'Full Spines', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>2+E, dur:2},{v:'shield', val:1, dur:2}],
+      txt:(P,E)=>`Raise every spine: for 2 rounds you hold Shield 1, and anything that hits you in melee takes ${2+E}.` },
+    'Eighteen spines, and every one has venom.');
+  K(['lionfish'],'lio_corral','Fan Corral','C',0,
+    { n:'Herd', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'force', kind:'pull', n:1},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Spread your fans and herd a foe within 2 one node toward you; it is Anchored 1.` },
+    { n:'Corner It', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'force', kind:'pull', n:1},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2},{v:'empower', val:(P,E)=>E, uses:1, dur:2}],
+      txt:(P,E)=>`Corner a foe within 2: draw it 1 closer, Anchored ${1+h(E)} and Weakened 1 for 2 rounds; your next hit deals +${E}.` },
+    'Fins like a net, closing.');
+  K(['lionfish'],'lio_hover','Hover Stalk','T',0,
+    { n:'Drift Closer', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, noTrap:true}],
+      txt:(P,E)=>`Drift ${2+P}, setting off no traps.` },
+    { n:'Hang Still', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'empower', val:(P,E)=>2+E, uses:1, dur:2},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +${2+E}.` },
+    'Barely moving, and then very much moving.');
+  K(['lionfish'],'lio_gulp','Gulp','M',0,
+    { n:'Gulp', ap:1, el:0, cd:2, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'heal', n:1}],
+      txt:(P,E)=>`Swallow at it: melee ${3+P}, and heal 1.` },
+    { n:'Whole', ap:1, el:1, cd:4, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'execute', threshold:(P,E)=>2+E},{v:'heal', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Melee ${3+E}; if that leaves it at ${2+E} hp or less it is swallowed whole. Heal ${1+E}.` },
+    'Faster than the eye.');
+  K(['lionfish'],'lio_invader','Invader','S',0,
+    { n:'Settle In', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'heal', n:1}],
+      txt:(P,E)=>`Move ${2+P} into new water, and heal 1.` },
+    { n:'Take Over', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'statusImmune', dur:2},{v:'shield', val:1, dur:2}],
+      txt:(P,E)=>`Make it yours: gain 1 AP at the start of your next turn; Shield 1 and no Weaken or Root for 2 rounds.` },
+    'No predators here. Not yet.');
+  K(['lionfish'],'lio_warn','Warning Fins','C',0,
+    { n:'Fan Out', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
+      txt:(P,E)=>`Fan out stripes and spines: foes beside you are Weakened 1, and the next hit on you is ${1+h(P)} less.` },
+    { n:'Back Off', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2, area:'adj'},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Spines first: foes within ${1+h(E)} back off 1, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1.` },
+    'Red and white stripes: everyone knows what they mean.');
+  K(['lionfish'],'lio_night','Night Hunt','T',0,
+    { n:'Dusk', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Hunt at dusk: see within ${2+P}, and Mark the nearest foe (the next hit on it deals +2).` },
+    { n:'Dark Reef', ap:1, el:1, cd:4, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+E},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Choose prey on the dark reef: it can't Hide for 2 rounds, your hits on it deal +${1+E}, and you are Hidden 1.` },
+    'It feeds when the reef goes dark.');
+
+  // Seahorse: Buoyancy Control, Lateral Line, Pouch, Turret Eyes, and these five
+  K(['seahorse'],'sea_anchor','Tail Anchor','T',2,
+    { n:'Hold On', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Wrap your tail round something: Shield ${1+P} this round, and nothing can push or pull you.` },
+    { n:'Moored', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:2},{v:'shield', val:(P,E)=>1+E, dur:2},{v:'engine', kind:'regen', val:1, dur:2}],
+      txt:(P,E)=>`Moor yourself: for 2 rounds hold Shield ${1+E}, heal 1 at the start of each turn, and nothing can push or pull you.` },
+    'A tail that grips like a hand.');
+  K(['seahorse'],'sea_snap','Snout Snap','M',0,
+    { n:'Snap', ap:1, el:0, cd:0, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P}],
+      txt:(P,E)=>`Snap at a foe within 2 for ${1+P}.` },
+    { n:'Fastest Mouth', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>3+E, revealTarget:true},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Snap faster than it can flinch: a foe within 2 takes ${3+E}, hidden or not; your next hit this turn deals +1.` },
+    'A pivot of the head, a snap, and the shrimp is gone.');
+  K(['seahorse'],'sea_drift','Drift Camouflage','T',0,
+    { n:'Weed', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Look like weed: Hidden 1, and heal 1.` },
+    { n:'Grow Filaments', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(E), party:true, radius:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:3}],
+      txt:(P,E)=>`You and an ally beside you are Hidden ${1+h(E)}; your next hit within 3 rounds deals +${1+E}.` },
+    'It grows skin flaps to match the weed it lives in.');
+  K(['seahorse'],'sea_plates','Bony Plates','M',0,
+    { n:'Plates', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Shield ${2+h(P)} this round, and the next hit on you is 1 less.` },
+    { n:'Armoured Ring', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>2+E, dur:2},{v:'counter', dmg:(P,E)=>1+E, dur:2}],
+      txt:(P,E)=>`Shield ${2+E} for 2 rounds; the next foe to hit you in melee takes ${1+E}.` },
+    'No scales: rings of bone, all the way down.');
+  K(['seahorse'],'sea_fin','Slow Fin','S',0,
+    { n:'Flutter', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Flutter ${1+P}; hazards can't touch you this round.` },
+    { n:'Ride the Current', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Let the current carry you to any node within ${2+E}; Hidden 1, and hazards can't touch you this round.` },
+    'The slowest fish in the sea, and it gets there anyway.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
