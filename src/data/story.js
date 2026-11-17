@@ -431,6 +431,41 @@
       onward: ["\"{PLACE},\" {A} says. \"Fish there? I bet there are fish there.\"", "\"{THREAT},\" {A} says, and stamps a blue foot."],
       reply: ["{A} whistles.", "\"Yes!\" {A} says.", "{A} lifts a blue foot at {B}."],
     },
+    raven: {
+      win: ["{A} lands on what is left and croaks, once, very pleased. \"Mine now.\"", "\"I remembered its face,\" {A} says. \"It should have remembered mine.\""],
+      close: ["{A} sits on a high branch, feathers puffed, not talking to anyone.", "\"It was cleverer than I thought,\" {A} says. \"That will not happen twice.\""],
+      quiet: ["{A} hides something shiny under a stone and pretends not to.", "{A} slides down a slope on their back, then climbs up and does it again, while {B} watches."],
+      onward: ["\"{PLACE},\" {A} says. \"I have heard things about {PLACE}.\"", "{A} tilts their head. \"{THREAT}? I will remember it.\""],
+      reply: ["{A} croaks.", "\"Hm,\" {A} says, in {B}'s voice.", "{A} clicks their beak at {B}."],
+    },
+    parrot: {
+      win: ["{A} shrieks with delight and says the foe's last words back to it.", "\"Easy,\" {A} says. \"Say it again: easy.\""],
+      close: ["{A} picks at their feathers, muttering.", "\"I said too much,\" {A} says. \"I always say too much.\""],
+      quiet: ["{A} cracks nuts with one foot and talks to {B} for an hour about nothing.", "{A} eats a little clay from the bank, and offers {B} some."],
+      onward: ["\"{PLACE}! {PLACE}!\" {A} says, trying out the word.", "\"{THREAT},\" {A} says. \"I will tell it a thing or two.\""],
+      reply: ["\"Hello,\" {A} says.", "{A} bobs their head.", "{A} repeats {B}'s last word, cheerfully."],
+    },
+    toucan: {
+      win: ["{A} tosses a fruit up and catches it. \"Did you see? Did it see?\"", "\"It saw the bill and ran,\" {A} says. \"Everyone does.\""],
+      close: ["{A} folds into a ball of feathers and will not come out.", "\"It was not scared of my bill,\" {A} says, offended."],
+      quiet: ["{A} throws fruit to {B}, who drops most of it.", "{A} hops from branch to branch around camp, croaking softly."],
+      onward: ["\"Trees in {PLACE}?\" {A} asks. \"Please say trees.\"", "\"{THREAT},\" {A} says, and waves their bill."],
+      reply: ["{A} croaks.", "\"Ha,\" {A} says.", "{A} clacks their huge bill."],
+    },
+    hummingbird: {
+      win: ["{A} hovers over what is left, buzzing. \"Too slow. Everything is too slow.\"", "\"It was a hundred times my size,\" {A} says. \"So?\""],
+      close: ["{A} goes cold and still on a twig and does not wake for an hour.", "\"I ran out,\" {A} says faintly. \"Of everything.\""],
+      quiet: ["{A} visits every flower near camp, in order, twice.", "{A} hovers in front of {B}'s face until {B} laughs."],
+      onward: ["\"Flowers in {PLACE}?\" {A} asks. \"I need to know which ones.\"", "\"{THREAT},\" {A} says. \"I have chased off worse.\""],
+      reply: ["{A} buzzes.", "\"Yes yes,\" {A} says.", "{A} darts to {B} and back."],
+    },
+    peacock: {
+      win: ["{A} spreads their whole train, shivering. \"Look at me.\"", "\"It looked at the eyes,\" {A} says. \"They always look at the eyes.\""],
+      close: ["{A} roosts high and alone, train hanging, saying nothing.", "\"It nearly had me,\" {A} says, and screams once at the dark."],
+      quiet: ["{A} struts back and forth in front of {B}, very slowly.", "{A} eats a snake for supper, which nobody else enjoys watching."],
+      onward: ["\"{PLACE},\" {A} says. \"Will anyone there see me?\"", "\"{THREAT},\" {A} says. \"I will make sure it sees us coming.\""],
+      reply: ["{A} screams, briefly.", "\"Mm,\" {A} says, adjusting a feather.", "{A} rattles their train at {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

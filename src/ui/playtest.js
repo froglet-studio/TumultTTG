@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.57.0',
+    version: '2.58.0',
     items: [
+      {
+        text: 'Five bright birds join: Raven, Parrot, Toucan, Hummingbird and Peacock. The raven and parrot share Mimicry and Human’s Pattern Recognition, and the parrot has Opposable Grip and Long Life (get up again if downed). The toucan shares Big Bill; the hummingbird has eight traits of its own (Hover, Thousand Beats, Night Torpor and more); the peacock fans, screams and kicks with its spurs. Which one plays most like the animal?',
+      },
       {
         text: 'Three seabirds join: Atlantic Puffin, Pelican and Blue-Footed Booby. All three share Plunge Dive, Waterproof and Salt Gland (and every bird’s Hollow Bones). The puffin also burrows like the jerboa, and the pelican shares the shoebill’s Big Bill. The puffin flies underwater, the pelican herds foes for its partner, the booby dances and holds its nest. Which one did you enjoy most?',
       },

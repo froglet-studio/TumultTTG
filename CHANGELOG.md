@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.58.0 — 2026-11-17 — the perching and bright birds
+
+The thirteenth branch of the tree (`docs/design/11-clades.md`): five painted birds, each with nine traits.
+
+- **Raven, Parrot, Toucan, Hummingbird and Peacock.**
+- Shared traits:
+  - **Hollow Bones**: every bird
+  - **Mimicry** (a decoy, or a foe's attack turned on its neighbour) and Human's **Pattern Recognition**: raven and parrot
+  - the parrot also carries Human's **Opposable Grip**, and **Long Life**: the koi, tortoise and lobster will share it
+  - the toucan carries the shoebill's **Big Bill**
+  - **Display Fan**, **Alarm Call** and **Spur** are the peacock's for now; the turkey will share them
+- Traits of each one's own:
+  - raven: Shiny Cache, Mob, Carrion Wing, Raven Memory, Wolf Guide and Snow Slide
+  - parrot: Beak Crack, Flock Chatter, Bright Colours and Clay Lick
+  - toucan: Bright Bluff, Fruit Toss, Canopy Hop, Bill Cool, Nest Raider, Fold Sleep and Loud Croak
+  - hummingbird: Hover, Thousand Beats, Night Torpor, Needle Bill, Backward Flight, Nectar Rush, Tiny Fury and Flower Memory
+  - peacock: Hundred Eyes, Train Sweep, Snake Eater, Jungle Roost and Iridescence
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (240 drafted runs, look-ahead player):
+  - Inside this release, runs with one of the five win 33% and runs without one 37%.
+  - The toucan is the highest, at 7 wins in 13 runs. That is too few runs to tune on.
+
 ## 2.57.0 — 2026-11-17 — the seabirds
 
 The twelfth branch of the tree (`docs/design/11-clades.md`): three painted seabirds, each with nine traits.

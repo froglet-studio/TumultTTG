@@ -2898,3 +2898,248 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Pratfall* · 1 AP · CD 1 — Trip over your own feet: a foe within 3 is Weakened 1 this round, laughing, and you heal 1. *(P3: Trip over your own feet: a foe within 3 is Weakened 2 this round, laughing, and you heal 1.)*
 - *Eth — Disarming* · 1 AP + 1 Charge · CD 3 — A foe within 3 is Weakened 1 for 2 rounds and Marked, and your hits on it deal +1. *(P3/E3: A foe within 3 is Weakened 2 for 2 rounds and Marked, and your hits on it deal +1.)*
+
+## 59 · Raven — leans T/C
+
+*Clever, playful, never forgets a face. Hunts with wolves and slides down snow for fun.*
+
+**Pattern Recognition** · Space · `hum_pattern`
+
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
+- *Eth — Weak Point* · 1 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Mimicry** · Charge · `bir_mimic`
+
+- *Phys — Sound Like* · 1 AP · CD 1 — Throw your voice: leave a decoy where you stood for 1 round, move 1, and your next hit deals +1. *(P3: Throw your voice: leave a decoy where you stood for 1 round, move 4, and your next hit deals +1.)*
+- *Eth — Its Own Voice* · 2 AP + 1 Charge · CD 4 — Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 1. *(P3/E3: Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 3.)*
+
+**Shiny Cache** · Time · `rav_cache`
+
+- *Phys — Stash* · 1 AP · CD 1 — Stash something for later: gain 1 AP next turn, and hold Shield 1 this round.
+- *Eth — Dig It Up* · 1 AP + 1 Time · CD 4 — Draw a Time die from your pool, reroll up to 1 banked dice, and heal 1. *(P3/E3: Draw a Time die from your pool, reroll up to 2 banked dice, and heal 1.)*
+
+**Mob** · Charge · `rav_mob`
+
+- *Phys — Harry* · 1 AP · CD 1 — Harry a foe within 2: it takes 1 and is Weakened 1 this round, and your ally's next hit deals +1. *(P3: Harry a foe within 2: it takes 4 and is Weakened 1 this round, and your ally's next hit deals +1.)*
+- *Eth — Call the Mob* · 1 AP + 1 Charge · CD 3 — Point the mob at a foe within 3: it is Marked, your hits on it deal +1, and both heroes' next hit deals +1. *(P3/E3: Point the mob at a foe within 3: it is Marked, your hits on it deal +2, and both heroes' next hit deals +2.)*
+
+**Carrion Wing** · Space · `rav_carrion`
+
+- *Phys — Circle Down* · 1 AP · CD 1 — Circle down 2, over foes, and see everything beside where you land. *(P3: Circle down 5, over foes, and see everything beside where you land.)*
+- *Eth — Pick the Weak* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3 and peck it for 3; if that leaves it at 2 hp or less, it falls. *(P3/E3: Drop beside a foe within 5 and peck it for 5; if that leaves it at 4 hp or less, it falls.)*
+
+**Raven Memory** · Time · `rav_memory`
+
+- *Phys — I Know You* · 1 AP · CD 1 — Remember a foe within 3: it can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Remember a foe within 3: it can't Hide for 5 rounds and is Marked (the next hit on it deals +2).)*
+- *Eth — Old Grudge* · 1 AP + 1 Time · CD 3 — Name any foe: it can't Hide for 3 rounds, your hits on it deal +2, and the next hit on you is 1 less. *(P3/E3: Name any foe: it can't Hide for 3 rounds, your hits on it deal +4, and the next hit on you is 1 less.)*
+
+**Wolf Guide** · Charge · `rav_wolf`
+
+- *Phys — This Way* · 1 AP · CD 1 — Call your ally on: they move 1 where you choose, and you see within 2. *(P3: Call your ally on: they move 4 where you choose, and you see within 2.)*
+- *Eth — Lead the Hunt* · 1 AP + 1 Charge · CD 4 — Lead your ally to any foe: it can't Hide for 2 rounds and is Marked, and your ally's next hit deals +3. *(P3/E3: Lead your ally to any foe: it can't Hide for 2 rounds and is Marked, and your ally's next hit deals +5.)*
+
+**Snow Slide** · Space · `rav_snow`
+
+- *Phys — Slide* · 1 AP · CD 0 — Slide 1 for the fun of it, and heal 1. *(P3: Slide 4 for the fun of it, and heal 1.)*
+- *Eth — Roll Down* · 1 AP + 1 Space · CD 3 — Roll 3 down the slope, past foes; shake off Anchored and Weakened, and your next hit deals +1. *(P3/E3: Roll 5 down the slope, past foes; shake off Anchored and Weakened, and your next hit deals +2.)*
+
+## 60 · Parrot — leans C/T
+
+*Loud, bright, long-lived, and holds its food in one foot while it talks back.*
+
+**Pattern Recognition** · Space · `hum_pattern`
+
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
+- *Eth — Weak Point* · 1 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
+
+**Opposable Grip** · Mass · `hum_grip`
+
+- *Phys — Manipulate* · 1 AP · CD 1 — Melee 1 and Weaken 1 (its next hit deals −1). *(P3: Melee 4 and Weaken 1 (its next hit deals −1).)*
+- *Eth — Leverage* · 2 AP + 1 Mass · CD 3 — Melee 2 and Anchor the foe for 2 rounds (it cannot move). *(P3/E3: Melee 5 and Anchor the foe for 4 rounds (it cannot move).)*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Mimicry** · Charge · `bir_mimic`
+
+- *Phys — Sound Like* · 1 AP · CD 1 — Throw your voice: leave a decoy where you stood for 1 round, move 1, and your next hit deals +1. *(P3: Throw your voice: leave a decoy where you stood for 1 round, move 4, and your next hit deals +1.)*
+- *Eth — Its Own Voice* · 2 AP + 1 Charge · CD 4 — Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 1. *(P3/E3: Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 3.)*
+
+**Long Life** · Time · `bir_life`
+
+- *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+
+**Beak Crack** · Mass · `par_crack`
+
+- *Phys — Crack* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Eth — Nutcracker* · 1 AP + 1 Mass · CD 3 — Melee 4 that ignores Shield, and open a weak point: its next hit taken deals +1. *(P3/E3: Melee 6 that ignores Shield, and open a weak point: its next hit taken deals +2.)*
+
+**Flock Chatter** · Charge · `par_chatter`
+
+- *Phys — Chatter* · 1 AP · CD 1 — Keep up the chatter: your ally heals 1 and their next hit deals +1. *(P3: Keep up the chatter: your ally heals 1 and their next hit deals +2.)*
+- *Eth — Roost Roar* · 1 AP + 1 Charge · CD 3 — The whole roost at dusk: both heroes' hits deal +1 for 2 rounds, and your ally gains 1 AP next turn.
+
+**Bright Colours** · Charge · `par_colours`
+
+- *Phys — Flash Wings* · 1 AP · CD 1 — Flash red and blue at a foe within 2: Weakened 1 this round and Marked (the next hit on it deals +2). *(P3: Flash red and blue at a foe within 2: Weakened 2 this round and Marked (the next hit on it deals +2).)*
+- *Eth — Rainbow* · 1 AP + 1 Charge · CD 3 — Leave a flash of colour as a decoy for 2 rounds and vanish into the leaves: Hidden 1, even if you move; heal 1. *(P3/E3: Leave a flash of colour as a decoy for 4 rounds and vanish into the leaves: Hidden 1, even if you move; heal 1.)*
+
+**Clay Lick** · Time · `par_clay`
+
+- *Phys — Lick* · 1 AP · CD 1 — Eat the bank's clay: heal 1, and you can't be Weakened or Rooted this round. *(P3: Eat the bank's clay: heal 4, and you can't be Weakened or Rooted this round.)*
+- *Eth — Settle the Stomach* · 1 AP + 1 Time · CD 4 — Both heroes shake off Anchored and Weakened and heal 2; you can't be Weakened or Rooted for 2 rounds. *(P3/E3: Both heroes shake off Anchored and Weakened and heal 4; you can't be Weakened or Rooted for 2 rounds.)*
+
+## 61 · Toucan — leans S/C
+
+*All bill and bluff. The bill is light as foam and the croak carries a mile.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Big Bill** · Mass · `bil_big`
+
+- *Phys — Bill Grab* · 1 AP · CD 1 — Grab a foe within 2: it takes 1 and is hauled 1 toward you. *(P3: Grab a foe within 2: it takes 4 and is hauled 1 toward you.)*
+- *Eth — Clamp Bill* · 1 AP + 1 Mass · CD 3 — Clamp a foe within 2: it takes 3, is Anchored 1, and is Weakened 1 this round. *(P3/E3: Clamp a foe within 2: it takes 5, is Anchored 2, and is Weakened 1 this round.)*
+
+**Bright Bluff** · Charge · `tou_bluff`
+
+- *Phys — Bluff* · 1 AP · CD 1 — Wave the bill at a foe within 2: it backs off 1 and is Weakened 1 this round. *(P3: Wave the bill at a foe within 2: it backs off 1 and is Weakened 2 this round.)*
+- *Eth — All Bill* · 1 AP + 1 Charge · CD 3 — Every foe within 1 falls back 1; foes beside you are Weakened 1 for 2 rounds, and you hold Shield 2 this round. *(P3/E3: Every foe within 2 falls back 1; foes beside you are Weakened 1 for 2 rounds, and you hold Shield 4 this round.)*
+
+**Fruit Toss** · Charge · `tou_toss`
+
+- *Phys — Toss* · 1 AP · CD 1 — Toss fruit: a foe within 3 takes 1, and your ally catches the next one and heals 1. *(P3: Toss fruit: a foe within 3 takes 4, and your ally catches the next one and heals 1.)*
+- *Eth — Catch!* · 1 AP + 1 Charge · CD 3 — Throw your ally a fruit: they heal 2, gain 1 AP to spend this turn, and their next hit deals +1. *(P3/E3: Throw your ally a fruit: they heal 4, gain 1 AP to spend this turn, and their next hit deals +1.)*
+
+**Canopy Hop** · Space · `tou_hop`
+
+- *Phys — Hop* · 1 AP · CD 0 — Hop onto any node within 1, height included. *(P3: Hop onto any node within 4, height included.)*
+- *Eth — Branch to Branch* · 1 AP + 1 Space · CD 3 — Hop to any node within 3, height included; see within 2, and your next hit this turn deals +1. *(P3/E3: Hop to any node within 5, height included; see within 2, and your next hit this turn deals +1.)*
+
+**Bill Cool** · Time · `tou_cool`
+
+- *Phys — Shed Heat* · 1 AP · CD 1 — Shed heat through your bill: heal 1, and hazards can't touch you this round. *(P3: Shed heat through your bill: heal 4, and hazards can't touch you this round.)*
+- *Eth — Radiator* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; ignore hazards and hold Shield 1 for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; ignore hazards and hold Shield 1 for 2 rounds.)*
+
+**Nest Raider** · Mass · `tou_raid`
+
+- *Phys — Raid* · 1 AP · CD 1 — Reach into cover: a foe within 2 takes 2 and loses 1 Shield. *(P3: Reach into cover: a foe within 2 takes 5 and loses 1 Shield.)*
+- *Eth — Snatch the Egg* · 1 AP + 1 Mass · CD 3 — Work an objective up to 2 away, height included; heal 1, and your next hit deals +2. *(P3/E3: Work an objective up to 2 away, height included; heal 1, and your next hit deals +4.)*
+
+**Fold Sleep** · Time · `tou_fold`
+
+- *Phys — Tuck In* · 1 AP · CD 1 — Tuck bill under wing and tail over head: Shield 1, and Hidden 1. *(P3: Tuck bill under wing and tail over head: Shield 4, and Hidden 1.)*
+- *Eth — Ball of Feathers* · 1 AP + 1 Time · CD 4 — Fold into a ball: heal 3, Shield 2 this round, and Hidden 1. *(P3/E3: Fold into a ball: heal 5, Shield 2 this round, and Hidden 1.)*
+
+**Loud Croak** · Charge · `tou_croak`
+
+- *Phys — Croak* · 1 AP · CD 1 — Croak across the canopy: see within 2, and Mark the nearest foe (the next hit on it deals +2). *(P3: Croak across the canopy: see within 5, and Mark the nearest foe (the next hit on it deals +2).)*
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 3 — Croak together: both heroes' next hit deals +2, and foes beside you are Weakened 1 this round. *(P3/E3: Croak together: both heroes' next hit deals +4, and foes beside you are Weakened 1 this round.)*
+
+## 62 · Hummingbird — leans S/T
+
+*The smallest bird there is, and the fiercest. Hovers, flies backwards, never stops.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Hover** · Space · `hmb_hover`
+
+- *Phys — Hold Still* · 1 AP · CD 1 — Dart 1 and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1. *(P3: Dart 4 and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1.)*
+- *Eth — Hang in the Air* · 1 AP + 1 Space · CD 4 — Hover for 2 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; Shield 1 this round. *(P3/E3: Hover for 4 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; Shield 1 this round.)*
+
+**Thousand Beats** · Time · `hmb_beats`
+
+- *Phys — Blur* · 1 AP · CD 1 — Wings to a blur: gain 1 AP next turn, and the next hit on you is 1 less.
+- *Eth — Overdrive* · 1 AP + 1 Time · CD 4 — Gain 1 AP to spend this turn, and your track slides 1 extra. *(P3/E3: Gain 2 AP to spend this turn, and your track slides 1 extra.)*
+
+**Night Torpor** · Time · `hmb_torpor`
+
+- *Phys — Slow Down* · 1 AP · CD 2 — Heal 2 and go still (no further actions with this hero this turn). *(P3: Heal 5 and go still (no further actions with this hero this turn).)*
+- *Eth — Deep Torpor* · 1 AP + 1 Time · CD 4 — Go cold and still: heal 1 at the start of each turn for 2 rounds, Shield 2 this round, and Hidden 1. *(P3/E3: Go cold and still: heal 2 at the start of each turn for 2 rounds, Shield 4 this round, and Hidden 1.)*
+
+**Needle Bill** · Mass · `hmb_needle`
+
+- *Phys — Needle* · 1 AP · CD 0 — Melee 1 that ignores Shield. *(P3: Melee 4 that ignores Shield.)*
+- *Eth — Stab and Stab* · 1 AP + 1 Mass · CD 3 — Melee 2 twice, each ignoring Shield; it is Weakened 1 this round. *(P3/E3: Melee 4 twice, each ignoring Shield; it is Weakened 1 this round.)*
+
+**Backward Flight** · Space · `hmb_back`
+
+- *Phys — Back Off* · 1 AP · CD 1 — Fly 1 backwards out of reach, past foes, and hold Shield 1 this round. *(P3: Fly 4 backwards out of reach, past foes, and hold Shield 1 this round.)*
+- *Eth — Hit and Back* · 1 AP + 1 Space · CD 3 — Melee 3 and back away: it is pushed 1, and the next hit on you is 1 less. *(P3/E3: Melee 5 and back away: it is pushed 2, and the next hit on you is 1 less.)*
+
+**Nectar Rush** · Charge · `hmb_nectar`
+
+- *Phys — Sip* · 1 AP · CD 1 — Sip nectar: heal 1, and your next hit this turn deals +1. *(P3: Sip nectar: heal 4, and your next hit this turn deals +1.)*
+- *Eth — Sugar High* · 1 AP + 1 Charge · CD 4 — Draw a Charge die from your pool, heal 1, and your next hit deals +2. *(P3/E3: Draw a Charge die from your pool, heal 1, and your next hit deals +4.)*
+
+**Tiny Fury** · Mass · `hmb_fury`
+
+- *Phys — Dive Bomb* · 1 AP · CD 1 — Dive up to 2 toward a foe within 3; if you end beside it, melee 2. *(P3: Dive up to 2 toward a foe within 3; if you end beside it, melee 5.)*
+- *Eth — Chase It Off* · 1 AP + 1 Mass · CD 3 — Melee 3 and chase it off: push 2, and it is Weakened 1 for 2 rounds. *(P3/E3: Melee 5 and chase it off: push 2, and it is Weakened 2 for 2 rounds.)*
+
+**Flower Memory** · Time · `hmb_memory`
+
+- *Phys — Route* · 1 AP · CD 1 — Remember the route: reroll up to 1 banked dice, and see within 2. *(P3: Remember the route: reroll up to 2 banked dice, and see within 2.)*
+- *Eth — Every Flower* · 1 AP + 1 Time · CD 4 — Remember every flower on the board: see the whole board this round, and both heroes' tracks slide 1 extra.
+
+## 63 · Peacock — leans C/M
+
+*A hundred eyes in its tail and a scream like a cat. Eats snakes.*
+
+**Hollow Bones** · Mass · `owl_bones`
+
+- *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+
+**Display Fan** · Charge · `bir_fan`
+
+- *Phys — Fan Out* · 1 AP · CD 1 — Spread the fan: a foe within 3 is drawn 1 toward you and Weakened 1 this round; you hold Shield 1. *(P3: Spread the fan: a foe within 3 is drawn 1 toward you and Weakened 1 this round; you hold Shield 2.)*
+- *Eth — Shiver the Train* · 1 AP + 1 Charge · CD 3 — Rattle the whole fan: every foe within 3 is drawn 1 toward you; you hold Shield 2 this round, and your ally's next hit deals +1. *(P3/E3: Rattle the whole fan: every foe within 5 is drawn 1 toward you; you hold Shield 4 this round, and your ally's next hit deals +1.)*
+
+**Alarm Call** · Time · `bir_alarm`
+
+- *Phys — Alarm* · 1 AP · CD 1 — Raise the alarm: see within 2, and both heroes hold Shield 1 this round. *(P3: Raise the alarm: see within 5, and both heroes hold Shield 1 this round.)*
+- *Eth — Whole Forest* · 1 AP + 1 Time · CD 3 — Wake the whole forest: see the whole board for 1 round, and each hero's next hit taken is 2 less. *(P3/E3: Wake the whole forest: see the whole board for 2 rounds, and each hero's next hit taken is 4 less.)*
+
+**Spur** · Mass · `bir_spur`
+
+- *Phys — Spur* · 1 AP · CD 1 — Melee 2, and it is Weakened 1 this round. *(P3: Melee 5, and it is Weakened 1 this round.)*
+- *Eth — Flying Spurs* · 1 AP + 1 Mass · CD 3 — Leap and kick with both feet: melee 3, then melee 1; it is Weakened 1 for 2 rounds. *(P3/E3: Leap and kick with both feet: melee 5, then melee 2; it is Weakened 1 for 2 rounds.)*
+
+**Hundred Eyes** · Charge · `pea_eyes`
+
+- *Phys — Stare* · 1 AP · CD 1 — A hundred eyes on one foe within 3: it takes 1 and is Weakened 1 for 1 round. *(P3: A hundred eyes on one foe within 3: it takes 1 and is Weakened 1 for 2 rounds.)*
+- *Eth — All Eyes* · 1 AP + 1 Charge · CD 3 — Every eye open: see within 3, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1. *(P3/E3: Every eye open: see within 5, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +2.)*
+
+**Train Sweep** · Mass · `pea_sweep`
+
+- *Phys — Sweep* · 1 AP · CD 1 — Swing the train: every foe beside you takes 1. *(P3: Swing the train: every foe beside you takes 2.)*
+- *Eth — Great Sweep* · 1 AP + 1 Mass · CD 3 — Every foe beside you takes 2 and is swept back 1. *(P3/E3: Every foe beside you takes 4 and is swept back 1.)*
+
+**Snake Eater** · Mass · `pea_snake`
+
+- *Phys — Peck* · 1 AP · CD 1 — Melee 2; you can't be Weakened or Rooted this round. *(P3: Melee 5; you can't be Weakened or Rooted this round.)*
+- *Eth — Venom Proof* · 1 AP + 1 Mass · CD 3 — Melee 4, shake off Anchored and Weakened, and you can't be Weakened or Rooted for 2 rounds. *(P3/E3: Melee 6, shake off Anchored and Weakened, and you can't be Weakened or Rooted for 2 rounds.)*
+
+**Jungle Roost** · Space · `pea_roost`
+
+- *Phys — Flap Up* · 1 AP · CD 1 — Flap up onto any node within 1, height included, and hold Shield 1 this round. *(P3: Flap up onto any node within 4, height included, and hold Shield 1 this round.)*
+- *Eth — High Roost* · 1 AP + 1 Space · CD 4 — Roost on any node within 2, height included: heal 2 now, and 1 at the start of each turn for 2 rounds. *(P3/E3: Roost on any node within 4, height included: heal 4 now, and 1 at the start of each turn for 2 rounds.)*
+
+**Iridescence** · Charge · `pea_iris`
+
+- *Phys — Shimmer* · 1 AP · CD 1 — Shimmer from blue to green: the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Shimmer from blue to green: the next hit on you is 4 less, and your next hit this turn deals +1.)*
+- *Eth — Shift the Light* · 1 AP + 1 Charge · CD 3 — Leave your shimmer behind as a decoy for 2 rounds, move 2, and stay Hidden 1. *(P3/E3: Leave your shimmer behind as a decoy for 4 rounds, move 2, and stay Hidden 1.)*
