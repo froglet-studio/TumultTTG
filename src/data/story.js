@@ -501,6 +501,20 @@
       onward: ["\"Is {PLACE} sandy?\" {A} asks. \"Please.\"", "\"{THREAT},\" {A} says, and puffs up a little."],
       reply: ["{A} puffs up, briefly.", "\"Mm,\" {A} says.", "{A} blinks slowly at {B}."],
     },
+    crocodile: {
+      win: ["{A} slides back into the water without a ripple. \"Done.\"", "\"It came to drink,\" {A} says. \"They always come to drink.\""],
+      close: ["{A} lies on the bank with their jaws open and does not move for an hour.", "\"It saw my eyes,\" {A} says. \"Nobody sees my eyes.\""],
+      quiet: ["{A} lies in the shallows, only eyes and nostrils showing, watching {B}.", "{A} basks on a warm rock all evening, perfectly still."],
+      onward: ["\"Is there a river in {PLACE}?\" {A} asks. \"There is usually a river.\"", "\"{THREAT},\" {A} says. \"I can wait.\""],
+      reply: ["{A} blinks, slowly.", "\"Hm,\" {A} says, from the water.", "{A} rumbles, low."],
+    },
+    tortoise: {
+      win: ["{A} plods up to what is left and looks at it for a long time. \"Well.\"", "\"Slowly,\" {A} says. \"But surely.\""],
+      close: ["{A} pulls everything in and stays that way until morning.", "\"That one was quick,\" {A} says. \"They are all quick.\""],
+      quiet: ["{A} eats a whole cactus, slowly, spines and all.", "{A} tells {B} about something that happened a hundred years ago, very slowly."],
+      onward: ["\"{PLACE},\" {A} says. \"I will get there.\"", "\"{THREAT},\" {A} says. \"I have outlived worse.\""],
+      reply: ["{A} nods, very slowly.", "\"Mm,\" {A} says, eventually.", "{A} blinks at {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

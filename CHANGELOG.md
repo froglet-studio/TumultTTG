@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.61.0 — 2026-11-17 — the crocodiles and tortoises
+
+The sixteenth branch of the tree (`docs/design/11-clades.md`): two painted reptiles, each with nine traits.
+
+- **Crocodile and Giant Tortoise.**
+- Shared traits:
+  - **Solar Basking** (every reptile's)
+  - **Armoured Hide** and **Slow Heart**. Slow Heart's ethereal face stops the heart long enough that nothing can target you through the next enemy phase.
+  - the tortoise carries the parrot's **Long Life**
+- Traits of each one's own:
+  - crocodile: Death Roll, Lurk, Ambush Jaws, Tail Sweep, Gape and River King
+  - tortoise: Shell, Slow and Sure, Beak Snap, Withdraw and Steady Plod
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (look-ahead player, forced squad: one hero is the clade plus a random second, 60 runs):
+  - The crocodile wins 27%.
+  - The tortoise won 13% at first. After the fixes below it wins 18%, the lowest of the new clades so far but below average, not above.
+  - Fixes: Beak Snap hits harder, Steady Plod moves further, Shell's ethereal face also hits back, and Slow and Sure's ethereal face adds to a later hit.
+
 ## 2.60.0 — 2026-11-17 — the lizards
 
 The fifteenth branch of the tree (`docs/design/11-clades.md`): three painted lizards join the Gecko, each with nine traits.

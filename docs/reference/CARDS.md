@@ -3388,3 +3388,101 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Puff* · 1 AP · CD 1 — Gulp air and swell: Shield 1 this round, and foes beside you are Weakened 1. *(P3: Gulp air and swell: Shield 4 this round, and foes beside you are Weakened 1.)*
 - *Eth — Too Big to Bite* · 1 AP + 1 Mass · CD 3 — Swell to twice your size: Shield 3 this round, every foe beside you is shoved back 1, and your next hit deals +1. *(P3/E3: Swell to twice your size: Shield 5 this round, every foe beside you is shoved back 1, and your next hit deals +1.)*
+
+## 69 · Crocodile — leans M/T
+
+*Two hundred million years of waiting under the surface. Then the roll.*
+
+**Solar Basking** · Charge · `gec_basking`
+
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
+
+**Armoured Hide** · Mass · `rep_hide`
+
+- *Phys — Plates* · 1 AP · CD 1 — Bone plates in the skin: Shield 2 this round, and nothing can push or pull you. *(P3: Bone plates in the skin: Shield 5 this round, and nothing can push or pull you.)*
+- *Eth — Osteoderms* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds; anything that hits you in melee takes 1 meanwhile, and heal 1. *(P3/E3: Shield 5 for 2 rounds; anything that hits you in melee takes 1 meanwhile, and heal 1.)*
+
+**Slow Heart** · Time · `rep_heart`
+
+- *Phys — Slow Down* · 1 AP · CD 1 — Slow your heart: heal 1, and gain 1 AP next turn. *(P3: Slow your heart: heal 4, and gain 1 AP next turn.)*
+- *Eth — Two Beats a Minute* · 1 AP + 1 Time · CD 5 · Dur 1 — Slow your heart almost to a stop: nothing can target you through the next enemy phase, and heal 3. *(P3/E3: Slow your heart almost to a stop: nothing can target you through the next enemy phase, and heal 5.)*
+
+**Death Roll** ★ · Mass · `cro_roll`
+
+- *Phys — Grab* · 1 AP · CD 1 — Melee 2, and hold on: Anchored 1. *(P3: Melee 5, and hold on: Anchored 1.)*
+- *Eth — Roll* · 2 AP + 1 Mass · CD 3 — Roll with it in your jaws: melee 5 that ignores Shield, and it is Weakened 1 for 2 rounds. *(P3/E3: Roll with it in your jaws: melee 7 that ignores Shield, and it is Weakened 2 for 2 rounds.)*
+
+**Lurk** · Time · `cro_lurk`
+
+- *Phys — Sink* · 1 AP · CD 1 — Sink until only your eyes show: Hidden 1, and your next hit within 2 rounds deals +1. *(P3: Sink until only your eyes show: Hidden 1, and your next hit within 2 rounds deals +4.)*
+- *Eth — Log in the River* · 1 AP + 1 Time · CD 4 — Drift 2 like a log: Hidden 1 even if you move, and your next hit within 3 rounds deals +3. *(P3/E3: Drift 4 like a log: Hidden 2 even if you move, and your next hit within 3 rounds deals +5.)*
+
+**Ambush Jaws** · Mass · `cro_jaws`
+
+- *Phys — Lunge* · 1 AP · CD 1 — Lunge 1 toward a foe within 2; if you end beside it, melee 3. *(P3: Lunge 1 toward a foe within 2; if you end beside it, melee 6.)*
+- *Eth — Out of the Water* · 1 AP + 1 Mass · CD 3 — Burst from the water beside a foe within 3, hidden or not: melee 4, and it is Anchored 1. *(P3/E3: Burst from the water beside a foe within 5, hidden or not: melee 6, and it is Anchored 1.)*
+
+**Tail Sweep** · Mass · `cro_tail`
+
+- *Phys — Sweep* · 1 AP · CD 1 — Swing your tail: every foe beside you takes 1 and is knocked back 1. *(P3: Swing your tail: every foe beside you takes 2 and is knocked back 1.)*
+- *Eth — Club Tail* · 1 AP + 1 Mass · CD 3 — Club one foe with your tail: melee 4, push it 2, and it is Weakened 1 this round. *(P3/E3: Club one foe with your tail: melee 6, push it 2, and it is Weakened 1 this round.)*
+
+**Gape** · Time · `cro_gape`
+
+- *Phys — Gape* · 1 AP · CD 1 — Lie with your jaws wide in the sun: heal 1, hold Shield 1, and foes beside you are Weakened 1 at the sight. *(P3: Lie with your jaws wide in the sun: heal 1, hold Shield 2, and foes beside you are Weakened 1 at the sight.)*
+- *Eth — Open Wide* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; the next foe to hit you in melee takes 3. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; the next foe to hit you in melee takes 5.)*
+
+**River King** · Charge · `cro_king`
+
+- *Phys — Bellow* · 1 AP · CD 1 — Bellow across the water: see within 2, foes beside you are Weakened 1, and your next hit this turn deals +1. *(P3: Bellow across the water: see within 5, foes beside you are Weakened 1, and your next hit this turn deals +1.)*
+- *Eth — My River* · 1 AP + 1 Charge · CD 4 — This is your river: both heroes deal +2 on their next hit, ignore hazards for 2 rounds, and hold Shield 1 this round. *(P3/E3: This is your river: both heroes deal +4 on their next hit, ignore hazards for 2 rounds, and hold Shield 1 this round.)*
+
+## 70 · Giant Tortoise — leans T/M
+
+*Slow, steady, and older than anyone it meets. Its house goes where it goes.*
+
+**Solar Basking** · Charge · `gec_basking`
+
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
+
+**Long Life** · Time · `bir_life`
+
+- *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+
+**Armoured Hide** · Mass · `rep_hide`
+
+- *Phys — Plates* · 1 AP · CD 1 — Bone plates in the skin: Shield 2 this round, and nothing can push or pull you. *(P3: Bone plates in the skin: Shield 5 this round, and nothing can push or pull you.)*
+- *Eth — Osteoderms* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds; anything that hits you in melee takes 1 meanwhile, and heal 1. *(P3/E3: Shield 5 for 2 rounds; anything that hits you in melee takes 1 meanwhile, and heal 1.)*
+
+**Slow Heart** · Time · `rep_heart`
+
+- *Phys — Slow Down* · 1 AP · CD 1 — Slow your heart: heal 1, and gain 1 AP next turn. *(P3: Slow your heart: heal 4, and gain 1 AP next turn.)*
+- *Eth — Two Beats a Minute* · 1 AP + 1 Time · CD 5 · Dur 1 — Slow your heart almost to a stop: nothing can target you through the next enemy phase, and heal 3. *(P3/E3: Slow your heart almost to a stop: nothing can target you through the next enemy phase, and heal 5.)*
+
+**Shell** ★ · Mass · `tor_shell`
+
+- *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and you can't be Weakened or Rooted. *(P3: Shield 5 this round, and you can't be Weakened or Rooted.)*
+- *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 4 and is pushed 1.)*
+
+**Slow and Sure** · Time · `tor_sure`
+
+- *Phys — Plan Ahead* · 1 AP · CD 1 — Reroll up to 1 banked dice, and gain 1 AP next turn. *(P3: Reroll up to 2 banked dice, and gain 1 AP next turn.)*
+- *Eth — In Good Time* · 1 AP + 1 Time · CD 4 — Gain 1 AP at the start of each turn for 2 rounds; the next hit on you is 2 less, and your next hit within 3 rounds deals +2. *(P3/E3: Gain 1 AP at the start of each turn for 3 rounds; the next hit on you is 4 less, and your next hit within 3 rounds deals +4.)*
+
+**Beak Snap** · Mass · `tor_beak`
+
+- *Phys — Snap* · 1 AP · CD 1 — Snap: it loses 1 Shield, then melee 3. *(P3: Snap: it loses 1 Shield, then melee 6.)*
+- *Eth — Shear* · 1 AP + 1 Mass · CD 3 — Shear with the beak's edge: melee 4 that ignores Shield, and it is Weakened 1 this round. *(P3/E3: Shear with the beak's edge: melee 6 that ignores Shield, and it is Weakened 1 this round.)*
+
+**Withdraw** · Time · `tor_withdraw`
+
+- *Phys — Pull In* · 1 AP · CD 2 — Pull everything in: Shield 3 this round, heal 1, and nothing can push or pull you. *(P3: Pull everything in: Shield 6 this round, heal 1, and nothing can push or pull you.)*
+- *Eth — Wait It Out* · 1 AP + 1 Time · CD 5 · Dur 1 — Wait it out inside: nothing can target you through the next enemy phase; heal 3 and shake off Anchored and Weakened. *(P3/E3: Wait it out inside: nothing can target you through the next enemy phase; heal 5 and shake off Anchored and Weakened.)*
+
+**Steady Plod** · Space · `tor_plod`
+
+- *Phys — Plod* · 1 AP · CD 0 — Plod 2, and hold Shield 1 this round. *(P3: Plod 5, and hold Shield 1 this round.)*
+- *Eth — Through Anything* · 1 AP + 1 Space · CD 3 — Plod 3 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted. *(P3/E3: Plod 5 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted.)*

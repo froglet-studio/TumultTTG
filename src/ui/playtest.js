@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.60.0',
+    version: '2.61.0',
     items: [
+      {
+        text: 'Crocodile and Giant Tortoise join. Both share Armoured Hide and Slow Heart (which can stop your heart long enough that nothing can target you), and every reptile’s Solar Basking; the tortoise also has the parrot’s Long Life. The crocodile lurks, lunges and rolls; the tortoise shells up, plans ahead and plods through anything. Are they too hard to kill, or just right?',
+      },
       {
         text: 'Three lizards join the gecko on its branch: Chameleon, Basilisk and Horned Lizard. All four share the gecko’s Tail Autotomy, Scaled Hide and Solar Basking. The chameleon shoots its tongue and watches two ways at once, the basilisk runs across water, and the horned lizard squirts blood, raises spikes and flattens into the sand. Does each one feel like itself?',
       },
