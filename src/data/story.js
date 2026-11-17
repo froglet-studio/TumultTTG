@@ -515,6 +515,20 @@
       onward: ["\"{PLACE},\" {A} says. \"I will get there.\"", "\"{THREAT},\" {A} says. \"I have outlived worse.\""],
       reply: ["{A} nods, very slowly.", "\"Mm,\" {A} says, eventually.", "{A} blinks at {B}."],
     },
+    newt: {
+      win: ["{A} walks off across the clearing, bright orange and unhurried. \"Nothing eats me.\"", "\"It bit,\" {A} says. \"It will not bite again.\""],
+      close: ["{A} slips into a pond and sits on the bottom for a long time.", "\"I lost a toe,\" {A} says. \"It will grow back.\""],
+      quiet: ["{A} wanders the leaf litter around camp all evening.", "{A} sits in the shallows next to {B}, perfectly still."],
+      onward: ["\"Is there a pond in {PLACE}?\" {A} asks. \"I always find the pond.\"", "\"{THREAT},\" {A} says, and turns their bright belly to the road."],
+      reply: ["{A} blinks.", "\"Mm,\" {A} says.", "{A} flicks their tail."],
+    },
+    tree_frog: {
+      win: ["{A} sticks to a leaf upside down and croaks, very pleased.", "\"It never saw me,\" {A} says. \"Then it saw my eyes.\""],
+      close: ["{A} goes clear on a leaf and does not move till morning.", "\"I missed the leap,\" {A} says. \"I never miss.\""],
+      quiet: ["{A} calls all night by the water, and {B} cannot sleep.", "{A} sits on {B}'s shoulder and will not get off."],
+      onward: ["\"Rain in {PLACE}?\" {A} asks. \"I can call it, if not.\"", "\"{THREAT},\" {A} says, and opens their red eyes wide."],
+      reply: ["{A} chirps.", "\"Hm,\" {A} says, gulping.", "{A} blinks red eyes at {B}."],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

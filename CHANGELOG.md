@@ -1,5 +1,22 @@
 # Changelog
 
+## 2.62.0 — 2026-11-17 — the amphibians
+
+The seventeenth branch of the tree (`docs/design/11-clades.md`): two painted amphibians join the Axolotl, each with nine traits.
+
+- **Newt and Tree Frog.** The Axolotl now sits on this branch and keeps its nine.
+- Shared traits:
+  - **Toxic Secretion** and **External Gills** (the axolotl's): all three
+  - **Regeneration** and **Lateral Line**: axolotl and newt
+  - the tree frog's sticky toes are the gecko's **Adhesive Setae**. It is not the gecko's kin, but it gives the same answer to the same wall (a variant).
+- Traits of each one's own:
+  - newt: Eft Wander, Warning Belly, Water Return, Tail Swim and Rough Skin
+  - tree frog: Leaf Leap, Rain Call, Red-Eye Startle, Glass Belly, Night Chorus and Long Tongue
+- Each has a voice in the passages between stops. The audit reports no narrow faces.
+- **Balance** (look-ahead player, forced squad: one hero is the clade plus a random second, 60 runs):
+  - Results: axolotl 33%, tree frog 23%, newt 25%.
+  - The newt was at 18% before its own strikes were raised: Rough Skin and Tail Flick hit 1 harder, Warning Belly adds +1 to your next hit, Eft Wander adds +1 too, and Tail Swim moves 1 further.
+
 ## 2.61.0 — 2026-11-17 — the crocodiles and tortoises
 
 The sixteenth branch of the tree (`docs/design/11-clades.md`): two painted reptiles, each with nine traits.

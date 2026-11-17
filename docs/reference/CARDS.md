@@ -3486,3 +3486,101 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Plod* · 1 AP · CD 0 — Plod 2, and hold Shield 1 this round. *(P3: Plod 5, and hold Shield 1 this round.)*
 - *Eth — Through Anything* · 1 AP + 1 Space · CD 3 — Plod 3 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted. *(P3/E3: Plod 5 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted.)*
+
+## 71 · Newt — leans T/C
+
+*Wanders the woods as a bright red eft for years, then goes back to the water. Tastes terrible.*
+
+**Regeneration** ★ · Time · `axo_regen`
+
+- *Phys — Knit* · 1 AP · CD 1 — Knit a wound: heal 2. *(P3: Knit a wound: heal 5.)*
+- *Eth — Regrow* · 2 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.)*
+
+**External Gills** · Charge · `axo_gills`
+
+- *Phys — Gills* · 1 AP · CD 1 — Breathe anything: immune to hazards for 2 rounds, and heal 1. *(P3: Breathe anything: immune to hazards for 2 rounds, and heal 2.)*
+- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(P3/E3: Both heroes: immune to hazards and regenerate 1 each turn for 5 rounds.)*
+
+**Toxic Secretion** · Mass · `axo_toxic`
+
+- *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+
+**Lateral Line** · Charge · `axo_lateral`
+
+- *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+
+**Eft Wander** ★ · Space · `new_eft`
+
+- *Phys — Wander* · 1 AP · CD 1 — Wander 2 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1. *(P3: Wander 5 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.)*
+- *Eth — Years on Land* · 1 AP + 1 Space · CD 3 — Walk 3, past foes, bright and unbothered: you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1. *(P3/E3: Walk 5, past foes, bright and unbothered: you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1.)*
+
+**Warning Belly** · Charge · `new_belly`
+
+- *Phys — Flash Belly* · 1 AP · CD 1 — Arch your back and show your belly: foes beside you are Weakened 1, you hold Shield 1 this round, and your next hit this turn deals +1. *(P3: Arch your back and show your belly: foes beside you are Weakened 1, you hold Shield 2 this round, and your next hit this turn deals +1.)*
+- *Eth — Unken Reflex* · 1 AP + 1 Charge · CD 3 — Freeze in warning: foes beside you are Weakened 1 for 2 rounds; for 2 rounds you hold Shield 1 and anything that hits you in melee takes 1. *(P3/E3: Freeze in warning: foes beside you are Weakened 2 for 2 rounds; for 2 rounds you hold Shield 1 and anything that hits you in melee takes 2.)*
+
+**Water Return** · Time · `new_return`
+
+- *Phys — Slip In* · 1 AP · CD 1 — Slip into the water 1 away: Hidden 1, and heal 1. *(P3: Slip into the water 4 away: Hidden 1, and heal 1.)*
+- *Eth — Home Pond* · 1 AP + 1 Time · CD 4 — Back to the pond where you hatched: both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Back to the pond where you hatched: both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for 3 rounds.)*
+
+**Tail Swim** · Space · `new_tail`
+
+- *Phys — Scull* · 1 AP · CD 0 — Scull 2 with your tail; hazards can't touch you this round. *(P3: Scull 5 with your tail; hazards can't touch you this round.)*
+- *Eth — Tail Flick* · 1 AP + 1 Space · CD 3 — Flick your tail: melee 4, push it 1, and take a free step. *(P3/E3: Flick your tail: melee 6, push it 1, and take a free step.)*
+
+**Rough Skin** · Mass · `new_rough`
+
+- *Phys — Nip* · 1 AP · CD 1 — Melee 3; your skin's poison gets in: it takes 1 at the start of its next 2 turns. *(P3: Melee 6; your skin's poison gets in: it takes 1 at the start of its next 2 turns.)*
+- *Eth — Deadly to Swallow* · 1 AP + 1 Mass · CD 3 — Seep toxin: for 2 rounds you hold Shield 1 and anything that hits you in melee takes 2; heal 1. *(P3/E3: Seep toxin: for 2 rounds you hold Shield 2 and anything that hits you in melee takes 4; heal 1.)*
+
+## 72 · Tree Frog — leans S/C
+
+*Sticky toes, red eyes, a glass belly, and a voice far too big for it.*
+
+**Adhesive Setae** ★ · Charge · `gec_setae`
+
+- *Phys — Climb* · 1 AP · CD 0 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
+- *Eth — Van der Waals* · 1 AP + 1 Charge · CD 3 — Command the molecular bond: pull a foe in your zone 2 toward you. *(P3/E3: Command the molecular bond: pull a foe in your zone 4 toward you and Anchor it 1.)*
+
+**External Gills** · Charge · `axo_gills`
+
+- *Phys — Gills* · 1 AP · CD 1 — Breathe anything: immune to hazards for 2 rounds, and heal 1. *(P3: Breathe anything: immune to hazards for 2 rounds, and heal 2.)*
+- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(P3/E3: Both heroes: immune to hazards and regenerate 1 each turn for 5 rounds.)*
+
+**Toxic Secretion** · Mass · `axo_toxic`
+
+- *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+
+**Leaf Leap** ★ · Space · `tfr_leap`
+
+- *Phys — Leap* · 1 AP · CD 1 — Leap onto any node within 1, height included; your next hit this turn deals +1. *(P3: Leap onto any node within 4, height included; your next hit this turn deals +1.)*
+- *Eth — Leaf to Leaf* · 1 AP + 1 Space · CD 3 — Leap to any node within 4, height included, and land Hidden 1. *(P3/E3: Leap to any node within 6, height included, and land Hidden 1.)*
+
+**Rain Call** · Charge · `tfr_rain`
+
+- *Phys — Croak for Rain* · 1 AP · CD 1 — Call the rain: both heroes heal 1 and ignore hazards this round. *(P3: Call the rain: both heroes heal 2 and ignore hazards this round.)*
+- *Eth — Downpour* · 1 AP + 1 Charge · CD 4 — Bring the downpour: both heroes heal 1 at the start of each turn for 2 rounds and deal +1 on their next hit; see within 2. *(P3/E3: Bring the downpour: both heroes heal 1 at the start of each turn for 4 rounds and deal +1 on their next hit; see within 2.)*
+
+**Red-Eye Startle** · Charge · `tfr_startle`
+
+- *Phys — Open Eyes* · 1 AP · CD 1 — Flash your red eyes at a foe within 2: Weakened 1 this round, and you take a free step. *(P3: Flash your red eyes at a foe within 2: Weakened 2 this round, and you take a free step.)*
+- *Eth — Flash of Colour* · 1 AP + 1 Charge · CD 3 — Flash red eyes, orange feet and blue flanks: foes beside you are Weakened 1, you leave a decoy, and you leap 3. *(P3/E3: Flash red eyes, orange feet and blue flanks: foes beside you are Weakened 1, you leave a decoy, and you leap 5.)*
+
+**Glass Belly** · Time · `tfr_glass`
+
+- *Phys — Go Clear* · 1 AP · CD 1 — Go see-through on a leaf: Hidden 1, and Shield 1 this round. *(P3: Go see-through on a leaf: Hidden 1, and Shield 4 this round.)*
+- *Eth — Hide the Blood* · 1 AP + 1 Time · CD 4 — Pack your blood away and turn to glass: Hidden 1 even if you move, and heal 2. *(P3/E3: Pack your blood away and turn to glass: Hidden 2 even if you move, and heal 4.)*
+
+**Night Chorus** · Charge · `tfr_chorus`
+
+- *Phys — Call* · 1 AP · CD 1 — Call into the night: see within 2, and your ally's next hit deals +1. *(P3: Call into the night: see within 2, and your ally's next hit deals +2.)*
+- *Eth — Wall of Sound* · 1 AP + 1 Charge · CD 3 — Every frog at once: foes within 1 fall back 1, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1. *(P3/E3: Every frog at once: foes within 2 fall back 1, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1.)*
+
+**Long Tongue** · Mass · `tfr_tongue`
+
+- *Phys — Flick* · 1 AP · CD 1 — Flick your tongue at a foe within 2 for 2. *(P3: Flick your tongue at a foe within 2 for 5.)*
+- *Eth — Snatch and Swallow* · 1 AP + 1 Mass · CD 3 — Snatch a foe within 2: it takes 3 and is pulled 1 toward you, and you heal 1. *(P3/E3: Snatch a foe within 2: it takes 5 and is pulled 1 toward you, and you heal 1.)*

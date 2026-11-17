@@ -3124,4 +3124,110 @@
       fx:[{v:'move', n:(P,E)=>2+E, noTrap:true},{v:'hazardImmune', dur:2},{v:'statusImmune', dur:2}],
       txt:(P,E)=>`Plod ${2+E} through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted.` },
     'It goes where it is going, and it gets there.');
+  /* ───────────────────────── AMPHIBIANS ─────────────────────────
+     axolotl · newt · tree frog. The axolotl's Toxic Secretion and External Gills are every amphibian's; its
+     Regeneration and Lateral Line the newt's too. The tree frog's sticky toes are the gecko's Adhesive Setae:
+     not kin, the same answer to the same wall (a variant). */
+  T.SPECIES.axolotl.branch = 'Amphibians';
+  S('newt', { name: 'Newt', lean: 'T/C', branch: 'Amphibians', icon: '🦎',
+    tagline: 'Wanders the woods as a bright red eft for years, then goes back to the water. Tastes terrible.' });
+  S('tree_frog', { name: 'Tree Frog', lean: 'S/C', branch: 'Amphibians', variant: true, icon: '🐸',
+    tagline: 'Sticky toes, red eyes, a glass belly, and a voice far too big for it.' });
+  T.shareTrait('axo_toxic', 'newt', 'tree_frog');
+  T.shareTrait('axo_gills', 'newt', 'tree_frog');
+  T.shareTrait('axo_regen', 'newt');
+  T.shareTrait('axo_lateral', 'newt');
+  T.shareTrait('gec_setae', 'tree_frog');
+
+  // Newt: Regeneration, Toxic Secretion, External Gills, Lateral Line, and these five
+  K(['newt'],'new_eft','Eft Wander','S',2,
+    { n:'Wander', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, noTrap:true},{v:'heal', n:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Wander ${2+P} through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.` },
+    { n:'Years on Land', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'statusImmune', dur:2},{v:'empower', val:1, uses:1, dur:2}],
+      txt:(P,E)=>`Walk ${2+E}, past foes, bright and unbothered: you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1.` },
+    'Bright orange, walking openly, because nothing wants to eat it.');
+  K(['newt'],'new_belly','Warning Belly','C',0,
+    { n:'Flash Belly', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Arch your back and show your belly: foes beside you are Weakened 1, you hold Shield ${1+h(P)} this round, and your next hit this turn deals +1.` },
+    { n:'Unken Reflex', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2, area:'adj'},{v:'thorns', val:(P,E)=>1+h(E), dur:2},{v:'shield', val:1, dur:2}],
+      txt:(P,E)=>`Freeze in warning: foes beside you are Weakened ${1+h(E)} for 2 rounds; for 2 rounds you hold Shield 1 and anything that hits you in melee takes ${1+h(E)}.` },
+    'Belly up and bright: you were warned.');
+  K(['newt'],'new_return','Water Return','T',0,
+    { n:'Slip In', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Slip into the water ${1+P} away: Hidden 1, and heal 1.` },
+    { n:'Home Pond', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(E), party:true},{v:'cleanse', party:true}],
+      txt:(P,E)=>`Back to the pond where you hatched: both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for ${2+h(E)} rounds.` },
+    'It finds its way home to the pond it was born in.');
+  K(['newt'],'new_tail','Tail Swim','S',0,
+    { n:'Scull', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Scull ${2+P} with your tail; hazards can't touch you this round.` },
+    { n:'Tail Flick', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:1},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Flick your tail: melee ${3+E}, push it 1, and take a free step.` },
+    'A flattened tail, made for water.');
+  K(['newt'],'new_rough','Rough Skin','M',0,
+    { n:'Nip', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'dot', kind:'toxin', val:1, dur:2}],
+      txt:(P,E)=>`Melee ${3+P}; your skin's poison gets in: it takes 1 at the start of its next 2 turns.` },
+    { n:'Deadly to Swallow', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'shield', val:(P,E)=>1+h(E), dur:2},{v:'heal', n:1}],
+      txt:(P,E)=>`Seep toxin: for 2 rounds you hold Shield ${1+h(E)} and anything that hits you in melee takes ${1+E}; heal 1.` },
+    'Enough poison in one to stop a dozen hearts.');
+
+  // Tree frog: Toxic Secretion, External Gills, Adhesive Setae, and these six
+  K(['tree_frog'],'tfr_leap','Leaf Leap','S',2,
+    { n:'Leap', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Leap onto any node within ${1+P}, height included; your next hit this turn deals +1.` },
+    { n:'Leaf to Leaf', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Leap to any node within ${3+E}, height included, and land Hidden 1.` },
+    'Twenty times its own length, and it sticks the landing.');
+  K(['tree_frog'],'tfr_rain','Rain Call','C',0,
+    { n:'Croak for Rain', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+h(P), party:true},{v:'hazardImmune', dur:1, party:true}],
+      txt:(P,E)=>`Call the rain: both heroes heal ${1+h(P)} and ignore hazards this round.` },
+    { n:'Downpour', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>1+E, party:true},{v:'reveal', radius:2, dur:1},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Bring the downpour: both heroes heal 1 at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'} and deal +1 on their next hit; see within 2.` },
+    'It sings before the storm, every time.');
+  K(['tree_frog'],'tfr_startle','Red-Eye Startle','C',0,
+    { n:'Open Eyes', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Flash your red eyes at a foe within 2: Weakened ${1+h(P)} this round, and you take a free step.` },
+    { n:'Flash of Colour', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'decoy', dur:1, here:true},{v:'weaken', val:1, dur:1, area:'adj'},{v:'move', n:(P,E)=>2+E}],
+      txt:(P,E)=>`Flash red eyes, orange feet and blue flanks: foes beside you are Weakened 1, you leave a decoy, and you leap ${2+E}.` },
+    'Asleep it is green. Awake, it is every colour at once.');
+  K(['tree_frog'],'tfr_glass','Glass Belly','T',0,
+    { n:'Go Clear', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Go see-through on a leaf: Hidden 1, and Shield ${1+P} this round.` },
+    { n:'Hide the Blood', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'heal', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Pack your blood away and turn to glass: Hidden ${1+h(E)} even if you move, and heal ${1+E}.` },
+    'You can see its heart beating through the skin.');
+  K(['tree_frog'],'tfr_chorus','Night Chorus','C',0,
+    { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Call into the night: see within 2, and your ally's next hit deals +${1+h(P)}.` },
+    { n:'Wall of Sound', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:2, area:'adj'},{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Every frog at once: foes within ${1+h(E)} fall back 1, foes beside you are Weakened 1 for 2 rounds, and both heroes' next hit deals +1.` },
+    'Thousands of them, and you cannot hear yourself think.');
+  K(['tree_frog'],'tfr_tongue','Long Tongue','M',0,
+    { n:'Flick', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`Flick your tongue at a foe within 2 for ${2+P}.` },
+    { n:'Snatch and Swallow', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+E},{v:'force', kind:'pull', n:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Snatch a foe within 2: it takes ${2+E} and is pulled 1 toward you, and you heal 1.` },
+    'Out, stuck, in, before you saw it move.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
