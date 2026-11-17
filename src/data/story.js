@@ -354,6 +354,20 @@
       onward: ['"Water in {PLACE}?" {A} asks. "Then I can feel everything."', '"{THREAT}," {A} says. "It has a heartbeat. I will find it."'],
       reply: ['{A} clicks their bill.', '"Hm," {A} says.', '{A} paddles a webbed foot.'],
     },
+    eagle: {
+      win: ['{A} settles their wings and looks down at what is left. "That will do."', '"It thought it was big," {A} says. "From up there, nothing is big."'],
+      close: ['{A} sits hunched on a high perch, feathers ruffled, saying nothing.', '"It nearly had me," {A} says. "It did not have me."'],
+      quiet: ['{A} circles high over camp for an hour, then lands without a word.', '{A} sits beside {B} on the highest thing around, watching the far edge.'],
+      onward: ['"{PLACE}," {A} says. "I want to see it from above first."', '{A} grips their perch tighter. "{THREAT}. I will find it before it finds us."'],
+      reply: ['{A} clacks their beak.', '"Yes," {A} says.', '{A} turns their head, slowly, to look at {B}.'],
+    },
+    hawk: {
+      win: ['{A} mantles over the last of it, wings spread. "Mine."', '"Too slow," {A} says, already looking for the next thing.'],
+      close: ['{A} preens a ragged wing for a long time, very carefully.', '"I lost it in the cover," {A} says. "I never lose it in the cover."'],
+      quiet: ['{A} hangs on the wind above camp, perfectly still, for no reason anyone can see.', '{A} races {B} to the ridge and gets there first, and waits.'],
+      onward: ['"Hedges in {PLACE}?" {A} asks. "Good. I like hedges."', '"{THREAT}," {A} says. "Fast? So am I."'],
+      reply: ['{A} rouses their feathers.', '"Mm," {A} says.', '{A} flicks their eyes to {B} and back to the sky.'],
+    },
   };
 
   /** The Terminal's log lines, by situation. Plain, procedural, a little dry; never a character. */

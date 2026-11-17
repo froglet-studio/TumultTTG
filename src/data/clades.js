@@ -1908,4 +1908,115 @@
       fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'teleport', reach:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
       txt:(P,E)=>`Leave a puzzle where you stood (a decoy for ${1+E} rounds), slip to a node within 2, and your next hit deals +${1+E}.` },
     'The first scientists to see one thought it was a hoax.');
+  /* ───────────────────────── BIRDS OF PREY AND OWLS ─────────────────────────
+     bald eagle · hawk, with the barn owl. Hollow Bones and Talon Strike are the owl's, and every raptor's;
+     Keen Sight and Stoop are the day hunters'. The hawk's Sky Hyperspeed is the cheetah's run, taken to the air. */
+  T.SPECIES.owl.branch = 'Birds of prey and owls';
+  S('eagle', { name: 'Bald Eagle', lean: 'M/C', branch: 'Birds of prey and owls', icon: '🦅',
+    tagline: 'Broad wings, a voice like a rusty hinge, and a grip nothing breaks.' });
+  S('hawk', { name: 'Hawk', lean: 'S/M', branch: 'Birds of prey and owls', icon: '🦅',
+    tagline: 'Quick in the hedges, quicker in the open. Hangs on the wind and drops.' });
+  T.shareTrait('owl_bones', 'eagle', 'hawk');
+  T.shareTrait('owl_talon', 'eagle', 'hawk');
+
+  K(['eagle','hawk'],'rap_sight','Keen Sight','C',0,
+    { n:'Spot', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>3+P, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`See everything within ${3+P}, and Mark the nearest foe (the next hit on it deals +2).` },
+    { n:'Eye of the Sky', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'reveal', radius:99, dur:1},{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`See the whole board this round; pick a foe: it can't Hide for ${2+E} rounds, and your hits on it deal +${1+h(E)}.` },
+    'It reads a newspaper from a mile up, if it cared to.', 'Birds of prey and owls');
+  K(['eagle','hawk'],'rap_stoop','Stoop','M',0,
+    { n:'Drop', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
+      txt:(P,E)=>`Drop up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
+    { n:'Plummet', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Fold the wings and fall beside a foe within ${3+E}, height included: melee ${3+E}, and it is Weakened 1 this round.` },
+    'Wings folded, and the whole sky behind it.', 'Birds of prey and owls');
+
+  // Bald eagle: Hollow Bones, Talon Strike, Keen Sight, Stoop, and these five
+  K(['eagle'],'eag_soar','Soar','S',0,
+    { n:'Ride the Wind', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Glide ${2+P}, over foes; hazards can't touch you this round.` },
+    { n:'High Circle', ap:1, el:1, cd:3, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>2+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Rise onto any node within ${2+E}, height included; see within ${2+E}, and your next hit this turn deals +1.` },
+    'Hours on one thermal without a wingbeat.');
+  K(['eagle'],'eag_lock','Talon Lock','M',0,
+    { n:'Clamp', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'anchor', who:'foe', dur:1},{v:'anchor', who:'self', dur:1}],
+      txt:(P,E)=>`Melee ${3+P} and lock on: it and you are both Anchored this round.` },
+    { n:'Death Grip', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E), held:true},{v:'dot', kind:'grip', val:1, dur:2}],
+      txt:(P,E)=>`Melee ${3+E} and do not let go: it is Anchored ${1+h(E)}, and takes 1 at the start of its next 2 turns.` },
+    'A grip that does not open.');
+  K(['eagle'],'eag_scream','Eagle Scream','C',0,
+    { n:'Scream', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:1, uses:1, dur:1, party:true}],
+      txt:(P,E)=>`Every foe beside you is Weakened 1, and both heroes' next hit this round deals +1.` },
+    { n:'Rally Cry', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'shield', val:1, dur:1, party:true},{v:'weaken', val:1, dur:2, area:'adj'}],
+      txt:(P,E)=>`Both heroes' next hit deals +${1+E} and they hold Shield 1 this round; foes beside you are Weakened 1 for 2 rounds.` },
+    'Smaller than it sounds, and everyone hears it.');
+  K(['eagle'],'eag_fish','Fish Snatch','S',0,
+    { n:'Snatch', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'force', kind:'pull', n:1}],
+      txt:(P,E)=>`Swoop on a foe within 3: it takes ${1+P} and is dragged 1 toward you.` },
+    { n:'Skim and Lift', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'heal', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Skim ${2+E}, over foes and through hazards, snatching a meal on the way: heal ${1+E}.` },
+    'Down to the water and up again, and never wet past the ankles.');
+  K(['eagle'],'eag_nest','Nest Guard','T',0,
+    { n:'Over the Nest', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1},{v:'counter', dmg:1, dur:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round, and the first foe to hit you in melee takes 1.` },
+    { n:'Eyrie', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+E} for 2 rounds and heal 1 at the start of each turn for 2 rounds.` },
+    'A nest the size of a car, and it comes back every year.');
+
+  // Hawk: Hollow Bones, Talon Strike, Keen Sight, Stoop, and these five
+  K(['hawk'],'haw_hyper','Sky Hyperspeed','S',0,
+    { n:'Sky Dash', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:4, exact:true, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'empower', val:(P,E)=>P, uses:1, dur:1}],
+      txt:(P,E)=>`Fly exactly 4, over foes and hazards${P ? `; your next strike this turn deals +${P}` : ''}.` },
+    { n:'Sky Burst', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:4, exact:true, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'empower', val:(P,E)=>2+E, uses:1, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Fly exactly 4, over foes and hazards; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +${2+E}.` },
+    'The cheetah’s run, with nothing underfoot to slow it.');
+  K(['hawk'],'haw_kite','Kite','S',0,
+    { n:'Hang', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'reveal', radius:2, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Slip ${1+P} and hang on the wind: see within 2, and your next hit this turn deals +1.` },
+    { n:'Hold the Wind', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hover', dur:(P,E)=>1+E},{v:'reveal', radius:(P,E)=>2+E, dur:1}],
+      txt:(P,E)=>`Hover for ${1+E} rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; see within ${2+E}.` },
+    'Perfectly still in a gale.');
+  K(['hawk'],'haw_bind','Talon Bind','M',0,
+    { n:'Bind', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'strike', kind:'melee', dmg:(P,E)=>1+h(P)}],
+      txt:(P,E)=>`Both feet: melee ${1+P}, then melee ${1+h(P)}.` },
+    { n:'Tumble', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:2},{v:'weaken', val:1, dur:2}],
+      txt:(P,E)=>`Lock feet and tumble: melee ${2+E}, push it 2, and it is Weakened 1 for 2 rounds.` },
+    'Two hawks locked together, falling, neither letting go.');
+  K(['hawk'],'haw_mantle','Mantle','T',0,
+    { n:'Mantle', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'hidden', dur:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Spread your wings over what you hold: Shield ${1+P}, Hidden 1, and heal 1.` },
+    { n:'Cover the Kill', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(E), party:true, radius:1},{v:'heal', n:(P,E)=>1+E, party:true}],
+      txt:(P,E)=>`You and an ally beside you are Hidden ${1+h(E)}, and both heroes heal ${1+E}.` },
+    'Wings down like a tent: mine.');
+  K(['hawk'],'haw_hedge','Hedge Chase','S',0,
+    { n:'Weave', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P, ignoreFoes:true, noTrap:true},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Weave ${2+P} through cover, past foes and setting off no traps; your next hit this turn deals +1.` },
+    { n:'Through the Hedge', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, revealTarget:true},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Burst out beside a foe within ${2+E}, hidden or not: melee ${2+E}, and you are Hidden 1.` },
+    'Through the gap in the hedge before the sparrow saw the gap.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
