@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.68.1 — 2026-11-17 — draft questions match your clades
+
+- **Canon questions in the draft.** A hero wearing a stand-in painting was asked about the painted pilot's clades, so an orca and mandrill hero was asked "what gives away the eagle in them?" (the painting is Jugger, orca and eagle). A stand-in is now never asked a question that names the pilot's clades, and the question says it is about the pilot whose painting the hero wears (`noClades` in `T.canonPrompt`).
+
 ## 2.68.0 — 2026-11-17 — painted clade heads
 
 - **Portraits.** Every clade but human now shows a painted head wherever its icon appeared: on cards, in draft packs and the species picker, in the codex and on pilot screens. The heads come from six sprite sheets of 128 px tiles (`assets/portraits/`, about 290 KB in all), sliced with CSS (`U.PORTRAIT_SHEETS`, `U.icClade`). Human, and any page built without the art, keeps the drawn icon. A build test requires a head for every clade.

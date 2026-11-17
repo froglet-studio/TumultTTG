@@ -117,6 +117,8 @@
    * remain); `turn` rotates the choice; for a pilot, `who` is { name, a, b } (their two clades) and the
    * pilot's own question, when there is one, comes before the questions every pilot shares.
    * Returns { id, subject, detail, ask, angles } with the pilot's words filled in.
+   * `noClades` leaves out the shared questions that name the pilot's clades: a hero wearing a stand-in
+   * painting has other clades than its pilot, so a question about the pilot's eagle reads as a mistake.
    */
   T.canonPrompt = function (subject, opts = {}) {
     const answered = new Set(opts.answered || []);
@@ -124,7 +126,8 @@
     const pool = T.CANON_PROMPTS.filter((p) => p.subject === subject);
     let pick = pool.filter((p) => !answered.has(p.id));
     if (subject.startsWith('pilot:')) {
-      const shared = T.CANON_PROMPTS.filter((p) => p.subject === 'pilot');
+      const namesClade = (p) => /\{[ab]\}/.test([p.detail, p.ask].concat(p.angles).join(' '));
+      const shared = T.CANON_PROMPTS.filter((p) => p.subject === 'pilot' && !(opts.noClades && namesClade(p)));
       if (!pick.length) pick = shared.filter((p) => !answered.has(p.id + ':' + subject));
       if (!pick.length) pick = pool.concat(shared);
     } else if (!pick.length) pick = pool;

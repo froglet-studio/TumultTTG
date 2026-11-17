@@ -196,6 +196,17 @@ test('canon: a pilot gets their own question first, then shared ones with their 
   assert.match(other.id, /:pilot:ZODIAC$/, 'a pilot with no page gets a shared question');
 });
 
+test("canon: a stand-in painting is never asked about the pilot's clades", () => {
+  const who = { name: 'Jugger', a: 'orca', b: 'eagle' };
+  for (let turn = 0; turn < 12; turn++) {
+    const p = T.canonPrompt('pilot:ZODIAC', { who, turn, noClades: true });
+    assert.ok(!/orca|eagle/.test(p.detail + p.ask + p.angles.join(' ')), `turn ${turn}: ${p.id}`);
+  }
+  const all = new Set();
+  for (let turn = 0; turn < 12; turn++) all.add(T.canonPrompt('pilot:ZODIAC', { who, turn }).id);
+  assert.ok(all.has('pilot.clades:pilot:ZODIAC'), 'an exact painting can still be asked about its clades');
+});
+
 /* ───────────── through the real page ───────────── */
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');

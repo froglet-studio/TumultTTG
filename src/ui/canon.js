@@ -171,6 +171,7 @@
       const p = T.canonPrompt(subject, {
         answered: answered(),
         turn: T.loadMeta().runs + d.heroIdx,
+        noClades: !U.isExact(a, hero),
         who: { name: a.name, a: clade(a.clades[0]), b: clade(a.clades[1]) },
       });
       if (!p) return '';
@@ -180,7 +181,7 @@
         where: 'draft:question',
         text: '',
         context: { hero: hero.name, painting: U.isExact(a, hero) ? 'exact' : 'stand-in' },
-        head: `<div class="row">${U.portrait(hero, 'xs')}<b>${esc(a.name)}</b><span class="dim small">${esc(a.key)} · tell us about them</span></div>`,
+        head: `<div class="row">${U.portrait(hero, 'xs')}<b>${esc(a.name)}</b><span class="dim small">${esc(a.key)} · ${U.isExact(a, hero) ? '' : `the pilot whose painting ${esc(hero.name)} wears · `}tell us about them</span></div>`,
       };
     }
     return promptHTML(key);
