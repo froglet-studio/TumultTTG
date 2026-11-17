@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.68.0 — 2026-11-17 — painted clade heads
+
+- **Portraits.** Every clade but human now shows a painted head wherever its icon appeared: on cards, in draft packs and the species picker, in the codex and on pilot screens. The heads come from six sprite sheets of 128 px tiles (`assets/portraits/`, about 290 KB in all), sliced with CSS (`U.PORTRAIT_SHEETS`, `U.icClade`). Human, and any page built without the art, keeps the drawn icon. A build test requires a head for every clade.
+- The sheets were generated in Figma Weave (Nano Banana Pro) from Garrett's approved test sheet and approved by him before going in (`assets/README.md`).
+
 ## 2.67.1 — 2026-11-17 — every clade drawn
 
 - **Icons.** The 75 clades added since 2.42 now have drawn icons in the same language as the first twelve: flat, angular silhouettes on the 24-unit grid, with cuts for eyes and markings. Until now they fell back to emoji on cards, in the codex and in draft packs. A build test now requires an icon for every clade.
