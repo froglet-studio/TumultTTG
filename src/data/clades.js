@@ -2019,4 +2019,270 @@
       fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, revealTarget:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Burst out beside a foe within ${2+E}, hidden or not: melee ${2+E}, and you are Hidden 1.` },
     'Through the gap in the hedge before the sparrow saw the gap.');
+  /* ───────────────────────── WADERS ─────────────────────────
+     crane · heron · egret · ibis · shoebill · flamingo. Every bird carries the owl's Hollow Bones; every wader
+     Wade and Long Legs; all but the flamingo Spear Bill and Still Hunt. The heron carries Human's Tool Use.
+     Migration is the crane's (the butterfly will share it) and Big Bill the shoebill's (the toucan and the
+     pelican will). */
+  const WADERS = ['crane','heron','egret','ibis','shoebill','flamingo'];
+  const SPEARS = ['crane','heron','egret','ibis','shoebill'];
+  S('crane', { name: 'Crane', lean: 'S/C', branch: 'Waders', icon: '🪿',
+    tagline: 'Tall, grey and patient, with a dance for every season and a voice that carries for miles.' });
+  S('heron', { name: 'Heron', lean: 'T/M', branch: 'Waders', icon: '🪿',
+    tagline: 'A statue in the shallows until the moment it is not. Uses bait, on purpose.' });
+  S('egret', { name: 'Egret', lean: 'C/S', branch: 'Waders', icon: '🪿',
+    tagline: 'White plumes, yellow feet, and a habit of riding on bigger animals.' });
+  S('ibis', { name: 'Ibis', lean: 'T/C', branch: 'Waders', icon: '🪿',
+    tagline: 'A curved bill that finds what is buried, and a flock that flies in a line.' });
+  S('shoebill', { name: 'Shoebill', lean: 'M/T', branch: 'Waders', icon: '🪿',
+    tagline: 'Stands still for an hour, then falls on its prey with its whole body. Its bill is a clog.' });
+  S('flamingo', { name: 'Flamingo', lean: 'T/C', branch: 'Waders', icon: '🦩',
+    tagline: 'Pink from what it eats, at home in lakes that would burn anyone else. Never alone.' });
+  T.shareTrait('owl_bones', ...WADERS);
+  T.shareTrait('hum_tool', 'heron');
+
+  K(WADERS,'wad_wade','Wade','S',0,
+    { n:'Wade', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Wade ${2+P}; hazards can't touch you this round.` },
+    { n:'Shallows', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E},{v:'hazardImmune', dur:2},{v:'clearHazard', radius:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Wade ${2+E}, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.` },
+    'Water to the knees is home.', 'Waders');
+  K(WADERS,'wad_legs','Long Legs','S',0,
+    { n:'High Step', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Step ${1+P} over foes, and hold Shield 1 this round.` },
+    { n:'Stand Tall', ap:1, el:1, cd:3, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Step up onto any node within ${1+E}, height included; see within ${2+E}, and your next hit this turn deals +1.` },
+    'Stilts that fold the wrong way.', 'Waders');
+  K(SPEARS,'wad_spear','Spear Bill','M',0,
+    { n:'Stab', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P, pierce:true}],
+      txt:(P,E)=>`Melee ${2+P} that ignores Shield.` },
+    { n:'Run Through', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>3+E, pierce:true},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Strike a foe within 2 for ${3+E}, ignoring Shield; it is Weakened 1 this round.` },
+    'A neck like a spring and a bill like a blade.', 'Waders');
+  K(SPEARS,'wad_still','Still Hunt','T',0,
+    { n:'Freeze', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'empower', val:(P,E)=>2+P, uses:1, dur:2},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Go still: Shield 1 this round, and your next hit within 2 rounds deals +${2+P}.` },
+    { n:'Patience', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'empower', val:(P,E)=>3+E, uses:1, dur:2},{v:'reroll', n:1}],
+      txt:(P,E)=>`Hidden 1; your next hit within 2 rounds deals +${3+E}, and reroll 1 banked die.` },
+    'It can wait longer than you can.', 'Waders');
+
+  // Crane: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, and these four
+  K(['crane'],'cra_migrate','Migration','S',0,
+    { n:'Long Haul', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>3+h(P)},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Fly ${3+h(P)}; hazards can't touch you this round.` },
+    { n:'Flyway', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+E},{v:'hasten', n:(P,E)=>1+h(E)},{v:'heal', n:1}],
+      txt:(P,E)=>`Fly ${2+E} and heal 1; your track slides ${1+h(E)} extra (your cards come back sooner).` },
+    'The same road in the sky, every year, for ten thousand years.');
+  K(['crane'],'cra_dance','Courtship Dance','C',0,
+    { n:'Dance', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+P, uses:1, dur:2, target:'ally'},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Dance for your partner: their next hit deals +${1+P}, and both heroes hold Shield 1 this round.` },
+    { n:'Pair Dance', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'cleanse', party:true},{v:'heal', n:(P,E)=>1+E, party:true},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Both heroes shake off Anchored and Weakened, heal ${1+E}, and deal +1 on their next hit.` },
+    'Bow, leap, toss a stick, bow again.');
+  K(['crane'],'cra_stride','Long Stride','S',0,
+    { n:'Stride', ap:1, el:0, cd:0, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P}],
+      txt:(P,E)=>`Stride ${2+P}.` },
+    { n:'Run-Up', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Run, flap and lift: land on any node within ${3+E}, height included; hazards can't touch you this round.` },
+    'Three long steps and it is in the air.');
+  K(['crane'],'cra_trumpet','Trumpet','C',0,
+    { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'weaken', val:1, dur:1, area:'adj'},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`See within ${2+P}; foes beside you are Weakened 1, and both heroes hold Shield 1 this round.` },
+    { n:'Unison Call', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'force', kind:'push', n:1, area:true, radius:1}],
+      txt:(P,E)=>`Call in unison: both heroes' next hit deals +${1+E}, and every foe beside you falls back 1.` },
+    'A windpipe coiled inside the breastbone, like a horn.');
+
+  // Heron: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, Tool Use, and these three
+  K(['heron'],'her_shade','Canopy Shade','T',0,
+    { n:'Wing Canopy', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'reveal', radius:2, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Spread your wings into a roof: Shield ${1+P}, see within 2, and Mark the nearest foe.` },
+    { n:'Deep Shade', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hidden', dur:(P,E)=>1+h(E), party:true, radius:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      txt:(P,E)=>`You and an ally beside you are Hidden ${1+h(E)}; your next hit deals +${1+E}.` },
+    'Shade on the water, and the fish come to it.');
+  K(['heron'],'her_neck','Neck Spring','M',0,
+    { n:'Spring', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P}],
+      txt:(P,E)=>`Strike a foe within 2 for ${2+P}.` },
+    { n:'Coiled Strike', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>3+E, revealTarget:true},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Strike a foe within 2 for ${3+E}, hidden or not, and pin it: Anchored 1.` },
+    'The neck is folded in an S, and the S is loaded.');
+  K(['heron'],'her_rookery','Rookery','C',0,
+    { n:'Colony', ap:1, el:0, cd:1, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+h(P), dur:1, party:true},{v:'heal', n:1, target:'ally'}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+h(P)} this round, and your ally heals 1.` },
+    { n:'Rookery Watch', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'engine', kind:'regen', val:1, dur:2, party:true},{v:'reveal', radius:99, dur:1}],
+      txt:(P,E)=>`Someone is always watching: see the whole board this round, and both heroes heal 1 at the start of each turn for 2 rounds.` },
+    'A hundred nests in one tree, and every one awake.');
+
+  // Egret: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, and these four
+  K(['egret'],'egr_plumes','Plumes','C',0,
+    { n:'Display', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'decoy', dur:1, here:true},{v:'move', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Flare your plumes and slip away: leave a decoy where you stood for 1 round, and move ${1+P}.` },
+    { n:'Dazzle', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
+      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'mark'},{v:'studied', n:1}],
+      txt:(P,E)=>`Dazzle a foe within 3: it is Weakened ${1+h(E)} for 2 rounds and Marked, and your hits on it deal +1.` },
+    'Plumes once worth more than gold.');
+  K(['egret'],'egr_stir','Foot Stir','T',0,
+    { n:'Stir', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'mark', nearest:true},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Stir the mud with a yellow foot: see within ${1+P}, Mark the nearest foe, and your next hit this turn deals +1.` },
+    { n:'Flush Out', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'locate', dur:2},{v:'strike', kind:'los', dmg:1, revealTarget:true},{v:'studied', n:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Flush out any foe: it takes 1, can't Hide for 2 rounds, and your hits on it deal +${1+h(E)}.` },
+    'Bright feet, shuffled, and everything hiding moves.');
+  K(['egret'],'egr_cattle','Cattle Rider','S',0,
+    { n:'Follow the Herd', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>2+P},{v:'heal', n:1},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Move ${2+P} and heal 1; your ally's next hit deals +1.` },
+    { n:'Ride Along', ap:1, el:1, cd:4, dur:0, tgt:'ally',
+      fx:[{v:'swap'},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Swap places with your ally, wherever they are; both heroes' next hit deals +${1+E}.` },
+    'Where the big animals walk, the insects jump.');
+  K(['egret'],'egr_lift','Graceful Lift','S',0,
+    { n:'Lift', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
+      fx:[{v:'climb', reach:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Lift onto any node within ${1+P}, height included, and hold Shield 1 this round.` },
+    { n:'Float', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'weightless', dur:(P,E)=>1+E},{v:'empower', val:1, uses:1, dur:2},{v:'heal', n:1}],
+      txt:(P,E)=>`Float for ${1+E} rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes; heal 1, and your next hit deals +1.` },
+    'Up off the water without a splash.');
+
+  // Ibis: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, and these four
+  K(['ibis'],'ibi_probe','Probing Bill','C',0,
+    { n:'Probe', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P, revealTarget:true},{v:'reveal', radius:1, dur:1}],
+      txt:(P,E)=>`Melee ${2+P}, hidden or not, and see everything beside you.` },
+    { n:'Deep Probe', ap:1, el:1, cd:3, dur:0, tgt:'node_r2',
+      fx:[{v:'interact', range:2},{v:'reveal', radius:2, dur:1},{v:'heal', n:(P,E)=>E}],
+      txt:(P,E)=>`Probe a node within 2: work an objective there as if you stood on it; see within 2${E ? `, and heal ${E}` : ''}.` },
+    'A bill that feels for what it cannot see.');
+  K(['ibis'],'ibi_flood','Flood Wader','T',0,
+    { n:'High Water', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'hazardImmune', dur:2},{v:'heal', n:1}],
+      txt:(P,E)=>`Shield ${1+P} this round, heal 1, and ignore hazards for 2 rounds.` },
+    { n:'Flood Plain', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'hazardImmune', dur:(P,E)=>2+E, party:true},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
+      txt:(P,E)=>`Both heroes ignore hazards for ${2+E} rounds and heal 1 at the start of each turn for 2 rounds.` },
+    'When the river rises, the ibis comes.');
+  K(['ibis'],'ibi_scribe','Scribe’s Eye','T',0,
+    { n:'Read the Signs', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reroll', n:(P,E)=>1+h(P)},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Reroll up to ${1+h(P)} banked dice, and see within 2.` },
+    { n:'Write It Down', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'draw', face:'T', val:1},{v:'reroll', n:1},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
+      txt:(P,E)=>`Draw a Time die from your pool and reroll 1 banked die; the next hit on you is ${1+E} less.` },
+    'The bird of the scribes, in the oldest stories.');
+  K(['ibis'],'ibi_flock','Flock V','S',0,
+    { n:'Formation', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>1+P},{v:'shield', val:1, dur:1, party:true}],
+      txt:(P,E)=>`Your ally moves ${1+P}, where you choose; both heroes hold Shield 1 this round.` },
+    { n:'V-Flight', ap:1, el:1, cd:4, dur:0, tgt:'ally_move',
+      fx:[{v:'rally', move:(P,E)=>2+E},{v:'shield', val:(P,E)=>1+h(E), dur:1, party:true},{v:'hasten', n:1, who:'ally'}],
+      txt:(P,E)=>`Your ally moves ${2+E} in your slipstream; both hold Shield ${1+h(E)} this round, and your ally's track slides 1 extra.` },
+    'The bird in front breaks the wind for the one behind.');
+
+  // Shoebill: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, Big Bill, and these three
+  K(['shoebill'],'bil_big','Big Bill','M',0,
+    { n:'Bill Grab', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'force', kind:'pull', n:1}],
+      txt:(P,E)=>`Grab a foe within 2: it takes ${1+P} and is hauled 1 toward you.` },
+    { n:'Clamp Bill', ap:1, el:1, cd:3, dur:0, tgt:'foe_r2',
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Clamp a foe within 2: it takes ${2+E}, is Anchored ${1+h(E)}, and is Weakened 1 this round.` },
+    'More bill than bird.');
+  K(['shoebill'],'sho_collapse','Collapse Strike','M',0,
+    { n:'Collapse', ap:1, el:0, cd:2, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+P}],
+      txt:(P,E)=>`Fall on a foe beside you with your whole body: melee ${4+P}.` },
+    { n:'Full Collapse', ap:2, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>5+E, pierce:true},{v:'weaken', val:1, dur:2}],
+      txt:(P,E)=>`Melee ${5+E} that ignores Shield; it is Weakened 1 for 2 rounds.` },
+    'All of it, at once, wings and all.');
+  K(['shoebill'],'sho_clatter','Bill Clatter','C',0,
+    { n:'Clatter', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Clatter your bill like a drum: foes beside you are Weakened 1, and you hold Shield ${1+h(P)} this round.` },
+    { n:'Machine-Gun Bill', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'force', kind:'push', n:1, area:true, radius:1},{v:'shield', val:(P,E)=>1+E, dur:1},{v:'empower', val:1, uses:1, dur:2}],
+      txt:(P,E)=>`Every foe beside you falls back 1; hold Shield ${1+E} this round, and your next hit deals +1.` },
+    'The only sound it makes, and it is a loud one.');
+  K(['shoebill'],'sho_ghost','Swamp Ghost','T',0,
+    { n:'Stand Still', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1},{v:'empower', val:(P,E)=>1+P, uses:1, dur:2}],
+      txt:(P,E)=>`Hidden 1; your next hit within 2 rounds deals +${1+P}.` },
+    { n:'In the Reeds', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'empower', val:2, uses:1, dur:2}],
+      txt:(P,E)=>`Move ${1+E}; Hidden ${1+h(E)} even if you move, and your next hit deals +2.` },
+    'Grey on grey in the papyrus. It was there the whole time.');
+
+  // Flamingo: Hollow Bones, Wade, Long Legs, and these six
+  K(['flamingo'],'fla_oneleg','One-Leg Rest','T',0,
+    { n:'Rest', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'heal', n:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Stand on one leg: heal ${1+P}, and hold Shield 1 this round.` },
+    { n:'Long Rest', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds, and hold Shield ${1+h(E)} for 2 rounds.` },
+    'Half the body asleep, and it never falls over.');
+  K(['flamingo'],'fla_filter','Filter Feed','C',0,
+    { n:'Filter', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reroll', n:(P,E)=>1+h(P)},{v:'heal', n:1}],
+      txt:(P,E)=>`Sift the shallows: reroll up to ${1+h(P)} banked dice, and heal 1.` },
+    { n:'Strain the Lake', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'engine', kind:'draw', face:'C', val:1},{v:'heal', n:(P,E)=>1+E},{v:'hazardImmune', dur:1}],
+      txt:(P,E)=>`Draw a Charge die from your pool, heal ${1+E}, and ignore hazards this round.` },
+    'Head upside down, bill sieving the water.');
+  K(['flamingo'],'fla_march','Flock March','S',0,
+    { n:'March', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'shield', val:(P,E)=>1+h(P), dur:1, party:true, allyRange:1}],
+      txt:(P,E)=>`March ${1+P}; you and an ally beside you hold Shield ${1+h(P)} this round.` },
+    { n:'Massed March', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:1, party:true},{v:'empower', val:1, uses:1, dur:2, party:true},{v:'force', kind:'push', n:1, area:true, radius:1}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+E} this round and deal +1 on their next hit; every foe beside you falls back 1.` },
+    'Heads turning together, a thousand at once.');
+  K(['flamingo'],'fla_salt','Salt Flats','T',0,
+    { n:'Salt Feet', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hazardImmune', dur:2},{v:'shield', val:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Ignore hazards for 2 rounds, and hold Shield ${1+P} this round.` },
+    { n:'Caustic Lake', ap:1, el:1, cd:3, dur:0, tgt:'node_r2',
+      fx:[{v:'dot', kind:'salt', val:(P,E)=>1+h(E), dur:2, area:'nodeArea'},{v:'hazardImmune', dur:2, party:true}],
+      txt:(P,E)=>`Stir the bitter lake at a node within 2: every foe on or beside it takes ${1+h(E)} at the start of its next 2 turns; both heroes ignore hazards for 2 rounds.` },
+    'It lives where the water would strip your skin.');
+  K(['flamingo'],'fla_milk','Crop Milk','T',0,
+    { n:'Feed', ap:1, el:0, cd:1, dur:0, tgt:'ally',
+      fx:[{v:'heal', n:(P,E)=>2+P, target:'ally'}],
+      txt:(P,E)=>`Your ally heals ${2+P}.` },
+    { n:'Nourish', ap:1, el:1, cd:4, dur:0, tgt:'ally',
+      fx:[{v:'heal', n:(P,E)=>2+E, target:'ally'},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'},{v:'cleanse', party:true}],
+      txt:(P,E)=>`Your ally heals ${2+E} and gains 1 AP next turn; both heroes shake off Anchored and Weakened.` },
+    'Both parents make it, and it is red.');
+  K(['flamingo'],'fla_pink','Pink Flock','C',0,
+    { n:'Blend In', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'hidden', dur:1, party:true, radius:1},{v:'heal', n:1}],
+      txt:(P,E)=>`Lose yourself in the flock: you and an ally beside you are Hidden 1, and you heal 1.` },
+    { n:'A Thousand Pink', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'hidden', dur:1, party:true, radius:1},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2}],
+      txt:(P,E)=>`Leave a decoy for ${1+E} rounds; you and an ally beside you are Hidden 1, and your next hit deals +${1+h(E)}.` },
+    'Which one? All of them.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));
