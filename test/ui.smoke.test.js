@@ -134,7 +134,7 @@ test(
       const m = U.run.mission;
       const before = JSON.stringify(m);
       let drew = 0;
-      for (const b of d.querySelectorAll('#mside .fbtn.ok, #mside [data-act="basic"]:not([disabled])')) {
+      for (const b of d.querySelectorAll('#mdock .fbtn.ok, #mdock [data-act="basic"]:not([disabled])')) {
         b.dispatchEvent(new w.MouseEvent('mouseover', { bubbles: true }));
         drew += d.querySelectorAll('#preview .pv').length;
       }
@@ -236,7 +236,7 @@ test(
       U.updateMission();
       assert.equal(JSON.stringify(m), before);
       // a play answers on the board, in its own layer
-      const face = d.querySelector('#mside .fbtn.ok');
+      const face = d.querySelector('#mdock .fbtn.ok');
       if (face) {
         face.dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
         const target = d.querySelector('#mtarget [data-act]');
@@ -285,7 +285,7 @@ test(
       T.mint(h, 'AP', 6);
       const before = JSON.stringify(m);
       U.updateMission();
-      const strike = d.querySelector(`#mside [data-act="basic"][data-arg="${i}|strike"]`);
+      const strike = d.querySelector(`#mdock [data-act="basic"][data-arg="${i}|strike"]`);
       assert.ok(strike && !strike.disabled, 'Strike can be used');
       // the marks are worked out just after the click is drawn
       assert.ok(!strike.querySelector('.combo-mark'), 'not before the screen has been drawn');
@@ -330,9 +330,11 @@ test(
       const before = JSON.stringify(m);
       const sel = U.ms.heroIdx;
       const other = 1 - sel;
-      const panel = (i) => d.querySelector(`#mside .hero[data-arg="${i}"]`);
-      // the pilot being played is open; the other is folded to its vitality and dice, and listed first
-      assert.ok(panel(sel).querySelector('.hand'), 'the selected pilot shows its cards');
+      const panel = (i) => d.querySelector(`#mside .hero[data-arg="${i}"], #mdock .hero[data-arg="${i}"]`);
+      // the pilot being played is in the dock, never folded; the other is folded to its vitality and dice in the side
+      assert.ok(d.querySelector(`#mdock .hero[data-arg="${sel}"] .hand`), "the dock shows the selected pilot's cards");
+      assert.ok(!d.querySelector('#mdock [data-act="peek"], #mdock [data-act="fold"]'), 'nothing in the dock folds');
+      assert.ok(d.querySelector('#mdock .res-ap'), 'the dock shows the AP banked');
       assert.ok(panel(other).classList.contains('folded') && !panel(other).querySelector('.hand'));
       assert.ok(panel(other).querySelector('.dice') && panel(other).querySelector('.hpbar'));
       assert.equal(d.querySelector('#mside .hero').getAttribute('data-arg'), String(other));
@@ -354,6 +356,13 @@ test(
       U.updateMission();
       assert.equal(d.querySelector('#mside .hero'), side, 'the side panel was not redrawn');
       assert.equal(JSON.stringify(m), before, 'folding never changes the mission');
+      // flying the other pilot swaps them: it takes the dock, and the one flown before goes to the side
+      click(`#mside .hero[data-arg="${other}"]`);
+      assert.equal(U.ms.heroIdx, other);
+      assert.ok(d.querySelector(`#mdock .hero[data-arg="${other}"] .hand`));
+      assert.ok(
+        d.querySelector(`#mside .hero[data-arg="${sel}"]`) && !d.querySelector(`#mdock .hero[data-arg="${sel}"]`),
+      );
     } finally {
       w.close();
     }
@@ -387,10 +396,10 @@ test('UI: moving the objective forward is answered on the board', { skip, timeou
     T.mint(h, 'AP', 6);
     U.updateMission();
     assert.equal(U.objectiveCheck(m), null, 'nothing moved since the last look: no news');
-    const btn = d.querySelector(`#mside [data-act="interact"][data-arg="${i}"]`);
+    const btn = d.querySelector(`#mdock [data-act="interact"][data-arg="${i}"]`);
     assert.ok(btn && !btn.disabled && btn.classList.contains('goal-act'), 'Interact glows where it would count');
     const p0 = T.objectiveProgress(m);
-    click(`#mside [data-act="interact"][data-arg="${i}"]`);
+    click(`#mdock [data-act="interact"][data-arg="${i}"]`);
     assert.ok(T.objectiveProgress(m) > p0, 'the objective moved');
     const card = d.querySelector('#board #goal.show');
     assert.ok(card, 'a card says so on the board');
@@ -435,7 +444,7 @@ test(
       h.heldDie = ['plain', 'plain', 'M', 'C', 'eth', 'T', 'plain'];
       h.pool = T.RULES.POOL - h.held.length;
       U.updateMission();
-      const die = (di) => d.querySelector(`#mside .die[data-arg="${i}|${di}"]`);
+      const die = (di) => d.querySelector(`#mdock .die[data-arg="${i}|${di}"]`);
       // each die is drawn as the die it is: a d20 a hexagon of facets, a d8 a diamond, a d12 a decagon
       const outline = (el) => el.querySelector('.dbody .o').getAttribute('d');
       const corners = (el) => outline(el).trim().split(/\s+/).length / 2;
@@ -449,7 +458,7 @@ test(
       // the Omni symbol is Cosmic Shore's omnicrystal (several shapes), not a single star
       assert.ok(die(6).querySelector('.face svg path') && /z\s*M/.test(T.UI.ICON_PATHS['el.O']));
       // the abilities are cards, with art showing what each face does
-      const hc = d.querySelector('#mside .hcard');
+      const hc = d.querySelector('#mdock .hcard');
       assert.ok(
         hc && hc.querySelector('.hart .vp svg') && hc.querySelector('.hart .ve svg'),
         'card art for both faces',

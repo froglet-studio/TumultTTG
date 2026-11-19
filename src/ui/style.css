@@ -1135,7 +1135,7 @@ hr {
 /* ---------- Mission ---------- */
 .mission {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 430px;
+  grid-template-columns: minmax(0, 1fr) 400px;
   grid-template-rows: auto minmax(0, 1fr) auto;
   gap: 10px;
   height: 100%;
@@ -1147,25 +1147,178 @@ hr {
 .mission .boardwrap {
   grid-column: 1;
   grid-row: 2;
-  min-height: 300px;
+  min-height: 260px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   min-width: 0;
 }
+/* the side column is what changes: the foes' intents, the ally, the log. It scrolls on its own. */
 .mission .side {
   grid-column: 2;
   grid-row: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  min-height: 0;
+}
+.mission .side-in {
+  flex: 1;
+  min-height: 0;
   overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 0;
 }
 .mission .bottom {
+  position: relative;
+  flex: none;
+}
+/* the dock is what never moves: the pilot being flown, what they have to spend, their hand and their actions */
+.mission .dock {
   grid-column: 1/3;
   grid-row: 3;
-  position: relative;
+  min-width: 0;
+}
+.dock-hero {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr) 330px;
+  gap: 12px;
+  align-items: start;
+  padding: 10px 12px;
+  border-width: 2px;
+  background: linear-gradient(180deg, rgba(94, 200, 216, 0.06), transparent 60%), var(--panel);
+}
+.dock-hero .hand {
+  margin-top: 0;
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(118px, 1fr);
+  overflow-x: auto;
+  padding: 2px 2px 4px;
+}
+.dock-hero .fbtn {
+  padding: 3px 5px;
+}
+.dock-hero .hcard .hn {
+  font-size: 12.5px;
+}
+/* a short screen gives the board the room: the cards drop their art */
+@media (max-height: 820px) and (min-width: 981px) {
+  .dock-hero .hart {
+    display: none;
+  }
+  .dock-hero .dicekey {
+    display: none;
+  }
+}
+.dock-hero .hart {
+  height: 30px;
+  margin-bottom: 3px;
+}
+.dock-hero .actions {
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+.dock-hero .actions button {
+  text-align: left;
+  padding: 4px 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dock-hero .dicekey {
+  margin-top: 6px;
+  gap: 2px 8px;
+}
+.dock-hero .dicekey .dk-sz {
+  display: none;
+}
+@media (max-width: 1400px) and (min-width: 981px) {
+  .dock-hero {
+    grid-template-columns: 230px minmax(0, 1fr) 250px;
+  }
+  .dock-hero .actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+.dock-hero .hh .nm {
+  font-size: 18px;
+}
+.dock-hero .hp {
+  font-size: 15px;
+  font-weight: 700;
+}
+.dk-purse {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.res-ap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 2px 12px 4px;
+  border-radius: 10px;
+  border: 1px solid var(--gold);
+  background: rgba(242, 193, 78, 0.1);
+  color: var(--gold);
+  cursor: help;
+}
+.res-ap b {
+  font-family: var(--mono);
+  font-size: 34px;
+  line-height: 1;
+}
+.res-ap span {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+.res-ap.empty {
+  border-color: var(--line2);
+  background: none;
+  color: var(--mute);
+}
+.res-els {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.res-el {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--c) 60%, transparent);
+  color: var(--c);
+  cursor: help;
+}
+.res-el b {
+  font-family: var(--mono);
+  font-size: 18px;
+  line-height: 1;
+}
+.res-el .icn {
+  width: 16px;
+  height: 16px;
+}
+.dk-purse .pool {
+  margin-left: auto;
+}
+.acost {
+  font-family: var(--mono);
+  font-weight: 700;
+  color: var(--gold);
+}
+button:disabled .acost {
+  color: inherit;
 }
 /* folding: the log to its last lines, the intents to the forecast, the objective to two lines,
    a pilot not selected to its vitality and dice (U.layout, kept in tumult_v2_ui) */
@@ -1191,6 +1344,20 @@ hr {
 }
 .fold-head {
   cursor: pointer;
+}
+.intents-panel .fold-head > .dim {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.ap-chip {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--gold);
+  margin-left: 8px;
+  white-space: nowrap;
 }
 .intents-panel.folded .forecast {
   margin-top: 4px;
@@ -1222,6 +1389,7 @@ hr {
   }
 }
 .topbar .obj .obj-txt {
+  font-size: 14.5px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -1270,7 +1438,7 @@ hr {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto;
     height: auto;
-    padding: 12px 16px;
+    padding: 12px 16px 0;
   }
   .mission .top {
     grid-column: 1;
@@ -1282,11 +1450,47 @@ hr {
   .mission .side {
     grid-column: 1;
     grid-row: 3;
+  }
+  .mission .side-in {
     overflow: visible;
   }
-  .mission .bottom {
+  /* on a narrow screen the dock sticks to the foot of the screen; its hand scrolls sideways inside it */
+  .mission .dock {
     grid-column: 1;
     grid-row: 4;
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    margin: 0 -16px;
+  }
+  .dock-hero {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+    max-height: 44vh;
+    overflow: auto;
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -10px 24px rgba(0, 0, 0, 0.5);
+  }
+  .dock-hero .hand {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: 150px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .dock-hero .actions {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .dock-hero .actions button {
+    flex: none;
+  }
+  .dock-hero .hart,
+  .dock-hero .tt,
+  .dock-hero .dicekey,
+  .dock-hero .states:empty {
+    display: none;
   }
 }
 .topbar {
@@ -1304,8 +1508,9 @@ hr {
 }
 .clock {
   font-family: var(--mono);
-  font-size: 13px;
-  padding: 4px 10px;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 3px 12px;
   border: 1px solid var(--amber);
   border-radius: 8px;
   color: var(--amber);
@@ -1996,7 +2201,8 @@ hr {
 .fbtn .fcost {
   margin-left: auto;
   font-family: var(--mono);
-  font-size: 10.5px;
+  font-size: 12px;
+  font-weight: 700;
   white-space: nowrap;
 }
 .fbtn.ok {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.71.0 — 2026-11-19 — the dock: your turn in one place
+
+- **A fixed dock.** The pilot being flown now sits in a dock along the foot of the mission screen that never folds or scrolls away: vitality, AP banked in large type, etherions banked as counted chips, dice and pool, the track, the whole hand in one row, and the basic actions and gear (three to a row, costs in gold). On a short screen the cards drop their art so the board keeps its room. On a phone the dock sticks to the bottom of the screen and its hand and actions scroll sideways.
+- **The side column is what changes.** Enemy intents and the forecast, the ally (folded to vitality, AP and dice; click to fly them, which swaps them into the dock, or Show cards) and the log, which now sits at the foot of the side column.
+- **Bigger where it matters.** The clock, the objective and every face's cost are larger; the ally's AP shows in gold beside its dice.
+
 ## 2.70.0 — 2026-11-19 — choose the next stop by what it asks
 
 - **Stop cards.** Above the route, every stop the squad can reach next stands as a card, side by side: for a mission, its objective in a word (Hold, Break in, Find, Channel, Carry, Tag, Defeat) and in full, how many rounds its clock gives, the foes on the board (with counts and vitality in the tips) and any swarm that keeps coming, the place's gravity and weather, and its bonus goals. A haven or an event says what it offers. Each card has its own Set out button, and hovering a card lights its stop on the route. The numbers are exact: the card reads the same spec the mission is launched from (`T.missionSpec`, `T.previewStop`), and previewing changes nothing in the run. Which cache is real stays hidden.
