@@ -52,11 +52,13 @@ The test page is published with these store rules and the `user` capability (nam
 { "db": { "rules": [
     { "path": "canon", "read": "admin", "write": "owner" },
     { "path": "canon/{self}", "read": "interact", "write": "interact" },
-    { "path": "canonReview", "read": "admin", "write": "owner" } ] },
+    { "path": "canonReview", "read": "admin", "write": "owner" },
+    { "path": "heroes", "read": "view", "write": "owner" },
+    { "path": "heroes/{self}", "read": "view", "write": "interact" } ] },
   "user": { "scopes": ["profile"] } }
 ```
 
-Everything else in the store (online games under `games/`) keeps the default rules. Testers need Contributor access to send, as for online play.
+The `heroes` rules share the pilots players make (`docs/reference/RUN_AND_ECONOMY.md`). Everything else in the store (online games under `games/`) keeps the default rules. Testers need Contributor access to send, as for online play.
 
 **Canon → Open the inbox** (owner and editors) lists every note with who sent it, what they were shown and where. The owner marks each *canon*, *rejected* or *keep proposed*, may edit the wording first, and ticks **public** for what may be copied into this repository. *Copy canon* gives the approved records as JSON lines with the decision applied (`status`, `public`, the edited `claim`, `decided: { at, note }`).
 

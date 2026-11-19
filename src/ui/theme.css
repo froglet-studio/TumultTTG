@@ -289,6 +289,16 @@ button.ghost {
   letter-spacing: 0.25em;
   color: var(--glow);
 }
+.pilot-card {
+  position: relative;
+}
+.pilot-card .made-x {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  margin: 0 !important;
+}
 .pilot-card .ic {
   margin-left: 74px !important;
   font-size: 20px;
