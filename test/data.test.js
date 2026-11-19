@@ -71,6 +71,38 @@ test('every face is well-formed and its text resolves at every P/E level', () =>
   }
 });
 
+test('a card plays at most once a turn: every face has a cooldown of at least 1', () => {
+  for (const c of T.CARDS) for (const fk of ['P', 'E']) assert.ok(c[fk].cd >= 1, `${c.id}.${fk}: cd ${c[fk].cd}`);
+});
+
+test('every face grows with its card: the text at the top level differs from the first', () => {
+  // an upgrade point spent on a card should always show; a face that never changes fades as a run goes on
+  for (const c of T.CARDS) {
+    assert.notEqual(c.P.txt(0, 1), c.P.txt(3, 3), `${c.id}.P does not scale with P`);
+    assert.notEqual(c.E.txt(1, 1), c.E.txt(3, 3), `${c.id}.E does not scale with E`);
+  }
+});
+
+test('no face is the key to a lock: nothing settles a recurring problem outright at every level', () => {
+  // Balance pass, 2.73: a squad that holds the right card should find the problem easier, not gone.
+  const at = (v, P, E) => (typeof v === 'function' ? v(P, E) : v);
+  for (const c of T.CARDS)
+    for (const fk of ['P', 'E'])
+      for (const x of c[fk].fx) {
+        const id = `${c.id}.${fk}`;
+        if (x.v === 'reveal') {
+          assert.ok(at(x.radius, 1, 1) < 99, `${id}: reveals the whole board`);
+          assert.ok(!x.findObjective, `${id}: finds the hidden objective from anywhere`);
+        }
+        if (x.v === 'locate') assert.ok(at(x.dur, 3, 3) < 99, `${id}: locates a foe for the whole mission`);
+        if (x.v === 'interact') assert.ok(!x.height, `${id}: works a ledge from the floor`);
+        if (x.v === 'stripShield') assert.ok(x.amount != null, `${id}: deletes any Shield outright`);
+        if (x.v === 'strike') assert.notEqual(x.stripShield, true, `${id}: deletes any Shield outright`);
+        if (x.v === 'hazardImmune' && x.party)
+          assert.ok(at(x.dur, 3, 3) <= 1, `${id}: the whole squad ignores hazards`);
+      }
+});
+
 test('every face of every card fires without an engine error', () => {
   for (const c of T.CARDS) {
     for (const fk of ['P', 'E']) {

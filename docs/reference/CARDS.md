@@ -14,13 +14,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Theory of Mind** ★ · Time · `hum_mind`
 
-- *Phys — Read* · 1 AP · CD 0 — Mark a foe: the next hit on it deals +2.
+- *Phys — Read* · 1 AP · CD 1 — Mark a foe: the next hit on it deals +2. *(P3: Mark a foe: the next hit on it deals +2, and its own next hit deals −1.)*
 - *Eth — Pre-empt* · 2 AP + 1 Time · CD 3 · Dur 2 — Pre-arm: the next hit on you is reduced by 3. Dur 2. *(P3/E3: Pre-arm: the next hit on you is reduced by 7 and reflects 3 back. Dur 2.)*
 
 **Tool Use** ★ · Space · `hum_tool`
 
 - *Phys — Improvise* · 1 AP · CD 1 — Your next strike this turn deals +1. *(P3: Your next strike this turn deals +4.)*
-- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away — even on a height node. *(P3/E3: Interact with an objective up to 4 nodes away — even on a height node.)*
+- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 1 less. *(P3/E3: Interact with an objective up to 4 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 3 less.)*
 
 **Persistence** · Time · `hum_persist`
 
@@ -29,7 +29,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Throwing Arm** · Mass · `hum_throw`
 
-- *Phys — Hurl* · 1 AP · CD 0 — Lane strike for 2. *(P3: Lane strike for 5.)*
+- *Phys — Hurl* · 1 AP · CD 1 — Lane strike for 2. *(P3: Lane strike for 5.)*
 - *Eth — Heavy Throw* · 2 AP + 1 Mass · CD 2 — Lane strike for 3, knockback 1. *(P3/E3: Lane strike for 6 that pierces Shield, knockback 3.)*
 
 **Language** ☆ · Charge · `hum_lang`
@@ -63,13 +63,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Saltatorial Leap** ★ · Space · `jer_leap`
 
-- *Phys — Spring* · 1 AP · CD 0 — Move 2, leaping over foes. *(P3: Move 5, leaping over foes.)*
+- *Phys — Spring* · 1 AP · CD 1 — Move 1, leaping over foes. *(P3: Move 4, leaping over foes.)*
 - *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
 
 **Radiator Ears** ★ · Charge · `jer_ears`
 
-- *Phys — Vent* · 1 AP · CD 1 — Shed Anchored/Weakened/dots and step 1.
-- *Eth — Infrared* · 1 AP + 1 Charge · CD 3 — Read the heat of the whole board for 2 rounds, and lash the nearest foe in your zone for 3 true damage. *(P3/E3: Read the heat of the whole board for 4 rounds, and lash the nearest foe in your zone for 5 true damage.)*
+- *Phys — Vent* · 1 AP · CD 1 — Shed Anchored/Weakened/dots and step 1. *(P3: Shed Anchored/Weakened/dots and step 2.)*
+- *Eth — Infrared* · 1 AP + 1 Charge · CD 3 — Read the heat of everything within 2 for 2 rounds, and lash the nearest foe in your zone for 3 true damage. *(P3/E3: Read the heat of everything within 4 for 4 rounds, and lash the nearest foe in your zone for 5 true damage.)*
 
 **Erratic Bounding** · Time · `jer_erratic`
 
@@ -78,8 +78,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Gnawing Incisors** · Mass · `jer_gnaw`
 
-- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
-- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+- *Phys — Gnaw* · 1 AP · CD 1 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew 2 off its Shield, then melee 3. *(P3/E3: Chew 4 off its Shield, then melee 6 and push 2.)*
 
 **Cheek Caching** · Space · `jer_cache`
 
@@ -89,7 +89,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Vibrissae Sense** · Mass · `jer_vibrissae`
 
 - *Phys — Feel* · 1 AP · CD 1 — Feel ground vibration: reveal everything within 1, and Shield 1 against what is coming. *(P3: Feel ground vibration: reveal everything within 4, and Shield 1 against what is coming.)*
-- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal the whole board and Weaken all foes 1 this round.
+- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal everything within 2 and Weaken all foes 1 this round. *(P3/E3: Sense every moving mass: reveal everything within 4 and Weaken all foes 1 this round.)*
 
 **Burrowing** · Space · `jer_burrow`
 
@@ -138,11 +138,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Compound Eyes** · Space · `hop_eyes`
 
 - *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
-- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: everything within 2 revealed and unable to Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: everything within 4 revealed and unable to Hide, and your next hit taken is −2.)*
 
 **Voracious Mandibles** · Mass · `hop_mandibles`
 
-- *Phys — Shred* · 1 AP · CD 0 — Melee 2. If it kills, refuel: mint 1 AP. *(P3: Melee 5. If it kills, refuel: mint 1 AP.)*
+- *Phys — Shred* · 1 AP · CD 1 — Melee 2. If it kills, refuel: mint 1 AP. *(P3: Melee 5. If it kills, refuel: mint 1 AP.)*
 - *Eth — Metabolize* · 2 AP + 1 Mass · CD 3 — Melee 3 and metabolize the mass into 1 temporary Omni. *(P3/E3: Melee 6 and metabolize the mass into 3 temporary Omni.)*
 
 **Swarm Pheromone** ☆ · Charge · `hop_swarm`
@@ -152,7 +152,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Glide Wings** · Space · `hop_glide`
 
-- *Phys — Buzz* · 1 AP · CD 0 — Glide 2, over foes. *(P3: Glide 5, over foes.)*
+- *Phys — Buzz* · 1 AP · CD 1 — Glide 1, over foes. *(P3: Glide 4, over foes.)*
 - *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn.)*
 
 ## 3 · Barn Owl — leans S/C
@@ -161,17 +161,17 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Silent Flight** ★ · Space · `owl_silent`
 
-- *Phys — Glide* · 1 AP · CD 0 — Move 2 without triggering traps; your next strike this turn deals +2 (surprise). *(P3: Move 5 without triggering traps; your next strike this turn deals +2 (surprise).)*
+- *Phys — Glide* · 1 AP · CD 1 — Move 1 without triggering traps; your next strike this turn deals +2 (surprise). *(P3: Move 4 without triggering traps; your next strike this turn deals +2 (surprise).)*
 - *Eth — Dampen* · 1 AP + 1 Space · CD 3 — Erase your presence: blink 2 and stay Hidden for 2 rounds even while moving. *(P3/E3: Erase your presence: blink 4 and stay Hidden for 4 rounds even while moving.)*
 
 **Sound Mapping** ★ · Space · `owl_sound`
 
 - *Phys — Listen* · 1 AP · CD 1 — Locate everything within 2 by ear alone, then take one free step. *(P3: Locate everything within 5 by ear alone, then take one free step.)*
-- *Eth — Acoustic Map* · 1 AP + 1 Space · CD 3 — A 3-D map of the whole board for 3 rounds — hidden foes, traps and the hidden objective all pinpointed. *(P3/E3: A 3-D map of the whole board for 5 rounds — hidden foes, traps and the hidden objective all pinpointed.)*
+- *Eth — Acoustic Map* · 1 AP + 1 Space · CD 3 — A 3-D map of everything within 3 for 3 rounds — hidden foes, traps and hidden objectives there all pinpointed, and you hear the next hit on you coming: it deals 1 less. *(P3/E3: A 3-D map of everything within 5 for 5 rounds — hidden foes, traps and hidden objectives there all pinpointed, and you hear the next hit on you coming: it deals 3 less.)*
 
 **Talon Strike** · Mass · `owl_talon`
 
-- *Phys — Grip* · 1 AP · CD 0 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
+- *Phys — Grip* · 1 AP · CD 1 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
 - *Eth — Pin* · 2 AP + 1 Mass · CD 3 — Melee 3 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2. *(P3/E3: Melee 6 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.)*
 
 **Owl Neck Swivel** · Time · `owl_swivel`
@@ -182,7 +182,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Night Eyes** · Charge · `owl_night`
 
 - *Phys — Amplify* · 1 AP · CD 1 — Reveal within 1 and Mark the nearest foe. *(P3: Reveal within 4 and Mark the nearest foe.)*
-- *Eth — Thermal* · 1 AP + 1 Charge · CD 3 — See heat through cover for 2 rounds; your zone strikes deal +1 meanwhile. *(P3/E3: See heat through cover for 4 rounds; your zone strikes deal +1 meanwhile.)*
+- *Eth — Thermal* · 1 AP + 1 Charge · CD 3 — See heat through cover within 2 for 2 rounds; your zone strikes deal +1 meanwhile. *(P3/E3: See heat through cover within 4 for 4 rounds; your zone strikes deal +1 meanwhile.)*
 
 **Soaring Lift** · Mass · `owl_soar`
 
@@ -196,12 +196,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Binocular Foresight** · Time · `owl_foresight`
 
-- *Phys — Spot Threat* · 1 AP · CD 1 — Reroll up to 1 of your banked dice. *(P3: Reroll up to 2 of your banked dice.)*
+- *Phys — Spot Threat* · 0 AP · CD 1 — Reroll up to 1 of your banked dice. *(P3: Reroll up to 2 of your banked dice.)*
 - *Eth — Foresee* · 1 AP + 1 Time · CD 3 · Dur 2 — A few seconds ahead: both heroes' next hit taken is −4. Dur 2. *(P3/E3: A few seconds ahead: both heroes' next hit taken is −6. Dur 2.)*
 
 **Threat Display** · Charge · `owl_threat`
 
-- *Phys — Hiss* · 1 AP · CD 0 — Flare and hiss: an adjacent foe is Weakened 1. *(P3: Flare and hiss: an adjacent foe is Weakened 4.)*
+- *Phys — Hiss* · 1 AP · CD 1 — Flare and hiss: an adjacent foe is Weakened 1. *(P3: Flare and hiss: an adjacent foe is Weakened 4.)*
 - *Eth — Dread* · 2 AP + 1 Charge · CD 3 — A field of dread: every foe within 2 falls back 1 and is Weakened 1. *(P3/E3: A field of dread: every foe within 4 falls back 1 and is Weakened 1.)*
 
 ## 4 · Mimic Octopus — leans S/C
@@ -220,7 +220,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Jet Propulsion** · Mass · `oct_jet`
 
-- *Phys — Jet* · 1 AP · CD 0 — Burst 2 in any direction. *(P3: Burst 5 in any direction.)*
+- *Phys — Jet* · 1 AP · CD 1 — Burst 1 in any direction. *(P3: Burst 4 in any direction.)*
 - *Eth — Recoil Slam* · 2 AP + 1 Mass · CD 2 — Melee 2, shove the foe 1, and recoil 1 node. *(P3/E3: Melee 5, shove the foe 3, and recoil 1 node.)*
 
 **Ink Screen** · Space · `oct_ink`
@@ -230,22 +230,22 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Boneless Squeeze** · Mass · `oct_squeeze`
 
-- *Phys — Squeeze* · 1 AP · CD 0 — Pour through any gap: escape every hold and step 1.
+- *Phys — Squeeze* · 1 AP · CD 1 — Pour through any gap: escape every hold and step 1. *(P3: Pour through any gap: escape every hold and step 2.)*
 - *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
 
 **Distributed Arms** ☆ · Time · `oct_arms`
 
-- *Phys — Multitask* · 1 AP · CD 2 — Eight arms: the next card you play this turn does not go to your track.
+- *Phys — Multitask* · 1 AP · CD 2 — Eight arms: the next card you play this turn does not go to your track. *(P3: Eight arms: the next card you play this turn does not go to your track, and mint 1 temporary AP.)*
 - *Eth — Parallel* · 2 AP + 2 Time · CD 4 — Parallel-process: the next two cards you play don't go to your track, and mint 1 AP. *(P3/E3: Parallel-process: the next two cards you play don't go to your track, and mint 2 AP.)*
 
 **Chemo-Suckers** · Charge · `oct_chemo`
 
-- *Phys — Taste* · 1 AP · CD 1 — Taste by touch: reveal adjacent and Mark the nearest foe.
+- *Phys — Taste* · 1 AP · CD 1 — Taste by touch: reveal within 1 and Mark the nearest foe. *(P3: Taste by touch: reveal within 2 and Mark the nearest foe.)*
 - *Eth — Cling-Read* · 1 AP + 1 Charge · CD 3 — Tag a foe for 3 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently. *(P3/E3: Tag a foe for 5 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently.)*
 
 **Paralytic Bite** · Time · `oct_bite`
 
-- *Phys — Bite* · 1 AP · CD 0 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
+- *Phys — Bite* · 1 AP · CD 1 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
 - *Eth — Neurotoxin* · 2 AP + 2 Time · CD 4 — Melee 2; the foe is enervated for 1 round: its hits deal −2 and it cannot move. It still acts. *(P3/E3: Melee 5; the foe is enervated for 2 rounds: its hits deal −2 and it cannot move. It still acts.)*
 
 **Adaptive Intellect** · Charge · `oct_intellect`
@@ -259,7 +259,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Adhesive Setae** ★ · Charge · `gec_setae`
 
-- *Phys — Climb* · 1 AP · CD 0 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
+- *Phys — Climb* · 1 AP · CD 1 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
 - *Eth — Van der Waals* · 1 AP + 1 Charge · CD 3 — Command the molecular bond: pull a foe in your zone 2 toward you. *(P3/E3: Command the molecular bond: pull a foe in your zone 4 toward you and Anchor it 1.)*
 
 **Lockjaw Bite** · Mass · `gec_lockjaw`
@@ -275,7 +275,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Forensic Vision** · Charge · `gec_forensic`
 
 - *Phys — UV* · 1 AP · CD 1 — See into ultraviolet: reveal within 1 and sense which way the hidden objective lies. *(P3: See into ultraviolet: reveal within 4 and sense which way the hidden objective lies.)*
-- *Eth — Full Spectrum* · 1 AP + 1 Charge · CD 4 — Light the whole board for 2 rounds; every foe within 2 is Marked (weak seams glow). *(P3/E3: Light the whole board for 2 rounds; every foe within 4 is Marked (weak seams glow).)*
+- *Eth — Full Spectrum* · 1 AP + 1 Charge · CD 4 — Light everything within 2 for 2 rounds; every foe within 2 is Marked (weak seams glow). *(P3/E3: Light everything within 4 for 2 rounds; every foe within 4 is Marked (weak seams glow).)*
 
 **Solar Basking** · Charge · `gec_basking`
 
@@ -285,7 +285,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Scent Tongue** · Space · `gec_scent`
 
 - *Phys — Flick* · 1 AP · CD 1 — Taste the air: reveal within 1; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Taste the air: reveal within 4; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Lock Scent* · 1 AP + 1 Space · CD 3 — Lock onto a foe: it can never Hide from you, and you may blink adjacent to it if it's within 3. *(P3/E3: Lock onto a foe: it can never Hide from you, and you may blink adjacent to it if it's within 5.)*
+- *Eth — Lock Scent* · 1 AP + 1 Space · CD 3 — Lock onto a foe: it can't Hide for 3 rounds, and you may blink adjacent to it if it's within 3. *(P3/E3: Lock onto a foe: it can't Hide for 5 rounds, and you may blink adjacent to it if it's within 5.)*
 
 **Scaled Hide** · Mass · `gec_hide`
 
@@ -299,7 +299,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wall Sprint** · Time · `gec_sprint`
 
-- *Phys — Sprint* · 1 AP · CD 0 — Dash 2. *(P3: Dash 5.)*
+- *Phys — Sprint* · 1 AP · CD 1 — Dash 1. *(P3: Dash 4.)*
 - *Eth — Haste* · 1 AP + 1 Time · CD 3 — Dash 2 and haste: every card on your track returns 2 columns sooner. *(P3/E3: Dash 2 and haste: every card on your track returns 4 columns sooner.)*
 
 ## 6 · Axolotl — leans T/S
@@ -319,31 +319,31 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **External Gills** · Charge · `axo_gills`
 
 - *Phys — Gills* · 1 AP · CD 1 — Breathe anything: immune to hazards for 2 rounds, and heal 1. *(P3: Breathe anything: immune to hazards for 2 rounds, and heal 2.)*
-- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(P3/E3: Both heroes: immune to hazards and regenerate 1 each turn for 5 rounds.)*
+- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes regenerate 1 each turn for 3 rounds; you ignore hazards for 3, your ally this round. *(P3/E3: Both heroes regenerate 1 each turn for 5 rounds; you ignore hazards for 5, your ally this round.)*
 
 **Toxic Secretion** · Mass · `axo_toxic`
 
 - *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
-- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve 4 of its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
 
 **Lateral Line** · Charge · `axo_lateral`
 
 - *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
-- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the field within 2 for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the field within 4 for 4 rounds; both heroes feel the next hit coming (−2).)*
 
 **Powerful Tail** · Mass · `axo_tail`
 
-- *Phys — Lunge* · 1 AP · CD 0 — Lunge 1 toward a foe, melee 2, and shove it 1. *(P3: Lunge 1 toward a foe, melee 5, and shove it 1.)*
+- *Phys — Lunge* · 1 AP · CD 1 — Lunge 1 toward a foe, melee 2, and shove it 1. *(P3: Lunge 1 toward a foe, melee 5, and shove it 1.)*
 - *Eth — Momentum Wave* · 2 AP + 1 Mass · CD 3 — A wave of thrust: every adjacent foe takes 2 and is knocked back 1. *(P3/E3: A wave of thrust: every adjacent foe takes 5 and is knocked back 3.)*
 
 **Metamorphosis** ☆ · Space · `axo_meta`
 
-- *Phys — Surge* · 3 AP · CD 3 · Dur 2 — Trigger the buried adult form for 2 rounds: strikes +2, +1 move. *(P3: Trigger the buried adult form for 2 rounds: strikes +3, +1 move.)*
+- *Phys — Surge* · 2 AP · CD 3 · Dur 2 — Trigger the buried adult form for 2 rounds: strikes +2, +1 move. *(P3: Trigger the buried adult form for 2 rounds: strikes +3, +1 move.)*
 - *Eth — Apex Form* · 2 AP + 2 Space · CD 5 — The war-form, for 2 rounds: strikes +3, melee reaches 2 nodes, +1 move, Shield 2. *(P3/E3: The war-form, for 4 rounds: strikes +3, melee reaches 2 nodes, +1 move, Shield 2.)*
 
 **Suction Gape** · Mass · `axo_suction`
 
-- *Phys — Gulp* · 1 AP · CD 1 — Vacuum a foe within 2 one node toward you.
+- *Phys — Gulp* · 1 AP · CD 1 — Vacuum a foe within 2 1 toward you. *(P3: Vacuum a foe within 2 2 toward you.)*
 - *Eth — Vacuum* · 2 AP + 1 Mass · CD 3 — A pulling pressure differential: drag a foe within 3 up to 3 toward you and Weaken it 1. *(P3/E3: A pulling pressure differential: drag a foe within 3 up to 5 toward you and Weaken it 1.)*
 
 **Degeneration Resistance** · Time · `axo_degen`
@@ -357,13 +357,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Electric Discharge** ★ · Charge · `eel_discharge`
 
-- *Phys — Jolt* · 1 AP · CD 0 — Lane strike for 2. *(P3: Lane strike for 5.)*
-- *Eth — Tesla Cascade* · 4 AP + 2 Charge · CD 4 — Strip the target's Shield and strike it for 5; the arc chains to 1 more foe within 1 of it for 4 each. *(P3/E3: Strip the target's Shield and strike it for 8; the arc chains to 3 more foes within 1 of it for 6 each.)*
+- *Phys — Jolt* · 1 AP · CD 1 — Lane strike for 2. *(P3: Lane strike for 5.)*
+- *Eth — Tesla Cascade* · 3 AP + 1 Charge · CD 4 — Strip 2 of the target's Shield and strike it for 5; the arc chains to 1 more foe within 1 of it for 4 each. *(P3/E3: Strip 4 of the target's Shield and strike it for 8; the arc chains to 3 more foes within 1 of it for 6 each.)*
 
 **Electroreception** ★ · Space · `eel_electro`
 
 - *Phys — Sense* · 1 AP · CD 1 — Sense bioelectric fields: reveal within 2, and jolt the nearest foe in your zone for 1 true damage. *(P3: Sense bioelectric fields: reveal within 5, and jolt the nearest foe in your zone for 1 true damage.)*
-- *Eth — Field Map* · 1 AP + 1 Space · CD 3 — Cast your field over the board for 3 rounds: everything revealed, foes can't Hide, and ambushes on either hero deal half. *(P3/E3: Cast your field over the board for 5 rounds: everything revealed, foes can't Hide, and ambushes on either hero deal half.)*
+- *Eth — Field Map* · 1 AP + 1 Space · CD 3 — Cast your field out to 2 for 3 rounds: everything in it revealed and unable to Hide, and ambushes on either hero deal half. *(P3/E3: Cast your field out to 4 for 5 rounds: everything in it revealed and unable to Hide, and ambushes on either hero deal half.)*
 
 **Electrocyte Charge-Up** · Time · `eel_chargeup`
 
@@ -382,7 +382,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ribbon-Fin Glide** · Space · `eel_ribbon`
 
-- *Phys — Undulate* · 1 AP · CD 0 — Undulate 2 in any direction, through foes. *(P3: Undulate 5 in any direction, through foes.)*
+- *Phys — Undulate* · 1 AP · CD 1 — Undulate 1 in any direction, through foes. *(P3: Undulate 4 in any direction, through foes.)*
 - *Eth — Decouple* · 1 AP + 1 Space · CD 3 — Decouple from momentum: reposition anywhere within 3, immune to push/pull this round. *(P3/E3: Decouple from momentum: reposition anywhere within 5, immune to push/pull this round.)*
 
 **Doublet Jolt** · Charge · `eel_doublet`
@@ -416,7 +416,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Carnivorous Digestion** · Time · `fly_digest`
 
-- *Phys — Digest* · 1 AP · CD 1 — Feed on a held foe: if it is Anchored, deal 2 true damage and heal 1. *(P3: Feed on a held foe: if it is Anchored, deal 5 true damage and heal 1.)*
+- *Phys — Digest* · 1 AP · CD 1 — Feed: melee 1 — or, if it is Anchored, 2 true damage and heal 1. *(P3: Feed: melee 2 — or, if it is Anchored, 5 true damage and heal 1.)*
 - *Eth — Enzymes* · 1 AP + 1 Time · CD 3 · Dur 2 — Accelerate the enzymes: heal 2 now; for 2 rounds, every Anchored foe takes 3 true damage at round end and you heal 1 per foe. *(P3/E3: Accelerate the enzymes: heal 4 now; for 2 rounds, every Anchored foe takes 5 true damage at round end and you heal 1 per foe.)*
 
 **Trigger-Hair Sense** · Space · `fly_hairs`
@@ -446,7 +446,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Nectar Lure** ☆ · Charge · `fly_lure`
 
-- *Phys — Lure* · 1 AP · CD 1 — Scent and UV nectar guides: a foe in your zone is drawn 1 toward you.
+- *Phys — Lure* · 1 AP · CD 1 — Scent and UV nectar guides: a foe in your zone is drawn 1 toward you. *(P3: Scent and UV nectar guides: a foe in your zone is drawn 2 toward you.)*
 - *Eth — Allure* · 2 AP + 1 Charge · CD 3 — Saturate the air: every foe within 2 is drawn 1 toward you and Weakened 1. *(P3/E3: Saturate the air: every foe within 4 is drawn 1 toward you and Weakened 1.)*
 
 ## 9 · Cordyceps Mycelium — leans C/S
@@ -471,11 +471,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Decomposition** · Mass · `cor_decomp`
 
 - *Phys — Decompose* · 1 AP · CD 1 — Break down the dying: destroy an adjacent foe with 3 or fewer hp and salvage 1 ◇. *(P3: Break down the dying: destroy an adjacent foe with 6 or fewer hp and salvage 1 ◇.)*
-- *Eth — Rot* · 2 AP + 1 Mass · CD 3 — Rot the bonds: strip its Shield, it takes 2 at the end of each round for 3 rounds, and adjacent hazard tiles are cleared. *(P3/E3: Rot the bonds: strip its Shield, it takes 4 at the end of each round for 3 rounds, and adjacent hazard tiles are cleared.)*
+- *Eth — Rot* · 2 AP + 1 Mass · CD 3 — Rot the bonds: strip 2 of its Shield, it takes 2 at the end of each round for 3 rounds, and adjacent hazard tiles are cleared. *(P3/E3: Rot the bonds: strip 4 of its Shield, it takes 4 at the end of each round for 3 rounds, and adjacent hazard tiles are cleared.)*
 
 **Hyphal Drain** · Time · `cor_drain`
 
-- *Phys — Bore* · 1 AP · CD 0 — Bore filaments in: melee 1, heal 1. *(P3: Bore filaments in: melee 4, heal 1.)*
+- *Phys — Bore* · 1 AP · CD 1 — Bore filaments in: melee 1, heal 1. *(P3: Bore filaments in: melee 4, heal 1.)*
 - *Eth — Parasitize* · 1 AP + 1 Time · CD 3 — Deepen the parasitism: for 3 rounds the foe takes 2 at round end and you heal 1. *(P3/E3: Deepen the parasitism: for 3 rounds the foe takes 4 (+1 more each round) at round end and you heal 2.)*
 
 **Network Regrowth** ☆ · Time · `cor_regrowth`
@@ -486,7 +486,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Enzyme Spray** · Mass · `cor_enzyme`
 
 - *Phys — Spit* · 1 AP · CD 1 — Spit exoenzymes across your zone: 1 damage and −1 to its Shield. *(P3: Spit exoenzymes across your zone: 4 damage and −1 to its Shield.)*
-- *Eth — Saturate* · 2 AP + 1 Mass · CD 3 — Saturate a node within 2 and its neighbours: every foe there loses its Shield and takes 3. *(P3/E3: Saturate a node within 2 and its neighbours: every foe there loses its Shield and takes 5, then corrodes for 1 (2 rounds).)*
+- *Eth — Saturate* · 2 AP + 1 Mass · CD 3 — Saturate a node within 2 and its neighbours: every foe there loses 2 Shield and takes 3. *(P3/E3: Saturate a node within 2 and its neighbours: every foe there loses 4 Shield and takes 5, then corrodes for 1 (2 rounds).)*
 
 **Mycorrhizal Bond** · Space · `cor_bond`
 
@@ -495,7 +495,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Radiotrophic Resilience** · Charge · `cor_radio`
 
-- *Phys — Thrive* · 1 AP · CD 1 — Thrive on hazard: heal 2 and mint 1 AP if you stand in a hazard (else heal 1). *(P3: Thrive on hazard: heal 5 and mint 1 AP if you stand in a hazard (else heal 1).)*
+- *Phys — Thrive* · 1 AP · CD 1 — Thrive on hazard: heal 2 and mint 1 AP if you stand in a hazard (else heal 1). *(P3: Thrive on hazard: heal 5 and mint 1 AP if you stand in a hazard (else heal 2).)*
 - *Eth — Feed on Energy* · 1 AP + 1 Charge · CD 3 · Dur 2 — For 2 rounds, the next 2 ranged hits on you are absorbed and each mints you 1 Charge. *(P3/E3: For 2 rounds, the next 4 ranged hits on you are absorbed and each mints you 1 Charge.)*
 
 ## 10 · Tardigrade — leans T/M
@@ -534,7 +534,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Stylet Drain** · Charge · `tar_stylet`
 
-- *Phys — Pierce* · 1 AP · CD 0 — A fine stylet through the seam: melee 1 that ignores Shield. *(P3: A fine stylet through the seam: melee 4 that ignores Shield.)*
+- *Phys — Pierce* · 1 AP · CD 1 — A fine stylet through the seam: melee 1 that ignores Shield. *(P3: A fine stylet through the seam: melee 4 that ignores Shield.)*
 - *Eth — Tap the Line* · 1 AP + 1 Charge · CD 3 — Tap its energy line: melee 2 that ignores Shield, and siphon 1 temporary Omni. *(P3/E3: Tap its energy line: melee 5 that ignores Shield, and siphon 2 temporary Omni.)*
 
 **Self-Replication** · Space · `tar_replicate`
@@ -545,7 +545,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Current-Cling Anchor** · Space · `tar_cling`
 
 - *Phys — Cling* · 1 AP · CD 1 — Cling fast: immune to push/pull for 1 rounds. *(P3: Cling fast: immune to push/pull for 4 rounds.)*
-- *Eth — Anchor Space* · 1 AP + 1 Space · CD 3 — Anchor to a point in space for 2 rounds: you and an adjacent ally cannot be moved. *(P3/E3: Anchor to a point in space for 4 rounds: you and an adjacent ally cannot be moved, and both ignore hazards.)*
+- *Eth — Anchor Space* · 1 AP + 1 Space · CD 3 — Anchor to a point in space for 2 rounds: you and an adjacent ally cannot be moved. *(P3/E3: Anchor to a point in space for 4 rounds: you and an adjacent ally cannot be moved, and both ignore hazards this round.)*
 
 ## 11 · Orangutan — leans T/C
 
@@ -553,13 +553,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Theory of Mind** ★ · Time · `hum_mind`
 
-- *Phys — Read* · 1 AP · CD 0 — Mark a foe: the next hit on it deals +2.
+- *Phys — Read* · 1 AP · CD 1 — Mark a foe: the next hit on it deals +2. *(P3: Mark a foe: the next hit on it deals +2, and its own next hit deals −1.)*
 - *Eth — Pre-empt* · 2 AP + 1 Time · CD 3 · Dur 2 — Pre-arm: the next hit on you is reduced by 3. Dur 2. *(P3/E3: Pre-arm: the next hit on you is reduced by 7 and reflects 3 back. Dur 2.)*
 
 **Tool Use** ★ · Space · `hum_tool`
 
 - *Phys — Improvise* · 1 AP · CD 1 — Your next strike this turn deals +1. *(P3: Your next strike this turn deals +4.)*
-- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away — even on a height node. *(P3/E3: Interact with an objective up to 4 nodes away — even on a height node.)*
+- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 1 less. *(P3/E3: Interact with an objective up to 4 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 3 less.)*
 
 **Opposable Grip** · Mass · `hum_grip`
 
@@ -584,7 +584,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Leaf Shelter** · Time · `ora_leaf`
 
 - *Phys — Leaf Roof* · 1 AP · CD 1 — You and an adjacent ally hold Shield 1 this round. *(P3: You and an adjacent ally hold Shield 4 this round.)*
-- *Eth — Rain Shelter* · 1 AP + 1 Time · CD 3 — Both heroes ignore hazards for 2 rounds and heal 1. *(P3/E3: Both heroes ignore hazards for 4 rounds and heal 1.)*
+- *Eth — Rain Shelter* · 1 AP + 1 Time · CD 3 — Both heroes heal 1 and ignore hazards this round; you stay dry for 2 rounds. *(P3/E3: Both heroes heal 1 and ignore hazards this round; you stay dry for 4 rounds.)*
 
 **Patient Study** · Time · `ora_study`
 
@@ -681,7 +681,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Fang Yawn** · Mass · `man_fang`
 
-- *Phys — Fangs* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Phys — Fangs* · 1 AP · CD 1 — Melee 2. *(P3: Melee 5.)*
 - *Eth — Gape* · 2 AP + 1 Mass · CD 3 — Melee 3; it is Weakened 2 for 2 rounds. *(P3/E3: Melee 6; it is Weakened 4 for 2 rounds.)*
 
 **Cheek Pouches** · Time · `man_cheek`
@@ -691,7 +691,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ground Charge** · Mass · `man_charge`
 
-- *Phys — Rush* · 1 AP · CD 0 — Rush 1 toward a foe, melee 2, and shove it 1. *(P3: Rush 1 toward a foe, melee 5, and shove it 1.)*
+- *Phys — Rush* · 1 AP · CD 1 — Rush 1 toward a foe, melee 2, and shove it 1. *(P3: Rush 1 toward a foe, melee 5, and shove it 1.)*
 - *Eth — Bowl Over* · 2 AP + 1 Mass · CD 3 — Charge 2 toward a foe within 3, melee 3, and shove it 2. *(P3/E3: Charge 2 toward a foe within 3, melee 6, and shove it 4.)*
 
 ## 14 · Eurasian Lynx — leans S/T
@@ -705,7 +705,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Retractable Claws** · Mass · `cat_claws`
 
-- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
 - *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
@@ -731,12 +731,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tufted Ears** · Space · `cat_tufts`
 
 - *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +1. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +2.)*
-- *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear the whole field for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear the whole field for 4 rounds; every foe within 4 is Marked.)*
+- *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear everything within 2 for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear everything within 4 for 4 rounds; every foe within 4 is Marked.)*
 
 **Snowshoe Paws** · Space · `lyn_snowshoe`
 
-- *Phys — Snowshoe* · 1 AP · CD 1 — Move 2; hazards don't touch you for 2 rounds. *(P3: Move 5; hazards don't touch you for 2 rounds.)*
-- *Eth — Deep Snow* · 1 AP + 1 Space · CD 3 — Both heroes ignore hazards for 2 rounds; every foe beside either of you is Weakened 1 for 2. *(P3/E3: Both heroes ignore hazards for 4 rounds; every foe beside either of you is Weakened 1 for 4.)*
+- *Phys — Snowshoe* · 1 AP · CD 1 — Move 1; hazards don't touch you for 2 rounds. *(P3: Move 4; hazards don't touch you for 2 rounds.)*
+- *Eth — Deep Snow* · 1 AP + 1 Space · CD 3 — Both heroes ignore hazards this round, and you for 2 rounds; every foe beside either of you is Weakened 1 for 2. *(P3/E3: Both heroes ignore hazards this round, and you for 4 rounds; every foe beside either of you is Weakened 1 for 4.)*
 
 **Snow Ghost** ★ · Time · `lyn_ghost`
 
@@ -754,7 +754,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Retractable Claws** · Mass · `cat_claws`
 
-- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
 - *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
@@ -780,11 +780,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tufted Ears** · Space · `cat_tufts`
 
 - *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +1. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +2.)*
-- *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear the whole field for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear the whole field for 4 rounds; every foe within 4 is Marked.)*
+- *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear everything within 2 for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear everything within 4 for 4 rounds; every foe within 4 is Marked.)*
 
 **Sky Swat** ★ · Charge · `car_swat`
 
-- *Phys — Swat* · 1 AP · CD 0 — Spring and swat a foe within 2 for 2; it is Weakened 1 this round. *(P3: Spring and swat a foe within 2 for 5; it is Weakened 1 this round.)*
+- *Phys — Swat* · 1 AP · CD 1 — Spring and swat a foe within 2 for 2; it is Weakened 1 this round. *(P3: Spring and swat a foe within 2 for 5; it is Weakened 1 this round.)*
 - *Eth — Snatch* · 1 AP + 1 Charge · CD 3 — Hook a foe within 3 and drag it 2 toward you; if it lands beside you, melee 3. It is Anchored 1. *(P3/E3: Hook a foe within 3 and drag it 4 toward you; if it lands beside you, melee 5. It is Anchored 1.)*
 
 **Vertical Leap** · Space · `car_leap`
@@ -803,7 +803,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Retractable Claws** · Mass · `cat_claws`
 
-- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
 - *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
@@ -838,7 +838,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Night Prowl** · Time · `oce_prowl`
 
-- *Phys — Prowl* · 1 AP · CD 1 — Move 2 without setting off traps, and end Hidden 1. *(P3: Move 5 without setting off traps, and end Hidden 1.)*
+- *Phys — Prowl* · 1 AP · CD 1 — Move 1 without setting off traps, and end Hidden 1. *(P3: Move 4 without setting off traps, and end Hidden 1.)*
 - *Eth — Night Shift* · 1 AP + 1 Time · CD 4 — Every card on your track returns 2 columns sooner; see within 2 this round. *(P3/E3: Every card on your track returns 4 columns sooner; see within 2 this round.)*
 
 ## 17 · Tiger — leans M/C
@@ -852,7 +852,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Retractable Claws** · Mass · `cat_claws`
 
-- *Phys — Unsheathe* · 1 AP · CD 0 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
+- *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
 - *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
@@ -931,12 +931,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Sprinter's Claws** · Mass · `che_claws`
 
-- *Phys — Kick Off* · 1 AP · CD 1 — Move 2; your next strike this turn deals +1. *(P3: Move 5; your next strike this turn deals +1.)*
+- *Phys — Kick Off* · 1 AP · CD 1 — Move 1; your next strike this turn deals +1. *(P3: Move 4; your next strike this turn deals +1.)*
 - *Eth — Dig In* · 1 AP + 1 Mass · CD 3 — Claws in: you can't be pushed or pulled for 2 rounds, hold Shield 2 this round, and draw 1 die as AP. *(P3/E3: Claws in: you can't be pushed or pulled for 4 rounds, hold Shield 4 this round, and draw 1 die as AP.)*
 
 **Trip** · Mass · `che_trip`
 
-- *Phys — Trip* · 1 AP · CD 0 — Hook a leg: melee 1, and it cannot move next round. *(P3: Hook a leg: melee 4, and it cannot move next round.)*
+- *Phys — Trip* · 1 AP · CD 1 — Hook a leg: melee 1, and it cannot move next round. *(P3: Hook a leg: melee 4, and it cannot move next round.)*
 - *Eth — Tumble* · 1 AP + 1 Mass · CD 3 — Melee 3; it cannot move and is Weakened 1 for 1 round. *(P3/E3: Melee 5; it cannot move and is Weakened 1 for 2 rounds.)*
 
 ## 19 · Fennec Fox — leans S/T
@@ -946,7 +946,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -955,7 +955,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Trot** · Time · `dog_trot`
 
-- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
 - *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
@@ -976,7 +976,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Big Ears** ★ · Space · `fen_ears`
 
 - *Phys — Cool Down* · 1 AP · CD 1 — Hear everything within 2 this round; your ears shed the heat: hazards don't touch you for 2 rounds. *(P3: Hear everything within 5 this round; your ears shed the heat: hazards don't touch you for 2 rounds.)*
-- *Eth — Under the Sand* · 1 AP + 1 Space · CD 3 — Hear the whole field for 2 rounds; the next hit on you is 1 less. *(P3/E3: Hear the whole field for 4 rounds; the next hit on you is 2 less.)*
+- *Eth — Under the Sand* · 1 AP + 1 Space · CD 3 — Hear everything within 2 for 2 rounds; the next hit on you is 1 less. *(P3/E3: Hear everything within 4 for 4 rounds; the next hit on you is 2 less.)*
 
 **Desert Thrift** · Time · `fen_thrift`
 
@@ -985,7 +985,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Night Trot** · Space · `fen_night`
 
-- *Phys — Night Trot* · 1 AP · CD 1 — Move 2 without setting off traps, seeing what is beside you as you go. *(P3: Move 5 without setting off traps, seeing what is beside you as you go.)*
+- *Phys — Night Trot* · 1 AP · CD 1 — Move 1 without setting off traps, seeing what is beside you as you go. *(P3: Move 4 without setting off traps, seeing what is beside you as you go.)*
 - *Eth — Moon Run* · 1 AP + 1 Space · CD 3 — Hide for 2 rounds, moving freely, and run 2 now. *(P3/E3: Hide for 4 rounds, moving freely, and run 2 now.)*
 
 ## 20 · Red Fox — leans S/C
@@ -995,7 +995,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1004,7 +1004,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Trot** · Time · `dog_trot`
 
-- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
 - *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
@@ -1044,7 +1044,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1053,7 +1053,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Trot** · Time · `dog_trot`
 
-- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
 - *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
@@ -1064,7 +1064,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Yip Chorus** · Charge · `dog_yip`
 
 - *Phys — Yip* · 1 AP · CD 1 — Call out what you see within 2; your ally's next strike deals +1. *(P3: Call out what you see within 5; your ally's next strike deals +1.)*
-- *Eth — Where Are You* · 1 AP + 1 Charge · CD 3 — The whole field answers for 2 rounds: everything is seen, and both heroes' next hit taken is 1 less. *(P3/E3: The whole field answers for 4 rounds: everything is seen, and both heroes' next hit taken is 1 less.)*
+- *Eth — Where Are You* · 1 AP + 1 Charge · CD 3 — Everything within 2 answers for 2 rounds and is seen, and both heroes' next hit taken is 1 less. *(P3/E3: Everything within 4 answers for 4 rounds and is seen, and both heroes' next hit taken is 1 less.)*
 
 **Opportunist** · Mass · `dog_opp`
 
@@ -1093,7 +1093,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1102,7 +1102,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Trot** · Time · `dog_trot`
 
-- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
 - *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
@@ -1113,7 +1113,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Yip Chorus** · Charge · `dog_yip`
 
 - *Phys — Yip* · 1 AP · CD 1 — Call out what you see within 2; your ally's next strike deals +1. *(P3: Call out what you see within 5; your ally's next strike deals +1.)*
-- *Eth — Where Are You* · 1 AP + 1 Charge · CD 3 — The whole field answers for 2 rounds: everything is seen, and both heroes' next hit taken is 1 less. *(P3/E3: The whole field answers for 4 rounds: everything is seen, and both heroes' next hit taken is 1 less.)*
+- *Eth — Where Are You* · 1 AP + 1 Charge · CD 3 — Everything within 2 answers for 2 rounds and is seen, and both heroes' next hit taken is 1 less. *(P3/E3: Everything within 4 answers for 4 rounds and is seen, and both heroes' next hit taken is 1 less.)*
 
 **Opportunist** · Mass · `dog_opp`
 
@@ -1132,7 +1132,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Lope Feint** · Space · `coy_lope`
 
-- *Phys — Lope* · 1 AP · CD 1 — Lope 2, slipping past foes. *(P3: Lope 5, slipping past foes.)*
+- *Phys — Lope* · 1 AP · CD 1 — Lope 1, slipping past foes. *(P3: Lope 4, slipping past foes.)*
 - *Eth — Double Back* · 1 AP + 1 Space · CD 3 — Lope 3 past foes and double back unseen: Hidden 1, and your next strike deals +1. *(P3/E3: Lope 5 past foes and double back unseen: Hidden 1, and your next strike deals +1.)*
 
 ## 23 · Spotted Hyena — leans M/C
@@ -1147,7 +1147,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for the rest of the mission, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1156,17 +1156,17 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Trot** · Time · `dog_trot`
 
-- *Phys — Trot* · 1 AP · CD 0 — Move 2. *(P3: Move 5.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
 - *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
 
 **Bone Crush** ★ · Mass · `hye_crush`
 
 - *Phys — Crunch* · 1 AP · CD 1 — Melee 2; it is Weakened 1 this round. *(P3: Melee 5 through Shield; it is Weakened 1 this round.)*
-- *Eth — Bone Crack* · 1 AP + 1 Mass · CD 3 — Crack its Shield away, melee 4, and it is Weakened 2 for 1 round. *(P3/E3: Crack its Shield away, melee 6, and it is Weakened 2 for 2 rounds.)*
+- *Eth — Bone Crack* · 1 AP + 1 Mass · CD 3 — Crack 2 off its Shield, melee 4, and it is Weakened 2 for 1 round. *(P3/E3: Crack 4 off its Shield, melee 6, and it is Weakened 2 for 2 rounds.)*
 
 **Clan Whoop** · Charge · `hye_whoop`
 
-- *Phys — Whoop* · 1 AP · CD 1 — Call your partner up to 2 nodes; their next strike deals +1.
+- *Phys — Whoop* · 1 AP · CD 1 — Call your partner up to 2 nodes; their next strike deals +1. *(P3: Call your partner up to 2 nodes; their next strike deals +2.)*
 - *Eth — Mob* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds; both heroes' next strike deals +1. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds; both heroes' next strike deals +1.)*
 
 **Scavenge** · Time · `hye_scav`
@@ -1176,7 +1176,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Endurance** · Time · `hye_endure`
 
-- *Phys — Keep Going* · 1 AP · CD 1 — Move 2, and heal 1. *(P3: Move 5, and heal 1.)*
+- *Phys — Keep Going* · 1 AP · CD 1 — Move 1, and heal 1. *(P3: Move 4, and heal 1.)*
 - *Eth — Run It Down* · 1 AP + 1 Time · CD 4 — For 3 rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner. *(P3/E3: For 5 rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner.)*
 
 **Matriarch** · Charge · `hye_matri`
@@ -1191,7 +1191,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tool Use** ★ · Space · `hum_tool`
 
 - *Phys — Improvise* · 1 AP · CD 1 — Your next strike this turn deals +1. *(P3: Your next strike this turn deals +4.)*
-- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away — even on a height node. *(P3/E3: Interact with an objective up to 4 nodes away — even on a height node.)*
+- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 1 less. *(P3/E3: Interact with an objective up to 4 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 3 less.)*
 
 **Musk** · Charge · `wea_musk`
 
@@ -1211,11 +1211,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Raft Together** · Charge · `ott_raft`
 
 - *Phys — Hold Paws* · 1 AP · CD 1 — Hold Shield 2 this round; an ally beside you holds it too. *(P3: Hold Shield 3 this round; an ally beside you holds it too.)*
-- *Eth — Raft* · 1 AP + 1 Charge · CD 4 — Both heroes heal 2, hold Shield 1 this round, and ignore hazards for 2. *(P3/E3: Both heroes heal 4, hold Shield 1 this round, and ignore hazards for 2.)*
+- *Eth — Raft* · 1 AP + 1 Charge · CD 4 — Both heroes heal 2, hold Shield 1 this round, and ignore hazards this round. *(P3/E3: Both heroes heal 4, hold Shield 1 this round, and ignore hazards this round.)*
 
 **Shell Crack** ★ · Mass · `ott_shell`
 
-- *Phys — Crack* · 1 AP · CD 1 — Knock its whole Shield off with your rock, then melee 1. *(P3: Knock its whole Shield off with your rock, then melee 4.)*
+- *Phys — Crack* · 1 AP · CD 1 — Knock 1 off its Shield with your rock, then melee 1. *(P3: Knock 4 off its Shield with your rock, then melee 4.)*
 - *Eth — Rock Throw* · 1 AP + 1 Mass · CD 3 — Throw your rock at a foe in sight: 2 of its Shield cracks, and it takes 3. *(P3/E3: Throw your rock at a foe in sight: 2 of its Shield cracks, and it takes 5.)*
 
 **Otter Roll** · Space · `ott_roll`
@@ -1323,7 +1323,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bamboo Jaw** · Mass · `rpa_bamboo`
 
-- *Phys — Chew* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
+- *Phys — Chew* · 1 AP · CD 1 — Melee 2. *(P3: Melee 5.)*
 - *Eth — Crush Stalk* · 1 AP + 1 Mass · CD 3 — Melee 4; it is Weakened 1 for 2 rounds. *(P3/E3: Melee 6; it is Weakened 1 for 2 rounds.)*
 
 **Cold Sleep** · Time · `rpa_cold`
@@ -1373,7 +1373,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ice Haul** · Time · `wal_ice`
 
 - *Phys — Tusk Up* · 1 AP · CD 1 — Haul yourself up on your tusks: climb 1, and hold Shield 1 this round. *(P3: Haul yourself up on your tusks: climb 4, and hold Shield 1 this round.)*
-- *Eth — Break the Ice* · 1 AP + 1 Time · CD 4 — Smash the ice around you: for 2 rounds every foe within 1 of you is Weakened 1, and you ignore hazards.
+- *Eth — Break the Ice* · 1 AP + 1 Time · CD 4 — Smash the ice around you: for 2 rounds every foe within 1 of you is Weakened 1, and you ignore hazards for 2 rounds. *(P3/E3: Smash the ice around you: for 2 rounds every foe within 1 of you is Weakened 1, and you ignore hazards for 4 rounds.)*
 
 **Ton of Weight** · Mass · `wal_ton`
 
@@ -1397,11 +1397,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Echolocation** · Space · `sea_echo`
 
 - *Phys — Click* · 1 AP · CD 1 — Click: reveal within 2 this round, and your next hit deals +1. *(P3: Click: reveal within 5 this round, and your next hit deals +1.)*
-- *Eth — Sound the Deep* · 1 AP + 1 Space · CD 3 — Reveal the whole board for 2 rounds, and Mark every foe within 2 (the next hit on each deals +2). *(P3/E3: Reveal the whole board for 2 rounds, and Mark every foe within 4 (the next hit on each deals +2).)*
+- *Eth — Sound the Deep* · 1 AP + 1 Space · CD 3 — Reveal everything within 2 for 2 rounds, and Mark every foe within 2 (the next hit on each deals +2). *(P3/E3: Reveal everything within 4 for 2 rounds, and Mark every foe within 4 (the next hit on each deals +2).)*
 
 **Pod Song** · Charge · `sea_song`
 
-- *Phys — Call the Pod* · 1 AP · CD 1 — Both heroes' next hit deals +1; your ally heals 1.
+- *Phys — Call the Pod* · 1 AP · CD 1 — Both heroes' next hit deals +1; your ally heals 1. *(P3: Both heroes' next hit deals +2; your ally heals 1.)*
 - *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — Both heroes gain 1 AP at the start of each turn for 2 rounds. *(P3/E3: Both heroes gain 1 AP at the start of each turn for 4 rounds.)*
 
 **Breach** · Space · `orc_breach`
@@ -1426,7 +1426,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Beach Charge** · Mass · `orc_beach`
 
-- *Phys — Ride the Surf* · 1 AP · CD 2 — Move 2, passing foes, and your next hit this turn deals +1. *(P3: Move 5, passing foes, and your next hit this turn deals +1.)*
+- *Phys — Ride the Surf* · 1 AP · CD 2 — Move 1, passing foes, and your next hit this turn deals +1. *(P3: Move 4, passing foes, and your next hit this turn deals +1.)*
 - *Eth — Strand* · 2 AP + 1 Mass · CD 4 — Melee 4, drag it 1 toward you, and pin it: Anchored 1. *(P3/E3: Melee 6, drag it 1 toward you, and pin it: Anchored 2.)*
 
 ## 29 · Narwhal — leans S/T
@@ -1446,11 +1446,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Echolocation** · Space · `sea_echo`
 
 - *Phys — Click* · 1 AP · CD 1 — Click: reveal within 2 this round, and your next hit deals +1. *(P3: Click: reveal within 5 this round, and your next hit deals +1.)*
-- *Eth — Sound the Deep* · 1 AP + 1 Space · CD 3 — Reveal the whole board for 2 rounds, and Mark every foe within 2 (the next hit on each deals +2). *(P3/E3: Reveal the whole board for 2 rounds, and Mark every foe within 4 (the next hit on each deals +2).)*
+- *Eth — Sound the Deep* · 1 AP + 1 Space · CD 3 — Reveal everything within 2 for 2 rounds, and Mark every foe within 2 (the next hit on each deals +2). *(P3/E3: Reveal everything within 4 for 2 rounds, and Mark every foe within 4 (the next hit on each deals +2).)*
 
 **Pod Song** · Charge · `sea_song`
 
-- *Phys — Call the Pod* · 1 AP · CD 1 — Both heroes' next hit deals +1; your ally heals 1.
+- *Phys — Call the Pod* · 1 AP · CD 1 — Both heroes' next hit deals +1; your ally heals 1. *(P3: Both heroes' next hit deals +2; your ally heals 1.)*
 - *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — Both heroes gain 1 AP at the start of each turn for 2 rounds. *(P3/E3: Both heroes gain 1 AP at the start of each turn for 4 rounds.)*
 
 **Tusk** · Mass · `sea_tusk`
@@ -1461,16 +1461,16 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Sense Tusk** · Space · `nar_sense`
 
 - *Phys — Taste the Water* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Read the Sea* · 1 AP + 1 Space · CD 4 — The next hit on each hero is 2 less, and both ignore hazards for 2 rounds. *(P3/E3: The next hit on each hero is 4 less, and both ignore hazards for 2 rounds.)*
+- *Eth — Read the Sea* · 1 AP + 1 Space · CD 4 — The next hit on each hero is 2 less, and both ignore hazards this round. *(P3/E3: The next hit on each hero is 4 less, and both ignore hazards this round.)*
 
 **Ice Lead** · Time · `nar_lead`
 
 - *Phys — Show the Way* · 1 AP · CD 1 — Your ally moves 1. *(P3: Your ally moves 4.)*
-- *Eth — Open Water* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards for 2 rounds and gain 1 AP next turn. *(P3/E3: Both heroes ignore hazards for 4 rounds and gain 1 AP next turn.)*
+- *Eth — Open Water* · 1 AP + 1 Time · CD 4 — Both heroes gain 1 AP next turn and ignore hazards this round; you for 2 rounds. *(P3/E3: Both heroes gain 1 AP next turn and ignore hazards this round; you for 4 rounds.)*
 
 **Deep Dive** · Time · `nar_dive`
 
-- *Phys — Sound* · 1 AP · CD 2 — Move 2, Hidden 1, and your next hit this turn deals +1. *(P3: Move 5, Hidden 1, and your next hit this turn deals +1.)*
+- *Phys — Sound* · 1 AP · CD 2 — Move 1, Hidden 1, and your next hit this turn deals +1. *(P3: Move 4, Hidden 1, and your next hit this turn deals +1.)*
 - *Eth — Surface Far Off* · 1 AP + 1 Time · CD 3 — Dive and come up anywhere within 3, Hidden 1. *(P3/E3: Dive and come up anywhere within 5, Hidden 1.)*
 
 **Pale Ghost** · Charge · `nar_ghost`
@@ -1484,7 +1484,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hooves** · Space · `hoof_hooves`
 
-- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
@@ -1495,7 +1495,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -1524,7 +1524,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Thin Air** · Space · `yak_air`
 
-- *Phys — Steady Breath* · 1 AP · CD 2 — Gain 1 AP next turn, and heal 1.
+- *Phys — Steady Breath* · 1 AP · CD 2 — Gain 1 AP next turn, and heal 1. *(P3: Gain 1 AP next turn, and heal 2.)*
 - *Eth — High Pass* · 1 AP + 1 Space · CD 3 — Climb 2 and hold Shield 2 this round. *(P3/E3: Climb 4, carrying an ally beside you, and hold Shield 2 this round.)*
 
 ## 31 · Bison — leans M/T
@@ -1533,7 +1533,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hooves** · Space · `hoof_hooves`
 
-- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
@@ -1544,7 +1544,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -1563,7 +1563,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Stampede** · Mass · `bis_stampede`
 
-- *Phys — Thunder* · 1 AP · CD 2 — Move 2, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1. *(P3: Move 5, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1.)*
+- *Phys — Thunder* · 1 AP · CD 2 — Move 1, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1. *(P3: Move 4, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1.)*
 - *Eth — Run Them Down* · 2 AP + 1 Mass · CD 4 — Every foe beside you takes 3 and is pushed 1. *(P3/E3: Every foe beside you takes 5 and is pushed 1.)*
 
 **Wallow** · Time · `bis_wallow`
@@ -1582,7 +1582,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hooves** · Space · `hoof_hooves`
 
-- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
@@ -1593,7 +1593,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -1622,7 +1622,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Mirage Walk** · Space · `ory_mirage`
 
-- *Phys — Shimmer* · 1 AP · CD 1 — Move 2; the next hit on you is 1 less, and you dodge a step from it. *(P3: Move 5; the next hit on you is 2 less, and you dodge a step from it.)*
+- *Phys — Shimmer* · 1 AP · CD 1 — Move 1; the next hit on you is 1 less, and you dodge a step from it. *(P3: Move 4; the next hit on you is 2 less, and you dodge a step from it.)*
 - *Eth — Heat Haze* · 1 AP + 1 Space · CD 4 — A shimmer draws foes to a node within 3 for 2 rounds, and you are Hidden 1 even if you move. *(P3/E3: A shimmer draws foes to a node within 3 for 4 rounds, and you are Hidden 1 even if you move.)*
 
 ## 33 · Bighorn Ram — leans M/S
@@ -1631,7 +1631,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hooves** · Space · `hoof_hooves`
 
-- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
@@ -1642,7 +1642,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -1680,7 +1680,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hooves** · Space · `hoof_hooves`
 
-- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
@@ -1691,7 +1691,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -1705,12 +1705,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bound Away** · Space · `hoof_bound`
 
-- *Phys — Bound* · 1 AP · CD 1 — Bound 2, passing foes; the next hit on you is 1 less. *(P3: Bound 5, passing foes; the next hit on you is 1 less.)*
+- *Phys — Bound* · 1 AP · CD 1 — Bound 1, passing foes; the next hit on you is 1 less. *(P3: Bound 4, passing foes; the next hit on you is 1 less.)*
 - *Eth — Over the Fence* · 1 AP + 1 Space · CD 3 — Leap to anywhere within 3, height included, and you are Hidden 1. *(P3/E3: Leap to anywhere within 5, height included, and you are Hidden 1.)*
 
 **Wade Deep** · Space · `moo_wade`
 
-- *Phys — Wade* · 1 AP · CD 1 — Move 2, and ignore hazards for 2 rounds. *(P3: Move 5, and ignore hazards for 2 rounds.)*
+- *Phys — Wade* · 1 AP · CD 1 — Move 1, and ignore hazards for 2 rounds. *(P3: Move 4, and ignore hazards for 2 rounds.)*
 - *Eth — Dive for Weed* · 1 AP + 1 Space · CD 4 — Duck under: Hidden 1, heal 3, and ignore hazards for 2 rounds. *(P3/E3: Duck under: Hidden 1, heal 5, and ignore hazards for 2 rounds.)*
 
 **Bellow** · Charge · `moo_bellow`
@@ -1729,7 +1729,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hooves** · Space · `hoof_hooves`
 
-- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
@@ -1740,7 +1740,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -1754,7 +1754,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bound Away** · Space · `hoof_bound`
 
-- *Phys — Bound* · 1 AP · CD 1 — Bound 2, passing foes; the next hit on you is 1 less. *(P3: Bound 5, passing foes; the next hit on you is 1 less.)*
+- *Phys — Bound* · 1 AP · CD 1 — Bound 1, passing foes; the next hit on you is 1 less. *(P3: Bound 4, passing foes; the next hit on you is 1 less.)*
 - *Eth — Over the Fence* · 1 AP + 1 Space · CD 3 — Leap to anywhere within 3, height included, and you are Hidden 1. *(P3/E3: Leap to anywhere within 5, height included, and you are Hidden 1.)*
 
 **Alert Ears** · Space · `dee_ears`
@@ -1778,7 +1778,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hooves** · Space · `hoof_hooves`
 
-- *Phys — Trot* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
@@ -1789,7 +1789,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -1832,13 +1832,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Gnawing Incisors** · Mass · `jer_gnaw`
 
-- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
-- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+- *Phys — Gnaw* · 1 AP · CD 1 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew 2 off its Shield, then melee 3. *(P3/E3: Chew 4 off its Shield, then melee 6 and push 2.)*
 
 **Vibrissae Sense** · Mass · `jer_vibrissae`
 
 - *Phys — Feel* · 1 AP · CD 1 — Feel ground vibration: reveal everything within 1, and Shield 1 against what is coming. *(P3: Feel ground vibration: reveal everything within 4, and Shield 1 against what is coming.)*
-- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal the whole board and Weaken all foes 1 this round.
+- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal everything within 2 and Weaken all foes 1 this round. *(P3/E3: Sense every moving mass: reveal everything within 4 and Weaken all foes 1 this round.)*
 
 **Burrowing** · Space · `jer_burrow`
 
@@ -1847,7 +1847,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Scurry** · Space · `mou_scurry`
 
-- *Phys — Scurry* · 1 AP · CD 0 — Move 2, setting off no traps. *(P3: Move 5, setting off no traps.)*
+- *Phys — Scurry* · 1 AP · CD 1 — Move 1, setting off no traps. *(P3: Move 4, setting off no traps.)*
 - *Eth — Every Which Way* · 1 AP + 1 Space · CD 3 — Move 4, through foes and past traps; the next hit on you is 2 less. *(P3/E3: Move 6, through foes and past traps; the next hit on you is 4 less.)*
 
 **Through the Gap** · Space · `mou_gap`
@@ -1867,7 +1867,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Squeak** · Charge · `mou_squeak`
 
-- *Phys — Alarm* · 1 AP · CD 1 — The next hit on each hero is 1 less, and your ally's next hit deals +1.
+- *Phys — Alarm* · 1 AP · CD 1 — The next hit on each hero is 1 less, and your ally's next hit deals +1. *(P3: The next hit on each hero is 2 less, and your ally's next hit deals +1.)*
 - *Eth — Ultrasound* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 1 round, and the nearest is Marked (the next hit on it deals +2). *(P3/E3: Every foe within 2 is Weakened 1 for 2 rounds, and the nearest is Marked (the next hit on it deals +2).)*
 
 ## 38 · Porcupine — leans M/T
@@ -1876,13 +1876,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Gnawing Incisors** · Mass · `jer_gnaw`
 
-- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
-- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+- *Phys — Gnaw* · 1 AP · CD 1 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew 2 off its Shield, then melee 3. *(P3/E3: Chew 4 off its Shield, then melee 6 and push 2.)*
 
 **Vibrissae Sense** · Mass · `jer_vibrissae`
 
 - *Phys — Feel* · 1 AP · CD 1 — Feel ground vibration: reveal everything within 1, and Shield 1 against what is coming. *(P3: Feel ground vibration: reveal everything within 4, and Shield 1 against what is coming.)*
-- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal the whole board and Weaken all foes 1 this round.
+- *Eth — Seismic* · 1 AP + 1 Mass · CD 3 — Sense every moving mass: reveal everything within 2 and Weaken all foes 1 this round. *(P3/E3: Sense every moving mass: reveal everything within 4 and Weaken all foes 1 this round.)*
 
 **Quills** · Mass · `por_quills`
 
@@ -1925,7 +1925,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Saltatorial Leap** ★ · Space · `jer_leap`
 
-- *Phys — Spring* · 1 AP · CD 0 — Move 2, leaping over foes. *(P3: Move 5, leaping over foes.)*
+- *Phys — Spring* · 1 AP · CD 1 — Move 1, leaping over foes. *(P3: Move 4, leaping over foes.)*
 - *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
 
 **Erratic Bounding** · Time · `jer_erratic`
@@ -1935,13 +1935,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Gnawing Incisors** · Mass · `jer_gnaw`
 
-- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
-- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+- *Phys — Gnaw* · 1 AP · CD 1 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew 2 off its Shield, then melee 3. *(P3/E3: Chew 4 off its Shield, then melee 6 and push 2.)*
 
 **Long Ears** · Space · `har_ears`
 
 - *Phys — Listen* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and you dodge a step from it. *(P3: Reveal within 5; the next hit on you is 1 less, and you dodge a step from it.)*
-- *Eth — Ears Back* · 1 AP + 1 Space · CD 3 — Hear the whole board this round, slip 2, and you are Hidden 1 even if you move. *(P3/E3: Hear the whole board this round, slip 4, and you are Hidden 1 even if you move.)*
+- *Eth — Ears Back* · 1 AP + 1 Space · CD 3 — Hear everything within 2 this round, slip 2, and you are Hidden 1 even if you move. *(P3/E3: Hear everything within 4 this round, slip 4, and you are Hidden 1 even if you move.)*
 
 **Boxing** · Mass · `har_box`
 
@@ -1960,8 +1960,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **White Winter** · Time · `har_winter`
 
-- *Phys — Snow Coat* · 1 AP · CD 2 — Hidden 1, Shield 1 this round, and ignore hazards for 2 rounds.
-- *Eth — Whiteout* · 1 AP + 1 Time · CD 4 — You and an ally within 2 are Hidden 1, and both ignore hazards for 2 rounds. *(P3/E3: You and an ally within 2 are Hidden 1, and both ignore hazards for 4 rounds.)*
+- *Phys — Snow Coat* · 1 AP · CD 2 — Hidden 1, Shield 1 this round, and ignore hazards for 2 rounds. *(P3: Hidden 1, Shield 2 this round, and ignore hazards for 2 rounds.)*
+- *Eth — Whiteout* · 1 AP + 1 Time · CD 4 — You and an ally within 2 are Hidden 1, and both ignore hazards this round; you for 2 rounds. *(P3/E3: You and an ally within 2 are Hidden 1, and both ignore hazards this round; you for 4 rounds.)*
 
 **Thump** · Charge · `har_thump`
 
@@ -1974,7 +1974,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Saltatorial Leap** ★ · Space · `jer_leap`
 
-- *Phys — Spring* · 1 AP · CD 0 — Move 2, leaping over foes. *(P3: Move 5, leaping over foes.)*
+- *Phys — Spring* · 1 AP · CD 1 — Move 1, leaping over foes. *(P3: Move 4, leaping over foes.)*
 - *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
 
 **Erratic Bounding** · Time · `jer_erratic`
@@ -1984,13 +1984,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Gnawing Incisors** · Mass · `jer_gnaw`
 
-- *Phys — Gnaw* · 1 AP · CD 0 — Melee 2. *(P3: Melee 5.)*
-- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew through its Shield entirely, then melee 3. *(P3/E3: Chew through its Shield entirely, then melee 6 and push 2.)*
+- *Phys — Gnaw* · 1 AP · CD 1 — Melee 2. *(P3: Melee 5.)*
+- *Eth — Crumble* · 2 AP + 1 Mass · CD 3 — Chew 2 off its Shield, then melee 3. *(P3/E3: Chew 4 off its Shield, then melee 6 and push 2.)*
 
 **Long Ears** · Space · `har_ears`
 
 - *Phys — Listen* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and you dodge a step from it. *(P3: Reveal within 5; the next hit on you is 1 less, and you dodge a step from it.)*
-- *Eth — Ears Back* · 1 AP + 1 Space · CD 3 — Hear the whole board this round, slip 2, and you are Hidden 1 even if you move. *(P3/E3: Hear the whole board this round, slip 4, and you are Hidden 1 even if you move.)*
+- *Eth — Ears Back* · 1 AP + 1 Space · CD 3 — Hear everything within 2 this round, slip 2, and you are Hidden 1 even if you move. *(P3/E3: Hear everything within 4 this round, slip 4, and you are Hidden 1 even if you move.)*
 
 **Boxing** · Mass · `har_box`
 
@@ -2004,7 +2004,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Shadow Bolt** · Space · `bha_bolt`
 
-- *Phys — Bolt* · 1 AP · CD 1 — Move 2, passing foes, and you are Hidden 1 even if you move. *(P3: Move 5, passing foes, and you are Hidden 1 even if you move.)*
+- *Phys — Bolt* · 1 AP · CD 1 — Move 1, passing foes, and you are Hidden 1 even if you move. *(P3: Move 4, passing foes, and you are Hidden 1 even if you move.)*
 - *Eth — Into the Dark* · 1 AP + 1 Space · CD 3 — Vanish to any node within 4, Hidden 1 even if you move. *(P3/E3: Vanish to any node within 6, Hidden 2 even if you move.)*
 
 **Night Kick** · Mass · `bha_kick`
@@ -2038,7 +2038,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Unhurried** · Time · `slo_unhurried`
 
-- *Phys — Take Your Time* · 1 AP · CD 1 — Your track returns 1 column sooner, and the next hit on you is 1 less.
+- *Phys — Take Your Time* · 1 AP · CD 1 — Your track returns 1 column sooner, and the next hit on you is 1 less. *(P3: Your track returns 1 column sooner, and the next hit on you is 2 less.)*
 - *Eth — Slow Hand* · 1 AP + 1 Time · CD 4 — The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 1 round. *(P3/E3: The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 2 rounds.)*
 
 **Hang On** · Space · `slo_hang`
@@ -2048,13 +2048,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Slow Swim** · Space · `slo_swim`
 
-- *Phys — Paddle* · 1 AP · CD 1 — Move 2, ignoring hazards this round. *(P3: Move 5, ignoring hazards this round.)*
+- *Phys — Paddle* · 1 AP · CD 1 — Move 1, ignoring hazards this round. *(P3: Move 4, ignoring hazards this round.)*
 - *Eth — Float* · 1 AP + 1 Space · CD 3 — Drift 3, passing foes; Hidden 1, and ignore hazards for 2 rounds. *(P3/E3: Drift 5, passing foes; Hidden 1, and ignore hazards for 2 rounds.)*
 
 **Neck Turn** · Space · `slo_neck`
 
 - *Phys — Look Back* · 1 AP · CD 1 — Reveal within 2; Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less. *(P3: Reveal within 5; Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less.)*
-- *Eth — All the Way Round* · 1 AP + 1 Space · CD 4 — See the whole board for 2 rounds; your next hit deals +2. *(P3/E3: See the whole board for 2 rounds; your next hit deals +4.)*
+- *Eth — All the Way Round* · 1 AP + 1 Space · CD 4 — See everything within 2 for 2 rounds; your next hit deals +2. *(P3/E3: See everything within 4 for 2 rounds; your next hit deals +4.)*
 
 **Sleep Anywhere** · Time · `slo_sleep`
 
@@ -2102,8 +2102,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Breath Crossing** · Space · `adi_breath`
 
-- *Phys — Walk the Bottom* · 1 AP · CD 1 — Move 2, and ignore hazards for 2 rounds. *(P3: Move 5, and ignore hazards for 2 rounds.)*
-- *Eth — Gulp Air* · 1 AP + 1 Space · CD 4 — Both heroes heal 1 and ignore hazards for 3 rounds. *(P3/E3: Both heroes heal 1 and ignore hazards for 5 rounds.)*
+- *Phys — Walk the Bottom* · 1 AP · CD 1 — Move 1, and ignore hazards for 2 rounds. *(P3: Move 4, and ignore hazards for 2 rounds.)*
+- *Eth — Gulp Air* · 1 AP + 1 Space · CD 4 — Both heroes heal 1 and ignore hazards this round; you hold your breath for 3 rounds. *(P3/E3: Both heroes heal 1 and ignore hazards this round; you hold your breath for 5 rounds.)*
 
 **Night Snuffle** · Charge · `adi_snuffle`
 
@@ -2156,7 +2156,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Walk Upright** · Space · `pan_upright`
 
-- *Phys — Stride* · 1 AP · CD 1 — Move 2, and reveal within 2 of where you stop. *(P3: Move 5, and reveal within 2 of where you stop.)*
+- *Phys — Stride* · 1 AP · CD 1 — Move 1, and reveal within 2 of where you stop. *(P3: Move 4, and reveal within 2 of where you stop.)*
 - *Eth — Tall and Wary* · 1 AP + 1 Space · CD 3 — Reveal within 4 for 2 rounds; your next hit deals +2. *(P3/E3: Reveal within 6 for 2 rounds; your next hit deals +4.)*
 
 **Ant Armour** · Charge · `pan_ants`
@@ -2185,7 +2185,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Snuffle** · Space · `heh_snuffle`
 
-- *Phys — Sniff About* · 1 AP · CD 1 — Snuffle 2, and reveal within 1 of where you stop. *(P3: Snuffle 5, and reveal within 1 of where you stop.)*
+- *Phys — Sniff About* · 1 AP · CD 1 — Snuffle 1, and reveal within 1 of where you stop. *(P3: Snuffle 4, and reveal within 1 of where you stop.)*
 - *Eth — Under the Hedge* · 1 AP + 1 Space · CD 3 — Move 3 under cover, setting off no traps; Hidden 1. *(P3/E3: Move 5 under cover, setting off no traps; Hidden 2.)*
 
 **Hibernate** · Time · `heh_hibernate`
@@ -2210,7 +2210,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Huff** · Charge · `heh_huff`
 
-- *Phys — Huff* · 1 AP · CD 1 — Huff at a foe within 2: it takes 1, is Weakened 1 this round, and is pushed 1.
+- *Phys — Huff* · 1 AP · CD 1 — Huff at a foe within 2: it takes 1, is Weakened 1 this round, and is pushed 1. *(P3: Huff at a foe within 2: it takes 2, is Weakened 1 this round, and is pushed 1.)*
 - *Eth — Snort and Pop* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 1 round; the next hit on you is 1 less. *(P3/E3: Every foe within 4 is Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
 
 ## 45 · Red Kangaroo — leans S/M
@@ -2224,7 +2224,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hop** · Space · `kan_hop`
 
-- *Phys — Hop* · 1 AP · CD 0 — Hop 2, over foes. *(P3: Hop 5, over foes.)*
+- *Phys — Hop* · 1 AP · CD 1 — Hop 1, over foes. *(P3: Hop 4, over foes.)*
 - *Eth — Bound Across* · 1 AP + 1 Space · CD 3 — Bound to any node within 4, height included; your next hit this turn deals +1. *(P3/E3: Bound to any node within 6, height included; your next hit this turn deals +1.)*
 
 **Tail Kick** · Mass · `kan_tailkick`
@@ -2249,7 +2249,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Hop** · Space · `kan_long`
 
-- *Phys — Stretch Out* · 1 AP · CD 1 — Move 3. *(P3: Move 6.)*
+- *Phys — Stretch Out* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
 - *Eth — Nine Metres* · 1 AP + 1 Space · CD 3 — Move 5, passing foes and ignoring hazards this round; the next hit on you is 1 less. *(P3/E3: Move 7, passing foes and ignoring hazards this round; the next hit on you is 1 less.)*
 
 **Kick Off** · Space · `kan_kickoff`
@@ -2298,12 +2298,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Thumb Feet** · Space · `opo_thumb`
 
-- *Phys — Grip* · 1 AP · CD 1 — Move 2; nothing can push or pull you this round. *(P3: Move 5; nothing can push or pull you this round.)*
+- *Phys — Grip* · 1 AP · CD 1 — Move 1; nothing can push or pull you this round. *(P3: Move 4; nothing can push or pull you this round.)*
 - *Eth — Grab and Go* · 1 AP + 1 Space · CD 3 — Snatch 2 Shield off a foe beside you, melee 3, and step 1. *(P3/E3: Snatch 2 Shield off a foe beside you, melee 5, and step 1.)*
 
 **Night Wander** · Space · `opo_wander`
 
-- *Phys — Wander* · 1 AP · CD 1 — Wander 2, setting off no traps, and reveal within 1 of where you stop. *(P3: Wander 5, setting off no traps, and reveal within 1 of where you stop.)*
+- *Phys — Wander* · 1 AP · CD 1 — Wander 1, setting off no traps, and reveal within 1 of where you stop. *(P3: Wander 4, setting off no traps, and reveal within 1 of where you stop.)*
 - *Eth — Under Cover of Night* · 1 AP + 1 Space · CD 3 — Move 3, passing foes; Hidden 1 even if you move. *(P3/E3: Move 5, passing foes; Hidden 2 even if you move.)*
 
 **Scavenger’s Nose** · Charge · `opo_nose`
@@ -2323,7 +2323,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Electroreception** · Charge · `pla_electro`
 
 - *Phys — Sense the Current* · 1 AP · CD 1 — Feel the electric field: reveal within 2, Mark the nearest foe (the next hit on it deals +2), and your next hit this turn deals +1. *(P3: Feel the electric field: reveal within 5, Mark the nearest foe (the next hit on it deals +2), and your next hit this turn deals +1.)*
-- *Eth — Every Heartbeat* · 1 AP + 1 Charge · CD 4 — Feel every heartbeat on the board for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Feel every heartbeat on the board for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+- *Eth — Every Heartbeat* · 1 AP + 1 Charge · CD 4 — Feel every heartbeat within 2 for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Feel every heartbeat within 4 for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
 
 **Venom Spur** · Mass · `pla_spur`
 
@@ -2332,12 +2332,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Duck Dive** · Space · `pla_dive`
 
-- *Phys — Dive* · 1 AP · CD 1 — Move 2, Hidden 1, and ignore hazards this round. *(P3: Move 5, Hidden 1, and ignore hazards this round.)*
+- *Phys — Dive* · 1 AP · CD 1 — Move 1, Hidden 1, and ignore hazards this round. *(P3: Move 4, Hidden 1, and ignore hazards this round.)*
 - *Eth — Bottom Run* · 1 AP + 1 Space · CD 3 — Come up anywhere within 3, Hidden 1, and ignore hazards for 2 rounds. *(P3/E3: Come up anywhere within 5, Hidden 1, and ignore hazards for 2 rounds.)*
 
 **Cheek Store** · Time · `pla_cheek`
 
-- *Phys — Fill Cheeks* · 1 AP · CD 2 — Gain 1 AP next turn, and heal 1.
+- *Phys — Fill Cheeks* · 1 AP · CD 2 — Gain 1 AP next turn, and heal 1. *(P3: Gain 1 AP next turn, and heal 2.)*
 - *Eth — Surface to Eat* · 1 AP + 1 Time · CD 4 — Heal 3, and gain 1 AP at the start of each turn for 1 round. *(P3/E3: Heal 5, and gain 1 AP at the start of each turn for 2 rounds.)*
 
 **Eyes-Shut Hunt** · Charge · `pla_shut`
@@ -2347,7 +2347,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Webbed Fold** · Space · `pla_web`
 
-- *Phys — Paddle* · 1 AP · CD 1 — Move 2, and hold Shield 1 this round. *(P3: Move 5, and hold Shield 1 this round.)*
+- *Phys — Paddle* · 1 AP · CD 1 — Move 1, and hold Shield 1 this round. *(P3: Move 4, and hold Shield 1 this round.)*
 - *Eth — Fold and Dig* · 1 AP + 1 Space · CD 4 — Fold back the webbing and dig in: Shield 3 for 2 rounds, nothing can push or pull you this round, and heal 1. *(P3/E3: Fold back the webbing and dig in: Shield 5 for 2 rounds, nothing can push or pull you this round, and heal 1.)*
 
 **Egg Clutch** · Time · `pla_egg`
@@ -2366,7 +2366,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Talon Strike** · Mass · `owl_talon`
 
-- *Phys — Grip* · 1 AP · CD 0 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
+- *Phys — Grip* · 1 AP · CD 1 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
 - *Eth — Pin* · 2 AP + 1 Mass · CD 3 — Melee 3 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2. *(P3/E3: Melee 6 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.)*
 
 **Hollow Bones** · Mass · `owl_bones`
@@ -2377,7 +2377,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Sight** · Charge · `rap_sight`
 
 - *Phys — Spot* · 1 AP · CD 1 — See everything within 3, and Mark the nearest foe (the next hit on it deals +2). *(P3: See everything within 6, and Mark the nearest foe (the next hit on it deals +2).)*
-- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See the whole board this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See the whole board this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
+- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See everything within 3 this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See everything within 5 this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
 
 **Stoop** · Mass · `rap_stoop`
 
@@ -2386,7 +2386,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Soar** · Space · `eag_soar`
 
-- *Phys — Ride the Wind* · 1 AP · CD 1 — Glide 2, over foes; hazards can't touch you this round. *(P3: Glide 5, over foes; hazards can't touch you this round.)*
+- *Phys — Ride the Wind* · 1 AP · CD 1 — Glide 1, over foes; hazards can't touch you this round. *(P3: Glide 4, over foes; hazards can't touch you this round.)*
 - *Eth — High Circle* · 1 AP + 1 Space · CD 3 — Rise onto any node within 3, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Rise onto any node within 5, height included; see within 5, and your next hit this turn deals +1.)*
 
 **Talon Lock** · Mass · `eag_lock`
@@ -2396,7 +2396,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Eagle Scream** · Charge · `eag_scream`
 
-- *Phys — Scream* · 1 AP · CD 1 — Every foe beside you is Weakened 1, and both heroes' next hit this round deals +1.
+- *Phys — Scream* · 1 AP · CD 1 — Every foe beside you is Weakened 1, and both heroes' next hit this round deals +1. *(P3: Every foe beside you is Weakened 1, and both heroes' next hit this round deals +2.)*
 - *Eth — Rally Cry* · 1 AP + 1 Charge · CD 3 — Both heroes' next hit deals +2 and they hold Shield 1 this round; foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Both heroes' next hit deals +4 and they hold Shield 1 this round; foes beside you are Weakened 1 for 2 rounds.)*
 
 **Fish Snatch** · Space · `eag_fish`
@@ -2415,7 +2415,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Talon Strike** · Mass · `owl_talon`
 
-- *Phys — Grip* · 1 AP · CD 0 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
+- *Phys — Grip* · 1 AP · CD 1 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
 - *Eth — Pin* · 2 AP + 1 Mass · CD 3 — Melee 3 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2. *(P3/E3: Melee 6 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.)*
 
 **Hollow Bones** · Mass · `owl_bones`
@@ -2426,7 +2426,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Sight** · Charge · `rap_sight`
 
 - *Phys — Spot* · 1 AP · CD 1 — See everything within 3, and Mark the nearest foe (the next hit on it deals +2). *(P3: See everything within 6, and Mark the nearest foe (the next hit on it deals +2).)*
-- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See the whole board this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See the whole board this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
+- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See everything within 3 this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See everything within 5 this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
 
 **Stoop** · Mass · `rap_stoop`
 
@@ -2455,7 +2455,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hedge Chase** · Space · `haw_hedge`
 
-- *Phys — Weave* · 1 AP · CD 1 — Weave 2 through cover, past foes and setting off no traps; your next hit this turn deals +1. *(P3: Weave 5 through cover, past foes and setting off no traps; your next hit this turn deals +1.)*
+- *Phys — Weave* · 1 AP · CD 1 — Weave 1 through cover, past foes and setting off no traps; your next hit this turn deals +1. *(P3: Weave 4 through cover, past foes and setting off no traps; your next hit this turn deals +1.)*
 - *Eth — Through the Hedge* · 1 AP + 1 Space · CD 3 — Burst out beside a foe within 3, hidden or not: melee 3, and you are Hidden 1. *(P3/E3: Burst out beside a foe within 5, hidden or not: melee 5, and you are Hidden 1.)*
 
 ## 50 · Crane — leans S/C
@@ -2469,7 +2469,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wade** · Space · `wad_wade`
 
-- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
 - *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
@@ -2489,7 +2489,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Migration** · Space · `cra_migrate`
 
-- *Phys — Long Haul* · 1 AP · CD 1 — Fly 3; hazards can't touch you this round. *(P3: Fly 4; hazards can't touch you this round.)*
+- *Phys — Long Haul* · 1 AP · CD 1 — Fly 2; hazards can't touch you this round. *(P3: Fly 3; hazards can't touch you this round.)*
 - *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; your track slides 2 extra (your cards come back sooner).)*
 
 **Courtship Dance** · Charge · `cra_dance`
@@ -2499,7 +2499,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Stride** · Space · `cra_stride`
 
-- *Phys — Stride* · 1 AP · CD 0 — Stride 2. *(P3: Stride 5.)*
+- *Phys — Stride* · 1 AP · CD 1 — Stride 1. *(P3: Stride 4.)*
 - *Eth — Run-Up* · 1 AP + 1 Space · CD 3 — Run, flap and lift: land on any node within 4, height included; hazards can't touch you this round. *(P3/E3: Run, flap and lift: land on any node within 6, height included; hazards can't touch you this round.)*
 
 **Trumpet** · Charge · `cra_trumpet`
@@ -2514,7 +2514,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tool Use** ★ · Space · `hum_tool`
 
 - *Phys — Improvise* · 1 AP · CD 1 — Your next strike this turn deals +1. *(P3: Your next strike this turn deals +4.)*
-- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away — even on a height node. *(P3/E3: Interact with an objective up to 4 nodes away — even on a height node.)*
+- *Eth — Reach Rig* · 1 AP + 1 Space · CD 2 — Interact with an objective up to 2 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 1 less. *(P3/E3: Interact with an objective up to 4 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 3 less.)*
 
 **Hollow Bones** · Mass · `owl_bones`
 
@@ -2523,7 +2523,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wade** · Space · `wad_wade`
 
-- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
 - *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
@@ -2554,7 +2554,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Rookery** · Charge · `her_rookery`
 
 - *Phys — Colony* · 1 AP · CD 1 — Both heroes hold Shield 1 this round, and your ally heals 1. *(P3: Both heroes hold Shield 2 this round, and your ally heals 1.)*
-- *Eth — Rookery Watch* · 1 AP + 1 Charge · CD 4 — Someone is always watching: see the whole board this round, and both heroes heal 1 at the start of each turn for 2 rounds.
+- *Eth — Rookery Watch* · 1 AP + 1 Charge · CD 4 — Someone is always watching: see everything within 2 this round, and both heroes heal 1 at the start of each turn for 2 rounds. *(P3/E3: Someone is always watching: see everything within 4 this round, and both heroes heal 1 at the start of each turn for 2 rounds.)*
 
 ## 52 · Egret — leans C/S
 
@@ -2567,7 +2567,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wade** · Space · `wad_wade`
 
-- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
 - *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
@@ -2597,7 +2597,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Cattle Rider** · Space · `egr_cattle`
 
-- *Phys — Follow the Herd* · 1 AP · CD 1 — Move 2 and heal 1; your ally's next hit deals +1. *(P3: Move 5 and heal 1; your ally's next hit deals +1.)*
+- *Phys — Follow the Herd* · 1 AP · CD 1 — Move 1 and heal 1; your ally's next hit deals +1. *(P3: Move 4 and heal 1; your ally's next hit deals +1.)*
 - *Eth — Ride Along* · 1 AP + 1 Space · CD 4 — Swap places with your ally, wherever they are; both heroes' next hit deals +2. *(P3/E3: Swap places with your ally, wherever they are; both heroes' next hit deals +4.)*
 
 **Graceful Lift** · Space · `egr_lift`
@@ -2616,7 +2616,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wade** · Space · `wad_wade`
 
-- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
 - *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
@@ -2642,7 +2642,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Flood Wader** · Time · `ibi_flood`
 
 - *Phys — High Water* · 1 AP · CD 1 — Shield 1 this round, heal 1, and ignore hazards for 2 rounds. *(P3: Shield 4 this round, heal 1, and ignore hazards for 2 rounds.)*
-- *Eth — Flood Plain* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards for 3 rounds and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes ignore hazards for 5 rounds and heal 1 at the start of each turn for 2 rounds.)*
+- *Eth — Flood Plain* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards this round (you for 3 rounds) and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes ignore hazards this round (you for 5 rounds) and heal 1 at the start of each turn for 2 rounds.)*
 
 **Scribe’s Eye** · Time · `ibi_scribe`
 
@@ -2665,7 +2665,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wade** · Space · `wad_wade`
 
-- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
 - *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
@@ -2714,7 +2714,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wade** · Space · `wad_wade`
 
-- *Phys — Wade* · 1 AP · CD 1 — Wade 2; hazards can't touch you this round. *(P3: Wade 5; hazards can't touch you this round.)*
+- *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
 - *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
@@ -2740,7 +2740,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Salt Flats** · Time · `fla_salt`
 
 - *Phys — Salt Feet* · 1 AP · CD 1 — Ignore hazards for 2 rounds, and hold Shield 1 this round. *(P3: Ignore hazards for 2 rounds, and hold Shield 4 this round.)*
-- *Eth — Caustic Lake* · 1 AP + 1 Time · CD 3 — Stir the bitter lake at a node within 2: every foe on or beside it takes 1 at the start of its next 2 turns; both heroes ignore hazards for 2 rounds. *(P3/E3: Stir the bitter lake at a node within 2: every foe on or beside it takes 2 at the start of its next 2 turns; both heroes ignore hazards for 2 rounds.)*
+- *Eth — Caustic Lake* · 1 AP + 1 Time · CD 3 — Stir the bitter lake at a node within 2: every foe on or beside it takes 1 at the start of its next 2 turns; both heroes ignore hazards this round. *(P3/E3: Stir the bitter lake at a node within 2: every foe on or beside it takes 2 at the start of its next 2 turns; both heroes ignore hazards this round.)*
 
 **Crop Milk** · Time · `fla_milk`
 
@@ -2749,7 +2749,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pink Flock** · Charge · `fla_pink`
 
-- *Phys — Blend In* · 1 AP · CD 1 — Lose yourself in the flock: you and an ally beside you are Hidden 1, and you heal 1.
+- *Phys — Blend In* · 1 AP · CD 1 — Lose yourself in the flock: you and an ally beside you are Hidden 1, and you heal 1. *(P3: Lose yourself in the flock: you and an ally beside you are Hidden 1, and you heal 2.)*
 - *Eth — A Thousand Pink* · 1 AP + 1 Charge · CD 3 — Leave a decoy for 2 rounds; you and an ally beside you are Hidden 1, and your next hit deals +1. *(P3/E3: Leave a decoy for 4 rounds; you and an ally beside you are Hidden 1, and your next hit deals +2.)*
 
 ## 56 · Atlantic Puffin — leans S/C
@@ -2779,11 +2779,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Salt Gland** · Time · `sea_salt`
 
 - *Phys — Drink the Sea* · 1 AP · CD 1 — Heal 1, and shake off Anchored and Weakened. *(P3: Heal 4, and shake off Anchored and Weakened.)*
-- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards for 2 rounds. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards for 2 rounds.)*
+- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards this round. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards this round.)*
 
 **Wingdive** · Space · `puf_wingdive`
 
-- *Phys — Fly Underwater* · 1 AP · CD 1 — Fly under the surface 2, and stay Hidden 1. *(P3: Fly under the surface 5, and stay Hidden 1.)*
+- *Phys — Fly Underwater* · 1 AP · CD 1 — Fly under the surface 1, and stay Hidden 1. *(P3: Fly under the surface 4, and stay Hidden 1.)*
 - *Eth — Deep Wingbeat* · 1 AP + 1 Space · CD 3 — Come up anywhere within 3; Hidden 1 even if you move, and your next hit deals +1. *(P3/E3: Come up anywhere within 5; Hidden 2 even if you move, and your next hit deals +1.)*
 
 **Beakful** · Charge · `puf_beakful`
@@ -2793,7 +2793,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Cliff Launch** · Space · `puf_cliff`
 
-- *Phys — Drop Off* · 1 AP · CD 1 — Drop off the edge and fly 2, over foes; your next hit this turn deals +1. *(P3: Drop off the edge and fly 5, over foes; your next hit this turn deals +1.)*
+- *Phys — Drop Off* · 1 AP · CD 1 — Drop off the edge and fly 1, over foes; your next hit this turn deals +1. *(P3: Drop off the edge and fly 4, over foes; your next hit this turn deals +1.)*
 - *Eth — Cliff Top* · 1 AP + 1 Space · CD 3 — Land on any node within 4, height included; both heroes hold Shield 1 this round. *(P3/E3: Land on any node within 6, height included; both heroes hold Shield 1 this round.)*
 
 **Bright Bill** · Charge · `puf_bill`
@@ -2828,7 +2828,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Salt Gland** · Time · `sea_salt`
 
 - *Phys — Drink the Sea* · 1 AP · CD 1 — Heal 1, and shake off Anchored and Weakened. *(P3: Heal 4, and shake off Anchored and Weakened.)*
-- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards for 2 rounds. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards for 2 rounds.)*
+- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards this round. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards this round.)*
 
 **Pouch Scoop** · Mass · `pel_scoop`
 
@@ -2842,7 +2842,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Glide** · Space · `pel_glide`
 
-- *Phys — Glide* · 1 AP · CD 1 — Glide 3, over foes. *(P3: Glide 4, over foes.)*
+- *Phys — Glide* · 1 AP · CD 1 — Glide 2, over foes. *(P3: Glide 3, over foes.)*
 - *Eth — Wave Ride* · 1 AP + 1 Space · CD 3 — Ride the air over a wave to any node within 4; see within 3, and ignore hazards this round. *(P3/E3: Ride the air over a wave to any node within 6; see within 5, and ignore hazards this round.)*
 
 **Pelican Crash** · Mass · `pel_crash`
@@ -2872,7 +2872,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Salt Gland** · Time · `sea_salt`
 
 - *Phys — Drink the Sea* · 1 AP · CD 1 — Heal 1, and shake off Anchored and Weakened. *(P3: Heal 4, and shake off Anchored and Weakened.)*
-- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards for 2 rounds. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards for 2 rounds.)*
+- *Eth — Brine Out* · 1 AP + 1 Time · CD 4 — Both heroes heal 1 at the start of each turn for 2 rounds, and ignore hazards this round. *(P3/E3: Both heroes heal 1 at the start of each turn for 4 rounds, and ignore hazards this round.)*
 
 **Blue Feet Dance** · Charge · `boo_feet`
 
@@ -2887,7 +2887,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Colony** · Time · `boo_colony`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round. *(P3: You and an ally beside you hold Shield 4 this round.)*
-- *Eth — Ten Thousand Eyes* · 1 AP + 1 Time · CD 4 — See the whole board this round, and both heroes hold Shield 2 for 2 rounds. *(P3/E3: See the whole board this round, and both heroes hold Shield 4 for 2 rounds.)*
+- *Eth — Ten Thousand Eyes* · 1 AP + 1 Time · CD 4 — See everything within 2 this round, and both heroes hold Shield 2 for 2 rounds. *(P3/E3: See everything within 4 this round, and both heroes hold Shield 4 for 2 rounds.)*
 
 **Ground Nest** · Time · `boo_nest`
 
@@ -2920,7 +2920,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Shiny Cache** · Time · `rav_cache`
 
-- *Phys — Stash* · 1 AP · CD 1 — Stash something for later: gain 1 AP next turn, and hold Shield 1 this round.
+- *Phys — Stash* · 1 AP · CD 1 — Stash something for later: gain 1 AP next turn, and hold Shield 1 this round. *(P3: Stash something for later: gain 1 AP next turn, and hold Shield 2 this round.)*
 - *Eth — Dig It Up* · 1 AP + 1 Time · CD 4 — Draw a Time die from your pool, reroll up to 1 banked dice, and heal 1. *(P3/E3: Draw a Time die from your pool, reroll up to 2 banked dice, and heal 1.)*
 
 **Mob** · Charge · `rav_mob`
@@ -2930,7 +2930,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Carrion Wing** · Space · `rav_carrion`
 
-- *Phys — Circle Down* · 1 AP · CD 1 — Circle down 2, over foes, and see everything beside where you land. *(P3: Circle down 5, over foes, and see everything beside where you land.)*
+- *Phys — Circle Down* · 1 AP · CD 1 — Circle down 1, over foes, and see everything beside where you land. *(P3: Circle down 4, over foes, and see everything beside where you land.)*
 - *Eth — Pick the Weak* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3 and peck it for 3; if that leaves it at 2 hp or less, it falls. *(P3/E3: Drop beside a foe within 5 and peck it for 5; if that leaves it at 4 hp or less, it falls.)*
 
 **Raven Memory** · Time · `rav_memory`
@@ -2945,7 +2945,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Snow Slide** · Space · `rav_snow`
 
-- *Phys — Slide* · 1 AP · CD 0 — Slide 1 for the fun of it, and heal 1. *(P3: Slide 4 for the fun of it, and heal 1.)*
+- *Phys — Slide* · 1 AP · CD 1 — Slide 1 for the fun of it, and heal 1. *(P3: Slide 4 for the fun of it, and heal 1.)*
 - *Eth — Roll Down* · 1 AP + 1 Space · CD 3 — Roll 3 down the slope, past foes; shake off Anchored and Weakened, and your next hit deals +1. *(P3/E3: Roll 5 down the slope, past foes; shake off Anchored and Weakened, and your next hit deals +2.)*
 
 ## 60 · Parrot — leans C/T
@@ -2985,7 +2985,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Flock Chatter** · Charge · `par_chatter`
 
 - *Phys — Chatter* · 1 AP · CD 1 — Keep up the chatter: your ally heals 1 and their next hit deals +1. *(P3: Keep up the chatter: your ally heals 1 and their next hit deals +2.)*
-- *Eth — Roost Roar* · 1 AP + 1 Charge · CD 3 — The whole roost at dusk: both heroes' hits deal +1 for 2 rounds, and your ally gains 1 AP next turn.
+- *Eth — Roost Roar* · 1 AP + 1 Charge · CD 3 — The whole roost at dusk: both heroes' hits deal +1 for 2 rounds, and your ally gains 1 AP next turn. *(P3/E3: The whole roost at dusk: both heroes' hits deal +1 for 2 rounds, and your ally gains 2 AP next turn.)*
 
 **Bright Colours** · Charge · `par_colours`
 
@@ -3023,7 +3023,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Canopy Hop** · Space · `tou_hop`
 
-- *Phys — Hop* · 1 AP · CD 0 — Hop onto any node within 1, height included. *(P3: Hop onto any node within 4, height included.)*
+- *Phys — Hop* · 1 AP · CD 1 — Hop onto any node within 1, height included. *(P3: Hop onto any node within 4, height included.)*
 - *Eth — Branch to Branch* · 1 AP + 1 Space · CD 3 — Hop to any node within 3, height included; see within 2, and your next hit this turn deals +1. *(P3/E3: Hop to any node within 5, height included; see within 2, and your next hit this turn deals +1.)*
 
 **Bill Cool** · Time · `tou_cool`
@@ -3034,7 +3034,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Nest Raider** · Mass · `tou_raid`
 
 - *Phys — Raid* · 1 AP · CD 1 — Reach into cover: a foe within 2 takes 2 and loses 1 Shield. *(P3: Reach into cover: a foe within 2 takes 5 and loses 1 Shield.)*
-- *Eth — Snatch the Egg* · 1 AP + 1 Mass · CD 3 — Work an objective up to 2 away, height included; heal 1, and your next hit deals +2. *(P3/E3: Work an objective up to 2 away, height included; heal 1, and your next hit deals +4.)*
+- *Eth — Snatch the Egg* · 1 AP + 1 Mass · CD 3 — Work an objective up to 2 away (not one up on a ledge); heal 1, and your next hit deals +2. *(P3/E3: Work an objective up to 2 away (not one up on a ledge); heal 1, and your next hit deals +4.)*
 
 **Fold Sleep** · Time · `tou_fold`
 
@@ -3062,7 +3062,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Thousand Beats** · Time · `hmb_beats`
 
-- *Phys — Blur* · 1 AP · CD 1 — Wings to a blur: gain 1 AP next turn, and the next hit on you is 1 less.
+- *Phys — Blur* · 1 AP · CD 1 — Wings to a blur: gain 1 AP next turn, and the next hit on you is 1 less. *(P3: Wings to a blur: gain 1 AP next turn, and the next hit on you is 2 less.)*
 - *Eth — Overdrive* · 1 AP + 1 Time · CD 4 — Gain 1 AP to spend this turn, and your track slides 1 extra. *(P3/E3: Gain 2 AP to spend this turn, and your track slides 1 extra.)*
 
 **Night Torpor** · Time · `hmb_torpor`
@@ -3072,7 +3072,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Needle Bill** · Mass · `hmb_needle`
 
-- *Phys — Needle* · 1 AP · CD 0 — Melee 1 that ignores Shield. *(P3: Melee 4 that ignores Shield.)*
+- *Phys — Needle* · 1 AP · CD 1 — Melee 1 that ignores Shield. *(P3: Melee 4 that ignores Shield.)*
 - *Eth — Stab and Stab* · 1 AP + 1 Mass · CD 3 — Melee 2 twice, each ignoring Shield; it is Weakened 1 this round. *(P3/E3: Melee 4 twice, each ignoring Shield; it is Weakened 1 this round.)*
 
 **Backward Flight** · Space · `hmb_back`
@@ -3093,7 +3093,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Flower Memory** · Time · `hmb_memory`
 
 - *Phys — Route* · 1 AP · CD 1 — Remember the route: reroll up to 1 banked dice, and see within 2. *(P3: Remember the route: reroll up to 2 banked dice, and see within 2.)*
-- *Eth — Every Flower* · 1 AP + 1 Time · CD 4 — Remember every flower on the board: see the whole board this round, and both heroes' tracks slide 1 extra.
+- *Eth — Every Flower* · 1 AP + 1 Time · CD 4 — Remember every flower on the board: see everything within 2 this round, and both heroes' tracks slide 1 extra. *(P3/E3: Remember every flower on the board: see everything within 4 this round, and both heroes' tracks slide 1 extra.)*
 
 ## 63 · Peacock — leans C/M
 
@@ -3112,7 +3112,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Alarm Call** · Time · `bir_alarm`
 
 - *Phys — Alarm* · 1 AP · CD 1 — Raise the alarm: see within 2, and both heroes hold Shield 1 this round. *(P3: Raise the alarm: see within 5, and both heroes hold Shield 1 this round.)*
-- *Eth — Whole Forest* · 1 AP + 1 Time · CD 3 — Wake the whole forest: see the whole board for 1 round, and each hero's next hit taken is 2 less. *(P3/E3: Wake the whole forest: see the whole board for 2 rounds, and each hero's next hit taken is 4 less.)*
+- *Eth — Whole Forest* · 1 AP + 1 Time · CD 3 — Wake the whole forest: see everything within 2 for 1 round, and each hero's next hit taken is 2 less. *(P3/E3: Wake the whole forest: see everything within 4 for 2 rounds, and each hero's next hit taken is 4 less.)*
 
 **Spur** · Mass · `bir_spur`
 
@@ -3156,7 +3156,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wide Eyes** · Space · `hoof_eyes`
 
 - *Phys — Look Around* · 1 AP · CD 1 — Reveal within 2; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3: Reveal within 5; the next hit on you is 2 less, and your next hit this turn deals +1.)*
-- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal the whole board this round; the next hit on each hero is 2 less. *(P3/E3: Reveal the whole board this round; the next hit on each hero is 4 less.)*
+- *Eth — Nothing Behind Me* · 1 AP + 1 Space · CD 4 — Reveal everything within 2 this round; the next hit on each hero is 2 less. *(P3/E3: Reveal everything within 4 this round; the next hit on each hero is 4 less.)*
 
 **Kick** · Mass · `hoof_kick`
 
@@ -3165,12 +3165,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ground Sprint** · Space · `gbd_sprint`
 
-- *Phys — Dash* · 1 AP · CD 1 — Run 3; your next hit this turn deals +1. *(P3: Run 4; your next hit this turn deals +1.)*
+- *Phys — Dash* · 1 AP · CD 1 — Run 2; your next hit this turn deals +1. *(P3: Run 3; your next hit this turn deals +1.)*
 - *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; your track slides 2 extra, and your next hit this turn deals +1.)*
 
 **Stride** · Space · `ost_stride`
 
-- *Phys — Five Metres* · 1 AP · CD 1 — Stride 2, over foes; your next hit this turn deals +1. *(P3: Stride 5, over foes; your next hit this turn deals +2.)*
+- *Phys — Five Metres* · 1 AP · CD 1 — Stride 1, over foes; your next hit this turn deals +1. *(P3: Stride 4, over foes; your next hit this turn deals +2.)*
 - *Eth — Top Gear* · 1 AP + 1 Space · CD 3 — Stride 4, over foes and hazards; the next hit on you is 1 less, and your next hit this turn deals +1. *(P3/E3: Stride 6, over foes and hazards; the next hit on you is 1 less, and your next hit this turn deals +2.)*
 
 **Head Low** · Time · `ost_head`
@@ -3180,7 +3180,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wing Fan** · Charge · `ost_wing`
 
-- *Phys — Flare* · 1 AP · CD 1 — Flare your wings: foes beside you are Weakened 1, and you and an ally beside you hold Shield 1 this round.
+- *Phys — Flare* · 1 AP · CD 1 — Flare your wings: foes beside you are Weakened 1, and you and an ally beside you hold Shield 1 this round. *(P3: Flare your wings: foes beside you are Weakened 1, and you and an ally beside you hold Shield 2 this round.)*
 - *Eth — Distraction* · 1 AP + 1 Charge · CD 3 — Flap and stagger as if hurt, leaving a decoy for 2 rounds; move 2, and both heroes' next hit deals +1. *(P3/E3: Flap and stagger as if hurt, leaving a decoy for 4 rounds; move 2, and both heroes' next hit deals +1.)*
 
 **Stone Gizzard** · Mass · `ost_gizzard`
@@ -3210,7 +3210,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Alarm Call** · Time · `bir_alarm`
 
 - *Phys — Alarm* · 1 AP · CD 1 — Raise the alarm: see within 2, and both heroes hold Shield 1 this round. *(P3: Raise the alarm: see within 5, and both heroes hold Shield 1 this round.)*
-- *Eth — Whole Forest* · 1 AP + 1 Time · CD 3 — Wake the whole forest: see the whole board for 1 round, and each hero's next hit taken is 2 less. *(P3/E3: Wake the whole forest: see the whole board for 2 rounds, and each hero's next hit taken is 4 less.)*
+- *Eth — Whole Forest* · 1 AP + 1 Time · CD 3 — Wake the whole forest: see everything within 2 for 1 round, and each hero's next hit taken is 2 less. *(P3/E3: Wake the whole forest: see everything within 4 for 2 rounds, and each hero's next hit taken is 4 less.)*
 
 **Spur** · Mass · `bir_spur`
 
@@ -3219,7 +3219,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ground Sprint** · Space · `gbd_sprint`
 
-- *Phys — Dash* · 1 AP · CD 1 — Run 3; your next hit this turn deals +1. *(P3: Run 4; your next hit this turn deals +1.)*
+- *Phys — Dash* · 1 AP · CD 1 — Run 2; your next hit this turn deals +1. *(P3: Run 3; your next hit this turn deals +1.)*
 - *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; your track slides 2 extra, and your next hit this turn deals +1.)*
 
 **Gobble** · Charge · `tur_gobble`
@@ -3230,7 +3230,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Flock Watch** · Time · `tur_watch`
 
 - *Phys — Heads Up* · 1 AP · CD 1 — See within 2; each hero's next hit taken is 1 less. *(P3: See within 2; each hero's next hit taken is 2 less.)*
-- *Eth — Sentinels* · 1 AP + 1 Time · CD 4 — Someone always has their head up: see the whole board for 2 rounds; both heroes hold Shield 2 this round and take half damage from ambushes for 2 rounds. *(P3/E3: Someone always has their head up: see the whole board for 2 rounds; both heroes hold Shield 4 this round and take half damage from ambushes for 2 rounds.)*
+- *Eth — Sentinels* · 1 AP + 1 Time · CD 4 — Someone always has their head up: see everything within 2 for 2 rounds; both heroes hold Shield 2 this round and take half damage from ambushes for 2 rounds. *(P3/E3: Someone always has their head up: see everything within 4 for 2 rounds; both heroes hold Shield 4 this round and take half damage from ambushes for 2 rounds.)*
 
 **Roost Flight** · Space · `tur_roost`
 
@@ -3312,7 +3312,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Water Run** ★ · Space · `bas_water`
 
-- *Phys — Skitter* · 1 AP · CD 1 — Run 2, across water and hazards: they can't touch you this round. *(P3: Run 5, across water and hazards: they can't touch you this round.)*
+- *Phys — Skitter* · 1 AP · CD 1 — Run 1, across water and hazards: they can't touch you this round. *(P3: Run 4, across water and hazards: they can't touch you this round.)*
 - *Eth — Walk on Water* · 1 AP + 1 Space · CD 3 — Run 4 across anything, past foes; ignore hazards for 2 rounds, and your next hit this turn deals +1. *(P3/E3: Run 6 across anything, past foes; ignore hazards for 2 rounds, and your next hit this turn deals +1.)*
 
 **Crest Flare** · Charge · `bas_crest`
@@ -3327,7 +3327,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Lizard Sprint** · Space · `bas_sprint`
 
-- *Phys — Sprint* · 1 AP · CD 0 — Sprint 2. *(P3: Sprint 5.)*
+- *Phys — Sprint* · 1 AP · CD 1 — Sprint 1. *(P3: Sprint 4.)*
 - *Eth — Burst* · 1 AP + 1 Space · CD 3 — Burst up to 3 toward a foe within 3; if you end beside it, melee 3; your next hit this turn deals +1. *(P3/E3: Burst up to 3 toward a foe within 3; if you end beside it, melee 5; your next hit this turn deals +1.)*
 
 **Two-Legged** · Mass · `bas_two`
@@ -3436,7 +3436,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **River King** · Charge · `cro_king`
 
 - *Phys — Bellow* · 1 AP · CD 1 — Bellow across the water: see within 2, foes beside you are Weakened 1, and your next hit this turn deals +1. *(P3: Bellow across the water: see within 5, foes beside you are Weakened 1, and your next hit this turn deals +1.)*
-- *Eth — My River* · 1 AP + 1 Charge · CD 4 — This is your river: both heroes deal +2 on their next hit, ignore hazards for 2 rounds, and hold Shield 1 this round. *(P3/E3: This is your river: both heroes deal +4 on their next hit, ignore hazards for 2 rounds, and hold Shield 1 this round.)*
+- *Eth — My River* · 1 AP + 1 Charge · CD 4 — This is your river: both heroes deal +2 on their next hit, ignore hazards this round, and hold Shield 1 this round. *(P3/E3: This is your river: both heroes deal +4 on their next hit, ignore hazards this round, and hold Shield 1 this round.)*
 
 ## 70 · Giant Tortoise — leans T/M
 
@@ -3484,7 +3484,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Steady Plod** · Space · `tor_plod`
 
-- *Phys — Plod* · 1 AP · CD 0 — Plod 2, and hold Shield 1 this round. *(P3: Plod 5, and hold Shield 1 this round.)*
+- *Phys — Plod* · 1 AP · CD 1 — Plod 1, and hold Shield 1 this round. *(P3: Plod 4, and hold Shield 1 this round.)*
 - *Eth — Through Anything* · 1 AP + 1 Space · CD 3 — Plod 3 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted. *(P3/E3: Plod 5 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted.)*
 
 ## 71 · Newt — leans T/C
@@ -3499,21 +3499,21 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **External Gills** · Charge · `axo_gills`
 
 - *Phys — Gills* · 1 AP · CD 1 — Breathe anything: immune to hazards for 2 rounds, and heal 1. *(P3: Breathe anything: immune to hazards for 2 rounds, and heal 2.)*
-- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(P3/E3: Both heroes: immune to hazards and regenerate 1 each turn for 5 rounds.)*
+- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes regenerate 1 each turn for 3 rounds; you ignore hazards for 3, your ally this round. *(P3/E3: Both heroes regenerate 1 each turn for 5 rounds; you ignore hazards for 5, your ally this round.)*
 
 **Toxic Secretion** · Mass · `axo_toxic`
 
 - *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
-- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve 4 of its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
 
 **Lateral Line** · Charge · `axo_lateral`
 
 - *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
-- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the field within 2 for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the field within 4 for 4 rounds; both heroes feel the next hit coming (−2).)*
 
 **Eft Wander** ★ · Space · `new_eft`
 
-- *Phys — Wander* · 1 AP · CD 1 — Wander 2 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1. *(P3: Wander 5 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.)*
+- *Phys — Wander* · 1 AP · CD 1 — Wander 1 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1. *(P3: Wander 4 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.)*
 - *Eth — Years on Land* · 1 AP + 1 Space · CD 3 — Walk 3, past foes, bright and unbothered: you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1. *(P3/E3: Walk 5, past foes, bright and unbothered: you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1.)*
 
 **Warning Belly** · Charge · `new_belly`
@@ -3528,7 +3528,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tail Swim** · Space · `new_tail`
 
-- *Phys — Scull* · 1 AP · CD 0 — Scull 2 with your tail; hazards can't touch you this round. *(P3: Scull 5 with your tail; hazards can't touch you this round.)*
+- *Phys — Scull* · 1 AP · CD 1 — Scull 1 with your tail; hazards can't touch you this round. *(P3: Scull 4 with your tail; hazards can't touch you this round.)*
 - *Eth — Tail Flick* · 1 AP + 1 Space · CD 3 — Flick your tail: melee 4, push it 1, and take a free step. *(P3/E3: Flick your tail: melee 6, push it 1, and take a free step.)*
 
 **Rough Skin** · Mass · `new_rough`
@@ -3542,18 +3542,18 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Adhesive Setae** ★ · Charge · `gec_setae`
 
-- *Phys — Climb* · 1 AP · CD 0 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
+- *Phys — Climb* · 1 AP · CD 1 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
 - *Eth — Van der Waals* · 1 AP + 1 Charge · CD 3 — Command the molecular bond: pull a foe in your zone 2 toward you. *(P3/E3: Command the molecular bond: pull a foe in your zone 4 toward you and Anchor it 1.)*
 
 **External Gills** · Charge · `axo_gills`
 
 - *Phys — Gills* · 1 AP · CD 1 — Breathe anything: immune to hazards for 2 rounds, and heal 1. *(P3: Breathe anything: immune to hazards for 2 rounds, and heal 2.)*
-- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes: immune to hazards and regenerate 1 each turn for 3 rounds. *(P3/E3: Both heroes: immune to hazards and regenerate 1 each turn for 5 rounds.)*
+- *Eth — Respire Anywhere* · 1 AP + 1 Charge · CD 4 — Both heroes regenerate 1 each turn for 3 rounds; you ignore hazards for 3, your ally this round. *(P3/E3: Both heroes regenerate 1 each turn for 5 rounds; you ignore hazards for 5, your ally this round.)*
 
 **Toxic Secretion** · Mass · `axo_toxic`
 
 - *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
-- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve 4 of its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
 
 **Leaf Leap** ★ · Space · `tfr_leap`
 
@@ -3592,7 +3592,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Lateral Line** · Charge · `axo_lateral`
 
 - *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
-- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the field within 2 for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the field within 4 for 4 rounds; both heroes feel the next hit coming (−2).)*
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
@@ -3616,7 +3616,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Upstream** · Space · `koi_up`
 
-- *Phys — Against the Current* · 1 AP · CD 1 — Swim 2 against the current; nothing can push or pull you this round. *(P3: Swim 5 against the current; nothing can push or pull you this round.)*
+- *Phys — Against the Current* · 1 AP · CD 1 — Swim 1 against the current; nothing can push or pull you this round. *(P3: Swim 4 against the current; nothing can push or pull you this round.)*
 - *Eth — Never Turn Back* · 1 AP + 1 Space · CD 3 — Swim 3, past foes; you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1. *(P3/E3: Swim 5, past foes; you can't be Weakened or Rooted for 2 rounds, and your next hit deals +2.)*
 
 **Shimmer Scales** · Charge · `koi_shimmer`
@@ -3641,7 +3641,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Lateral Line** · Charge · `axo_lateral`
 
 - *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
-- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the field within 2 for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the field within 4 for 4 rounds; both heroes feel the next hit coming (−2).)*
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
@@ -3660,13 +3660,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Dart** · Space · `clo_dart`
 
-- *Phys — Dart* · 1 AP · CD 0 — Dart 1. *(P3: Dart 4.)*
+- *Phys — Dart* · 1 AP · CD 1 — Dart 1. *(P3: Dart 4.)*
 - *Eth — Dart Out, Dart Back* · 1 AP + 1 Space · CD 3 — Dart up to 2 toward a foe within 3 and nip it for 3 if you reach it; the next hit on you is 1 less. *(P3/E3: Dart up to 2 toward a foe within 3 and nip it for 5 if you reach it; the next hit on you is 1 less.)*
 
 **Mucus Coat** · Time · `clo_mucus`
 
-- *Phys — Coat* · 1 AP · CD 1 — A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Rooted this round, and heal 1.
-- *Eth — Share the Coat* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards for 3 rounds, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3/E3: Both heroes ignore hazards for 5 rounds, shake off Anchored and Weakened, and hold Shield 1 this round.)*
+- *Phys — Coat* · 1 AP · CD 1 — A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Rooted this round, and heal 1. *(P3: A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Rooted this round, and heal 2.)*
+- *Eth — Share the Coat* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards this round (you for 3 rounds), shake off Anchored and Weakened, and hold Shield 1 this round. *(P3/E3: Both heroes ignore hazards this round (you for 5 rounds), shake off Anchored and Weakened, and hold Shield 1 this round.)*
 
 **Pair Bond** · Charge · `clo_pair`
 
@@ -3690,7 +3690,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Lateral Line** · Charge · `axo_lateral`
 
 - *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
-- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the field within 2 for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the field within 4 for 4 rounds; both heroes feel the next hit coming (−2).)*
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
@@ -3704,12 +3704,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Fan Corral** · Charge · `lio_corral`
 
-- *Phys — Herd* · 1 AP · CD 1 — Spread your fans and herd a foe within 2 one node toward you; it is Anchored 1.
+- *Phys — Herd* · 1 AP · CD 1 — Spread your fans and herd a foe within 2 one node toward you; it is Anchored 1. *(P3: Spread your fans and herd a foe within 2 one node toward you; it is Anchored 2.)*
 - *Eth — Corner It* · 1 AP + 1 Charge · CD 3 — Corner a foe within 2: draw it 1 closer, Anchored 1 and Weakened 1 for 2 rounds; your next hit deals +1. *(P3/E3: Corner a foe within 2: draw it 1 closer, Anchored 2 and Weakened 1 for 2 rounds; your next hit deals +3.)*
 
 **Hover Stalk** · Time · `lio_hover`
 
-- *Phys — Drift Closer* · 1 AP · CD 1 — Drift 2, setting off no traps. *(P3: Drift 5, setting off no traps.)*
+- *Phys — Drift Closer* · 1 AP · CD 1 — Drift 1, setting off no traps. *(P3: Drift 4, setting off no traps.)*
 - *Eth — Hang Still* · 1 AP + 1 Time · CD 3 — Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +3. *(P3/E3: Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +5.)*
 
 **Gulp** · Mass · `lio_gulp`
@@ -3719,8 +3719,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Invader** · Space · `lio_invader`
 
-- *Phys — Settle In* · 1 AP · CD 1 — Move 2 into new water, and heal 1. *(P3: Move 5 into new water, and heal 1.)*
-- *Eth — Take Over* · 1 AP + 1 Space · CD 4 — Make it yours: gain 1 AP at the start of your next turn; Shield 1 and no Weaken or Root for 2 rounds.
+- *Phys — Settle In* · 1 AP · CD 1 — Move 1 into new water, and heal 1. *(P3: Move 4 into new water, and heal 1.)*
+- *Eth — Take Over* · 1 AP + 1 Space · CD 4 — Make it yours: gain 1 AP at the start of your next turn; Shield 1 and no Weaken or Root for 2 rounds. *(P3/E3: Make it yours: gain 1 AP at the start of your next turn; Shield 2 and no Weaken or Root for 2 rounds.)*
 
 **Warning Fins** · Charge · `lio_warn`
 
@@ -3739,7 +3739,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Lateral Line** · Charge · `axo_lateral`
 
 - *Phys — Feel Flow* · 1 AP · CD 1 — Feel pressure and flow: reveal within 1, and the next hit on you is −1. *(P3: Feel pressure and flow: reveal within 4, and the next hit on you is −1.)*
-- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the whole field for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the whole field for 4 rounds; both heroes feel the next hit coming (−2).)*
+- *Eth — Pressure Map* · 1 AP + 1 Charge · CD 3 — Read the field within 2 for 2 rounds; you feel the next hit coming (−2). *(P3/E3: Read the field within 4 for 4 rounds; both heroes feel the next hit coming (−2).)*
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
@@ -3763,12 +3763,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Snout Snap** · Mass · `sea_snap`
 
-- *Phys — Snap* · 1 AP · CD 0 — Snap at a foe within 2 for 1. *(P3: Snap at a foe within 2 for 4.)*
+- *Phys — Snap* · 1 AP · CD 1 — Snap at a foe within 2 for 1. *(P3: Snap at a foe within 2 for 4.)*
 - *Eth — Fastest Mouth* · 1 AP + 1 Mass · CD 3 — Snap faster than it can flinch: a foe within 2 takes 4, hidden or not; your next hit this turn deals +1. *(P3/E3: Snap faster than it can flinch: a foe within 2 takes 6, hidden or not; your next hit this turn deals +1.)*
 
 **Drift Camouflage** · Time · `sea_drift`
 
-- *Phys — Weed* · 1 AP · CD 1 — Look like weed: Hidden 1, and heal 1.
+- *Phys — Weed* · 1 AP · CD 1 — Look like weed: Hidden 1, and heal 1. *(P3: Look like weed: Hidden 1, and heal 2.)*
 - *Eth — Grow Filaments* · 1 AP + 1 Time · CD 4 — You and an ally beside you are Hidden 1; your next hit within 3 rounds deals +2. *(P3/E3: You and an ally beside you are Hidden 2; your next hit within 3 rounds deals +4.)*
 
 **Bony Plates** · Mass · `sea_plates`
@@ -3778,7 +3778,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Slow Fin** · Space · `sea_fin`
 
-- *Phys — Flutter* · 1 AP · CD 0 — Flutter 1; hazards can't touch you this round. *(P3: Flutter 4; hazards can't touch you this round.)*
+- *Phys — Flutter* · 1 AP · CD 1 — Flutter 1; hazards can't touch you this round. *(P3: Flutter 4; hazards can't touch you this round.)*
 - *Eth — Ride the Current* · 1 AP + 1 Space · CD 3 — Let the current carry you to any node within 3; Hidden 1, and hazards can't touch you this round. *(P3/E3: Let the current carry you to any node within 5; Hidden 1, and hazards can't touch you this round.)*
 
 ## 77 · Snail — leans T/M
@@ -3787,12 +3787,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Boneless Squeeze** · Mass · `oct_squeeze`
 
-- *Phys — Squeeze* · 1 AP · CD 0 — Pour through any gap: escape every hold and step 1.
+- *Phys — Squeeze* · 1 AP · CD 1 — Pour through any gap: escape every hold and step 1. *(P3: Pour through any gap: escape every hold and step 2.)*
 - *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
 
 **Chemo-Suckers** · Charge · `oct_chemo`
 
-- *Phys — Taste* · 1 AP · CD 1 — Taste by touch: reveal adjacent and Mark the nearest foe.
+- *Phys — Taste* · 1 AP · CD 1 — Taste by touch: reveal within 1 and Mark the nearest foe. *(P3: Taste by touch: reveal within 2 and Mark the nearest foe.)*
 - *Eth — Cling-Read* · 1 AP + 1 Charge · CD 3 — Tag a foe for 3 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently. *(P3/E3: Tag a foe for 5 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently.)*
 
 **Regeneration** ★ · Time · `axo_regen`
@@ -3822,8 +3822,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **After Rain** · Space · `snl_rain`
 
-- *Phys — Wet Night* · 1 AP · CD 1 — Out after the rain: move 2 and heal 1. *(P3: Out after the rain: move 5 and heal 1.)*
-- *Eth — Downpour* · 1 AP + 1 Space · CD 4 — Everything comes out in the wet: both heroes heal 1 at the start of their next 2 turns and deal +1 with their next hit, and hazards beside you wash away.
+- *Phys — Wet Night* · 1 AP · CD 1 — Out after the rain: move 1 and heal 1. *(P3: Out after the rain: move 4 and heal 1.)*
+- *Eth — Downpour* · 1 AP + 1 Space · CD 4 — Everything comes out in the wet: both heroes heal 1 at the start of their next 2 turns and deal +1 with their next hit, and hazards beside you wash away. *(P3/E3: Everything comes out in the wet: both heroes heal 1 at the start of their next 4 turns and deal +1 with their next hit, and hazards beside you wash away.)*
 
 **Eye Stalks** · Charge · `snl_stalks`
 
@@ -3836,7 +3836,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Boneless Squeeze** · Mass · `oct_squeeze`
 
-- *Phys — Squeeze* · 1 AP · CD 0 — Pour through any gap: escape every hold and step 1.
+- *Phys — Squeeze* · 1 AP · CD 1 — Pour through any gap: escape every hold and step 1. *(P3: Pour through any gap: escape every hold and step 2.)*
 - *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
 
 **Regeneration** ★ · Time · `axo_regen`
@@ -3861,7 +3861,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bell Pulse** · Space · `jel_pulse`
 
-- *Phys — Pulse* · 1 AP · CD 1 — Pulse your bell and drift 2, through foes if need be. *(P3: Pulse your bell and drift 5, through foes if need be.)*
+- *Phys — Pulse* · 1 AP · CD 1 — Pulse your bell and drift 1, through foes if need be. *(P3: Pulse your bell and drift 4, through foes if need be.)*
 - *Eth — Jet* · 1 AP + 1 Space · CD 3 — Clench hard: foes beside you are pushed back 1, then you shoot up to 3 wherever you like. *(P3/E3: Clench hard: foes beside you are pushed back 1, then you shoot up to 5 wherever you like.)*
 
 **Bioluminescence** · Charge · `jel_glow`
@@ -3910,7 +3910,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tail Flip** · Space · `lob_flip`
 
-- *Phys — Flip Back* · 1 AP · CD 1 — Snap your tail and shoot backwards 2, through foes if need be. *(P3: Snap your tail and shoot backwards 5, through foes if need be.)*
+- *Phys — Flip Back* · 1 AP · CD 1 — Snap your tail and shoot backwards 1, through foes if need be. *(P3: Snap your tail and shoot backwards 4, through foes if need be.)*
 - *Eth — Gone* · 1 AP + 1 Space · CD 3 — One flick and you are elsewhere: go to any node within 3, Hidden 1, and the next hit on you is 2 less. *(P3/E3: One flick and you are elsewhere: go to any node within 5, Hidden 1, and the next hit on you is 4 less.)*
 
 **Long March** · Time · `lob_march`
@@ -3989,7 +3989,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Compound Eyes** · Space · `hop_eyes`
 
 - *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
-- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: everything within 2 revealed and unable to Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: everything within 4 revealed and unable to Hide, and your next hit taken is −2.)*
 
 **Antennae** · Charge · `ins_antennae`
 
@@ -4033,16 +4033,16 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Compound Eyes** · Space · `hop_eyes`
 
 - *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
-- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: everything within 2 revealed and unable to Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: everything within 4 revealed and unable to Hide, and your next hit taken is −2.)*
 
 **Glide Wings** · Space · `hop_glide`
 
-- *Phys — Buzz* · 1 AP · CD 0 — Glide 2, over foes. *(P3: Glide 5, over foes.)*
+- *Phys — Buzz* · 1 AP · CD 1 — Glide 1, over foes. *(P3: Glide 4, over foes.)*
 - *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn.)*
 
 **Migration** · Space · `cra_migrate`
 
-- *Phys — Long Haul* · 1 AP · CD 1 — Fly 3; hazards can't touch you this round. *(P3: Fly 4; hazards can't touch you this round.)*
+- *Phys — Long Haul* · 1 AP · CD 1 — Fly 2; hazards can't touch you this round. *(P3: Fly 3; hazards can't touch you this round.)*
 - *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; your track slides 2 extra (your cards come back sooner).)*
 
 **Antennae** · Charge · `ins_antennae`
@@ -4067,7 +4067,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Erratic Flight** · Space · `but_flutter`
 
-- *Phys — Flutter* · 1 AP · CD 1 — Flit 2 this way and that, past foes and over traps. *(P3: Flit 5 this way and that, past foes and over traps.)*
+- *Phys — Flutter* · 1 AP · CD 1 — Flit 1 this way and that, past foes and over traps. *(P3: Flit 4 this way and that, past foes and over traps.)*
 - *Eth — Zigzag* · 1 AP + 1 Space · CD 3 — Zigzag where no one can follow: go to any node within 3, and the next hit on you is 3 less. *(P3/E3: Zigzag where no one can follow: go to any node within 5, and the next hit on you is 5 less.)*
 
 **Metamorphosis** · Time · `but_morph`
@@ -4087,7 +4087,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Compound Eyes** · Space · `hop_eyes`
 
 - *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
-- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: everything within 2 revealed and unable to Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: everything within 4 revealed and unable to Hide, and your next hit taken is −2.)*
 
 **Antennae** · Charge · `ins_antennae`
 
@@ -4101,7 +4101,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Synchrony** · Time · `ffl_sync`
 
-- *Phys — In Time* · 1 AP · CD 1 — Flash in time with your ally: both heroes' next hit deals +1.
+- *Phys — In Time* · 1 AP · CD 1 — Flash in time with your ally: both heroes' next hit deals +1. *(P3: Flash in time with your ally: both heroes' next hit deals +2.)*
 - *Eth — All at Once* · 1 AP + 1 Time · CD 4 — The whole field flashes at once: both heroes gain 1 AP at the start of their next turn, and both heroes' next hit deals +2. *(P3/E3: The whole field flashes at once: both heroes gain 1 AP at the start of their next turn, and both heroes' next hit deals +4.)*
 
 **False Signal** · Space · `ffl_lure`
@@ -4136,7 +4136,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Compound Eyes** · Space · `hop_eyes`
 
 - *Phys — Mosaic* · 1 AP · CD 1 · Dur 1 — Reveal within 2; ambushes against you deal half this round. *(P3: Reveal within 5; ambushes against you deal half this round.)*
-- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: the whole board revealed, foes can't Hide, and your next hit taken is −2.)*
+- *Eth — Panoramic* · 1 AP + 1 Space · CD 4 — 360° lock for 3 rounds: everything within 2 revealed and unable to Hide, and your next hit taken is −2. *(P3/E3: 360° lock for 5 rounds: everything within 4 revealed and unable to Hide, and your next hit taken is −2.)*
 
 **Antennae** · Charge · `ins_antennae`
 
@@ -4150,7 +4150,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hold Still** · Time · `man_still`
 
-- *Phys — Wait* · 1 AP · CD 1 — Do nothing at all: Hidden 1, and your next hit within 2 rounds deals +1.
+- *Phys — Wait* · 1 AP · CD 1 — Do nothing at all: Hidden 1, and your next hit within 2 rounds deals +1. *(P3: Do nothing at all: Hidden 1, and your next hit within 2 rounds deals +2.)*
 - *Eth — Patience* · 1 AP + 1 Time · CD 4 — Wait as long as it takes: Hidden 1, the next hit on you is 1 less, and your next hit within 2 rounds deals +3. *(P3/E3: Wait as long as it takes: Hidden 1, the next hit on you is 1 less, and your next hit within 2 rounds deals +5.)*
 
 **Leaf Sway** · Space · `man_sway`
@@ -4160,17 +4160,17 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Swivel Head** · Charge · `man_head`
 
-- *Phys — Turn and Look* · 1 AP · CD 1 — Turn your head to watch one foe: your hits on it deal +1, and you see beside you.
+- *Phys — Turn and Look* · 1 AP · CD 1 — Turn your head to watch one foe: your hits on it deal +1, and you see within 1. *(P3: Turn your head to watch one foe: your hits on it deal +1, and you see within 2.)*
 - *Eth — Measure* · 1 AP + 1 Charge · CD 3 — Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +2. *(P3/E3: Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +4.)*
 
 **Startle Display** · Charge · `man_wings`
 
-- *Phys — Rear Up* · 1 AP · CD 1 — Rear up and spread your arms: foes beside you are Weakened 1, and you hold Shield 1 this round.
+- *Phys — Rear Up* · 1 AP · CD 1 — Rear up and spread your arms: foes beside you are Weakened 1, and you hold Shield 1 this round. *(P3: Rear up and spread your arms: foes beside you are Weakened 1, and you hold Shield 2 this round.)*
 - *Eth — Wings Wide* · 1 AP + 1 Charge · CD 3 — Throw open bright wings: foes beside you are pushed back 1 and Weakened 1 for 2 rounds, and your next hit deals +2. *(P3/E3: Throw open bright wings: foes beside you are pushed back 1 and Weakened 1 for 2 rounds, and your next hit deals +4.)*
 
 **Flower Lure** · Space · `man_flower`
 
-- *Phys — Bloom* · 1 AP · CD 1 — Look like a flower: draw a foe within 2 one closer, and your next hit this turn deals +1.
+- *Phys — Bloom* · 1 AP · CD 1 — Look like a flower: draw a foe within 2 one closer, and your next hit this turn deals +1. *(P3: Look like a flower: draw a foe within 2 one closer, and your next hit this turn deals +2.)*
 - *Eth — Orchid* · 1 AP + 1 Space · CD 4 — Become an orchid, or seem to, at a node within 3: foes treat it as a hero for 2 rounds, and both heroes' next hit deals +2. *(P3/E3: Become an orchid, or seem to, at a node within 3: foes treat it as a hero for 4 rounds, and both heroes' next hit deals +4.)*
 
 ## 85 · Scorpion — leans M/C
@@ -4209,7 +4209,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Sand Sense** · Charge · `sco_sense`
 
-- *Phys — Feel the Ground* · 1 AP · CD 1 — Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less.
+- *Phys — Feel the Ground* · 1 AP · CD 1 — Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less. *(P3: Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 2 less.)*
 - *Eth — Every Step* · 1 AP + 1 Charge · CD 3 — Read one foe through the ground: it can't Hide for 3 rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is). *(P3/E3: Read one foe through the ground: it can't Hide for 5 rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is).)*
 
 **Burrow** · Time · `sco_burrow`

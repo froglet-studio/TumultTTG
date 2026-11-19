@@ -72,7 +72,7 @@ test('Radiotrophic Resilience — Thrive mints its AP only on a hazard', () => {
   dry.h.hp = 10;
   dry.h.temp = [];
   assert.ok(H.playIn(dry, 'cor_radio', 'P').ok);
-  assert.equal(dry.h.hp, 11, 'off a hazard it heals 1');
+  assert.equal(dry.h.hp, 12, 'off a hazard it heals 1 + ½P (P 2 here)');
   assert.equal(minted(dry.h, 'AP'), 0, 'and mints nothing');
 
   const wet = H.arena('cor_radio');

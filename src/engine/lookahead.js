@@ -124,6 +124,9 @@
           });
           if (plain.length) T.rerollHeld(m, h, plain);
         }
+        // A free step is the player's to take at once; this player keeps it for the rest of the
+        // turn instead, so the search can take it as a walk wherever it serves best.
+        if (r.ok && r.ctx.pendingFreeMove) h.freeMove = (h.freeMove || 0) + r.ctx.pendingFreeMove;
         return r;
       }
       case 'walk':
@@ -249,7 +252,26 @@
     cooldown: 0.25, // per column a card still has to travel
     crystal: 0.4,
     item: 2,
+    // Something already bought that lands after this round — a regen engine, AP to come, a strike
+    // bonus not yet used, a foe Studied — counts at this share of what it will be worth, so a set-up
+    // is not scored as nothing just because it pays off later than the round being looked at.
+    ahead: 0.6,
+    spare: 0.5, // per temporary die minted and not yet spent, while the search is still choosing (see loose)
   };
+  /** What a hero has bought for later rounds, in points before the `ahead` share. */
+  function banked(m, h) {
+    let s = 0;
+    const foes = T.liveEnemies(m).length;
+    for (const en of h.states.Engines || []) {
+      const turns = Math.max(0, en.t || 0);
+      if (en.kind === 'regen') s += T.EVAL.heroHp * Math.min((en.val || 0) * turns, h.maxHp - h.hp);
+      else if (en.kind === 'ap' || en.kind === 'draw') s += (en.val || 1) * turns;
+    }
+    if (foes)
+      for (const em of h.states.Empower || []) s += T.EVAL.foeHp * (em.v || 0) * Math.min(em.uses || 1, 2, foes + 1);
+    if (h.states.Preempt) s += 0.5 * (h.states.Preempt.v || 0);
+    return s;
+  }
   /** The worth of a position to the squad: higher is better. Read after the round has played out. */
   T.evaluate = function (m) {
     const W = T.EVAL;
@@ -265,10 +287,15 @@
       s += W.dice * Math.min(kept, 4) + W.hoard * Math.max(0, kept - 4);
       s -= W.cooldown * h.track.reduce((n, t) => n + t.left + (t.phase === 'dur' ? t.cd : 0), 0);
       s += W.item * h.consumables.length;
+      s += W.ahead * banked(m, h);
     }
     // a Mark is 2 damage already bought: the next hit on that foe, by anyone, deals it
     for (const e of m.enemies)
-      if (e.alive) s -= W.foeAlive + W.foeHp * (Math.max(0, e.hp) + e.shield - (e.states.Marked ? 2 : 0));
+      if (e.alive) {
+        s -= W.foeAlive + W.foeHp * (Math.max(0, e.hp) + e.shield - (e.states.Marked ? 2 : 0));
+        // a Studied foe takes more from every hit to come: count two of them
+        if (e.states.Studied) s += W.ahead * W.foeHp * Math.min(Math.max(0, e.hp), 2 * e.states.Studied.n);
+      }
     if (m.clock) s += W.clock * m.clock.value;
     s += W.crystal * T.totalCrystals(m);
     const gs = goals(m);
@@ -357,6 +384,16 @@
     };
   };
   const scratch = (m) => T.clone(Object.assign({}, m, { log: [], fx: [] }));
+  /**
+   * Temporary AP and Omni minted this turn and not yet spent. They are gone when the round ends, so
+   * the evaluation gives them nothing; but a line that has just minted them is about to spend them,
+   * and the search should not drop it before it gets the chance.
+   */
+  function loose(m) {
+    let n = 0;
+    for (const h of m.heroes) if (!h.downed) n += h.temp.length;
+    return T.EVAL.spare * n;
+  }
   /** What the position is worth if the squad stops here: the declared enemy turn plays out, then it is scored. */
   function worthIfStopped(m) {
     if (!m.over) T.finishRound(m);
@@ -379,7 +416,8 @@
         for (const a of T.legalActions(node.m)) {
           const c = scratch(node.m);
           if (!T.applyAction(c, a).ok) continue;
-          kids.push({ from: node, a, score: worthIfStopped(c) });
+          const spare = loose(c);
+          kids.push({ from: node, a, score: worthIfStopped(c) + spare });
         }
       if (!kids.length) break;
       kids.sort((x, y) => y.score - x.score);

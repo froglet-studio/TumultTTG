@@ -66,12 +66,16 @@ One measure for every mission, in points of about one hero vitality each (`T.EVA
 | `short` | 5 | each AP held by a hero who stands where the objective takes an Interact and cannot yet pay for one |
 | `cooldown` | 0.25 | each column a played card still has to travel |
 | `crystal`, `item` | 0.4, 2 | crystals and consumables kept |
+| `ahead` | 0.6 | the share counted of what a hero has bought for later rounds: a regen engine (up to the vitality it can restore), AP to come, a strike bonus not yet spent; and two hits' worth on a Studied foe (since 2.73) |
+| `spare` | 0.5 | each temporary die minted and not yet spent — counted only while the search ranks its lines, so a line that has just minted dice is not dropped before it spends them (since 2.73) |
+
+A face's free step (`move` with `free`) is a walk the player may take later in the same turn: the interface asks for it at once, this player keeps it for the turn (`h.freeMove`) so the search can place it where it serves best.
 
 The weights were set by reasoning and three corrections (plus, in 2.28.0, the two duet notes above, without which a set-up for the other pilot was worth nothing), each from watching it lose a mission it should have won: both heroes are credited for approaching the objective, not only the nearest; dice beyond four are worth almost nothing, or it hoards; and a hero one AP short of an Interact holds that AP instead of spending it on whatever is to hand. They have not been fitted to the win rates, and should not be: a player tuned until the tables look right measures nothing.
 
 ## What it cannot do
 
-- **It thinks one round ahead.** It holds nothing back for a later turn, sets no trap for a foe that is two rounds away, and does not value an engine for what it will give in round three. The audit lists the faces it never chose (40 of 198 at the last run): strike-next-turn set-ups, engines, long reveals, immunities. Each is either weak for its cost or pays off later than this player can see — a person has to say which.
+- **It thinks one round ahead.** It holds nothing back for a later turn and sets no trap for a foe that is two rounds away. Since 2.73 it gives an engine, AP to come or a strike bonus held a share of their worth (`ahead`), but only a share, and only for what is already on the board. The audit lists the faces it never chose (40 of 198 at the last run): strike-next-turn set-ups, engines, long reveals, immunities. Each is either weak for its cost or pays off later than this player can see — a person has to say which.
 - **It does not read the log.** A UV trail that says how far the real cache is tells it nothing.
 - **It does not choose its squad, its upgrades or its road across the map.** `tools/harness.js` does that with simple rules, the same for both players.
 

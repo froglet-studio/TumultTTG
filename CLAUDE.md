@@ -19,6 +19,7 @@ npm run check          build + test — run before calling any change done
 npm run format         Prettier (src/data/ is deliberately excluded)
 npm run docs           regenerate docs/reference/CARDS.md and ABILITY_AUDIT.md
 
+node tools/census.js 4000            is any face categorically better or worse? each face's share of plays vs a fair share (~7 min)
 node tools/turns.js 10               does every turn offer a decision? idle / forced / open turns per pilot (~3 min)
 node tools/sim.js 40                 balance tables for both simulated players and the gap (~75 s; `--player weak` is the 1 s look;
                                      or `40 missions`, `80 runs`, `10 cards`; `--rule VITALITY=28` tries a rules constant)
@@ -66,7 +67,8 @@ Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/
 
 - 15-die pool per hero: pool + banked = 15, always. Roll 4 per turn (3 before 2.29), drawn from the pool. Minted dice are temporary and never count.
 - Dice (Garrett, 2026-11-14): the plain die is a d20 (Mass, Charge, Space, Time, Omni once each, fifteen AP); each awakened card and each Affinity boon swaps a plain die for its element's d8 (four of its element, one each of the others and Omni); Omni Core swaps one for an ethereal d12 (two of each symbol) (`T.DICE`, `docs/design/10-dice.md`). The element symbols are Cosmic Shore's, shared across Froglet's Hypersea games. Omni pays for any etherion.
-- Six-column track: playing either face sends the whole card away for that face's cooldown (after its duration).
+- Six-column track: playing either face sends the whole card away for that face's cooldown (after its duration). Every face has a cooldown of at least 1, so a card plays at most once a turn (2.73).
+- Every face grows with its card: its text at P 3 / E 3 differs from its first level (2.73).
 - Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. The capability must be awakened: an Ethereal face cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E`; Garrett, 2026-11-12), and every hero starts with at least two cards awakened (`START_AWAKE`). Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline.
 - **No turn theft.** Control taxes position or efficiency; a controlled unit still acts.
 - **No hard counters.** Every state is pressured by several general verbs.
@@ -80,6 +82,8 @@ Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/
 4. Every ability is either a **staple** (straightforward, useful, used often) or a **tool** (usable creatively in many situations).
 
 And for missions: **every encounter's board is different**, and **not every problem is a fight**.
+
+No face settles a recurring problem outright at every level (2.73, `test/data.test.js`): no whole-board reveal, no Shield deleted whatever its size, no squad-wide hazard immunity past this round, no lock-on for the whole mission, no ledge worked from the floor. Make it reach, chip or last as far as the card is upgraded.
 
 Litmus test for any new card, gear, enemy or mission: *can you describe it without naming the one thing it beats or the one thing that beats it?* If not, redesign it as a general verb. `npm run audit` measures these rules for the trait cards, played by the look-ahead player (about a minute; gear and enemy abilities are not audited yet); a change to abilities or missions is not done until the audit has been regenerated and read.
 
