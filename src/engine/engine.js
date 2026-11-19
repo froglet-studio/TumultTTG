@@ -1311,8 +1311,11 @@
         if (f.kind === 'melee' && st(actor).Morph && st(actor).Morph.reach) opts.kind = 'melee';
         for (const t of targets) {
           if (f.stripShield && t.kind === 'enemy') {
-            t.shield = 0;
-            delete st(t).Shield;
+            // true strips it all; a number (or a magnitude) strips that much
+            const cut = f.stripShield === true ? Infinity : num(f.stripShield, P, E);
+            t.shield = Math.max(0, t.shield - cut);
+            if (st(t).Shield) st(t).Shield.v = Math.max(0, st(t).Shield.v - cut);
+            if (cut === Infinity || (st(t).Shield && st(t).Shield.v <= 0)) delete st(t).Shield;
           }
           if (f.revealTarget) breakHidden(m, t, 'twitch');
           T.damage(m, actor, t, dmg, opts);
@@ -1352,14 +1355,15 @@
       case 'stripShield': {
         const t = targetEnt(m, ctx) || ctx.lastTarget;
         if (!t || t.kind !== 'enemy') break;
-        if (f.amount) {
-          t.shield = Math.max(0, t.shield - f.amount);
-          if (st(t).Shield) st(t).Shield.v = Math.max(0, st(t).Shield.v - f.amount);
+        const amount = f.amount != null ? num(f.amount, P, E) : 0;
+        if (amount) {
+          t.shield = Math.max(0, t.shield - amount);
+          if (st(t).Shield) st(t).Shield.v = Math.max(0, st(t).Shield.v - amount);
         } else {
           t.shield = 0;
           delete st(t).Shield;
         }
-        say(m, `${t.name}'s Shield is ${f.amount ? 'weakened' : 'stripped'}.`, 'hero');
+        say(m, `${t.name}'s Shield is ${amount ? 'weakened' : 'stripped'}.`, 'hero');
         break;
       }
       case 'dot': {

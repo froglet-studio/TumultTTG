@@ -221,7 +221,7 @@ function soloRisks(x) {
   if (x.v === 'reveal' && x.findObjective) out.push('finds the hidden objective outright');
   if (x.v === 'locate' && num(x.dur) >= 99) out.push('locates a foe for the whole mission');
   if (x.v === 'interact' && x.height) out.push('works the Vault from the floor');
-  if ((x.v === 'stripShield' && x.amount == null) || (x.v === 'strike' && x.stripShield))
+  if ((x.v === 'stripShield' && x.amount == null) || (x.v === 'strike' && x.stripShield === true))
     out.push('deletes a Shield outright');
   if (x.v === 'hazardImmune' && x.party && num(x.dur) >= 2) out.push('whole squad ignores hazards');
   return out;

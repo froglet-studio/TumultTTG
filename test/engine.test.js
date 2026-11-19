@@ -463,3 +463,35 @@ test('a run toward a foe goes up to its full length and stops beside it (Pounce)
   assert.ok(B.adjacent(m.board, h.pos, zone.pos), 'two steps bring the hero beside it');
   assert.ok(zone.hp < hp, 'and the bite lands');
 });
+
+test('balance pass: a Shield breaker chips by its level, it does not delete the Shield', () => {
+  const { m, h } = scene('vault', 1, 5);
+  const w = m.enemies.find((e) => e.type === 'warden');
+  w.shield = 6;
+  // Crumble (jer_gnaw.E) chews 1 + E off the Shield: E 1 leaves 4, E 3 leaves 2
+  T.applyEffect(m, h, T.CARD.jer_gnaw.E.fx[0], { P: 0, E: 1, target: w.uid });
+  assert.equal(w.shield, 4);
+  T.applyEffect(m, h, T.CARD.jer_gnaw.E.fx[0], { P: 0, E: 3, target: w.uid });
+  assert.equal(w.shield, 0, 'what is left goes, and no further');
+});
+
+test('balance pass: Pace moves where its player chooses, after shrugging off a hold', () => {
+  const s = H.arena(['hum_persist']);
+  s.h.states.Anchored = { t: 2 };
+  const from = s.h.pos;
+  const chk = T.canPlay(s.m, s.h, 'hum_persist', 'P');
+  assert.ok(chk.ok && chk.tg.need === 'node' && chk.tg.options.length, 'Pace asks for a node');
+  const to = chk.tg.options[chk.tg.options.length - 1];
+  assert.ok(T.playFace(s.m, s.h, 'hum_persist', 'P', { node: to }).ok);
+  assert.notEqual(s.h.pos, from);
+  assert.equal(s.h.pos, to);
+  assert.ok(!s.h.states.Anchored, 'the hold is shed first');
+});
+
+test('balance pass: a card goes to the track when played, so it plays at most once a turn', () => {
+  const s = H.arena(['hum_throw']);
+  assert.ok(H.playIn(s, 'hum_throw', 'P').ok);
+  assert.equal(T.canPlay(s.m, s.h, 'hum_throw', 'P').ok, false, 'Hurl is on the track until next turn');
+  T.heroTurnStart(s.m, s.h);
+  assert.ok(T.inHand(s.h, 'hum_throw'), 'and back the turn after');
+});
