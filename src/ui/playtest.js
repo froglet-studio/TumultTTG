@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.71.0',
+    version: '2.72.0',
     items: [
+      {
+        text: 'Every pilot you build in the draft is now kept. When you start an expedition, the pilots players have made appear below the pre-made heroes, with who made them; on this page that means everyone who plays it, not only you. Pick one to fly it as it was built. ✕ takes one of your own off the list. Did your pilots come back as you left them? Is anyone else’s worth flying?',
+      },
       {
         text: 'The mission screen has a dock along the bottom for the pilot you are flying: AP in large type, etherions banked, dice, the whole hand in one row, and the actions. It never folds or scrolls away. The side column holds the enemy intents, your ally and the log; click the ally to swap them into the dock. Can you play a whole turn without hunting for anything? Does the board still have room on your screen?',
       },

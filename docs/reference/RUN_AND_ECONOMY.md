@@ -8,6 +8,14 @@ A hero is **Human + two bloodlines**, **6 trait cards** to start, **6 Upgrade Po
 
 **Two ways to build.** *Quick Build* takes one of six pre-made heroes (Rosh the Brawler-in-the-Cloud, Ekora the Tidewarden, Nedira the Bulwark, Echo the Nightwing, Karenth the Network, Slingshot the Catapult), each a painted Cosmic Shore pilot: that pilot's name, pair of clades and art. *Draft* opens packs of 4 cards drawn across your three pools, pick 1, six times; you may pass a pack. Then spend 6 UP on P/E tracks (caps 3/3 per card). Unspent UP carries over.
 
+**Pilots players made (2.72).** Every pilot confirmed from a draft is kept as a recipe of the same shape as a pre-made hero (`T.madeFrom`: name, title, clades, cards, the points on each and any bound point), on the device under `tumult_v2_heroes`, newest first, at most `T.MADE_MAX` (60); one with the same name, clades and cards replaces the older. A new expedition lists them beneath the pre-made heroes, and choosing one builds it with `T.heroFromPrebuilt`, as it was. Every recipe is checked by `T.validMade` before it is shown or played. On the test page and Tumult Online (`src/ui/heroes-net.js`, playtest build only) each player's list is also written to the page's store, so every player of the page can choose it:
+
+| Path | What | Who reads | Who writes |
+| --- | --- | --- | --- |
+| `heroes/<viewer id>` | `{ list: [recipe, …], at }`: that player's made pilots | anyone who can open the page | that player; the owner may tidy |
+
+Store rules for it (added to the page's `db` rules beside the canon ones in `docs/reference/CANON.md`): `{ "path": "heroes", "read": "view", "write": "owner" }, { "path": "heroes/{self}", "read": "view", "write": "interact" }`. Flying someone else's pilot does not copy it into your own list.
+
 **P vs E (the v1.0 grammar, unchanged).** P deepens the Physical face's numbers — reliable, AP-fed. E awakens the Ethereal face — it cannot be played until its card has E 1 — and then scales its *capability*, something P can never buy at any level. A new hero sets out with at least two cards awakened (`T.RULES.START_AWAKE`): the pre-made heroes are written that way, and a drafted hero's first two E points go to its strongest signatures from the starting six UP (the player can move them; Confirm tops the count back up to two if UP is left). Hover a face to see its exact numbers at the hero's current P/E.
 
 ## The round (what the player actually does)

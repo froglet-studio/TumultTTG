@@ -260,6 +260,48 @@
     const label = U.isExact(p, h) ? p.key : 'stand-in · ' + p.key;
     return `<div class="pc-art" style="background-image:url(${sc})">${U.portrait(h, 'md')}<span class="pc-call">${esc(label)}</span></div>`;
   }
+  /** A pre-made hero's card in the draft; a made hero says who made it, and its maker may let it go. */
+  function pilotCard(pb, who, mine) {
+    const clades = pb.species.slice(1);
+    const sig = pb.cards.filter((c) => T.CARD[c].sig >= 2);
+    const blurb = pb.blurb || (sig.length ? sig : pb.cards.slice(0, 3)).map((c) => T.CARD[c].name).join(' · ');
+    const by = who ? `<div class="small mute">Made by ${esc(who)}</div>` : '';
+    const forget = mine
+      ? `<button class="sm ghost made-x" data-act="forgetMade" data-arg="${esc(pb.id)}" data-tip="Take ${esc(pb.name)} off this device's list.">✕</button>`
+      : '';
+    return `<div class="sp-card pilot-card" data-act="prebuilt" data-arg="${esc(pb.id)}">${premadeArt(pb)}${forget}<div class="ic">${clades
+      .map((s) => U.icClade(s))
+      .join(
+        ' ',
+      )}</div><b>${esc(pb.name)} <span class="dim" style="font-weight:400">${esc(pb.title)}</span></b><div class="small dim">${clades
+      .map((s) => T.SPECIES[s].name)
+      .join(' · ')}</div><div class="small" style="margin-top:4px">${esc(blurb)}</div>${by}</div>`;
+  }
+  /**
+   * The heroes players have made: this device's first, then those others shared through the test
+   * page's store (src/ui/heroes-net.js), each once. [{ rec, who, mine }]
+   */
+  U.madeHeroes = function () {
+    const seen = new Set();
+    const out = [];
+    T.loadMade().forEach((rec) => {
+      seen.add(rec.id);
+      out.push({ rec, who: 'you', mine: true });
+    });
+    (U.heroesFromOthers ? U.heroesFromOthers() : []).forEach((x) => {
+      if (seen.has(x.rec.id)) return;
+      seen.add(x.rec.id);
+      out.push({ rec: x.rec, who: x.who || 'another player', mine: false });
+    });
+    return out;
+  };
+  /** A pre-made or made hero by id, and whether it was made on this device. */
+  function choiceById(id) {
+    const pb = T.PREBUILTS.find((p) => p.id === id);
+    if (pb) return { pb, mine: false };
+    const x = U.madeHeroes().find((m) => m.rec.id === id);
+    return x ? { pb: x.rec, mine: x.mine } : null;
+  }
   U.startDraft = function () {
     U.run = T.newRun();
     U.run.tide = chosenTide(T.loadMeta());
@@ -294,23 +336,15 @@
     const who = U.seatTag ? U.seatTag(d.heroIdx) : '';
     let body = '';
     if (d.step === 'mode') {
+      const free = (pb) => !run.heroes.some((h) => h && h.name === pb.name);
+      const made = U.madeHeroes().filter((x) => free(x.rec));
       body = `<div class="panel"><h3>Hero ${n} of 2 ${who}— choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
         <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span>${draftOut(d)}</div>
         <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
-        <div class="prebuilt-grid">${T.PREBUILTS.filter((pb) => !run.heroes.some((h) => h && h.name === pb.name))
-          .map(
-            (pb) =>
-              `<div class="sp-card pilot-card" data-act="prebuilt" data-arg="${pb.id}">${premadeArt(pb)}<div class="ic">${pb.species
-                .slice(1)
-                .map((s) => U.icClade(s))
-                .join(
-                  ' ',
-                )}</div><b>${esc(pb.name)} <span class="dim" style="font-weight:400">${esc(pb.title)}</span></b><div class="small dim">${pb.species
-                .slice(1)
-                .map((s) => T.SPECIES[s].name)
-                .join(' · ')}</div><div class="small" style="margin-top:4px">${esc(pb.blurb)}</div></div>`,
-          )
-          .join('')}</div></div>`;
+        <div class="prebuilt-grid">${T.PREBUILTS.filter(free)
+          .map((pb) => pilotCard(pb))
+          .join('')}</div>
+        ${made.length ? `<h3 style="margin-top:14px">…or play a pilot someone made</h3><p class="dim small">Every pilot built in the draft is kept here, ${U.heroesShared && U.heroesShared() ? 'for everyone who plays this page' : 'on this device'}, ready to fly again.</p><div class="prebuilt-grid">${made.map((x) => pilotCard(x.rec, x.who, x.mine)).join('')}</div>` : ''}</div>`;
     } else if (d.step === 'species') {
       body = `<div class="panel"><h3>Hero ${n} ${who}: choose two bloodlines (Human is always the third)</h3>
         <div class="row" style="margin:8px 0">${U.portrait({ name: d.name, species: ['human'].concat(d.species) }, 'lg')}<span class="small dim">The portrait follows the two bloodlines: a painting of that exact pair when one exists, else the nearest stand-in.</span></div>
@@ -363,9 +397,15 @@
     if (act === 'draftMode') {
       d.step = 'species';
     } else if (act === 'prebuilt') {
-      const pb = T.PREBUILTS.find((p) => p.id === arg);
-      d.hero = T.heroFromPrebuilt(run, pb);
+      const c = choiceById(arg);
+      if (!c) return;
+      d.hero = T.heroFromPrebuilt(run, c.pb);
+      // a pilot made on this device is kept again with any points moved; another player's stays theirs
+      d.premade = !c.mine;
       d.step = 'up';
+    } else if (act === 'forgetMade') {
+      T.forgetMade(arg);
+      if (U.heroesForget) U.heroesForget(arg);
     } else if (act === 'pickSpecies') {
       if (d.species.includes(arg)) d.species = d.species.filter((s) => s !== arg);
       else if (d.species.length < 2) d.species.push(arg);
@@ -374,6 +414,7 @@
     } else if (act === 'draftBack') {
       d.step = arg === 'species' ? 'species' : 'mode';
       d.hero = null;
+      d.premade = false;
       d.pack = [];
       d.picks = 0;
     } else if (act === 'draftQuit') {
@@ -383,7 +424,17 @@
     } else if (act === 'draftPrev') {
       // the first pilot comes back to its last step, as it was left
       const h = run.heroes.pop();
-      U.draft = { heroIdx: 0, step: 'up', species: h.species.slice(1), name: h.name, hero: h, pack: [], picks: 0 };
+      const premade = T.PREBUILTS.some((pb) => pb.name === h.name && String(h.id).startsWith(pb.id + '_'));
+      U.draft = {
+        heroIdx: 0,
+        step: 'up',
+        species: h.species.slice(1),
+        name: h.name,
+        hero: h,
+        pack: [],
+        picks: 0,
+        premade,
+      };
     } else if (act === 'openPacks') {
       const inp = $('#heroName');
       if (inp && inp.value.trim()) d.name = inp.value.trim().slice(0, 24);
@@ -417,6 +468,11 @@
       T.respecHero(d.hero);
     } else if (act === 'confirmHero') {
       T.awaken(d.hero);
+      // every pilot a player built is kept, to be chosen again beside the pre-made heroes
+      if (!d.premade) {
+        const kept = T.keepMade(T.madeFrom(d.hero, new Date().toISOString()));
+        if (kept && U.heroesShare) U.heroesShare(kept);
+      }
       if (U.savePilotAnswer) U.savePilotAnswer(d);
       if (d.hero.upUnspent > 0) U.toast(`${d.hero.upUnspent} UP carried over — spend it later with Train.`);
       if (U.net && U.net.online()) {

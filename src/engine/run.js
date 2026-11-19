@@ -189,9 +189,119 @@
       cards: pb.cards,
       up: pb.up,
     });
-    const spent = Object.values(h.up).reduce((s, v) => s + v[0] + v[1], 0);
+    // a trait taken twice brings its own points: those on it now are not from the free pool
+    if (pb.bound) Object.keys(pb.bound).forEach((c) => (h.bound[c] = pb.bound[c].slice()));
+    const onBound = Object.values(h.bound).reduce((s, b) => s + b[1], 0);
+    const spent = Object.values(h.up).reduce((s, v) => s + v[0] + v[1], 0) - onBound;
     h.upUnspent = Math.max(0, R().START_UP - spent);
     return h;
+  };
+
+  /* ───────────────────────────── HEROES PLAYERS MADE ───────────────────────────── */
+  // Every pilot a player builds in the draft is kept as a recipe of the same shape as a pre-made
+  // hero (T.PREBUILTS), so it can be chosen again from the same list. Kept on this device under
+  // `tumult_v2_heroes`; the test page also shares them through its store (src/ui/heroes-net.js).
+  const MADE_KEY = 'tumult_v2_heroes';
+  T.MADE_MAX = 60;
+  const hash = (str) => {
+    let x = 5381;
+    for (let i = 0; i < str.length; i++) x = ((x * 33) ^ str.charCodeAt(i)) >>> 0;
+    return x.toString(36);
+  };
+  /** The recipe of a hero a player built: its name, clades, cards and the points on them. */
+  T.madeFrom = function (h, at) {
+    const up = {};
+    h.cards.forEach((c) => (up[c] = (h.up[c] || [0, 0]).slice(0, 2)));
+    const bound = {};
+    Object.keys(h.bound || {}).forEach((c) => (bound[c] = h.bound[c].slice(0, 2)));
+    const key = [h.name, h.species.join('+'), h.cards.slice().sort().join('+')].join('|');
+    return {
+      id: 'made_' + hash(key),
+      name: h.name,
+      title: h.title || '',
+      species: h.species.slice(),
+      cards: h.cards.slice(),
+      up,
+      bound,
+      at: at || '',
+    };
+  };
+  const isInt = (n, lo, hi) => Number.isInteger(n) && n >= lo && n <= hi;
+  /**
+   * A made hero's recipe as the rules allow it, or null. Recipes shared by other players are
+   * untrusted, so each is rebuilt from known parts: real clades and cards, the 3-of-9 cap, the caps on
+   * P and E, and no more points than a new hero has.
+   */
+  T.validMade = function (rec) {
+    if (!rec || typeof rec !== 'object') return null;
+    const name = typeof rec.name === 'string' ? rec.name.trim().slice(0, 24) : '';
+    const id = typeof rec.id === 'string' && /^made_[a-z0-9]{1,12}$/.test(rec.id) ? rec.id : '';
+    if (!name || !id) return null;
+    const sp = rec.species;
+    if (!Array.isArray(sp) || sp.length !== 3 || sp[0] !== 'human') return null;
+    if (!sp.every((s) => typeof s === 'string' && T.SPECIES[s]) || new Set(sp).size !== 3) return null;
+    const cards = rec.cards;
+    if (!Array.isArray(cards) || cards.length < R().START_CARDS || cards.length > R().MAX_CARDS) return null;
+    const probe = T.makeHero({ id, name, species: sp, cards: [] });
+    for (const c of cards) {
+      if (typeof c !== 'string' || !T.CARD[c] || probe.cards.includes(c)) return null;
+      if (!T.canAddCard(probe, c).ok) return null;
+      probe.cards.push(c);
+    }
+    const up = {};
+    let spent = 0;
+    for (const c of cards) {
+      const u = (rec.up && rec.up[c]) || [0, 0];
+      if (!Array.isArray(u) || !isInt(u[0], 0, R().P_CAP) || !isInt(u[1], 0, R().E_CAP)) return null;
+      up[c] = [u[0], u[1]];
+      spent += u[0] + u[1];
+    }
+    const bound = {};
+    for (const c of Object.keys(rec.bound || {})) {
+      const b = rec.bound[c];
+      const shared = T.CARD[c] && T.CARD[c].clades.filter((s) => sp.includes(s)).length >= 2;
+      if (!cards.includes(c) || !shared || !Array.isArray(b) || b[0] !== R().DOUBLE_UP) return null;
+      if (!isInt(b[1], 0, b[0]) || b[1] > up[c][0] + up[c][1]) return null;
+      bound[c] = [b[0], b[1]];
+      spent -= b[1];
+    }
+    if (spent > R().START_UP) return null;
+    return {
+      id,
+      name,
+      title: typeof rec.title === 'string' ? rec.title.slice(0, 40) : '',
+      species: sp.slice(),
+      cards: cards.slice(),
+      up,
+      bound,
+      at: typeof rec.at === 'string' ? rec.at.slice(0, 30) : '',
+    };
+  };
+  /** The heroes made on this device, newest first (none when storage is unavailable). */
+  T.loadMade = function () {
+    try {
+      const list = JSON.parse(localStorage.getItem(MADE_KEY) || '[]');
+      return Array.isArray(list) ? list.map(T.validMade).filter(Boolean) : [];
+    } catch (e) {
+      return [];
+    }
+  };
+  const saveMade = (list) => {
+    try {
+      localStorage.setItem(MADE_KEY, JSON.stringify(list.slice(0, T.MADE_MAX)));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+  /** Keep a made hero (one with the same name, clades and cards is replaced). Returns the kept recipe or null. */
+  T.keepMade = function (rec) {
+    const r = T.validMade(rec);
+    if (!r) return null;
+    return saveMade([r].concat(T.loadMade().filter((x) => x.id !== r.id))) ? r : null;
+  };
+  T.forgetMade = function (id) {
+    return saveMade(T.loadMade().filter((x) => x.id !== id));
   };
   // UP allocation
   T.adjustUp = function (h, cardId, which, delta) {

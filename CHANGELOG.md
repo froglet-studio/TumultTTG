@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.72.0 — 2026-11-19 — pilots you made, ready to fly again
+
+- **Every pilot built is kept.** Confirming a pilot drafted from packs keeps its name, clades, cards and the points on them (`T.madeFrom`, kept on the device under `tumult_v2_heroes`, newest first, up to 60). A new expedition lists them under the pre-made heroes, *…or play a pilot someone made*, and picking one builds it exactly as it was (a trait taken twice keeps its own point). ✕ takes one of your own off the list. Playing a pre-made hero adds nothing.
+- **Shared on the test page.** On the test page and Tumult Online each player's made pilots are also written to the page's store (`heroes/<viewer id>`), so everyone who opens the page can fly them, with the maker's name shown. A pilot shared by someone else is rebuilt from the rules before it is offered (`T.validMade`: real clades and cards, 3 of 9, caps, no more points than a new hero), and flying it does not make it yours. The offline TUMULT.html keeps them on the device only.
+
 ## 2.71.0 — 2026-11-19 — the dock: your turn in one place
 
 - **A fixed dock.** The pilot being flown now sits in a dock along the foot of the mission screen that never folds or scrolls away: vitality, AP banked in large type, etherions banked as counted chips, dice and pool, the track, the whole hand in one row, and the basic actions and gear (three to a row, costs in gold). On a short screen the cards drop their art so the board keeps its room. On a phone the dock sticks to the bottom of the screen and its hand and actions scroll sideways.
