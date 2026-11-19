@@ -541,21 +541,21 @@
     return `<span class="pull pull-${dir}">${dir === 'up' ? '▲' : dir === 'down' ? '▼' : '•'} ${g} g</span>`;
   }
   /**
-   * The route, drawn as the climb it is: each leg over its painting, each stop a painted roundel of the place
-   * it is played in (its atlas page), the road already taken lit gold, the next choices glowing, the squad
-   * standing where it last stopped, and the threat waiting at the top.
+   * The route, read from the top down: the squad sets out at the top, each leg over its painting, each stop a
+   * painted roundel of the place it is played in (its atlas page), the road already taken lit gold, the next
+   * choices glowing, the squad standing where it last stopped, and the threat waiting at the foot.
    */
   function renderRoute(run) {
     const map = run.map;
     const ROW = 116;
-    const FOOT = 64; // room below the first row for the squad before it sets out
-    const H = map.rows.length * ROW + FOOT;
+    const HEAD = 64; // room above the first row for the squad before it sets out
+    const H = map.rows.length * ROW + HEAD;
     const ex = T.expeditionOf(run);
     // the stops stand in a field to the right of the leg titles (--gut, which narrow screens set to 0)
     const fx = (x) => `calc(var(--gut) + (100% - var(--gut)) * ${x / 100})`;
     const pos = (nd) => {
       const n = map.rows[nd.row].length;
-      return { x: n === 1 ? 50 : ((nd.col + 0.5) / n) * 100, y: H - FOOT - (nd.row + 0.5) * ROW };
+      return { x: n === 1 ? 50 : ((nd.col + 0.5) / n) * 100, y: HEAD + (nd.row + 0.5) * ROW };
     };
     const legs = [];
     for (let r = 0; r < map.rows.length;) {
@@ -569,8 +569,8 @@
     const here = at != null ? map.all[at].row : -1;
     const bands = legs
       .map((l) => {
-        const top = H - FOOT - (l.to + 1) * ROW;
-        const h = (l.to - l.from + 1) * ROW + (l.from === 0 ? FOOT : 0);
+        const top = l.from === 0 ? 0 : HEAD + l.from * ROW;
+        const h = (l.to - l.from + 1) * ROW + (l.from === 0 ? HEAD : 0);
         const boss = map.all[map.rows[l.from][0]].type === 'boss';
         const leg = ex && ex.legs[l.act];
         const art = U.artClass(boss && ex ? ex.legs[2].scene : leg ? leg.scene : U.LEG_SCENES[l.act]);
@@ -602,11 +602,11 @@
         );
       }),
     );
-    // before the first stop, the roads lead up from where the squad sets out
+    // before the first stop, the roads lead down from where the squad sets out
     if (at == null)
       map.rows[0].forEach((id) => {
         const b = pos(map.all[id]);
-        const a = { x: 50, y: H - FOOT / 2 };
+        const a = { x: 50, y: HEAD / 2 };
         const my = (a.y + b.y) / 2;
         curves.push(
           `<path class="cur open" d="M${a.x} ${a.y} C${a.x} ${my} ${b.x} ${my} ${b.x} ${b.y}" vector-effect="non-scaling-stroke"/>`,
@@ -636,18 +636,19 @@
               ? `<div class="tip-plate ${art}"></div><b>${esc(pg.name)}</b> <span class="dim">· ${U.gravityText(pg.gravity)}</span><div>${esc(pg.blurb)}</div><div class="small" style="margin-top:4px"><b>${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}</b>${type === 'haven' || type === 'event' ? '' : ' · tier ' + nd.tier}: `
               : `<b>${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}</b> · tier ${nd.tier}<div class="small">`) +
             esc(T.MISSIONS[type].blurb) +
-            '</div>'
+            '</div>' +
+            (nd.done ? '' : briefTip(U.stopPreview(run, nd.id)))
           : type === 'haven'
             ? '<b>Haven</b><div>A night under a windbreak: rest, trade, buy gear and consumables.</div>'
             : '<b>Event</b><div>A fork in the route: something on the road, and a choice about it.</div>';
         const tier = type === 'haven' || type === 'event' ? '' : `<span class="tier">${'◆'.repeat(nd.tier)}</span>`;
         const name = type === 'boss' ? esc(T.threatTitle(run)) : pg ? esc(pg.name) : NODE_NAME[type];
         const sub = type === 'boss' ? 'The Heart’s rules' : pg ? NODE_NAME[type] : '';
-        return `<div class="${cls}" style="left:${fx(p.x)};top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal${art ? ' painted' : ''}">${art ? `<span class="plate ${art}"></span>` : ''}<span class="mic">${NODE_ICON[type]}</span></div><div class="t"><span class="nm">${name}</span>${sub || tier || pg ? `<span class="sub">${sub ? sub + ' ' : ''}${tier}${pg && type !== 'boss' ? pullTag(pg.gravity) : ''}</span>` : ''}</div></div>`;
+        return `<div class="${cls}" data-node="${nd.id}" style="left:${fx(p.x)};top:${p.y}px" ${avail ? `data-act="goNode" data-arg="${nd.id}"` : ''} data-tip="${esc(tip)}"><div class="medal${art ? ' painted' : ''}">${art ? `<span class="plate ${art}"></span>` : ''}<span class="mic">${NODE_ICON[type]}</span></div><div class="t"><span class="nm">${name}</span>${sub || tier || pg ? `<span class="sub">${sub ? sub + ' ' : ''}${tier}${pg && type !== 'boss' ? pullTag(pg.gravity) : ''}</span>` : ''}</div></div>`;
       })
       .join('');
-    // the squad stands where it last stopped (or at the foot of the route, before it sets out)
-    const sp = at != null ? pos(map.all[at]) : { x: 50, y: H - FOOT / 2 };
+    // the squad stands where it last stopped (or at the head of the route, before it sets out)
+    const sp = at != null ? pos(map.all[at]) : { x: 50, y: HEAD / 2 };
     const squad = `<div class="squad-mark${at == null ? ' start' : ''}" style="left:${fx(sp.x)};top:${sp.y}px">${run.heroes
       .filter(Boolean)
       .map((h) => U.portrait(h, 'sm'))
@@ -679,13 +680,112 @@
     if (!ex) return '';
     return `<b class="dom-${ex.domain}">${esc(ex.patronDef.title)}</b> to ${esc(T.threatName(run))}. `;
   }
+  /** What each kind of objective asks, in a word: the first thing a player compares between stops. */
+  const GOAL_VERB = {
+    hold: 'Hold',
+    vault: 'Break in',
+    find: 'Find',
+    valve: 'Channel',
+    kill: 'Defeat',
+    salvage: 'Carry',
+    survey: 'Tag',
+  };
+  /** A stop's mission as it will be played (T.previewStop), worked out once for each stop and kept. */
+  const previews = {};
+  U.stopPreview = function (run, id) {
+    const key = [run.seed, run.tide, id, run.map.all[id].type, !!run.nextElite].join('|');
+    if (!previews[key]) previews[key] = T.previewStop(run, id);
+    return previews[key];
+  };
+  /** The foes a stop holds, as icons with counts, and the swarm that keeps coming, if one does. */
+  function foesLine(p) {
+    const foes = p.foes
+      .map(
+        (f) =>
+          `<span class="sc-foe" data-tip="${esc(`<b>${esc(f.name)}</b> · ${f.hp} vitality<div>${esc(T.ENEMIES[f.type].flavor || '')}</div>`)}">${U.icEnemy(f.type, T.ENEMIES[f.type].glyph, 'tiny')}${f.n > 1 ? `<b>${f.n}×</b>` : ''} ${esc(f.name)}</span>`,
+      )
+      .join('');
+    const more = p.spawns
+      .map(
+        (s) =>
+          `<div class="sc-more">+ more every ${s.every === 1 ? 'round' : s.every + ' rounds'} from round ${s.from} (up to ${s.max} at once): ${esc(s.kinds.join(', '))}</div>`,
+      )
+      .join('');
+    return `<div class="sc-foes">${foes}</div>${more}`;
+  }
+  /** The place's rules today, as pills: gravity and weather, each rule in its tip. */
+  function placePills(pl) {
+    const gb = T.GRAVITY.find((b) => b.id === pl.gravity);
+    const wx = T.WEATHER[pl.weather];
+    return (
+      (gb && gb.text ? `<span class="pill" data-tip="${esc(gb.text)}">${esc(gb.name)}</span>` : '') +
+      (wx && wx.text ? `<span class="pill" data-tip="${esc(wx.text)}">${esc(wx.name)}</span>` : '')
+    );
+  }
+  /**
+   * One stop the squad can go to next, as a card: what kind of stop it is, and for a mission what it asks
+   * (the objective, in a word and in full), how long it gives, what stands in the way, the place's rules and
+   * the bonus goals, so two stops can be compared before choosing. Exact: the numbers are the ones that will
+   * be played (T.previewStop).
+   */
+  function stopCard(run, id) {
+    const nd = run.map.all[id];
+    const p = U.stopPreview(run, id);
+    const pg = p.page && T.PAGE_BY[p.page];
+    const plate =
+      p.type === 'boss' ? (T.expeditionOf(run) ? T.expeditionOf(run).legs[2].scene : null) : pg ? pg.plate : null;
+    const art = U.artClass(plate);
+    const go = `<button class="primary sm sc-go" data-act="goNode" data-arg="${id}">${p.type === 'haven' ? 'Make camp' : p.type === 'event' ? 'Take this road' : 'Set out'} ▶</button>`;
+    const name = p.type === 'boss' ? esc(T.threatTitle(run)) : pg ? esc(pg.name) : NODE_NAME[p.type];
+    const head = `<div class="sc-head"><span class="sc-ic">${NODE_ICON[p.type]}</span><span class="sc-nm"><b>${name}</b><span class="dim small">${NODE_NAME[p.type]}${T.MISSIONS[p.type] ? ` · tier <span class="tier">${'◆'.repeat(p.tier)}</span>` : ''}${pg ? ' · ' + U.gravityText(pg.gravity) : ''}</span></span></div>`;
+    if (!T.MISSIONS[p.type]) {
+      const what =
+        p.type === 'haven'
+          ? 'A night under a windbreak. Rest to mend, train with upgrade points, trade, and buy gear and consumables.'
+          : 'A fork in the road: something on the route, and a choice about it. Not a mission; no board, no foes.';
+      return `<div class="stopcard k-${p.type}" data-node="${id}">${art ? `<div class="sc-plate ${art}"></div>` : ''}${head}<div class="sc-body"><div class="sc-what">${what}</div></div>${go}</div>`;
+    }
+    const verb = GOAL_VERB[p.goal] || 'Win';
+    return `<div class="stopcard k-${p.type}${p.elite ? ' elite-owed' : ''}" data-node="${id}">${art ? `<div class="sc-plate ${art}"></div>` : ''}${head}
+      <div class="sc-body">
+        ${p.elite ? '<div class="sc-flag">The run owes an elite: this stop will be one.</div>' : ''}
+        <div class="sc-goal"><span class="sc-verb${p.fight ? ' fight' : ''}" data-tip="${esc(p.fight ? 'A fight: the mission is won when this foe falls.' : 'Not a fight: the mission is won by the objective, whatever is left standing.')}">${verb}</span><span>${esc(p.objective)}</span></div>
+        <div class="sc-row">${p.clock ? `<span class="sc-clock" data-tip="${esc(p.clock.label + ': the mission is lost when it runs out.')}">⏳ <b>${p.clock.value}</b> rounds</span>` : '<span class="sc-clock" data-tip="No clock: the mission ends when one side falls.">⏳ <b>no clock</b></span>'}${placePills(p.place)}</div>
+        ${foesLine(p)}
+        ${p.bonus.length ? `<div class="sc-bonus small dim">Bonus: ${p.bonus.map((b) => '○ ' + esc(b)).join(' &nbsp; ')}</div>` : ''}
+      </div>${go}</div>`;
+  }
+  /** A stop's mission in two lines, for its roundel's tip: the objective, the clock and what stands in the way. */
+  function briefTip(p) {
+    if (!p || !p.objective) return '';
+    const foes = p.foes.map((f) => (f.n > 1 ? f.n + ' ' : '') + esc(f.name)).join(', ');
+    return `<div class="small" style="margin-top:4px"><b>${GOAL_VERB[p.goal] || 'Win'}:</b> ${esc(p.objective)}</div><div class="small dim">${p.clock ? '⏳ ' + p.clock.value + ' rounds · ' : ''}${foes}${p.spawns.length ? ' · and more keep coming' : ''}</div>`;
+  }
+  /** The stops the squad can reach next, side by side, at the top of the route. */
+  function renderChoices(run) {
+    if (run.phase !== 'map' || !run.available.length) return '';
+    return `<div class="choices"><div class="row"><span class="kick">Choose the next stop</span><span class="dim small">${expeditionLine(run)}${esc(T.threatTitle(run))} waits at the end of the route.</span></div><div class="stopcards">${run.available.map((id) => stopCard(run, id)).join('')}</div></div>`;
+  }
+  // a stop card and its roundel on the route light up together
+  document.addEventListener('mouseover', (e) => {
+    const card = e.target && e.target.closest && e.target.closest('.stopcard[data-node]');
+    const id = card ? card.getAttribute('data-node') : null;
+    document
+      .querySelectorAll('.mnode.hl')
+      .forEach((n) => n.getAttribute('data-node') !== id && n.classList.remove('hl'));
+    if (id) {
+      const n = document.querySelector(`.mnode[data-node="${id}"]`);
+      if (n) n.classList.add('hl');
+    }
+  });
   function renderMap() {
     const run = U.run;
     const map = run.map;
     return `<div class="wrap">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${titleBtn()}`)}
       ${renderPassage(run)}
       ${partyBar(run)}
-      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">${expeditionLine(run)}Pick the next stop. Glowing stops are reachable. ${esc(T.threatTitle(run))} waits at the end of the route.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
+      ${renderChoices(run)}
+      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">The whole route, from the top. Glowing stops are reachable; hover one to see what it holds.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
   }
 
   /* ───────────── TRAIN / KIT modals ───────────── */

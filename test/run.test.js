@@ -157,3 +157,47 @@ test('every hero sets out with a few Ethereal faces awakened (RULES.START_AWAKE)
   assert.equal(T.awakenedCount(h), 1, 'one UP awakens one card');
   assert.equal(h.upUnspent, 0);
 });
+
+test('a stop on the route is previewed exactly as it will be played, and previewing changes nothing', () => {
+  let missions = 0;
+  for (const seed of [11, 12, 13, 14]) {
+    for (const owed of [false, true]) {
+      const run = T.newRun(seed);
+      H.prebuiltSquad(run, 0, 1);
+      T.startMap(run);
+      run.nextElite = owed; // an elite the run owes takes the place of the next mission
+      // every stop on the first two rows, each from a copy of the run standing where it could be chosen
+      const rows = run.map.rows.slice(0, 2).flat();
+      for (const id of rows) {
+        const r = T.clone(run);
+        if (!r.available.includes(id)) r.available = [id];
+        const before = JSON.stringify(r);
+        const p = T.previewStop(r, id);
+        assert.equal(JSON.stringify(r), before, 'previewing a stop leaves the run as it was');
+        T.chooseNode(r, id);
+        if (r.phase !== 'mission') {
+          assert.equal(p.type, r.phase, 'a haven or an event says what it is');
+          continue;
+        }
+        missions++;
+        const m = r.mission;
+        assert.equal(p.type, m.archetype, 'the mission type');
+        assert.equal(p.objective, m.objective.text, 'the objective');
+        assert.equal(p.title, m.title, 'the title');
+        assert.equal(p.clock && p.clock.value, m.clock && m.clock.value, 'the clock');
+        const foes = {};
+        m.enemies.forEach((e) => (foes[e.type] = (foes[e.type] || 0) + 1));
+        assert.deepEqual(Object.fromEntries(p.foes.map((f) => [f.type, f.n])), foes, 'the foes');
+        for (const f of p.foes)
+          assert.equal(f.hp, m.enemies.find((e) => e.type === f.type).maxHp, f.type + ' vitality');
+        assert.deepEqual(p.place, m.place, 'the place');
+        assert.deepEqual(
+          p.bonus,
+          m.bonus.map((b) => b.text),
+          'the bonus goals',
+        );
+      }
+    }
+  }
+  assert.ok(missions >= 8, 'enough missions were compared');
+});

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.69.0 — 2026-11-19 — choose the next stop by what it asks
+
+- **Stop cards.** Above the route, every stop the squad can reach next stands as a card, side by side: for a mission, its objective in a word (Hold, Break in, Find, Channel, Carry, Tag, Defeat) and in full, how many rounds its clock gives, the foes on the board (with counts and vitality in the tips) and any swarm that keeps coming, the place's gravity and weather, and its bonus goals. A haven or an event says what it offers. Each card has its own Set out button, and hovering a card lights its stop on the route. The numbers are exact: the card reads the same spec the mission is launched from (`T.missionSpec`, `T.previewStop`), and previewing changes nothing in the run. Which cache is real stays hidden.
+- **The route reads from the top.** The squad sets out at the top of the route and the Heart waits at the foot, so the first choice is on screen without scrolling. A stop's tip on the route now also gives its objective, clock and foes.
+
 ## 2.68.1 — 2026-11-17 — draft questions match your clades
 
 - **Canon questions in the draft.** A hero wearing a stand-in painting was asked about the painted pilot's clades, so an orca and mandrill hero was asked "what gives away the eagle in them?" (the painting is Jugger, orca and eagle). A stand-in is now never asked a question that names the pilot's clades, and the question says it is about the pilot whose painting the hero wears (`noClades` in `T.canonPrompt`).
