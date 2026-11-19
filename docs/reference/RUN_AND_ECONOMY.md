@@ -25,7 +25,9 @@ Every pilot has 15 dice, and pool + banked = 15 always. Most are **plain d20s**:
 
 ## The route
 
-Seven rows, bottom to top. Row 0 offers three openers (Swarm / Vault / Cascade). Rows 1–5 mix missions, Elites, Havens (row 2 and a guaranteed Haven in row 4) and Events. Row 6 is the Heart. Each node links to 1–3 nodes in the next row; every node is reachable. Tiers: rows 0–1 tier 1 (*The Lowland Reach*), rows 2–4 tier 2 (*The Open Sea*), rows 5–6 tier 3 (*The High Air*). A refused privateer toll upgrades your next mission to an Elite; a paid guide skips a row.
+Seven rows, drawn top to bottom since 2.70: the squad sets out at the top and the Heart waits at the foot. Row 0 offers three openers (Swarm / Vault / Cascade). Rows 1–5 mix missions, Elites, Havens (row 2 and a guaranteed Haven in row 4) and Events. Row 6 is the Heart. Each node links to 1–3 nodes in the next row; every node is reachable. Tiers: rows 0–1 tier 1 (*The Lowland Reach*), rows 2–4 tier 2 (*The Open Sea*), rows 5–6 tier 3 (*The High Air*). A refused privateer toll upgrades your next mission to an Elite; a paid guide skips a row.
+
+Above the route, the stops the squad can reach next stand side by side as cards (`T.previewStop`): for a mission, its objective in a word (Hold, Break in, Find, Channel, Carry, Tag, Defeat) and in full, its clock, its foes and any swarm, the place's gravity and weather, and its bonus goals. The preview reads the same spec the mission is launched from (`T.missionSpec`), so the numbers are the ones that will be played; it changes nothing in the run, and never shows what must be found in play (which cache is real). A stop the run owes as an elite says so.
 
 ## Difficulty: the wind
 

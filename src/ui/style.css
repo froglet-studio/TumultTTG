@@ -518,7 +518,7 @@ hr {
   overflow: hidden;
 }
 .leg + .leg {
-  border-bottom: 1px solid rgba(232, 200, 120, 0.22);
+  border-top: 1px solid rgba(232, 200, 120, 0.22);
 }
 .leg-art {
   position: absolute;
@@ -826,6 +826,189 @@ hr {
   font-family: var(--serif);
   font-size: 14px;
   color: #ffd0dc;
+}
+/* the stops the squad can reach next, as cards side by side above the route (core.js stopCard): what each asks,
+   how long it gives and what stands in the way, so two stops can be compared before choosing */
+.choices {
+  margin-top: 12px;
+}
+.choices > .row {
+  gap: 10px;
+  align-items: baseline;
+}
+.stopcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+.stopcard {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line2);
+  border-radius: 12px;
+  background: var(--panel);
+  overflow: hidden;
+  transition:
+    border-color 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
+}
+.stopcard:hover {
+  border-color: var(--cyan);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+}
+.stopcard .sc-plate {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 96px;
+  background-size: cover;
+  background-position: center 40%;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent);
+  mask-image: linear-gradient(180deg, #000 30%, transparent);
+  pointer-events: none;
+}
+.sc-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 6px;
+  text-shadow: 0 1px 6px #000;
+}
+.sc-ic {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: 50%;
+  background: rgba(7, 16, 32, 0.8);
+  border: 1px solid var(--cyan);
+  color: #fff;
+}
+.sc-ic .icn {
+  width: 20px;
+  height: 20px;
+}
+.sc-nm {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.sc-nm b {
+  font-family: var(--serif);
+  font-size: 17px;
+}
+.sc-nm .tier {
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+.sc-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 4px 14px 10px;
+  flex: 1;
+}
+.sc-goal {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  font-size: 13.5px;
+  line-height: 1.4;
+}
+.sc-verb {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #0a1426;
+  background: var(--cyan);
+  cursor: help;
+}
+.sc-verb.fight {
+  background: var(--rose);
+}
+.sc-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.sc-clock {
+  font-size: 13px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(242, 193, 78, 0.45);
+  color: var(--gold);
+  cursor: help;
+}
+.sc-foes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 12.5px;
+}
+.sc-foe {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #ffc2d2;
+  cursor: help;
+}
+.sc-foe b {
+  color: var(--txt);
+}
+.sc-more {
+  font-size: 11.5px;
+  color: var(--rose);
+}
+.sc-flag {
+  font-size: 12px;
+  color: #ffc48a;
+}
+.sc-what {
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.45;
+}
+.stopcard .sc-go {
+  margin: 0 14px 12px;
+  align-self: flex-start;
+  font-size: 13px;
+  padding: 6px 16px;
+}
+.stopcard.k-haven .sc-ic {
+  border-color: #9ff0b4;
+  color: #9ff0b4;
+}
+.stopcard.k-event .sc-ic {
+  border-color: var(--violet);
+}
+.stopcard.k-elite .sc-ic,
+.stopcard.elite-owed .sc-ic {
+  border-color: #ffc48a;
+  color: #ffc48a;
+}
+.stopcard.k-boss .sc-ic {
+  border-color: var(--rose);
+  color: #ffd0dc;
+}
+/* the roundel of the stop card under the pointer */
+.mnode.hl {
+  z-index: 6;
+  transform: translate(-50%, -50%) scale(1.15);
+}
+.mnode.hl .medal {
+  filter: drop-shadow(0 0 14px var(--cyan)) brightness(1.2);
 }
 /* the tooltip of a stop shows the place it is played in */
 .tip .tip-plate {

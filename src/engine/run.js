@@ -58,8 +58,8 @@
    * The seed of the mission about to be launched. On the Tide Map it belongs to the node, not to
    * the road taken there or the squad that walks it; off the map, to the order of launching.
    */
-  T.missionSeed = function (run, type, tier) {
-    const where = run.nodeId != null ? 'n' + run.nodeId : '#' + run.launched;
+  T.missionSeed = function (run, type, tier, nodeId = run.nodeId) {
+    const where = nodeId != null ? 'n' + nodeId : '#' + run.launched;
     return T.subSeed(run.seed, `mission:${where}:${type}:${tier}`);
   };
   T.newDraftHero = function (run, name, title, species) {
@@ -326,13 +326,15 @@
     T.writePassage(run, 'start', null);
   };
   T.actOf = (row) => (row <= 1 ? 0 : row <= 4 ? 1 : 2);
+  /** The mission types an elite may stand in for when the run owes one (T.chooseNode). */
+  const ELITE_STANDS_IN = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey'];
   T.chooseNode = function (run, nodeId) {
     if (!run.available.includes(nodeId)) return { ok: false };
     const node = run.map.all[nodeId];
     run.nodeId = nodeId;
     run.map.current = nodeId;
     let type = node.type;
-    if (run.nextElite && ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey'].includes(type)) {
+    if (run.nextElite && ELITE_STANDS_IN.includes(type)) {
       node.type = type = 'elite';
       run.nextElite = false;
     }
@@ -347,16 +349,19 @@
     }
     return { ok: true, type };
   };
-  T.launchMission = function (run, type, tier, pageId) {
-    T.settlePurses(run);
+  /**
+   * The mission a stop holds, as plain data: board, foes, objective, clock, place and title. Nothing in the
+   * run changes, so the route can show a stop exactly as it will be played before anyone chooses it
+   * (T.previewStop); T.launchMission plays the same spec. `nodeId` is the stop (the run's own by default).
+   */
+  T.missionSpec = function (run, type, tier, pageId, nodeId = run.nodeId) {
     const gen = T.MISSIONS[type];
-    const seed = T.missionSeed(run, type, tier);
-    run.launched++;
+    const seed = T.missionSeed(run, type, tier, nodeId);
     // The board has a stream to itself: the same seed is the same board, whoever plays it.
     const board = T.makeRng(T.subSeed(seed, 'board'));
     // the atlas page it is played on: the route's choice for this stop, or (a mission launched on its own,
     // as the simulators do) one the board's stream picks, unless the caller names one
-    const node = run.map && run.nodeId != null ? run.map.all[run.nodeId] : null;
+    const node = run.map && nodeId != null ? run.map.all[nodeId] : null;
     const picked = board.pick(T.ATLAS).id; // drawn either way, so naming a page leaves the rest of the board alike
     if (!pageId) pageId = node && node.page ? node.page : picked;
     const spec = gen.gen(board, tier, T.TIDES[run.tide] || T.TIDES.rising, T.PAGE_BY[pageId]);
@@ -371,10 +376,62 @@
       spec.title = T.threatTitle(run);
       spec.blurb = threat.look + ' ' + gen.blurb;
     }
+    return { spec, seed };
+  };
+  T.launchMission = function (run, type, tier, pageId) {
+    T.settlePurses(run);
+    const { spec, seed } = T.missionSpec(run, type, tier, pageId);
+    run.launched++;
     run.mission = T.startMission(run, spec, type, tier, seed);
+    const threat = T.expeditionOf(run) && T.expeditionOf(run).threatDef;
     if (type === 'boss' && threat)
       run.mission.enemies.filter((e) => e.type === 'heart').forEach((e) => (e.name = threat.foe));
     run.phase = 'mission';
+  };
+  /**
+   * What a stop on the route holds, before anyone chooses it: the mission it will launch, read from the same
+   * spec (so the numbers are the ones that will be played), minus anything a player must find out in play.
+   * A haven or an event says only what it is. Plain data; the run is not changed.
+   */
+  T.previewStop = function (run, nodeId) {
+    const node = run.map.all[nodeId];
+    let type = node.type;
+    const elite = run.nextElite && ELITE_STANDS_IN.includes(type);
+    if (elite) type = 'elite';
+    if (!T.MISSIONS[type]) return { type, tier: node.tier, page: node.page || null };
+    const { spec } = T.missionSpec(run, type, node.tier, null, nodeId);
+    const tier = node.tier;
+    const count = {};
+    spec.enemies.forEach((e) => (count[e.type] = (count[e.type] || 0) + 1));
+    const foes = Object.keys(count).map((k) => ({
+      type: k,
+      n: count[k],
+      name:
+        type === 'boss' && k === 'heart' && T.expeditionOf(run) ? T.expeditionOf(run).threatDef.foe : T.ENEMIES[k].name,
+      hp: T.foeHp(T.ENEMIES[k].hp[tier - 1]),
+    }));
+    const spawns = (spec.spawns || []).map((s) => ({
+      every: s.every || 1,
+      from: s.startRound || 1,
+      max: s.max,
+      kinds: [...new Set(s.pool)].map((k) => T.ENEMIES[k].name),
+    }));
+    return {
+      type,
+      tier,
+      page: spec.page,
+      elite,
+      title: spec.title,
+      blurb: spec.blurb,
+      goal: spec.objective.kind,
+      objective: spec.objective.text,
+      fight: spec.objective.kind === 'kill',
+      clock: spec.clock ? { value: spec.clock.value, label: spec.clock.label } : null,
+      foes,
+      spawns,
+      bonus: (spec.bonus || []).map((b) => b.text),
+      place: spec.place,
+    };
   };
   T.finishNode = function (run) {
     const node = run.map.all[run.nodeId];
