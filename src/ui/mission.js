@@ -114,8 +114,8 @@
     return `<div class="mission">
       <div class="top panel tight" id="mtop"></div>
       <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div></div>
-      <div class="side" id="mside"></div>
-      <div class="bottom">${foldBtn('log', 'the log')}<div class="log${U.layout.log ? '' : ' folded'}" id="mlog"></div></div>
+      <div class="side"><div class="side-in" id="mside"></div><div class="bottom">${foldBtn('log', 'the log')}<div class="log${U.layout.log ? '' : ' folded'}" id="mlog"></div></div></div>
+      <div class="dock" id="mdock"></div>
     </div>`;
   };
   U.afterMissionRender = function () {
@@ -520,13 +520,16 @@
     const changed = setHTML(
       $('#mside'),
       `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b>Enemy intents</b><span class="dim small right">${open ? 'declared — they adapt only to close distance' : `${foes} foe${foes === 1 ? '' : 's'} · shown on the board`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}${forecastHTML(m)}</div>` +
-        // the pilots not selected, folded, above the one being played: all of them in view at once
+        // the pilots not being played, folded: the ally's vitality, dice and (on request) cards
         m.heroes
           .map((h, i) => i)
-          .sort((a, b) => (a === U.ms.heroIdx) - (b === U.ms.heroIdx) || a - b)
+          .filter((i) => i !== U.ms.heroIdx)
           .map((i) => heroPanel(m, m.heroes[i], i))
           .join(''),
     );
+    // the pilot being played stays in the dock: its hand, AP, dice and actions always on screen, never folded
+    const sel = m.heroes[U.ms.heroIdx];
+    setHTML($('#mdock'), sel ? heroPanel(m, sel, U.ms.heroIdx) : '');
     // tooltips on intents are computed lazily
     if (changed)
       document
@@ -641,7 +644,7 @@
     const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>`;
-    const diceRow = `<div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span><span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool} · AP ${T.apValue(h)}</span></div>`;
+    const diceRow = `<div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span><span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool}</span><span class="ap-chip" data-tip="Action points banked">${T.apValue(h)} AP</span></div>`;
     // a pilot not selected folds to its vitality and dice; its cards open on request
     if (!sel && !U.layout.peek[i]) {
       const ready = h.cards.filter(
@@ -661,11 +664,7 @@
     const canInteract = inode != null && (T.apValue(h) >= 2 || !!T.markPay(h, m.board.nodes[inode].objective));
     const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
-    return `<div class="hero ${sel ? 'active' : 'peeking'} ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
-      ${head}${diceRow}${sel ? U.diceKey() : `<div class="fold-sum small dim"><span>Not selected: click to select ${esc(h.name)}</span><button class="ghost sm peek" data-act="peek" data-arg="${i}">Hide cards ▴</button></div>`}
-      ${h.track.length ? `<div class="track">${trackCols.join('')}</div>` : ''}
-      <div class="hand">${hand}</div>
-      <div class="actions">
+    const actions = `<div class="actions">
         ${T.BASIC.map((b) => {
           const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
           if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
@@ -673,14 +672,48 @@
             ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
             : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
           const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
-          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` (${b.ap})` : ''}</button>`;
+          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` <span class="acost">${b.ap}</span>` : ''}</button>`;
         }).join('')}
-        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact (2)</button>
-        <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally (2)</button>
+        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact <span class="acost">2</span></button>
+        <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally <span class="acost">2</span></button>
         <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>
         <button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>
+      </div>`;
+    const gearRow = gear || cons ? `<div class="gearrow">${gear}${cons}</div>` : '';
+    if (sel) {
+      // the dock: who you are flying and what they have to spend on the left, the hand in the middle, the
+      // actions anyone can take on the right — the whole of a turn's choices, in one place that never moves
+      const ap = T.apValue(h);
+      const els = ['M', 'C', 'S', 'T', 'O']
+        .map((e) => ({ e, n: h.held.filter((f) => f === e).length + h.temp.filter((f) => f === e).length }))
+        .filter((x) => x.n)
+        .map(
+          (x) =>
+            `<span class="res-el" style="--c:${EL[x.e].color}" data-tip="${esc(`${x.n} ${EL[x.e].name} banked: pays a face's ${x.e === 'O' ? 'etherion of any element' : EL[x.e].name + ' cost'}, or channels an action.`)}">${U.ic('el.' + x.e, x.e)}<b>${x.n}</b></span>`,
+        )
+        .join('');
+      return `<div class="hero dock-hero active ${h.downed ? 'downed' : ''}" data-arg="${i}">
+      <div class="dk-res">
+        ${head}
+        <div class="dk-purse">
+          <span class="res-ap${ap ? '' : ' empty'}" data-tip="${esc(`Action points banked this turn: ${ap}. Faces, steps (1 AP each), Strike, Brace, Shove, Interact and Rally spend them. What is not spent stays banked.`)}"><b>${ap}</b><span>AP</span></span>
+          <span class="res-els">${els || '<span class="dim small">no etherions</span>'}</span>
+          <span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool}</span>
+        </div>
+        <div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span></div>
+        ${h.track.length ? `<div class="track">${trackCols.join('')}</div>` : ''}
+        ${U.diceKey()}
       </div>
-      ${gear || cons ? `<div class="gearrow">${gear}${cons}</div>` : ''}
+      <div class="hand">${hand}</div>
+      <div class="dk-acts">${actions}${gearRow}</div>
+    </div>`;
+    }
+    return `<div class="hero peeking ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
+      ${head}${diceRow}<div class="fold-sum small dim"><span>Not being flown: click to fly ${esc(h.name)}</span><button class="ghost sm peek" data-act="peek" data-arg="${i}">Hide cards ▴</button></div>
+      ${h.track.length ? `<div class="track">${trackCols.join('')}</div>` : ''}
+      <div class="hand">${hand}</div>
+      ${actions}
+      ${gearRow}
     </div>`;
   }
   function interactNode(m, h) {
@@ -1257,14 +1290,14 @@
     if (typeof requestAnimationFrame === 'function') requestAnimationFrame(() => setTimeout(run, 0));
     else setTimeout(run, 0);
   }
+  /** The buttons that play something, in the dock and in a pilot's panel opened in the side column. */
+  const PLAYS = ['face', 'basic', 'gear'].map((a) => `#mdock [data-act="${a}"], #mside [data-act="${a}"]`).join(', ');
   function markCombos(m) {
     if (m.over || U.ms.mode !== 'idle') {
-      document.querySelectorAll('#mside .combo-mark').forEach((x) => x.remove());
+      document.querySelectorAll('.mission .combo-mark').forEach((x) => x.remove());
       return;
     }
-    for (const btn of document.querySelectorAll(
-      '#mside [data-act="face"], #mside [data-act="basic"], #mside [data-act="gear"]',
-    )) {
+    for (const btn of document.querySelectorAll(PLAYS)) {
       btn.querySelectorAll('.combo-mark').forEach((x) => x.remove()); // the panel is kept when it did not change: work the marks out afresh
       if (btn.disabled) continue;
       const pk = pendingOf(btn);
@@ -1290,9 +1323,7 @@
     if (U.screen !== 'mission' || !U.ms || !U.ms.built || M().over) return;
     const ms = U.ms;
     if (ms.mode === 'idle') {
-      const btn =
-        e.target.closest &&
-        e.target.closest('#mside [data-act="face"], #mside [data-act="basic"], #mside [data-act="gear"]');
+      const btn = e.target.closest && e.target.closest(PLAYS);
       if (!btn || btn.disabled) return;
       const pk = pendingOf(btn);
       if (!pk) return clearPreview();
@@ -1329,11 +1360,12 @@
   });
   document.addEventListener('mouseout', (e) => {
     if (U.screen !== 'mission' || !U.ms) return;
-    const from = e.target.closest && e.target.closest('#mside [data-act], #tokens .token, #nodes .node');
+    const from =
+      e.target.closest && e.target.closest('#mside [data-act], #mdock [data-act], #tokens .token, #nodes .node');
     const to =
       e.relatedTarget &&
       e.relatedTarget.closest &&
-      e.relatedTarget.closest('#mside [data-act], #tokens .token, #nodes .node');
+      e.relatedTarget.closest('#mside [data-act], #mdock [data-act], #tokens .token, #nodes .node');
     if (from && from !== to) clearPreview();
   });
 

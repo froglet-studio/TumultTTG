@@ -231,7 +231,7 @@
     // the new dice in the hand are dealt in as each one lands
     const deal = (j, ms) =>
       setTimeout(() => {
-        const d = document.querySelector(`#mside .die[data-arg="${hi}|${at[j]}"]`);
+        const d = document.querySelector(`.mission .die[data-arg="${hi}|${at[j]}"]`);
         if (!d) return;
         d.classList.remove('fresh');
         d.getBoundingClientRect();

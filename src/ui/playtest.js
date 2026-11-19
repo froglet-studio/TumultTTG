@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.70.0',
+    version: '2.71.0',
     items: [
+      {
+        text: 'The mission screen has a dock along the bottom for the pilot you are flying: AP in large type, etherions banked, dice, the whole hand in one row, and the actions. It never folds or scrolls away. The side column holds the enemy intents, your ally and the log; click the ally to swap them into the dock. Can you play a whole turn without hunting for anything? Does the board still have room on your screen?',
+      },
       {
         text: 'Choosing the next stop: the stops you can reach now stand as cards above the route, each with its objective, clock, foes, place rules and bonus goals, and the route reads from the top down. Is it clear which stop you would rather take, and why? Is anything you want to know before choosing missing?',
       },

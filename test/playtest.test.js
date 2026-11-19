@@ -103,7 +103,9 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
     assert.ok(said.includes(h.name), `the forecast names ${h.name}`);
     if (h.after < h.hp) assert.ok(said.includes(`takes ${h.hp - h.after} (${h.after} left)`), said);
   }
-  const heading = f.heroes.map((h, i) => p.d.querySelector(`#mside .hero[data-arg="${i}"] .hp`).textContent);
+  const heading = f.heroes.map(
+    (h, i) => p.d.querySelector(`#mside .hero[data-arg="${i}"] .hp, #mdock .hero[data-arg="${i}"] .hp`).textContent,
+  );
   f.heroes.forEach((h, i) => assert.equal(heading[i].includes('→ ' + h.after), h.after !== h.hp, heading[i]));
 
   // "Copy save" hands over this exact moment. Where the page may not use the clipboard (as here),
