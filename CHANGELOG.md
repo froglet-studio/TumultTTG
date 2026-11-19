@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.73.0 — 2026-11-19 — a balance and utility pass: no keys, no chains, everything grows
+
+Garrett's ask: nothing categorically better than anything else, everything useful from the first mission to the Heart, and combos that feel cinematic because of their depth, not because one card is the key to a lock.
+
+- **A card plays at most once a turn.** 38 faces had a cooldown of 0 and could be chained: two Trots for 8 steps, a Mark on every foe. Every face now has a cooldown of at least 1, so it is back in hand the turn after. A data test holds the rule.
+- **No face is the key to a lock** (47 faces). Whole-board reveals now reach as far as the card is upgraded (1 + E around you, 2 + E for the two keenest senses); Acoustic Map no longer finds the hidden cache from anywhere. Shield breakers chip 1 + E (Otter's Crack: 1 + P) instead of deleting any Shield. Squad-wide hazard shelters cover the ally for this round and their caster for the rounds the card gave before. Scent locks last 2 + E rounds instead of the mission. Reach Rig and Snatch the Egg no longer work a ledge from the floor. A data test holds each.
+- **Every face grows with its card.** 36 faces read the same at every level (Read, Huff, Steady Breath, Break the Ice…); each now has a magnitude that grows with P or E, mostly 1 + ½P, so an upgrade point always shows. A data test holds the rule.
+- **The cheapest moves go one step less.** The 59 physical faces that moved 4 or more for 1 AP at P 2 now move one fewer (Trot, Spring, Jet, Undulate…). They were picked about two and a half times as often as their neighbours.
+- **Fixes.** Pace's move did nothing (it never asked where to); it now does. Digest hits for 1 + ½P when the foe is not held instead of nothing. Tesla Cascade costs 3 AP and one etherion (was 4 and two), Surge 2 AP (was 3), Spot Threat's reroll is free. Multitask also mints ½P AP.
+- **The look-ahead player sees a little further** (`docs/reference/PLAYERS.md`). It takes a face's free step as a walk, it counts what a set-up has already bought for later rounds (a regen engine with vitality to restore, AP to come, a strike bonus held, a Studied foe) at 0.6 of its worth (`T.EVAL.ahead`), and it no longer drops a line that has just minted dice before it can spend them (`T.EVAL.spare`). None of this was fitted to the win rates.
+- **A census of what gets chosen** (`node tools/census.js`): each face's share of its hero's plays against a fair share. Before the pass, 40 faces were picked over three times their fair share (the best five times) and 139 never; after it, 16 and 102, the best 3.7 times. Difficulty: main is a touch harder, not easier (`docs/reference/BALANCE.md`).
+
 ## 2.72.0 — 2026-11-19 — pilots you made, ready to fly again
 
 - **Every pilot built is kept.** Confirming a pilot drafted from packs keeps its name, clades, cards and the points on them (`T.madeFrom`, kept on the device under `tumult_v2_heroes`, newest first, up to 60). A new expedition lists them under the pre-made heroes, *…or play a pilot someone made*, and picking one builds it exactly as it was (a trait taken twice keeps its own point). ✕ takes one of your own off the list. Playing a pre-made hero adds nothing.

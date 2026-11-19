@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.72.0',
+    version: '2.73.0',
     items: [
+      {
+        text: 'A balance pass on every ability. No card can be played twice in one turn any more (the cheap moves and Read were being chained), and the cheapest moves go one step less. Nothing settles a problem outright now: sensing reaches as far as the card is upgraded instead of the whole board, Shield breakers chip by their level instead of deleting it, the squad-wide hazard shelters cover your ally for this round and you for longer, a lock-on lasts some rounds rather than the mission, and nothing works a ledge from the floor. Thirty-odd faces that ignored upgrades now grow with them, and Pace now moves you. Does any card you liked feel flat now? Is anything still the one answer you always reach for?',
+      },
       {
         text: 'Every pilot you build in the draft is now kept. When you start an expedition, the pilots players have made appear below the pre-made heroes, with who made them; on this page that means everyone who plays it, not only you. Pick one to fly it as it was built. ✕ takes one of your own off the list. Did your pilots come back as you left them? Is anyone else’s worth flying?',
       },

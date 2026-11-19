@@ -360,6 +360,52 @@ How many upgrade points should a second pick of a shared trait be worth (`RULES.
 
 So `DOUBLE_UP` is 1. 2.48 also fixes how bound points were counted: before, the points already on a card counted against them, so taking a trait twice often gave nothing.
 
+## A balance and utility pass (2.73)
+
+Garrett (2026-11-19): nothing categorically better than anything else; everything useful through the whole game; combos cinematic because of emergent depth, never because one piece is the key to a lock.
+
+**How it was measured.** `node tools/census.js 4000` plays 4,000 missions with random legal squads and the look-ahead player, and gives each face its share of its hero's plays against a fair share (1 = fair). It was run on main, after the first changes, and on the final pass:
+
+| | main (2.72) | first changes | 2.73 |
+|---|---|---|---|
+| faces held often enough to judge | 808 | 808 | 808 |
+| most chosen face | 5.09 (Trot, move 4 for 1 AP at cooldown 0) | 4.02 | 3.65 (Unsettle) |
+| faces chosen ≥ 3× their fair share | 40 | 28 | 16 |
+| faces never chosen (< 0.1) | 139 | 111 | 102 |
+
+What the census found on main: the 38 cooldown-0 faces could be played again and again in one turn and sat at the top (2.6 on average; moves of 4 for 1 AP at 4 to 5); the faces it never chose were set-ups that pay off later — engines, AP next turn, strike bonuses — which the look-ahead player scored as nothing, and pure economy (rerolls, temporary AP) that its search pruned before the dice could be spent. The changes are in `CHANGELOG.md`; in short, every face cooldown ≥ 1, 47 key-to-a-lock faces made positional or partial, 36 non-scaling faces given a magnitude, the 59 cheapest moves one step shorter, Pace fixed, and the look-ahead player taught to value set-ups (`docs/reference/PLAYERS.md`).
+
+What is left at the bottom is mostly healing over time and hiding: a careful player ends missions with about 95% of its vitality, so there is nothing to heal and nothing to hide from. That is the difficulty being low, not the cards; it is the next lever.
+
+**Difficulty.** `node tools/sim.js 120 missions`, main against 2.73, same seeds:
+
+| archetype | tier | heuristic win% before → after | look-ahead win% before → after | look-ahead rounds before → after |
+|---|---|---|---|---|
+| swarm | 1 | 98% → 98% | 100% → 100% | 7.0 → 7.0 |
+| swarm | 2 | 90% → 88% | 100% → 100% | 7.0 → 7.0 |
+| swarm | 3 | 82% → 83% | 100% → 100% | 8.0 → 8.0 |
+| vault | 1 | 89% → 85% | 98% → 98% | 5.2 → 5.4 |
+| vault | 2 | 76% → 76% | 88% → 85% | 5.5 → 5.7 |
+| vault | 3 | 48% → 44% | 88% → 80% | 6.2 → 6.4 |
+| hidden | 1 | 100% → 100% | 100% → 100% | 3.2 → 3.3 |
+| hidden | 2 | 98% → 98% | 100% → 100% | 3.2 → 3.4 |
+| hidden | 3 | 88% → 88% | 99% → 100% | 3.1 → 3.0 |
+| cascade | 1 | 100% → 100% | 100% → 100% | 3.4 → 3.4 |
+| cascade | 2 | 98% → 98% | 100% → 100% | 3.4 → 3.4 |
+| cascade | 3 | 85% → 84% | 100% → 100% | 4.0 → 4.0 |
+| salvage | 1 | 98% → 98% | 100% → 100% | 3.5 → 3.6 |
+| salvage | 2 | 53% → 54% | 99% → 98% | 4.4 → 4.5 |
+| salvage | 3 | 32% → 28% | 86% → 83% | 5.4 → 5.3 |
+| survey | 1 | 98% → 93% | 100% → 100% | 3.1 → 3.3 |
+| survey | 2 | 87% → 83% | 99% → 98% | 3.3 → 3.4 |
+| survey | 3 | 47% → 47% | 88% → 93% | 3.5 → 3.4 |
+| elite | 1 | 91% → 93% | 100% → 100% | 3.9 → 4.0 |
+| elite | 2 | 88% → 88% | 100% → 100% | 4.6 → 4.3 |
+| elite | 3 | 78% → 79% | 98% → 99% | 5.5 → 4.5 |
+| boss | 3 | 26% → 20% | 44% → 43% | 15.3 → 14.7 |
+
+Averaged over the cells, the heuristic wins 79.5% → 78.4% and the look-ahead player 94.9% → 94.4%: the game is a touch harder, not easier, so no difficulty constant moved with it. No single cell moves by more than its noise at 120 a cell (about ±8 points) except, perhaps, the Vault at tier 3 for the careful player (88 → 80): a ledge can no longer be worked from the floor, so a squad has to climb or pull the lever.
+
 ## What the tuning fixed along the way
 
 - **Vault was unwinnable at 33%** because the lever's ramp didn't make the ledge walkable in the engine. Fixed; vault t1 went to 100%.
