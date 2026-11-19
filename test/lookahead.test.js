@@ -255,3 +255,34 @@ test("turnChoices measures one hero's turn without changing the mission", () => 
   won.won = true;
   assert.equal(T.turnChoices(won, 1).kind, 'idle');
 });
+
+test('a set-up that lands next round is worth something now: regen, AP to come, a strike bonus held', () => {
+  const m = mission('swarm', 1, 0);
+  const h = m.heroes[0];
+  h.hp = h.maxHp - 10;
+  const before = T.evaluate(m);
+  h.states.Engines = [{ kind: 'regen', val: 2, t: 3 }];
+  const regen = T.evaluate(m);
+  assert.ok(regen > before, 'a regen engine with vitality to restore counts');
+  h.hp = h.maxHp;
+  const full = T.evaluate(m);
+  delete h.states.Engines;
+  assert.ok(Math.abs(full - T.evaluate(m)) < 1e-9, 'and counts nothing when there is nothing to restore');
+  h.states.Empower = [{ v: 3, uses: 1, kind: null, pierce: false, t: null }];
+  assert.ok(T.evaluate(m) > full, 'a strike bonus still to spend counts');
+});
+
+test('a free step from a face is the look-ahead player’s to take as a walk this turn', () => {
+  const s = H.arena(['jer_ears']);
+  s.h.up.jer_ears = [3, 1];
+  const hi = s.m.heroes.indexOf(s.h);
+  const r = T.applyAction(s.m, { t: 'face', hero: hi, card: 'jer_ears', face: 'P' });
+  assert.ok(r.ok);
+  assert.equal(s.h.freeMove, 2, 'Vent at P 3 steps 2');
+  s.h.held = [];
+  s.h.temp = [];
+  assert.ok(
+    T.legalActions(s.m).some((a) => a.t === 'walk' && a.hero === hi),
+    'with no AP left, the free step is still on offer',
+  );
+});
