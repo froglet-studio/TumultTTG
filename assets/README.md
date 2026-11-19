@@ -19,7 +19,10 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
   `Docs/Pilots/art/scenes/`), resized and re-encoded. The thirty pilots beyond the callsigns (added in 2.12)
   take their portrait from their bust, `Docs/Pilots/art/busts/<Name>.jpg` (the upper middle square), their scene
   from `Docs/Pilots/art/scenes/<Name>.jpg`, and their pair from the bust's brief
-  (`busts/briefs/<Name>.txt`). Scenes also illustrate events and havens, where they show life on Tumult. Who each pilot is lives in `src/ui/pilots.js`.
+  (`busts/briefs/<Name>.txt`). The 76 painted crew pilots (added in 2.69, Cosmic Shore 2026-11-19) take their
+  portrait from `Assets/_Graphics/Profile/Pilots/Avatar_<Name>.png`, their scene from
+  `Assets/Resources/Pilots/Scenes/<Name>.jpg`, and their pair and callsign from `Docs/Pilots/art/roster/plan.json`;
+  many share a callsign, so their files and keys use the first name in capitals (`pilot/JORIRO`). Scenes also illustrate events and havens, where they show life on Tumult. Who each pilot is lives in `src/ui/pilots.js`.
   Garrett asked for them here on 2026-11-12: Tumult's heroes are Cosmic Shore's pilots.
 - **Element symbols** (Mass, Charge, Space, Time) are Cosmic Shore's element petals (`froglet-studio/cosmic-shore`, MIT,
   © Froglet Inc., `Assets/Resources/ElementPetals/<element>_petal.png`), traced to SVG paths in `src/ui/icons.js`

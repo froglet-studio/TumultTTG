@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.69.0 — 2026-11-19 — 76 more painted pilots
+
+- **Art.** Cosmic Shore's 76 new painted crew pilots join the 50 already here, each with a portrait and a scene in their world (`assets/pilots/`, `assets/scenes/`) and their pair of clades, so 126 paintings now cover 126 different pairs. Heroes whose pair had only a stand-in before often get an exact painting now, and a squad has far more faces to choose from. Scenes also rotate behind the title.
+- Many crew pilots fly the same callsign, so each is keyed by first name (`JORIRO`) and carries its callsign (`ENSIGN`) for captions and canon (`U.callsignOf`).
+- Five of their animals are not Tumult clades yet (capybara, cuttlefish, mole, tapir, wolf); those paintings show for a hero who shares their other clade.
+- The single-file build grows from about 4.4 MB to 8.1 MB.
+
 ## 2.68.1 — 2026-11-17 — draft questions match your clades
 
 - **Canon questions in the draft.** A hero wearing a stand-in painting was asked about the painted pilot's clades, so an orca and mandrill hero was asked "what gives away the eagle in them?" (the painting is Jugger, orca and eagle). A stand-in is now never asked a question that names the pilot's clades, and the question says it is about the pilot whose painting the hero wears (`noClades` in `T.canonPrompt`).

@@ -235,7 +235,7 @@
     // a different pilot in their world behind the title each expedition, so the people come first
     const who = U.PILOT_ART[meta.runs % U.PILOT_ART.length];
     const scene = U.sceneSrc(who);
-    return `${scene ? `<div class="title-scene" style="background-image:url(${scene})"></div><div class="title-veil"></div><div class="title-cap"><b>${esc(who.name)}</b> · ${esc(who.key)} · ${esc(who.clades.join(' · '))} ${U.canonMark ? U.canonMark('pilot:' + who.key, `${who.name}, callsign ${who.key}: ${who.clades.join(' and ')}`, 'title:caption') : ''}</div>` : ''}<div class="title">
+    return `${scene ? `<div class="title-scene" style="background-image:url(${scene})"></div><div class="title-veil"></div><div class="title-cap"><b>${esc(who.name)}</b> · ${esc(U.callsignOf(who))} · ${esc(who.clades.join(' · '))} ${U.canonMark ? U.canonMark('pilot:' + who.key, `${who.name}, callsign ${U.callsignOf(who)}: ${who.clades.join(' and ')}`, 'title:caption') : ''}</div>` : ''}<div class="title">
       <div class="kick">An expedition on Tumult</div>
       <h1>TUMULT</h1>
       <div class="sub">Draft two pilots from eleven bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</div>

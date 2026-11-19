@@ -117,7 +117,9 @@ These are the game's rules; a story told alongside play, or about it, keeps them
   const pilots = (T.UI.PILOT_ART || [])
     .map((a) => {
       const b = block('pilot:' + a.key);
-      return b || a.name !== a.key ? `### ${a.name} · ${a.key}\n\nHuman, ${a.clades.join(' and ')}.\n${b}` : '';
+      return b || a.name !== a.key
+        ? `### ${a.name} · ${a.callsign || a.key}\n\nHuman, ${a.clades.join(' and ')}.\n${b}`
+        : '';
     })
     .filter(Boolean)
     .join('\n');
