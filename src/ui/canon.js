@@ -181,7 +181,7 @@
         where: 'draft:question',
         text: '',
         context: { hero: hero.name, painting: U.isExact(a, hero) ? 'exact' : 'stand-in' },
-        head: `<div class="row">${U.portrait(hero, 'xs')}<b>${esc(a.name)}</b><span class="dim small">${esc(a.key)} · ${U.isExact(a, hero) ? '' : `the pilot whose painting ${esc(hero.name)} wears · `}tell us about them</span></div>`,
+        head: `<div class="row">${U.portrait(hero, 'xs')}<b>${esc(a.name)}</b><span class="dim small">${esc(U.callsignOf(a))} · ${U.isExact(a, hero) ? '' : `the pilot whose painting ${esc(hero.name)} wears · `}tell us about them</span></div>`,
       };
     }
     return promptHTML(key);

@@ -19,10 +19,13 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.69.0',
+    version: '2.70.0',
     items: [
       {
         text: 'Choosing the next stop: the stops you can reach now stand as cards above the route, each with its objective, clock, foes, place rules and bonus goals, and the route reads from the top down. Is it clear which stop you would rather take, and why? Is anything you want to know before choosing missing?',
+      },
+      {
+        text: '76 more painted pilots from Cosmic Shore: 126 portraits and scenes in all, one for each pair of clades they cover. More heroes now wear a painting of their own pair instead of a stand-in, and the title shows a different one each expedition. Does any portrait or scene look wrong for the clades it is shown with?',
       },
       {
         text: 'Every clade now has a painted head: on cards, in draft packs, the codex and the pilot screens, in place of the flat icons (human keeps its drawn icon). Does any head not read as its animal at small sizes, or clash with the card art?',

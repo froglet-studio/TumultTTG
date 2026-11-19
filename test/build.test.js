@@ -75,6 +75,9 @@ test('every pilot has a portrait and a scene in the build, and every pre-made he
     window: g,
   });
   const U = g.T.UI;
+  assert.equal(new Set(U.PILOT_ART.map((a) => a.key)).size, U.PILOT_ART.length, 'every painting has its own key');
+  assert.equal(U.callsignOf(U.ART_BY.JORIRO), 'ENSIGN', 'a crew pilot shows the callsign they fly');
+  assert.equal(U.callsignOf(U.ART_BY.BANDIT), 'BANDIT');
   for (const a of U.PILOT_ART) {
     assert.match(ART['pilot/' + a.key] || '', /^data:image\/jpeg;base64,/, `${a.key} has a portrait`);
     assert.match(ART['scene/' + a.key] || '', /^data:image\/(jpeg|webp);base64,/, `${a.key} has a scene`);
