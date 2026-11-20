@@ -533,14 +533,15 @@
   }
 
   /* ───────────── actions ───────────── */
-  U.extraAct = function (act, arg) {
+  const prevExtra = U.extraAct; // the game's own add-ons (Home, src/ui/home.js) come before this panel
+  U.extraAct = function (act, arg, el, e) {
     if (act === 'missionDone') {
       // seen before the game handles it: the mission is over and still whole
       const run = U.run;
       if (run && run.mission && run.mission.over) record(run, run.mission);
-      return false;
+      return prevExtra ? prevExtra(act, arg, el, e) : false;
     }
-    if (act.slice(0, 3) !== 'pt-') return false;
+    if (act.slice(0, 3) !== 'pt-') return prevExtra ? prevExtra(act, arg, el, e) : false;
     const c = st.cfg;
     switch (act) {
       case 'pt-type':
@@ -565,6 +566,10 @@
       case 'pt-rounds': {
         if (!T.ROUND_MODES.includes(arg)) break;
         st.rounds = arg;
+        // Home's setup shows the same choice (src/ui/home.js): one way to play, set in either place
+        const meta = T.loadMeta();
+        meta.rounds = arg;
+        T.saveMeta(meta);
         // the expedition under way changes too, when this screen is its host (online, the guests follow)
         const run = U.run;
         if (

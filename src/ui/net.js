@@ -302,7 +302,7 @@
   function showGames() {
     if (typeof document === 'undefined' || !document) return; // the page is closing
     const el = document.getElementById('netGames');
-    if (el && U.screen === 'title') el.innerHTML = U.gamesList();
+    if (el && (U.screen === 'title' || U.screen === 'join')) el.innerHTML = U.gamesList();
   }
   const ago = (ms) => {
     const m = Math.round(ms / 60000);
@@ -366,7 +366,7 @@
     if (!N.games.length) return;
     gamesTimer = setTimeout(() => {
       gamesTimer = null;
-      if (U.screen === 'title') {
+      if (U.screen === 'title' || U.screen === 'join') {
         showGames();
         readGames();
       }
@@ -383,7 +383,7 @@
     else readGames();
   };
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && U.screen === 'title') readGames();
+    if (document.visibilityState === 'visible' && (U.screen === 'title' || U.screen === 'join')) readGames();
   });
 
   /**
@@ -617,7 +617,8 @@
     if (N.role !== 'host' || N.joined() < 2) return;
     U.startDraft();
     U.run.party = T.newParty(N.joined(), N.names);
-    if (U.roundsPref) U.run.party.rounds = U.roundsPref();
+    const rounds = U.homeRounds ? U.homeRounds() : U.roundsPref ? U.roundsPref() : null;
+    if (rounds) U.run.party.rounds = rounds;
     U.draft.heroIdx = 0;
     N.publish();
   };

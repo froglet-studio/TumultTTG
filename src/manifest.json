@@ -32,7 +32,8 @@
     "ui/canon.js",
     "ui/welcome.js",
     "ui/telemetry.js",
-    "ui/account.js"
+    "ui/account.js",
+    "ui/home.js"
   ],
   "css": [
     "ui/style.css",
@@ -43,7 +44,8 @@
     "ui/feel.css",
     "ui/account.css",
     "ui/welcome.css",
-    "ui/sea.css"
+    "ui/sea.css",
+    "ui/home.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
