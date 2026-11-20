@@ -29,9 +29,23 @@
     "ui/mission.js",
     "ui/feel.js",
     "ui/atlas.js",
-    "ui/canon.js"
+    "ui/canon.js",
+    "ui/shell.js",
+    "ui/settings.js",
+    "ui/crew.js",
+    "ui/binder.js",
+    "ui/guide.js"
   ],
-  "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css", "ui/canon.css", "ui/feel.css", "ui/sea.css"],
+  "css": [
+    "ui/style.css",
+    "ui/theme.css",
+    "ui/party.css",
+    "ui/atlas.css",
+    "ui/canon.css",
+    "ui/feel.css",
+    "ui/sea.css",
+    "ui/shell.css"
+  ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
     "css": ["ui/playtest.css", "ui/net.css"]
