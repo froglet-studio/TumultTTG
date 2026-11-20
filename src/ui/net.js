@@ -385,8 +385,9 @@
     const run = U.run;
     if (N.role !== 'host' || !run) return;
     N.admit();
-    const squad = run.party ? run.party.owner.length : 2;
-    if (run.phase === 'draft' && run.heroes.length >= squad && run.heroes.every(Boolean)) {
+    // a guest's pilot can arrive before the host's, leaving a hole: count every seat, holes too (every()
+    // skips them, which set out a squad with the host's pilot missing, 2.74–2.79.0)
+    if (run.phase === 'draft' && T.squadReady(run)) {
       T.startMap(run);
       T.saveRun(run);
       U.screen = 'map';

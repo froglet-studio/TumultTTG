@@ -512,3 +512,46 @@ test('online: three screens join one game, draft a pilot each and set out', { sk
   assert.equal(A.T.scaleFor(A.U.run).size, 2, 'the next mission scales for four');
   assert.deepEqual(A.errors.concat(B.errors, C.errors, D.errors), []);
 });
+
+test(
+  'online: a guest who sets out first waits for the host, whose draft goes on',
+  { skip, timeout: 60_000 },
+  async () => {
+    // 2.74–2.79.0: the guest's pilot left a hole where the host's would go; every() skips holes, so the squad
+    // set out without the host's pilot, and the host's draft screen broke on the hole
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const html = build({ playtest: true }).html;
+    const db = fakeDb();
+    const A = await open(html, db);
+    const B = await open(html, db);
+    A.type('netName', 'Ana');
+    A.act('netHost');
+    await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+    B.type('netName', 'Bo');
+    B.type('netCode', A.U.net.code);
+    B.act('netJoin');
+    await until(() => A.U.net.names[1] === 'Bo', 'the host to see the guest');
+    A.act('netStart');
+    await until(() => B.U.screen === 'draft' && B.U.draft, "the guest's draft");
+    const draft = (P, sp) => {
+      P.act('draftMode', 'draft');
+      sp.forEach((s) => P.act('pickSpecies', s));
+      P.act('openPacks');
+      while (P.U.draft.step === 'packs') P.act('pickCard', P.U.draft.pack[0]);
+    };
+    draft(A, ['owl', 'eel']);
+    draft(B, ['owl', 'gecko']);
+    B.act('confirmHero');
+    await until(() => A.U.run.heroes[1], "the guest's pilot on the host");
+    assert.equal(A.U.run.phase, 'draft', 'the squad waits for the host');
+    assert.equal(A.U.screen, 'draft');
+    const cid = A.U.draft.hero.cards[0];
+    const left = A.U.draft.hero.upUnspent;
+    A.act('up', cid + '|P|1');
+    assert.equal(A.U.draft.hero.upUnspent, left - 1, "the host's upgrade is taken");
+    A.act('confirmHero');
+    await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both on the map');
+    assert.ok(A.U.run.heroes[0] && A.U.run.heroes[1], 'both pilots set out');
+    assert.deepEqual(A.errors.concat(B.errors), []);
+  },
+);

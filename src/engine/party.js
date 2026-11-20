@@ -47,7 +47,13 @@
     return { ok: true, seat, hero };
   };
   /** Has every seat its pilot? The route waits for a pilot still being drafted. */
-  T.squadReady = (run) => run.heroes.length >= (run.party ? run.party.owner.length : 2) && run.heroes.every(Boolean);
+  T.squadReady = (run) => {
+    // every seat counted, holes too: every() skips a hole, so a guest's pilot arriving before the host's
+    // once set out a squad with the host's pilot missing (2.74–2.79.0)
+    const n = Math.max(run.party ? run.party.owner.length : 2, run.heroes.length);
+    for (let i = 0; i < n; i++) if (!run.heroes[i]) return false;
+    return true;
+  };
   /**
    * A late pilot catches up with the least grown: it gets as many spare points as the least-grown pilot
    * already flying has grown past it (T.pilotPower). Its level, which scales missions, is the one it came with.

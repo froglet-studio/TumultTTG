@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.79.0',
+    version: '2.79.1',
     items: [
+      {
+        text: 'Online, a guest can now finish drafting before the host: the squad waits for the host’s pilot, and the host’s upgrades and Set out work. Did every player get to set out?',
+      },
       {
         text: 'Someone can join an expedition already under way. While the squad is on the route between missions, a newcomer enters the game code, makes or brings a pilot, and the route waits until it joins. A late pilot gets spare points to match the least-grown pilot already flying, and the next mission grows for the bigger squad. Did joining feel smooth? Was the newcomer caught up enough?',
       },
