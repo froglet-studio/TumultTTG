@@ -4,14 +4,17 @@
    T.Backend, never through a host page's API directly, so the same screens can run on any
    host that offers the three capabilities below.
 
-   A provider is { name, available() → bool, use(capability) → Promise<object|null> }.
-   Providers are tried newest first; the first one that is available serves every call.
+   A provider is { name, available() → bool, use(capability) → Promise<object|null>,
+   capabilities? }. Providers are tried newest first; the first one that is available and offers
+   the capability serves it. A provider without a capabilities list offers the online three.
 
    The capabilities, as the online screens use them:
      db    collection(path) / doc(path) — the shared store: documents read, written, listed,
            deleted and watched (see net.js for the calls each screen makes)
      room  join(name) — an optional live channel between the screens open on one game
      user  id(), can(permission), canEdit(), isOwner(), profiles(ids) — who is playing
+     analytics  track(event, props), flush(leaving) — anonymous play data (src/ui/telemetry.js);
+           offered on its own by the web version's Froglet Analytics provider (src/web/analytics.js)
 
    Built in: 'claude-artifact', the claude.ai page that hosts the playtest build
    (window.claude.use). A Cloudflare Workers provider registers itself the same way
@@ -30,14 +33,16 @@
     return p;
   };
 
-  /** The provider that serves calls now, or null when the game is offline. */
-  B.active = () => providers.find((p) => p.available()) || null;
-  B.available = () => !!B.active();
-  B.name = () => (B.active() || { name: 'offline' }).name;
+  const ONLINE = ['db', 'room', 'user'];
+  const offers = (p, capability) => (p.capabilities || ONLINE).includes(capability);
+  /** The provider that serves a capability now ('db' — the online game — when none is named), or null. */
+  B.active = (capability = 'db') => providers.find((p) => offers(p, capability) && p.available()) || null;
+  B.available = (capability) => !!B.active(capability);
+  B.name = (capability) => (B.active(capability) || { name: 'offline' }).name;
 
-  /** A capability from the active provider; null (not a rejection) when there is none or it lacks one. */
+  /** A capability from the provider that offers it; null (not a rejection) when there is none or it lacks one. */
   B.use = (capability) => {
-    const p = B.active();
+    const p = B.active(capability);
     if (!p) return Promise.resolve(null);
     return Promise.resolve(p.use(capability)).then((c) => c || null);
   };
