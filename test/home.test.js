@@ -64,6 +64,9 @@ test('a first visit lands on Play now; the setup is kept and starts the expediti
   p.U.render();
   assert.ok(p.d.querySelector('[data-act="continueRun"]'), 'Continue on Home');
   assert.equal(p.d.querySelector('.is-landing'), null, 'no landing once something is saved');
+  // Make a pilot opens the Pilots tab's maker, not a new draft
+  p.act('makePilot');
+  assert.equal(p.U.screen, 'maker');
   assert.deepEqual(p.errors, []);
   p.close();
 });
