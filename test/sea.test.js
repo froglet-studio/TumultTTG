@@ -70,7 +70,9 @@ test('Sea: the Look panel sets theme, accent and motion, and they are kept', { s
     assert.ok(d.querySelectorAll('#sea .sea-mote').length >= 8, 'and motes');
     assert.equal(root.getAttribute('data-sea'), 'deep', 'the title is in the Deep Sea');
     assert.equal(root.getAttribute('data-motion'), 'full', 'with no reduce-motion setting, everything moves');
-    click('[data-act="look"]');
+    // Home sits in the app shell, whose ⚙ Settings holds the look; the Look panel still opens from the mission menu
+    U.seaAct('look');
+    U.render();
     assert.ok(d.querySelector('.modal .look'), 'Look opens');
     click('[data-act="lookTheme"][data-arg="glow"]');
     click('[data-act="lookAccent"][data-arg="ruby"]');
@@ -126,7 +128,7 @@ test('Calm: one menu, one conditions chip, the story box and More on request', {
     const before = JSON.stringify(m);
     // the screen's own buttons sit behind one menu
     assert.ok(!d.querySelector('#mtop .mmenu.open'));
-    for (const a of ['toggleSound', 'help', 'look']) assert.ok(d.querySelector(`#mtop .mmenu [data-act="${a}"]`), a);
+    for (const a of ['toggleSound', 'help', 'quick']) assert.ok(d.querySelector(`#mtop .mmenu [data-act="${a}"]`), a);
     click('#mtop [data-act="mmenu"]');
     assert.ok(d.querySelector('#mtop .mmenu.open'), 'the menu opens');
     click('#board');

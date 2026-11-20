@@ -35,6 +35,11 @@
     "ui/welcome.js",
     "ui/telemetry.js",
     "ui/account.js",
+    "ui/shell.js",
+    "ui/settings.js",
+    "ui/crew.js",
+    "ui/binder.js",
+    "ui/guide.js",
     "ui/home.js"
   ],
   "css": [
@@ -48,6 +53,7 @@
     "ui/welcome.css",
     "ui/sea.css",
     "ui/after.css",
+    "ui/shell.css",
     "ui/home.css"
   ],
   "playtest": {

@@ -9,6 +9,20 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.86.0 — 2026-11-21 — the pages around the game
+
+From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
+
+- **One shell for every page.** Home, Route, Pilots, Cards, Atlas and Canon sit as tabs across the top, with ⚙ for Settings; on a phone they become a bar at the bottom with More (Atlas, Canon, Codex, How to play, Settings) in a sheet (`src/ui/shell.js`, `src/ui/shell.css`). Other screens add their page through `U.SCREENS`, `U.ACTS` and `U.INPUTS`, and use `U.shell(tab, html)`.
+- **Pilots.** The crew as a wall of scenes, filtered by Everyone, Ready-made, Made by you and On expedition; a page for each pilot with its kit, expeditions, story and canon notes. **Make a pilot** in four steps: two clades (head, then feature), a name, callsign and domain, three story questions that can go in as canon notes, then save to the crew or draft their cards; either way the pilot keeps its callsign, domain and story, and its answers can go to canon. A made pilot keeps its callsign, domain and story in its recipe (`T.validMade`), and takes them home from an expedition (`src/ui/crew.js`).
+- **Cards.** A binder of every trait found, twelve to a page, filtered by element or a search, drawn as foil relics that tilt toward the pointer when motion is Full; a card opens with who carries it, how many missions it has gone on, and its faces at each level (`src/ui/binder.js`).
+- **Atlas.** Every kind of place by land, sea and air, visited or not yet; a place's page shows its board as a model on a table, gauges for gravity and weather, its rules and field notes.
+- **Canon.** Notes pinned on a wall by subject, with an add form; proposed ones stay marked as proposed.
+- **Settings.** A full page (look and sound, play, accessibility, account, keys) with a live sample that changes as you do, and a quick panel from ⚙ in the mission menu. New: effects volume, text size, when hints show, whether End Round asks first, and higher contrast, kept in `tumult_v2_prefs` (`src/ui/settings.js`).
+- **How to play and the codex.** Seven short pages, one rule and one picture each; the codex in tabs for words, foes, gear, dice and clades, with a search (`src/ui/guide.js`). Empty states for no canon, no cards and being offline.
+- **Loading.** The web version opens on the loading ring instead of a bare word, and lays the loading screen (the place, the squad, a tip) over a mission until its place painting and the squad's scenes have arrived, five seconds at most. The offline file carries its paintings inside and never waits.
+- **Tests.** The new pilot fields in `test/heroes.test.js`; Make a pilot through the draft, and the loading screen, in `test/pages.test.js`.
+
 ## 2.85.0 — 2026-11-21 — AI seats, dropped players, Short expeditions
 
 Shombith: host a table "offers Co-op/Versus, Short/Full length, and filling empty seats with AI", the waiting room says "AI fills it", and when someone drops an AI flies their pilot (the table only waited before). Versus is left out for now.

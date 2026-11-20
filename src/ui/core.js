@@ -33,7 +33,9 @@
       const g = actx.createGain();
       o.type = type || 'sine';
       o.frequency.value = freq;
-      g.gain.value = vol || 0.04;
+      const gain = U.fxGain ? U.fxGain() : 1; // the Effects slider in Settings (src/ui/settings.js)
+      if (gain <= 0) return;
+      g.gain.value = (vol || 0.04) * gain;
       o.connect(g);
       g.connect(actx.destination);
       o.start();
@@ -67,8 +69,9 @@
     document.body.appendChild(t);
     setTimeout(() => t.remove(), ms || 2200);
   };
-  U.openModal = function (html, onMount) {
-    U.modal = { html, onMount };
+  /** Open a modal; `opts.sheet` slides it up from the bottom (a phone's More), `opts.side` in from the right. */
+  U.openModal = function (html, onMount, opts) {
+    U.modal = Object.assign({ html, onMount }, opts || {});
     U.render();
   };
   U.closeModal = function () {
@@ -424,6 +427,8 @@
       )
       .join('')}</div>${body}</div>`;
   }
+  /** The draft's actions, for the screens that start a draft with a pilot chosen (src/ui/crew.js). */
+  U.draftAct = (act, arg) => draftAct(act, arg);
   function draftAct(act, arg) {
     const d = U.draft;
     const run = U.run;
@@ -447,6 +452,7 @@
     } else if (act === 'draftBack') {
       d.step = arg === 'species' ? 'species' : 'mode';
       d.hero = null;
+      if (arg !== 'species') d.maker = null; // a pilot from Make a pilot stays theirs only while its clades do
       d.premade = false;
       d.pack = [];
       d.picks = 0;
@@ -501,7 +507,9 @@
       T.awaken(d.hero);
       // every pilot a player built is kept, to be chosen again beside the pre-made heroes
       if (!d.premade) {
-        const kept = T.keepMade(T.madeFrom(d.hero, new Date().toISOString()));
+        const rec = T.madeFrom(d.hero, new Date().toISOString());
+        const kept = T.keepMade(U.makerStamp ? U.makerStamp(d, rec) : rec);
+        if (U.makerKept) U.makerKept(d, kept);
         if (kept) d.hero.madeId = kept.id; // what it learns on this expedition comes home to this recipe
         if (kept && U.heroesShare) U.heroesShare(kept);
       }
@@ -989,53 +997,60 @@
     const root = app();
     if (U.screen !== 'mission' && U.windBed) U.windBed(false); // the wind stays on the board
     let html = '';
-    switch (U.screen) {
-      case 'title':
-        html = U.renderHome ? U.renderHome() : renderTitle();
-        break;
-      case 'host':
-        html = U.renderHost ? U.renderHost() : renderTitle();
-        break;
-      case 'join':
-        html = U.renderJoin ? U.renderJoin() : renderTitle();
-        break;
-      case 'draft':
-        html = renderDraft();
-        break;
-      case 'map':
-        html = renderMap();
-        break;
-      case 'mission':
-        html = U.renderMission();
-        break;
-      case 'reward':
-        html = U.renderReward();
-        break;
-      case 'haven':
-        html = U.renderHaven();
-        break;
-      case 'event':
-        html = U.renderEvent();
-        break;
-      case 'summary':
-        html = U.renderSummary();
-        break;
-      case 'codex':
-        html = renderCodex();
-        break;
-      case 'lobby':
-        // the table as Home draws it (src/ui/home.js), else net.js's own
-        html = U.tableScreen && U.net ? U.tableScreen() : U.renderLobby ? U.renderLobby() : '';
-        break;
-      case 'atlas':
-        html = U.renderAtlas();
-        break;
-      case 'help':
-        html = `<div class="wrap">${header('How to Play', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="panel">${U.helpHTML()}</div></div>`;
-        break;
-    }
-    if (U.modal) html += `<div class="modal-bg" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
+
+    // a screen with a renderer of its own (the app shell's tabs, settings, the codex, how to play)
+    if (U.SCREENS && U.SCREENS[U.screen]) html = U.SCREENS[U.screen]();
+    else
+      switch (U.screen) {
+        case 'title':
+          html = U.renderHome ? U.renderHome() : renderTitle();
+          break;
+        case 'host':
+          html = U.renderHost ? U.renderHost() : renderTitle();
+          break;
+        case 'join':
+          html = U.renderJoin ? U.renderJoin() : renderTitle();
+          break;
+        case 'draft':
+          html = renderDraft();
+          break;
+        case 'map':
+          html = renderMap();
+          break;
+        case 'mission':
+          html = U.renderMission();
+          break;
+        case 'reward':
+          html = U.renderReward();
+          break;
+        case 'haven':
+          html = U.renderHaven();
+          break;
+        case 'event':
+          html = U.renderEvent();
+          break;
+        case 'summary':
+          html = U.renderSummary();
+          break;
+        case 'codex':
+          html = renderCodex();
+          break;
+        case 'lobby':
+          // the table as Home draws it (src/ui/home.js), else net.js's own
+          html = U.tableScreen && U.net ? U.tableScreen() : U.renderLobby ? U.renderLobby() : '';
+          break;
+        case 'atlas':
+          html = U.renderAtlas();
+          break;
+        case 'help':
+          html = `<div class="wrap">${header('How to Play', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="panel">${U.helpHTML()}</div></div>`;
+          break;
+      }
+    if (U.modal)
+      html += `<div class="modal-bg${U.modal.sheet ? ' sheet' : ''}${U.modal.side ? ' side' : ''}" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
     html += tutorialHTML();
+    // the web version lays the loading screen over a mission until its paintings are here (src/ui/shell.js)
+    if (U.loadingGate) html += U.loadingGate() || '';
     root.innerHTML = html;
     // #app is the page's scroller: a new screen starts at its top, a re-render stays where it was
     if (shown !== U.screen) root.scrollTop = 0;
@@ -1052,6 +1067,8 @@
     if (U.modal && U.modal.onMount) U.modal.onMount();
     if (U.canonRestore) U.canonRestore();
     if (U.seaApply) U.seaApply();
+    if (U.prefsApply) U.prefsApply();
+    if (U.noteSeen) U.noteSeen();
   };
 
   /* ───────────── ACTION DISPATCH (event delegation) ───────────── */
@@ -1063,6 +1080,8 @@
     const arg = t.getAttribute('data-arg');
     // an add-on (the playtest panel) sees every action first and may take it
     if (U.extraAct && U.extraAct(act, arg, t, e)) return;
+    // the app shell's screens (shell, pilots, cards, settings, how to play and the codex) answer theirs first
+    for (const h of U.ACTS || []) if (h(act, arg, t, e)) return;
     if (U.atlasAct && U.atlasAct(act, arg)) return;
     if (U.canonAct && U.canonAct(act, arg)) return;
     if (U.seaAct && U.seaAct(act, arg)) return;

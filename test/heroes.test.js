@@ -237,3 +237,26 @@ test(
     assert.deepEqual(A.errors.concat(B.errors), []);
   },
 );
+
+test('a pilot from Make a pilot keeps its callsign, domain and story, and takes them home', () => {
+  const rec = Object.assign(T.madeFrom(drafted(9, 'Tamsin', ['owl', 'eel'])), {
+    callsign: ' tide-6 ',
+    domain: 'ruby',
+    story: ['Grew up on the Ark.', '', 'Owes a pilot a favour.'],
+  });
+  const kept = T.validMade(rec);
+  assert.equal(kept.callsign, 'TIDE-6');
+  assert.equal(kept.domain, 'ruby');
+  assert.deepEqual(kept.story, ['Grew up on the Ark.', '', 'Owes a pilot a favour.']);
+  const odd = T.validMade(Object.assign({}, rec, { callsign: '<b>', domain: 'violet', story: ['a', 'b', 'c', 'd'] }));
+  assert.ok(odd, 'odd extras are dropped, the pilot is kept');
+  assert.equal(odd.callsign, undefined);
+  assert.equal(odd.domain, undefined);
+  assert.equal(odd.story, undefined);
+  assert.equal(T.validMade(Object.assign({}, rec, { story: ['x'.repeat(400)] })).story[0].length, 280);
+  const home = T.progressRecord(T.heroFromPrebuilt(T.newRun(2), kept), kept);
+  assert.equal(home.callsign, 'TIDE-6');
+  assert.equal(home.domain, 'ruby');
+  assert.deepEqual(home.story, kept.story);
+  assert.equal(home.runs, 1);
+});

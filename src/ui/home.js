@@ -639,8 +639,9 @@
         U.render();
         return true;
       case 'makePilot':
-        if (U.openMaker) U.openMaker();
-        else {
+        // the Pilots tab's maker (src/ui/crew.js) when it is in the build
+        if (U.SCREENS && U.SCREENS.maker) return prevExtra ? prevExtra(act, arg, el, e) : false;
+        {
           U.startDraft();
           if (U.draft) U.draft.step = 'species'; // the draft's own "make your own" path
           U.render();
