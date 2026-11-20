@@ -22,9 +22,9 @@ Next, Back, Got it and Skip the guide are always there, and the player can play 
 
 ## Keep your squad
 
-Sign-in is offered **once**, under the report of the first **won** mission, so the win is read before the ask (the card slides up a moment later). Not before play, not after a loss, not to a guest in someone else's online game, never again after "Not now" (`tumult_v2_tut.keepSquad`). The title carries a quiet "Sign in" line, and hosting an online game asks a signed-out player to sign in first, because the game is saved to its host.
+Sign-in is offered **once**, under the report of the first **won** mission, so the win is read before the ask (the card slides up a moment later). Not before play, not after a loss, not to a guest in someone else's online game, never again after "Not now" (`tumult_v2_tut.keepSquad`). Its button opens the sign-in box with the reason on top; once signed in, the card goes.
 
-Accounts are T.Backend's `account` capability (`src/ui/backend.js`): `signedIn()`, `methods()`, `signIn(method)`, `name()`. The sign-in Worker's provider offers it. **With no provider, nobody is asked anything** and everything stays on the device, which is how the offline file and the playtest page play today.
+Accounts are not built here: they are `T.Account` and its sign-in box `T.UI.askSignIn` (`src/ui/account.js`, from the sign-in work), which also draws the title's Sign in line and asks a host to sign in when the server says so. **Where accounts are not available, nobody is asked** and everything stays on the device, which is how the offline file and the playtest page play today.
 
 ## Invites
 
@@ -32,6 +32,6 @@ A link with `?join=CODE` (or `#join=CODE`) opens the title on that game; the cod
 
 ## What it reports
 
-Through anonymous play data (`docs/reference/ANALYTICS.md`): `run_started.play_now`, `guide_step` (next, back, finished, skipped, and the step), `signin_prompt` (where, shown or answered) and `invite_link` (opened, joined, declined, copied). The new-player and invite funnels are in `docs/analytics/EVENT_SCHEMA.json`.
+Through anonymous play data (`docs/reference/ANALYTICS.md`): `run_started.play_now`, `guide_step` (next, back, finished, skipped, and the step), `signin_prompt` (shown, opened, later, signed in) and `invite_link` (opened, joined, declined, copied). The new-player and invite funnels are in `docs/analytics/EVENT_SCHEMA.json`.
 
 Tests: `test/welcome.test.js`.

@@ -17,22 +17,24 @@ try {
 }
 const skip = hasJsdom ? false : 'jsdom is not installed (run `npm install`)';
 
-/** A stand-in for the sign-in Worker's provider: the 'account' capability, signed out until signIn. */
+/** A stand-in for T.Account and its sign-in box (src/ui/account.js, the sign-in thread): a guest until asked. */
 function fakeAccount() {
-  const acct = {
-    calls: [],
-    _in: false,
-    signedIn: () => acct._in,
-    methods: () => ['google', 'discord'],
-    name: () => (acct._in ? 'Tester' : null),
-    signIn(m) {
-      acct.calls.push(m);
-      acct._in = true;
-      return Promise.resolve(true);
-    },
+  const fake = { asked: [], user: { guest: true }, listeners: [] };
+  fake.install = (w) => {
+    w.T = {
+      Account: {
+        available: () => true,
+        user: () => fake.user,
+        onChange: (fn) => fake.listeners.push(fn),
+      },
+      UI: { askSignIn: (why) => fake.asked.push(why) },
+    };
   };
-  const provider = { name: 'fake-account', capabilities: ['account'], available: () => true, use: () => acct };
-  return { acct, provider };
+  fake.signIn = () => {
+    fake.user = { guest: false, name: 'Tester' };
+    fake.listeners.forEach((fn) => fn(fake.user));
+  };
+  return fake;
 }
 
 async function open(html, { url = 'https://tumult.froglet.games/', account = null } = {}) {
@@ -44,7 +46,7 @@ async function open(html, { url = 'https://tumult.froglet.games/', account = nul
     pretendToBeVisual: true,
     url,
     beforeParse(w) {
-      if (account) w.T = { Backend: { _providers: [account.provider] } };
+      if (account) account.install(w);
       w.TUMULT_NO_TELEMETRY = true;
       w.console.error = (...a) => errors.push(a.map(String).join(' '));
       w.addEventListener('error', (e) => errors.push((e.error && e.error.stack) || e.message));
@@ -75,7 +77,6 @@ test(
       // the title of a first visit: Play now first, the draft a click away, sign-in offered but not pushed
       assert.ok(p.d.querySelector('[data-act="playNow"]'), 'Play now on a first visit');
       assert.match(p.html(), /Build your own squad/);
-      assert.match(p.html(), /Sign in/);
 
       assert.ok(click('[data-act="playNow"]'));
       assert.equal(U.screen, 'map', 'Play now goes straight to the route');
@@ -141,13 +142,10 @@ test(
       }
       assert.equal(U.missionOverExtra({ won: false }), '');
 
-      // signing in goes through the account capability
-      // (after a loss, the card the report would have shown after a win)
-      if (!p.d.querySelector('#keepSquad'))
-        p.d.querySelector('.modal').insertAdjacentHTML('beforeend', `<div>${U.welcome.cardForTest()}</div>`);
-      assert.ok(click('[data-act="signIn"]'));
-      await new Promise((r) => setTimeout(r, 5));
-      assert.deepEqual(account.acct.calls, ['google']);
+      // signing in goes through the account box (src/ui/account.js)
+      assert.ok(p.click('[data-act="signInKeep"]'));
+      assert.equal(account.asked.length, 1);
+      account.signIn();
       assert.equal(p.d.querySelector('#keepSquad'), null, 'the card goes once signed in');
       assert.equal(U.missionOverExtra({ won: true }), '', 'a signed-in player is never asked');
       assert.deepEqual(p.errors, []);
@@ -161,7 +159,6 @@ test('with no accounts on the page, nobody is asked to sign in', { skip, timeout
   const { build } = await load();
   const p = await open(build().html);
   try {
-    assert.doesNotMatch(p.html(), /Sign in/);
     assert.equal(p.U.welcome.canAsk(), false);
     assert.equal(p.U.missionOverExtra({ won: true }), '');
     // a returning player sees New Expedition, not Play now
@@ -238,12 +235,6 @@ test(
       assert.ok(p.d.querySelector('[data-act="netStart"]:not([disabled])'));
       Object.assign(U.net, { role: null, code: null, names: ['', ''] });
 
-      // hosting, signed out: the sign-in card instead of a game
-      U.screen = 'title';
-      U.render();
-      await U.net.host('Ana');
-      assert.equal(U.net.role, null, 'no game was hosted');
-      assert.ok(U.modal && /data-act="signIn" data-arg="google\|host"/.test(U.modal.html));
       assert.deepEqual(p.errors, []);
     } finally {
       p.w.close();

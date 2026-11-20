@@ -27,7 +27,7 @@ Every event carries the envelope (`common_envelope` in the schema: the anonymous
 | `run_started`, `draft_completed` | New Expedition or Play now (`play_now`); the squad set out (each pilot's pre-made id or `made`, clades, card count) |
 | `tutorial_shown` | a first-time tip (`map`, `mission`) |
 | `guide_step` | the guided first mission: next, back, finished or skipped, and the step (`docs/reference/WELCOME.md`) |
-| `signin_prompt` | sign-in offered (after the first win, on the title, before hosting) and how it was answered; only where the page has accounts |
+| `signin_prompt` | Keep your squad, after the first won mission: shown, the sign-in box opened, Not now, signed in; only where accounts are available |
 | `invite_link` | an invite link opened, joined or declined, or copied by a host |
 | `mission_started` | a mission's board opens for the first time (a mission resumed from a save is not counted twice) |
 | `mission_ended` | won or lost: the playtest report's fields (rounds, kills, hit points, bonus objectives, Physical and Ethereal faces and those at E 0) plus every face's play count (`'<card id>:<P|E>'`), gear, basics, items, moves, take-backs and seconds |

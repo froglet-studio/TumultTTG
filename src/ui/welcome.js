@@ -10,12 +10,11 @@
    - Keep your squad. After the first won mission, sign-in is offered once, under the report, so the
      win is read before the ask. Never before play, never again after "Not now".
    - Invites. A link with ?join=CODE opens the title on that game: join with a name, or, where this
-     page cannot reach online play, play solo while the host waits. Hosting asks for sign-in where the
-     page has accounts.
+     page cannot reach online play, play solo while the host waits.
 
-   Accounts are not built here: they are T.Backend's 'account' capability (src/ui/backend.js), which the
-   sign-in Worker's provider offers. With no such provider the sign-in prompts never show, and the game
-   is exactly as before. Gameplay rules are untouched: this file only adds screens around them.
+   Accounts are not built here: they are T.Account and its sign-in box, T.UI.askSignIn (src/ui/account.js),
+   which also draws the title's Sign in line and asks a host to sign in. Where accounts are not available
+   (no server, the offline file) nobody is asked, and the game is exactly as before. Gameplay rules are untouched: this file only adds screens around them.
    ========================================================================== */
 (function (T) {
   const U = T.UI;
@@ -42,40 +41,33 @@
     } catch (e) {}
   }
 
-  /* ───────────── accounts, through the backend seam ───────────── */
-  // The provider's 'account' object: { signedIn() → bool, methods() → ['google', …], signIn(method) → Promise,
-  // name() → string|null }. Read once the page is up; null until then, and null for good with no provider.
-  W.account = null;
-  const METHOD_NAME = { google: 'Google', discord: 'Discord', apple: 'Apple', github: 'GitHub', email: 'email' };
-  const signedIn = () => !!(W.account && W.account.signedIn && W.account.signedIn());
-  const methods = () => {
-    const m = W.account && W.account.methods ? W.account.methods() : null;
-    return (Array.isArray(m) && m.length ? m : ['google', 'discord']).filter((x) => METHOD_NAME[x]);
+  /* ───────────── accounts (src/ui/account.js) ───────────── */
+  const acct = () => (T.Account && T.Account.available && T.Account.available() ? T.Account : null);
+  const signedIn = () => {
+    const a = acct();
+    const u = a && a.user && a.user();
+    return !!(u && !u.guest);
   };
-  /** May this page ask the player to sign in? Only where a provider offers accounts and they are a guest. */
-  W.canAsk = () => !!W.account && !signedIn();
-
-  function signInButtons(where) {
-    return methods()
-      .map(
-        (m) =>
-          `<button class="signin-btn signin-${m}" data-act="signIn" data-arg="${m}|${where}"><span class="signin-mark" aria-hidden="true"></span>Continue with ${METHOD_NAME[m]}</button>`,
-      )
-      .join('');
+  /** May this page ask the player to sign in? Only where accounts are available and they are a guest. */
+  W.canAsk = () => !!acct() && !!(U.askSignIn || T.UI.askSignIn) && !signedIn();
+  function askSignIn(where) {
+    track('signin_prompt', { where, action: 'opened' });
+    (U.askSignIn || T.UI.askSignIn)('Keep this expedition and your pilots on any device.');
   }
-  function signIn(method, where) {
-    if (!W.account || !W.account.signIn) return;
-    track('signin_prompt', { where, action: method });
-    Promise.resolve(W.account.signIn(method)).then(
-      (ok) => {
-        if (ok === false) return;
-        U.toast(`Signed in${W.account.name && W.account.name() ? ' as ' + W.account.name() : ''}. Your squad is kept.`);
-        const card = document.getElementById('keepSquad');
-        if (card) card.remove();
-        if (U.screen === 'title') U.render();
-      },
-      () => U.toast('Could not sign in just now. You can keep playing as a guest and try again from the title.', 6000),
-    );
+  let watching = false;
+  /** Once signed in, the card goes and the play-data line says so (once per sign-in). */
+  function watchAccount() {
+    const a = acct();
+    if (watching || !a || typeof a.onChange !== 'function') return;
+    watching = true;
+    a.onChange(() => {
+      if (!signedIn()) return;
+      const card = document.getElementById('keepSquad');
+      if (card) {
+        track('signin_prompt', { where: 'first_win', action: 'signed_in' });
+        card.remove();
+      }
+    });
   }
 
   /* ───────────── who is new ───────────── */
@@ -114,22 +106,8 @@
     else if (U.isNewPlayer(meta, hasSave))
       out += `<div class="welcome-start"><button class="primary play-now" data-act="playNow">Play now</button>
         <div class="small dim">Free, no account needed. You set out with two pilots, and your first mission teaches you as you go.</div></div>`;
-    if (W.account) {
-      out += signedIn()
-        ? `<div class="mute small account-line">Signed in${W.account.name && W.account.name() ? ' as ' + esc(W.account.name()) : ''}: your expeditions and pilots are kept on any device.</div>`
-        : `<div class="small account-line"><button class="link sm ghost" data-act="signInOpen" data-arg="title">Sign in</button><span class="dim"> to keep your squad on any device. Playing as a guest keeps it in this browser.</span></div>`;
-    }
     return out;
   };
-  function signInModal(where, lead) {
-    track('signin_prompt', { where, action: 'shown' });
-    U.openModal(
-      `<div class="keep-squad keep-squad-modal"><span class="kick">Keep your squad</span><h3>${esc(lead)}</h3>
-      <p class="small">Sign in to keep your expeditions and pilots on any device, and to host games with friends. Playing on as a guest keeps everything in this browser only.</p>
-      ${signInButtons(where)}<button class="link ghost" data-act="closeModal">Not now</button></div>`,
-    );
-  }
-
   /* ───────────── the guided first mission ───────────── */
   // Each step lights one part of the mission screen: the first selector that finds something visible wins.
   const STEPS = [
@@ -315,6 +293,7 @@
     if (!m.won || !W.canAsk() || seen('keepSquad')) return '';
     if (U.net && U.net.isGuest && U.net.isGuest()) return ''; // a guest's squad is the host's
     markSeen('keepSquad');
+    watchAccount();
     track('signin_prompt', { where: 'first_win', action: 'shown' });
     return keepSquadCard();
   };
@@ -322,7 +301,7 @@
     `<div class="keep-squad" id="keepSquad"><span class="kick">Keep your squad</span>
       <b>Your first mission is won.</b>
       <p class="small">Sign in to keep this expedition and your pilots on any device, and to host games with friends. Playing on as a guest keeps everything in this browser only.</p>
-      ${signInButtons('first_win')}
+      <button class="primary" data-act="signInKeep">Sign in to keep your squad</button>
       <button class="link ghost sm" data-act="keepSquadLater">Not now, keep playing as a guest</button></div>`;
   W.cardForTest = keepSquadCard;
 
@@ -377,20 +356,6 @@
     }, 4000);
   }
 
-  // hosting keeps the game on the host's account: where the page has accounts, a guest signs in first
-  function guardHosting() {
-    if (!U.net || typeof U.net.host !== 'function' || U.net.host._guarded) return;
-    const realHost = U.net.host;
-    U.net.host = function () {
-      if (W.canAsk()) {
-        signInModal('host', 'Hosting saves the game to you');
-        return Promise.resolve();
-      }
-      return realHost.apply(this, arguments);
-    };
-    U.net.host._guarded = true;
-  }
-
   /* ───────────── actions ───────────── */
   const prevExtra = U.extraAct;
   U.extraAct = function (act, arg, el, e) {
@@ -413,13 +378,8 @@
       case 'tutClose':
         if (W.guiding()) guideEnd('skipped');
         return false; // the tip closes as it always has (src/ui/core.js)
-      case 'signIn': {
-        const [method, where] = String(arg || '').split('|');
-        signIn(method, where || 'title');
-        return true;
-      }
-      case 'signInOpen':
-        signInModal(arg || 'title', 'Keep your squad on any device');
+      case 'signInKeep':
+        askSignIn('first_win');
         return true;
       case 'keepSquadLater': {
         track('signin_prompt', { where: 'first_win', action: 'later' });
@@ -475,15 +435,7 @@
     if (W.started) return;
     W.started = true;
     takeInvite();
-    guardHosting();
-    if (T.Backend && T.Backend.available('account'))
-      T.Backend.use('account').then(
-        (a) => {
-          W.account = a;
-          if (U.screen === 'title') U.render();
-        },
-        () => {},
-      );
+    watchAccount();
     if (W.invite && U.screen === 'title') U.render();
   };
   // after every script of the page has run, so online play (net.js) and any provider are in place

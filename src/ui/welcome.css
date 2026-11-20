@@ -125,38 +125,6 @@
 .keep-squad p {
   margin: 0;
 }
-.keep-squad-modal {
-  margin-top: 0;
-  border: 0;
-  padding: 0;
-  background: none;
-  animation: none;
-}
-.signin-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 46px;
-  font-weight: 600;
-}
-.signin-google {
-  background: #f4f7fb;
-  color: #111a28;
-  border-color: #f4f7fb;
-}
-.signin-discord {
-  background: #2b3260;
-  color: #eef0ff;
-  border-color: #4a54a0;
-}
-.signin-mark {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.35;
-}
 @keyframes keepSquadUp {
   from {
     transform: translateY(24px);

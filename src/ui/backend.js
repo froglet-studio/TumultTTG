@@ -15,10 +15,6 @@
      user  id(), can(permission), canEdit(), isOwner(), profiles(ids) — who is playing
      analytics  track(event, props), flush(leaving) — anonymous play data (src/ui/telemetry.js);
            offered on its own by the web version's Froglet Analytics provider (src/web/analytics.js)
-     account  signedIn() → bool, methods() → ['google', 'discord', …], signIn(method) → Promise<bool>,
-           name() → string|null — the player's Froglet account, offered by the sign-in Worker's
-           provider. With none, nobody is asked to sign in (src/ui/welcome.js) and all play stays
-           on the device. Like analytics, offered on its own: it never makes the game look online.
 
    Built in: 'claude-artifact', the claude.ai page that hosts the playtest build
    (window.claude.use). A Cloudflare Workers provider registers itself the same way

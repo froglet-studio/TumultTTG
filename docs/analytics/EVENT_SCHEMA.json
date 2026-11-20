@@ -135,15 +135,15 @@
       }
     },
     "signin_prompt": {
-      "description": "An offer to sign in: shown, or answered. Only where the page has accounts.",
+      "description": "Keep your squad: the offer to sign in under the first won mission's report (src/ui/welcome.js), and what came of it. Only where accounts are available.",
       "properties": {
         "where": {
           "type": "string",
-          "description": "first_win (under the first won mission's report) | title | host (hosting a game)."
+          "description": "first_win (the only place it is offered today)."
         },
         "action": {
           "type": "string",
-          "description": "shown | later | the sign-in method chosen (google, discord, apple, github, email)."
+          "description": "shown | opened (the sign-in box) | later (Not now) | signed_in."
         }
       }
     },
