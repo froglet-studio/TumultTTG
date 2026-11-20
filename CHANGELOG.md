@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.74.0 — 2026-11-20 — online: quicker, and a reload can rejoin
+
+Garrett, after 2.73.1: "it feels slow often… like it is waiting for the network to process a simple move." The engine answers a move in about 7 ms; the wait was the page store's live delivery, which can fall back to a refresh every half minute.
+
+- **A fast lane.** Where the page offers a live channel between the screens open on it (claude.ai's `room`), a game's screens meet in a room named for its code. A guest sends each command there as well as to the store, and the host says "this state is written" there after each write, so the guest reads it at once. Messages there can drop, so the store stays the truth; the room only hurries it along. Tumult Online opens the two topics (`cmd`, `rev`) to Contributors and up.
+- **A backstop read.** A guest reads the host's state at least every 2 seconds when nothing has arrived, so a stalled live delivery costs 2 seconds, not 30.
+- **Rejoin after a reload.** The game a screen is in is remembered on the device (`tumult_v2_net`, 12 hours; leaving on purpose forgets it), and the title offers *Rejoin game ABCD*. A guest takes its seat again (waiting out the few seconds a reloaded page's seat claim lasts) and carries on numbering from the host's acks; a host picks the game up from the state it last wrote, with its acks and results.
+- **Tests.** Online tests for a guest and then a host reloading and rejoining, and for moves crossing through the room in under a second while the store hears nothing live.
+
 ## 2.73.1 — 2026-11-20 — online: a partner's turn no longer resets
 
 A playtest was halted because the partner's (guest's) turn kept snapping back while the host's screen was fine.

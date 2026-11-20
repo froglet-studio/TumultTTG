@@ -16,12 +16,23 @@
      games/<CODE>/cmds/<n>-<seq> { cmd, seat, seq, holder, at }   a guest's command, deleted once carried out
 
    Commands are a reliable, ordered channel (2.74; the pattern of client prediction and server
-   reconciliation that networked action games use). Each guest numbers its commands 1, 2, 3…; the host
+   reconciliation that networked action games use; 2.73.1). Each guest numbers its commands 1, 2, 3…; the host
    carries out seq n only after n-1, and writes the last one it carried out for each seat in `acks`. A
    guest keeps every command the host has not acknowledged, plays it again on top of each state the host
    writes, and sends it again until it is acknowledged. Nothing is dropped for being slow: the store's
    live delivery can lag or stop (a hidden tab, a dropped stream), so the host also reads the commands
    every few seconds, and a guest reads the state when its own commands wait too long.
+
+   Either screen can come back (2.74): the game a screen was in is remembered on the device
+   (tumult_v2_net), and the title offers to rejoin it. A guest takes its seat again and carries on
+   numbering from the host's acks; a host picks the game up from the state it last wrote.
+
+   The fast lane (2.74): the store's live delivery can fall back to a refresh every half minute, which
+   made the other player's moves feel slow. Where the page also offers a live channel between the
+   screens open on it (claude.ai's `room`), a game's screens meet in a room named for its code. A guest
+   sends each command there as well as to the store, and the host says "rev n is written" there after
+   each state it writes, so the guest reads it at once. The room only hurries things along: messages
+   can drop, so the store stays the truth, and a guest also reads the state every 2 s.
    ========================================================================== */
 (function (T) {
   const U = T.UI;
@@ -31,6 +42,42 @@
   const newCode = () => Array.from({ length: 4 }, () => LETTERS[Math.floor(Math.random() * LETTERS.length)]).join('');
 
   let db = null;
+  let rooms = null; // the page's live channel, when it has one
+  let lane = null; // this game's room
+  const leaveLane = () => {
+    if (lane) lane.leave().catch(() => {});
+    lane = null;
+  };
+  /** Meet the game's other screens in a room named for its code, if the page offers one. */
+  const joinLane = async () => {
+    leaveLane();
+    if (!rooms || typeof rooms.join !== 'function' || !N.code) return;
+    try {
+      const r = await rooms.join('tumult-' + N.code);
+      if (!N.code) return r.leave().catch(() => {});
+      lane = r;
+      if (N.role === 'host')
+        unsubs.push(
+          r.on('cmd', (msg) => {
+            const d = msg && msg.data;
+            if (msg.isMe || !d || typeof d !== 'object') return;
+            N.drain([{ id: `${+d.seat}-${String(+d.seq).padStart(9, '0')}`, data: () => d }]);
+          }),
+        );
+      else
+        unsubs.push(
+          r.on('rev', (msg) => {
+            const d = msg && msg.data;
+            if (d && +d.rev > N.rev) readState();
+          }),
+        );
+    } catch {
+      lane = null; // no room: the store alone carries the game, as before
+    }
+  };
+  const ping = (topic, data) => {
+    if (lane) lane.emit(topic, data).catch(() => {});
+  };
   const N = (U.net = {
     available: false,
     canWrite: null, // may this viewer write the shared store? false: they can watch but not play; null: not told
@@ -52,7 +99,13 @@
         db = d;
         N.available = !!d;
         if (d && U.screen === 'title') U.render();
-        return window.claude.use('user');
+        return window.claude.use('room').then(
+          (r) => {
+            rooms = r;
+            return window.claude.use('user');
+          },
+          () => window.claude.use('user'),
+        );
       })
       .then(async (u) => {
         if (!u || typeof u.can !== 'function') return;
@@ -77,6 +130,26 @@
   const gameDoc = () => db.doc('games/' + N.code);
   const unsubs = [];
   const stop = () => unsubs.splice(0).forEach((u) => u && u());
+
+  /** The game this screen was last in, kept on the device so a reload can rejoin it. */
+  const MEMO = 'tumult_v2_net';
+  const MEMO_MS = 12 * 3600 * 1000;
+  N.remembered = function () {
+    try {
+      const m = JSON.parse(localStorage.getItem(MEMO) || 'null');
+      return m && m.code && Date.now() - (m.at || 0) < MEMO_MS ? m : null;
+    } catch {
+      return null;
+    }
+  };
+  const remember = (m) => {
+    try {
+      if (m) localStorage.setItem(MEMO, JSON.stringify(Object.assign({ at: Date.now() }, m)));
+      else localStorage.removeItem(MEMO);
+    } catch {
+      /* a page without storage cannot rejoin; it plays as before */
+    }
+  };
 
   /* ───────────── the host ───────────── */
   let lastWritten = null;
@@ -106,6 +179,7 @@
     };
     writing = writing
       .then(() => gameDoc().set(doc))
+      .then(() => ping('rev', { rev: doc.rev }))
       .catch((e) => {
         lastWritten = null; // write it again with the next change, or the next look at the commands
         U.toast('Could not reach the other player: ' + esc((e && e.code) || e));
@@ -190,6 +264,11 @@
       N.leave();
       return;
     }
+    remember({ code: N.code, role: 'host', name: N.names[0] });
+    listenAsHost();
+  };
+  function listenAsHost() {
+    joinLane();
     // who has taken seat 1
     unsubs.push(
       db.doc(`games/${N.code}/seats/1`).onSnapshot((snap) => {
@@ -206,6 +285,61 @@
     watchCmds();
     pollTimer = setInterval(poll, POLL_MS);
     document.addEventListener('visibilitychange', onVisible);
+  }
+
+  /** Pick up hosting a game this screen hosted before a reload: from the state it last wrote. */
+  N.resume = async function (code) {
+    if (!db) return;
+    let d;
+    try {
+      const snap = await db.doc('games/' + code).get();
+      d = snap.exists ? snap.data() : null;
+    } catch (e) {
+      U.toast(why(e), 9000);
+      return;
+    }
+    if (!d) {
+      remember(null);
+      U.toast('That game is gone.');
+      U.render();
+      return;
+    }
+    N.code = code;
+    N.role = 'host';
+    N.seat = 0;
+    N.names = (d.names || ['Player 1', '']).map(String);
+    N.rev = +d.rev || 0;
+    U.seats = [0];
+    Object.assign(acks, d.acks || {});
+    try {
+      Object.assign(results, JSON.parse(d.results || '{}'));
+    } catch {
+      /* no results to carry */
+    }
+    U.modal = null;
+    if (d.run) {
+      const run = T.deserializeRun(d.run);
+      if (run.mission) run.mission.fx = JSON.parse(d.fx || '[]');
+      U.run = run;
+      if (run.phase === 'draft') {
+        if (run.heroes[0]) U.draft = Object.assign(U.draft || {}, { heroIdx: 0, step: 'wait' });
+        else U.beginDraft(0);
+        U.screen = 'draft';
+      } else if (run.phase === 'mission' && run.mission) {
+        U.screen = 'mission';
+        U.enterMission();
+        // the effects in the state were shown before the reload
+        U.ms.fxDone = run.mission.fx.length;
+      } else U.screen = ['reward', 'haven', 'event', 'summary'].includes(run.phase) ? run.phase : 'map';
+    } else {
+      U.run = null;
+      U.screen = 'lobby';
+    }
+    N.status = N.names[1] ? `${N.names[1]} is here.` : 'Waiting for player 2…';
+    lastWritten = null;
+    U.render();
+    listenAsHost();
+    U.toast('Back in game ' + esc(code) + '.');
   };
   /** Carry out a guest's command on this (the host's) screen, then tell everyone. */
   N.carryOut = function (id, cmd, seats) {
@@ -263,6 +397,8 @@
   const cmdId = (n) => `${N.seat}-${String(n).padStart(9, '0')}`;
   const write = (p) => {
     p.sentAt = Date.now();
+    const body = { cmd: p.cmd, seat: N.seat, seq: p.seq, holder: tab, at: p.at };
+    if (JSON.stringify(body).length < 3500) ping('cmd', body); // the room takes 4 KiB at most
     return db
       .doc(`games/${N.code}/cmds/${cmdId(p.seq)}`)
       .set({ cmd: p.cmd, seat: N.seat, seq: p.seq, holder: tab, at: p.at });
@@ -287,19 +423,29 @@
   };
   let guestTimer = null;
   let stallSaid = 0;
+  let reading = false;
+  let lastRead = 0;
+  /** Read the host's state now, rather than wait for the live delivery. One read at a time. */
+  function readState() {
+    if (reading || N.role !== 'guest' || !N.code) return;
+    reading = true;
+    lastRead = Date.now();
+    gameDoc()
+      .get()
+      .then((s) => s.exists && N.receive(s.data()))
+      .catch(() => {})
+      .then(() => (reading = false));
+  }
+  const READ_MS = 2000; // the live delivery can lag by half a minute: read at least this often
   const guestTick = () => {
-    if (N.role !== 'guest' || !pending.length) {
+    if (N.role !== 'guest') return;
+    const now = Date.now();
+    if (now - lastRead >= READ_MS) readState();
+    if (!pending.length) {
       N.stalled = false;
       return;
     }
-    const now = Date.now();
     for (const p of pending) if (now - p.sentAt >= RESEND_MS) write(p).catch(() => {});
-    // the live state may be lagging: read it
-    if (now - pending[0].at >= RESEND_MS)
-      gameDoc()
-        .get()
-        .then((s) => s.exists && N.receive(s.data()))
-        .catch(() => {});
     N.stalled = now - pending[0].at >= STALL_MS;
     if (N.stalled && now - stallSaid > 15000) {
       stallSaid = now;
@@ -339,7 +485,12 @@
         return;
       }
       const seatDoc = db.doc(`games/${code}/seats/1`);
-      const lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
+      // a short lease while claiming the seat; one left by a page that just reloaded runs out in seconds
+      let lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
+      for (let i = 0; i < 4 && !lease.acquired; i++) {
+        await new Promise((r) => setTimeout(r, 1000));
+        lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
+      }
       const taken = (await seatDoc.get()).data();
       if (!lease.acquired || (taken && taken.name && taken.name !== name)) {
         N.code = null;
@@ -358,17 +509,21 @@
     N.seat = 1;
     U.seats = [1];
     U.screen = 'lobby';
+    remember({ code, role: 'guest', name: name || 'Player 2' });
     N.status = 'Joined. Waiting for the host to start…';
     // a guest's screen keeps no save of its own: the game lives on the host's
     N.realSave = N.realSave || T.saveRun;
     T.saveRun = () => true;
     U.render();
     watchGame();
-    guestTimer = setInterval(guestTick, 1000);
+    joinLane();
+    lastRead = Date.now();
+    guestTimer = setInterval(guestTick, 500);
   };
 
   /** A guest takes in the state the host wrote. */
   N.receive = function (d) {
+    lastRead = Date.now(); // a state arrived, by whatever road: no need to read it again yet
     if (!d || !d.run || d.rev <= N.rev) {
       if (d && d.names) N.names = d.names.map(String);
       return;
@@ -393,6 +548,7 @@
     }
     // play again what this screen has done that the host has not reached yet
     pending = pending.filter((p) => p.seq > acked);
+    if (acked > seq) seq = acked; // a command from before a reload was carried out after this screen took its number
     for (const p of pending) if (p.ahead) T.execCommand(run, JSON.parse(JSON.stringify(p.cmd)), U.seats);
     U.run = run;
     // which screen: the run's phase decides, except the draft, which each player does on their own
@@ -426,7 +582,9 @@
   }
 
   N.leave = function () {
+    remember(null); // leaving on purpose: nothing to rejoin
     stop();
+    leaveLane();
     pending = [];
     seq = 0;
     clearInterval(pollTimer);
@@ -449,7 +607,11 @@
     if (!N.available) return '';
     if (N.canWrite === false)
       return `<div class="net-pick"><span class="dim small">Play online</span><div class="mute small">${esc(NO_ACCESS)}</div></div>`;
-    return `<div class="net-pick"><span class="dim small">Play online</span>
+    const m = N.remembered();
+    const back = m
+      ? `<button class="sm primary" data-act="netRejoin">Rejoin game ${esc(m.code)}${m.role === 'host' ? ' as host' : ''}</button>`
+      : '';
+    return `<div class="net-pick"><span class="dim small">Play online</span>${back}
       <input id="netName" placeholder="Your name" maxlength="24">
       <button class="sm" data-act="netHost">Host a game</button>
       <input id="netCode" placeholder="CODE" maxlength="4" style="width:5em;text-transform:uppercase">
@@ -477,6 +639,12 @@
       case 'netJoin':
         N.join(val('netCode'), val('netName') || 'Player 2');
         return true;
+      case 'netRejoin': {
+        const m = N.remembered();
+        if (m && m.role === 'host') N.resume(m.code);
+        else if (m) N.join(m.code, m.name);
+        return true;
+      }
       case 'netStart':
         N.start();
         return true;

@@ -121,10 +121,44 @@ function fakeDb(opt = {}) {
   return { doc, collection: col, store };
 }
 
+/** A stand-in for the room capability: named rooms whose moments reach every page in them. */
+function fakeRooms() {
+  const named = new Map(); // name → Set({ topic → Set(fn) })
+  const page = () => {
+    const mine = new Map(); // name → handlers of this page
+    return {
+      join: async (name) => {
+        if (!named.has(name)) named.set(name, new Set());
+        const hs = new Map();
+        named.get(name).add(hs);
+        mine.set(name, hs);
+        return {
+          name,
+          emit: async (topic, data) => {
+            const text = JSON.stringify(data);
+            if (text.length > 4096) throw { code: 'invalid_argument', message: 'over 4 KiB' };
+            for (const other of named.get(name))
+              for (const fn of other.get(topic) || [])
+                setTimeout(() => fn({ topic, data: JSON.parse(text), isMe: other === hs, sameTab: other === hs }), 1);
+          },
+          on: (topic, fn) => {
+            if (!hs.has(topic)) hs.set(topic, new Set());
+            hs.get(topic).add(fn);
+            return () => hs.get(topic).delete(fn);
+          },
+          connected: () => true,
+          leave: async () => named.get(name).delete(hs),
+        };
+      },
+    };
+  };
+  return { page };
+}
+
 const windows = [];
 test.after(() => windows.forEach((w) => w.close())); // their timers would keep the run alive
 
-async function open(html, db) {
+async function open(html, db, rooms) {
   const { JSDOM } = require('jsdom');
   const errors = [];
   const dom = new JSDOM(html, {
@@ -135,7 +169,8 @@ async function open(html, db) {
       w.console.error = (...a) => errors.push('console.error: ' + a.map(String).join(' '));
       w.addEventListener('error', (e) => errors.push('window.error: ' + ((e.error && e.error.stack) || e.message)));
       // data crosses between the two pages as JSON, as it would through the store
-      w.claude = { use: async (name) => (name === 'db' ? db : null) };
+      const room = rooms ? rooms.page() : null;
+      w.claude = { use: async (name) => (name === 'db' ? db : name === 'room' ? room : null) };
     },
   });
   const w = dom.window;
@@ -245,11 +280,11 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
 });
 
 /** Host and guest in the first mission, on the guest's turn. */
-async function toGuestTurn(db) {
+async function toGuestTurn(db, rooms) {
   const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
   const html = build({ playtest: true }).html;
-  const A = await open(html, db);
-  const B = await open(html, db);
+  const A = await open(html, db, rooms);
+  const B = await open(html, db, rooms);
   A.type('netName', 'Ana');
   A.act('netHost');
   await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
@@ -339,6 +374,84 @@ test(
     assert.equal(mA().heroes[1].pos, start, 'the second walk waits for the first');
     await until(() => mA().heroes[1].pos === back, 'both walks, in order, on the host', 10000);
     await until(() => B.U.net.rev === A.U.net.rev, "the host's state on the guest's screen");
+    assert.equal(B.T.serializeRun(B.U.run), A.T.serializeRun(A.U.run), 'both screens hold the same game');
+    assert.deepEqual(A.errors.concat(B.errors), []);
+  },
+);
+
+test('online: a guest and then a host reload their page and rejoin the game', { skip, timeout: 60_000 }, async () => {
+  const db = fakeDb({ lag: 20 });
+  const { A, B } = await toGuestTurn(db);
+  const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const html = build({ playtest: true }).html;
+  const code = A.U.net.code;
+  const [a, b] = [A, B].map((P) => P.U.net.remembered());
+  assert.deepEqual([a.code, a.role, b.code, b.role], [code, 'host', code, 'guest'], 'each screen remembers its game');
+
+  // the guest walks, then its page reloads: the old page goes quiet, a new one rejoins from the title
+  const [to] = steps(B, 1);
+  B.U.exec({ op: 'walk', hero: 1, node: to });
+  await until(() => A.U.run.mission.heroes[1].pos === to, 'the walk on the host');
+  B.U.net.leave();
+  const B2 = await open(html, db);
+  B2.w.localStorage.setItem('tumult_v2_net', JSON.stringify(b));
+  B2.U.render();
+  B2.act('netRejoin');
+  await until(
+    () => B2.U.screen === 'mission' && B2.U.run.mission.heroes[1].pos === to,
+    'the guest back in the mission',
+  );
+  assert.equal(B2.U.ms.heroIdx, 1, 'on their own pilot');
+  const next = steps(B2, 3).find((n) => n !== to);
+  assert.ok(next != null);
+  B2.U.exec({ op: 'walk', hero: 1, node: next });
+  await until(() => A.U.run.mission.heroes[1].pos === next, "the rejoined guest's walk on the host");
+
+  // now the host's page reloads and picks the game up from the state it last wrote
+  await until(() => B2.U.net.rev === A.U.net.rev, 'the guest caught up');
+  const before = A.T.serializeRun(A.U.run);
+  A.U.net.leave();
+  const A2 = await open(html, db);
+  A2.w.localStorage.setItem('tumult_v2_net', JSON.stringify(a));
+  A2.U.render();
+  assert.match(A2.d.querySelector('[data-act="netRejoin"]').textContent, new RegExp(code));
+  A2.act('netRejoin');
+  await until(() => A2.U.screen === 'mission', 'the host back in the mission');
+  assert.equal(A2.T.serializeRun(A2.U.run), before, 'the host picks up the game as it was');
+  const third = steps(B2, 3).find((n) => n !== next);
+  B2.U.exec({ op: 'walk', hero: 1, node: third });
+  await until(() => A2.U.run.mission.heroes[1].pos === third, 'the guest plays on with the resumed host');
+  await until(() => B2.U.net.rev === A2.U.net.rev, 'the guest takes the resumed host’s state');
+  assert.equal(B2.T.serializeRun(B2.U.run), A2.T.serializeRun(A2.U.run), 'both screens hold the same game');
+  assert.deepEqual(A.errors.concat(B.errors, A2.errors, B2.errors), []);
+});
+
+test(
+  'online: with a live channel, moves cross at once even when the store is slow',
+  { skip, timeout: 60_000 },
+  async () => {
+    let slow = false;
+    // once play starts, the store hears nothing live: only reads and the room carry the game
+    const db = fakeDb({ lag: 20, deaf: () => slow });
+    const { A, B } = await toGuestTurn(db, fakeRooms());
+    slow = true;
+    const mA = () => A.U.run.mission;
+    const [to] = steps(B, 1);
+    const t0 = Date.now();
+    B.U.exec({ op: 'walk', hero: 1, node: to });
+    await until(() => mA().heroes[1].pos === to, 'the host to hear the walk');
+    const heard = Date.now() - t0;
+    assert.ok(heard < 1000, `the host heard the walk through the room, in ${heard} ms (a poll takes up to 2.5 s)`);
+    await until(() => B.U.net.rev === A.U.net.rev, "the host's answer on the guest's screen");
+    assert.equal(B.U.net.remembered().code, A.U.net.code);
+    // the host's turn-taking reaches the guest fast too: the guest ends its turn, the round runs on the host
+    const round = mA().round;
+    B.act('endRound');
+    if (B.U.ms.endConfirm) B.act('endRound');
+    await until(() => mA().round > round || mA().over, 'the next round on the host');
+    const t1 = Date.now();
+    await until(() => B.U.net.rev === A.U.net.rev, 'the next round on the guest');
+    assert.ok(Date.now() - t1 < 1500, 'the guest read the new state on the host’s word');
     assert.equal(B.T.serializeRun(B.U.run), A.T.serializeRun(A.U.run), 'both screens hold the same game');
     assert.deepEqual(A.errors.concat(B.errors), []);
   },
