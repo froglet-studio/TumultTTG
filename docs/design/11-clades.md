@@ -42,6 +42,8 @@ One pull request per branch, each with its audit and simulation numbers.
 | Crustaceans (2.65) | lobster, mantis_shrimp |
 | Insects and arachnids (2.66) | beetle, butterfly, firefly, mantis, scorpion |
 
+The table gives clade ids, which never change, because saves and canon notes are keyed on them. Display names follow Cosmic Shore's (Garrett, 2026-11-20): `badger` is the **Ratel**, `orca` the **Orca**, and `hawk` the **Red-tailed Hawk**, a real species rather than a family.
+
 The five painted animals that are already clades (octopus, eel, axolotl, owl, gecko) keep their nine and gain kin as their branch is built. The five unpainted clades (jerboa, hopper, flytrap, cordyceps, tardigrade) stay until Garrett decides otherwise; the jerboa sits on the Gnawers branch and lends the gnawers five of its traits.
 
 ## After the branches

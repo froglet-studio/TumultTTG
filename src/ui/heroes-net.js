@@ -6,7 +6,9 @@
 
    Store layout (rules declared when the page is published; see
    docs/reference/RUN_AND_ECONOMY.md):
-     heroes/<viewer id>   { list: [recipe, …], at }   that player's made heroes, newest first
+     heroes/<viewer id>   { list: [recipe, …], at, who }   that player's made heroes, newest first,
+                          and the name their account shows (so Claude can copy each pilot,
+                          with its player, to Froglet's character list; tools/pilot-sheet.js)
    Anyone who can open the page reads them all; each player writes only their
    own; the owner may tidy any. A recipe from the store is untrusted and is
    rebuilt by T.validMade before it is shown or played.
@@ -19,6 +21,7 @@
   let db = null;
   let user = null;
   let uid = null;
+  let who = '';
   let others = []; // [{ rec, by }]
   const names = {};
 
@@ -32,10 +35,12 @@
       const snap = await db.collection('heroes').get();
       const list = [];
       let stored = null;
+      let storedWho = '';
       snap.docs.forEach((doc) => {
         const data = doc.data() || {};
         if (doc.id === uid) {
           stored = Array.isArray(data.list) ? data.list.map(T.validMade).filter(Boolean) : [];
+          storedWho = typeof data.who === 'string' ? data.who : '';
           return;
         }
         (Array.isArray(data.list) ? data.list : []).slice(0, T.MADE_MAX).forEach((r) => {
@@ -52,7 +57,8 @@
           .reverse()
           .forEach((r) => T.keepMade(r));
         const there = new Set((stored || []).map((r) => r.id));
-        if (T.loadMade().some((r) => !there.has(r.id))) push();
+        // …and of this player's name, when the list is there but the name is missing or old
+        if (T.loadMade().some((r) => !there.has(r.id)) || (stored && stored.length && who && storedWho !== who)) push();
       }
       list.sort((a, b) => String(b.rec.at).localeCompare(String(a.rec.at)));
       others = list;
@@ -71,7 +77,7 @@
     if (!uid) return;
     chain = chain.then(async () => {
       try {
-        await db.doc(`heroes/${uid}`).set({ list: T.loadMade(), at: new Date().toISOString() });
+        await db.doc(`heroes/${uid}`).set({ list: T.loadMade(), at: new Date().toISOString(), who });
       } catch (e) {}
     });
   }
@@ -87,6 +93,10 @@
         const id = await u.id();
         if (!id) return load();
         uid = id;
+        try {
+          const me = await u.me();
+          who = String((me && me.name) || '').slice(0, 60);
+        } catch (e) {}
         load();
       })
       .catch(() => {});

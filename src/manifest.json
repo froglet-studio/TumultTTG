@@ -13,6 +13,7 @@
     "engine/ai.js",
     "engine/lookahead.js",
     "engine/party.js",
+    "engine/scaling.js",
     "engine/story.js",
     "engine/run.js",
     "engine/canon.js"

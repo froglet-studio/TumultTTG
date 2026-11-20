@@ -594,7 +594,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Whisker Hunt — Whiskers (Phys) | staple | One tough foe, The unseen | 1/2 (0.50) |  |
 | Whisker Hunt — Murky Hunt (Eth) | staple | One tough foe, A crowd, The unseen | 0/0 |  |
 
-### Honey Badger
+### Ratel
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
@@ -1002,7 +1002,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Nest Guard — Over the Nest (Phys) | staple | A crowd, One big telegraphed hit | 7/6 (1.17) |  |
 | Nest Guard — Eyrie (Eth) | staple | A crowd, One big telegraphed hit, Attrition | 1/6 (0.17) |  |
 
-### Hawk
+### Red-tailed Hawk
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
@@ -1359,7 +1359,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Slow and Sure — In Good Time (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 3/5 (0.60) |  |
 | Beak Snap — Snap (Phys) | staple | One tough foe, Shields | 5/6 (0.83) |  |
 | Beak Snap — Shear (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 0/6 (0.00) |  |
-| Withdraw — Pull In (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Attrition, Control on you | 0/6 (0.00) |  |
+| Withdraw — Tuck In (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Attrition, Control on you | 0/6 (0.00) |  |
 | Withdraw — Wait It Out (Eth) | staple | One big telegraphed hit, Attrition, Control on you | 0/1 (0.00) |  |
 | Steady Plod — Plod (Phys) | staple | The clock, One big telegraphed hit | 4/5 (0.80) |  |
 | Steady Plod — Through Anything (Eth) | staple | The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 0/1 (0.00) |  |
@@ -1477,7 +1477,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | After Rain — Wet Night (Phys) | staple | The clock, One big telegraphed hit, Attrition | 4/4 (1.00) |  |
 | After Rain — Downpour (Eth) | staple | One tough foe, Hazards and being dragged, Attrition | 1/4 (0.25) |  |
 | Eye Stalks — Peek (Phys) | staple | The unseen, One big telegraphed hit | 0/3 (0.00) |  |
-| Eye Stalks — Pull In (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/0 |  |
+| Eye Stalks — Shell Watch (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/0 |  |
 
 ### Jellyfish
 

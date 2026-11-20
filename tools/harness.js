@@ -8,17 +8,20 @@ const loadTumult = require('./load');
 const ARCHETYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey', 'elite', 'boss'];
 
 function createHarness(T = loadTumult()) {
-  /** Two pre-made heroes (indices into T.PREBUILTS), UP auto-spent. */
+  /** Pre-made heroes (indices into T.PREBUILTS), UP auto-spent: two, or a list of two to five. */
   function prebuiltSquad(run, i, j) {
-    run.heroes = [T.heroFromPrebuilt(run, T.PREBUILTS[i]), T.heroFromPrebuilt(run, T.PREBUILTS[j])];
+    const ids = Array.isArray(i) ? i : [i, j];
+    run.heroes = ids.map((k) => T.heroFromPrebuilt(run, T.PREBUILTS[k]));
     run.heroes.forEach((h) => T.autoAllocate(h));
   }
+  /** A squad of n pre-made heroes, starting from index i (n = 2 is prebuiltSquad(run, i, i + 2)). */
+  const squadIds = (i, n) => (n === 2 ? [i % 6, (i + 2) % 6] : Array.from({ length: n }, (x, k) => (i + k) % 6));
 
   /** Two heroes drafted at random from packs (random bloodlines, random picks). */
-  function draftedSquad(run) {
+  function draftedSquad(run, n = 2) {
     run.heroes = [];
     const rng = T.runStream(run, 'squad');
-    for (let k = 0; k < 2; k++) {
+    for (let k = 0; k < n; k++) {
       const species = rng.shuffle(T.SPECIES_ORDER.filter((s) => s !== 'human')).slice(0, 2);
       const h = T.newDraftHero(run, 'Drafted' + k, 'the drafted', species);
       for (let p = 0; p < 3 * T.RULES.START_CARDS && h.cards.length < T.RULES.START_CARDS; p++) {
@@ -29,6 +32,27 @@ function createHarness(T = loadTumult()) {
       T.autoAllocate(h);
       run.heroes.push(h);
     }
+  }
+
+  /**
+   * Make every pilot of a squad a veteran of this level, as if back from earlier expeditions (T.pilotLevel):
+   * up to three more traits, then the rest of the level's growth as points, spent by the autoplayer.
+   */
+  function addLevel(run, level) {
+    const S = T.SCALING;
+    run.heroes.forEach((h) => {
+      let pts = (level - 1) * S.LEVEL_UP;
+      for (const c of T.runStream(run, 'squad').shuffle(T.CARDS.slice())) {
+        if (h.cards.length >= T.RULES.MAX_CARDS || pts < S.CARD_UP + 2) break;
+        if (h.cards.includes(c.id) || !T.canAddCard(h, c.id).ok) continue;
+        T.addCard(h, c.id);
+        pts -= S.CARD_UP;
+      }
+      h.upUnspent += pts;
+      T.autoAllocate(h);
+      // the level it set out at: a tier's kit (T.addProgression) is growth on this expedition, not before it
+      h.level = level;
+    });
   }
 
   /** Give a squad the kit it would plausibly have at this tier of a real run (T.addProgression). */
@@ -101,7 +125,9 @@ function createHarness(T = loadTumult()) {
         const rw = run.lastReward;
         run.heroes.forEach((h, hi) => {
           if (rw.picked[hi]) return;
-          if (rw.offers[hi].length) T.takeOfferedCard(run, rw.offers[hi][0], hi);
+          // the simulated players never exchange a trait: a full kit passes on an exchange, as it always has
+          if (rw.offers[hi].length && !T.isSwapOffer(run, hi, rw.offers[hi][0]))
+            T.takeOfferedCard(run, rw.offers[hi][0], hi);
           else T.skipOfferedCard(run, hi);
         });
         if (rw.boons) run.heroes.forEach((h, hi) => T.takeBoon(run, rw.boons[hi][0], hi));
@@ -248,6 +274,8 @@ function createHarness(T = loadTumult()) {
     T,
     ARCHETYPES,
     prebuiltSquad,
+    squadIds,
+    addLevel,
     draftedSquad,
     addProgression,
     playMission,
