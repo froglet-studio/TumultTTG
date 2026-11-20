@@ -205,7 +205,7 @@
    * The loading screen: the living sea, one line on what is happening, one tip, and who is ready when it is an
    * online table (`who`: [{ name, ready }]). The tip is chosen by `seed` so it does not flicker between renders.
    */
-  U.loadingHTML = function ({ line, place, who, seed } = {}) {
+  U.loadingHTML = function ({ line, place, who, seed, over } = {}) {
     const tip = TIPS[Math.abs(seed || 0) % TIPS.length];
     const people = (who || [])
       .map(
@@ -213,7 +213,54 @@
           `<span class="ld-who${p.ready ? ' ready' : ''}">${U.portrait ? U.portrait({ name: p.name, species: p.species || ['human'] }, 'xs') : ''}${esc(p.name)} ${p.ready ? 'ready' : 'joining…'}</span>`,
       )
       .join('');
-    return `<div class="loading" role="status" aria-live="polite"><span class="ld-ring" aria-hidden="true"></span><h2>${esc(line || 'The tide is turning')}</h2>${place ? `<p class="dim">Setting the board for ${esc(place)}…</p>` : ''}<div class="ld-tip"><span aria-hidden="true">✦</span><span><b>Tip.</b> ${esc(tip)}</span></div>${people ? `<div class="ld-people">${people}</div>` : ''}</div>`;
+    return `<div class="loading${over ? ' over' : ''}" role="status" aria-live="polite"><span class="ld-ring" aria-hidden="true"></span><h2>${esc(line || 'The tide is turning')}</h2>${place ? `<p class="dim">Setting the board for ${esc(place)}…</p>` : ''}<div class="ld-tip"><span aria-hidden="true">✦</span><span><b>Tip.</b> ${esc(tip)}</span></div>${people ? `<div class="ld-people">${people}</div>` : ''}</div>`;
+  };
+
+  /* ───────────── waiting for a painting ───────────── */
+  // The offline file carries every painting inside it; the web version fetches each one the first time a
+  // screen shows it (tools/build.mjs). Rather than show a mission over an empty sea and pop the place in a
+  // moment later, the loading screen covers it until the place and the squad's scenes are here, five seconds
+  // at most. A painting already in the page (a data URI) or fetched once before never waits.
+  const artHere = new Set();
+  let artWaiting = false;
+  const fetchArt = (src) =>
+    new Promise((res) => {
+      const done = () => (artHere.add(src), res());
+      const img = new Image();
+      img.onload = img.onerror = done;
+      setTimeout(done, 5000);
+      img.src = src;
+    });
+  /** True when every painting named is ready to draw; otherwise fetches them and renders again once they are. */
+  U.artReady = function (srcs) {
+    const need = srcs.filter((s) => typeof s === 'string' && s && !/^data:/.test(s) && !artHere.has(s));
+    if (!need.length) return true;
+    if (!artWaiting && typeof Image !== 'undefined') {
+      artWaiting = true;
+      Promise.all(need.map(fetchArt)).then(() => {
+        artWaiting = false;
+        U.render();
+      });
+    }
+    return typeof Image === 'undefined';
+  };
+  /** The loading screen to lay over a mission whose paintings are still on the way, or null when they are here. */
+  U.loadingGate = function () {
+    const m = U.screen === 'mission' && U.run && U.run.mission;
+    if (!m) return null;
+    const page = m.page && T.PAGE_BY[m.page];
+    const heroes = U.run.heroes || [];
+    const srcs = [page && T.ART && T.ART[page.plate]].concat(
+      heroes.map((h) => U.sceneSrc && U.pilotOf && U.sceneSrc(U.pilotOf(h))),
+    );
+    if (U.artReady(srcs)) return null;
+    return U.loadingHTML({
+      over: true,
+      line: 'The tide is turning',
+      place: page && page.name,
+      who: heroes.map((h) => ({ name: h.name, species: h.species, ready: true })),
+      seed: (U.run.stop || 0) + heroes.length,
+    });
   };
 
   /* ───────────── what this browser has seen ───────────── */

@@ -16,20 +16,50 @@
         background: #04070f;
         color: #cfe3f0;
       }
+      /* the first paint is the loading screen's own ring (src/ui/shell.css), until the game's script draws */
       .boot {
         font:
           600 14px/1.4 system-ui,
           sans-serif;
-        letter-spacing: 0.2em;
+        letter-spacing: 0.3em;
         text-align: center;
-        padding-top: 40vh;
+        padding-top: 34vh;
+        color: #bff4fb;
+      }
+      .boot i {
+        display: block;
+        width: 96px;
+        height: 96px;
+        margin: 0 auto 32px;
+        border-radius: 50%;
+        border: 3px solid rgba(127, 227, 240, 0.15);
+        border-right-color: #7fe3f0;
+        animation: boot-spin 1.4s linear infinite;
+      }
+      .boot small {
+        display: block;
+        margin-top: 10px;
+        letter-spacing: 0.08em;
+        font-weight: 400;
         opacity: 0.6;
+      }
+      @keyframes boot-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot i {
+          animation: none;
+        }
       }
     </style>
     <!--__HEAD__-->
   </head>
   <body>
-    <div id="app"><div class="boot">TUMULT</div></div>
+    <div id="app">
+      <div class="boot" role="status"><i aria-hidden="true"></i>TUMULT<small>The tide is turning…</small></div>
+    </div>
     <noscript><p class="boot">Tumult needs JavaScript to play.</p></noscript>
     <script>
       // Keep the game's files for offline play and faster return visits (sw.js). Only on https or

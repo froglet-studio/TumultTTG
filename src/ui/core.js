@@ -447,6 +447,7 @@
     } else if (act === 'draftBack') {
       d.step = arg === 'species' ? 'species' : 'mode';
       d.hero = null;
+      if (arg !== 'species') d.maker = null; // a pilot from Make a pilot stays theirs only while its clades do
       d.premade = false;
       d.pack = [];
       d.picks = 0;
@@ -501,7 +502,9 @@
       T.awaken(d.hero);
       // every pilot a player built is kept, to be chosen again beside the pre-made heroes
       if (!d.premade) {
-        const kept = T.keepMade(T.madeFrom(d.hero, new Date().toISOString()));
+        const rec = T.madeFrom(d.hero, new Date().toISOString());
+        const kept = T.keepMade(U.makerStamp ? U.makerStamp(d, rec) : rec);
+        if (U.makerKept) U.makerKept(d, kept);
         if (kept) d.hero.madeId = kept.id; // what it learns on this expedition comes home to this recipe
         if (kept && U.heroesShare) U.heroesShare(kept);
       }
@@ -1151,6 +1154,7 @@
     const root = app();
     if (U.screen !== 'mission' && U.windBed) U.windBed(false); // the wind stays on the board
     let html = '';
+
     // a screen with a renderer of its own (the app shell's tabs, settings, the codex, how to play)
     if (U.SCREENS && U.SCREENS[U.screen]) html = U.SCREENS[U.screen]();
     else
@@ -1195,6 +1199,8 @@
     if (U.modal)
       html += `<div class="modal-bg${U.modal.sheet ? ' sheet' : ''}${U.modal.side ? ' side' : ''}" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
     html += tutorialHTML();
+    // the web version lays the loading screen over a mission until its paintings are here (src/ui/shell.js)
+    if (U.loadingGate) html += U.loadingGate() || '';
     root.innerHTML = html;
     // #app is the page's scroller: a new screen starts at its top, a re-render stays where it was
     if (shown !== U.screen) root.scrollTop = 0;

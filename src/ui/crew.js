@@ -345,28 +345,41 @@
     T.autoAllocate(h);
     return h;
   };
+  /** Who a pilot from Make a pilot is, as its recipe keeps it: callsign, domain and story. */
+  const identity = (m) => ({
+    callsign: (m.own || m.callsign || '').toUpperCase(),
+    domain: m.domain,
+    story: m.story.map((s) => s.trim()),
+  });
+  /** Its story answers, sent as canon notes about it when the maker asked for that. */
+  function storyToCanon(m, kept) {
+    if (!m.canon || !U.canonKeep) return;
+    m.story.forEach((a, i) => {
+      if (a.trim())
+        U.canonKeep({
+          subject: 'hero:' + kept.id,
+          kind: 'answer',
+          claim: a.trim(),
+          shown: QUESTIONS[i].replace('{name}', m.name.split(' ')[0]),
+          where: 'maker:story',
+        });
+    });
+  }
   function saveMade(m) {
     const h = U.makerKit(m.name.trim(), m.clades);
-    const rec = T.madeFrom(h, new Date().toISOString());
-    rec.callsign = (m.own || m.callsign || '').toUpperCase();
-    rec.domain = m.domain;
-    rec.story = m.story.map((s) => s.trim());
+    const rec = Object.assign(T.madeFrom(h, new Date().toISOString()), identity(m));
     const kept = T.keepMade(rec);
     if (!kept) return null;
     if (U.heroesShare) U.heroesShare(kept);
-    if (m.canon && U.canonKeep)
-      m.story.forEach((a, i) => {
-        if (a.trim())
-          U.canonKeep({
-            subject: 'hero:' + kept.id,
-            kind: 'answer',
-            claim: a.trim(),
-            shown: QUESTIONS[i].replace('{name}', m.name.split(' ')[0]),
-            where: 'maker:story',
-          });
-      });
+    storyToCanon(m, kept);
     return kept;
   }
+  /**
+   * A pilot from Make a pilot whose cards are drafted: the draft keeps the maker (d.maker), and when the
+   * pilot is confirmed its recipe takes the callsign, domain and story, and the answers go to canon.
+   */
+  U.makerStamp = (d, rec) => (d && d.maker ? Object.assign(rec, identity(d.maker)) : rec);
+  U.makerKept = (d, kept) => d && d.maker && kept && storyToCanon(d.maker, kept);
 
   U.crewInput = function (name, value, el) {
     const m = U.maker;
@@ -506,6 +519,7 @@
         const d = U.draft;
         d.species = m.clades.slice();
         d.name = m.name.trim();
+        d.maker = m;
         if (U.draftAct) U.draftAct('openPacks');
         U.maker = null;
         break;
