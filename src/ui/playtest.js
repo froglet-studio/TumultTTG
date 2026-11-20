@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.76.0',
+    version: '2.76.1',
     items: [
+      {
+        text: 'A trait you lose now gives back every point on it. Exchange one of nine traits for a new one, or lose one to the Molt or Trade events, and all its upgrade points return to spend again, including the point a second copy of that trait added. Did the refund show up where you expected it?',
+      },
       {
         text: 'Up to five players. Pick 3, 4 or 5 players on the title (or host online and let up to four join with the code): each player drafts and flies one pilot, and you take turns. A bigger squad meets bigger missions: tougher foes, more of them, and more to do; the ⚖ pill on the route says how much. Does a squad of four feel as pressed as a squad of two? Is the board too crowded?',
       },

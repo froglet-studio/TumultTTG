@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.76.1 — 2026-11-20 — a lost card gives back every point
+
+Garrett: "when players loose a card they should get their points refunded."
+
+- **Refunds.** Whenever a trait leaves a kit (an exchange for a new trait, the "Molt a trait" and "Offer a trade" events), every upgrade point on it comes back to the pilot's free pool, including the point a second copy bound to it, spent or not. Before, the bound point was lost with the card. Every path goes through `T.removeCard`. No save change.
+
 ## 2.76.0 — 2026-11-20 — squads of up to five, missions that answer them, pilots that keep their growth
 
 Garrett: "create formulas for scaling maps etc. based on the player's level and the size of their party. set the max player count to 5. then players can save meta progression on their characters and a new adventure can scale with their upgrades."
