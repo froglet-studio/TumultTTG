@@ -98,21 +98,17 @@
   /** How many of a hero's traits count toward one clade. */
   T.cladeCount = (h, sp) => Object.values(T.cladeSlots(h, h.cards) || {}).filter((s) => s === sp).length;
   /**
-   * Can this hero take this trait? A trait two of their clades carry may be taken a second time, once:
-   * the second copy is not a card but DOUBLE_UP upgrade points bound to the first ({ ok, double: true }).
+   * Can this hero take this trait? A trait it already holds is not offered again (2.77; Garrett, 2026-11-20:
+   * "lets no longer have them gain extra points for drawing the card again. they just have a smaller pool").
+   * From 2.42 to 2.76 a trait two of a hero's clades shared could be taken twice, the second time as
+   * DOUBLE_UP points bound to it; saves and made pilots that hold such points keep them (h.bound).
    */
   T.canAddCard = function (h, cardId) {
     const c = T.CARD[cardId];
     if (!c) return { ok: false, why: 'unknown' };
     const mine = c.clades.filter((sp) => h.species.includes(sp));
     if (!mine.length) return { ok: false, why: 'not your bloodline' };
-    if (h.cards.includes(cardId)) {
-      if (mine.length < 2) return { ok: false, why: 'already held' };
-      if (h.bound && h.bound[cardId] != null) return { ok: false, why: 'already taken twice' };
-      const u = h.up[cardId] || [0, 0];
-      if (u[0] + u[1] + R().DOUBLE_UP > R().P_CAP + R().E_CAP) return { ok: false, why: 'already fully upgraded' };
-      return { ok: true, double: true };
-    }
+    if (h.cards.includes(cardId)) return { ok: false, why: 'already held' };
     if (h.cards.length >= R().MAX_CARDS) return { ok: false, why: 'kit is full (9)' };
     if (!T.cladeSlots(h, h.cards.concat(cardId)))
       return { ok: false, why: `already 3 of 9 from ${mine.map((sp) => T.SPECIES[sp].name).join(' and ')}` };
@@ -121,11 +117,6 @@
   T.addCard = function (h, cardId) {
     const r = T.canAddCard(h, cardId);
     if (!r.ok) return r;
-    if (r.double) {
-      h.bound = h.bound || {};
-      h.bound[cardId] = [R().DOUBLE_UP, 0]; // [bound to it, of those spent on it]
-      return { ok: true, double: true };
-    }
     h.cards.push(cardId);
     h.up[cardId] = [0, 0];
     return { ok: true };
@@ -177,7 +168,7 @@
   T.swapDrops = (h, cardId) => h.cards.filter((d) => T.canSwapCard(h, cardId, d).ok);
   /**
    * Exchange: the old trait leaves and the new one takes its place in the kit, unupgraded. The points
-   * spent on the old one come back to the free pool, except those a second copy bound to it, which go with it.
+   * on the old one, bound ones included, come back to the free pool (`T.removeCard`).
    */
   T.swapCard = function (h, cardId, dropId) {
     const r = T.canSwapCard(h, cardId, dropId);
@@ -190,8 +181,8 @@
   };
   T.draftPack = function (run, h, size) {
     size = size || 4;
-    // pool: every card of the hero's clades they could still take (a trait two of them share, a second
-    // time); weighted so each clade shows up
+    // pool: every card of the hero's clades they could still take, none they hold; weighted so each
+    // clade shows up
     const pool = T.CARDS.filter((c) => T.canAddCard(h, c.id).ok);
     const bySp = {};
     pool.forEach((c) => {
@@ -729,11 +720,11 @@
         .slice(0, n - offers[i].length)
         .map((c) => c.id);
       more.forEach((id) => given.add(id));
-      offers[i] = offers[i].concat(more); // a second copy it may still take comes first
+      offers[i] = offers[i].concat(more);
     });
     return offers;
   };
-  /** Is this offered trait an exchange for this hero (their kit is full and it is not a second copy)? */
+  /** Is this offered trait an exchange for this hero (their kit is full)? */
   T.isSwapOffer = (run, heroIdx, cardId) => {
     const h = run.heroes[heroIdx];
     return h.cards.length >= R().MAX_CARDS && !h.cards.includes(cardId);
@@ -974,9 +965,7 @@
     const h = run.heroes[heroIdx];
     const sp = T.CARD[dropId].clades.find((x) => h.species.includes(x)) || T.CARD[dropId].sp;
     T.removeCard(h, dropId);
-    const cands = T.cardsOf(sp).filter(
-      (c) => c.id !== dropId && !T.canAddCard(h, c.id).double && T.canAddCard(h, c.id).ok,
-    );
+    const cands = T.cardsOf(sp).filter((c) => c.id !== dropId && T.canAddCard(h, c.id).ok);
     const nc = T.runStream(run, 'event').pick(cands);
     if (nc) T.addCard(h, nc.id);
     return nc ? nc.id : null;
