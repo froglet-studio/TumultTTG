@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.78.0 — 2026-11-20 — made pilots on Froglet's character sheet
+
+Garrett: "Whenever a player creates or updates a character, add or update their row in the Google Sheet … Leave the Pilot columns alone."
+
+- **The player's name travels with their pilots.** Tumult Online's store now keeps `who`, the name the player's account shows, beside their list of made pilots (`heroes/<player id>`), and writes it once for lists saved before. No save change; the offline build is untouched.
+- **Rows for the sheet.** `node tools/pilot-sheet.js <heroes dir>` turns the store's documents into one row per pilot (name, player, the two clades, traits, each face with its level) in a Drive feed file named by its content.
+- **The sheet keeps itself up to date.** `tools/sheets/pilots-sync.gs`, an Apps Script bound to the sheet, applies the newest feed every ten minutes: upserts by pilot id, claims a seeded row whose species match, never writes the Pilot columns or empties the story columns, and sets Tumult status to Finished once Backstory, Look, Personality and Faction or job are filled. How it fits together: `docs/reference/PILOT_SHEET.md`.
+
 ## 2.77.0 — 2026-11-20 — a held trait is never offered again
 
 Garrett: "lets no longer have them gain extra points for drawing the card again. they just have a smaller pool. which gives them more reliability in their late game adaptive swaps."
@@ -46,7 +54,7 @@ Garrett, after 2.73.1: "it feels slow often… like it is waiting for the networ
 
 - **A fast lane.** Where the page offers a live channel between the screens open on it (claude.ai's `room`), a game's screens meet in a room named for its code. A guest sends each command there as well as to the store, and the host says "this state is written" there after each write, so the guest reads it at once. Messages there can drop, so the store stays the truth; the room only hurries it along. Tumult Online opens the two topics (`cmd`, `rev`) to Contributors and up.
 - **A backstop read.** A guest reads the host's state at least every 2 seconds when nothing has arrived, so a stalled live delivery costs 2 seconds, not 30.
-- **Rejoin after a reload.** The game a screen is in is remembered on the device (`tumult_v2_net`, 12 hours; leaving on purpose forgets it), and the title offers *Rejoin game ABCD*. A guest takes its seat again (waiting out the few seconds a reloaded page's seat claim lasts) and carries on numbering from the host's acks; a host picks the game up from the state it last wrote, with its acks and results.
+- **Rejoin after a reload.** The game a screen is in is remembered on the device (`tumult_v2_net`, 12 hours; leaving on purpose forgets it), and the title offers _Rejoin game ABCD_. A guest takes its seat again (waiting out the few seconds a reloaded page's seat claim lasts) and carries on numbering from the host's acks; a host picks the game up from the state it last wrote, with its acks and results.
 - **Tests.** Online tests for a guest and then a host reloading and rejoining, and for moves crossing through the room in under a second while the store hears nothing live.
 
 ## 2.73.1 — 2026-11-20 — online: a partner's turn no longer resets
@@ -71,7 +79,7 @@ Garrett's ask: nothing categorically better than anything else, everything usefu
 
 ## 2.72.0 — 2026-11-19 — pilots you made, ready to fly again
 
-- **Every pilot built is kept.** Confirming a pilot drafted from packs keeps its name, clades, cards and the points on them (`T.madeFrom`, kept on the device under `tumult_v2_heroes`, newest first, up to 60). A new expedition lists them under the pre-made heroes, *…or play a pilot someone made*, and picking one builds it exactly as it was (a trait taken twice keeps its own point). ✕ takes one of your own off the list. Playing a pre-made hero adds nothing.
+- **Every pilot built is kept.** Confirming a pilot drafted from packs keeps its name, clades, cards and the points on them (`T.madeFrom`, kept on the device under `tumult_v2_heroes`, newest first, up to 60). A new expedition lists them under the pre-made heroes, _…or play a pilot someone made_, and picking one builds it exactly as it was (a trait taken twice keeps its own point). ✕ takes one of your own off the list. Playing a pre-made hero adds nothing.
 - **Shared on the test page.** On the test page and Tumult Online each player's made pilots are also written to the page's store (`heroes/<viewer id>`), so everyone who opens the page can fly them, with the maker's name shown. A pilot shared by someone else is rebuilt from the rules before it is offered (`T.validMade`: real clades and cards, 3 of 9, caps, no more points than a new hero), and flying it does not make it yours. The offline TUMULT.html keeps them on the device only.
 
 ## 2.71.0 — 2026-11-19 — the dock: your turn in one place
@@ -84,6 +92,7 @@ Garrett's ask: nothing categorically better than anything else, everything usefu
 
 - **Stop cards.** Above the route, every stop the squad can reach next stands as a card, side by side: for a mission, its objective in a word (Hold, Break in, Find, Channel, Carry, Tag, Defeat) and in full, how many rounds its clock gives, the foes on the board (with counts and vitality in the tips) and any swarm that keeps coming, the place's gravity and weather, and its bonus goals. A haven or an event says what it offers. Each card has its own Set out button, and hovering a card lights its stop on the route. The numbers are exact: the card reads the same spec the mission is launched from (`T.missionSpec`, `T.previewStop`), and previewing changes nothing in the run. Which cache is real stays hidden.
 - **The route reads from the top.** The squad sets out at the top of the route and the Heart waits at the foot, so the first choice is on screen without scrolling. A stop's tip on the route now also gives its objective, clock and foes.
+
 ## 2.69.0 — 2026-11-19 — 76 more painted pilots
 
 - **Art.** Cosmic Shore's 76 new painted crew pilots join the 50 already here, each with a portrait and a scene in their world (`assets/pilots/`, `assets/scenes/`) and their pair of clades, so 126 paintings now cover 126 different pairs. Heroes whose pair had only a stand-in before often get an exact painting now, and a squad has far more faces to choose from. Scenes also rotate behind the title.
@@ -109,14 +118,14 @@ Garrett's ask: nothing categorically better than anything else, everything usefu
 
 With all 21 branches built, each pre-made hero is now a painted Cosmic Shore pilot: that pilot's name, pair of clades and art (Garrett chose the pilots' names). Each keeps the old hero's title and role; the ids stay the old names so saved canon notes still match.
 
-| Was | Now (painting) | Clades |
-|---|---|---|
-| Cavitt, the Brawler-in-the-Cloud (octopus, grasshopper) | Rosh (BANDIT) | octopus, raven |
-| Marish, the Tidewarden (eel, flytrap) | Ekora (FLUME) | otter, eel |
-| Ossa, the Bulwark (tardigrade, gecko) | Nedira (CITADEL) | hedgehog, tortoise |
-| Veil, the Nightwing (owl, jerboa) | Echo (ECHO) | mouse, owl |
-| Mycel, the Network (cordyceps, axolotl) | Karenth (VOLT) | axolotl, koi |
-| Kess, the Catapult (grasshopper, eel) | Slingshot (SLINGSHOT) | flamingo, mantis shrimp |
+| Was                                                     | Now (painting)        | Clades                  |
+| ------------------------------------------------------- | --------------------- | ----------------------- |
+| Cavitt, the Brawler-in-the-Cloud (octopus, grasshopper) | Rosh (BANDIT)         | octopus, raven          |
+| Marish, the Tidewarden (eel, flytrap)                   | Ekora (FLUME)         | otter, eel              |
+| Ossa, the Bulwark (tardigrade, gecko)                   | Nedira (CITADEL)      | hedgehog, tortoise      |
+| Veil, the Nightwing (owl, jerboa)                       | Echo (ECHO)           | mouse, owl              |
+| Mycel, the Network (cordyceps, axolotl)                 | Karenth (VOLT)        | axolotl, koi            |
+| Kess, the Catapult (grasshopper, eel)                   | Slingshot (SLINGSHOT) | flamingo, mantis shrimp |
 
 - Each kit keeps six cards, at most three per bloodline, and six UP with two cards awakened.
 - **Balance** (`node tools/sim.js 40`, before → after):
@@ -260,7 +269,7 @@ The fourteenth branch of the tree (`docs/design/11-clades.md`): the last two pai
 - Shared traits:
   - **Hollow Bones** (every bird) and **Ground Sprint** (both)
   - the turkey carries the peacock's **Display Fan**, **Alarm Call** and **Spur**
-  - the ostrich carries the hoofed animals' **Kick** and **Wide Eyes**. It is not their kin, but it gives the same answer to the same open plain (a *variant*, `docs/design/11-clades.md`).
+  - the ostrich carries the hoofed animals' **Kick** and **Wide Eyes**. It is not their kin, but it gives the same answer to the same open plain (a _variant_, `docs/design/11-clades.md`).
 - Traits of each one's own:
   - ostrich: Stride, Head Low, Wing Fan, Stone Gizzard and Nest Ring
   - turkey: Gobble, Flock Watch, Roost Flight and Wattle Flush
@@ -442,11 +451,11 @@ The fifth branch of the tree (`docs/design/11-clades.md`): three painted sea mam
 
 The third and fourth branches of the tree (`docs/design/11-clades.md`): eight painted animals, each with nine traits.
 
-- **Fennec Fox, Red Fox, Golden Jackal, Coyote and Spotted Hyena** (branch *Dogs and hyenas*).
+- **Fennec Fox, Red Fox, Golden Jackal, Coyote and Spotted Hyena** (branch _Dogs and hyenas_).
   - Keen Nose, Pack Howl and Long Trot are carried by all five; Pin Down by the four dogs.
   - Fennec and fox share Mousing Pounce and Den; jackal and coyote share Yip Chorus and Opportunist.
   - The hyena also carries the cats' Killing Bite: hyenas sit on the cat side of the carnivores, so a branch may name a second branch it is kin to (`alsoKin`).
-- **Sea Otter, Honey Badger and Red Panda** (branch *Weasel kin*). All three carry Musk and Dense Fur; otter and badger share Ferocity. The otter also shares Human Tool Use; the red panda shares Human Grip and the ocelot's Headfirst Descent (variants for unrelated climbers).
+- **Sea Otter, Honey Badger and Red Panda** (branch _Weasel kin_). All three carry Musk and Dense Fur; otter and badger share Ferocity. The otter also shares Human Tool Use; the red panda shares Human Grip and the ocelot's Headfirst Descent (variants for unrelated climbers).
 - Every clade keeps at least one trait no clade on its branch carries; each has a voice in the passages between stops.
 - The audit reports no narrow faces (Keen Nose's Track also Marks the nearest foe).
 - Balance: in 240 drafted runs with the look-ahead player, main wins 88 and this release 85. The new clades together win about as often as the old (37% against 36%); the red fox ran highest, so Go to Ground no longer heals and Line Up gives +1 instead of +1 to +2. `node tools/sim.js 120 runs` moves 47 → 55 (look-ahead) and 22 → 27 (heuristic), but half its squads are drafted from a longer clade list, so they are different squads; the paired drafted runs above are the like-for-like test.
@@ -482,6 +491,7 @@ The second branch of the tree: five painted cats, each with nine traits.
 - Tests for both movement changes.
 
 Audit: 272 faces, 0 narrow (Throat Bite became a strike plus a finishing bite after the first pass flagged it), 0 hard-counter candidates, 0 collapsed gate cells. Simulation, `node tools/sim.js 40`, before and after the cats (on 2.43): heuristic run wins 5/40 → 7/40, mission win 72% → 73%; look-ahead 14/40 → 12/40, 83% → 83%. Within noise.
+
 ## 2.46.0 — 2026-11-16 — Survey, a second mission that is not a fight
 
 The next non-combat mission from the plan for two-player runs (`docs/design/03-missions.md`), aimed at turns where one move is clearly best.
@@ -494,6 +504,7 @@ The next non-combat mission from the plan for two-player runs (`docs/design/03-m
 - **Balance** (`node tools/sim.js 80 runs`, main → 2.46.0): heuristic 18 → 17, look-ahead 32 → 33. Survey cells over 40 missions, heuristic / look-ahead: t1 100/100%, t2 80/100%, t3 33/90%.
 - **Dull turns** (`node tools/turns.js 10`): Survey t1/t2/t3 31/24/35%, against 38/42/31% for the Cascade it replaces at tier 2. It started at 43% at tier 2 when marks took AP only and could be tagged from beside them.
 - No mission needs an ability: squads with no cards at all win Survey 100% at tier 1 and 94% at tier 2 (`ABILITY_AUDIT.md`).
+
 ## 2.45.0 — 2026-11-16 — canon from play: defining moments
 
 A step of design 06: when something dramatic happens to a pilot, the game says what happened and asks what it meant.
@@ -510,7 +521,7 @@ Garrett: "more canon is better, but guide them into an interesting question wher
 - **Every question now has three parts**: a **detail** the game already shows (from the atlas's field notes), a **question** about it, and three **openings**, the first words of an answer for the player to carry on ("It is ground down and…"). Picking an opening puts it in the box; it never overwrites words the player wrote. Answers may also start from nothing. Nothing in a question is new canon: each detail restates its page.
 - **After every mission**, the mission-over panel asks one question about the page it was played on ("While the dust settles"). 27 questions, three for each of the nine places. A question answered on this device is not asked again until its place's others have been.
 - **At the draft**, the question about the Cosmic Shore pilot whose painting the hero wears takes the same shape: the nine pilots whose world is an atlas page get their own question first ("Who taught Brikon to carry it alone…?"), then five every pilot shares, filled with their name and clades. It replaces the "why do they guide?" choices of 2.20.
-- Optional as before: *Send* on the panel, or *Continue* sends what was typed; turning questions off under Canon hides them. What is typed survives the screen redrawing. Answers carry the question and detail they answer (`prompt`, `shown`).
+- Optional as before: _Send_ on the panel, or _Continue_ sends what was typed; turning questions off under Canon hides them. What is typed survives the screen redrawing. Answers carry the question and detail they answer (`prompt`, `shown`).
 - No rules, dice or missions change.
 
 ## 2.43.0 — 2026-11-16 — the primates
@@ -647,7 +658,7 @@ Garrett: "make the ladder up the rogue like adventure look better and more repre
 
 - **Legs.**
   - Each leg lies over its painting, which is now plain to see (the road is dimmed where it runs, not the whole picture).
-  - Each leg is headed *Leg I · by land*, then its name, then a line from that ground's guides, written from `docs/LORE.md`: ground that deforms and is rebuilt, windbreaks, the constant wind, uphill and downhill.
+  - Each leg is headed _Leg I · by land_, then its name, then a line from that ground's guides, written from `docs/LORE.md`: ground that deforms and is rebuilt, windbreaks, the constant wind, uphill and downhill.
   - The finale is headed by what the threat looks like, over its own ground, and breathes rose.
   - A leg you have finished fades to sepia.
 - **Stops.**
@@ -658,7 +669,7 @@ Garrett: "make the ladder up the rogue like adventure look better and more repre
 - **The road.**
   - The road taken is lit gold, the next choices glow and flow, and the roads ahead are dotted.
   - Stops you passed by fade, and stops more than two rows ahead are dimmed, though still readable for planning.
-  - Your two pilots stand beside the stop where you last stopped, and before the first stop at the foot of the route, *setting out*.
+  - Your two pilots stand beside the stop where you last stopped, and before the first stop at the foot of the route, _setting out_.
 - **Behind the scenes.** A painting shown many times is written into the page once, as a class (`U.artClass`), never repeated in the markup or in tooltips. On a phone, the leg titles shrink to a line and the stops use the whole width.
 - No rule or balance changes.
 
@@ -708,7 +719,7 @@ Garrett: "Fix the formatting issues and add back buttons where possible."
   - The draft's first step leads back to the title, or for the second pilot back to the first pilot as it was left.
   - The packs lead back to the bloodlines.
   - Spending Upgrade Points leads back to choosing how to build.
-  - The route, missions, rewards, havens and events all have a Title button. The run is saved, and Continue resumes it where it was left. Online, that button reads *Leave game*.
+  - The route, missions, rewards, havens and events all have a Title button. The run is saved, and Continue resumes it where it was left. Online, that button reads _Leave game_.
 - No rule changes.
 
 ## 2.29.0 — dice kinds and four dice a turn
@@ -757,7 +768,7 @@ Step 3 of the two-player plan: the place is an opponent too, so the same squad p
 - **Heavy gravity** (3 g or more: Crystal Quarry, High Pass Halt): anything shoved or pulled takes 1 damage for each space it is moved.
 - **Wind:** at the end of every round every unit moves 1 space downwind (toward E or toward A), if a path leads there and the space is free. A shield, an anchor or a hover holds you; the Heart stands. It blows before hazards.
 - **Fog:** a ranged strike reaches only units within 2 steps, even in its zone.
-- Each page lists the weathers a visit may bring (`skies`), and each mission draws one from a stream of its own, so a seed's board is unchanged. The top bar shows today's rules with the rule in its tip, the forecast shows where the wind will put everyone, the log opens with them, and the atlas spread lists them under *Rules of this place*.
+- Each page lists the weathers a visit may bring (`skies`), and each mission draws one from a stream of its own, so a seed's board is unchanged. The top bar shows today's rules with the rule in its tip, the forecast shows where the wind will put everyone, the log opens with them, and the atlas spread lists them under _Rules of this place_.
 - **Save version 10:** the mission keeps its `place` and its board its `fog`. A mission under way in an older save keeps normal gravity and calm air (fixture `save-2.24.json`).
 - **Balance (`node tools/sim.js 40`, before → after):** a little harder, never easier. Full runs: heuristic 9 → 7 of 40, look-ahead 21 → 19 of 40. Single missions within a few points everywhere; the heuristic loses a little more at tier 3 (swarm 93 → 83%, cascade 90 → 85%), the look-ahead player wins tier-3 elites 95 → 98% and the finale 60 → 65% (heuristic 35 → 40%).
 - **Dull turns (`node tools/turns.js 10`):** 41% → 39%. Light gravity and wind give Mass and Brace more to do, but most dull turns are still at tier 1; the missions that are not fights (next step) are aimed there.
@@ -767,7 +778,7 @@ Step 3 of the two-player plan: the place is an opponent too, so the same squad p
 
 Step 2 of the two-player plan: a baseline for "both players have interesting decisions every turn".
 
-- **`T.turnChoices(m, hero)`** (`src/engine/lookahead.js`) says what one hero's turn offers from here: *idle* (nothing is worth 3 points over doing nothing), *forced* (one clear best outcome) or *open* (two or more different outcomes close to the best). It works on an imagined copy and changes nothing.
+- **`T.turnChoices(m, hero)`** (`src/engine/lookahead.js`) says what one hero's turn offers from here: _idle_ (nothing is worth 3 points over doing nothing), _forced_ (one clear best outcome) or _open_ (two or more different outcomes close to the best). It works on an imagined copy and changes nothing.
 - **`node tools/turns.js 10`** plays every archetype and tier with the look-ahead player and reports idle, forced and open turns, and dull turns for each pilot. Baseline: 13% idle, 28% forced, 59% open, so about 41% of turns are dull. The worst are tier 1, elites (69%) and vaults (61%). `docs/reference/PLAYERS.md` has the table.
 - No change to play.
 
@@ -777,7 +788,7 @@ Garrett: "both players should always get an upgrade." The first step of the two-
 
 - **A trait for every hero.** After a won mission each hero is offered three cards of their own, drawn from the traits that hero can take, and no card is offered to both. Each takes one or skips for +2 ◇. Before, the squad shared one pick of one card.
 - **A boon for every hero** after an elite: each picks one of their own two.
-- **With two players, each chooses for their own pilot**, on one screen or two: *Skip* is now a pilot's choice, not the host's, and goes through `T.execCommand` like *Take*. *Continue* waits until every pilot has chosen.
+- **With two players, each chooses for their own pilot**, on one screen or two: _Skip_ is now a pilot's choice, not the host's, and goes through `T.execCommand` like _Take_. _Continue_ waits until every pilot has chosen.
 - **Save version 9:** the reward keeps one offer per hero (`offers`, `boons`, and a `picked` / `boonPicked` flag each). A version-8 save on the reward screen offers its one trait and boon to each hero (fixture `save-2.22.json`).
 - **Balance:** within noise. Full runs, `node tools/sim.js 40`: heuristic 8 → 9 of 40, look-ahead 21 → 21 of 40; 80 heuristic runs: 20 → 21. Single missions are unchanged (their kits are fixed). The simulated players take the first card offered, so a person who chooses well may gain more than this shows; watch it in playtests.
 
@@ -785,14 +796,14 @@ Garrett: "both players should always get an upgrade." The first step of the two-
 
 Garrett: "the multiplayer didn't work. nothing happened they didn't connect. the players should take turns."
 
-- **Turns.** With two players, a mission's hero phase is played one player at a time. The player whose turn it is flies their own pilot and presses *End turn*, the other player then does the same, and the enemy turn comes once both are done. The first player alternates each round: seat (round − 1) mod players goes first. A player whose pilots are all down is skipped. `T.turnSeat(run)` decides, and `T.execCommand` refuses a command, or an end of turn, from a player whose turn it is not. This applies on one shared screen and online alike. It is tracked in `party.ready`, so the save shape does not change. It only restricts the order of actions and changes no rules or numbers, so difficulty can only hold or rise.
+- **Turns.** With two players, a mission's hero phase is played one player at a time. The player whose turn it is flies their own pilot and presses _End turn_, the other player then does the same, and the enemy turn comes once both are done. The first player alternates each round: seat (round − 1) mod players goes first. A player whose pilots are all down is skipped. `T.turnSeat(run)` decides, and `T.execCommand` refuses a command, or an end of turn, from a player whose turn it is not. This applies on one shared screen and online alike. It is tracked in `party.ready`, so the save shape does not change. It only restricts the order of actions and changes no rules or numbers, so difficulty can only hold or rise.
 - **Why the join failed.** A partner who opened the test page from its share link holds view access, and view access can never write to the page's store, so their join failed with no message. The title now checks `user.can('data.write')` and, when it is false, explains that the partner needs an email invite as Editor or a Contributor seat in the organization. Store errors when hosting, joining or sending are shown instead of swallowed. Online games move to a separate invite-only page.
 
 ## 2.22.0 — 2026-11-13 — canon from play: the storyteller pack
 
 Step 3 of 4. What the lore lead approves becomes a resource for AI storytellers, and public canon is kept in this repository as well.
 
-- **`node tools/canon-pack.js records.jsonl`** writes `dist/canon/tumult-storyteller.md` and `tumult-canon.jsonl` from the game and the approved records (the inbox's *Copy canon*). In order of authority: the rules a story must respect (numbers taken from `T.RULES`), the world (`docs/LORE.md`), every atlas place, Cosmic Shore pilot and foe with its approved canon beneath it (a correction names the text it replaces), other canon, and what is off limits. `--proposals` adds undecided notes, labelled as ideas to offer, never facts. Rejected notes never appear. The pack can hold private canon, so it stays under `dist/` and is never committed.
+- **`node tools/canon-pack.js records.jsonl`** writes `dist/canon/tumult-storyteller.md` and `tumult-canon.jsonl` from the game and the approved records (the inbox's _Copy canon_). In order of authority: the rules a story must respect (numbers taken from `T.RULES`), the world (`docs/LORE.md`), every atlas place, Cosmic Shore pilot and foe with its approved canon beneath it (a correction names the text it replaces), other canon, and what is off limits. `--proposals` adds undecided notes, labelled as ideas to offer, never facts. Rejected notes never appear. The pack can hold private canon, so it stays under `dist/` and is never committed.
 - **`--public`** keeps `docs/canon/public.jsonl`: canon the lore lead marked public, a redundant copy in git (Garrett, 2026-11-13). A record no longer public canon leaves it on the next run.
 - No change to play.
 
@@ -800,8 +811,8 @@ Step 3 of 4. What the lore lead approves becomes a resource for AI storytellers,
 
 Step 2 of 4. On the test page, canon notes leave the device and reach a private inbox, where the lore lead decides on each one.
 
-- **Sent as written.** Every ✎ correction and draft answer is written to the test page's store (`canon/<viewer>/notes/<id>`); notes written while the store was not answering go when it does. *Canon* on the title says how many have been sent.
-- **The inbox** (Canon → *Open the inbox*, for the page's owner and editors): every note with who sent it, what they were shown and where, filtered by proposed, canon, rejected or all. The owner, as lore lead, marks each *canon*, *rejected* or *keep proposed*, edits its wording, and ticks **public** for what may be copied into this repository (Garrett, 2026-11-13); decisions are kept in `canonReview/<id>`. *Copy canon* gives the approved notes as JSON lines with the decisions applied.
+- **Sent as written.** Every ✎ correction and draft answer is written to the test page's store (`canon/<viewer>/notes/<id>`); notes written while the store was not answering go when it does. _Canon_ on the title says how many have been sent.
+- **The inbox** (Canon → _Open the inbox_, for the page's owner and editors): every note with who sent it, what they were shown and where, filtered by proposed, canon, rejected or all. The owner, as lore lead, marks each _canon_, _rejected_ or _keep proposed_, edits its wording, and ticks **public** for what may be copied into this repository (Garrett, 2026-11-13); decisions are kept in `canonReview/<id>`. _Copy canon_ gives the approved notes as JSON lines with the decisions applied.
 - **Who reads what:** a tester writes and reads only their own notes; editors and the owner read all of them; only the owner decides. The test page is published with these store rules (`docs/reference/CANON.md`).
 - `TUMULT.html` is unchanged: with no store, notes stay on the device and are copied by hand. No rules, dice or missions change.
 
@@ -809,9 +820,9 @@ Step 2 of 4. On the test page, canon notes leave the device and reach a private 
 
 Garrett: "the web experience asks us for flavor through the experience. then this gets recorded into the lore … steer the details of the world by correcting what is presented." This is the first of four steps (plan agreed with Garrett, 2026-11-13).
 
-- **Correct this.** A small ✎ sits beside the atlas's rules of a place, its blurb, weather and field notes; the pilot named on the title screen; every foe's flavour in the Codex; and every event's text. A player picks *That's wrong*, *Add a detail* or *Love this* and writes a line.
+- **Correct this.** A small ✎ sits beside the atlas's rules of a place, its blurb, weather and field notes; the pilot named on the title screen; every foe's flavour in the Codex; and every event's text. A player picks _That's wrong_, _Add a detail_ or _Love this_ and writes a line.
 - **One question at the draft:** why does the Cosmic Shore pilot whose painting this hero wears guide? Three answers are offered (a rotation of `T.CANON_HOOKS`), or the player writes their own; it is optional, and can be turned off.
-- **Each answer is a canon record** (`src/engine/canon.js`): plain data with what was shown, where, the build, page and mission, starting *proposed* and *private*. Garrett is the lore lead: only he makes a record canon, and only records he marks public are ever copied into this repository. Records are kept on the device (`tumult_v2_canon`, newest 500), apart from any run, so the save is unchanged.
+- **Each answer is a canon record** (`src/engine/canon.js`): plain data with what was shown, where, the build, page and mission, starting _proposed_ and _private_. Garrett is the lore lead: only he makes a record canon, and only records he marks public are ever copied into this repository. Records are kept on the device (`tumult_v2_canon`, newest 500), apart from any run, so the save is unchanged.
 - **Canon** on the title screen lists them, turns the questions on or off, and copies them as JSON lines. The test page will send them to a private inbox in the next step.
 - No rules, dice or missions change: the simulation is untouched.
 
@@ -822,7 +833,7 @@ Garrett: "the physical copy should have a book of these with each page a differe
 - **Nine pages**, three for each ground: Crystal Quarry, Mast-Crop Hills, Barricaded Market (land); Tidal Wreck Flats, Drowned Hamlet, Kelp Lagoon (sea); Floating Meadows, High Pass Halt, Burrowed Sea Cliff (air). Each grows from a Cosmic Shore pilot scene, whose painting is its plate. Places are kinds, not named spots, so a page can stand for a different place each session (Garrett).
 - **One fixed board per page** (Garrett: "Choose A"), with its own shape: terraces joined by ramps, a threshing ring, a barricaded street, a ring of floats round a lagoon, rafts joined by single paths. Zones follow the place (a raft, a terrace, a ledge), some spaces sit in two, and some pages add high ground or a hazard (X1).
 - **Spaces have names**, A1 to E3: the letter is how far from where you arrive, the number the side. Every mission places its starts, foes and objectives by name, so each of the six missions works on every page. A mission's own ledge is L1.
-- **The Atlas screen** (title and every header): the contents by ground, and each place as a spread: the board on the left page; facing it, *Rules of this place* (what its paths and special spaces do) and *Field notes* (gravity, weather, what it is, ecology, life there, who comes from such places). In a mission, the place's name in the top bar opens its page, and the board sits over the place's painting.
+- **The Atlas screen** (title and every header): the contents by ground, and each place as a spread: the board on the left page; facing it, _Rules of this place_ (what its paths and special spaces do) and _Field notes_ (gravity, weather, what it is, ecology, life there, who comes from such places). In a mission, the place's name in the top bar opens its page, and the board sits over the place's painting.
 - **On the route**, each stop is given a page of its leg's ground (stream `atlas`), not the page of a stop that leads to it while the ground has another; the route's tips name the place.
 - **Gravity and weather are printed but have no rules yet**: that is 2.20.
 - **Difficulty (harder, not easier):** `node tools/sim.js 40`, before → after. Heuristic 13 → 8 runs of 40, missions 79% → 74%; look-ahead 22 → 21 runs, missions 90% → 88%. The finale is the main change: Heart win rate 43% → 35% (heuristic) and 78% → 60% (look-ahead), and 15.7 → 18.2 rounds; on its own it ranges by page from 50% (High Pass Halt) to 100% (Tidal Wreck Flats) for the look-ahead player. The Thinning Swarm at tier 3 got easier for the heuristic (63% → 93%) and Elite tier 1 too (80% → 93%), on boards with more room. The ability audit has no narrow faces and no collapsed gate cells.
@@ -833,7 +844,7 @@ Garrett: "the physical copy should have a book of these with each page a differe
 
 Garrett: "move away from lanes as vertical columns of nodes", toward boards with the spatial variety of Unmatched. This is the first step of the atlas plan: the rule a board of any shape needs.
 
-- **Zones.** Every node sits in one or more coloured zones, and two units that share a zone are in range of a ranged strike, at any distance. A node in two zones reaches both. Every card, foe and piece of gear that said *lane* now says *zone* (`zone_all`, `foe_zone_all`, `area: 'zone'`); Hidden and Located work as before.
+- **Zones.** Every node sits in one or more coloured zones, and two units that share a zone are in range of a ranged strike, at any distance. A node in two zones reaches both. Every card, foe and piece of gear that said _lane_ now says _zone_ (`zone_all`, `foe_zone_all`, `area: 'zone'`); Hidden and Located work as before.
 - **On today's boards each column is one zone**, so play is unchanged: the full simulation (`node tools/sim.js 40`, both players) and six narrated missions are byte-identical before and after. Heuristic 13/40 runs, look-ahead 22/40, as before.
 - **Drawn as regions.** Each zone is one soft region whatever its shape (a disc at each node, joined along the shortest tree between them), named under its lowest node; a node's outer ring shows an arc for each of its zones. New muted colours (Slate, Sand, Plum, Sage, Clay, Ash) so a zone is never mistaken for an etherion or a domain.
 - **Saves:** version 7 replaces a board node's `lane` with `zones`. A version-6 save's lane becomes a zone of the same name (fixture `save-2.17.json`).
@@ -854,10 +865,10 @@ Garrett: "it should have a different feel and adventure each time." Each run now
 
 Garrett chose the frame: each run is an expedition on Tumult, set down from an Ark, with the Terminal narrating. This step changes only words; the rules, ids and saves are untouched.
 
-- **One setting throughout.** The skiff, the HyperSea tide-run and the Consolidation are gone from every screen, mission, foe, event and log line. The title reads *An expedition on Tumult*; *New Tide* is *New Expedition*; the Tide Map is *the route*, and its three legs are *the Lowland Reach*, *the Open Sea* and *the High Air* (land, sea and air, as Tumult's guide services run). The Heart stays the end of the route.
-- **Difficulty is weather now:** *Steady wind* (was Rising tide) and *Gale* (was Flood tide). Same rules, same ids (`rising`, `flood`), so a saved choice carries over.
+- **One setting throughout.** The skiff, the HyperSea tide-run and the Consolidation are gone from every screen, mission, foe, event and log line. The title reads _An expedition on Tumult_; _New Tide_ is _New Expedition_; the Tide Map is _the route_, and its three legs are _the Lowland Reach_, _the Open Sea_ and _the High Air_ (land, sea and air, as Tumult's guide services run). The Heart stays the end of the route.
+- **Difficulty is weather now:** _Steady wind_ (was Rising tide) and _Gale_ (was Flood tide). Same rules, same ids (`rising`, `flood`), so a saved choice carries over.
 - Renamed to match: Storm Lantern, Windbreak Charm, Etherion-touched, Call the Swarm, The Heart's Envoy, Quiet Hour; three mission titles (The Thinning Swarm, What the Wind Buried, Floodgate).
-- The interface still says *hero* and *bloodline*; those become *pilot* and *clade* together with the code, in roadmap milestone C1.
+- The interface still says _hero_ and _bloodline_; those become _pilot_ and _clade_ together with the code, in roadmap milestone C1.
 - A saved run keeps the leg names it was made with.
 
 ## 2.15.0 — 2026-11-13 — between the stops
@@ -886,7 +897,7 @@ Garrett: "increase the fidelity across the board; it should feel like it is in o
 
 The second step of multiplayer: two players on two screens, in one game, on the test page.
 
-- **Host and join.** On the test page's title screen, *Play online*: one player hosts and gets a four-letter code, the other joins with it. The host starts the tide when both are there. Each player drafts their own pilot at the same time; the map opens when both are done.
+- **Host and join.** On the test page's title screen, _Play online_: one player hosts and gets a four-letter code, the other joins with it. The host starts the tide when both are there. Each player drafts their own pilot at the same time; the map opens when both are done.
 - **One game, held by the host.** The host's screen carries out every change and writes the whole state to the page's shared store; the guest's screen shows it and sends its own commands, which the host carries out in the order they come. A screen that reloads or joins late is caught up by the next state. `src/ui/net.js`.
 - **Commands.** Everything a player does to the run now goes through `T.execCommand` (`src/engine/party.js`): a card face, a walk, a basic action, gear, an item, the round's Ready, a draft pick joining the squad, training, rewards and shopping. On one screen it runs at once, as before; online, on the host's. The host refuses a command for another player's pilot.
 - **Only the test page has it** (the playtest build, through claude.ai's shared store). `TUMULT.html` still makes no network requests and is unchanged. The partner needs edit access to the page (an organization member at Contributor, or an outside person invited by email as Editor).
@@ -899,7 +910,7 @@ Garrett: "now let's make it multiplayer." The first step: players and seats, whi
 
 - **Players.** The title screen picks Solo or 2 players (kept like the tide). With two, each player drafts and flies one pilot, and their name is on that pilot's draft, panel and party card. Today they pass one screen.
 - **Seats.** Each hero belongs to one player; seat 0, the host, makes the squad's shared choices (the route, rewards to skip, havens, events). A screen that holds only some seats acts only for their pilots; one that holds all (solo, or a passed screen) acts for everyone, as before. `src/engine/party.js` (rules), `src/ui/party.js` (who may click what).
-- **Ready.** A round ends when every player is ready. On one screen, End Round readies everyone at once, so nothing changes; from separate screens the button reads *Ready 1/2* until the last player presses it.
+- **Ready.** A round ends when every player is ready. On one screen, End Round readies everyone at once, so nothing changes; from separate screens the button reads _Ready 1/2_ until the last player presses it.
 - **Saves:** version 4 adds `run.party`; an older save loads with one player (fixture `save-2.11.json`).
 - **No rules change.** Two players meet exactly the squad, missions and dice one player does; a test holds a run to the same result whatever the number of players. The simulators are unaffected.
 
@@ -929,15 +940,15 @@ Garrett, after a playtest: a hero loaded with elemental crystals and no AP, or n
 
 Plan phase 4, second group of roadmap S2. The audit's last seven narrow faces each gain a small effect that matters in any mission; what they already did is unchanged.
 
-| Face | Card | Now also |
-|---|---|---|
-| Deflect (Eth) | Counterbalance Tail (Jerboa) | Shield E (at least 1) this round |
-| Blend | Chromatic Cloak (Octopus) | Shield 1 |
-| Ink | Ink Screen (Octopus) | foes adjacent to you Weakened 1 |
-| Gills | External Gills (Axolotl) | heal 1 (2 at P 2+) |
-| Enzymes (Eth) | Carnivorous Digestion (Flytrap) | heal 1 + E now |
-| Cilia Field (Eth) | Trigger-Hair Sense (Flytrap) | foes adjacent now Weakened 1 |
-| Endure | Extremophile Traversal (Tardigrade) | Shield 1 (2 at P 2+) this round |
+| Face              | Card                                | Now also                         |
+| ----------------- | ----------------------------------- | -------------------------------- |
+| Deflect (Eth)     | Counterbalance Tail (Jerboa)        | Shield E (at least 1) this round |
+| Blend             | Chromatic Cloak (Octopus)           | Shield 1                         |
+| Ink               | Ink Screen (Octopus)                | foes adjacent to you Weakened 1  |
+| Gills             | External Gills (Axolotl)            | heal 1 (2 at P 2+)               |
+| Enzymes (Eth)     | Carnivorous Digestion (Flytrap)     | heal 1 + E now                   |
+| Cilia Field (Eth) | Trigger-Hair Sense (Flytrap)        | foes adjacent now Weakened 1     |
+| Endure            | Extremophile Traversal (Tardigrade) | Shield 1 (2 at P 2+) this round  |
 
 - **Audit:** narrow faces 7 → 0 (168 staples, 30 tools); still no hard-counter candidates or collapsed gate cells. Endure left the never-played list; Vanish (Chromatic Cloak's Ethereal face) joined it.
 - **Balance:** the look-ahead player is unchanged (22 runs of 40). The heuristic falls from 9 runs to 6, and from 65% to 53% on the tier-3 Swarm: it plays any face with a Shield or a Weaken when threatened, so it now spends turns on Blend and Ink that it used to spend on blows. That is the weak player's blind spot, not a harder game (`docs/reference/BALANCE.md`, v2.9.0).
@@ -946,15 +957,15 @@ Plan phase 4, second group of roadmap S2. The audit's last seven narrow faces ea
 
 Plan phase 4, the first group of roadmap S2: the audit's narrow faces. Each of the seven Physical faces that only revealed now also does a small thing that matters in any mission. Its reveal is unchanged.
 
-| Face | Card | Now also |
-|---|---|---|
-| Spot | Pattern Recognition (Human) | your next strike this turn deals +1 |
-| Feel | Vibrissae Sense (Jerboa) | Shield 1 |
-| Listen | Sound Mapping (Barn Owl) | one free step |
-| Flick | Scent Tongue (Gecko) | Marks the nearest foe (+2 on the next hit) |
-| Feel Flow | Lateral Line (Axolotl) | the next hit on you is −1 |
-| Sense | Electroreception (Eel) | 1 true damage to the nearest foe in your lane |
-| Hairs | Trigger-Hair Sense (Flytrap) | adjacent foes Weakened 1 |
+| Face      | Card                         | Now also                                      |
+| --------- | ---------------------------- | --------------------------------------------- |
+| Spot      | Pattern Recognition (Human)  | your next strike this turn deals +1           |
+| Feel      | Vibrissae Sense (Jerboa)     | Shield 1                                      |
+| Listen    | Sound Mapping (Barn Owl)     | one free step                                 |
+| Flick     | Scent Tongue (Gecko)         | Marks the nearest foe (+2 on the next hit)    |
+| Feel Flow | Lateral Line (Axolotl)       | the next hit on you is −1                     |
+| Sense     | Electroreception (Eel)       | 1 true damage to the nearest foe in your lane |
+| Hairs     | Trigger-Hair Sense (Flytrap) | adjacent foes Weakened 1                      |
 
 - **Audit:** narrow faces 14 → 7; staples 154 → 161; still no hard-counter candidates or collapsed gate cells. The look-ahead player now plays Feel, which it never did before; it still never plays Listen or Flick, and Spot is still played almost only in the hidden-cache mission. Two faces joined the never-played list (Burrowing's Dig and Paralytic Bite's Ethereal face), most likely sampling noise from the changed play; the next S2 group looks at them.
 - **Balance:** next to nothing moves (`node tools/sim.js 40`; full runs: heuristic 9/40, look-ahead 22/40, as in 2.7.0). Tables in `docs/reference/BALANCE.md`.
@@ -980,6 +991,7 @@ The second slice of roadmap S1 (design/02), accepted into the core by Garrett.
   - Time: Brace, plus 1 extra track slide.
 
   Every etherion now has somewhere to go. Each channelled action is its own entry in `T.BASIC` (`el` names its etherion) and uses existing verbs. It is deliberately weaker than any Ethereal face of the same colour.
+
 - **Changed:** a channelled button appears beside the basic actions only while its etherion is banked. The heuristic channels Mass into Strike when it can; the look-ahead player weighs every channelled action. How to Play explains Channel.
 - **Changed:** a hero stuck on a ledge can Scramble down with a Space die.
 - **Added:** a test that Channel pays its etherion or an Omni, refuses without one, and that every etherion has a channelled action (96 tests in all).
@@ -1066,7 +1078,7 @@ The same game, built a second way for whoever is testing it. One more card now d
 - **Added:** the playtest build — `npm run build:playtest` → `dist/TUMULT.playtest.html`, or `http://localhost:5173/?playtest` on the dev server. A panel on the title screen starts any mission at any tier with two pre-made heroes, their starting six cards or the kit for that tier, and a seed; switches `ETHEREAL_MIN_E` (decision 4 in `docs/HANDOFF.md`), mid-mission too; lists what to look at in the build; and keeps a log of finished missions on the device, with a report to copy. The ordinary build carries none of it.
 - **Added:** `T.quickMission` starts a run inside one chosen mission. The panel and `tools/mission-log.js` both use it, so a seed names the same board and opening dice in either; `mission-log.js` takes a sixth argument, `start` or `tier`, for the kit. `T.addProgression` (the kit a squad would carry by a tier) moved from the test harness into the run layer.
 - **Added:** `node tools/build.mjs --fragment` writes a build without the `<html>`, `<head>` and `<body>` wrapper, for a host page that supplies its own. Every build now knows its version (`T.BUILD`).
-- **Fixed:** *Distributed Arms — Multitask* frees the next card played **this turn**, as it says; the offer used to wait as long as it took. *Parallel*'s two still wait until they are spent. `freecast` takes `dur`.
+- **Fixed:** _Distributed Arms — Multitask_ frees the next card played **this turn**, as it says; the offer used to wait as long as it took. _Parallel_'s two still wait until they are spent. `freecast` takes `dur`.
 - **Fixed:** no screen scrolls sideways at a phone's width: the Tide Map's nodes and the hand's cards share the row instead of overflowing it. The page is sized from its container rather than the viewport, so it sits properly inside a host page; a new screen starts at its top; a tooltip left by a tap goes when the page scrolls. The mission screen is still built for a mouse (roadmap P1).
 - **Changed:** the interface has three optional extension points (`U.titleExtra`, `U.missionTopExtra`, `U.extraAct`), which is how the panel attaches without the game knowing about it.
 - **Added:** 8 tests (72 in all): quick missions, the build variants, Multitask, and the panel driven through the real page.
@@ -1076,13 +1088,13 @@ The same game, built a second way for whoever is testing it. One more card now d
 
 Roadmap milestone S0. A review at handoff listed eight places where card or boon text promised something the engine did not do. Seven are fixed, each test-first; the eighth is now a switch with the numbers for both settings, waiting on a decision. Tests written to keep the class from coming back found as many again, fixed here too.
 
-- **Fixed:** a condition on an effect (`ifAnchored`, `ifOnHazard`, `ifAdjacent`, `ifE`, `ifHpBelow`) now gates it whatever its verb. *Talon Strike — Pin* Weakens only prey left at 8 hp or less; *Radiotrophic Resilience — Thrive* mints its AP only on a hazard.
-- **Fixed:** *Hollow Bones — Weightless* and *Neoteny — Reshape* let a hero walk up to a ledge, as they always said.
+- **Fixed:** a condition on an effect (`ifAnchored`, `ifOnHazard`, `ifAdjacent`, `ifE`, `ifHpBelow`) now gates it whatever its verb. _Talon Strike — Pin_ Weakens only prey left at 8 hp or less; _Radiotrophic Resilience — Thrive_ mints its AP only on a hazard.
+- **Fixed:** _Hollow Bones — Weightless_ and _Neoteny — Reshape_ let a hero walk up to a ledge, as they always said.
 - **Fixed:** an Anchored or Slowed Harrier cannot blink. A held Harrier still lances a hero beside it: before, a Counted Trap took its whole turn.
-- **Fixed:** strike bonuses go to strikes. A corrosion tick, a snare or a zone no longer spends "your next strike" or gains a form's bonus; "this turn" bonuses (*Tool Use — Improvise*, *Silent Flight — Glide*) end with the turn; *Night Eyes — Thermal* lasts its 1 + E rounds instead of one.
-- **Fixed:** boons are wired by their `hook` and `val`, so the table is the truth. *Momentum* works every round, not once a mission. *Quick Hands* did nothing; it now brings round-1 cards home a column sooner. *Second Wind*'s text says what it does: its holder rises, not whoever falls first.
+- **Fixed:** strike bonuses go to strikes. A corrosion tick, a snare or a zone no longer spends "your next strike" or gains a form's bonus; "this turn" bonuses (_Tool Use — Improvise_, _Silent Flight — Glide_) end with the turn; _Night Eyes — Thermal_ lasts its 1 + E rounds instead of one.
+- **Fixed:** boons are wired by their `hook` and `val`, so the table is the truth. _Momentum_ works every round, not once a mission. _Quick Hands_ did nothing; it now brings round-1 cards home a column sooner. _Second Wind_'s text says what it does: its holder rises, not whoever falls first.
 - **Fixed:** a Located Harrier cannot fade (it keeps its turn). The Warden's bestiary text no longer claims area damage beats its shield. A few telegraphs and tooltips corrected.
-- **Fixed:** no recipe carries an option the engine ignores. `interact` honours `height`; `anyTerrain`, `los` on `force`, `kind` on `hazardImmune` and three no-ops are gone. *Current-Cling Anchor — Cling* loses a round of hazard immunity its text never mentioned.
+- **Fixed:** no recipe carries an option the engine ignores. `interact` honours `height`; `anyTerrain`, `los` on `force`, `kind` on `hazardImmune` and three no-ops are gone. _Current-Cling Anchor — Cling_ loses a round of hazard immunity its text never mentioned.
 - **Added:** `T.RULES.ETHEREAL_MIN_E` — whether an Ethereal face can be played at E 0. Unchanged at 0; the choice is Garrett's (`docs/HANDOFF.md`, decision 4).
 - **Added:** `node tools/sim.js … --rule NAME=VALUE` tries a rules constant for one run.
 - **Added:** 24 tests (64 in all), among them one that fires every card face, gear ability and consumable in several situations and fails on any recipe option the engine ignores, and a suite that holds each of the fifteen boons to its text.
@@ -1092,7 +1104,7 @@ Roadmap milestone S0. A review at handoff listed eight places where card or boon
 
 No rules changes. The v2.0 game was reorganised into `src/`, `tools/` and `test/` and given a build, a test suite and continuous integration.
 
-- **Fixed:** the pre-made hero *Veil* carried four Barn Owl cards, breaking the three-per-bloodline cap. *Binocular Foresight* was replaced with *Burrowing* (Jerboa). Found by the new data tests.
+- **Fixed:** the pre-made hero _Veil_ carried four Barn Owl cards, breaking the three-per-bloodline cap. _Binocular Foresight_ was replaced with _Burrowing_ (Jerboa). Found by the new data tests.
 - **Fixed (text only):** the boss briefing and the log said the Vault drowns in six rounds and that area damage beats the Heart's shield; the engine gives seven rounds and its shield stops area. The text now says so.
 - **Documented:** a review found several places where card or boon text promises something the engine does not do. They are listed as known issues in `docs/HANDOFF.md` and scheduled as roadmap milestone S0; none was changed here.
 - **Added:** `npm test` (40 tests: data integrity, engine rules, every mission type, full runs with save round-trips, the build, and two whole runs driven through the real interface).
