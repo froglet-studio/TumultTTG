@@ -1,0 +1,87 @@
+# Publishes the web version (npm run build:web → dist/web) into the Froglet website, so players get
+# Tumult at https://www.froglet.games/tumult/play/ beside its store page at /tumult/.
+#
+# froglet.games is GitHub Pages from froglet-studio/Cosmic-Shore-landing-page, and nobody on the team
+# can change the domain's DNS, so the game goes into that site's folder tumult/play/ instead of a
+# subdomain: one commit on the website's main per release, which GitHub Pages then serves (Jekyll
+# copies the files as they are, because none has front matter). Every push to main publishes;
+# "Run workflow" on the Actions tab republishes main.
+#
+# Admin setup, once (docs/reference/HOSTING.md): a deploy key with write access on the website repo,
+# its private half in this repo's environment "froglet-games" as TUMULT_SITE_DEPLOY_KEY, and that
+# environment limited to main. Until the secret exists the job builds and skips the publish.
+name: Publish to froglet.games
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: froglet-games
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: froglet-games
+      url: https://www.froglet.games/tumult/play/
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+      - run: npm run build:web
+      - id: key
+        env:
+          KEY: ${{ secrets.TUMULT_SITE_DEPLOY_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "TUMULT_SITE_DEPLOY_KEY is not set; built, not published." >> "$GITHUB_STEP_SUMMARY"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.key.outputs.ready == 'true'
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: froglet-studio/Cosmic-Shore-landing-page
+          ref: main
+          path: site
+          ssh-key: ${{ secrets.TUMULT_SITE_DEPLOY_KEY }}
+          persist-credentials: true
+      - if: steps.key.outputs.ready == 'true'
+        name: Copy the game into tumult/play/ and push
+        run: |
+          version=$(node -p "require('./package.json').version")
+          # Replace the folder whole, so a release's old content-named files do not pile up.
+          # _headers is Cloudflare's; GitHub Pages ignores it and Jekyll skips "_" files anyway.
+          rm -rf site/tumult/play
+          mkdir -p site/tumult/play
+          cp -r dist/web/. site/tumult/play/
+          rm -f site/tumult/play/_headers site/tumult/play/.nojekyll
+          cd site
+          git add -A tumult/play
+          if git diff --cached --quiet; then
+            echo "froglet.games already serves this build." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q -m "chore(tumult): publish Tumult $version (${GITHUB_SHA::7})" \
+            -m "From froglet-studio/TumultTTG@${GITHUB_SHA}, by .github/workflows/site.yml."
+          # Someone may save to the website at the same moment: take their commit and try again.
+          for i in 1 2 3 4; do
+            git push origin HEAD:main && break
+            [ "$i" = 4 ] && exit 1
+            sleep $((i * 5))
+            git pull -q --rebase origin main
+          done
+          echo "Published Tumult $version to https://www.froglet.games/tumult/play/ (live in a minute or two)." >> "$GITHUB_STEP_SUMMARY"

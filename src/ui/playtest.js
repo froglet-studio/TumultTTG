@@ -28,6 +28,10 @@
         text: 'The mission screen fits phones and tablets now. On a phone: the board, then a one-line forecast, then your pilot with a hand you swipe a card at a time; nothing runs off the side. Tap a card face once to see what it would do on the board, and what ending the round would do after it; tap it again to play it. On any screen the forecast now has its own strip under the board, and ↶ Undo sits beside End Round (Ctrl+Z on a keyboard): take back a step or a play, as long as it rolled no dice and revealed nothing. Did you ever need to undo something that would not go back? Did a tap ever play a card you only meant to look at?',
       },
       {
+        text: 'Hyperspeed and Sky Hyperspeed now count a run of exactly 4 the way you would on the board: four steps, past foes, never the same space twice, ending on an empty space. Before, they only offered spaces whose shortest way was 4, so on a tight board like Mast-Crop Hills they often said there was nowhere to go. Does the run go where you expect now?',
+        cards: ['che_hyper', 'haw_hyper'],
+      },
+      {
         text: 'Two ways to share a round with friends, under "Way to play with friends" on this panel (the host chooses). Take turns: each round, whoever acts first takes the next turn, and you roll your next dice the moment your turn ends, so you can plan while the others play. All at once: no turns; everyone spends AP whenever they like, in whatever order you agree, presses Done, and everyone rolls together when the round begins. Which way did your table enjoy more? With All at once, did two moves ever clash?',
       },
       {

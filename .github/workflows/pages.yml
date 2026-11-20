@@ -1,16 +1,14 @@
-# Publishes the web version (npm run build:web → dist/web: a small page plus content-named,
-# cacheable files) to GitHub Pages at https://tumult.froglet.games, with the offline single file
-# beside it at /TUMULT.html.
+# The fallback address: publishes main's web version (npm run build:web → dist/web) to this
+# repository's own GitHub Pages site, https://froglet-studio.github.io/TumultTTG/, with the offline
+# single file beside it at /TUMULT.html.
 #
-# Every push to main publishes, so a release is a promotion of development to main
-# (docs/BRANCHING_AND_RELEASE.md). "Run workflow" on the Actions tab republishes main by hand.
-# Admin setup, once (docs/reference/HOSTING.md): Settings → Pages → Source "GitHub Actions",
-# custom domain tumult.froglet.games, and main allowed in the github-pages environment.
-name: Publish playable build
+# Players get the game from the Froglet website (site.yml, www.froglet.games/tumult/play/); this is
+# for when that cannot be used. Manual only: "Run workflow" on the Actions tab, on main.
+# Admin setup, once (docs/reference/HOSTING.md): Settings → Pages → Source "GitHub Actions", and main
+# allowed in the github-pages environment. No custom domain.
+name: Publish fallback build
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -33,12 +31,7 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run build:web
-      # CNAME records the domain beside the files; with an Actions deploy, the domain set in
-      # Settings → Pages is the one that counts, so keep the two the same.
-      - run: |
-          cp -r dist/web _site
-          cp dist/TUMULT.html _site/TUMULT.html
-          echo tumult.froglet.games > _site/CNAME
+      - run: cp -r dist/web _site && cp dist/TUMULT.html _site/TUMULT.html
       # Versions as documented in the two actions' READMEs (checked 2026-11), pinned to commit SHAs;
       # bump the pair together, SHA and version comment both.
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
@@ -47,7 +40,7 @@ jobs:
 
   deploy:
     needs: build
-    # Only main is ever live; a run started from another branch builds and stops here.
+    # Only main is published; a run started from another branch builds and stops here.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
