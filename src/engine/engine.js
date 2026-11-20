@@ -1197,23 +1197,54 @@
         return { need: 'none' };
     }
   };
-  /** The empty nodes a hero can walk to in n steps or fewer; with `exact`, only those whose shortest walk is n. */
+  /**
+   * The empty nodes a hero can walk to in n steps or fewer. With `exact`, the nodes a run of exactly n steps
+   * can end on, never stepping on the same space twice: count the steps on the board, as at the table. (Before
+   * 2.81.1 it was the nodes whose *shortest* walk is n, which on a small or well-joined board left a run of 4
+   * nowhere to go from most of it: the whole threshing floor of Mast-Crop Hills.)
+   */
   T.reachableWalk = function (m, h, n, ignoreFoes, exact) {
     const bd = m.board;
+    const climber = canClimb(h);
+    // a step onto y: is it allowed, and is y somewhere a walk may pass (but not stop, if occupied)?
+    const step = (y) => {
+      if (bd.nodes[y].height && !climber && !bd.ramp) return null;
+      const occ = T.entityAt(m, y);
+      if (occ && !(ignoreFoes || occ.kind === 'hero')) return null; // can't pass through foes unless ignoring
+      return { empty: !occ };
+    };
+    if (exact) {
+      const out = new Set();
+      const onPath = new Set([h.pos]);
+      const go = (x, d) => {
+        for (const y of B.walkNeighbors(bd, x, climber)) {
+          if (onPath.has(y)) continue;
+          const s = step(y);
+          if (!s) continue;
+          if (d + 1 === n) {
+            if (s.empty) out.add(y);
+            continue;
+          }
+          onPath.add(y);
+          go(y, d + 1);
+          onPath.delete(y);
+        }
+      };
+      if (n > 0) go(h.pos, 0);
+      return [...out];
+    }
     const out = [];
     const seen = new Set([h.pos]);
     const q = [[h.pos, 0]];
-    const climber = canClimb(h);
     while (q.length) {
       const [x, d] = q.shift();
       if (d >= n) continue;
       for (const y of B.walkNeighbors(bd, x, climber)) {
         if (seen.has(y)) continue;
-        if (bd.nodes[y].height && !climber && !bd.ramp) continue;
-        const occ = T.entityAt(m, y);
-        if (occ && !(ignoreFoes || occ.kind === 'hero')) continue; // can't pass through foes unless ignoring
+        const s = step(y);
+        if (!s) continue;
         seen.add(y);
-        if (!occ && (!exact || d + 1 === n)) out.push(y);
+        if (s.empty) out.push(y);
         q.push([y, d + 1]);
       }
     }
