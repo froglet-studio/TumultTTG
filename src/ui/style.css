@@ -2932,6 +2932,8 @@ html.calm .combo-mark {
 }
 .privacy-line button {
   text-decoration: underline;
+}
+
 /* ---------- Mission screen, 2.76: calmer ---------- */
 /* one menu, one conditions chip, the story box on request: the top bar keeps the objective, the clock and End Round */
 .mission .endgrp {
