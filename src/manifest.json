@@ -23,6 +23,7 @@
     "ui/icons.js",
     "ui/keywords.js",
     "ui/core.js",
+    "ui/sea.js",
     "ui/party.js",
     "ui/pilots.js",
     "ui/mission.js",
@@ -30,7 +31,7 @@
     "ui/atlas.js",
     "ui/canon.js"
   ],
-  "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css", "ui/canon.css", "ui/feel.css"],
+  "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css", "ui/canon.css", "ui/feel.css", "ui/sea.css"],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
     "css": ["ui/playtest.css", "ui/net.css"]

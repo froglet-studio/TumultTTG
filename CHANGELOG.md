@@ -6,6 +6,16 @@
 - **Previews.** Every pull request and push to `bleeding-edge` deploys the web version to Cloudflare Pages once the secrets are set; GitHub Pages publishes it with the offline file beside it.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
+## 2.83.0 — 2026-11-20 — a living sea, a calmer mission screen, and motion
+
+Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, motion kit). No rule changes.
+
+- **The sea around the board.** Behind every screen the water moves: a deep gradient, slow glows, sea lines drifting across, light coming down and motes rising (`src/ui/sea.js`, `src/ui/sea.css`). The map art stays; only the blue around it changes. Four themes: **Deep Sea**, **Shore** (the light twin), **Glow** and **Storm**. By default the sea follows the expedition: Shore in the shallows, Deep Sea mid-route, Glow in the deep stops, Storm at the Heart, darker every stop. **Look** (the ☰ menu on a mission, the title, the strip at the top of other screens) pins a theme, picks an accent for the call to act (Tide, Jade, Ruby, Gold) and sets motion. Kept in `tumult_v2_look`.
+- **Motion: Full, Reduced or Off.** It follows the device's reduce-motion setting until the player picks one. Reduced keeps the sea slow and without motes and turns walks and hits into short fades, with no shake or tumbling dice; Off stops everything, and the log and forecast still say what happened. Every reduce-motion rule in the styles now follows this setting.
+- **A calmer mission screen.** Plan, Report, sound, help, Look and Title sit behind one ☰ menu. Gravity, weather and the hour fold into one "N conditions" chip, and the round joins the clock. The story box opens from ✎. The intents panel is headed *Enemy plans*, without the sentence. The ally is a compact pill. A card with nothing it can do now folds small; a face's reason it cannot be played waits in its tip. Four basic actions stay in view (Strike, Brace, Shove, Spot, and Interact or Rally when they can be used), the rest under *More actions*. The how-to line above the board shows in the first two missions only. A soft wash over the map art and a halo under each node let the board read on top of the painting.
+- **The motion kit.** A pilot or foe walks its path node by node (0.25 s a step) instead of jumping; a shove or swap slides. A striker leans into the blow (the engine's damage effect now says who struck, `by`; no rule reads it), the target flashes and shakes, the number floats up. The forecast chip whose figure changed pulses. At a new round the cards on the track step one column toward Ready. A new screen slides in. The dice still tumble and land one after another.
+- **Tests.** `test/sea.test.js`: the sea by route depth, the Look panel and its storage, the calm screen's folds through the real interface, and a walk that ends where the engine put the pilot, or no walk at all with motion Off.
+
 ## 2.82.0 — 2026-11-20 — the mission screen: undo, a forecast strip, phones and tablets
 
 Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
