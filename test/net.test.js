@@ -817,7 +817,16 @@ test(
     await until(() => A.U.net.away[1] != null, 'the host to see the guest drop', 5000);
     assert.match(A.d.getElementById('netAway').textContent, /Bo lost connection/);
     assert.ok(A.d.querySelector('[data-act="netGiveAI"]'), 'the host may give the seat to the AI at once');
+    // the mission HUD shows the same: the squad row with its countdown, and a seat card with the host's two choices
+    await until(() => A.d.querySelector('#msquad .sq-st.away [data-until]'), "the squad to show Bo's countdown", 5000);
+    assert.match(A.d.querySelector('#mside .seat-panel').textContent, /Bo lost connection/);
+    assert.ok(A.d.querySelector('#mside .seat-panel [data-act="netGiveAI"]'));
     await until(() => A.T.botKind(A.U.run, 1) === 'hold', 'the countdown to run out', 5000);
+    await until(
+      () => /AI/.test(A.d.querySelector('#msquad').textContent),
+      'the squad to say the AI has the seat',
+      5000,
+    );
     await until(() => m().round > round || m().over, "the AI to finish Bo's turn", 10000);
     assert.equal(A.U.run.party.players[1].name, 'Bo', 'the seat keeps its name');
     // Bo reloads and rejoins: the seat is theirs again

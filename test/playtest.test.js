@@ -104,7 +104,7 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
     if (h.after < h.hp) assert.ok(said.includes(`takes ${h.hp - h.after} (${h.after} left)`), said);
   }
   const heading = f.heroes.map(
-    (h, i) => p.d.querySelector(`#mside .hero[data-arg="${i}"] .hp, #mdock .hero[data-arg="${i}"] .hp`).textContent,
+    (h, i) => p.d.querySelector(`#msquad .sq-row[data-arg="${i}"] .sq-side .mono`).textContent,
   );
   f.heroes.forEach((h, i) => assert.equal(heading[i].includes('→ ' + h.after), h.after !== h.hp, heading[i]));
 

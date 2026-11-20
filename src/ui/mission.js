@@ -53,7 +53,16 @@
    */
   const LAYOUT_KEY = 'tumult_v2_ui';
   U.layout = (() => {
-    const base = { log: false, intents: true, obj: false, peek: {} };
+    const base = {
+      log: false,
+      intents: true,
+      obj: false,
+      full: false,
+      noHand: false,
+      noPlans: false,
+      tab: 'hand',
+      peek: {},
+    };
     try {
       return Object.assign(base, JSON.parse(localStorage.getItem(LAYOUT_KEY) || '{}'), { peek: {} });
     } catch {
@@ -62,8 +71,8 @@
   })();
   function saveLayout() {
     try {
-      const { log, intents, obj } = U.layout;
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj }));
+      const { log, intents, obj, full, noHand, noPlans, tab } = U.layout;
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj, full, noHand, noPlans, tab }));
     } catch {
       /* no storage: the choice lasts for this page */
     }
@@ -107,17 +116,44 @@
   }
 
   /* ───────────── skeleton ───────────── */
+  /**
+   * The mission HUD (Frogma "Finalised UI", HUD 1×2): the board in a frame with the sea around it, the mission
+   * across the top, the foes' plans, the squad and the log on the right, the pilot being flown and its hand
+   * along the foot. ⛶ Full screen (HUD 1+) lets the board fill the screen; the plans and the hand become trays
+   * that slide away. On a phone the foot is one sheet with tabs: Hand, Plans, Squad and Log.
+   * Which of these is chosen is kept for this browser with the folds (tumult_v2_ui).
+   */
+  const TABS = [
+    ['hand', 'Hand'],
+    ['plans', 'Plans'],
+    ['squad', 'Squad'],
+    ['log', 'Log'],
+  ];
+  U.hudClass = function () {
+    const L = U.layout;
+    return `mission hud${L.full ? ' full' : ''}${L.noHand ? ' nohand' : ''}${L.full && L.noPlans ? ' noplans' : ''}`;
+  };
   U.renderMission = function () {
     // the board sits in a place: its atlas page's plate (or, on a board with no page, the lead pilot's world)
     const m = U.run && U.run.mission;
     const page = m && m.page && T.PAGE_BY[m.page];
     const lead = m && m.heroes[0];
     const scene = (page && T.ART && T.ART[page.plate]) || (lead && U.sceneSrc(U.pilotOf(lead)));
-    return `<div class="mission">
-      <div class="top panel tight" id="mtop"></div>
-      <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div><div class="mfc" id="mfc" aria-live="polite"></div></div>
-      <div class="side"><div class="side-in" id="mside"></div><div class="bottom">${foldBtn('log', 'the log')}<div class="log${U.layout.log ? '' : ' folded'}" id="mlog"></div></div></div>
-      <div class="dock" id="mdock"></div>
+    const L = U.layout;
+    const tab = TABS.some(([k]) => k === L.tab) ? L.tab : 'hand';
+    const tabs = TABS.map(
+      ([k, n]) =>
+        `<button class="ptab${k === tab ? ' on' : ''}" data-act="hudTab" data-arg="${k}" aria-pressed="${k === tab}">${n}</button>`,
+    ).join('');
+    return `<div class="${U.hudClass()}" data-tab="${tab}">
+      <div class="top" id="mtop"></div>
+      <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div><button class="ghost fsbtn" data-act="hudFull" id="mfull">${L.full ? '⤡ Back to frame' : '⛶ Full screen'}</button><div class="mfc" id="mfc" aria-live="polite"></div></div>
+      <div class="tray">
+        <div class="ptabs">${tabs}<button class="primary endbtn2" data-act="endRound" id="mend2">End Round ▶</button></div>
+        <div class="side"><button class="grab grab-plans" data-act="hudTray" data-arg="plans" aria-label="Slide the plans tray">${L.noPlans ? '◂ Plans' : 'Plans ▸'}</button><div class="side-in pane p-plans" id="mside"></div><div class="pane p-squad" id="msquad"></div><div class="bottom pane p-log">${foldBtn('log', 'the log')}<div class="log${L.log ? '' : ' folded'}" id="mlog"></div></div></div>
+        <div class="dock"><button class="grab grab-hand" data-act="hudTray" data-arg="hand" aria-label="Slide the hand tray">${L.noHand ? 'Hand ▴' : 'Hand ▾'}</button><div class="pane p-hand" id="mdock"></div></div>
+      </div>
+      <div class="pass" id="mpass" hidden></div>
     </div>`;
   };
   U.afterMissionRender = function () {
@@ -389,6 +425,7 @@
     renderForecast(m);
     renderSide(m);
     renderLog(m);
+    showPass(m);
     updateBoard(m);
     // a new round: every resting card steps one column toward Ready, together
     if (U.ms.trackRound != null && U.ms.trackRound !== m.round)
@@ -402,6 +439,85 @@
       setTimeout(() => showMissionOver(m), U.MISSION_OVER_DELAY);
     }
   };
+
+  /** Put the HUD's chosen shape on the screen without drawing it again. */
+  function applyHud() {
+    const root = $('.mission.hud');
+    if (!root) return;
+    const L = U.layout;
+    root.className = U.hudClass();
+    root.setAttribute('data-tab', TABS.some(([k]) => k === L.tab) ? L.tab : 'hand');
+    document.querySelectorAll('.mission .ptab').forEach((b) => {
+      const on = b.getAttribute('data-arg') === root.getAttribute('data-tab');
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    const fs = $('#mfull');
+    if (fs) fs.textContent = L.full ? '⤡ Back to frame' : '⛶ Full screen';
+    const gh = $('.mission .grab-hand');
+    if (gh) gh.textContent = L.noHand ? 'Hand ▴' : 'Hand ▾';
+    const gp = $('.mission .grab-plans');
+    if (gp) gp.textContent = L.noPlans ? '◂ Plans' : 'Plans ▸';
+    // the board keeps its proportions in its new frame
+    if (U.feelResize) U.feelResize();
+  }
+  U.applyHud = applyHud;
+
+  /**
+   * Pass the screen: players taking turns at one screen hand it on between turns. The cover names who is up
+   * and hides the hand that was just played until its player has the screen back. In an open round, where
+   * players choose their order, it asks who goes next. Online each player has their own screen: no cover.
+   */
+  function passState(m) {
+    const run = U.run;
+    if (U.seats || !run.party || T.playerCount(run) < 2 || T.liveRounds(run) || m.over || m.phase !== 'hero')
+      return null;
+    const p = run.party;
+    if (!p.ready.some(Boolean)) return null; // the round's first turn: the table is already looking
+    const turn = T.turnSeat(run);
+    const left = T.seatsToPlay(run);
+    if (turn != null && p.active === turn) return null; // a turn under way: it was begun on this screen
+    if (!left.length) return null;
+    return { key: m.round + ':' + p.ready.map((x) => (x ? 1 : 0)).join(''), turn, left };
+  }
+  function showPass(m) {
+    const el = $('#mpass');
+    if (!el) return;
+    const st = passState(m);
+    U.ms.passKey = st && st.key;
+    if (!st || U.ms.passShown === st.key) {
+      el.hidden = true;
+      el.innerHTML = '';
+      return;
+    }
+    const run = U.run;
+    const p = run.party;
+    const name = (s) => esc(p.players[s].name);
+    const done = p.players.map((x, s) => s).filter((s) => p.ready[s]);
+    const n = p.players.length;
+    const pilotOf = (s) => m.heroes[T.heroesOf(run, s).find((i) => !m.heroes[i].downed)];
+    const heads = `<span class="dim small">${done.length ? done.map(name).join(', ') + (done.length > 1 ? ' are' : ' is') + ' done' : ''}</span>`;
+    let html;
+    if (st.turn != null || st.left.length === 1) {
+      const s = st.turn != null ? st.turn : st.left[0];
+      const h = pilotOf(s);
+      const after = st.left.filter((x) => x !== s);
+      html = `<div class="pass-in">${h ? U.portrait(h, 'xl') : ''}<span class="kick">Round ${m.round} · turn ${done.length + 1} of ${n}</span><h2>Pass to ${name(s)}</h2><p>${h ? esc(h.name) + "'s turn. " : ''}The last hand stays hidden until its player has the screen again.</p><button class="primary" data-act="passOk" data-arg="${s}">I'm ${name(s)} · show my turn</button>${after.length ? `<span class="dim small">${after.map(name).join(' and ')} go after ${name(s)}</span>` : ''}${heads}</div>`;
+    } else {
+      const btns = st.left
+        .map((s) => {
+          const h = pilotOf(s);
+          return `<button class="pass-who" data-act="passOk" data-arg="${s}">${h ? U.portrait(h, 'lg') : ''}<b>${name(s)}</b><span class="dim small">${h ? esc(h.name) : ''}</span></button>`;
+        })
+        .join('');
+      html = `<div class="pass-in"><span class="kick">Round ${m.round} · turn ${done.length + 1} of ${n}</span><h2>Pass the screen</h2><p>Who goes next? Players choose their order each round. The last hand stays hidden until its player has the screen again.</p><div class="pass-row">${btns}</div>${heads}</div>`;
+    }
+    if (el._html !== html) {
+      el.innerHTML = html;
+      el._html = html;
+    }
+    el.hidden = false;
+  }
 
   function renderTop(m) {
     const ob = m.objective;
@@ -421,7 +537,7 @@
       prog = t ? `${t.name} ${Math.max(0, t.hp)}/${t.maxHp}` : 'destroyed';
     }
     const clock = m.clock
-      ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label + ' · round ' + m.round)}">⏳ ${m.clock.value}<small class="rnd">R${m.round}</small></span>`
+      ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label + ' · round ' + m.round)}"><span class="cv">⏳ ${m.clock.value}</span><small class="rnd">round ${m.round}</small></span>`
       : `<span class="pill mono">Round ${m.round}</span>`;
     // the place's rules today: gravity, weather and the hour, folded into one chip; each rule in its tip
     const pl = m.place || {};
@@ -446,11 +562,16 @@
     const noteOpen = ms.noteOpen || !!typing || !!ms.noteDraft;
     const changed = setHTML(
       $('#mtop'),
-      `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
-      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
-      <div class="tpills">${clock}${condsChip}${U.purseHTML(m, true)}</div>
-      <div class="endgrp${noteOpen ? ' note-open' : ''}"><div class="endrow"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${undoBtn(m)}<button class="ghost sm note-btn${noteOpen ? ' on' : ''}" data-act="noteOpen" aria-expanded="${noteOpen}" data-tip="Give this turn a line of story">✎</button>${menuBtn}</div>${noteBox(m)}${menu}</div></div>`,
+      `<div class="topbar"><div class="mhead"><div class="kickrow"><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span>${condsChip}</div><h3 style="margin:0">${esc(m.title)}</h3>
+      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="obj-bar" style="--p:${Math.round(100 * T.objectiveProgress(m))}%"><i></i></span><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '<span class="bonus">○ ' + esc(b.text) + '</span>').join(' ')}</div></div></div>
+      <div class="tpills">${clock}${U.purseHTML(m, true)}</div>
+      <div class="endgrp${noteOpen ? ' note-open' : ''}"><div class="endrow">${undoBtn(m)}<button class="ghost sm note-btn${noteOpen ? ' on' : ''}" data-act="noteOpen" aria-expanded="${noteOpen}" aria-label="Write a line of story" data-tip="Give this turn a line of story">✎</button>${menuBtn}<button class="primary endbtn" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button></div><div class="turnline small">${turnLine(U.run)}</div>${noteBox(m)}${menu}</div></div>`,
     );
+    const end2 = $('#mend2');
+    if (end2) {
+      end2.textContent = U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶';
+      end2.disabled = !!m.over;
+    }
     const box = changed && typing && $('#turnNote');
     if (box) {
       box.focus();
@@ -623,26 +744,23 @@
 
   /* ───────────── side panels ───────────── */
   function renderSide(m) {
+    const live = T.liveEnemies(m).filter((e) => e.intent);
     const intents =
-      T.liveEnemies(m)
-        .filter((e) => e.intent)
+      live
         .map(
           (e) =>
-            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
+            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span class="who"><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span><i class="ehp"><i style="width:${Math.round((100 * Math.max(0, e.hp)) / (e.maxHp || 1))}%"></i></i></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
     const open = U.layout.intents;
     const foes = T.liveEnemies(m).length;
     const changed = setHTML(
       $('#mside'),
-      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b data-tip="Declared before you act: each foe does what it says, adapting only to close distance. Each also carries its plan on the board.">Enemy plans</b><span class="dim small right">${open ? '' : `${foes} foe${foes === 1 ? '' : 's'}`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
-        // the pilots not being played, folded: the ally's vitality, dice and (on request) cards
-        m.heroes
-          .map((h, i) => i)
-          .filter((i) => i !== U.ms.heroIdx)
-          .map((i) => heroPanel(m, m.heroes[i], i))
-          .join(''),
+      seatPanel(m) +
+        `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b class="lab" data-tip="Declared before you act: each foe does what it says, adapting only to close distance. Each also carries its plan on the board.">Enemy plans</b><span class="dim small right">${open ? (live.length ? `${live.length} act at round end` : '') : `${foes} foe${foes === 1 ? '' : 's'}`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
+        waitPanel(m),
     );
+    renderSquad(m);
     // the pilot being played stays in the dock: its hand, AP, dice and actions always on screen, never folded
     const sel = m.heroes[U.ms.heroIdx];
     setHTML($('#mdock'), sel ? heroPanel(m, sel, U.ms.heroIdx) : '');
@@ -651,6 +769,162 @@
       document
         .querySelectorAll('#mside [data-tipid]')
         .forEach((el) => el.setAttribute('data-tip', tipFor(el.getAttribute('data-tipid'))));
+  }
+
+  /**
+   * Where each player stands this round, in words: whose turn it is, who is done, who still has one to take.
+   * Null for one player. `here` says whether this screen holds that seat.
+   */
+  function seatState(run, s) {
+    const p = run.party;
+    if (!p || T.playerCount(run) < 2) return null;
+    const m = run.mission;
+    const here = !U.seats || U.seats.includes(s);
+    const down = T.heroesOf(run, s).every((i) => !m.heroes[i] || m.heroes[i].downed);
+    if (down) return { k: 'down', t: 'down' };
+    // online: a player who has gone quiet (the countdown before the AI takes the seat), or a seat the AI flies
+    const away = U.net && U.net.away && U.net.away[s];
+    if (away != null) return { k: 'away', t: 'lost connection', until: +away };
+    const bot = T.botKind ? T.botKind(run, s) : false;
+    const ai = (st) =>
+      bot ? Object.assign(st, { ai: bot, t: st.k === 'turn' || st.k === 'play' ? 'AI playing' : st.t }) : st;
+    if (bot === 'hold' && !p.ready[s] && !T.liveRounds(run) && T.turnSeat(run) !== s)
+      return { k: 'ai', t: 'AI holds the seat', ai: bot };
+    if (T.liveRounds(run)) return ai(p.ready[s] ? { k: 'done', t: 'done ✓' } : { k: 'play', t: 'playing' });
+    if (p.ready[s]) return ai({ k: 'done', t: 'done ✓' });
+    const turn = T.turnSeat(run);
+    if (turn === s) return ai({ k: 'turn', t: here && U.seats ? 'your turn' : 'their turn' });
+    const left = T.seatsToPlay(run);
+    if (turn == null && left.includes(s)) return ai({ k: 'next', t: left.length > 1 ? 'any order' : 'next' });
+    return ai({ k: 'wait', t: 'waiting' });
+  }
+  U.seatState = seatState;
+  /** m:ss until a time (ms), for a countdown. */
+  const clockTo = (until) => {
+    const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    return `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+  };
+  /** The countdowns on the mission screen tick with the one over every screen (src/ui/net.js calls this). */
+  U.tickAway = function () {
+    if (typeof document === 'undefined') return;
+    document.querySelectorAll('[data-until]').forEach((el) => {
+      el.textContent = clockTo(+el.getAttribute('data-until'));
+    });
+    const m = U.run && U.run.mission;
+    if (!m || !document.querySelector('.mission.hud')) return;
+    // a seat went quiet or came back since the last draw: draw the squad and the seat card again
+    const key = JSON.stringify(Object.keys((U.net && U.net.away) || {})) + (T.botSeats ? T.botSeats(U.run).join() : '');
+    if (key !== U.ms.awayKey) {
+      U.ms.awayKey = key;
+      renderSide(m);
+    }
+  };
+
+  /**
+   * Online, in play: a card for each seat that has gone quiet (the countdown, and on the host's screen its two
+   * choices) and each seat an AI holds for a player who dropped. It stands in for the strip over other screens.
+   */
+  function seatPanel(m) {
+    const run = U.run;
+    const N = U.net;
+    if (!N || !N.role || !run.party || m.over) return '';
+    const name = (s) => esc((N.names && N.names[s]) || run.party.players[s].name || 'Player ' + (s + 1));
+    const rows = [];
+    for (const k of Object.keys(N.away || {})) {
+      const s = +k;
+      const mine = N.role === 'guest' && s === N.seat;
+      rows.push(`<div class="seat-row away"><b>${mine ? 'You seem to be offline' : name(s) + ' lost connection'}</b>
+        <div class="small">An AI pilot takes the seat in <span class="mono" data-until="${+N.away[k]}">${clockTo(+N.away[k])}</span> and plays it safe until they are back.</div>${
+          N.role === 'host'
+            ? `<div class="seat-acts"><button class="sm" data-act="netGiveAI" data-arg="${s}">Give it to the AI</button><button class="sm ghost" data-act="netWait" data-arg="${s}">Wait for them</button></div>`
+            : ''
+        }</div>`);
+    }
+    (T.botSeats ? T.botSeats(run) : [])
+      .filter((s) => T.botKind(run, s) === 'hold')
+      .forEach((s) =>
+        rows.push(
+          `<div class="seat-row held"><b>An AI pilot holds ${name(s)}'s seat</b><div class="small">until they are back. Reloading the page puts them back in it.</div></div>`,
+        ),
+      );
+    return rows.length ? `<div class="panel tight seat-panel">${rows.join('')}</div>` : '';
+  }
+
+  /** One line under End: who goes after this turn, and whose turn ends the round. */
+  function turnLine(run) {
+    if (!run || !run.party || T.playerCount(run) < 2) return '';
+    const p = run.party;
+    const name = (s) => esc(p.players[s].name);
+    if (T.liveRounds(run)) {
+      const n = p.ready.filter(Boolean).length;
+      return n && n < p.players.length
+        ? `You can still play after Done, until the last player is done · ${n}/${p.players.length} done`
+        : 'Everyone plays at once: foes move when the last player is done';
+    }
+    const left = T.seatsToPlay(run);
+    const turn = T.turnSeat(run);
+    const after = left.filter((s) => s !== turn);
+    if (turn != null && !after.length) return `${name(turn)} ends the round`;
+    if (turn != null) return `Then ${after.map(name).join(', ')}, in any order · the last turn ends the round`;
+    if (left.length > 1) return `${left.map(name).join(', ')} still to play, in any order`;
+    return '';
+  }
+
+  /** The squad: every pilot, its player, its vitality and dice, where it stands this round. Click to fly it. */
+  function renderSquad(m) {
+    const run = U.run;
+    const players = T.playerCount(run);
+    const mode = players < 2 ? '' : T.liveRounds(run) ? 'all at once' : 'take turns';
+    const p = run.party;
+    const done = p && players >= 2 ? p.ready.filter(Boolean).length : 0;
+    const rows = m.heroes
+      .map((h, i) => {
+        const sel = i === U.ms.heroIdx;
+        const st = seatState(run, T.ownerOf(run, i));
+        const status = st
+          ? `<span class="sq-st ${st.k}${st.ai ? ' ai' : ''}">${st.t}${st.until ? ` <span class="mono" data-until="${st.until}">${clockTo(st.until)}</span>` : ''}</span>`
+          : `<span class="sq-st ${sel ? 'turn' : 'wait'}">${sel ? 'flying' : h.downed ? 'down' : 'Tab ⇄'}</span>`;
+        const els = ['M', 'C', 'S', 'T', 'O']
+          .map((e) => ({ e, n: h.held.filter((f) => f === e).length }))
+          .filter((x) => x.n)
+          .map((x) => `<span class="res-el" style="--c:${EL[x.e].color}">${U.ic('el.' + x.e, x.e)}<b>${x.n}</b></span>`)
+          .join('');
+        return `<div class="sq-row${sel ? ' sel' : ''}${h.downed ? ' downed' : ''}" data-act="selHero" data-arg="${i}" data-tip="${esc(sel ? `Flying ${h.name}` : `Fly ${h.name} (Tab)`)}">
+          ${U.portrait(h, 'sm')}
+          <span class="sq-main"><span class="sq-name"><b>${esc(h.name)}</b>${players >= 2 ? ` <span class="dim">· ${esc(T.ownerName(run, i))}</span>` : ''}</span><i class="sq-hp"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></i><span class="sq-res">${els}<span class="ap-chip">${T.apValue(h)} AP</span></span></span>
+          <span class="sq-side"><span class="mono small">${h.downed ? 'down' : h.hp}${heading(i)}</span>${status}${sel ? '' : `<button class="ghost sm peek" data-act="peek" data-arg="${i}" aria-expanded="${!!U.layout.peek[i]}">${U.layout.peek[i] ? 'Hide cards ▴' : 'Cards ▾'}</button>`}</span>
+        </div>`;
+      })
+      .join('');
+    const peeks = m.heroes.map((h, i) => (i !== U.ms.heroIdx && U.layout.peek[i] ? heroPanel(m, h, i) : '')).join('');
+    setHTML(
+      $('#msquad'),
+      `<div class="panel tight squad-panel"><div class="row"><b class="lab">Squad · ${m.heroes.length}${mode ? ' · ' + mode : ''}</b><span class="dim small right">${T.liveRounds(run) && players >= 2 ? `${done} of ${players} done` : ''}</span></div><div class="sq-rows">${rows}</div>${peeks}</div>`,
+    );
+  }
+
+  /**
+   * Online, on a player's own screen: once they have ended their turn (or are done, in live rounds), or while
+   * another player takes theirs, a card says who the table is waiting on and how to take it back.
+   */
+  function waitPanel(m) {
+    const run = U.run;
+    if (!U.seats || !run.party || T.playerCount(run) < 2 || m.over) return '';
+    const p = run.party;
+    const name = (s) => `<b>${esc(p.players[s].name)}</b>`;
+    const list = (a) =>
+      a.length > 1 ? a.slice(0, -1).map(name).join(', ') + ' and ' + name(a[a.length - 1]) : a.map(name).join('');
+    const mine = U.seats.every((s) => p.ready[s]);
+    if (T.liveRounds(run)) {
+      if (!mine) return '';
+      const left = T.seatsPlaying(run);
+      return `<div class="panel tight wait-panel"><b class="lab ok">You are done with the round</b><div>Waiting on ${list(left)}. Foes act when everyone is done.</div><button class="ghost" data-act="endRound">Take it back</button><div class="dim small">You can still change your moves until the round resolves.</div></div>`;
+    }
+    const turn = T.turnSeat(run);
+    const left = T.seatsToPlay(run);
+    const waitingOn = turn != null ? [turn] : left;
+    if (waitingOn.some((s) => U.seats.includes(s))) return '';
+    return `<div class="panel tight wait-panel"><b class="lab ok">${mine ? 'You ended your turn' : 'Not your turn yet'}</b><div>Waiting on ${list(waitingOn)}. ${mine ? 'Your dice for the next round are rolled: plan while they play.' : 'Watch the board; your turn comes when theirs ends.'}</div></div>`;
   }
   /** Beside a hero's vitality: where it will stand if the round ends now, when that is somewhere else. */
   function heading(i) {
@@ -750,7 +1024,7 @@
     for (let c = 1; c <= T.RULES.TRACK; c++) {
       const items = h.track.filter((t) => t.left === c);
       trackCols.push(
-        `<div class="tcol"><span class="n">${c}</span>${items.map((t) => `<span class="tpill ${t.phase}" data-tip="${esc(T.CARD[t.card].name)} — ${t.phase === 'dur' ? 'active (duration), then cools ' + t.cd : 'cooling'}; returns to hand in ${t.left + (t.phase === 'dur' ? t.cd : 0)}">${t.phase === 'dur' ? '●' : '○'} ${esc(T.CARD[t.card].name)}</span>`).join('')}</div>`,
+        `<div class="tcol"><span class="n" data-tip="${c === 1 ? 'Back in hand next round' : 'Back in ' + c + ' rounds'}">${c}</span><span class="tlab">${c === 1 ? 'next round' : 'in ' + c}</span>${items.map((t) => `<span class="tpill ${t.phase}" data-tip="${esc(T.CARD[t.card].name)} — ${t.phase === 'dur' ? 'active (duration), then cools ' + t.cd : 'cooling'}; returns to hand in ${t.left + (t.phase === 'dur' ? t.cd : 0)}">${t.phase === 'dur' ? '●' : '○'} ${esc(T.CARD[t.card].name)}</span>`).join('')}</div>`,
       );
     }
     const hand = h.cards
@@ -862,28 +1136,18 @@
             `<span class="res-el" style="--c:${EL[x.e].color}" data-tip="${esc(`${x.n} ${EL[x.e].name} banked: pays a face's ${x.e === 'O' ? 'etherion of any element' : EL[x.e].name + ' cost'}, or channels an action.`)}">${U.ic('el.' + x.e, x.e)}<b>${x.n}</b></span>`,
         )
         .join('');
-      // the other pilots, one tap away: on a phone their panels are further down the page
-      const swap = m.heroes
-        .map((x, j) =>
-          j === i
-            ? ''
-            : `<button class="sm ghost dk-swap${x.downed ? ' downed' : ''}" data-act="selHero" data-arg="${j}" data-tip="${esc(`Fly ${x.name} (Tab)`)}">${U.portrait(x, 'xs')}<span>${esc(x.name)}</span><span class="mono dim">${x.downed ? 'down' : x.hp}${heading(j)}</span></button>`,
-        )
-        .join('');
       return `<div class="hero dock-hero active ${h.downed ? 'downed' : ''}" data-arg="${i}">
       <div class="dk-res">
         ${head}
-        ${swap ? `<div class="dk-swaps">${swap}</div>` : ''}
         <div class="dk-purse">
           <span class="res-ap${ap ? '' : ' empty'}" data-tip="${esc(`Action points banked this turn: ${ap}. Faces, steps (1 AP each), Strike, Brace, Shove, Interact and Rally spend them. What is not spent stays banked.`)}"><b>${ap}</b><span>AP</span></span>
           <span class="res-els">${els || '<span class="dim small">no etherions</span>'}</span>
           <span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool}</span>
         </div>
         <div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span></div>
-        ${h.track.length ? `<div class="track">${trackCols.join('')}</div>` : ''}
         ${U.diceKey()}
       </div>
-      <div class="hand">${hand}</div>
+      <div class="dk-hand"><div class="track dk-track${h.track.length ? '' : ' empty'}"><span class="tlab tready" data-tip="Cards in hand, ready to play">Track · ready ${h.cards.length - h.track.length}</span>${trackCols.join('')}</div><div class="hand">${hand}</div></div>
       <div class="dk-acts">${actions}${gearRow}</div>
     </div>`;
     }
@@ -1978,6 +2242,33 @@
           const box = $('#turnNote');
           if (box) box.focus();
         }
+        return true;
+      }
+      // the HUD's own shape: framed or full screen, the trays, the phone's tabs (kept with the folds)
+      case 'hudFull':
+      case 'hudTray':
+      case 'hudTab': {
+        const L = U.layout;
+        if (act === 'hudFull') {
+          L.full = !L.full;
+          L.noHand = L.noPlans = false;
+        } else if (act === 'hudTray') {
+          const k = arg === 'plans' ? 'noPlans' : 'noHand';
+          L[k] = !L[k];
+        } else if (TABS.some(([k]) => k === arg)) L.tab = arg;
+        saveLayout();
+        applyHud();
+        return true;
+      }
+      case 'passOk': {
+        // the player named on the pass cover takes the screen; in an open round, the one who said "me"
+        if (arg != null && arg !== '') {
+          const mine = T.heroesOf(U.run, +arg).filter((i) => !m.heroes[i].downed);
+          if (mine.length) ms.heroIdx = mine[0];
+        }
+        ms.passShown = ms.passKey;
+        showPass(m);
+        U.updateMission();
         return true;
       }
       case 'moreActs':

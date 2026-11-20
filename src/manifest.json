@@ -52,6 +52,8 @@
     "ui/account.css",
     "ui/welcome.css",
     "ui/sea.css",
+    "ui/hud.css",
+    "ui/journey.css",
     "ui/after.css",
     "ui/shell.css",
     "ui/home.css"

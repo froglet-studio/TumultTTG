@@ -9,6 +9,20 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.87.0 — 2026-11-21 — the mission HUD, the draft and the route, as designed
+
+From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
+
+- **The mission HUD (HUD 1×2).** The board sits in a frame with the sea around it. The mission runs across the top on the water: kind, tier, place and conditions, its name, the objective with a progress bar and the bonuses, then the clock (with the round), the purse, Undo, ✎, ☰ and End as one pill in the accent. The hint and the forecast sit inside the frame along its foot. The right column holds the foes' plans (with a vitality bar each), the squad and the log; the foot holds the pilot being flown, the track as a strip over its hand, and the actions. The per-pilot swap buttons in the dock are gone: the squad panel does that job.
+- **Full screen (HUD 1+).** ⛶ Full screen lets the board fill the screen. The plans and the hand become trays that slide away and back (Plans ▸, Hand ▾); ⤡ returns to the frame. The choice is kept with the folds (`tumult_v2_ui`).
+- **The squad, for 2 to 5.** One row a pilot: its player, vitality, etherions, AP, and where its player stands this round (their turn, done, any order still to play; in live rounds, playing or done, with a count). Under End, a line says who goes after this turn and whose turn ends the round. Click a row to fly that pilot, or Cards to look at its hand.
+- **Passing the screen.** Players taking turns at one screen get a cover between turns: it names who is up (or asks who goes next, when several still have a turn) and hides the last hand until its player has the screen again (`test/squad.ui.test.js`).
+- **A seat gone quiet, on the HUD.** When a player drops (2.85), their squad row says _lost connection_ with the countdown, and a card at the top of the side column says the same, with the host's two choices (Give it to the AI, Wait for them). A seat the AI holds or fills says _AI holds the seat_ or _AI playing_. On the mission screen these stand in for the strip shown over other screens.
+- **Online in play.** A player who has ended their turn, or is done in live rounds, sees who the table is waiting on; in live rounds they can take it back.
+- **Phones.** The foot of the screen is one sheet: the pilot with its AP, the tabs Hand, Plans, Squad and Log with End beside them, and the tab's pane. Its grip folds it down to the pilot and the tabs.
+- **The draft** keeps today's cards and flow in a frosted panel; the kit fills up along its foot as you pick, the next slot lit. The build screen says "Pilot n of N" for any squad.
+- **The route as a journey column (Route 3).** The Heart at the top with how many stops away it is, the legs to come as bands of their art, the next stops as big art cards, the stops passed below with how each went. The pilots stand in a column beside it. The chart of the whole route stays underneath, folded. A newcomer joining on the route gets a card saying who is bringing a pilot.
+
 ## 2.86.0 — 2026-11-21 — the pages around the game
 
 From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
@@ -71,7 +85,7 @@ Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
 
 Garrett, from a playtest of Three Caches on Mast-Crop Hills: "it seemed like our abilities would allow us to go through guys 4 spaces away (hyperspeed), but the card said no spaces available."
 
-- **Exactly 4 means four steps.** Hyperspeed and Top Speed (cheetah) and Sky Dash and Sky Burst (hawk) run exactly 4. The engine used to offer only the spaces whose *shortest* way was 4, which is not what a player counts, and on a small, well-joined board there are few: on Mast-Crop Hills, from any space of the threshing floor (B2, C1, C2, D2, C3) everything is 3 or fewer away, so the card had nowhere to go even on an empty board. Now a run of exactly 4 is four steps, past foes and allies, never on the same space twice, ending on an empty space: count it on the board, as at the table (`T.reachableWalk`). Every space of every page off high ground now has somewhere to run (tested), and the highlighted spaces are the ones the card accepts.
+- **Exactly 4 means four steps.** Hyperspeed and Top Speed (cheetah) and Sky Dash and Sky Burst (hawk) run exactly 4. The engine used to offer only the spaces whose _shortest_ way was 4, which is not what a player counts, and on a small, well-joined board there are few: on Mast-Crop Hills, from any space of the threshing floor (B2, C1, C2, D2, C3) everything is 3 or fewer away, so the card had nowhere to go even on an empty board. Now a run of exactly 4 is four steps, past foes and allies, never on the same space twice, ending on an empty space: count it on the board, as at the table (`T.reachableWalk`). Every space of every page off high ground now has somewhere to run (tested), and the highlighted spaces are the ones the card accepts.
 - **Balance.** `node tools/sim.js 40` is unchanged to the digit (no pre-made squad in the simulator carries either card). No save change.
 
 ## 2.81.0 — 2026-11-20 — take turns in any order, or play all at once
