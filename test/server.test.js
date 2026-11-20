@@ -125,6 +125,29 @@ test('store: saves are private, guests keep one, and a merged account keeps the 
   assert.equal(await docs.get('heroes/u_ana'), null, 'a deleted account leaves nothing behind');
 });
 
+test("store: the list of games, written by each game's host and tidied when stale", async () => {
+  const docs = S.store.memoryDocs();
+  const { setDoc, deleteDoc, listDocs } = S.store;
+  const kept = await setDoc(
+    docs,
+    'lobby/ABCD',
+    { code: 'ABCD', host: 'Ana', names: ['Ana', 'Bo'], open: true, at: 1 },
+    ANA,
+    ENV,
+    100,
+  );
+  assert.equal(kept.by, 'u_ana');
+  assert.ok(kept.at > 1, "the server's clock, not the screen's");
+  assert.equal((await listDocs(docs, 'lobby', null, ENV)).length, 1, 'anyone sees the games being played');
+  await refusedWith(setDoc(docs, 'lobby/ABCD', { code: 'ABCD' }, BO, ENV, 10), 'permission-denied');
+  await refusedWith(setDoc(docs, 'lobby/ABCD', { code: 'WXYZ' }, ANA, ENV, 10), 'invalid-argument');
+  await refusedWith(setDoc(docs, 'lobby/QQQQ', { code: 'QQQQ' }, GUEST, ENV, 10), 'permission-denied');
+  await refusedWith(deleteDoc(docs, 'lobby/ABCD', BO, ENV), 'permission-denied');
+  await docs.put('lobby/ABCD', 'u_ana', Object.assign(kept, { at: Date.now() - 3 * 24 * 3600 * 1000 }));
+  await deleteDoc(docs, 'lobby/ABCD', BO, ENV);
+  assert.equal(await docs.get('lobby/ABCD'), null, "a listing quiet for days is anyone's to tidy");
+});
+
 /** A socket into a room, for a player: send ops, read answers and pushes. */
 async function enter(room, code, user, q = '') {
   const res = await room.fetch(

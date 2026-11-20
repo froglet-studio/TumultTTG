@@ -87,6 +87,7 @@ export async function setDoc(docs, path, data, user, env, bytes) {
   const r = ruleFor(path, 'doc', user, env);
   if (!r.write) refuse(user ? 403 : 401, user ? 'permission-denied' : 'unauthenticated');
   if (bytes > r.max) refuse(413, 'too-large', `at most ${r.max} bytes here`);
+  if (r.writeIf && !r.writeIf(await docs.get(path))) refuse(403, 'permission-denied', "that is someone else's");
   const kept = r.validate(data);
   await docs.put(path, r.owner, kept);
   return kept;
@@ -94,7 +95,9 @@ export async function setDoc(docs, path, data, user, env, bytes) {
 
 export async function deleteDoc(docs, path, user, env) {
   const r = ruleFor(path, 'doc', user, env);
-  if (!r.write) refuse(user ? 403 : 401, user ? 'permission-denied' : 'unauthenticated');
+  if (r.deleteIf) {
+    if (!r.deleteIf(await docs.get(path))) refuse(403, 'permission-denied', "that is someone else's");
+  } else if (!r.write) refuse(user ? 403 : 401, user ? 'permission-denied' : 'unauthenticated');
   await docs.del(path);
 }
 
@@ -138,6 +141,14 @@ export async function mergeDocs(docs, fromId, intoId) {
 export async function deleteOwned(docs, userId) {
   if (!userId) return;
   for (const d of await docs.byOwner(userId)) await docs.del(d.path);
+}
+
+/** The daily tidy (the Worker's cron): listings of games quiet for two days, as the screens would. */
+export async function sweepStore(env) {
+  if (!env.DB) return;
+  await env.DB.prepare("DELETE FROM docs WHERE parent = 'lobby' AND updated_at < ?")
+    .bind(Date.now() - 2 * 24 * 3600 * 1000)
+    .run();
 }
 
 /** The hooks the sign-in module calls (handleAuth's fourth argument). */

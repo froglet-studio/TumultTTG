@@ -8,6 +8,8 @@
      canon/<user>/notes/<record id>   a canon record            the player writes their own
      canonReview/<record id>          { status, public, … }     reviewers read; only a lore lead writes
      saves/<user>                     { run, meta, at }         only the player, guests too
+     lobby/<CODE>                     { code, host, names, … }  the list of games being played (2.80): anyone
+                                                                reads; the host's account writes its own
 
    Writing anything others can read (pilots, canon notes) needs an account; a guest may keep a save.
    Every document others will read is rebuilt by the game's own rules before it is kept: a pilot by
@@ -79,6 +81,27 @@ function validReview(data) {
   };
 }
 
+const LISTING_DROP_MS = 2 * 24 * 3600 * 1000;
+function validListing(data, code, by) {
+  const d = data || {};
+  if (!/^[A-Z]{4}$/.test(code) || (d.code && d.code !== code))
+    refuse(400, 'invalid-argument', 'a listing is filed under its code');
+  const names = (a, n, len) => (Array.isArray(a) ? a.slice(0, n).map((x) => str(String(x == null ? '' : x), len)) : []);
+  return {
+    code,
+    host: str(d.host, 24),
+    names: names(d.names, 5, 24),
+    pilots: names(d.pilots, 10, 30),
+    phase: str(d.phase, 16),
+    stage: str(d.stage, 80),
+    open: !!d.open,
+    over: !!d.over,
+    at: Date.now(), // the server's clock, so a listing cannot pretend to be fresh or stale
+    v: str(d.v, 16),
+    by,
+  };
+}
+
 function validSave(data) {
   const d = data || {};
   let run = null;
@@ -109,7 +132,7 @@ export function ruleFor(path, kind, user, env) {
   const deny = { read: false, write: false };
 
   if (kind === 'list') {
-    if (p.length === 1 && top === 'heroes') return { read: true };
+    if (p.length === 1 && (top === 'heroes' || top === 'lobby')) return { read: true };
     if (p.length === 1 && (top === 'canon' || top === 'canonReview')) return { read: reviewer };
     if (p.length === 3 && top === 'canon' && p[2] === 'notes') return { read: own(p[1]) || reviewer };
     refuse(404, 'not-found', 'no such collection');
@@ -135,6 +158,18 @@ export function ruleFor(path, kind, user, env) {
     };
   if (top === 'canonReview' && p.length === 2)
     return { read: reviewer, write: lead, owner: null, max, validate: validReview };
+  // the list of games being played (2.80): a host's account writes its own game's entry; anyone may
+  // tidy away one that has been quiet for two days, as the screens do
+  if (top === 'lobby' && p.length === 2)
+    return {
+      read: true,
+      write: hasAccount(user),
+      writeIf: (old) => !old || old.by === me || Date.now() - (+old.at || 0) > LISTING_DROP_MS,
+      deleteIf: (old) => !old || old.by === me || Date.now() - (+old.at || 0) > LISTING_DROP_MS,
+      owner: me,
+      max: 4 * 1024,
+      validate: (d) => validListing(d, p[1], me),
+    };
   if (top === 'saves' && p.length === 2)
     return { read: own(p[1]), write: own(p[1]), owner: p[1], max, validate: validSave };
   return deny;

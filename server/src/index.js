@@ -10,7 +10,7 @@
    so every answer carries CORS headers for the origins in ALLOWED_ORIGIN.
    ========================================================================== */
 import * as auth from './auth/index.js';
-import { handleStore, mergeUser, deleteUser } from './store.js';
+import { handleStore, mergeUser, deleteUser, sweepStore } from './store.js';
 import { roles } from './rules.js';
 export { GameRoom } from './room.js';
 export { Presence } from './presence.js';
@@ -92,6 +92,7 @@ export default {
     }
   },
   async scheduled(event, env, ctx) {
+    ctx.waitUntil(sweepStore(env));
     if (typeof auth.sweepAuth === 'function') ctx.waitUntil(auth.sweepAuth(env));
   },
 };

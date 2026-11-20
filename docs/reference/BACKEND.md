@@ -42,6 +42,7 @@ Like Cosmic Shore's online list, shown in the game as "Lobby", not "Friends". Ev
 | `canon/<user>` and `canon/<user>/notes/<id>` | that player, reviewers | that player, with an account | each note rebuilt by `T.canonRecord`, always `proposed` and private |
 | `canonReview/<id>` | reviewers | lore leads | a decision: status, public, claim, note |
 | `saves/<user>` | that player | that player, guests too | `{ run, meta, at }`; a run the game cannot load is refused |
+| `lobby/<CODE>` | anyone | the host's account; anyone, once quiet for two days | the list of games being played (2.80): names, stage, open seats, stamped with the server's time; a daily cron tidies stale ones |
 
 The server checks pilots and notes with the game's own engine: `tools/build-server.mjs` turns the engine files in `src/manifest.json` into one module (`server/src/engine.gen.js`, generated, not committed) before every `wrangler dev` and `deploy`. Lore leads and reviewers are user ids in `CANON_LEADS` and `CANON_REVIEWERS` (`server/wrangler.toml`).
 
