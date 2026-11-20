@@ -43,7 +43,8 @@ test('a bigger squad: a start each, tougher foes, more of them, more to do, on t
         const { spec } = T.missionSpec(run, arch, 2, null, null);
         assert.deepEqual(spec.board.edges, two.board.edges, 'the same walks');
         assert.deepEqual(Object.keys(spec.board.nodes), Object.keys(two.board.nodes), 'the same spaces');
-        assert.equal(spec.foeHp, sc.hp);
+        const hp = spec.isBoss ? sc.hp + Math.round(100 * sc.size * T.SCALING.boss.hp) : sc.hp;
+        assert.equal(spec.foeHp, hp, `${arch}: foes' vitality`);
         if (!spec.isBoss)
           assert.ok(spec.enemies.length > two.enemies.length || arch === 'survey', `${arch}: more foes`);
         T.launchMission(run, arch, 2);
@@ -53,7 +54,7 @@ test('a bigger squad: a start each, tougher foes, more of them, more to do, on t
         m.enemies.forEach((e) => assert.ok(!at.includes(e.pos), 'no foe on a start'));
         m.enemies
           .filter((e) => e.type === 'biter')
-          .forEach((e) => assert.equal(e.maxHp, Math.round((T.foeHp(T.ENEMIES.biter.hp[1]) * sc.hp) / 100)));
+          .forEach((e) => assert.equal(e.maxHp, Math.round((T.foeHp(T.ENEMIES.biter.hp[1]) * hp) / 100)));
       }
     }
   }

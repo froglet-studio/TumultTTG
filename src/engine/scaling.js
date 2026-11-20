@@ -23,6 +23,9 @@
     CARD_UP: 2, // a trait past the first six counts as this many points
     size: { hp: 0.5, foes: 2, need: 1, swarm: 1 },
     level: { hp: 0.05, foes: 0.25, need: 0.25, swarm: 0.25 },
+    // the Heart: its chamber has no objective to grow, so a bigger squad meets more of the fight itself. Per pilot
+    // past two, the Heart's foes take this much more vitality on top of `size.hp`, and its extras are `foes` of the usual.
+    boss: { hp: 0.2, foes: 0.5 },
   };
 
   /** How many pilots fly in this run (a squad is two to five). */
@@ -92,9 +95,10 @@
         .concat(ids.filter((id) => !taken.has(id) && !free(id) && free(id, true)).sort(order));
       spec.starts = spec.starts.concat(near.slice(0, pilots - spec.starts.length));
     }
-    if (sc.hp !== 100) spec.foeHp = sc.hp;
+    const hp = spec.isBoss ? sc.hp + Math.round(100 * sc.size * T.SCALING.boss.hp) : sc.hp;
+    if (hp !== 100) spec.foeHp = hp;
     // the Heart's chamber takes half as many extras, from its own spawn: its fight is the Heart and its Spawners
-    const extras = spec.isBoss ? Math.floor(sc.foes / 2) : sc.foes;
+    const extras = spec.isBoss ? Math.floor(sc.foes * T.SCALING.boss.foes + 1e-9) : sc.foes;
     if (extras > 0) {
       const pool = spec.enemies.map((e) => e.type).filter(RANK);
       const spawned = (spec.spawns || []).flatMap((x) => x.pool || []).filter(RANK);
