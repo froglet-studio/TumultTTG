@@ -135,12 +135,11 @@ Two optional helpers are included as project skills: `/ability` (add or change a
 
 Already in files, mirroring Cosmic Shore: `.github/CODEOWNERS` puts `.github/` under review by Shombith03, FenrysUnchained, gradies and YsKhan61, the same four who review Cosmic Shore's; workflows run with read-only tokens (only the Pages deploy job gets more) and pinned actions; `.gitignore` blocks signing material and `.env` files; `AGENTS.md` points every agent at `CLAUDE.md`.
 
-Only a repository admin can set the rest, on GitHub:
+**Branches (2026-11-20):** `bleeding-edge` → `development` → `main`, as in Cosmic Shore; Shombith and Garrett are co-owners and both push to `bleeding-edge`. The flow, the promotion runbooks and the settings only an admin can make (default branch, a ruleset per branch, merge methods, fork workflows) are in [`BRANCHING_AND_RELEASE.md`](BRANCHING_AND_RELEASE.md).
 
-- **A ruleset on `main`**, the counterpart of Cosmic Shore's "Protect trunks": require a pull request, require the CI checks (`build + test (Node 22)` and `build + test (Node 24)`), require review from Code Owners, and block force pushes and deletion. CODEOWNERS enforces nothing until this exists. Do it before inviting more people: dozens of accounts can already push here.
-- **Actions → Fork pull request workflows:** require approval for all external contributors, the setting Cosmic Shore's CI docs require for a public repository.
-- **Merging:** squash and merge as the default, as Cosmic Shore's git rules set for feature branches.
-- **Optional — a public play link.** Settings → Pages → Source: *GitHub Actions*, then run the *Publish playable build* workflow by hand. Nothing is published until someone does.
+Two optional extras:
+
+- **Optional — a public play link.** Settings → Pages → Source: *GitHub Actions*, then run the *Publish playable build* workflow by hand from `main`. Nothing is published until someone does.
 - **Optional — fewer permission prompts in Claude Code.** A shared `.claude/settings.json` can pre-approve the project's own commands. It is deliberately not included: which commands an agent may run without asking is a decision for the repository's owner. A starting point, to be checked against the current Claude Code permissions documentation:
 
   ```json
