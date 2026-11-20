@@ -1,7 +1,7 @@
 /* ============================================================================
    TUMULT — PLAY ONLINE (test page only).
    Two screens, one game, through the shared store of the page that hosts the build
-   (claude.ai's `db` capability: window.claude.use('db')). Only the playtest build has
+   (the `db` capability through T.Backend, ui/backend.js; on claude.ai, window.claude.use('db')). Only the playtest build has
    this file; with no such store, it shows nothing and the game is as it was.
 
    The host's screen holds the game. A guest's screen shows the state the host last
@@ -92,19 +92,18 @@
   });
 
   // light up once the page's host answers; a saved copy of the page never will
-  if (window.claude && typeof window.claude.use === 'function') {
-    window.claude
-      .use('db')
+  if (T.Backend && T.Backend.available()) {
+    T.Backend.use('db')
       .then((d) => {
         db = d;
         N.available = !!d;
         if (d && U.screen === 'title') U.render();
-        return window.claude.use('room').then(
+        return T.Backend.use('room').then(
           (r) => {
             rooms = r;
-            return window.claude.use('user');
+            return T.Backend.use('user');
           },
-          () => window.claude.use('user'),
+          () => T.Backend.use('user'),
         );
       })
       .then(async (u) => {
