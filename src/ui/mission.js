@@ -358,10 +358,23 @@
     U.ms.forecast = T.forecast(m);
     // players take turns: when the turn passes, say whose it is and pick up their pilot
     const turn = U.turn();
-    const tkey = turn ? m.round + ':' + turn.seat : null;
+    const tkey = turn ? m.round + ':' + (turn.open ? 'open' + turn.left.join('') : turn.seat) : null;
     if (tkey !== U.ms.lastTurn) {
       U.ms.lastTurn = tkey;
-      if (turn) {
+      if (turn && turn.open) {
+        // whoever acts first takes the next turn
+        if (turn.here) {
+          const mine = turn.left
+            .filter((s) => !U.seats || U.seats.includes(s))
+            .flatMap((s) => T.heroesOf(U.run, s))
+            .filter((i) => !m.heroes[i].downed);
+          if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
+          U.toast(
+            U.seats ? 'Take your turn whenever you like: act to begin it.' : 'Anyone can go next: act to begin a turn.',
+          );
+        }
+        if (U.sfx.turn) U.sfx.turn();
+      } else if (turn) {
         if (turn.here) {
           const mine = T.heroesOf(U.run, turn.seat).filter((i) => !m.heroes[i].downed);
           if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
@@ -433,15 +446,17 @@
   }
 
   /**
-   * The story box beside End turn: the player whose turn it is may give it a line of story, as the
-   * pilot they have selected. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
+   * The story box beside End turn: every player may give the round a line of story, as the pilot they have
+   * selected (or their own, when they are looking at someone else's), on their own turn or while others take
+   * theirs. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
    */
   function noteBox(m) {
     const ms = U.ms;
-    const t = U.turn && U.turn();
-    const i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    const own = (j) => !U.run || T.mayActFor(U.run, U.seats, j);
+    let i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    if (!own(i)) i = m.heroes.findIndex((x, j) => x && own(j));
     const h = m.heroes[i];
-    if (m.over || !h || (t && !t.here) || (U.mine && !U.mine(i))) return '';
+    if (m.over || !h || !own(i)) return '';
     const noted = m.log.find((l) => l.who === 'note' && l.hero === i && l.r === m.round);
     const val = ms.noteDraft != null ? ms.noteDraft : noted ? noted.text : '';
     const tip =
@@ -464,7 +479,11 @@
   U.commitNote = commitNote;
   document.addEventListener('input', (e) => {
     if (!e.target || e.target.id !== 'turnNote' || !U.ms) return;
-    if (U.ms.noteDraft == null) U.ms.noteHero = U.ms.heroIdx;
+    if (U.ms.noteDraft == null) {
+      const m = M();
+      const own = (j) => !U.run || T.mayActFor(U.run, U.seats, j);
+      U.ms.noteHero = own(U.ms.heroIdx) || !m ? U.ms.heroIdx : m.heroes.findIndex((x, j) => x && own(j));
+    }
     U.ms.noteDraft = e.target.value;
   });
   document.addEventListener('change', (e) => {
@@ -767,7 +786,8 @@
     }
     const inode = h.downed ? null : interactNode(m, h);
     const canInteract = inode != null && (T.apValue(h) >= 2 || !!T.markPay(h, m.board.nodes[inode].objective));
-    const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
+    const down = T.downedAllyOf(m, h);
+    const canRally = !h.downed && down && down.downed && B.adjacent(m.board, h.pos, down.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
     const actions = `<div class="actions">
         ${T.BASIC.map((b) => {
@@ -1966,11 +1986,13 @@
         // with two players, this ends the turn of the one playing; the last turn ends the round
         const t = U.turn && U.turn();
         if (t && !t.here) {
-          U.toast(`It is ${esc(t.name)}'s turn.`);
+          U.toast(t.open ? 'Your turn is over for this round.' : `It is ${esc(t.name)}'s turn.`);
           return true;
         }
         commitNote();
-        U.exec({ op: 'ready' });
+        // with the next turn open, a player may end theirs without acting: on one screen, the selected pilot's
+        const seat = t && t.open && !U.seats ? T.ownerOf(U.run, ms.heroIdx) : undefined;
+        U.exec(seat != null ? { op: 'ready', seat } : { op: 'ready' });
         U.sfx.click();
         afterAction();
         return true;
@@ -2016,7 +2038,7 @@
     }
     if (e.key === 'Tab') {
       e.preventDefault();
-      U.ms.heroIdx = 1 - U.ms.heroIdx;
+      U.ms.heroIdx = (U.ms.heroIdx + 1) % U.run.mission.heroes.length;
       U.updateMission();
     }
     if (e.key === 'e' || e.key === 'E') {

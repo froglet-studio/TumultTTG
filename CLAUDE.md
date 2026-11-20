@@ -49,6 +49,7 @@ src/engine/generators.js  board generators, mission archetypes, the Tide Map
 src/engine/engine.js      dice, track, damage, verbs (T.applyEffect), movement, objectives, rounds
 src/engine/ai.js          enemy intents + execution; heuristic hero autoplayer (the weak simulated player)
 src/engine/lookahead.js   actions as data, the shared evaluation, the look-ahead player (the strong one)
+src/engine/scaling.js     how a mission grows with the squad's size and level (T.SCALING)
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
 src/ui/                   screens, SVG board, input (browser only)
 src/ui/backend.js         T.Backend: the one seam the online screens reach a server through
@@ -79,7 +80,7 @@ Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/
 - Dice (Garrett, 2026-11-14): the plain die is a d20 (Mass, Charge, Space, Time, Omni once each, fifteen AP); each awakened card and each Affinity boon swaps a plain die for its element's d8 (four of its element, one each of the others and Omni); Omni Core swaps one for an ethereal d12 (two of each symbol) (`T.DICE`, `docs/design/10-dice.md`). The element symbols are Cosmic Shore's, shared across Froglet's Hypersea games. Omni pays for any etherion.
 - Six-column track: playing either face sends the whole card away for that face's cooldown (after its duration). Every face has a cooldown of at least 1, so a card plays at most once a turn (2.73).
 - Every face grows with its card: its text at P 3 / E 3 differs from its first level (2.73).
-- Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. The capability must be awakened: an Ethereal face cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E`; Garrett, 2026-11-12), and every hero starts with at least two cards awakened (`START_AWAKE`). Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline.
+- Two faces per card. **Physical** costs AP only and scales with P. **Ethereal** costs AP + at least one etherion and unlocks a capability that scales with E. The capability must be awakened: an Ethereal face cannot be played until its card has E 1 (`T.RULES.ETHEREAL_MIN_E`; Garrett, 2026-11-12), and every hero starts with at least two cards awakened (`START_AWAKE`). Caps: P 3, E 3. Kits: 6 cards to start, 9 at most, never more than 3 from one bloodline; a full kit grows by exchange (2.75), and a pilot back from earlier expeditions sets out with the kit it came home with (2.76).
 - **No turn theft.** Control taxes position or efficiency; a controlled unit still acts.
 - **No hard counters.** Every state is pressured by several general verbs.
 - Deterministic combat, random replenishment. Defence is proactive (no reactions or interrupts). Enemies telegraph their intent before the player acts.
@@ -115,5 +116,5 @@ Run like Cosmic Shore (Garrett, 2026-11-11): open by default, with the same secu
 - No secrets: no keys, tokens, passwords, signing material or `.env` files. `.gitignore` blocks the common ones; never force-add past it.
 - Changes under `.github/` need a code owner's review (`.github/CODEOWNERS`). Keep workflow tokens read-only unless a job needs more, give extra permissions to that job alone, and pin third-party actions to a commit SHA with the version in a comment.
 - No internal material: no links to or text pasted from Froglet's internal notes, no unreleased story beats or named canon characters, no business or schedule details, no personal data. Summarise only what the game needs — `docs/LORE.md` is the working subset.
-- Terminology: **Ark**, never "Caddis". **Domains** (Jade, Ruby, Gold) are not factions. In the setting a **squad** is three pilots (the game fields two heroes today; three is proposed). People are human plus two **clades**.
+- Terminology: **Ark**, never "Caddis". **Domains** (Jade, Ruby, Gold) are not factions. In the setting a **squad** is three pilots (the game fields two to five since 2.76: one player flies two, more players one each; missions scale to the squad, `docs/reference/SCALING.md`). People are human plus two **clades**.
 - All art must be original or explicitly licensed for this repo; no generated likenesses of real people, no third-party characters or logos.

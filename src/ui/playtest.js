@@ -1,7 +1,7 @@
 /* ============================================================================
    TUMULT — PLAYTEST ADD-ON. Only in the playtest build (npm run build:playtest).
    A panel on the title screen for whoever is testing the game: jump into any
-   mission, switch a rule that is waiting on a decision, read what to look at
+   mission, choose how rounds go with friends, read what to look at
    in this build, and copy a report of what happened.
    It adds no rules. It starts missions through T.quickMission, the same door
    tools/mission-log.js uses, so a seed names the same mission in both.
@@ -19,10 +19,40 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.76.0',
+    version: '2.82.0',
     items: [
       {
         text: 'The mission screen fits phones and tablets now. On a phone: the board, then a one-line forecast, then your pilot with a hand you swipe a card at a time; nothing runs off the side. Tap a card face once to see what it would do on the board, and what ending the round would do after it; tap it again to play it. On any screen the forecast now has its own strip under the board, and ↶ Undo sits beside End Round (Ctrl+Z on a keyboard): take back a step or a play, as long as it rolled no dice and revealed nothing. Did you ever need to undo something that would not go back? Did a tap ever play a card you only meant to look at?',
+      },
+      {
+        text: 'Two ways to share a round with friends, under "Way to play with friends" on this panel (the host chooses). Take turns: each round, whoever acts first takes the next turn, and you roll your next dice the moment your turn ends, so you can plan while the others play. All at once: no turns; everyone spends AP whenever they like, in whatever order you agree, presses Done, and everyone rolls together when the round begins. Which way did your table enjoy more? With All at once, did two moves ever clash?',
+      },
+      {
+        text: 'Play online now lists the games being played: who hosts, who is in, their pilots and where they are. Type your name and press Join, no code needed; a game in a mission says you can join between missions. Did you find your friends’ game? Did a game you left, or one whose host closed the page, read as quiet?',
+      },
+      {
+        text: 'The story box beside End turn now stays open on other players’ turns: write what your pilot is doing while you wait. Did you add more lines of story this way?',
+      },
+      {
+        text: 'Online, a guest can now finish drafting before the host: the squad waits for the host’s pilot, and the host’s upgrades and Set out work. Did every player get to set out?',
+      },
+      {
+        text: 'Someone can join an expedition already under way. While the squad is on the route between missions, a newcomer enters the game code, makes or brings a pilot, and the route waits until it joins. A late pilot gets spare points to match the least-grown pilot already flying, and the next mission grows for the bigger squad. Did joining feel smooth? Was the newcomer caught up enough?',
+      },
+      {
+        text: 'A pilot you share now carries your name, so the list of pilots says who made each one and Froglet can follow up on the ones worth painting. Pilots you shared before show your name after you next open the page. Does “Made by” show the name you expect?',
+      },
+      {
+        text: 'A trait a pilot already holds is never offered to it again. Pilots of two clades that share traits (a primate with a human side, two cats) used to be offered a shared trait a second time for 1 upgrade point; now the draft and every reward draw only traits it could take, so its pool is smaller and the ones it is after come up more often. Pilots saved with such a point keep it. Did the late exchanges offer what you were hoping for?',
+      },
+      {
+        text: 'A trait you lose now gives back every point on it. Exchange one of nine traits for a new one, or lose one to the Molt or Trade events, and all its upgrade points return to spend again, including the point a second copy of that trait added. Did the refund show up where you expected it?',
+      },
+      {
+        text: 'Up to five players. Pick 3, 4 or 5 players on the title (or host online and let up to four join with the code): each player drafts and flies one pilot, and you take turns. A bigger squad meets bigger missions: tougher foes, more of them, and more to do; the ⚖ pill on the route says how much. Does a squad of four feel as pressed as a squad of two? Is the board too crowded?',
+      },
+      {
+        text: 'Pilots you made now keep their growth. When an expedition ends, won or lost, a pilot you built comes home with its traits and points, at a level, and shows it in the list next time. Fly it again and the missions grow to meet it. Does a veteran feel stronger and still challenged? Is anything you expected to keep (gear, boons) missing?',
       },
       {
         text: 'Three clades take Cosmic Shore’s names: the Honey Badger is now the Ratel, the Hawk is the Red-tailed Hawk (a real species), and the Orca keeps its name. Saved pilots of those clades load as before. Cards that move dice from your pool now say “draw”, not “pull”, so Pull’s tip only shows where a foe is moved. Does every clade name read as a real animal?',
@@ -248,7 +278,7 @@
   /* ───────────── state (kept on this device) ───────────── */
   const fresh = () => ({
     cfg: { type: 'vault', tier: 1, kit: 'tier', heroes: [0, 1], seed: '' },
-    minE: T.RULES.ETHEREAL_MIN_E,
+    rounds: 'turns',
     last: null,
     log: [],
   });
@@ -258,8 +288,8 @@
       const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
       if (saved && typeof saved === 'object') {
         Object.assign(st.cfg, saved.cfg);
-        // 'etherealMinE' since 2.4.0: a 'minE' stored before then is the old default, not a choice
-        if (saved.etherealMinE === 0 || saved.etherealMinE === 1) st.minE = saved.etherealMinE;
+        // the Ethereal rule switch (2.4–2.80) is gone: a stored 'etherealMinE' is ignored, and the rule is as shipped
+        if (T.ROUND_MODES.includes(saved.rounds)) st.rounds = saved.rounds;
         if (saved.last) st.last = saved.last;
         if (Array.isArray(saved.log)) st.log = saved.log.slice(0, LOG_MAX);
       }
@@ -280,11 +310,11 @@
   const st = load();
   function save() {
     try {
-      const { minE, ...rest } = st;
-      localStorage.setItem(KEY, JSON.stringify({ ...rest, etherealMinE: minE }));
+      localStorage.setItem(KEY, JSON.stringify(st));
     } catch (e) {}
   }
-  T.RULES.ETHEREAL_MIN_E = st.minE;
+  /** The way to play that expeditions started on this screen take (T.ROUND_MODES). */
+  U.roundsPref = () => st.rounds;
 
   /* ───────────── what was played (counted per mission) ───────────── */
   let live = { m: null, faces: {}, P: 0, E: 0, E0: 0 };
@@ -308,7 +338,7 @@
     const rec = {
       at: new Date().toISOString(),
       v: T.BUILD.version,
-      minE: T.RULES.ETHEREAL_MIN_E,
+      play: T.playerCount(run) >= 2 ? run.party.rounds || 'turns' : 'solo', // how rounds went
       seed: run.seed,
       quick: run.quick || null,
       type: m.archetype,
@@ -351,15 +381,23 @@
     `node tools/mission-log.js ${type} ${tier} ${seed} ${q.heroes[0]} ${q.heroes[1]} ${q.kit}`;
 
   /* ───────────── the report ───────────── */
-  const ruleText = (minE) =>
-    minE >= 1 ? 'Ethereal faces need E 1 (ETHEREAL_MIN_E = 1)' : 'Ethereal faces playable at E 0 (ETHEREAL_MIN_E = 0)';
+  const ROUNDS = {
+    turns: 'take turns, in the order you choose; each player rolls as their turn ends',
+    live: 'all at once, no turns; everyone rolls together when the round begins',
+    solo: 'solo',
+  };
+  const roundsText = () => {
+    const run = U.run;
+    const now = run && T.playerCount(run) >= 2 ? ` (this expedition: ${ROUNDS[run.party.rounds] || ROUNDS.turns})` : '';
+    return ROUNDS[st.rounds] + now;
+  };
   function logLine(r) {
     const when = String(r.at).slice(0, 16).replace('T', ' ');
     const kit = r.quick ? `${r.quick.kit} kit` : 'on an expedition';
-    return `${when} · ${r.type} t${r.tier} · seed ${r.seed} · ${r.squad.join(' + ')} · ${kit} · ${r.won ? 'WON' : 'LOST'} in ${r.rounds} rounds · hp ${r.hp.join(', ')} · ${r.kills} kills · bonus ${r.bonus} · faces P ${r.P} / E ${r.E} (${r.E0} at E 0) · rule E≥${r.minE} · v${r.v}`;
+    return `${when} · ${r.type} t${r.tier} · seed ${r.seed} · ${r.squad.join(' + ')} · ${kit} · ${r.won ? 'WON' : 'LOST'} in ${r.rounds} rounds · hp ${r.hp.join(', ')} · ${r.kills} kills · bonus ${r.bonus} · faces P ${r.P} / E ${r.E} (${r.E0} at E 0)${r.play ? ' · ' + r.play : r.minE != null ? ' · rule E≥' + r.minE : ''} · v${r.v}`;
   }
   function reportText() {
-    const out = [`TUMULT playtest report — build ${T.BUILD.version}`, 'Rule: ' + ruleText(T.RULES.ETHEREAL_MIN_E)];
+    const out = [`TUMULT playtest report — build ${T.BUILD.version}`, 'Rounds with friends: ' + roundsText()];
     const run = U.run;
     const m = run && run.mission;
     if (m && (U.screen === 'mission' || !m.over)) {
@@ -452,9 +490,9 @@
         <button class="primary" data-act="pt-go">▶ Play this mission</button></div>
       ${last}
       <p class="dim small">The same seed, squad and kit always give the same board and the same opening dice. After the mission the expedition carries on from that node.</p>
-      <h3>Rule: Ethereal faces need E 1</h3>
-      <div class="pt-row">${seg('pt-rule', 1, 'Asleep until E 1 — as shipped', st.minE === 1)}${seg('pt-rule', 0, 'Playable at E 0 — the old rule', st.minE === 0)}</div>
-      <p class="dim small">Since 2.4.0 an Ethereal face is magic that must be awakened: it cannot be played until its card has E 1. Until 2.3 it could be played at E 0, where it does less. The switch takes effect at once, even mid-mission, and stays set on this device.</p>
+      <h3>Way to play with friends</h3>
+      <div class="pt-row">${seg('pt-rounds', 'turns', 'Take turns', st.rounds === 'turns')}${seg('pt-rounds', 'live', 'All at once', st.rounds === 'live')}</div>
+      <p class="dim small"><b>Take turns</b>: each round, players take turns in the order they choose, and each player rolls their next dice as soon as their turn ends. <b>All at once</b>: no turns. Everyone spends their AP whenever they like, in whatever order you agree between you, and presses Done; once everyone is done the foes act, and everyone rolls together. The host chooses: expeditions started on this screen play this way, and so does the one under way if you host it. Kept on this device.</p>
       <details><summary>What to look at in this build</summary><ul class="pt-notes">${NOTES.items.map((n) => `<li>${esc(n.text)}${carriers(n.cards)}</li>`).join('')}</ul></details>
     </div>`;
   };
@@ -521,10 +559,30 @@
       case 'pt-again':
         if (st.last) Object.assign(c, st.last, { heroes: st.last.heroes.slice(), seed: String(st.last.seed) });
         break;
-      case 'pt-rule':
-        st.minE = arg === '1' ? 1 : 0;
-        T.RULES.ETHEREAL_MIN_E = st.minE;
+      case 'pt-rounds': {
+        if (!T.ROUND_MODES.includes(arg)) break;
+        st.rounds = arg;
+        // the expedition under way changes too, when this screen is its host (online, the guests follow)
+        const run = U.run;
+        if (
+          run &&
+          run.party &&
+          T.playerCount(run) >= 2 &&
+          !run.over &&
+          !(U.net && U.net.isGuest()) &&
+          T.mayLead(run, U.seats)
+        ) {
+          T.execCommand(run, { op: 'rounds', mode: arg }, U.seats);
+          T.saveRun(run);
+          if (U.net && U.net.publish) U.net.publish();
+        }
+        U.toast(
+          arg === 'live'
+            ? 'All at once: everyone plays each round together.'
+            : 'Take turns: one player at a time, in any order.',
+        );
         break;
+      }
       case 'pt-go':
         save();
         launch();

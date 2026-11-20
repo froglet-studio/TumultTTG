@@ -1,7 +1,7 @@
 'use strict';
 /**
  * The playtest build (npm run build:playtest): the panel on the title screen starts the
- * mission the command-line tools would, switches the rule under test, and keeps a log.
+ * mission the command-line tools would, chooses how rounds go with friends, and keeps a log.
  * Driven through the real page in jsdom, like test/ui.smoke.test.js.
  */
 const test = require('node:test');
@@ -140,45 +140,43 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
   assert.deepEqual([...p.errors, ...q.errors], []);
 });
 
-test(
-  'the rule switch takes effect at once and is remembered; stored settings are never trusted',
-  { skip },
-  async () => {
-    const html = (await builds())({ playtest: true }).html;
-    const p = await boot(html);
-    assert.equal(p.T.RULES.ETHEREAL_MIN_E, 1, 'as shipped');
-    p.act('pt-rule', '0');
-    assert.equal(p.T.RULES.ETHEREAL_MIN_E, 0);
-    startElite(p);
-    const h = p.U.run.mission.heroes[0];
-    const atZero = h.cards.find((c) => p.T.heroE(h, c) === 0);
-    assert.notEqual(p.T.canPlay(p.U.run.mission, h, atZero, 'E').why, 'needs E 1', 'the old rule, in a mission');
-    const stored = p.w.localStorage.getItem(KEY);
-    assert.equal(JSON.parse(stored).etherealMinE, 0);
+test('the way to play is chosen on the panel and remembered; stored settings are never trusted', { skip }, async () => {
+  const html = (await builds())({ playtest: true }).html;
+  const p = await boot(html);
+  assert.equal(p.U.roundsPref(), 'turns', 'players take turns unless the panel says otherwise');
+  assert.ok(!p.d.querySelector('[data-act="pt-rule"]'), 'the Ethereal rule switch is gone: the rule is as shipped');
+  p.act('pt-rounds', 'live');
+  assert.equal(p.U.roundsPref(), 'live');
+  // a new expedition for two players takes it up
+  p.act('pickPlayers', 2);
+  p.act('newRun');
+  assert.equal(p.U.run.party.rounds, 'live');
+  assert.equal(p.T.turnSeat(p.U.run), null);
+  const stored = p.w.localStorage.getItem(KEY);
+  assert.equal(JSON.parse(stored).rounds, 'live');
 
-    const again = await boot(html, (w) => w.localStorage.setItem(KEY, stored));
-    assert.equal(again.T.RULES.ETHEREAL_MIN_E, 0, 'still set after a reload');
+  const again = await boot(html, (w) => w.localStorage.setItem(KEY, stored));
+  assert.equal(again.U.roundsPref(), 'live', 'still set after a reload');
 
-    // before 2.4.0 the panel stored its default as 'minE': that was never a tester's choice
-    const old = await boot(html, (w) => w.localStorage.setItem(KEY, JSON.stringify({ minE: 0 })));
-    assert.equal(old.T.RULES.ETHEREAL_MIN_E, 1, 'an old stored default does not override the new rule');
+  // the switch of 2.4–2.80 left 'etherealMinE' behind: it no longer changes the rule
+  const old = await boot(html, (w) => w.localStorage.setItem(KEY, JSON.stringify({ etherealMinE: 0 })));
+  assert.equal(old.T.RULES.ETHEREAL_MIN_E, 1, 'an old stored switch does not override the rule');
 
-    const junk = JSON.stringify({
-      etherealMinE: 7,
-      cfg: { type: 'nonsense', tier: 9, heroes: [4, 4], seed: 'x1y2' },
-      log: 'no',
-    });
-    const odd = await boot(html, (w) => w.localStorage.setItem(KEY, junk));
-    const st = odd.U.playtest.state;
-    assert.equal(odd.T.RULES.ETHEREAL_MIN_E, 1);
-    assert.deepEqual(
-      [st.cfg.type, st.cfg.tier, Array.from(st.cfg.heroes), st.cfg.seed, st.log.length],
-      ['vault', 1, [0, 1], '12', 0],
-    );
-    assert.ok(odd.d.querySelector('.pt'));
-    assert.deepEqual([...p.errors, ...again.errors, ...odd.errors], []);
-  },
-);
+  const junk = JSON.stringify({
+    rounds: 'sideways',
+    cfg: { type: 'nonsense', tier: 9, heroes: [4, 4], seed: 'x1y2' },
+    log: 'no',
+  });
+  const odd = await boot(html, (w) => w.localStorage.setItem(KEY, junk));
+  const st = odd.U.playtest.state;
+  assert.equal(odd.U.roundsPref(), 'turns');
+  assert.deepEqual(
+    [st.cfg.type, st.cfg.tier, Array.from(st.cfg.heroes), st.cfg.seed, st.log.length],
+    ['vault', 1, [0, 1], '12', 0],
+  );
+  assert.ok(odd.d.querySelector('.pt'));
+  assert.deepEqual([...p.errors, ...again.errors, ...old.errors, ...odd.errors], []);
+});
 
 test(
   'a finished mission lands in the log and the report, and the Tide carries on',
@@ -199,8 +197,8 @@ test(
     assert.equal(log.length, 1);
     const r = log[0];
     assert.deepEqual(
-      [r.seed, r.type, r.tier, r.won, r.rounds, r.v, r.minE, r.quick.kit],
-      [8, 'elite', 2, !!m.won, m.round, p.T.BUILD.version, 1, 'tier'],
+      [r.seed, r.type, r.tier, r.won, r.rounds, r.v, r.quick.kit],
+      [8, 'elite', 2, !!m.won, m.round, p.T.BUILD.version, 'tier'],
     );
     const counted = Object.values(r.faces).reduce((a, b) => a + b, 0);
     assert.ok(counted > 0 && counted === r.P + r.E, 'every face played was counted once');

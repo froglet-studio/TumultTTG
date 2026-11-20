@@ -140,13 +140,15 @@ test('a full kit is offered exchanges: a new trait in, an old one out, nine kept
     if (!cid) continue;
     assert.equal(T.takeOfferedCard(run, cid, 0).ok, false, 'an exchange names the trait it gives up');
     const drop = T.swapDrops(h, cid)[0];
-    const pts = h.upUnspent + h.up[drop][0] + h.up[drop][1] - ((h.bound && h.bound[drop] && h.bound[drop][1]) || 0);
+    // every point on the old trait comes back, and any a second copy bound to it, spent or not
+    const b = h.bound && h.bound[drop];
+    const pts = h.upUnspent + h.up[drop][0] + h.up[drop][1] + (b ? b[0] - b[1] : 0);
     assert.ok(T.takeOfferedCard(run, cid, 0, drop).ok);
     assert.equal(h.cards.length, T.RULES.MAX_CARDS, 'still nine');
     assert.ok(h.cards.includes(cid) && !h.cards.includes(drop));
     assert.deepEqual(h.up[cid], [0, 0]);
     assert.equal(h.up[drop], undefined);
-    assert.equal(h.upUnspent, pts, "the old trait's free points come back");
+    assert.equal(h.upUnspent, pts, "the old trait's points all come back");
     assert.ok(T.cladeSlots(h, h.cards), 'the 3-of-9 cap holds');
     assert.ok(rw.picked[0]);
     return;

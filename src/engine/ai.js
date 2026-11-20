@@ -547,7 +547,7 @@
       if (h.downed || m.over) continue;
       let guard = 0;
       while (!m.over && guard++ < 12 && !h.rested) {
-        const ally = T.allyOf(m, h);
+        const ally = T.downedAllyOf(m, h);
         // 1. rally
         if (ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2) {
           T.rally(m, h);

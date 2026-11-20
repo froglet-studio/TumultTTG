@@ -53,14 +53,15 @@ test('a made hero comes back as it was built: the same cards and the same points
   }
 });
 
-test('a trait taken twice keeps its own point when the hero is made again', () => {
+test('a trait taken twice before 2.77 keeps its own point when the hero is made again', () => {
   const shared = T.CARDS.find((c) => c.clades.filter((s) => s !== 'human').length >= 2);
   assert.ok(shared, 'some trait is shared by two clades');
   const sp = shared.clades.filter((s) => s !== 'human').slice(0, 2);
   const run = T.newRun(4);
   const h = T.newDraftHero(run, 'Wren', 'the drafted', sp);
   T.addCard(h, shared.id);
-  assert.ok(T.addCard(h, shared.id).double);
+  assert.equal(T.addCard(h, shared.id).ok, false, 'a held trait is not taken again');
+  h.bound[shared.id] = [T.RULES.DOUBLE_UP, 0]; // as a pilot saved before 2.77 holds it
   while (h.cards.length < T.RULES.START_CARDS) T.addCard(h, T.draftPack(run, h, 4)[0]);
   T.adjustUp(h, shared.id, 'P', 1); // from the bound point
   T.autoAllocate(h);
@@ -163,6 +164,7 @@ function fakeDb() {
 }
 const fakeUser = (id) => ({
   id: async () => id,
+  me: async () => ({ id, name: id === 'u_tess' ? 'Tess' : 'Bo' }),
   isOwner: async () => false,
   canEdit: async () => false,
   profiles: async (ids) => Object.fromEntries(ids.map((i) => [i, { id: i, name: i === 'u_tess' ? 'Tess' : 'Bo' }])),
@@ -212,6 +214,7 @@ test(
     A.act('confirmHero');
     await until(() => db.store.has('heroes/u_tess'), 'the pilot in the store');
     assert.equal(JSON.parse(db.store.get('heroes/u_tess')).list[0].name, made.name);
+    assert.equal(JSON.parse(db.store.get('heroes/u_tess')).who, 'Tess', 'with the name of the player who made it');
     assert.equal(A.w.T.loadMade().length, 1, 'kept on the device too');
     // a pre-made hero is not kept again
     A.act('prebuilt', 'cavitt');

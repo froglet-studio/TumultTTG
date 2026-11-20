@@ -25,7 +25,7 @@
                              // must be awakened (Garrett, 2026-11-12). 0 is the v2.0 rule, kept as a switch.
     START_AWAKE: 2,          // a new hero begins with this many cards awakened (E 1), paid from START_UP
     START_UP: 6, START_CARDS: 6, MAX_PER_SPECIES: 3, MAX_CARDS: 9,
-    DOUBLE_UP: 1,            // a trait two of a hero's clades share may be taken a second time: as this many UP for it alone
+    DOUBLE_UP: 1,            // 2.42–2.76: a shared trait taken a second time was this many UP for it alone (old saves keep them)
     GEAR_SLOTS: 2,
   };
 
@@ -252,7 +252,7 @@
     { id:'beacon', title:'Terminal Beacon', icon:'📡',
       text:'A Terminal relay blinks awake as you pass. "Service available," it says, in the voice it uses for everyone. It will help those who help themselves — and it will log the transaction.',
       options:[
-        { label:'Request repair (4 ◇)', cost:{crystals:4}, fx:{healAll:'full'}, result:'Both heroes restored. The relay files a receipt with no name on it.' },
+        { label:'Request repair (4 ◇)', cost:{crystals:4}, fx:{healAll:'full'}, result:'The squad is restored. The relay files a receipt with no name on it.' },
         { label:'Accept a nudge', fx:{up:2, damageOne:5}, result:'A corrective jolt. One hero staggers (−5), both come away sharper (+2 UP each).' },
         { label:'Walk on', fx:{}, result:'The relay dims. It has a hundred thousand years; it can wait.' },
       ]},
@@ -272,7 +272,7 @@
     { id:'bloom', title:'Bloom of the Superorganism', icon:'🌸',
       text:'A reef flowers along the shore — all of it one body, the superorganism reminding you whose cells you are made from.',
       options:[
-        { label:'Rest among the blooms', fx:{healAll:8}, result:'Both heroes heal 8. Something in the reef recognizes your bloodlines.' },
+        { label:'Rest among the blooms', fx:{healAll:8}, result:'Every pilot heals 8. Something in the reef recognizes your bloodlines.' },
         { label:'Harvest a trait', fx:{cardPick:true}, result:'The reef offers a trait. One hero takes it.' },
       ]},
     { id:'guide', title:'Stranded Guide', icon:'🎈',
@@ -290,7 +290,7 @@
     { id:'shrine', title:'Lintukoto Shrine', icon:'🕯️',
       text:'A shrine to the old name, maintained by no one. Offerings left in crystal; answers left in nothing you could prove.',
       options:[
-        { label:'Offer 2 ◇', cost:{crystals:2}, fx:{up:1}, result:'Both heroes gain 1 UP. Whatever listens, it listened.' },
+        { label:'Offer 2 ◇', cost:{crystals:2}, fx:{up:1}, result:'Every pilot gains 1 UP. Whatever listens, it listened.' },
         { label:'Pray', fx:{boonRandom:true}, result:'A boon. You will not be able to say from where.' },
       ]},
     { id:'mirror', title:'Mirror Pool', icon:'🪞',
@@ -320,7 +320,7 @@
     { id:'quiet', title:'Quiet Hour', icon:'🌙',
       text:'Nothing hunts here. Nothing calls. The wind drops, and for one whole Tumult day, an hour and no more, the world is only ground and sky.',
       options:[
-        { label:'Rest', fx:{healAll:'half'}, result:'Both heroes recover half their missing vitality.' },
+        { label:'Rest', fx:{healAll:'half'}, result:'Every pilot recovers half their missing vitality.' },
         { label:'Drill', fx:{up:1}, result:'You run the kits until the moves are reflex. +1 UP each.' },
       ]},
   ];

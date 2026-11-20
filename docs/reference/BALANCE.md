@@ -351,12 +351,14 @@ Survey (`MISSIONS_AND_BESTIARY.md`) went through three versions, each measured w
 
 Need 4/5/6 and clock 6/6/5, both before the tide. It takes Cascade's place in the middle row of the route. Full runs over 80 match main within noise: heuristic 18 → 17, look-ahead 32 → 33.
 
-## A trait taken twice (2.48)
+## A trait taken twice (2.48; retired in 2.77)
+
+Since 2.77 a held trait is never offered again, so no second pick exists; this section is kept for the history of `DOUBLE_UP`, which now only reads older saves.
 
 How many upgrade points should a second pick of a shared trait be worth (`RULES.DOUBLE_UP`)? Garrett (2026-11-16): another card and more upgrade power should give comparable win rates.
 
 - **Whole runs** (measured on the two-player thread's branch): every trait reward was taken either as a card or as N bound UP. Runs won with the look-ahead player, out of 120: card 48, 1 UP 58, 2 UP 68, 3 UP 69. With the heuristic player, out of 400: card 85, 1 UP 88, 2 UP 102. One point is within noise of a card; two is clearly more.
-- **Single missions** (`node tools/double-up.js 150`, heuristic player, tiers 2 and 3, 1,752 paired missions per row): no setting could be told apart from another, or from taking nothing, on either tide (all within ±1 point of 57% on Flood and 74% on Rising). One pick decides little within a single mission; the difference shows over a run.
+- **Single missions** (`tools/double-up.js`, removed in 2.77, heuristic player, tiers 2 and 3, 1,752 paired missions per row): no setting could be told apart from another, or from taking nothing, on either tide (all within ±1 point of 57% on Flood and 74% on Rising). One pick decides little within a single mission; the difference shows over a run.
 
 So `DOUBLE_UP` is 1. 2.48 also fixes how bound points were counted: before, the points already on a card counted against them, so taking a trait twice often gave nothing.
 

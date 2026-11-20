@@ -1,8 +1,9 @@
 'use strict';
 /**
  * Traits shared across clades (Garrett, 2026-11-16): a trait is written once for a branch of the tree and
- * carried by every clade under it. A pilot whose two clades share a trait holds it once; taking it a second
- * time gives DOUBLE_UP upgrade points bound to that card, and that is the only way a card comes up twice.
+ * carried by every clade under it. A pilot whose two clades share a trait holds it once, and it is never
+ * offered again (2.77). From 2.42 to 2.76 a second pick gave DOUBLE_UP points bound to the card; pilots and
+ * saves from then keep them (`h.bound`), so the accounting for bound points is still tested here.
  */
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -20,18 +21,26 @@ const hero = (species, cards) => {
   cards.forEach((id) => assert.ok(T.addCard(h, id).ok, id));
   return h;
 };
+// a second copy as a 2.42–2.76 save holds it: n points bound to the card, none spent
+const bind = (h, id, n) => {
+  h.bound = h.bound || {};
+  h.bound[id] = [n == null ? R.DOUBLE_UP : n, 0];
+};
 
-test('a shared trait is held once, and a second pick binds upgrade points to it instead', () => {
+test('a shared trait is held once and never offered again, so it pays no points twice', () => {
   const h = hero(['orangutan', 'gecko'], ['hum_tool']);
   assert.deepEqual(T.CARD.hum_tool.clades.slice(0, 2), ['human', 'orangutan']);
   assert.ok(T.cardsOf('orangutan').some((c) => c.id === 'hum_tool'));
-  assert.deepEqual(T.canAddCard(h, 'hum_tool'), { ok: true, double: true });
+  assert.deepEqual(T.canAddCard(h, 'hum_tool'), { ok: false, why: 'already held' });
   const free = h.upUnspent;
-  assert.deepEqual(T.addCard(h, 'hum_tool'), { ok: true, double: true });
+  assert.equal(T.addCard(h, 'hum_tool').ok, false);
   assert.deepEqual(h.cards, ['hum_tool'], 'still one card');
-  assert.deepEqual(h.bound.hum_tool, [R.DOUBLE_UP, 0]);
+  assert.ok(!h.bound || !h.bound.hum_tool, 'nothing bound');
   assert.equal(h.upUnspent, free, 'the free pool is untouched');
-  assert.equal(T.canAddCard(h, 'hum_tool').ok, false, 'never a third time');
+  const run = T.newRun(9);
+  for (let i = 0; i < 20; i++) assert.ok(!T.draftPack(run, h, 4).includes('hum_tool'), 'not in the draft');
+  run.heroes = [h];
+  for (let i = 0; i < 20; i++) assert.ok(!T.cardOffers(run, 3)[0].includes('hum_tool'), 'nor in a reward');
 });
 
 test("a trait only one of the hero's clades carries is never offered twice", () => {
@@ -46,10 +55,7 @@ test('bound points are spent on their card first, never on another, and come bac
   // the accounting, with two points bound (whatever RULES.DOUBLE_UP is today)
   const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
   h.upUnspent = 1;
-  const was = R.DOUBLE_UP;
-  R.DOUBLE_UP = 2;
-  T.addCard(h, 'hum_tool');
-  R.DOUBLE_UP = was;
+  bind(h, 'hum_tool', 2);
   assert.ok(T.adjustUp(h, 'hum_tool', 'E', 1).ok);
   assert.ok(T.adjustUp(h, 'hum_tool', 'P', 1).ok);
   assert.equal(h.upUnspent, 1, "both points came from the card's own");
@@ -92,12 +98,12 @@ test('a save from 2.41 loads with nothing bound and plays on', () => {
   assert.ok(run.over);
 });
 
-test('taken twice, a trait with points already on it still gains every bound point (the 2.42 rule lost them)', () => {
+test('a trait taken twice before 2.77, with free points on it too, keeps every bound point', () => {
   const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
   h.upUnspent = 2;
   assert.ok(T.adjustUp(h, 'hum_tool', 'P', 2).ok);
   assert.equal(h.upUnspent, 0);
-  T.addCard(h, 'hum_tool');
+  bind(h, 'hum_tool');
   assert.equal(T.boundLeft(h, 'hum_tool'), R.DOUBLE_UP, 'the points already on it were free ones');
   T.autoAllocate(h);
   const u = h.up.hum_tool;
@@ -106,7 +112,7 @@ test('taken twice, a trait with points already on it still gains every bound poi
   assert.equal(h.upUnspent, 2, 'a respec gives back the two free points');
   assert.equal(T.boundLeft(h, 'hum_tool'), R.DOUBLE_UP, 'and keeps the bound ones for the card');
   T.removeCard(h, 'hum_tool');
-  assert.equal(h.upUnspent, 2, 'dropping the card loses only what was bound to it');
+  assert.equal(h.upUnspent, 2 + R.DOUBLE_UP, 'a card that leaves gives back every point, bound ones too');
 });
 
 test('a 2.47 save keeps its bound points, counted as spent on the card the way 2.42 counted them', () => {
@@ -120,4 +126,18 @@ test('a 2.47 save keeps its bound points, counted as spent on the card the way 2
   assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run));
   H.playRun(run);
   assert.ok(run.over);
+});
+
+test('a trait lost to a molt or a trade gives back every point on it, bound ones too', () => {
+  const run = T.newRun(11);
+  const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
+  run.heroes = [h];
+  h.upUnspent = 3;
+  bind(h, 'hum_tool'); // a second copy from an older save: a bound point
+  T.autoAllocate(h);
+  const before = h.upUnspent + h.cards.reduce((s, c) => s + h.up[c][0] + h.up[c][1], 0) + T.boundLeft(h, 'hum_tool');
+  T.tradeCard(run, 0, 'hum_tool');
+  const after = h.upUnspent + h.cards.reduce((s, c) => s + h.up[c][0] + h.up[c][1], 0);
+  assert.ok(!h.cards.includes('hum_tool') || h.up.hum_tool.every((x) => x === 0));
+  assert.equal(after, before, 'no point is lost with the card');
 });

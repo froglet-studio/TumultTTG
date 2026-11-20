@@ -14,6 +14,9 @@
      games/<CODE>               { rev, run (a save, T.serializeRun), fx, results, acks, host, names, at }
      games/<CODE>/seats/<n>     { name, holder }       a guest's claim on seat n
      games/<CODE>/cmds/<n>-<seq> { cmd, seat, seq, holder, at }   a guest's command, deleted once carried out
+     lobby/<CODE>               { code, host, names, pilots, phase, stage, open, at, v }   the game as the list
+                                of open games shows it (2.80), a few hundred bytes; refreshed while the host's
+                                screen is open, deleted when the host leaves
 
    Commands are a reliable, ordered channel (2.74; the pattern of client prediction and server
    reconciliation that networked action games use; 2.73.1). Each guest numbers its commands 1, 2, 3…; the host
@@ -84,7 +87,7 @@
     code: null,
     role: null, // 'host' | 'guest'
     seat: null,
-    names: ['', ''],
+    names: ['', '', '', '', ''], // one a seat, host first; '' is a seat nobody has taken
     rev: 0,
     status: '',
     isGuest: () => N.role === 'guest',
@@ -97,6 +100,7 @@
       .then((d) => {
         db = d;
         N.available = !!d;
+        if (d) watchGames();
         if (d && U.screen === 'title') U.render();
         return T.Backend.use('room').then(
           (r) => {
@@ -127,6 +131,14 @@
   N.why = why;
 
   const gameDoc = () => db.doc('games/' + N.code);
+  /** A seat's name for each seat, the host's first and the rest empty. */
+  const blankNames = (host) => Array.from({ length: T.MAX_PLAYERS }, (x, s) => (s ? '' : host));
+  /** Who is here, for the lobby. */
+  const lobbyStatus = () => {
+    const n = N.names.filter((x, s) => s > 0 && x).length;
+    if (!n) return 'Waiting for players… share the code (two to ' + T.MAX_PLAYERS + ' can play).';
+    return `${n + 1} here. ${n + 1 < T.MAX_PLAYERS ? 'More can join until you start.' : 'The squad is full.'}`;
+  };
   const unsubs = [];
   const stop = () => unsubs.splice(0).forEach((u) => u && u());
 
@@ -158,6 +170,7 @@
   const holders = {}; // seat → the screen (tab) that holds it now
   /** Write the state if it changed. One write at a time; a burst coalesces into the last one. */
   N.publish = function () {
+    list();
     if (N.role !== 'host' || !U.run) return;
     const run = T.serializeRun(U.run);
     const fx = U.run.mission ? U.run.mission.fx : [];
@@ -184,6 +197,186 @@
         U.toast('Could not reach the other player: ' + esc((e && e.code) || e));
       });
   };
+
+  /* ───────────── the list of games (2.80) ───────────── */
+  /**
+   * Who is playing, for the title's list of games: a small doc beside the game, so a newcomer can see the
+   * games under way and step in without being told a code. The host's screen writes it when what it shows
+   * changes, and at least once a minute while it is open, so a game whose host has gone quiet reads as such.
+   */
+  const LIST_BEAT_MS = 60 * 1000;
+  N.LIVE_MS = 3 * 60 * 1000; // a host heard from within this is playing now
+  const LIST_KEEP_MS = 12 * 3600 * 1000; // after this a quiet game is not shown at all
+  const LIST_DROP_MS = 2 * 24 * 3600 * 1000; // and after this any screen tidies it away
+  /** Where the expedition is, in a few words. */
+  N.stageOf = function (run) {
+    if (!run) return 'Gathering players';
+    const map = run.map;
+    const stop = map && run.nodeId != null && map.all[run.nodeId] ? map.all[run.nodeId].row + 1 : 0;
+    const of = map ? ` (stop ${stop} of ${map.rows.length})` : '';
+    if (run.phase === 'summary' || run.over) return run.won ? 'Finished: reached the Heart' : 'Finished';
+    if (run.phase === 'draft') return 'Drafting pilots';
+    if (run.phase === 'mission' && run.mission)
+      return `In a mission${run.mission.title ? ': ' + run.mission.title : ''}, round ${run.mission.round || 1}${of}`;
+    if (run.phase === 'map') return `On the route${of}`;
+    return `Between missions${of}`;
+  };
+  /** The game as the list shows it. */
+  N.summary = function () {
+    const run = U.run;
+    const joined = N.names.filter(Boolean).length;
+    return {
+      code: N.code,
+      host: N.names[0] || 'Player 1',
+      names: N.names.filter(Boolean),
+      pilots: run ? run.heroes.filter(Boolean).map((h) => String(h.name || '')) : [],
+      phase: run ? run.phase : 'lobby',
+      stage: N.stageOf(run),
+      // can a newcomer take a seat now? Before the start while there is room; after, on the route (2.79)
+      open: run ? T.canAddPlayer(run) : joined < T.MAX_PLAYERS,
+      over: !!(run && (run.over || run.phase === 'summary')),
+      v: (T.BUILD && T.BUILD.version) || '',
+    };
+  };
+  let lastListed = null;
+  let beatTimer = null;
+  function list(beat) {
+    if (N.role !== 'host' || !N.code || !db) return;
+    const s = N.summary();
+    const body = JSON.stringify(s);
+    if (!beat && body === lastListed) return;
+    lastListed = body;
+    db.doc('lobby/' + N.code)
+      .set(Object.assign(s, { at: Date.now() }))
+      .catch(() => (lastListed = null)); // the list is a convenience: the game goes on without it
+  }
+  const unlist = (code) => {
+    if (db && code)
+      db.doc('lobby/' + code)
+        .delete()
+        .catch(() => {});
+  };
+
+  /** The games the list knows of, newest first: { code, host, names, pilots, stage, open, over, at }. */
+  N.games = [];
+  const str = (x, n = 40) => String(x == null ? '' : x).slice(0, n);
+  const takeGames = (docs) => {
+    const now = Date.now();
+    const out = [];
+    for (const d of docs) {
+      const g = d.exists === false ? null : d.data && d.data();
+      if (!g || typeof g !== 'object') continue;
+      const at = +g.at || 0;
+      if (now - at > LIST_DROP_MS) {
+        db.doc('lobby/' + d.id)
+          .delete()
+          .catch(() => {}); // long gone: tidy it away
+        continue;
+      }
+      const code = str(g.code || d.id, 4).toUpperCase();
+      if (!/^[A-Z]{4}$/.test(code)) continue;
+      out.push({
+        code,
+        host: str(g.host, 24),
+        names: Array.isArray(g.names) ? g.names.slice(0, T.MAX_PLAYERS).map((x) => str(x, 24)) : [],
+        pilots: Array.isArray(g.pilots) ? g.pilots.slice(0, 10).map((x) => str(x, 30)) : [],
+        stage: str(g.stage, 80),
+        open: !!g.open,
+        over: !!g.over,
+        at,
+      });
+    }
+    N.games = out.sort((a, b) => b.at - a.at);
+    showGames();
+    if (!gamesTimer) tickGames();
+  };
+  /** Redraw only the list on the title, so a name being typed there is kept. */
+  function showGames() {
+    if (typeof document === 'undefined' || !document) return; // the page is closing
+    const el = document.getElementById('netGames');
+    if (el && U.screen === 'title') el.innerHTML = U.gamesList();
+  }
+  const ago = (ms) => {
+    const m = Math.round(ms / 60000);
+    return m < 1 ? 'just now' : m < 60 ? `${m} min ago` : `${Math.round(m / 60)} h ago`;
+  };
+  /** The list of games on the title: playing now first, with a way in; quiet and finished ones after, folded. */
+  U.gamesList = function () {
+    const now = Date.now();
+    const mine = N.remembered();
+    const shown = N.games.filter((g) => now - g.at < LIST_KEEP_MS && g.code !== N.code);
+    const live = shown.filter((g) => !g.over && now - g.at < N.LIVE_MS);
+    const rest = shown.filter((g) => !live.includes(g));
+    const row = (g, playing) => {
+      const back = mine && mine.code === g.code;
+      const btn = back
+        ? `<button class="sm primary" data-act="netRejoin">Rejoin${mine.role === 'host' ? ' as host' : ''}</button>`
+        : playing && g.open
+          ? `<button class="sm primary" data-act="netJoinGame" data-arg="${esc(g.code)}">Join</button>`
+          : '';
+      const why = g.over
+        ? ''
+        : !playing
+          ? 'The host’s screen is closed.'
+          : g.open
+            ? ''
+            : g.names.length >= T.MAX_PLAYERS
+              ? 'Full.'
+              : 'You can join between missions.';
+      return `<div class="net-game${playing ? '' : ' quiet'}"><div class="net-game-who"><b>${esc(g.host || 'Someone')}</b>’s game <span class="mono dim">${esc(g.code)}</span>
+        <div class="small">${esc(g.names.join(', '))}${g.pilots.length ? ` <span class="dim">· flying ${esc(g.pilots.join(', '))}</span>` : ''}</div>
+        <div class="small dim">${esc(g.stage)} · ${ago(now - g.at)}${why ? ' · ' + why : ''}</div></div>${btn}</div>`;
+    };
+    const head = live.length
+      ? `<div class="dim small">Playing now</div>${live.map((g) => row(g, true)).join('')}`
+      : '<div class="mute small">Nobody is playing online right now. Host a game and it shows here for others to join.</div>';
+    const fold = rest.length
+      ? `<details class="net-quiet"><summary class="small dim">Quiet and finished games (${rest.length})</summary>${rest.map((g) => row(g, false)).join('')}</details>`
+      : '';
+    return head + fold;
+  };
+  let gamesTimer = null;
+  let gamesCol = null;
+  /** Read the list again now (the live delivery can lag), at most every few seconds. */
+  let gamesReadAt = 0;
+  const readGames = () => {
+    if (!gamesCol || typeof gamesCol.get !== 'function' || Date.now() - gamesReadAt < 5000) return;
+    gamesReadAt = Date.now();
+    gamesCol
+      .get()
+      .then((snap) => takeGames(snap.docs || []))
+      .catch(() => {});
+  };
+  /**
+   * Keep the list fresh while this screen is on the title: live, read again when the page comes back into
+   * view, and every 20 s while the list has games on it (their times and liveness move on). An empty list
+   * waits for the live delivery, so a page left open with nothing to show keeps no timer running.
+   */
+  const tickGames = () => {
+    clearTimeout(gamesTimer);
+    gamesTimer = null;
+    if (!N.games.length) return;
+    gamesTimer = setTimeout(() => {
+      gamesTimer = null;
+      if (U.screen === 'title') {
+        showGames();
+        readGames();
+      }
+      tickGames();
+    }, 20000);
+  };
+  const watchGames = () => {
+    gamesCol = db.collection('lobby');
+    if (typeof gamesCol.onSnapshot === 'function')
+      gamesCol.onSnapshot(
+        (snap) => takeGames(snap.docs || []),
+        () => setTimeout(watchGames, 5000),
+      );
+    else readGames();
+  };
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && U.screen === 'title') readGames();
+  });
 
   /**
    * Carry out the guests' commands found in the store, each seat's in order. A command already carried
@@ -251,10 +444,10 @@
     N.code = newCode();
     N.role = 'host';
     N.seat = 0;
-    N.names = [name || 'Player 1', ''];
+    N.names = blankNames(name || 'Player 1');
     U.seats = [0];
     U.screen = 'lobby';
-    N.status = 'Waiting for player 2…';
+    N.status = lobbyStatus();
     U.render();
     try {
       await gameDoc().set({ rev: 0, run: null, acks: {}, host: tab, names: N.names, at: Date.now() });
@@ -268,18 +461,25 @@
   };
   function listenAsHost() {
     joinLane();
-    // who has taken seat 1
-    unsubs.push(
-      db.doc(`games/${N.code}/seats/1`).onSnapshot((snap) => {
-        const d = snap.exists ? snap.data() : null;
-        N.names[1] = d ? String(d.name || 'Player 2').slice(0, 24) : '';
-        holders[1] = d && d.holder ? String(d.holder) : null;
-        if (U.run && U.run.party && U.run.party.players[1]) U.run.party.players[1].name = N.names[1] || 'Player 2';
-        N.status = N.names[1] ? `${N.names[1]} is here.` : 'Waiting for player 2…';
-        if (U.screen === 'lobby') U.render();
-        N.publish();
-      }),
-    );
+    lastListed = null;
+    list();
+    clearInterval(beatTimer);
+    beatTimer = setInterval(() => list(true), LIST_BEAT_MS);
+    // who has taken each guest seat (1 to MAX_PLAYERS - 1)
+    for (let s = 1; s < T.MAX_PLAYERS; s++)
+      unsubs.push(
+        db.doc(`games/${N.code}/seats/${s}`).onSnapshot((snap) => {
+          const d = snap.exists ? snap.data() : null;
+          N.names[s] = d ? String(d.name || 'Player ' + (s + 1)).slice(0, 24) : '';
+          holders[s] = d && d.holder ? String(d.holder) : null;
+          if (U.run && U.run.party && U.run.party.players[s])
+            U.run.party.players[s].name = N.names[s] || 'Player ' + (s + 1);
+          N.admit();
+          N.status = lobbyStatus();
+          if (U.screen === 'lobby') U.render();
+          N.publish();
+        }),
+      );
     // guests' commands: live, and read again every few seconds in case the live delivery lags
     watchCmds();
     pollTimer = setInterval(poll, POLL_MS);
@@ -306,7 +506,7 @@
     N.code = code;
     N.role = 'host';
     N.seat = 0;
-    N.names = (d.names || ['Player 1', '']).map(String);
+    N.names = blankNames('Player 1').map((x, s) => String((d.names && d.names[s]) || x));
     N.rev = +d.rev || 0;
     U.seats = [0];
     Object.assign(acks, d.acks || {});
@@ -334,7 +534,7 @@
       U.run = null;
       U.screen = 'lobby';
     }
-    N.status = N.names[1] ? `${N.names[1]} is here.` : 'Waiting for player 2…';
+    N.status = lobbyStatus();
     lastWritten = null;
     U.render();
     listenAsHost();
@@ -354,21 +554,45 @@
     N.publish();
   };
   const done = new Set();
-  /** What follows from a change on the host: both pilots drafted → the map. */
+  /**
+   * A player who took the next seat after the expedition set out joins it on the route (2.79, T.addPlayer):
+   * their screen then drafts or brings a pilot, and the route waits for it.
+   */
+  N.admit = function () {
+    const run = U.run;
+    if (N.role !== 'host' || !run || !run.party) return;
+    while (N.names[run.party.players.length] && T.canAddPlayer(run)) {
+      const s = run.party.players.length;
+      T.addPlayer(run, N.names[s]);
+      U.toast(esc(N.names[s]) + ' joins the expedition and is bringing a pilot.');
+      if (U.screen === 'map') U.render();
+    }
+  };
+  /** What follows from a change on the host: every pilot drafted → the map; a newcomer waiting → in. */
   N.afterChange = function () {
     const run = U.run;
     if (N.role !== 'host' || !run) return;
-    if (run.phase === 'draft' && run.heroes.length === 2 && run.heroes.every(Boolean)) {
+    N.admit();
+    // a guest's pilot can arrive before the host's, leaving a hole: count every seat, holes too (every()
+    // skips them, which set out a squad with the host's pilot missing, 2.74–2.79.0)
+    if (run.phase === 'draft' && T.squadReady(run)) {
       T.startMap(run);
       T.saveRun(run);
       U.screen = 'map';
       U.draft = null;
     }
   };
+  /** The players who will set out: the host and the guests in the seats after it, with no empty seat between. */
+  N.joined = () => {
+    let n = 1;
+    while (n < T.MAX_PLAYERS && N.names[n]) n++;
+    return n;
+  };
   N.start = function () {
-    if (N.role !== 'host' || !N.names[1]) return;
+    if (N.role !== 'host' || N.joined() < 2) return;
     U.startDraft();
-    U.run.party = T.newParty(2, N.names);
+    U.run.party = T.newParty(N.joined(), N.names);
+    if (U.roundsPref) U.run.party.rounds = U.roundsPref();
     U.draft.heroIdx = 0;
     N.publish();
   };
@@ -483,32 +707,64 @@
         U.toast('No game with that code. Check it with the host; the host must keep their page open.');
         return;
       }
-      const seatDoc = db.doc(`games/${code}/seats/1`);
-      // a short lease while claiming the seat; one left by a page that just reloaded runs out in seconds
-      let lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
-      for (let i = 0; i < 4 && !lease.acquired; i++) {
-        await new Promise((r) => setTimeout(r, 1000));
-        lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
+      // a seat already in this name is taken again (a reload); else the first seat nobody holds. Once the
+      // expedition has set out, only its own seats are open.
+      const g = snap.data();
+      // on the route between missions one more seat opens for a newcomer (2.79)
+      let onRoute = false;
+      try {
+        onRoute = !!g.run && T.canAddPlayer(T.deserializeRun(g.run));
+      } catch {
+        /* a state this screen cannot read: no seat for a newcomer */
       }
-      const taken = (await seatDoc.get()).data();
-      if (!lease.acquired || (taken && taken.name && taken.name !== name)) {
+      const open = g.run ? (g.names || []).filter((x, s) => s > 0 && x).length + (onRoute ? 2 : 1) : T.MAX_PLAYERS;
+      const names = await Promise.all(
+        Array.from({ length: T.MAX_PLAYERS - 1 }, (x, k) =>
+          db
+            .doc(`games/${code}/seats/${k + 1}`)
+            .get()
+            .then((d) => (d.exists && d.data() ? String(d.data().name || '') : '')),
+        ),
+      );
+      const order = [];
+      names.forEach((x, k) => x && x === name && order.push(k + 1));
+      names.forEach((x, k) => !x && k + 1 < open && order.push(k + 1));
+      let seat = null;
+      for (const s of order) {
+        const seatDoc = db.doc(`games/${code}/seats/${s}`);
+        // a short lease while claiming the seat; one left by a page that just reloaded runs out in seconds
+        let lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
+        for (let i = 0; i < 4 && !lease.acquired; i++) {
+          await new Promise((r) => setTimeout(r, 1000));
+          lease = await seatDoc.acquire({ holder: tab, ttlMs: 3000 });
+        }
+        const taken = (await seatDoc.get()).data();
+        if (!lease.acquired || (taken && taken.name && taken.name !== name)) continue;
+        await seatDoc.set({ name: name || 'Player ' + (s + 1), holder: tab });
+        seat = s;
+        break;
+      }
+      if (seat == null) {
         N.code = null;
-        U.toast('That game already has two players.');
+        U.toast(
+          g.run
+            ? 'That expedition is in a mission or full. A newcomer can join on the route, between missions.'
+            : `That game already has ${T.MAX_PLAYERS} players.`,
+        );
         return;
       }
-      await seatDoc.set({ name: name || 'Player 2', holder: tab });
+      N.seat = seat;
       // carry on numbering from what the host has already carried out for this seat
-      seq = (snap.data().acks && +snap.data().acks[1]) || 0;
+      seq = (g.acks && +g.acks[seat]) || 0;
     } catch (e) {
       N.code = null;
       U.toast(why(e), 9000);
       return;
     }
     N.role = 'guest';
-    N.seat = 1;
-    U.seats = [1];
+    U.seats = [N.seat];
     U.screen = 'lobby';
-    remember({ code, role: 'guest', name: name || 'Player 2' });
+    remember({ code, role: 'guest', name: name || 'Player ' + (N.seat + 1) });
     N.status = 'Joined. Waiting for the host to start…';
     // a guest's screen keeps no save of its own: the game lives on the host's
     N.realSave = N.realSave || T.saveRun;
@@ -553,9 +809,15 @@
     // which screen: the run's phase decides, except the draft, which each player does on their own
     const sameMission =
       before && before.mission && run.mission && before.launched === run.launched && U.screen === 'mission';
+    // a newcomer on the route makes the pilot it brings (2.79): the seat's pilot the run is still waiting for
+    const owed =
+      run.phase === 'map' && run.party ? run.party.owner.findIndex((s, i) => s === N.seat && !run.heroes[i]) : -1;
     if (run.phase === 'draft') {
       if (run.heroes[N.seat]) U.draft = Object.assign(U.draft || {}, { step: 'wait' });
       else if (!U.draft || U.screen !== 'draft') U.beginDraft(N.seat);
+      U.screen = 'draft';
+    } else if (owed >= 0) {
+      if (!U.draft || U.draft.heroIdx !== owed || U.screen !== 'draft') U.beginDraft(owed);
       U.screen = 'draft';
     } else if (run.phase === 'mission' && run.mission) {
       if (!sameMission) {
@@ -567,6 +829,8 @@
     } else {
       if (U.screen === 'mission') U.modal = null;
       U.screen = ['reward', 'haven', 'event', 'summary'].includes(run.phase) ? run.phase : 'map';
+      // the expedition is over: this player's own pilot takes its growth home to this device
+      if (run.phase === 'summary' && U.keepProgress) U.keepProgress(run);
     }
     if (refused && U.screen === 'mission' && U.ms && U.ms.mode !== 'idle') U.ms.mode = 'idle';
     // effects already shown are not shown again; if the host's state has fewer, start counting from there
@@ -582,6 +846,9 @@
 
   N.leave = function () {
     remember(null); // leaving on purpose: nothing to rejoin
+    if (N.role === 'host') unlist(N.code); // and nobody else can join it now
+    clearInterval(beatTimer);
+    lastListed = null;
     stop();
     leaveLane();
     pending = [];
@@ -615,14 +882,16 @@
       <button class="sm" data-act="netHost">Host a game</button>
       <input id="netCode" placeholder="CODE" maxlength="4" style="width:5em;text-transform:uppercase">
       <button class="sm" data-act="netJoin">Join</button>
-      <div class="mute small">Two players, two screens: each flies one pilot and you take turns. The host keeps this page open and shares the code; the partner needs write access to this page (an email invite as Editor, or Contributor in your organization). A view-only link can't join.</div></div>`;
+      <div class="net-games" id="netGames">${U.gamesList()}</div>
+      <div class="mute small">Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns. Join a game from the list, or with the code its host gives you; the host keeps this page open. Players need write access to this page (an email invite as Editor, or Contributor in your organization). A view-only link can't join.</div></div>`;
   };
   U.renderLobby = function () {
     const host = N.role === 'host';
+    const here = N.names.map((x, s) => (s === 0 ? esc(x || 'Player 1') + ' (host)' : x ? esc(x) : '')).filter(Boolean);
     return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Online game</div><h2>Code <span class="mono">${esc(N.code || '')}</span></h2>
-      <p>${esc(N.names[0] || 'Player 1')} (host)${N.names[1] ? ' · ' + esc(N.names[1]) : ''}</p>
+      <p>${here.join(' · ')}</p>
       <p class="dim">${esc(N.status)}</p>
-      <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.names[1] ? '' : 'disabled'}>Start the expedition</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
+      <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.joined() > 1 ? '' : 'disabled'}>Start the expedition${N.joined() > 1 ? ` (${N.joined()} players)` : ''}</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
   };
 
   const val = (id) => {
@@ -636,7 +905,10 @@
         N.host(val('netName') || 'Player 1');
         return true;
       case 'netJoin':
-        N.join(val('netCode'), val('netName') || 'Player 2');
+        N.join(val('netCode'), val('netName'));
+        return true;
+      case 'netJoinGame':
+        N.join(arg, val('netName'));
         return true;
       case 'netRejoin': {
         const m = N.remembered();

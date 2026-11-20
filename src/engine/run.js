@@ -98,21 +98,17 @@
   /** How many of a hero's traits count toward one clade. */
   T.cladeCount = (h, sp) => Object.values(T.cladeSlots(h, h.cards) || {}).filter((s) => s === sp).length;
   /**
-   * Can this hero take this trait? A trait two of their clades carry may be taken a second time, once:
-   * the second copy is not a card but DOUBLE_UP upgrade points bound to the first ({ ok, double: true }).
+   * Can this hero take this trait? A trait it already holds is not offered again (2.77; Garrett, 2026-11-20:
+   * "lets no longer have them gain extra points for drawing the card again. they just have a smaller pool").
+   * From 2.42 to 2.76 a trait two of a hero's clades shared could be taken twice, the second time as
+   * DOUBLE_UP points bound to it; saves and made pilots that hold such points keep them (h.bound).
    */
   T.canAddCard = function (h, cardId) {
     const c = T.CARD[cardId];
     if (!c) return { ok: false, why: 'unknown' };
     const mine = c.clades.filter((sp) => h.species.includes(sp));
     if (!mine.length) return { ok: false, why: 'not your bloodline' };
-    if (h.cards.includes(cardId)) {
-      if (mine.length < 2) return { ok: false, why: 'already held' };
-      if (h.bound && h.bound[cardId] != null) return { ok: false, why: 'already taken twice' };
-      const u = h.up[cardId] || [0, 0];
-      if (u[0] + u[1] + R().DOUBLE_UP > R().P_CAP + R().E_CAP) return { ok: false, why: 'already fully upgraded' };
-      return { ok: true, double: true };
-    }
+    if (h.cards.includes(cardId)) return { ok: false, why: 'already held' };
     if (h.cards.length >= R().MAX_CARDS) return { ok: false, why: 'kit is full (9)' };
     if (!T.cladeSlots(h, h.cards.concat(cardId)))
       return { ok: false, why: `already 3 of 9 from ${mine.map((sp) => T.SPECIES[sp].name).join(' and ')}` };
@@ -121,11 +117,6 @@
   T.addCard = function (h, cardId) {
     const r = T.canAddCard(h, cardId);
     if (!r.ok) return r;
-    if (r.double) {
-      h.bound = h.bound || {};
-      h.bound[cardId] = [R().DOUBLE_UP, 0]; // [bound to it, of those spent on it]
-      return { ok: true, double: true };
-    }
     h.cards.push(cardId);
     h.up[cardId] = [0, 0];
     return { ok: true };
@@ -145,8 +136,14 @@
     const b = boundOf(h, cardId);
     return b ? b[0] - b[1] : 0;
   };
+  /**
+   * A trait leaves the kit (an exchange, a molt or a trade): every upgrade point on it comes back to spend
+   * again, and so do the points a second copy bound to it, spent or not (Garrett, 2026-11-20: "when players
+   * lose a card they should get their points refunded"). With the card gone, they are free points.
+   */
   T.removeCard = function (h, cardId) {
-    h.upUnspent += freeSpent(h, cardId);
+    const b = boundOf(h, cardId);
+    h.upUnspent += freeSpent(h, cardId) + (b ? b[0] : 0);
     h.cards = h.cards.filter((c) => c !== cardId);
     delete h.up[cardId];
     if (h.bound) delete h.bound[cardId];
@@ -171,7 +168,7 @@
   T.swapDrops = (h, cardId) => h.cards.filter((d) => T.canSwapCard(h, cardId, d).ok);
   /**
    * Exchange: the old trait leaves and the new one takes its place in the kit, unupgraded. The points
-   * spent on the old one come back to the free pool, except those a second copy bound to it, which go with it.
+   * on the old one, bound ones included, come back to the free pool (`T.removeCard`).
    */
   T.swapCard = function (h, cardId, dropId) {
     const r = T.canSwapCard(h, cardId, dropId);
@@ -184,8 +181,8 @@
   };
   T.draftPack = function (run, h, size) {
     size = size || 4;
-    // pool: every card of the hero's clades they could still take (a trait two of them share, a second
-    // time); weighted so each clade shows up
+    // pool: every card of the hero's clades they could still take, none they hold; weighted so each
+    // clade shows up
     const pool = T.CARDS.filter((c) => T.canAddCard(h, c.id).ok);
     const bySp = {};
     pool.forEach((c) => {
@@ -224,8 +221,41 @@
     if (pb.bound) Object.keys(pb.bound).forEach((c) => (h.bound[c] = pb.bound[c].slice()));
     const onBound = Object.values(h.bound).reduce((s, b) => s + b[1], 0);
     const spent = Object.values(h.up).reduce((s, v) => s + v[0] + v[1], 0) - onBound;
-    h.upUnspent = Math.max(0, R().START_UP - spent);
+    // a pilot back from earlier expeditions keeps the points it had not spent; a new one has what is left of six
+    h.upUnspent = typeof pb.spare === 'number' ? pb.spare : Math.max(0, R().START_UP - spent);
+    // a pilot players made remembers which recipe it is, so what it learns can be kept (T.progressRecord)
+    if (/^made_/.test(pb.id)) h.madeId = pb.id;
+    if (pb.runs) h.runs = pb.runs; // the expeditions it has flown
+    // its level is set as it sets out, and the missions of this expedition answer it (T.squadLevel)
+    const lvl = T.pilotLevel(h);
+    if (lvl > 1) h.level = lvl;
     return h;
+  };
+
+  /* ───────────────────────────── LEVELS: growth kept between expeditions ───────────────────────────── */
+  /**
+   * How far a pilot has grown past a new one, in upgrade points: every point it holds (spent, spare, or bound
+   * to a card) past the six it started with, and CARD_UP for every trait past its first six.
+   */
+  T.pilotPower = function (h) {
+    const S = T.SCALING;
+    const onCards = Object.values(h.up || {}).reduce((s, v) => s + v[0] + v[1], 0);
+    const bound = Object.values(h.bound || {}).reduce((s, b) => s + b[0] - b[1], 0); // bound but not yet spent
+    const pts = onCards + bound + (h.upUnspent || 0) - R().START_UP;
+    return Math.max(0, pts + S.CARD_UP * Math.max(0, h.cards.length - R().START_CARDS));
+  };
+  /** A pilot's level: 1 for a new pilot, and one more for every LEVEL_UP points of growth (about a tier of a run). */
+  T.pilotLevel = (h) => 1 + Math.floor(T.pilotPower(h) / T.SCALING.LEVEL_UP);
+  /**
+   * What a made pilot takes home when its expedition ends, won or lost: its traits, the points on them and
+   * those it had not spent, under the same recipe, one more expedition flown. Gear, boons and crystals stay
+   * with the expedition. `prev` is the recipe it set out as.
+   */
+  T.progressRecord = function (h, prev, at) {
+    const r = T.madeFrom(h, at || (prev && prev.at) || '');
+    if (prev) r.id = prev.id;
+    r.runs = ((prev && prev.runs) || 0) + 1;
+    return r;
   };
 
   /* ───────────────────────────── HEROES PLAYERS MADE ───────────────────────────── */
@@ -247,14 +277,16 @@
     Object.keys(h.bound || {}).forEach((c) => (bound[c] = h.bound[c].slice(0, 2)));
     const key = [h.name, h.species.join('+'), h.cards.slice().sort().join('+')].join('|');
     return {
-      id: 'made_' + hash(key),
+      id: h.madeId || 'made_' + hash(key),
       name: h.name,
       title: h.title || '',
       species: h.species.slice(),
       cards: h.cards.slice(),
       up,
       bound,
+      spare: h.upUnspent || 0,
       at: at || '',
+      runs: h.runs || 0,
     };
   };
   const isInt = (n, lo, hi) => Number.isInteger(n) && n >= lo && n <= hi;
@@ -296,8 +328,13 @@
       bound[c] = [b[0], b[1]];
       spent -= b[1];
     }
-    if (spent > R().START_UP) return null;
-    return {
+    // a pilot back from expeditions may hold more than a new one's six points, never more than its kit can carry
+    const spare = rec.spare == null ? null : rec.spare;
+    if (spare != null && !isInt(spare, 0, (R().P_CAP + R().E_CAP) * R().MAX_CARDS)) return null;
+    const runs = rec.runs == null ? 0 : rec.runs;
+    if (!isInt(runs, 0, 9999)) return null;
+    if (!runs && spent + (spare || 0) > R().START_UP) return null; // a new pilot has six points, no more
+    const out = {
       id,
       name,
       title: typeof rec.title === 'string' ? rec.title.slice(0, 40) : '',
@@ -307,6 +344,9 @@
       bound,
       at: typeof rec.at === 'string' ? rec.at.slice(0, 30) : '',
     };
+    if (spare != null) out.spare = spare;
+    if (runs) out.runs = runs;
+    return out;
   };
   /** The heroes made on this device, newest first (none when storage is unavailable). */
   T.loadMade = function () {
@@ -329,6 +369,9 @@
   T.keepMade = function (rec) {
     const r = T.validMade(rec);
     if (!r) return null;
+    // kept again from the draft, a pilot keeps the expeditions it has flown
+    const prev = T.loadMade().find((x) => x.id === r.id);
+    if (prev && (prev.runs || 0) > (r.runs || 0)) r.runs = prev.runs;
     return saveMade([r].concat(T.loadMade().filter((x) => x.id !== r.id))) ? r : null;
   };
   T.forgetMade = function (id) {
@@ -471,6 +514,7 @@
   const ELITE_STANDS_IN = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey'];
   T.chooseNode = function (run, nodeId) {
     if (!run.available.includes(nodeId)) return { ok: false };
+    if (T.squadReady && !T.squadReady(run)) return { ok: false, why: 'a pilot is still being drafted' };
     const node = run.map.all[nodeId];
     run.nodeId = nodeId;
     run.map.current = nodeId;
@@ -505,7 +549,10 @@
     const node = run.map && nodeId != null ? run.map.all[nodeId] : null;
     const picked = board.pick(T.ATLAS).id; // drawn either way, so naming a page leaves the rest of the board alike
     if (!pageId) pageId = node && node.page ? node.page : picked;
-    const spec = gen.gen(board, tier, T.TIDES[run.tide] || T.TIDES.rising, T.PAGE_BY[pageId]);
+    // the squad's size and level ask more of the mission (src/engine/scaling.js); two new pilots ask nothing more
+    const sc = T.scaleFor(run);
+    const spec = gen.gen(board, tier, T.scaledTide(T.TIDES[run.tide] || T.TIDES.rising, sc), T.PAGE_BY[pageId]);
+    T.scaleSpec(spec, sc, T.squadSize(run), T.makeRng(T.subSeed(seed, 'squad')));
     spec.page = pageId;
     // the day's weather has a stream of its own, so the board and its foes are the same whatever the sky
     spec.place = T.placeConditions(T.PAGE_BY[pageId], T.makeRng(T.subSeed(seed, 'place')));
@@ -549,7 +596,7 @@
       n: count[k],
       name:
         type === 'boss' && k === 'heart' && T.expeditionOf(run) ? T.expeditionOf(run).threatDef.foe : T.ENEMIES[k].name,
-      hp: T.foeHp(T.ENEMIES[k].hp[tier - 1]),
+      hp: Math.round((T.foeHp(T.ENEMIES[k].hp[tier - 1]) * (spec.foeHp || 100)) / 100),
     }));
     const spawns = (spec.spawns || []).map((s) => ({
       every: s.every || 1,
@@ -674,11 +721,11 @@
         .slice(0, n - offers[i].length)
         .map((c) => c.id);
       more.forEach((id) => given.add(id));
-      offers[i] = offers[i].concat(more); // a second copy it may still take comes first
+      offers[i] = offers[i].concat(more);
     });
     return offers;
   };
-  /** Is this offered trait an exchange for this hero (their kit is full and it is not a second copy)? */
+  /** Is this offered trait an exchange for this hero (their kit is full)? */
   T.isSwapOffer = (run, heroIdx, cardId) => {
     const h = run.heroes[heroIdx];
     return h.cards.length >= R().MAX_CARDS && !h.cards.includes(cardId);
@@ -919,9 +966,7 @@
     const h = run.heroes[heroIdx];
     const sp = T.CARD[dropId].clades.find((x) => h.species.includes(x)) || T.CARD[dropId].sp;
     T.removeCard(h, dropId);
-    const cands = T.cardsOf(sp).filter(
-      (c) => c.id !== dropId && !T.canAddCard(h, c.id).double && T.canAddCard(h, c.id).ok,
-    );
+    const cands = T.cardsOf(sp).filter((c) => c.id !== dropId && T.canAddCard(h, c.id).ok);
     const nc = T.runStream(run, 'event').pick(cands);
     if (nc) T.addCard(h, nc.id);
     return nc ? nc.id : null;
@@ -934,7 +979,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 16;
+  T.SAVE_VERSION = 18;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1068,6 +1113,20 @@
         }
       });
       r.v = 16;
+    },
+    // 2.76 lets a hero carry its level (as it set out), the made recipe it is (`madeId`) and the expeditions it
+    // has flown (`runs`), and a mission its foes' vitality (`foeHp`, percent). An older save has two new pilots
+    // whose missions do not scale: nothing to add.
+    16(r) {
+      r.v = 17;
+    },
+    // 2.81 lets players take turns in the order they choose (`party.active`, the seat taking its turn now) and
+    // roll the next round's dice as they end their turn (`rolledAhead` on a hero, for that round), or play rounds
+    // all at once (`party.rounds`, 'turns' or 'live'). An older save takes turns and is between them: whoever is
+    // next may begin, and nothing is rolled ahead.
+    17(r) {
+      if (r.party) Object.assign(r.party, { active: null, rounds: 'turns' });
+      r.v = 18;
     },
   };
   T.deserializeRun = function (json) {
