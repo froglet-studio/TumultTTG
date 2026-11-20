@@ -11,7 +11,7 @@
 # secrets exist the deploy step is skipped and the job passes. Pull requests from forks never get
 # the secrets, so they build but do not deploy.
 #
-# The players' site is GitHub Pages (pages.yml); nothing here reaches tumult.froglet.games.
+# Players get the game from the Froglet website (site.yml); nothing here reaches froglet.games.
 name: Preview
 
 on:

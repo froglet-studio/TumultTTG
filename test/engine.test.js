@@ -422,28 +422,72 @@ test('at level 0, with no AP and no awakened card, every crystal still opens an 
     );
 });
 
-test('an exact run (Hyperspeed) offers only nodes whose shortest walk is exactly that far, and lands there', () => {
+/** Every node a run of exactly n steps can end on, counted by hand: no space twice, past anyone, ending empty. */
+function runEnds(m, h, n) {
+  const out = new Set();
+  const walk = (path) => {
+    const x = path[path.length - 1];
+    if (path.length === n + 1) {
+      if (!T.occupied(m, x)) out.add(x);
+      return;
+    }
+    for (const y of T.Board.walkNeighbors(m.board, x))
+      if (!path.includes(y) && !m.board.nodes[y].height) walk(path.concat(y));
+  };
+  walk([h.pos]);
+  return out;
+}
+
+test('an exact run (Hyperspeed) offers every node a run of exactly that many steps ends on, and lands there', () => {
   const scene = H.arena('che_hyper');
   const { m, h } = scene;
-  const all = T.reachableWalk(m, h, 4, true);
   const exact = T.reachableWalk(m, h, 4, true, true);
-  assert.ok(exact.length > 0, 'the arena has a node four steps off');
-  assert.ok(exact.every((n) => all.includes(n)));
-  const three = new Set(T.reachableWalk(m, h, 3, true));
-  assert.ok(
-    exact.every((n) => !three.has(n)),
-    'nothing nearer than four is offered',
-  );
+  assert.ok(exact.length > 0, 'the arena has somewhere a run of four ends');
+  assert.deepEqual(exact.slice().sort(), [...runEnds(m, h, 4)].sort(), 'the same nodes a player counts on the board');
   const tg = T.canPlay(m, h, 'che_hyper', 'P').tg;
   assert.deepEqual(tg.options.slice().sort(), exact.slice().sort(), 'the face offers the same nodes');
-  const near = all.find((n) => !exact.includes(n));
-  if (near != null) {
-    assert.ok(T.playFace(m, h, 'che_hyper', 'P', { node: near }).ok);
-    assert.notEqual(h.pos, near, 'a nearer node is refused');
+  const off = Object.keys(m.board.nodes)
+    .map(Number)
+    .find((n) => n !== h.pos && !exact.includes(n) && !T.occupied(m, n));
+  if (off != null) {
+    assert.ok(T.playFace(m, h, 'che_hyper', 'P', { node: off }).ok);
+    assert.notEqual(h.pos, off, 'a node no run of four ends on is refused');
   }
   const scene2 = H.arena('che_hyper');
   assert.ok(H.playIn(scene2, 'che_hyper', 'P').ok);
-  assert.ok(exact.includes(scene2.h.pos), 'it lands four steps away');
+  assert.ok(exact.includes(scene2.h.pos), 'it lands where a run of four ends');
+});
+
+test('a run of four has somewhere to go from every space of every page, the Mast-Crop threshing floor too (2.81.1)', () => {
+  // the playtest report: on Three Caches (Mast-Crop Hills), Hyperspeed said there was nowhere to go
+  for (const page of T.ATLAS) {
+    const board = T.Board.build(T.pageBoard(page));
+    for (const k of Object.keys(board.nodes)) {
+      if (board.nodes[k].height) continue; // high ground: no walk leaves it without a ladder, as for any walk
+      const h = { kind: 'hero', pos: +k, states: {}, cards: [], gear: [], boons: [] };
+      const m = { board, heroes: [h], enemies: [], decoys: [] };
+      assert.ok(
+        T.reachableWalk(m, h, 4, true, true).length,
+        `${page.id} ${board.nodes[k].label}: a run of 4 goes somewhere`,
+      );
+    }
+  }
+  // and past foes: on the floor's centre, with every neighbour taken, the run still goes through them
+  const page = T.ATLAS.find((p) => p.id === 'mastcrop');
+  const board = T.Board.build(T.pageBoard(page));
+  const C2 = Object.keys(board.nodes)
+    .map(Number)
+    .find((n) => board.nodes[n].label === 'C2');
+  const h = { kind: 'hero', pos: C2, states: {}, cards: [], gear: [], boons: [] };
+  const foes = T.Board.walkNeighbors(board, C2).map((pos) => ({ kind: 'enemy', alive: true, pos, states: {} }));
+  const m = { board, heroes: [h], enemies: foes, decoys: [] };
+  const ends = T.reachableWalk(m, h, 4, true, true);
+  assert.ok(ends.length, 'a ring of foes is run past');
+  assert.ok(
+    ends.every((n) => !T.occupied(m, n)),
+    'and the run never ends on one',
+  );
+  assert.deepEqual(T.reachableWalk(m, h, 4, false, true), [], 'a plain walk of four cannot pass them');
 });
 
 test('a run toward a foe goes up to its full length and stops beside it (Pounce)', () => {

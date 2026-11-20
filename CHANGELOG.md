@@ -39,6 +39,13 @@ Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
 - **Phones and tablets.** The screen is one column that no longer runs off the right edge: the top bar, the board sized to its map, the forecast, the dock, then the intents, the ally and the log. The hand is swiped and snaps a card at a time; every play is at least 40 px tall on a touch screen; the dock has a button to fly each other pilot. On a phone the top bar keeps End Round and Undo beside the mission's name and folds the objective to one line.
 - **Tests.** `test/undo.test.js`: what can and cannot be taken back, on hundreds of moves, and Undo through the real interface.
 
+## 2.81.1 — 2026-11-20 — a run of exactly 4 counts its steps
+
+Garrett, from a playtest of Three Caches on Mast-Crop Hills: "it seemed like our abilities would allow us to go through guys 4 spaces away (hyperspeed), but the card said no spaces available."
+
+- **Exactly 4 means four steps.** Hyperspeed and Top Speed (cheetah) and Sky Dash and Sky Burst (hawk) run exactly 4. The engine used to offer only the spaces whose *shortest* way was 4, which is not what a player counts, and on a small, well-joined board there are few: on Mast-Crop Hills, from any space of the threshing floor (B2, C1, C2, D2, C3) everything is 3 or fewer away, so the card had nowhere to go even on an empty board. Now a run of exactly 4 is four steps, past foes and allies, never on the same space twice, ending on an empty space: count it on the board, as at the table (`T.reachableWalk`). Every space of every page off high ground now has somewhere to run (tested), and the highlighted spaces are the ones the card accepts.
+- **Balance.** `node tools/sim.js 40` is unchanged to the digit (no pre-made squad in the simulator carries either card). No save change.
+
 ## 2.81.0 — 2026-11-20 — take turns in any order, or play all at once
 
 Garrett: "each player should roll their dice as soon as they end their turn. players should take turns in the order of their choice each round." And: "lets replace that [the A/B test] with a different way to play where we do all roll together at the end of the round and players can all play in real time without taking turns."

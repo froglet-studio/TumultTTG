@@ -46,5 +46,5 @@ simple = { limit = 20, period = 60 }
 [triggers]
 crons = ["17 4 * * *"]
 
-# The API's own address. Needs froglet.games on Cloudflare DNS; until then use the workers.dev address.
-# routes = [{ pattern = "api.tumult.froglet.games", custom_domain = true }]
+# The API answers at https://tumult-api.<account>.workers.dev (froglet.games's DNS is not on Cloudflare).
+# A custom domain later: docs/reference/BACKEND.md, "A custom address later".
