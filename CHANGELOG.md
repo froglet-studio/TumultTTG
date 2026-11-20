@@ -8,6 +8,19 @@
 - **Online play on Tumult's own server.** A Cloudflare Worker (`server/`, `docs/reference/BACKEND.md`) replaces claude.ai's page storage for the web version: a live room per game code (a Durable Object; up to five players; the room keeps the latest state, so a reload or a returning host catches up), a Lobby of who is online, and a store for shared pilots, canon notes and cloud saves, with pilots and notes checked by the game's own rules on the server. Hosting needs an account; a guest joins with the host's invite link. The online screens are now in the web version; the offline file still has none. Rules unchanged.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
+## 2.84.0 — 2026-11-20 — after a mission and the end of an expedition
+
+The finalised Frogma boards for rows 8 and 9 (after a mission, the end of an expedition), desktop and phone. No rule changes: every button sends the command the old screens sent.
+
+- **Victory and rewards on one screen.** The place's painting behind a gold VICTORY; the objectives and the squad's vitality on the left; on the right each pilot's reward behind a tab of their own (a dot until they have chosen, a tick after). Tap a trait to read both its faces, then Take it, or Skip for 2 ◇; after an elite, the boons sit underneath. Onward waits until every pilot has chosen and says how many have.
+- **The full kit's exchange.** A trait offered to a full kit opens its own view: the trait coming in, the nine held (the ones the bloodline rule keeps are dimmed and say why), the one going out marked, and the points that come back and each bloodline's count before Swap.
+- **Grow one card.** The Train sheet becomes the upgrade view: the kit down the side, the chosen card large with sparks rising, its two faces as buttons (Awaken for a sleeping one), the face's words before and after side by side, Grow it, a burst of light when it grows, and a way to take a point back. Other pilots and Auto are a tap away. A pilot with points is offered it from the reward, the haven and a respec event.
+- **A loss the lifeline carries** is told in red over the greyed painting: what happened, the hearts left, the squad, and Onward.
+- **The haven** sits beside its painting: Rest, Trade, Train and Listen as four cards, the squad, then the stalls (gear and supplies, bought per pilot). **Events** use the same layout: the story, the choices as cards with their price, the result in a quote bar.
+- **The end of an expedition** has three tabs. _The end_: THE HEART with the squad's portraits and the route played as painted tiles, or _The expedition ends here_ over the greyed art with what carries over (pilots coming home, lines of story, places played, the best run so far). _Logbook_: the expedition as a page of a printed log, each stop with its painting and the last line written there, the passages between stops, Copy as text and Print (prints the page alone). _Numbers_: stops, rounds, foes destroyed and missions won, each pilot's damage dealt and taken, and the kits they finished with.
+- **Phones.** Everything stacks; offers and kits scroll sideways a card at a time; the call to act sits in a bar at the foot of the screen. These screens keep a dark wash over the painting whatever the sea, so the words read on the light Shore sea too, and their motion follows Look (Reduced stills the sparks, the shimmer and the slow pan).
+- **Code.** The screens moved out of `src/ui/core.js` into `src/ui/after.js` and `src/ui/after.css`. `test/after.test.js` drives them through the real interface.
+
 ## 2.83.0 — 2026-11-21 — a living sea, a calmer mission screen, and motion
 
 Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, motion kit). No rule changes.

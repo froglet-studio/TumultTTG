@@ -26,6 +26,7 @@
     "ui/sea.js",
     "ui/party.js",
     "ui/pilots.js",
+    "ui/after.js",
     "ui/mission.js",
     "ui/feel.js",
     "ui/atlas.js",
@@ -43,7 +44,8 @@
     "ui/feel.css",
     "ui/account.css",
     "ui/welcome.css",
-    "ui/sea.css"
+    "ui/sea.css",
+    "ui/after.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
