@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.75.0',
+    version: '2.76.0',
     items: [
+      {
+        text: 'The sea comes alive and the mission screen is calmer. Behind every screen the water now drifts: sea lines, slow light and rising motes. The sea follows the expedition down the route, from the light Shore in the shallows through the Deep Sea and Glow to a violet Storm at the Heart, a little darker every stop; Look (in the ☰ menu on a mission, or on the title) pins a theme, picks an accent and sets motion to Full, Reduced or Off. On the mission screen, Plan, Report, sound, help and Title sit behind ☰, the place’s rules fold into one chip, the story box opens from ✎, four basic actions show with the rest under More, cards with nothing to do fold small, and the how-to line goes after the first two missions. Pilots now walk their path node by node, strikers lean into their blows, a hit shakes, the forecast pulses when it changes and the track steps toward Ready at a new round. Is anything you used often now too far away? Does any animation slow a turn down?',
+      },
       {
         text: 'The mission screen fits phones and tablets now. On a phone: the board, then a one-line forecast, then your pilot with a hand you swipe a card at a time; nothing runs off the side. Tap a card face once to see what it would do on the board, and what ending the round would do after it; tap it again to play it. On any screen the forecast now has its own strip under the board, and ↶ Undo sits beside End Round (Ctrl+Z on a keyboard): take back a step or a play, as long as it rolled no dice and revealed nothing. Did you ever need to undo something that would not go back? Did a tap ever play a card you only meant to look at?',
       },
