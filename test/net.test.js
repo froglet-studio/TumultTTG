@@ -555,3 +555,73 @@ test(
     assert.deepEqual(A.errors.concat(B.errors), []);
   },
 );
+
+test(
+  'online: the title lists the games being played, and a newcomer joins one from it',
+  { skip, timeout: 60_000 },
+  async () => {
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const html = build({ playtest: true }).html;
+    const db = fakeDb();
+    // a game whose host went quiet long ago, and one finished: neither offers a way in
+    db.store.set(
+      'lobby/QQQQ',
+      JSON.stringify({
+        code: 'QQQQ',
+        host: 'Old',
+        names: ['Old'],
+        stage: 'On the route',
+        open: true,
+        at: Date.now() - 3600e3,
+      }),
+    );
+    const A = await open(html, db);
+    const B = await open(html, db);
+    await until(() => B.d.getElementById('netGames'), 'the list on the title');
+    await until(
+      () => /Quiet and finished games \(1\)/.test(B.d.getElementById('netGames').textContent),
+      'the quiet game, folded',
+    );
+    assert.equal(B.d.querySelector('[data-act="netJoinGame"]'), null, 'a quiet game offers no way in');
+
+    A.type('netName', 'Ana');
+    A.act('netHost');
+    await until(() => A.U.net.code && db.store.has('lobby/' + A.U.net.code), 'the game to be listed');
+    const code = A.U.net.code;
+    const listed = JSON.parse(db.store.get('lobby/' + code));
+    assert.equal(listed.host, 'Ana');
+    assert.equal(listed.open, true);
+    assert.ok(JSON.stringify(listed).length < 600, 'the list entry stays small');
+    // the guest types a name but no code, and joins from the list; the name typed is kept while the list updates
+    B.type('netName', 'Bo');
+    await until(() => B.d.querySelector(`[data-act="netJoinGame"][data-arg="${code}"]`), 'the game on the list');
+    assert.match(B.d.getElementById('netGames').textContent, /Ana’s game/);
+    assert.equal(B.d.getElementById('netName').value, 'Bo');
+    B.act('netJoinGame', code);
+    await until(() => A.U.net.names[1] === 'Bo', 'the host to see the guest');
+    assert.equal(B.U.screen, 'lobby');
+    await until(() => JSON.parse(db.store.get('lobby/' + code)).names.join() === 'Ana,Bo', 'the list to show both');
+
+    A.act('netStart');
+    A.U.run.seed = SEED;
+    A.U.run.rngs = {};
+    A.U.net.publish();
+    const entry = () => JSON.parse(db.store.get('lobby/' + code));
+    await until(() => entry().stage === 'Drafting pilots', 'the list to say the squad is drafting');
+    assert.equal(entry().open, false, 'nobody new can join mid-draft');
+    const ids = A.T.PREBUILTS.map((p) => p.id);
+    await until(() => B.U.screen === 'draft', "the guest's draft");
+    A.act('prebuilt', ids[0]);
+    A.act('confirmHero');
+    B.act('prebuilt', ids[1]);
+    B.act('confirmHero');
+    await until(() => A.U.screen === 'map', 'the route');
+    await until(() => /^On the route/.test(entry().stage) && entry().open, 'the list to open a seat on the route');
+    assert.equal(entry().pilots.length, 2, 'the list names the pilots');
+
+    // the host leaves: the game leaves the list
+    A.act('netLeave');
+    await until(() => !db.store.has('lobby/' + code), 'the game off the list');
+    assert.deepEqual(A.errors.concat(B.errors), []);
+  },
+);

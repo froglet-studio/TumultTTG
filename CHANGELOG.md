@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.80.0 — 2026-11-20 — see who is playing and join their game
+
+Garrett: "now lets have it work more like cosmic shore where we can just see who is playing and jump into their game."
+
+- **A list of games on the title.** Under Play online, Tumult Online now lists the games being played: whose game it is, who is in it, the pilots they fly, and where the expedition is ("Drafting pilots", "On the route (stop 2 of 6)", "In a mission: Hold the Beacon, round 3"). Type your name and press Join: no code to pass around. Codes still work.
+- **When you can join.** Join shows while a game is gathering players or its squad is on the route with a seat free (2.79). A game in a mission says you can join between missions; a full one says so. A game you were in offers Rejoin.
+- **Quiet and finished games.** Each host's screen refreshes its entry at least once a minute, so a game not heard from for three minutes is folded under "Quiet and finished games" with no Join button, as is a finished one. Entries leave the list when the host leaves, after 12 hours of quiet, and are tidied away after two days.
+- **Compatibility.** The list is a small extra document per game (`lobby/<CODE>`); the game's own documents and commands are unchanged, so a game started on 2.79 plays on, and screens on either version can still join by code. A game hosted from 2.79 appears in the list once its host reloads onto 2.80. No save change, no rules change.
+
 ## 2.79.1 — 2026-11-20 — an online squad waits for the host's pilot
 
 Garrett: "we tried a 5 and 2 player test and we were not able to start either. it was hanging on the upgrade screen and not accepting my upgrades then i could net press the set out button"
