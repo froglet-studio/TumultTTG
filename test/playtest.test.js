@@ -96,9 +96,9 @@ test('the panel starts the mission the command-line tools would', { skip }, asyn
   assert.match(p.U.playtest.reportText(), /node tools\/mission-log\.js elite 2 8 3 1 tier/);
   assert.ok(p.d.querySelector('#mtop [data-act="pt-report"]'), 'the report is one click away mid-mission');
 
-  // the forecast: what ending the round now would do, a line a hero, and each hero's vitality says where it is heading
+  // the forecast: what ending the round now would do, a chip a hero in the strip under the board, and each hero's vitality says where it is heading
   const f = p.T.forecast(p.U.run.mission);
-  const said = p.d.querySelector('#mside .forecast').textContent;
+  const said = p.d.querySelector('#mfc .forecast').textContent;
   for (const h of f.heroes) {
     assert.ok(said.includes(h.name), `the forecast names ${h.name}`);
     if (h.after < h.hp) assert.ok(said.includes(`takes ${h.hp - h.after} (${h.after} left)`), said);

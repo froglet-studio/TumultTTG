@@ -230,4 +230,27 @@
     const r = f(run, m, h, cmd) || { ok: false };
     return Object.assign({}, r, { ctx: cmd.ctx });
   };
+
+  /* ───────────── take-backs: what a player may undo ───────────── */
+  /**
+   * What a player could not have known before a play: the random streams (a die rolled, a foe's
+   * choice drawn), which caches have been searched and which is real, which survey marks are still
+   * veiled, which foes are on the board and which of them are Hidden, and whether the mission is over.
+   * Two missions with the same secrets differ only in things the player already knew.
+   */
+  T.secretsOf = function (m) {
+    const nodes = Object.values(m.board.nodes)
+      .filter((n) => n.objective)
+      .map((n) => [n.id, !!n.objective.searched, !!n.objective.veiled]);
+    const foes = m.enemies.map((e) => [e.uid, !!(e.states && e.states.Hidden)]);
+    const ob = m.objective || {};
+    return JSON.stringify([m.rngs, nodes, foes, !!ob.found, !!m.over, m.round, m.phase]);
+  };
+  /**
+   * May the change from `before` to `after` be taken back? Yes when it rolled no dice, drew nothing
+   * at random, revealed nothing and did not end the mission or the round: the player could have
+   * planned it from what they could already see, so undoing it hides nothing and gains nothing
+   * (docs/design/07-art-and-ux.md, Undo). A table plays the same way: put the token back.
+   */
+  T.canTakeBack = (before, after) => T.secretsOf(before) === T.secretsOf(after);
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

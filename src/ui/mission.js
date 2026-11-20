@@ -38,6 +38,8 @@
       fxDone: 0,
       built: false,
       overShown: false,
+      undo: [], // missions as they stood before each move that can still be taken back (T.canTakeBack)
+      armed: null, // on a touch screen: the play tapped once, previewed, waiting for a second tap
     };
   };
   const M = () => U.run.mission;
@@ -113,7 +115,7 @@
     const scene = (page && T.ART && T.ART[page.plate]) || (lead && U.sceneSrc(U.pilotOf(lead)));
     return `<div class="mission">
       <div class="top panel tight" id="mtop"></div>
-      <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div></div>
+      <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div><div class="mfc" id="mfc" aria-live="polite"></div></div>
       <div class="side"><div class="side-in" id="mside"></div><div class="bottom">${foldBtn('log', 'the log')}<div class="log${U.layout.log ? '' : ' folded'}" id="mlog"></div></div></div>
       <div class="dock" id="mdock"></div>
     </div>`;
@@ -169,6 +171,7 @@
     const host = $('#board');
     const old = host.querySelector('svg');
     if (old) old.remove();
+    host.style.setProperty('--ar', `${g.W} / ${g.H}`); // a narrow screen sizes the board to its map
     const svg = svgEl('svg', { viewBox: `0 0 ${g.W} ${g.H}`, preserveAspectRatio: 'xMidYMid meet' });
     host.insertBefore(svg, host.firstChild);
     const defs = svgEl('defs', {}, svg);
@@ -349,6 +352,7 @@
   U.updateMission = function () {
     const m = M();
     clearPreview();
+    U.ms.armed = null;
     if (!U.ms.built) buildBoard();
     // what ending the round now would do: the enemy turn is declared, so this is exact (T.forecast)
     U.ms.forecast = T.forecast(m);
@@ -369,6 +373,7 @@
     if (U.objectiveCheck) U.objectiveCheck(m);
     renderTop(m);
     renderTargetBar(m);
+    renderForecast(m);
     renderSide(m);
     renderLog(m);
     updateBoard(m);
@@ -417,7 +422,7 @@
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
       <div class="tpills">${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span>${U.purseHTML(m, true)}</div>
-      <div class="endgrp"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${noteBox(m)}</div>
+      <div class="endgrp"><div class="endrow"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${undoBtn(m)}</div>${noteBox(m)}</div>
       ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`,
     );
     const box = changed && typing && $('#turnNote');
@@ -496,13 +501,83 @@
     if (!h || h.downed) return 'Select a hero.';
     const ap = T.apValue(h);
     const parts = [`<b>${esc(h.name)}</b>: ${ap} AP banked`];
-    const f = U.ms.forecast && U.ms.forecast.heroes[U.ms.heroIdx];
-    if (f && f.after < f.hp)
-      parts.push(
-        `<span class="fc-bad">ending the round now costs you ${f.hp - f.after}${f.downed ? ' — you go down' : ` (${f.after} left)`}</span>`,
-      );
-    parts.push('click a card face to play it · click a node to walk (1 AP/step) · End Round when done');
+    parts.push(
+      U.touch()
+        ? 'tap a card face to see what it does, tap again to play it · tap a node to walk (1 AP/step)'
+        : 'hover a card face to see what it does, click to play it · click a node to walk (1 AP/step) · End Round when done',
+    );
     return parts.join(' · ');
+  }
+
+  /* ───────────── take-backs ───────────── */
+  /** Does this screen take touches rather than a pointer that hovers? (jsdom, with no matchMedia: no.) */
+  U.touch = () => typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(hover: none)').matches;
+  /** The moves a player can take back: those that only spend what is in hand, on the board in view. */
+  const TAKE_BACK = new Set(['face', 'basic', 'gear', 'item', 'interact', 'rally', 'valve', 'dump', 'walk']);
+  /** Take-backs are for one screen playing alone or passing the screen; online, the host's mission is shared. */
+  const takeBackOn = () => !(U.net && U.net.online && U.net.online());
+  /** Called by U.exec before a command: the mission as it stands, if the command could be taken back. */
+  U.takeBackBefore = function (cmd) {
+    if (U.screen !== 'mission' || !U.ms || !U.run || !U.run.mission) return null;
+    if (cmd.op === 'ready' || !takeBackOn()) {
+      U.ms.undo = [];
+      return null;
+    }
+    if (!TAKE_BACK.has(cmd.op) || U.run.mission.over) return null;
+    return { m: T.clone(U.run.mission), heroIdx: U.ms.heroIdx, label: moveLabel(cmd) };
+  };
+  /** Called by U.exec after it: keep the old mission if nothing hidden came out, or forget them all if it did. */
+  U.takeBackAfter = function (cmd, r, before) {
+    if (!before || !U.ms) return;
+    if (!r || r.ok === false) return;
+    if (!T.canTakeBack(before.m, U.run.mission)) {
+      U.ms.undo = [];
+      return;
+    }
+    U.ms.undo.push(before);
+    if (U.ms.undo.length > 40) U.ms.undo.shift();
+  };
+  function moveLabel(cmd) {
+    const m = M();
+    const h = m.heroes[cmd.hero];
+    const who = h ? h.name + "'s " : '';
+    if (cmd.op === 'face') return who + T.CARD[cmd.card][cmd.fk].n;
+    if (cmd.op === 'basic') return who + ((T.BASIC_BY[cmd.id] && T.BASIC_BY[cmd.id].n) || 'action');
+    if (cmd.op === 'gear') return who + T.GEAR_BY[h.gear[cmd.gi].id].abilities[cmd.ai].n;
+    if (cmd.op === 'walk') return who + 'step';
+    if (cmd.op === 'item') return who + T.CONSUMABLE_BY[h.consumables[cmd.ci]].name;
+    return who + { interact: 'Interact', rally: 'Rally', valve: 'fold to Omni', dump: 'returned die' }[cmd.op];
+  }
+  /** Put the mission back as it stood before the last move that can be taken back. */
+  function takeBack() {
+    const ms = U.ms;
+    const cur = U.run && U.run.mission;
+    if (!ms || !cur || cur.over || !ms.undo.length || !takeBackOn()) return;
+    const e = ms.undo.pop();
+    // lines of story written since are kept: they are words, not moves
+    const had = new Set(e.m.log.filter((l) => l.who === 'note').map((l) => l.hero + ':' + l.r + ':' + l.text));
+    U.run.mission = e.m;
+    cur.log
+      .filter((l) => l.who === 'note' && l.r === e.m.round && !had.has(l.hero + ':' + l.r + ':' + l.text))
+      .forEach((l) => T.addNote(e.m, l.hero, l.text));
+    ms.mode = 'idle';
+    ms.pending = null;
+    ms.rerollPicked = [];
+    ms.heroIdx = e.heroIdx;
+    ms.fxDone = e.m.fx.length;
+    ms.built = false;
+    U.toast(`Taken back: ${esc(e.label)}.`);
+    if (U.sfx.click) U.sfx.click();
+    afterAction();
+  }
+  U.takeBack = takeBack;
+  function undoBtn(m) {
+    if (!takeBackOn() || m.over) return '';
+    const last = U.ms.undo[U.ms.undo.length - 1];
+    const tip = last
+      ? `Take back ${esc(last.label)} (Ctrl+Z). Anything that rolled dice or revealed something cannot be taken back.`
+      : 'Nothing to take back. Moves that rolled no dice and revealed nothing can be taken back, until the round ends.';
+    return `<button class="ghost undo" data-act="undo" ${last ? '' : 'disabled'} data-tip="${esc(tip)}" aria-label="Undo">↶<span class="undo-lab"> Undo</span></button>`;
   }
 
   /* ───────────── side panels ───────────── */
@@ -519,7 +594,7 @@
     const foes = T.liveEnemies(m).length;
     const changed = setHTML(
       $('#mside'),
-      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b>Enemy intents</b><span class="dim small right">${open ? 'declared — they adapt only to close distance' : `${foes} foe${foes === 1 ? '' : 's'} · shown on the board`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}${forecastHTML(m)}</div>` +
+      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b>Enemy intents</b><span class="dim small right">${open ? 'declared — they adapt only to close distance' : `${foes} foe${foes === 1 ? '' : 's'} · shown on the board`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
         // the pilots not being played, folded: the ally's vitality, dice and (on request) cards
         m.heroes
           .map((h, i) => i)
@@ -542,28 +617,58 @@
     if (!f || f.after === f.hp) return '';
     return ` <span class="${f.after < f.hp ? 'fc-bad' : 'fc-good'}">→ ${f.downed ? 'down' : f.after}</span>`;
   }
-  /** "What happens if I end the round now?" — the telegraphs, hazards and objective added up, a line a hero. */
-  function forecastHTML(m) {
-    const f = U.ms.forecast;
-    if (!f) return '';
-    const lines = f.heroes
-      .filter((x, i) => !m.heroes[i].downed)
-      .map((x) => {
+  /**
+   * "What happens if I end the round now?" — the telegraphs, hazards and objective added up, a chip a pilot,
+   * in a strip under the board that is always in view. While a play is previewed (hovered, or tapped once on
+   * a touch screen), the strip shows what ending the round would do after that play instead, beside now.
+   */
+  function forecastChips(m, f, was) {
+    const chips = f.heroes
+      .map((x, i) => ({ x, i, w: was && was.heroes[i] }))
+      .filter(({ i }) => !m.heroes[i].downed)
+      .map(({ x, w }) => {
         const d = x.hp - x.after;
-        if (x.downed) return `<span class="fc-bad"><b>${esc(x.name)}</b> goes down</span>`;
-        if (d > 0) return `<span class="fc-bad"><b>${esc(x.name)}</b> takes ${d} (${x.after} left)</span>`;
-        if (d < 0) return `<span class="fc-good"><b>${esc(x.name)}</b> mends ${-d} (${x.after})</span>`;
-        return `<span><b>${esc(x.name)}</b> is untouched</span>`;
+        const changed = w && (w.after !== x.after || w.downed !== x.downed);
+        const tone = x.downed || d > 0 ? 'bad' : d < 0 ? 'good' : 'ok';
+        const what = x.downed
+          ? 'goes down'
+          : d > 0
+            ? `takes ${d} <span class="dim">(${x.after} left)</span>`
+            : d < 0
+              ? `mends ${-d} <span class="dim">(${x.after})</span>`
+              : 'is untouched';
+        const from = changed
+          ? `<s class="dim">${w.downed ? 'down' : w.hp - w.after > 0 ? '−' + (w.hp - w.after) : w.hp - w.after < 0 ? '+' + (w.after - w.hp) : 'untouched'}</s> `
+          : '';
+        return `<span class="fc-chip ${tone}${changed ? ' changed' : ''}"><b>${esc(x.name)}</b> ${from}${what}</span>`;
       });
     const falls = f.foes.filter((x) => x.falls).length;
-    if (falls) lines.push(`<span class="fc-good">${falls} foe${falls > 1 ? 's fall' : ' falls'}</span>`);
+    const fellBefore = was ? was.foes.filter((x) => x.falls).length : falls;
+    if (falls)
+      chips.push(
+        `<span class="fc-chip good${falls !== fellBefore ? ' changed' : ''}">${falls} foe${falls > 1 ? 's fall' : ' falls'}</span>`,
+      );
     const ob = m.objective;
     if (f.result)
-      lines.push(`<span class="${f.result === 'won' ? 'fc-good' : 'fc-bad'}"><b>the mission is ${f.result}</b></span>`);
-    else if (f.progress.after > f.progress.before) lines.push('<span class="fc-good">the objective advances</span>');
-    else if (ob && ob.kind === 'hold')
-      lines.push('<span class="fc-bad">no one is by the beacon: the round will not count</span>');
-    return `<div class="forecast" data-tip="Worked out from the declared intents, hazards and effects in play. Nothing in an enemy turn is random: this is what will happen if you end the round as things stand."><span class="dim">End the round now:</span> ${lines.join(' · ')}</div>`;
+      chips.push(
+        `<span class="fc-chip ${f.result === 'won' ? 'good' : 'bad'}"><b>the mission is ${f.result}</b></span>`,
+      );
+    else if (f.progress.after > f.progress.before)
+      chips.push('<span class="fc-chip good">the objective advances</span>');
+    else if (ob && ob.kind === 'hold') chips.push('<span class="fc-chip bad">no one is by the beacon</span>');
+    return chips.join('');
+  }
+  function forecastHTML(m, after) {
+    const f = U.ms.forecast;
+    if (!f) return '';
+    const tip =
+      'Worked out from the declared intents, hazards and effects in play. Nothing in an enemy turn is random: this is what will happen if you end the round as things stand.';
+    if (after)
+      return `<div class="forecast preview" data-tip="${esc(tip)}"><span class="fc-lab">After this play, ending the round:</span>${forecastChips(m, after, f)}</div>`;
+    return `<div class="forecast" data-tip="${esc(tip)}"><span class="fc-lab">End the round now:</span>${forecastChips(m, f)}</div>`;
+  }
+  function renderForecast(m, after) {
+    setHTML($('#mfc'), m.over ? '' : forecastHTML(m, after));
   }
   function heroPanel(m, h, i) {
     const sel = U.ms.heroIdx === i;
@@ -692,9 +797,18 @@
             `<span class="res-el" style="--c:${EL[x.e].color}" data-tip="${esc(`${x.n} ${EL[x.e].name} banked: pays a face's ${x.e === 'O' ? 'etherion of any element' : EL[x.e].name + ' cost'}, or channels an action.`)}">${U.ic('el.' + x.e, x.e)}<b>${x.n}</b></span>`,
         )
         .join('');
+      // the other pilots, one tap away: on a phone their panels are further down the page
+      const swap = m.heroes
+        .map((x, j) =>
+          j === i
+            ? ''
+            : `<button class="sm ghost dk-swap${x.downed ? ' downed' : ''}" data-act="selHero" data-arg="${j}" data-tip="${esc(`Fly ${x.name} (Tab)`)}">${U.portrait(x, 'xs')}<span>${esc(x.name)}</span><span class="mono dim">${x.downed ? 'down' : x.hp}${heading(j)}</span></button>`,
+        )
+        .join('');
       return `<div class="hero dock-hero active ${h.downed ? 'downed' : ''}" data-arg="${i}">
       <div class="dk-res">
         ${head}
+        ${swap ? `<div class="dk-swaps">${swap}</div>` : ''}
         <div class="dk-purse">
           <span class="res-ap${ap ? '' : ' empty'}" data-tip="${esc(`Action points banked this turn: ${ap}. Faces, steps (1 AP each), Strike, Brace, Shove, Interact and Rally spend them. What is not spent stays banked.`)}"><b>${ap}</b><span>AP</span></span>
           <span class="res-els">${els || '<span class="dim small">no etherions</span>'}</span>
@@ -1133,7 +1247,7 @@
       }
     return out;
   }
-  function previewFor(p, ctxs, i = U.ms.heroIdx) {
+  function previewFor(p, ctxs, i = U.ms.heroIdx, withForecast) {
     const m = M();
     const all = [];
     const combos = [];
@@ -1150,6 +1264,8 @@
       if (!r || !r.ok) continue;
       const d = diffPlay(m, copy);
       all.push(...d);
+      // one way to make the play: what ending the round would do after it (with several targets, it depends)
+      if (withForecast && ctxs.length === 1 && !copy.over) all.fc = T.forecast(copy);
       goal = Math.max(goal, T.objectiveProgress(copy) - p0);
       for (const c of combosOf(m, copy, d)) if (!combos.some((x) => x.text === c.text)) combos.push(c);
     }
@@ -1215,6 +1331,7 @@
       (x.removed || []).forEach((b) => bits.push(`<s class="dim">${esc(b.k)}</s>`));
       words.push(`<b>${esc(name)}</b> ${bits.join(' ')}`);
     }
+    if (diffs.fc) renderForecast(M(), diffs.fc);
     const bar = $('#mtarget');
     if (diffs.goal) words.unshift('<span class="pv-goal">◎ moves the objective forward</span>');
     if (bar && (words.length || note || (diffs.combos && diffs.combos.length))) {
@@ -1236,6 +1353,10 @@
     if (pv) pv.innerHTML = '';
     const el = document.querySelector('#mtarget .pv-line');
     if (el) el.remove();
+    const fc = document.querySelector('#mfc .forecast.preview');
+    if (fc && U.run && U.run.mission) renderForecast(U.run.mission);
+    document.querySelectorAll('.mission .armed').forEach((b) => b.classList.remove('armed'));
+    if (U.ms) U.ms.armed = null;
   }
   U.clearPreview = clearPreview;
   /** The play a hovered button stands for, with its targets, or null. */
@@ -1321,6 +1442,7 @@
   }
   document.addEventListener('mouseover', (e) => {
     if (U.screen !== 'mission' || !U.ms || !U.ms.built || M().over) return;
+    if (U.touch()) return; // a tap is not a hover: a touch screen previews on its first tap (previewFirst)
     const ms = U.ms;
     if (ms.mode === 'idle') {
       const btn = e.target.closest && e.target.closest(PLAYS);
@@ -1330,7 +1452,7 @@
       const ctxs = ctxsFor(pk.tg);
       const many = ctxs.length > 1;
       drawPreview(
-        previewFor(pk.p, ctxs, pk.i),
+        previewFor(pk.p, ctxs, pk.i, true),
         pk.tg.need === 'node' ? '(pick a node to see exactly)' : many ? '(each ring is a target you could pick)' : '',
       );
       return;
@@ -1355,11 +1477,11 @@
       if (!ctx) return;
       const p =
         ms.pending.kind === 'card' ? { kind: 'card', cardId: ms.pending.cardId, fk: ms.pending.fk } : ms.pending;
-      drawPreview(previewFor(p, [ctx]));
+      drawPreview(previewFor(p, [ctx], U.ms.heroIdx, true));
     }
   });
   document.addEventListener('mouseout', (e) => {
-    if (U.screen !== 'mission' || !U.ms) return;
+    if (U.screen !== 'mission' || !U.ms || U.touch()) return;
     const from =
       e.target.closest && e.target.closest('#mside [data-act], #mdock [data-act], #tokens .token, #nodes .node');
     const to =
@@ -1641,10 +1763,34 @@
     T.saveRun(U.run);
   }
 
+  /**
+   * A touch screen cannot hover, so its first tap on a play shows what the play would do (the same preview a
+   * mouse gets by hovering) and the second tap makes it. Returns true when this tap only previewed.
+   */
+  function previewFirst(act, arg, el) {
+    if (!U.touch() || !el || U.ms.mode !== 'idle') return false;
+    const key = act + ':' + arg;
+    if (U.ms.armed === key) return false;
+    const pk = pendingOf(el);
+    if (!pk) return false;
+    clearPreview();
+    U.ms.armed = key;
+    el.classList.add('armed');
+    const ctxs = ctxsFor(pk.tg);
+    drawPreview(
+      previewFor(pk.p, ctxs, pk.i, true),
+      'Tap it again to play' + (pk.tg.need === 'none' ? '.' : ', then pick where.'),
+    );
+    return true;
+  }
   U.handleMissionAct = function (act, arg, el, ev) {
     const m = M();
     const ms = U.ms;
+    if ((act === 'face' || act === 'basic' || act === 'gear') && previewFirst(act, arg, el)) return true;
     switch (act) {
+      case 'undo':
+        takeBack();
+        return true;
       case 'fold': {
         if (!['log', 'intents', 'obj'].includes(arg)) return true;
         U.layout[arg] = !U.layout[arg];
@@ -1856,6 +2002,11 @@
     const tag = e.target && e.target.tagName;
     if (tag === 'INPUT' || tag === 'TEXTAREA') {
       if (e.target.id === 'turnNote' && (e.key === 'Enter' || e.key === 'Escape')) e.target.blur();
+      return;
+    }
+    if ((e.key === 'z' || e.key === 'Z') && (e.ctrlKey || e.metaKey) && !e.shiftKey) {
+      e.preventDefault();
+      takeBack();
       return;
     }
     if (e.key === 'Escape') {
