@@ -24,3 +24,8 @@ CLAUDE.local.md
 *.jks
 .env
 .env.*
+
+# the Worker: its generated engine copy, local state and local secrets
+server/src/engine.gen.js
+server/.wrangler/
+server/.dev.vars

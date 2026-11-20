@@ -120,28 +120,49 @@
     </div>`;
   };
 
-  /** The Atlas screen: the contents by ground, or one spread with a way back and to the pages either side. */
+  /* ───────────── the Atlas tab: land, sea, air (Frogma "Atlas 2"), and one place as a diorama ───────────── */
+  const GROUND_C = { land: '#f0c35a', sea: '#7fe3f0', air: '#dbe7f5' };
+  /** A weather a visit may bring, as a gauge: its name and how often. */
+  const skyLine = (page) => {
+    const skies = (page.skies || []).filter((w) => w !== 'calm' && T.WEATHER[w]);
+    return skies.length ? skies.map((w) => T.WEATHER[w].name).join(', ') : 'Calm';
+  };
+  /** The place's board tilted like a model on a table, with its plate under the glass. */
+  U.dioramaHTML = function (page) {
+    const plate = T.ART && T.ART[page.plate];
+    return `<div class="diorama" aria-hidden="false"><div class="dio-table">${plate ? `<span class="dio-plate" style="background-image:url(${plate})"></span>` : ''}<span class="dio-glass"></span>${U.atlasMapSVG(page)}</div></div>`;
+  };
+  function placePage(page) {
+    const i = T.ATLAS.indexOf(page);
+    const prev = T.ATLAS[(i - 1 + T.ATLAS.length) % T.ATLAS.length];
+    const next = T.ATLAS[(i + 1) % T.ATLAS.length];
+    const ground = GROUNDS.find((g) => g[0] === page.ground)[1];
+    const gb = T.GRAVITY.find((x) => x.id === T.gravityBand(page.gravity));
+    const gauges = `<div class="dio-gauges"><span class="gauge"><i aria-hidden="true">◎</i><b>${page.gravity} g</b><small>${esc(U.gravityText(page.gravity).replace(/^[^(]*\(|\)/g, ''))}</small></span><span class="gauge"><i aria-hidden="true">≋</i><b>${esc(skyLine(page))}</b><small>Some visits</small></span><span class="gauge"><i aria-hidden="true">☾</i><b>${esc(page.weather.split(/[;.]/)[0])}</b><small>Weather</small></span></div>`;
+    return `<div class="page place" style="--gr:${GROUND_C[page.ground]}"><div class="place-cols"><div class="place-left">${gauges}${U.dioramaHTML(page)}</div>
+      <section class="place-text"><span class="eyebrow">${esc(ground)}</span><h1>${esc(page.name)}</h1><p class="dim">${esc(page.blurb)} ${mark(page, page.blurb, 'blurb')}</p>
+        <span class="lab">Rules</span><ul class="place-rules">${page.rules.map((r, j) => `<li>${esc(r)} ${mark(page, r, 'rules:' + j)}</li>`).join('')}${U.placeRuleItems(page)}</ul>
+        <details class="small dim"><summary>Reading a board</summary><ul>${LEGEND.map((l) => `<li>${esc(l)}</li>`).join('')}</ul></details>
+        <span class="lab">Field notes</span><div class="place-notes atlas-notes"><p class="small"><b>Gravity</b> ${esc(U.gravityText(page.gravity))}. <b>Weather</b> ${esc(page.weather)} ${mark(page, page.weather, 'weather')}</p>${page.notes.map((n, j) => `<p><b>${esc(n.h)}.</b> ${esc(n.t)} ${mark(page, n.h + '. ' + n.t, 'notes:' + j)}</p>`).join('')}</div></section></div>
+      <nav class="place-turn" aria-label="Other places"><button class="ghost" data-act="atlasPage" data-arg="${prev.id}">‹ ${esc(prev.name)}</button><button class="ghost" data-act="atlasBack">All places</button><button class="ghost" data-act="atlasPage" data-arg="${next.id}">${esc(next.name)} ›</button></nav></div>`;
+  }
   U.renderAtlas = function () {
-    const id = U.atlasPage;
-    const page = id && T.PAGE_BY[id];
-    const back = `<button class="sm" data-act="atlasBack">${page ? 'Contents' : 'Back'}</button>`;
-    if (page) {
-      const i = T.ATLAS.indexOf(page);
-      const prev = T.ATLAS[(i - 1 + T.ATLAS.length) % T.ATLAS.length];
-      const next = T.ATLAS[(i + 1) % T.ATLAS.length];
-      return `<div class="wrap">${U.header('Atlas of Tumult', back)}${U.atlasSpreadHTML(page)}
-        <div class="row atlas-turn"><button class="ghost sm" data-act="atlasPage" data-arg="${prev.id}">← ${esc(prev.name)}</button><span class="dim small">Page ${i + 1} of ${T.ATLAS.length}</span><button class="ghost sm right" data-act="atlasPage" data-arg="${next.id}">${esc(next.name)} →</button></div></div>`;
-    }
-    const groups = GROUNDS.map(([g, name]) => {
+    const page = U.atlasPage && T.PAGE_BY[U.atlasPage];
+    if (page) return U.shell ? U.shell('atlas', placePage(page)) : placePage(page);
+    const seen = U.seen ? U.seen().pages : [];
+    const cols = GROUNDS.map(([g, name]) => {
       const pages = T.ATLAS.filter((p) => p.ground === g);
-      return `<h3>${name}</h3><div class="atlas-index">${pages
+      return `<section class="ground" style="--gr:${GROUND_C[g]}"><h2><span>${esc(name)}</span></h2>${pages
         .map((p) => {
           const plate = T.ART && T.ART[p.plate];
-          return `<button class="atlas-card" data-act="atlasPage" data-arg="${p.id}">${plate ? `<span class="atlas-thumb" style="background-image:url(${plate})"></span>` : ''}<b>${esc(p.name)}</b><span class="small dim">${esc(U.gravityText(p.gravity))}</span><span class="small">${esc(p.blurb)}</span></button>`;
+          const been = seen.includes(p.id);
+          return `<button class="place-tile${been ? '' : ' unseen'}" data-act="atlasPage" data-arg="${p.id}">${plate ? `<span class="pt-art" style="background-image:url(${plate})"></span>` : ''}<span class="pt-veil"></span><span class="pt-text"><b>${esc(p.name)}</b><small>${been ? 'visited' : 'not yet visited'}</small></span><span class="pt-g" aria-label="${p.gravity} g"><b>${p.gravity}</b><small>g</small></span></button>`;
         })
-        .join('')}</div>`;
+        .join('')}</section>`;
     }).join('');
-    return `<div class="wrap">${U.header('Atlas of Tumult', back)}<p class="dim" style="max-width:640px">Every page is a kind of place on Tumult, not one spot: the quarry you fight across today may be a different quarry next time. A journey runs from page to page.</p>${groups}</div>`;
+    const visited = T.ATLAS.filter((p) => seen.includes(p.id)).length;
+    const inner = `<div class="page atlas"><div class="pg-head"><h1>Atlas of Tumult</h1><span class="dim">Every page is a kind of place, not one spot. ${visited} of ${T.ATLAS.length} visited.</span></div><div class="grounds">${cols}</div></div>`;
+    return U.shell ? U.shell('atlas', inner) : inner;
   };
 
   /** The atlas's own actions; true when one was taken. */
@@ -159,8 +180,14 @@
         U.render();
         return true;
       case 'atlasBack':
-        if (U.atlasPage) U.atlasPage = null;
-        else U.screen = U.atlasFrom || 'title';
+        // from a place: back to every place; from every place: back where the atlas was opened
+        if (!U.atlasPage && U.screen === 'atlas') {
+          U.screen = U.atlasFrom && U.atlasFrom !== 'atlas' ? U.atlasFrom : 'title';
+          U.render();
+          return true;
+        }
+        U.atlasPage = null;
+        U.screen = 'atlas';
         U.render();
         return true;
       case 'atlasHere': {

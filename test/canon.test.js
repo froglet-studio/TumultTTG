@@ -248,7 +248,7 @@ test(
   { skip, timeout: 60_000 },
   async () => {
     const { d, click, errors, records } = await page();
-    click('[data-act="atlas"]');
+    click('[data-act="tab"][data-arg="atlas"]');
     click('[data-act="atlasPage"][data-arg="quarry"]');
     const marks = d.querySelectorAll('.atlas-notes [data-act="canonMark"]');
     assert.equal(marks.length, T.PAGE_BY.quarry.notes.length + 1, 'a mark on the weather and on every note');
@@ -301,11 +301,12 @@ test(
     assert.equal(records().length, 1);
     // the list on the title screen turns the asking off
     click('[data-act="quitToTitle"]');
+    click('[data-act="tab"][data-arg="canon"]'); // the Canon tab holds the list
     click('[data-act="canonList"]');
     assert.equal(d.querySelectorAll('.canon-row').length, 1);
     click('[data-act="canonAsk"]');
     click('[data-act="closeModal"]');
-    click('[data-act="newRun"]');
+    d.defaultView.T.UI.startDraft(); // a new expedition's draft, however Home is laid out
     click('[data-act="prebuilt"][data-arg="ossa"]');
     assert.ok(!d.querySelector('.canon-ask'), 'no question once turned off');
     assert.deepEqual(errors, []);

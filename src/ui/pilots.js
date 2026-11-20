@@ -177,6 +177,7 @@
     const squad = (U.run && U.run.heroes) || [];
     const taken = new Set();
     for (const s of squad) {
+      if (!s) continue; // a seat still drafting
       const a = U.artForPair(cladesOf(s), taken);
       if (s === h || s.id === h.id) return a;
       if (a) taken.add(a.key);

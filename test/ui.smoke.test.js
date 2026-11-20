@@ -330,39 +330,49 @@ test(
       const before = JSON.stringify(m);
       const sel = U.ms.heroIdx;
       const other = 1 - sel;
-      const panel = (i) => d.querySelector(`#mside .hero[data-arg="${i}"], #mdock .hero[data-arg="${i}"]`);
-      // the pilot being played is in the dock, never folded; the other is folded to its vitality and dice in the side
+      const row = (i) => d.querySelector(`#msquad .sq-row[data-arg="${i}"]`);
+      // the pilot being played is in the dock, never folded; the squad lists every pilot, one row each
       assert.ok(d.querySelector(`#mdock .hero[data-arg="${sel}"] .hand`), "the dock shows the selected pilot's cards");
       assert.ok(!d.querySelector('#mdock [data-act="peek"], #mdock [data-act="fold"]'), 'nothing in the dock folds');
       assert.ok(d.querySelector('#mdock .res-ap'), 'the dock shows the AP banked');
-      assert.ok(panel(other).classList.contains('folded') && !panel(other).querySelector('.hand'));
-      assert.ok(panel(other).querySelector('.dice') && panel(other).querySelector('.hpbar'));
-      assert.equal(d.querySelector('#mside .hero').getAttribute('data-arg'), String(other));
+      assert.ok(row(sel).classList.contains('sel') && row(other) && !row(other).querySelector('.hand'));
+      assert.ok(row(other).querySelector('.sq-hp') && row(other).querySelector('.ap-chip'), 'vitality and AP');
       // its cards open on request, without selecting it
-      click(`#mside .hero[data-arg="${other}"] [data-act="peek"]`);
-      assert.ok(panel(other).querySelector('.hand'));
+      click(`#msquad .sq-row[data-arg="${other}"] [data-act="peek"]`);
+      assert.ok(d.querySelector(`#msquad .hero[data-arg="${other}"] .hand`));
       assert.equal(U.ms.heroIdx, sel);
       // the log folds to its last lines, and the choice is kept for this browser
       assert.ok(d.getElementById('mlog').classList.contains('folded'), 'the log starts folded');
       click('.mission .bottom [data-act="fold"]');
       assert.ok(!d.getElementById('mlog').classList.contains('folded'));
       assert.equal(JSON.parse(w.localStorage.getItem('tumult_v2_ui')).log, true);
-      // the intents fold away; the forecast has a strip of its own under the board
+      // the intents fold away; the forecast stays in the board's frame
       click('#mside [data-act="fold"][data-arg="intents"]');
       assert.ok(!d.querySelector('#mside .intents'), 'the intents are folded away');
       assert.ok(d.querySelector('#mfc .forecast'), 'the forecast stays');
       // an update that changes nothing leaves the panels as they are
-      const side = d.querySelector('#mside .hero');
+      const squad = d.querySelector('#msquad .squad-panel');
       U.updateMission();
-      assert.equal(d.querySelector('#mside .hero'), side, 'the side panel was not redrawn');
+      assert.equal(d.querySelector('#msquad .squad-panel'), squad, 'the squad panel was not redrawn');
       assert.equal(JSON.stringify(m), before, 'folding never changes the mission');
-      // flying the other pilot swaps them: it takes the dock, and the one flown before goes to the side
-      click(`#mside .hero[data-arg="${other}"]`);
+      // flying the other pilot swaps them: it takes the dock
+      click(`#msquad .sq-row[data-arg="${other}"]`);
       assert.equal(U.ms.heroIdx, other);
       assert.ok(d.querySelector(`#mdock .hero[data-arg="${other}"] .hand`));
-      assert.ok(
-        d.querySelector(`#mside .hero[data-arg="${sel}"]`) && !d.querySelector(`#mdock .hero[data-arg="${sel}"]`),
-      );
+      assert.ok(!d.querySelector(`#mdock .hero[data-arg="${sel}"]`) && row(sel) && !row(sel).classList.contains('sel'));
+      // full screen and the trays: the shape is kept with the folds, and never touches the mission
+      click('[data-act="hudFull"]');
+      assert.ok(d.querySelector('.mission.hud.full'), 'the board fills the screen');
+      click('[data-act="hudTray"][data-arg="hand"]');
+      assert.ok(d.querySelector('.mission.hud.full.nohand'), 'the hand tray slides away');
+      click('[data-act="hudTray"][data-arg="plans"]');
+      assert.ok(d.querySelector('.mission.hud.full.noplans'), 'the plans tray slides away');
+      assert.equal(JSON.parse(w.localStorage.getItem('tumult_v2_ui')).full, true);
+      click('[data-act="hudFull"]');
+      assert.ok(!d.querySelector('.mission.hud.full') && !d.querySelector('.mission.hud.noplans'), 'back to the frame');
+      click('[data-act="hudTab"][data-arg="squad"]');
+      assert.equal(d.querySelector('.mission.hud').getAttribute('data-tab'), 'squad', "the phone's tabs");
+      assert.equal(JSON.stringify(m), before, 'the shape of the screen never changes the mission');
     } finally {
       w.close();
     }

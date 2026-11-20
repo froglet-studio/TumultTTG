@@ -53,7 +53,8 @@
     return N.names[N.role === 'host' ? 0 : 1] || '';
   }
 
-  /** Keep one record; tell the player whether it was kept. */
+  /** Keep one record; tell the player whether it was kept. Also used by Make a pilot (src/ui/crew.js). */
+  U.canonKeep = (o) => keep(o);
   function keep(o) {
     const r = T.canonRecord(Object.assign({ at: new Date().toISOString(), by: by(), context: context() }, o));
     if (!r.ok) {
@@ -282,6 +283,61 @@
       <div class="row" style="margin-top:10px"><button class="primary" data-act="canonCopy" ${list.length ? '' : 'disabled'}>Copy all</button><button class="ghost" data-act="canonClear" ${list.length ? '' : 'disabled'}>${clearing ? 'Really clear them all?' : 'Clear'}</button><button class="right" data-act="closeModal">Close</button></div>`;
   }
 
+  /* ───────────── the Canon tab: the story wall (Frogma "Canon 2") ───────────── */
+  /** What a subject is called on the wall: the pilot, the place, the foe, by name. */
+  U.canonSubjectName = function (subject) {
+    const [kind, id] = String(subject).split(':');
+    if (kind === 'place' && T.PAGE_BY && T.PAGE_BY[id]) return T.PAGE_BY[id].name;
+    if (kind === 'foe' && T.ENEMIES && T.ENEMIES[id]) return T.ENEMIES[id].name;
+    if (kind === 'pilot' && U.ART_BY && U.ART_BY[id]) return U.ART_BY[id].name;
+    if (kind === 'hero') {
+      const pb = T.PREBUILTS.find((p) => p.id === id) || T.loadMade().find((p) => p.id === id);
+      if (pb) return pb.name;
+    }
+    if (kind === 'world') return 'Tumult';
+    return id ? id.replace(/_/g, ' ') : subject;
+  };
+  const WALL = [
+    ['pilots', 'Pilots', ['pilot', 'hero']],
+    ['places', 'Places', ['place', 'world']],
+    ['foes', 'Foes and events', ['foe', 'event', 'threat', 'patron']],
+  ];
+  /** A note pinned to the wall, tilted a little by its id so the wall looks pinned by hand, the same every time. */
+  function pin(r) {
+    let h = 0;
+    for (const ch of r.id || r.claim || '') h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+    const tilt = ((h % 7) - 3) * 0.45;
+    const canon = r.status === 'canon';
+    return `<article class="pin-card${canon ? ' canon' : ''}" style="--tilt:${tilt.toFixed(2)}deg"><i class="pin" aria-hidden="true"></i><span class="pc-about">${esc(U.canonSubjectName(r.subject))}${r.kind === 'answer' && r.shown ? ' · ' + esc(r.shown) : ''}</span><p>${esc(r.claim || '♥ Loved this')}</p><span class="pn-tag">${canon ? 'Canon' : 'Proposed'}</span></article>`;
+  }
+  U.renderCanon = function () {
+    const list = T.loadCanon().slice().reverse();
+    const asks = U.canonAsks();
+    const cols = WALL.map(([id, name, kinds]) => {
+      const notes = list.filter((r) => kinds.includes(String(r.subject).split(':')[0])).slice(0, 40);
+      return `<section class="wall-col"><h2 class="lab">${esc(name)}</h2>${notes.map(pin).join('') || '<p class="dim small">No notes here yet.</p>'}</section>`;
+    }).join('');
+    const body = list.length
+      ? `<div class="wall">${cols}</div>`
+      : `<div class="wall-empty">${U.emptyState(U.EMPTY.noCanon)}</div>`;
+    const inner = `<div class="page canon-wall"><div class="pg-head"><h1>The story so far</h1><span class="dim">Pinned by subject. Canon is approved by the lore lead; yours wait as proposed.</span><span class="right row"><button class="ghost" data-act="canonAsk" aria-pressed="${asks}">${asks ? 'Questions as I play: on' : 'Questions as I play: off'}</button><button class="ghost" data-act="canonList">Copy or send</button><button class="ghost" data-act="canonAdd">✎ Add a note</button></span></div>${body}</div>`;
+    return U.shell ? U.shell('canon', inner) : inner;
+  };
+  /** Add a note from the wall: about the world, or a pilot or place picked from a list. */
+  function addHTML() {
+    const opts = [['world', 'Tumult itself']]
+      .concat(T.PREBUILTS.map((p) => ['hero:' + p.id, p.name]))
+      .concat(T.loadMade().map((p) => ['hero:' + p.id, p.name]))
+      .concat(T.ATLAS.map((p) => ['place:' + p.id, p.name]))
+      .concat(Object.entries(T.ENEMIES).map(([k, e]) => ['foe:' + k, e.name]));
+    return `<h3>Add a note</h3><p class="dim small">A detail, a correction or a question answered. It waits as proposed until the lore lead approves it.</p>
+      <label class="small dim" for="canonAbout">About</label><select id="canonAbout" class="canon-about">${opts.map(([v, n]) => `<option value="${esc(v)}">${esc(n)}</option>`).join('')}</select>
+      <label class="small dim" for="canonText">What is true of it?</label><textarea id="canonText" class="canon-text" rows="4" maxlength="1000"></textarea>
+      <div class="row" style="margin-top:10px"><button class="primary" data-act="canonAddSave">Pin it</button><button class="ghost" data-act="closeModal">Cancel</button></div>`;
+  }
+
+  (U.SCREENS = U.SCREENS || {}).canon = () => U.renderCanon();
+
   /** The canon actions; true when one was taken. */
   U.canonAct = function (act, arg) {
     switch (act) {
@@ -342,6 +398,34 @@
         if (wrap) wrap.outerHTML = promptHTML(arg);
         return true;
       }
+      case 'canon':
+        U.screen = 'canon';
+        U.render();
+        return true;
+      case 'canonAdd':
+        U.openModal(addHTML());
+        return true;
+      case 'canonHow':
+        U.openModal(
+          `<h3>Writing canon</h3><p>Look for ✎ beside a pilot, a place's field notes, a foe or an event. Tap it to say that something is wrong, to add a detail, or that you love it. Questions asked as you play land here too.</p><p class="dim small">Each note is a proposal until the lore lead approves it; approved notes are marked Canon.</p><div class="row"><button class="primary right" data-act="closeModal">Got it</button></div>`,
+        );
+        return true;
+      case 'canonAddSave': {
+        const about = $('#canonAbout');
+        if (
+          keep({
+            subject: about ? about.value : 'world',
+            kind: 'detail',
+            claim: typed(),
+            shown: '',
+            where: 'canon:wall',
+          })
+        ) {
+          U.closeModal();
+          if (U.screen === 'canon') U.render();
+        }
+        return true;
+      }
       case 'canonList':
         clearing = false;
         U.openModal(listHTML());
@@ -350,7 +434,8 @@
         const meta = T.loadMeta();
         meta.askCanon = meta.askCanon === false;
         T.saveMeta(meta);
-        U.openModal(listHTML());
+        if (U.screen === 'canon' && !U.modal) U.render();
+        else U.openModal(listHTML());
         return true;
       }
       case 'canonCopy': {

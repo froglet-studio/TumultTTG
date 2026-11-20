@@ -1,0 +1,1035 @@
+/* ============================================================================
+   TUMULT — THE MISSION HUD (Frogma "Finalised UI": H-Final, G-HUD5, G-Live, G-Pass)
+   HUD 1×2 by default: the board in a frame with the sea around it, the mission across
+   the top, the foes' plans, the squad and the log on the right, the pilot being flown
+   and its hand along the foot. ⛶ Full screen (HUD 1+): the board fills the screen and
+   the plans and the hand become trays that slide away. Phones and small tablets: one
+   sheet at the foot with tabs, Hand, Plans, Squad and Log.
+   Loaded after style.css, so the old mission layout is kept for anything not named here.
+   ========================================================================== */
+
+/* ---------- framed (the default) ---------- */
+.mission.hud {
+  --hud-r: 16px;
+  --hud-side: 350px;
+  grid-template-columns: minmax(0, 1fr) var(--hud-side);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 12px 16px;
+  padding: 12px 20px 14px;
+  height: 100%;
+  box-sizing: border-box;
+}
+.mission.hud .tray {
+  display: contents;
+}
+.mission.hud .ptabs,
+.mission.hud .grab {
+  display: none;
+}
+.mission.hud .panel {
+  clip-path: none;
+  border-radius: 14px;
+  backdrop-filter: blur(8px);
+}
+.mission.hud .panel::before {
+  display: none;
+}
+.mission.hud .lab {
+  font-family: var(--serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.mission.hud .lab.ok {
+  color: var(--good, #6fe0a0);
+}
+
+/* the mission, across the top, on the sea: no box */
+.mission.hud .top {
+  grid-column: 1 / 3;
+  grid-row: 1;
+  background: none;
+  border: 0;
+  box-shadow: none;
+  clip-path: none;
+  padding: 0;
+}
+.mission.hud .top::before {
+  display: none;
+}
+.mission.hud .topbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: start;
+  gap: 18px;
+}
+.mission.hud .mhead {
+  min-width: 0;
+}
+.mission.hud .kickrow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.mission.hud .kickrow .kick {
+  margin: 0;
+}
+.mission.hud .mhead h3 {
+  font-family: var(--serif);
+  font-size: 20px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 2px 0 2px !important;
+}
+.mission.hud .obj {
+  border: 0;
+  background: none;
+  padding: 0;
+  max-width: 760px;
+  cursor: pointer;
+}
+.mission.hud .obj-txt b {
+  display: none;
+}
+.mission.hud .obj-bonus {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 4px;
+}
+.mission.hud .obj-bar {
+  width: 140px;
+  height: 5px;
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--line2) 70%, transparent);
+  overflow: hidden;
+  flex: none;
+}
+.mission.hud .obj-bar > i {
+  display: block;
+  height: 100%;
+  width: var(--p);
+  background: linear-gradient(90deg, var(--cyan), var(--good, #6fe0a0));
+  transition: width 0.4s ease;
+}
+.mission.hud .obj-prog {
+  background: none;
+  border: 0;
+  padding: 0;
+}
+.mission.hud .tpills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 4px;
+}
+.mission.hud .clock {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+  background: none;
+  border: 0;
+  padding: 0 6px;
+}
+.mission.hud .clock .cv {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--gold);
+}
+.mission.hud .clock .rnd {
+  font-size: 10px;
+  color: var(--dim);
+  margin-top: 3px;
+}
+.mission.hud .endgrp {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+.mission.hud .endrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.mission.hud .endrow .note-btn,
+.mission.hud .endrow .mmenu-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 0;
+}
+/* End Round: the one call to act, a pill in the accent */
+.mission.hud .endbtn {
+  height: 50px;
+  padding: 0 28px;
+  border-radius: 26px;
+  font-family: var(--serif);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  box-shadow: 0 6px 22px color-mix(in srgb, var(--accent, #1f8ea3) 35%, transparent);
+}
+.mission.hud .turnline {
+  color: var(--gold);
+  text-align: right;
+  min-height: 1em;
+}
+.mission.hud .turnline:empty {
+  display: none;
+}
+
+/* the board, in its frame: the sea shows around it */
+.mission.hud .boardwrap {
+  grid-column: 1;
+  grid-row: 2;
+  position: relative;
+  gap: 0;
+}
+.mission.hud .board {
+  border-radius: var(--hud-r);
+  border-color: var(--line2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+  padding-bottom: 46px;
+}
+.mission.hud .fsbtn {
+  position: absolute;
+  top: -14px;
+  right: 18px;
+  z-index: 6;
+  height: 34px;
+  padding: 0 16px;
+  border-radius: 18px;
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  background: var(--panel2);
+}
+/* the hint (who is flying, what a click does) and the forecast sit inside the frame, along its foot */
+.mission.hud #mtarget {
+  position: absolute;
+  left: 14px;
+  bottom: 10px;
+  z-index: 5;
+  max-width: 46%;
+}
+.mission.hud #mtarget .hint,
+.mission.hud #mtarget > * {
+  border-radius: 16px;
+  background: var(--panel2);
+  backdrop-filter: blur(6px);
+  margin: 0;
+}
+.mission.hud .mfc {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  z-index: 5;
+  max-width: 54%;
+}
+.mission.hud .mfc .forecast {
+  justify-content: flex-end;
+  border-radius: 18px;
+  background: var(--panel2);
+  backdrop-filter: blur(6px);
+  margin: 0;
+}
+
+/* the right column: the foes' plans, the squad, the log; a long list of plans scrolls inside its panel */
+.mission.hud .side {
+  grid-column: 2;
+  grid-row: 2;
+  overflow: auto;
+  gap: 10px;
+}
+.mission.hud .side-in {
+  flex: 0 1 auto;
+  min-height: 170px;
+  overflow: auto;
+}
+.mission.hud .p-squad {
+  flex: none;
+}
+
+/* on the light sea (Shore) the words on the water are ink, not foam */
+:root[data-sea='shore'] .mission.hud:not(.full) .mhead,
+:root[data-sea='shore'] .mission.hud:not(.full) .mhead h3,
+:root[data-sea='shore'] .mission.hud .turnline,
+:root[data-sea='shore'] .mission.hud:not(.full) .clock .rnd {
+  color: #0c3440;
+  text-shadow: none;
+}
+:root[data-sea='shore'] .mission.hud:not(.full) .mhead .dim,
+:root[data-sea='shore'] .mission.hud:not(.full) .mhead .obj-prog {
+  color: #2d5a66;
+}
+:root[data-sea='shore'] .mission.hud:not(.full) .mhead .kick {
+  color: #8a5a00;
+}
+:root[data-sea='shore'] .mission.hud .clock .cv {
+  color: #a46a00;
+}
+:root[data-sea='shore'] .mission.hud .endrow > .ghost {
+  color: #0c3440;
+  border-color: rgba(12, 52, 64, 0.35);
+}
+.mission.hud .intents-panel .fold-head {
+  align-items: center;
+}
+.mission.hud .intent {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 0;
+  border-top: 1px solid var(--line);
+}
+.mission.hud .intent .g {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1.5px solid #ff6b7a;
+  display: grid;
+  place-items: center;
+}
+.mission.hud .intent .who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 6px;
+}
+.mission.hud .ehp {
+  display: block;
+  flex-basis: 100%;
+  height: 3px;
+  max-width: 90px;
+  margin-top: 3px;
+  background: color-mix(in srgb, #ff6b7a 20%, transparent);
+  border-radius: 2px;
+}
+.mission.hud .ehp > i {
+  display: block;
+  height: 100%;
+  background: #ff6b7a;
+  border-radius: 2px;
+}
+.mission.hud .squad-panel .row {
+  margin-bottom: 4px;
+}
+.mission.hud .sq-row {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 7px 6px;
+  border-top: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.mission.hud .sq-row:hover {
+  background: color-mix(in srgb, var(--glow) 6%, transparent);
+}
+.mission.hud .sq-row.sel {
+  background: color-mix(in srgb, var(--glow) 10%, transparent);
+}
+.mission.hud .sq-row.downed {
+  opacity: 0.55;
+}
+.mission.hud .sq-row .pfp {
+  width: 34px;
+  height: 34px;
+}
+.mission.hud .sq-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.mission.hud .sq-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mission.hud .sq-hp {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--line2) 70%, transparent);
+  max-width: 130px;
+}
+.mission.hud .sq-hp > i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--good, #6fe0a0));
+}
+.mission.hud .sq-res {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  font-size: 11px;
+}
+.mission.hud .sq-res .res-el {
+  padding: 0 4px;
+  font-size: 11px;
+}
+.mission.hud .sq-res .ap-chip {
+  font-size: 11px;
+  padding: 0 6px;
+}
+.mission.hud .sq-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.mission.hud .sq-st {
+  font-size: 12px;
+  color: var(--dim);
+}
+.mission.hud .sq-st.turn {
+  color: var(--gold);
+}
+.mission.hud .sq-st.done {
+  color: var(--good, #6fe0a0);
+}
+.mission.hud .sq-st.next,
+.mission.hud .sq-st.play {
+  color: var(--cyan);
+}
+.mission.hud .sq-side .peek {
+  padding: 1px 8px;
+  font-size: 11px;
+}
+.mission.hud .squad-panel .hero {
+  margin-top: 8px;
+}
+.mission.hud .wait-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+.mission.hud .wait-panel button {
+  border-radius: 22px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-family: var(--serif);
+}
+.mission.hud .bottom {
+  flex: none;
+}
+
+/* the foot: the pilot being flown, the track over its hand, the actions anyone can take */
+.mission.hud .dock {
+  grid-column: 1 / 3;
+  grid-row: 3;
+}
+.mission.hud .dock-hero {
+  grid-template-columns: 280px minmax(0, 1fr) 260px;
+  gap: 14px;
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  clip-path: none;
+}
+.mission.hud .dock-hero::before {
+  display: none;
+}
+.mission.hud .dk-res {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  backdrop-filter: blur(8px);
+}
+.mission.hud .dk-hand {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.mission.hud .dk-track {
+  display: grid;
+  grid-template-columns: 1.3fr repeat(6, 1fr);
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel2);
+  overflow: hidden;
+  min-height: 30px;
+}
+.mission.hud .dk-track > * {
+  border-left: 1px solid var(--line);
+  padding: 4px 8px;
+  min-width: 0;
+}
+.mission.hud .dk-track > :first-child {
+  border-left: 0;
+}
+.mission.hud .dk-track .tlab {
+  font-family: var(--serif);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.mission.hud .dk-track .tready {
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+}
+.mission.hud .dk-track .tcol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 6px;
+}
+.mission.hud .dk-track .tcol .n {
+  display: none;
+}
+.mission.hud .dk-track .tpill {
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+.mission.hud .dock-hero .hand {
+  grid-auto-columns: minmax(108px, 1fr);
+  gap: 8px;
+}
+.mission.hud .dock-hero .hcard {
+  border-radius: 12px;
+  border-width: 1.5px;
+  padding: 6px 8px 8px;
+}
+.mission.hud .dk-acts .actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.mission.hud .dk-acts .actions > button {
+  border-radius: 10px;
+  min-height: 38px;
+  text-align: left;
+}
+.mission.hud .dk-acts .more-btn,
+.mission.hud .dk-acts .more-acts {
+  grid-column: 1 / 3;
+}
+.mission.hud .dk-acts .more-btn {
+  border-style: dashed;
+  text-align: center !important;
+}
+
+/* ---------- full screen (HUD 1+): the board fills the screen, the rest floats on it ---------- */
+.mission.hud.full .boardwrap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+.mission.hud.full .board {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  height: 100%;
+  padding: 150px calc(var(--hud-side) + 40px) 260px 20px;
+}
+.mission.hud.full .top {
+  position: fixed;
+  top: 12px;
+  left: 20px;
+  right: 20px;
+  z-index: 8;
+  pointer-events: none;
+}
+.mission.hud.full .top .topbar > * {
+  pointer-events: auto;
+}
+.mission.hud.full .mhead {
+  max-width: 470px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  backdrop-filter: blur(8px);
+}
+.mission.hud.full .fsbtn {
+  position: fixed;
+  top: 128px;
+  right: calc(var(--hud-side) + 36px);
+}
+.mission.hud.full #mtarget {
+  position: fixed;
+  left: 20px;
+  bottom: 262px;
+  max-width: 560px;
+}
+.mission.hud.full.nohand #mtarget {
+  bottom: 20px;
+}
+.mission.hud.full .mfc {
+  position: fixed;
+  top: 84px;
+  right: 20px;
+  bottom: auto;
+  max-width: 640px;
+}
+.mission.hud.full .side {
+  position: fixed;
+  right: 20px;
+  top: 176px;
+  bottom: 270px;
+  width: var(--hud-side);
+  z-index: 7;
+  overflow: visible;
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.mission.hud.full .side-in {
+  max-height: 55%;
+}
+.mission.hud.full .dock {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 7;
+  padding: 14px 20px 14px;
+  background: linear-gradient(180deg, transparent, var(--panel2) 22%);
+  border-top: 1px solid var(--line);
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.mission.hud.full .grab {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  font-family: var(--serif);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  background: var(--panel2);
+  border-color: var(--line2);
+}
+.mission.hud.full .grab-hand {
+  left: 50%;
+  top: -28px;
+  transform: translateX(-50%);
+  border-radius: 10px 10px 0 0;
+  border-bottom: 0;
+  padding: 5px 18px;
+}
+.mission.hud.full .grab-plans {
+  left: -34px;
+  top: 0;
+  writing-mode: vertical-rl;
+  border-radius: 10px 0 0 10px;
+  border-right: 0;
+  padding: 14px 6px;
+}
+.mission.hud.full.nohand .dock {
+  transform: translateY(100%);
+}
+.mission.hud.full.noplans .side {
+  transform: translateX(calc(100% + 24px));
+}
+.mission.hud.full.nohand .board {
+  padding-bottom: 20px;
+}
+.mission.hud.full.noplans .board {
+  padding-right: 20px;
+}
+.mission.hud.full.nohand .side {
+  bottom: 30px;
+}
+
+/* ---------- pass the screen ---------- */
+.mission.hud .pass {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(60% 60% at 50% 45%, rgba(10, 34, 56, 0.96), rgba(3, 8, 18, 0.99));
+  color: #dbe7f5;
+  animation: passIn 0.35s ease-out both;
+}
+.mission.hud .pass[hidden] {
+  display: none;
+}
+@keyframes passIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.mission.hud .pass-in {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  max-width: 560px;
+  padding: 20px;
+}
+.mission.hud .pass-in .pfp.xl {
+  width: 150px;
+  height: 150px;
+  border: 3px solid var(--glow);
+  box-shadow: 0 0 50px color-mix(in srgb, var(--glow) 40%, transparent);
+}
+.mission.hud .pass-in h2 {
+  font-family: var(--serif);
+  font-size: 46px;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+.mission.hud .pass-in p {
+  margin: 0;
+  color: var(--dim);
+  font-size: 15px;
+}
+.mission.hud .pass-in .primary {
+  height: 54px;
+  padding: 0 32px;
+  border-radius: 28px;
+  font-family: var(--serif);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+.mission.hud .pass-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 8px;
+}
+.mission.hud .pass-who {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 18px;
+  border-radius: 16px;
+  min-width: 120px;
+}
+.mission.hud .pass-who .pfp.lg {
+  width: 72px;
+  height: 72px;
+}
+.mission.hud .ptabs .endbtn2 {
+  display: none;
+}
+
+/* ---------- a narrow desktop: a slimmer right column and foot ---------- */
+@media (max-width: 1280px) and (min-width: 981px) {
+  .mission.hud {
+    --hud-side: 310px;
+  }
+  .mission.hud .dock-hero {
+    grid-template-columns: 240px minmax(0, 1fr) 220px;
+  }
+}
+
+/* ---------- phones and small tablets: the board, then one sheet with tabs ---------- */
+@media (max-width: 980px) {
+  .mission.hud {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 8px 10px 0;
+    gap: 8px;
+  }
+  .mission.hud .top {
+    flex: none;
+  }
+  .mission.hud .topbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 6px 10px;
+  }
+  .mission.hud .mhead {
+    grid-column: 1;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 8px 12px;
+  }
+  .mission.hud .mhead h3 {
+    font-size: 15px;
+  }
+  .mission.hud .obj:not(.open) .obj-txt {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mission.hud .obj-bonus .bonus {
+    display: none;
+  }
+  .mission.hud .obj-bar {
+    width: 80px;
+  }
+  .mission.hud .tpills {
+    grid-column: 2;
+    grid-row: 1;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+  .mission.hud .mhead {
+    grid-row: 1 / 3;
+  }
+  .mission.hud .endgrp {
+    grid-column: 2;
+    grid-row: 2;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+  .mission.hud .endrow {
+    gap: 4px;
+  }
+  .mission.hud .endrow .undo-lab {
+    display: none;
+  }
+  .mission.hud .endrow > button {
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border-radius: 50%;
+  }
+  .mission.hud .endrow .endbtn {
+    display: none;
+  }
+  .mission.hud .endgrp .turnline {
+    display: none;
+  }
+  .mission.hud .boardwrap {
+    flex: 1 1 auto;
+    min-height: 200px;
+  }
+  .mission.hud .board {
+    flex: 1;
+    height: 100%;
+    max-height: none;
+    aspect-ratio: auto;
+    padding-bottom: 40px;
+  }
+  .mission.hud .fsbtn {
+    display: none;
+  }
+  .mission.hud #mtarget {
+    max-width: 50%;
+    bottom: 6px;
+    left: 6px;
+  }
+  .mission.hud .mfc {
+    max-width: 60%;
+    bottom: 6px;
+    right: 6px;
+  }
+  .mission.hud .mfc .forecast {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  /* the sheet: the pilot, the tabs with End, then the tab's pane */
+  .mission.hud .tray {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    max-height: 52%;
+    margin: 0 -10px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+    background: var(--panel2);
+    border-top: 1px solid var(--line2);
+    border-radius: 20px 20px 0 0;
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+    overflow: hidden;
+  }
+  .mission.hud .side,
+  .mission.hud .dock,
+  .mission.hud #mdock,
+  .mission.hud .dock-hero {
+    display: contents;
+  }
+  .mission.hud .grab-hand {
+    display: block;
+    order: 0;
+    align-self: center;
+    width: 56px;
+    height: 6px;
+    padding: 0;
+    border: 0;
+    border-radius: 3px;
+    background: color-mix(in srgb, var(--glow) 50%, transparent);
+    font-size: 0;
+  }
+  .mission.hud .dk-res {
+    order: 1;
+    padding: 0;
+    border: 0;
+    background: none;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 2px 8px;
+  }
+  .mission.hud .dk-res > .hh {
+    grid-column: 1;
+  }
+  .mission.hud .dk-res > .dk-purse {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0;
+  }
+  .mission.hud .dk-res > .hpbar,
+  .mission.hud .dk-res > .dice,
+  .mission.hud .dk-res > .dice-key,
+  .mission.hud .dk-res > .states:empty {
+    display: none;
+  }
+  .mission.hud .dk-res .pool,
+  .mission.hud .dk-res .res-els {
+    display: none;
+  }
+  .mission.hud .ptabs {
+    order: 2;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .mission.hud .ptab {
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 16px;
+    background: none;
+    color: var(--dim);
+  }
+  .mission.hud .ptab.on {
+    background: color-mix(in srgb, var(--glow) 18%, transparent);
+    color: var(--txt);
+  }
+  .mission.hud .ptabs .endbtn2 {
+    display: inline-flex;
+    margin-left: auto;
+    height: 34px;
+    padding: 0 14px;
+    border-radius: 18px;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    max-width: 52%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .mission.hud .pane,
+  .mission.hud .dk-hand,
+  .mission.hud .dk-acts {
+    order: 3;
+    min-height: 0;
+    overflow: auto;
+  }
+  .mission.hud .dk-acts {
+    order: 4;
+  }
+  .mission.hud .dk-track {
+    display: none;
+  }
+  .mission.hud .dock-hero .hand {
+    grid-auto-columns: 140px;
+  }
+  .mission.hud .dk-acts .actions {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .mission.hud .dk-acts .more-btn,
+  .mission.hud .dk-acts .more-acts {
+    grid-column: 1 / -1;
+  }
+  .mission.hud .dk-acts .actions > button {
+    min-height: 34px;
+    font-size: 12px;
+    padding: 4px 6px;
+  }
+  .mission.hud:not([data-tab='hand']) .dk-hand,
+  .mission.hud:not([data-tab='hand']) .dk-acts,
+  .mission.hud:not([data-tab='plans']) .p-plans,
+  .mission.hud:not([data-tab='squad']) .p-squad,
+  .mission.hud:not([data-tab='log']) .p-log {
+    display: none;
+  }
+  .mission.hud .p-log .log,
+  .mission.hud .p-log .log.folded {
+    max-height: none;
+  }
+  .mission.hud .p-log > .fold {
+    display: none;
+  }
+  .mission.hud.nohand .dk-hand,
+  .mission.hud.nohand .dk-acts,
+  .mission.hud.nohand .pane {
+    display: none;
+  }
+  .mission.hud .pass-in h2 {
+    font-size: 36px;
+  }
+  .mission.hud .pass-in .pfp.xl {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+/* motion Off: the trays and the cover appear without sliding */
+html[data-motion='off'] .mission.hud .side,
+html[data-motion='off'] .mission.hud .dock,
+html[data-motion='off'] .mission.hud .pass {
+  transition: none;
+  animation: none;
+}
+
+/* ---------- online: a seat gone quiet, a seat the AI holds (src/ui/net.js) ---------- */
+/* on the mission screen the squad and the side column show these, so the strip over other screens steps aside */
+body:has(.mission.hud) .net-away {
+  display: none;
+}
+.seat-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.seat-row {
+  border-left: 3px solid var(--gold);
+  padding: 2px 0 2px 10px;
+}
+.seat-row.held {
+  border-left-color: var(--glow);
+}
+.seat-row .seat-acts {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.mission.hud .sq-st.away {
+  color: var(--gold);
+}
+.mission.hud .sq-st.ai,
+.mission.hud .sq-st.ai.done {
+  color: var(--glow);
+}

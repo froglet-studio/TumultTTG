@@ -381,25 +381,24 @@ button.goal-act:not(:disabled) {
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .board .wx-wind i {
-    display: none;
-  }
-  .board .wx-fog,
-  .board .readout.show {
-    animation: none;
-    opacity: 1;
-  }
-  .board .sky {
-    transition: none;
-  }
-  .board .goal,
-  .board .goal.show .goal-bar i,
-  .topbar .obj .obj-prog.just,
-  button.goal-act:not(:disabled) {
-    animation: none;
-    transition: none;
-  }
+/* reduced or no motion (src/ui/sea.js U.motion) */
+html.calm .board .wx-wind i {
+  display: none;
+}
+html.calm .board .wx-fog,
+html.calm .board .readout.show {
+  animation: none;
+  opacity: 1;
+}
+html.calm .board .sky {
+  transition: none;
+}
+html.calm .board .goal,
+html.calm .board .goal.show .goal-bar i,
+html.calm .topbar .obj .obj-prog.just,
+html.calm button.goal-act:not(:disabled) {
+  animation: none;
+  transition: none;
 }
 
 /* the dice rolling (feel.js rollTray): a tray at the foot of the board where each pilot's new dice tumble in
@@ -562,9 +561,108 @@ button.goal-act:not(:disabled) {
     transform: scale(1);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .die.fresh,
-  .rdie {
-    animation: none;
+/* reduced or no motion (src/ui/sea.js U.motion) */
+html.calm .die.fresh,
+html.calm .rdie {
+  animation: none;
+}
+
+/* ───────────── the motion kit, 2.76 (mission.js walkToken, lunge; sea.js U.motion) ───────────── */
+/* a token on Reduced motion fades in where it lands instead of walking there */
+.token.arrive {
+  animation: tok-arrive 0.35s ease-out;
+}
+@keyframes tok-arrive {
+  from {
+    opacity: 0.15;
+  }
+  to {
+    opacity: 1;
+  }
+}
+/* a walking token stays above the others */
+.token.walking {
+  filter: drop-shadow(0 0 6px rgba(127, 227, 240, 0.6));
+}
+/* a hit token flashes and shakes */
+.token.hit .body {
+  animation:
+    tok-hit 0.45s ease-out,
+    tok-shake 0.32s linear;
+}
+@keyframes tok-shake {
+  0% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(4px);
+  }
+  45% {
+    transform: translateX(-3px);
+  }
+  70% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+html.calm .token.hit .body {
+  animation: tok-hit 0.45s ease-out;
+}
+/* the forecast answers a move: a chip whose figure changed pulses once */
+.fc-chip.bump {
+  animation: fc-bump 0.7s ease-out;
+}
+@keyframes fc-bump {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(127, 227, 240, 0.55);
+  }
+  30% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 8px rgba(127, 227, 240, 0);
+  }
+}
+html.calm .fc-chip.bump {
+  animation: fc-bump-calm 0.6s ease-out;
+}
+@keyframes fc-bump-calm {
+  from {
+    background: rgba(127, 227, 240, 0.22);
+  }
+}
+/* a new round: the cards resting on the track step one column toward Ready together */
+.track.slide .tpill {
+  animation: track-step 0.45s cubic-bezier(0.5, 0, 0.2, 1);
+}
+@keyframes track-step {
+  from {
+    transform: translateX(calc(100% + 4px));
+    opacity: 0.4;
+  }
+}
+html.calm .track.slide .tpill {
+  animation: none;
+}
+/* screens slide in the direction of travel; on Reduced they fade */
+#app.screen-in > :not(.modal-bg):not(.title-scene):not(.title-veil) {
+  animation: screen-in 0.3s ease-out;
+}
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateX(28px);
+  }
+}
+html.calm #app.screen-in > :not(.modal-bg) {
+  animation: screen-fade 0.25s ease-out;
+}
+@keyframes screen-fade {
+  from {
+    opacity: 0;
   }
 }

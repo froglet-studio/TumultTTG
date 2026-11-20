@@ -33,7 +33,9 @@
       const g = actx.createGain();
       o.type = type || 'sine';
       o.frequency.value = freq;
-      g.gain.value = vol || 0.04;
+      const gain = U.fxGain ? U.fxGain() : 1; // the Effects slider in Settings (src/ui/settings.js)
+      if (gain <= 0) return;
+      g.gain.value = (vol || 0.04) * gain;
       o.connect(g);
       g.connect(actx.destination);
       o.start();
@@ -67,8 +69,9 @@
     document.body.appendChild(t);
     setTimeout(() => t.remove(), ms || 2200);
   };
-  U.openModal = function (html, onMount) {
-    U.modal = { html, onMount };
+  /** Open a modal; `opts.sheet` slides it up from the bottom (a phone's More), `opts.side` in from the right. */
+  U.openModal = function (html, onMount, opts) {
+    U.modal = Object.assign({ html, onMount }, opts || {});
     U.render();
   };
   U.closeModal = function () {
@@ -133,7 +136,6 @@
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
       <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : ''}>${U.icClade(shownSp)} ${esc(c.kin || sp.name)}</span></div>
       ${U.cardArt(c, false, shownSp)}${face('P')}${face('E')}
-      ${o.double ? `<div class="small double-note">Already held: taking it again gives ${T.RULES.DOUBLE_UP} UP to spend on this card alone.</div>` : ''}
       ${o.bound ? `<div class="small double-note">${o.bound} UP bound to this card</div>` : ''}
       ${o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button> &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button></div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P} · E${E}</div>` : ''}
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
@@ -208,7 +210,7 @@
 
   /* ───────────── header strip ───────────── */
   function header(title, right) {
-    return `<div class="row" style="margin-bottom:10px"><span class="kick">Tumult</span><h2 style="margin:0 6px">${title}</h2><span class="right row"><button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="atlas">Atlas</button><button class="ghost sm" data-act="codex">Codex</button>${right || ''}</span></div>`;
+    return `<div class="row" style="margin-bottom:10px"><span class="kick">Tumult</span><h2 style="margin:0 6px">${title}</h2><span class="right row"><button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="atlas">Atlas</button><button class="ghost sm" data-act="codex">Codex</button><button class="ghost sm" data-act="look" data-tip="The sea behind the game, its accent and how much moves">Look</button>${right || ''}</span></div>`;
   }
   U.header = header;
   /** The way out of a run screen: to the title (the run is saved), or out of an online game. */
@@ -238,18 +240,39 @@
     return `${scene ? `<div class="title-scene" style="background-image:url(${scene})"></div><div class="title-veil"></div><div class="title-cap"><b>${esc(who.name)}</b> · ${esc(U.callsignOf(who))} · ${esc(who.clades.join(' · '))} ${U.canonMark ? U.canonMark('pilot:' + who.key, `${who.name}, callsign ${U.callsignOf(who)}: ${who.clades.join(' and ')}`, 'title:caption') : ''}</div>` : ''}<div class="title">
       <div class="kick">An expedition on Tumult</div>
       <h1>TUMULT</h1>
-      <div class="sub">Draft two pilots from eleven bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</div>
-      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button data-act="canonList" data-tip="Answers and corrections you have written while playing">Canon</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
+      <div class="sub">Draft a squad of pilots from Tumult's bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</div>
+      ${U.welcomeTitle ? U.welcomeTitle(meta, hasSave) : ''}
+      <div class="btns">${U.isNewPlayer && U.isNewPlayer(meta, hasSave) ? '<button data-act="newRun" data-tip="Draft your own pilots from the bloodlines, card by card.">Build your own squad</button>' : '<button class="primary" data-act="newRun">New Expedition</button>'}${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button data-act="canonList" data-tip="Answers and corrections you have written while playing">Canon</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button><button class="ghost" data-act="look" data-tip="The sea behind the game, its accent and how much moves">Look</button></div>
       ${tidePicker(meta)}
       ${U.partyPicker ? U.partyPicker(meta) : ''}
+      ${U.titleAccount ? U.titleAccount() : ''}
       ${U.titleNet ? U.titleNet() : ''}
       <div class="mute small" style="margin-top:14px">Expeditions: ${meta.runs} · Hearts ended: ${meta.wins} · Furthest stop: ${meta.bestRow}/6</div>
       <div class="mute small" style="max-width:520px;text-align:center;margin-top:16px;font-family:var(--serif);font-style:italic">${esc(T.FLAVOR.terminalIntro[meta.runs % T.FLAVOR.terminalIntro.length])}</div>
       ${U.titleExtra ? U.titleExtra() : ''}
+      ${U.privacyLine ? U.privacyLine() : ''}
     </div>`;
   }
 
+  /** What this squad's size and level ask of its missions (T.scaleFor), as a pill on the route; nothing for two new pilots. */
+  U.scalePill = function (run) {
+    const sc = T.scaleFor(run);
+    if (!sc.size && !sc.level) return '';
+    const who = [sc.size ? `a squad of ${sc.size + 2}` : '', sc.level ? `level ${sc.level + 1}` : '']
+      .filter(Boolean)
+      .join(', ');
+    const what = [
+      `foes have ${sc.hp}% vitality`,
+      sc.foes ? `${sc.foes} more foe${sc.foes > 1 ? 's' : ''} where a mission has room` : '',
+      sc.need ? `objectives ask ${sc.need} more` : '',
+      sc.swarm ? `swarms grow ${sc.swarm} larger` : '',
+    ].filter(Boolean);
+    return `<span class="pill" data-tip="${esc(`<b>The missions answer ${who}</b><div>${what.join('; ')}. The Heart keeps its rules and grows only in vitality.</div>`)}">⚖ ${esc(who)}</span>`;
+  };
+
   /* ───────────── DRAFT ───────────── */
+  /** How many pilots this run's squad drafts: two for one player, one each for two to five (T.pilotsFor). */
+  const squadOf = (run) => (run && run.party ? run.party.owner.length : 2);
   const NAMES = ['Sable', 'Quill', 'Marrow', 'Tessel', 'Orin', 'Pell', 'Wren', 'Casque', 'Lumen', 'Hale'];
   /** A pre-made hero's banner: their pilot in their world, with the portrait over it. */
   function premadeArt(pb) {
@@ -266,6 +289,12 @@
     const sig = pb.cards.filter((c) => T.CARD[c].sig >= 2);
     const blurb = pb.blurb || (sig.length ? sig : pb.cards.slice(0, 3)).map((c) => T.CARD[c].name).join(' · ');
     const by = who ? `<div class="small mute">Made by ${esc(who)}</div>` : '';
+    // a pilot back from expeditions shows how far it has grown: the missions it meets grow with it
+    const probe = { up: pb.up || {}, bound: pb.bound || {}, cards: pb.cards, upUnspent: pb.spare || 0 };
+    const lvl = pb.runs ? T.pilotLevel(probe) : 1;
+    const vet = pb.runs
+      ? `<div class="small" data-tip="Level ${lvl}: the missions of its expedition grow to meet it.">Level ${lvl} · ${pb.runs} expedition${pb.runs > 1 ? 's' : ''} · ${pb.cards.length} traits</div>`
+      : '';
     const forget = mine
       ? `<button class="sm ghost made-x" data-act="forgetMade" data-arg="${esc(pb.id)}" data-tip="Take ${esc(pb.name)} off this device's list.">✕</button>`
       : '';
@@ -275,7 +304,7 @@
         ' ',
       )}</div><b>${esc(pb.name)} <span class="dim" style="font-weight:400">${esc(pb.title)}</span></b><div class="small dim">${clades
       .map((s) => T.SPECIES[s].name)
-      .join(' · ')}</div><div class="small" style="margin-top:4px">${esc(blurb)}</div>${by}</div>`;
+      .join(' · ')}</div><div class="small" style="margin-top:4px">${esc(blurb)}</div>${vet}${by}</div>`;
   }
   /**
    * The heroes players have made: this device's first, then those others shared through the test
@@ -306,6 +335,10 @@
     U.run = T.newRun();
     U.run.tide = chosenTide(T.loadMeta());
     if (U.chosenPlayers) U.run.party = T.newParty(U.chosenPlayers(T.loadMeta()));
+    // how rounds go: Home's setup (src/ui/home.js), else the playtest panel's switch
+    const rounds = U.homeRounds ? U.homeRounds() : U.roundsPref ? U.roundsPref() : null;
+    if (rounds) U.run.party.rounds = rounds;
+    if (U.applyTable) U.applyTable(U.run); // the expedition's length, when the engine has lengths
     U.beginDraft(0);
     U.render();
   };
@@ -325,8 +358,9 @@
   /** The draft's first step leads back: to the title, to the first pilot, or out of an online game. */
   function draftOut(d) {
     if (U.net && U.net.online()) return `<button class="ghost right" data-act="netLeave">Leave game</button>`;
-    if (d.heroIdx > 0 && U.run.heroes[0])
-      return `<button class="ghost right" data-act="draftPrev" data-tip="Back to ${esc(U.run.heroes[0].name)}, the first pilot, as you left them.">Back to ${esc(U.run.heroes[0].name)}</button>`;
+    const prev = d.heroIdx > 0 ? U.run.heroes[d.heroIdx - 1] : null;
+    if (prev)
+      return `<button class="ghost right" data-act="draftPrev" data-tip="Back to ${esc(prev.name)}, the pilot before, as you left them.">Back to ${esc(prev.name)}</button>`;
     return `<button class="ghost right" data-act="draftQuit">Back to the title</button>`;
   }
   function renderDraft() {
@@ -338,7 +372,7 @@
     if (d.step === 'mode') {
       const free = (pb) => !run.heroes.some((h) => h && h.name === pb.name);
       const made = U.madeHeroes().filter((x) => free(x.rec));
-      body = `<div class="panel"><h3>Hero ${n} of 2 ${who}— choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
+      body = `<div class="panel"><h3>Pilot ${n} ${who}· choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
         <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span>${draftOut(d)}</div>
         <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
         <div class="prebuilt-grid">${T.PREBUILTS.filter(free)
@@ -346,7 +380,7 @@
           .join('')}</div>
         ${made.length ? `<h3 style="margin-top:14px">…or play a pilot someone made</h3><p class="dim small">Every pilot built in the draft is kept here, ${U.heroesShared && U.heroesShared() ? 'for everyone who plays this page' : 'on this device'}, ready to fly again.</p><div class="prebuilt-grid">${made.map((x) => pilotCard(x.rec, x.who, x.mine)).join('')}</div>` : ''}</div>`;
     } else if (d.step === 'species') {
-      body = `<div class="panel"><h3>Hero ${n} ${who}: choose two bloodlines (Human is always the third)</h3>
+      body = `<div class="panel"><h3>Pilot ${n} ${who}: choose two bloodlines (Human is always the third)</h3>
         <div class="row" style="margin:8px 0">${U.portrait({ name: d.name, species: ['human'].concat(d.species) }, 'lg')}<span class="small dim">The portrait follows the two bloodlines: a painting of that exact pair when one exists, else the nearest stand-in.</span></div>
         <div class="row" style="margin:8px 0"><label class="small dim">Name</label><input id="heroName" value="${esc(d.name)}" style="background:#0b1222;border:1px solid var(--line2);color:var(--txt);padding:5px 8px;border-radius:6px"></div>
         <div class="species-grid">${T.SPECIES_ORDER.filter((s) => s !== 'human')
@@ -363,22 +397,33 @@
           .join('')}</div>
         <div class="row" style="margin-top:12px"><button class="primary" data-act="openPacks" ${d.species.length === 2 ? '' : 'disabled'}>Open the first pack</button><button class="ghost" data-act="draftBack">Back</button></div></div>`;
     } else if (d.step === 'packs') {
+      // the draft (Frogma "Finalised UI", D-Draft-v2): the pack across the middle, the kit filling up along the foot
       const h = d.hero;
-      body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' ')}</span></div>
-        <p class="dim small">Each pack mixes your three bloodlines. ★ marks a species' signature traits. Hover any face for exact numbers at your current P/E.</p>
-        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', double: h.cards.includes(cid), clades: h.species })).join('')}</div>
-        <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button></div>
-        ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
+      const slots = [];
+      for (let k = 0; k < T.RULES.START_CARDS; k++) {
+        const cid = h.cards[k];
+        slots.push(
+          cid
+            ? `<span class="kit-slot full" style="--c:${EL[(T.CARD[cid].E && T.CARD[cid].E.elt) || T.CARD[cid].el].color}" data-tip="${esc(T.CARD[cid].name)}">${esc(T.CARD[cid].name)}</span>`
+            : `<span class="kit-slot${k === h.cards.length ? ' next' : ''}">${k === h.cards.length ? 'pick ' + (k + 1) : ''}</span>`,
+        );
+      }
+      body = `<div class="panel draft2"><div class="d2-head"><h3>${esc(h.name)} · pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="d2-tab on">New pack · ${d.pack.length}</span><span class="right small dim">Kit ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' · ')}</span></div>
+        <p class="dim small">This pack mixes your three bloodlines: click a card to take it, or pass the pack. ★ marks a bloodline's signature traits. Hover any face for exact numbers at your current P/E.</p>
+        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', clades: h.species })).join('')}</div>
+        <div class="d2-kit"><span class="lab">Kit</span>${slots.join('')}<span class="d2-acts"><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button></span></div></div>`;
     } else if (d.step === 'wait') {
       const other = run.party.players.find((p, s) => !run.heroes[s]);
-      body = `<div class="panel"><h3>Your pilot is ready</h3><p class="dim">Waiting for ${esc(other ? other.name : 'the other player')} to finish drafting…</p></div>`;
+      body = U.waitingRoom
+        ? U.waitingRoom(run)
+        : `<div class="panel"><h3>Your pilot is ready</h3><p class="dim">Waiting for ${esc(other ? other.name : 'the other player')} to finish drafting…</p></div>`;
     } else if (d.step === 'up') {
       const h = d.hero;
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
         <p class="dim small">P deepens the physical face's numbers (reliable, AP-fed). E awakens the ethereal face — it cannot be played until its card has E 1 — and scales its <i>capability</i>, something P can never buy. Every hero sets out with at least ${T.RULES.START_AWAKE} cards awakened. Caps: P 3, E 3 per card.</p>
         <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, bound: T.boundLeft(h, cid), clades: h.species })).join('')}</div>
         ${U.pilotQuestion ? U.pilotQuestion(h, d) : ''}
-        <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx === 0 ? 'Confirm — draft hero 2' : 'Confirm — set out'}</button><button class="ghost" data-act="draftBack" data-tip="Build this pilot another way: a different pre-made pilot, or a fresh draft.">Back</button></div></div>`;
+        <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx < squadOf(U.run) - 1 && !(U.net && U.net.online()) ? `Confirm — draft pilot ${d.heroIdx + 2}` : 'Confirm — set out'}</button><button class="ghost" data-act="draftBack" data-tip="Build this pilot another way: a different pre-made pilot, or a fresh draft.">Back</button></div></div>`;
     }
     return `<div class="wrap">${header('The Draft')}<div class="row small dim" style="margin-bottom:8px">${run.heroes
       .filter(Boolean)
@@ -391,6 +436,8 @@
       )
       .join('')}</div>${body}</div>`;
   }
+  /** The draft's actions, for the screens that start a draft with a pilot chosen (src/ui/crew.js). */
+  U.draftAct = (act, arg) => draftAct(act, arg);
   function draftAct(act, arg) {
     const d = U.draft;
     const run = U.run;
@@ -414,6 +461,7 @@
     } else if (act === 'draftBack') {
       d.step = arg === 'species' ? 'species' : 'mode';
       d.hero = null;
+      if (arg !== 'species') d.maker = null; // a pilot from Make a pilot stays theirs only while its clades do
       d.premade = false;
       d.pack = [];
       d.picks = 0;
@@ -422,11 +470,11 @@
       U.draft = null;
       U.screen = 'title';
     } else if (act === 'draftPrev') {
-      // the first pilot comes back to its last step, as it was left
+      // the pilot before comes back to its last step, as it was left
       const h = run.heroes.pop();
       const premade = T.PREBUILTS.some((pb) => pb.name === h.name && String(h.id).startsWith(pb.id + '_'));
       U.draft = {
-        heroIdx: 0,
+        heroIdx: run.heroes.length,
         step: 'up',
         species: h.species.slice(1),
         name: h.name,
@@ -449,8 +497,6 @@
         return;
       }
       U.sfx.click();
-      // a trait taken a second time is upgrade points on it, not a card: the kit still needs its six
-      if (r.double) U.toast(`${T.CARD[arg].name} taken twice: ${T.RULES.DOUBLE_UP} UP to spend on it alone.`);
       d.picks = d.hero.cards.length;
       if (d.picks >= T.RULES.START_CARDS) {
         T.awaken(d.hero);
@@ -470,7 +516,10 @@
       T.awaken(d.hero);
       // every pilot a player built is kept, to be chosen again beside the pre-made heroes
       if (!d.premade) {
-        const kept = T.keepMade(T.madeFrom(d.hero, new Date().toISOString()));
+        const rec = T.madeFrom(d.hero, new Date().toISOString());
+        const kept = T.keepMade(U.makerStamp ? U.makerStamp(d, rec) : rec);
+        if (U.makerKept) U.makerKept(d, kept);
+        if (kept) d.hero.madeId = kept.id; // what it learns on this expedition comes home to this recipe
         if (kept && U.heroesShare) U.heroesShare(kept);
       }
       if (U.savePilotAnswer) U.savePilotAnswer(d);
@@ -485,9 +534,9 @@
         return;
       }
       run.heroes.push(d.hero);
-      if (d.heroIdx === 0) {
+      if (run.heroes.length < squadOf(run)) {
         U.draft = {
-          heroIdx: 1,
+          heroIdx: run.heroes.length,
           step: 'mode',
           species: [],
           name: NAMES[T.runStream(run, 'squad').int(NAMES.length)],
@@ -615,9 +664,10 @@
     };
     const legs = [];
     for (let r = 0; r < map.rows.length;) {
-      const a = T.actOf(r);
+      const a = T.actOf(r, map);
       let r2 = r;
-      while (r2 + 1 < map.rows.length && T.actOf(r2 + 1) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss') r2++;
+      while (r2 + 1 < map.rows.length && T.actOf(r2 + 1, map) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss')
+        r2++;
       legs.push({ act: a, from: r, to: r2 });
       r = r2 + 1;
     }
@@ -817,11 +867,14 @@
     const foes = p.foes.map((f) => (f.n > 1 ? f.n + ' ' : '') + esc(f.name)).join(', ');
     return `<div class="small" style="margin-top:4px"><b>${GOAL_VERB[p.goal] || 'Win'}:</b> ${esc(p.objective)}</div><div class="small dim">${p.clock ? '⏳ ' + p.clock.value + ' rounds · ' : ''}${foes}${p.spawns.length ? ' · and more keep coming' : ''}</div>`;
   }
-  /** The stops the squad can reach next, side by side, at the top of the route. */
-  function renderChoices(run) {
-    if (run.phase !== 'map' || !run.available.length) return '';
-    return `<div class="choices"><div class="row"><span class="kick">Choose the next stop</span><span class="dim small">${expeditionLine(run)}${esc(T.threatTitle(run))} waits at the end of the route.</span></div><div class="stopcards">${run.available.map((id) => stopCard(run, id)).join('')}</div></div>`;
-  }
+  // the chart of the whole route stays open or folded as the player left it
+  document.addEventListener(
+    'toggle',
+    (e) => {
+      if (e.target && e.target.classList && e.target.classList.contains('route-panel')) U.routeOpen = e.target.open;
+    },
+    true,
+  );
   // a stop card and its roundel on the route light up together
   document.addEventListener('mouseover', (e) => {
     const card = e.target && e.target.closest && e.target.closest('.stopcard[data-node]');
@@ -834,70 +887,107 @@
       if (n) n.classList.add('hl');
     }
   });
+  /**
+   * The route as a journey column (Frogma "Finalised UI", Route 3): the Heart at the top, the legs still to
+   * come as bands, the leg the squad is on with its next stops as big art cards, and the stops passed below.
+   */
+  function legsOf(map) {
+    const legs = [];
+    for (let r = 0; r < map.rows.length;) {
+      const a = T.actOf(r);
+      let r2 = r;
+      while (r2 + 1 < map.rows.length && T.actOf(r2 + 1) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss') r2++;
+      legs.push({ act: a, from: r, to: r2, boss: map.all[map.rows[r][0]].type === 'boss' });
+      r = r2 + 1;
+    }
+    return legs;
+  }
+  function stopName(run, nd) {
+    const pg = nd.page && T.PAGE_BY[nd.page];
+    return nd.type === 'boss' ? T.threatTitle(run) : pg ? pg.name : NODE_NAME[nd.type];
+  }
+  function renderJourney(run) {
+    const map = run.map;
+    const ex = T.expeditionOf(run);
+    const at = run.nodeId != null ? run.nodeId : null;
+    const here = at != null ? map.all[at].row : -1;
+    const legs = legsOf(map);
+    const next = Math.min(here + 1, map.rows.length - 1);
+    const cur = legs.find((l) => next >= l.from && next <= l.to) || legs[0];
+    const bossLeg = legs.find((l) => l.boss);
+    const away = map.rows.length - 1 - here;
+    const heart = `<div class="j-heart${cur === bossLeg ? ' near' : ''}${bossLeg && ex ? ' ' + U.artClass(ex.legs[2].scene) : ''}"><span class="j-heart-t">${esc(T.threatTitle(run))}</span><span class="small">${away <= 1 ? 'the next stop' : away + ' stops away'}</span></div>`;
+    const legName = (l) => {
+      const leg = ex && ex.legs[l.act];
+      return `Leg ${ROMAN[l.act]}${leg ? ' · ' + GROUND_NAME[leg.ground] : ''}`;
+    };
+    const ahead = legs
+      .filter((l) => !l.boss && l.from > cur.to)
+      .reverse()
+      .map((l) => {
+        const leg = ex && ex.legs[l.act];
+        const art = U.artClass(leg ? leg.scene : U.LEG_SCENES[l.act]);
+        return `<div class="j-leg ${art}"><span class="j-shade"></span><span class="j-leg-t"><b>${legName(l)}</b> <span class="dim small">· ${esc(map.actNames[l.act])} · ${l.to - l.from + 1} stop${l.to > l.from ? 's' : ''}</span></span></div>`;
+      })
+      .join('');
+    const choosing = run.phase === 'map' && run.available.length && T.squadReady(run);
+    const now = cur.boss
+      ? ''
+      : `<div class="j-now"><div class="row"><span class="kick">${legName(cur)}</span><span class="dim small">${esc(map.actNames[cur.act])}${choosing ? ' · you are here · choose the next stop' : ''}</span></div></div>`;
+    // the stops passed, newest first; a mission's line says how it went
+    const missions = run.history.slice();
+    const passed = Object.values(map.all)
+      .filter((nd) => nd.done)
+      .sort((x, y) => x.row - y.row)
+      .map((nd) => {
+        let how = nd.type === 'haven' ? 'rested' : nd.type === 'event' ? 'a fork in the road' : '';
+        if (T.MISSIONS[nd.type] && nd.type !== 'haven' && nd.type !== 'event') {
+          const h = missions.shift();
+          if (h)
+            how = `${h.won ? 'won' : 'lost'} · ${h.rounds} round${h.rounds === 1 ? '' : 's'}${h.kills ? ' · ' + h.kills + ' foe' + (h.kills === 1 ? '' : 's') + ' down' : ''}`;
+        }
+        const pg = nd.page && T.PAGE_BY[nd.page];
+        const art = U.artClass(pg ? pg.plate : null);
+        return `<div class="j-past ${art}"><span class="j-shade"></span><span class="j-past-t"><span class="ok">✓</span> <b>${esc(stopName(run, nd))}</b> <span class="dim small">${NODE_NAME[nd.type]}${how ? ' · ' + esc(how) : ''}</span></span></div>`;
+      })
+      .reverse()
+      .join('');
+    const start = `<div class="j-past j-start"><span class="j-past-t"><span class="ok">${at == null ? '●' : '✓'}</span> <b>The Ark</b> <span class="dim small">${at == null ? 'setting out' : 'where the route began'}</span></span></div>`;
+    return `<div class="journey">${heart}${ahead}${now}${choosing ? `<div class="stopcards">${run.available.map((id) => stopCard(run, id)).join('')}</div>` : ''}${passed}${start}</div>`;
+  }
+  /**
+   * A newcomer joining on the route (2.79): the squad sees them bringing a pilot, and the route waits for them.
+   */
+  function joinCard(run) {
+    if (T.squadReady(run)) return '';
+    const name = esc(T.ownerName(run, run.heroes.length));
+    const seats = run.heroes
+      .filter(Boolean)
+      .map(
+        (h, i) =>
+          `<span class="j-seat">${U.portrait(h, 'sm')}<span class="small">${esc(T.ownerName(run, i))}</span><span class="dim small">ready</span></span>`,
+      )
+      .join('');
+    return `<div class="panel joincard"><span class="kick">A new player joined</span><h3>${name} is bringing a pilot</h3><p class="dim small">They join at this stop, at the squad's level. From the next mission the squad is ${run.heroes.length + 1}, and missions grow to match. The route opens again once the pilot joins.</p><div class="j-seats">${seats}<span class="j-seat waiting"><span class="pfp sm none">?</span><span class="small">${name}</span><span class="small pulse-t">drafting…</span></span></div></div>`;
+  }
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    return `<div class="wrap">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${titleBtn()}`)}
+    return `<div class="wrap route-screen">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${U.scalePill(run)}${titleBtn()}`)}
       ${renderPassage(run)}
-      ${partyBar(run)}
-      ${renderChoices(run)}
-      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">The whole route, from the top. Glowing stops are reachable; hover one to see what it holds.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
+      ${joinCard(run)}
+      <div class="route3"><div class="r3-squad">${partyBar(run)}</div><div class="r3-main">${run.phase === 'map' && run.available.length ? `<div class="small dim r3-line">${expeditionLine(run)}${esc(T.threatTitle(run))} waits at the end of the route.</div>` : ''}${renderJourney(run)}</div></div>
+      <details class="panel route-panel" style="margin-top:12px"${U.routeOpen ? ' open' : ''}><summary class="row"><span class="dim small">The whole route, as a chart: every road and stop from the top. Glowing stops are reachable; hover one to see what it holds.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></summary>${renderRoute(run)}</details></div>`;
   }
 
   /* ───────────── TRAIN / KIT modals ───────────── */
-  U.openTrain = function (i) {
-    const h = U.run.heroes[i];
-    U.openModal(
-      `<div class="row"><h3>${esc(h.name)} — Train</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUpRun" data-arg="${i}">Auto</button><button class="sm" data-act="closeModal">Done</button></div><p class="dim small">Spend UP on P (physical magnitude) or E (awakens the ethereal face at E 1, then scales its capability). Caps 3/3.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, flavor: false, bound: T.boundLeft(h, cid), clades: h.species }).replace(/data-act="up"/g, `data-act="upRun" data-hero="${i}"`)).join('')}</div>`,
-    );
-  };
+  // U.openTrain, the upgrade view, lives in src/ui/after.js with the other screens after a mission
   U.openKit = function (i) {
     const h = U.run.heroes[i];
     U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => U.icClade(s) + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
     <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} ${own(i) ? `<button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half, to your own purse">sell</button>` : ''}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
     <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false, clades: h.species })).join('')}</div>`);
   };
-
-  /* ───────────── REWARD ───────────── */
-  function renderReward() {
-    const run = U.run;
-    const rw = run.lastReward;
-    const bonus = rw.bonus
-      .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
-      .join('');
-    // every pilot chooses an upgrade of their own: a trait (or +2 ◇), and after an elite a boon
-    const perHero = rw.lifeline
-      ? ''
-      : run.heroes
-          .map((h, i) => {
-            const cards = rw.offers[i];
-            // a partner's upgrade is theirs to choose: shown, never offered to this screen
-            if (!own(i))
-              return `<hr><h3>${esc(h.name)}'s upgrade</h3><p class="dim small">${rw.picked[i] && (!rw.boons || rw.boonPicked[i]) ? '✓ Chosen.' : `${esc(T.ownerName(run, i))} is choosing…`}</p>`;
-            const trait = rw.picked[i]
-              ? `<p class="dim small">✓ Trait chosen.</p>`
-              : `<p class="dim small">Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.</p><div class="pack">${cards
-                  .map(
-                    (cid) =>
-                      `<div class="offer">${U.cardHTML(cid, { flavor: false, double: h.cards.includes(cid), clades: h.species })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
-                  )
-                  .join(
-                    '',
-                  )}</div><div class="row" style="margin-top:8px"><button class="ghost" data-act="skipCard" data-arg="${i}">Skip (+2 ◇)</button></div>`;
-            const boon = !rw.boons
-              ? ''
-              : rw.boonPicked[i]
-                ? `<p class="dim small">✓ Boon chosen.</p>`
-                : `<h4>An elite falls: a boon for ${esc(h.name)}</h4><div class="row">${rw.boons[i].map((b) => `<div class="panel tight" style="min-width:220px"><b>${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</b><div class="small dim">${esc(T.BOON_BY[b].desc)}</div><div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeBoon" data-arg="${b}|${i}">Take</button></div></div>`).join('')}</div>`;
-            return `<hr><h3>${esc(h.name)}'s upgrade</h3>${trait}${boon}`;
-          })
-          .join('');
-    const ready = T.rewardSettled(rw);
-    return `<div class="wrap">${header(rw.lifeline ? 'Lifeline' : 'Mission Complete', titleBtn())}<div class="panel">
-      ${rw.lifeline ? `<h3>${esc(rw.title)} — lost, but the Lifeline holds once</h3><p class="dim">No rewards from this stop. Both heroes limp on at half vitality. The Lifeline is spent.</p>` : `<h3>${esc(rw.title)} — ${rw.rounds} rounds, ${rw.kills} foes destroyed</h3><div class="row" style="margin:8px 0"><span class="pill">+${rw.up} UP each</span><span class="pill" ${rw.purse && rw.purse.length > 1 ? `data-tip="${esc(rw.purse.map((n, s) => `${esc(run.party.players[s].name)}: +${n}`).join(' · '))}"` : ''}>+${rw.crystals} ◇${rw.purse && rw.purse.length > 1 ? ` (${rw.purse.map((n) => '+' + n).join(' / ')})` : ''}</span></div>${bonus}`}
-      ${perHero}
-      <div class="row" style="margin-top:14px"><button class="primary" data-act="rewardDone" ${ready ? '' : 'disabled'}>Continue to the map</button></div></div></div>`;
-  }
 
   /* ───────────── HAVEN ───────────── */
   /**
@@ -924,107 +1014,6 @@
     const img = key && T.ART && T.ART[key];
     return `<div class="panel scene-card ${cls || ''} ${img ? '' : 'no-art'}">${img ? `<div class="scene-art" style="background-image:url(${img})"></div>` : ''}<div class="scene-body">${inner}</div></div>`;
   };
-  function renderHaven() {
-    const run = U.run;
-    const hv = run.haven;
-    return `<div class="wrap">${header('Haven', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${titleBtn()}`)}
-      ${partyBar(run)}
-      ${U.sceneCard(U.EVENT_SCENES.haven, `<h3>Rest</h3><div class="row"><button data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest — recover half of missing vitality (free)</button><button data-act="rest" data-arg="full" ${hv.healed || T.totalCrystals(run) < 3 ? 'disabled' : ''} data-tip="The squad's repair: both pilots back to full.${T.playerCount(run) > 1 ? ' Paid from the fuller purse first.' : ''}">Full repair — 3 ◇</button></div><p class="story-text small">Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.</p>`, 'haven-rest')}
-      <div class="panel" style="margin-top:12px"><h3>Gear <span class="dim small" style="font-weight:400">— fueled by ◇ per use; 2 slots per hero. Gear grants general verbs, never keyed counters.</span></h3>
-        <div class="shop-grid">${
-          hv.gear
-            .map((gid) => {
-              const g = T.GEAR_BY[gid];
-              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes
-                .map((h, i) => {
-                  if (!own(i)) return '';
-                  const can = T.crystalsFor(run, i) >= g.price && h.gear.length < 2;
-                  return `<button class="sm ${can ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${can ? '' : 'disabled'}>Buy for ${esc(h.name)}</button>`;
-                })
-                .join('')}</div></div>`;
-            })
-            .join('') || '<span class="dim small">Sold out.</span>'
-        }</div>
-        <h3 style="margin-top:12px">Consumables <span class="dim small" style="font-weight:400">— one use, 3 per hero</span></h3>
-        <div class="shop-grid">${hv.cons
-          .map((cid) => {
-            const c = T.CONSUMABLE_BY[cid];
-            return `<div class="panel tight"><b>${U.icCons(c.id)} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes
-              .map((h, i) =>
-                own(i)
-                  ? `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${T.crystalsFor(run, i) >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>Buy for ${esc(h.name)}</button>`
-                  : '',
-              )
-              .join('')}</div></div>`;
-          })
-          .join('')}</div>
-      </div>
-      <div class="row" style="margin-top:12px"><button class="primary" data-act="leaveHaven">Back to the route</button></div></div>`;
-  }
-
-  /* ───────────── EVENT ───────────── */
-  function renderEvent() {
-    const run = U.run;
-    const ev = run.event;
-    const def = ev.def;
-    let body;
-    if (!ev.resolved)
-      body = `<div class="col">${def.options
-        .map((o, i) => {
-          const cost = o.cost && o.cost.crystals;
-          const can = !cost || T.totalCrystals(run) >= cost;
-          return `<button data-act="eventOpt" data-arg="${i}" ${can ? '' : 'disabled'} style="text-align:left;padding:10px 14px">${esc(o.label)}${!can ? ' <span class="dim small">(not enough ◇)</span>' : ''}</button>`;
-        })
-        .join('')}</div>`;
-    else {
-      let fu = '';
-      const f = ev.followup;
-      if (f && f.kind === 'cardPick' && !f.done)
-        fu = `<hr><h3>Choose a trait</h3><div class="pack">${f.offer
-          .map(
-            (cid) =>
-              `<div>${U.cardHTML(cid, { flavor: false })}<div class="row" style="margin-top:6px">${run.heroes
-                .map((h, i) => {
-                  const ok = T.canAddCard(h, cid);
-                  return `<button class="sm ${ok.ok ? 'primary' : ''}" data-act="evTakeCard" data-arg="${cid}|${i}" ${ok.ok ? '' : 'disabled'}>→ ${esc(h.name)}</button>`;
-                })
-                .join('')}</div></div>`,
-          )
-          .join('')}</div><button class="ghost sm" data-act="evSkipCard" style="margin-top:6px">Take nothing</button>`;
-      else if (f && f.kind === 'tradeCard' && !f.done) {
-        const h = run.heroes[f.heroIdx];
-        fu = `<hr><h3>${esc(h.name)} — choose a trait to shed</h3><p class="dim small">A random trait of the same bloodline replaces it.</p><div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { pickable: true, act: 'evTrade', flavor: false, clades: h.species })).join('')}</div><button class="ghost sm" data-act="evSkipCard" style="margin-top:6px">Keep everything</button>`;
-      } else if (f && f.kind === 'tradeCard' && f.done)
-        fu = `<p class="small">${esc(run.heroes[f.heroIdx].name)} sheds <b>${esc(T.CARD[f.dropped].name)}</b> and grows <b>${f.gained ? esc(T.CARD[f.gained].name) : 'nothing — the bloodline is exhausted'}</b>.</p>`;
-      else if (f && f.kind === 'boonGiven')
-        fu = `<p class="small">${esc(f.hero)} gains <b>${U.icBoon(f.boon)} ${esc(T.BOON_BY[f.boon].name)}</b> — ${esc(T.BOON_BY[f.boon].desc)}</p>`;
-      else if (f && f.kind === 'respec')
-        fu = `<p class="small">${esc(f.hero)}'s Upgrade Points return to the pool. Use <b>Train</b> on the map to spend them again.</p>`;
-      const ready = !f || f.done || !['cardPick', 'tradeCard'].includes(f.kind);
-      body = `<p style="font-family:var(--serif);font-size:15px">${esc(ev.result)}</p>${fu}<div class="row" style="margin-top:12px"><button class="primary" data-act="leaveEvent" ${ready ? '' : 'disabled'}>Continue</button></div>`;
-    }
-    return `<div class="wrap">${header('Event', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${titleBtn()}`)}${U.sceneCard(U.EVENT_SCENES[def.id], `<div class="row"><span class="ev-ic">${U.icEvent(def)}</span><h2 style="margin:0">${esc(def.title)}</h2></div><p class="story-text">${esc(def.text)} ${U.canonMark('event:' + def.id, def.text, 'event:text')}</p>${body}`)}</div>`;
-  }
-
-  /* ───────────── SUMMARY ───────────── */
-  /** The last mission of a run is told by no passage: its lines of story close the log. */
-  function lastWords(run) {
-    const last = run.history[run.history.length - 1];
-    if (!last || !last.notes || !last.notes.length) return '';
-    return `<div class="entry"><h4>${esc(last.title)}</h4>${last.notes.map((n) => passageLine(run, { who: n.hero, text: n.text, own: true })).join('')}</div>`;
-  }
-  function renderSummary() {
-    const run = U.run;
-    const won = run.won;
-    return `<div class="wrap">${header(won ? T.threatTitle(run) + ' Is Ended' : 'The Expedition Is Lost')}<div class="panel" style="max-width:760px;margin:0 auto">
-      <p style="font-family:var(--serif);font-size:16px;line-height:1.5">${esc(T.fillTokens(won ? T.FLAVOR.win[0] : T.FLAVOR.lose[0], { THREAT: T.threatName(run) }))}</p>
-      <div class="kv" style="margin:10px 0"><span class="dim">Missions</span><span>${run.stats.missions} (${run.history.filter((x) => x.won).length} won)</span><span class="dim">Rounds fought</span><span>${run.stats.rounds}</span><span class="dim">Foes destroyed</span><span>${run.stats.kills}</span><span class="dim">Crystals left</span><span>${T.totalCrystals(run)} ◇</span><span class="dim">Lifeline used</span><span>${run.stats.lifelineUsed ? 'yes' : 'no'}</span></div>
-      <div class="small">${run.history.map((h) => `<div class="row"><span>${NODE_ICON[h.archetype] || '•'} ${esc(h.title)}</span><span class="dim">${h.rounds} rounds · ${h.kills} kills</span><span class="right ${h.won ? 'el-S' : 'el-M'}">${h.won ? 'won' : 'lost'}</span></div>`).join('')}</div>
-      <hr>${run.heroes.map((h) => `<div class="row small"><b>${esc(h.name)}</b><span class="dim">dealt ${h.stats.dmgDealt} · took ${h.stats.dmgTaken} · ${h.stats.kills} kills</span></div>`).join('')}
-      ${run.story && run.story.log.length ? `<hr><h3>The log of this run</h3><div class="chronicle passage">${run.story.log.map((p) => `<div class="entry"><h4>${esc(p.title)}</h4>${p.lines.map((l) => passageLine(run, l)).join('')}</div>`).join('')}${lastWords(run)}</div>` : ''}
-      <div class="row" style="margin-top:14px"><button class="primary" data-act="newRun">New Expedition</button><button class="ghost" data-act="toTitle">Title</button></div></div></div>`;
-  }
-
   /* ───────────── CODEX ───────────── */
   function renderCodex() {
     const c = U.codex;
@@ -1063,7 +1052,7 @@
 
   U.helpHTML = function () {
     return `<div class="help"><h3>How to play</h3>
-      <p><b>The turn.</b> Each round your two heroes act freely, in any order, interleaved. At the start of the round each hero's <b>track</b> slides one column (cards come back), engines fire, and each hero <b>rolls 4 dice</b> drawn from their 15-die pool into their bank. Dice you don't spend stay banked — but the pool shrinks, so hoarding starves next turn's roll. Most dice are plain d20s (mostly AP, each element once); every card you awaken, and every Affinity boon, swaps a plain die for a d8 of its element (no AP, mostly that element), so a pilot who wakes more cards rolls more etherions and fewer AP. A die's size shows in its corner.</p>
+      <p><b>The turn.</b> Each round your pilots act freely, in any order, interleaved (with several players, each takes a turn with their own). At the start of the round each hero's <b>track</b> slides one column (cards come back), engines fire, and each hero <b>rolls 4 dice</b> drawn from their 15-die pool into their bank. Dice you don't spend stay banked — but the pool shrinks, so hoarding starves next turn's roll. Most dice are plain d20s (mostly AP, each element once); every card you awaken, and every Affinity boon, swaps a plain die for a d8 of its element (no AP, mostly that element), so a pilot who wakes more cards rolls more etherions and fewer AP. A die's size shows in its corner.</p>
       <p><b>Cards have two faces.</b> The <b>Physical</b> face costs AP, has a short cooldown, and scales with <b>P</b>. The <b>Ethereal</b> face costs AP + an etherion, has a longer cooldown, and does something physical cannot — teleport, area, chain, control, engines — scaling with <b>E</b>. Playing <i>either</i> face sends the whole card to the track for its cooldown.</p>
       <p><b>Enemies telegraph.</b> Every enemy shows what it will do before you act. Step out of its zone and a zone shot has no line. Move two nodes and a slow brute spends its turn walking. Hide and ranged shots strike afterimages. Push it off the node and its plan collapses. <b>Defense is proactive</b> — there are no reactions; you prepare on your turn.</p>
       <p><b>Zones.</b> Every node sits in one or two coloured zones. Ranged ("zone") strikes hit anything that shares a zone with you, at any distance. Melee needs a shared edge. Height nodes (dashed ring) can only be reached by Space verbs — teleport, climb, hover — or by dropping the ramp with the lever.</p>
@@ -1090,6 +1079,8 @@
     U.tut = key;
   };
   function tutorialHTML() {
+    // the first mission is guided step by step (src/ui/welcome.js); the tip below is its fallback
+    if (U.tut === 'mission' && U.guideHTML) return U.guideHTML();
     if (!U.tut || !TUT[U.tut]) return '';
     return `<div class="tutorial">${TUT[U.tut]}<div class="row" style="margin-top:8px"><button class="sm primary" data-act="tutClose">Got it</button></div></div>`;
   }
@@ -1100,53 +1091,78 @@
     const root = app();
     if (U.screen !== 'mission' && U.windBed) U.windBed(false); // the wind stays on the board
     let html = '';
-    switch (U.screen) {
-      case 'title':
-        html = renderTitle();
-        break;
-      case 'draft':
-        html = renderDraft();
-        break;
-      case 'map':
-        html = renderMap();
-        break;
-      case 'mission':
-        html = U.renderMission();
-        break;
-      case 'reward':
-        html = renderReward();
-        break;
-      case 'haven':
-        html = renderHaven();
-        break;
-      case 'event':
-        html = renderEvent();
-        break;
-      case 'summary':
-        html = renderSummary();
-        break;
-      case 'codex':
-        html = renderCodex();
-        break;
-      case 'lobby':
-        html = U.renderLobby ? U.renderLobby() : '';
-        break;
-      case 'atlas':
-        html = U.renderAtlas();
-        break;
-      case 'help':
-        html = `<div class="wrap">${header('How to Play', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="panel">${U.helpHTML()}</div></div>`;
-        break;
-    }
-    if (U.modal) html += `<div class="modal-bg" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
+
+    // a screen with a renderer of its own (the app shell's tabs, settings, the codex, how to play)
+    if (U.SCREENS && U.SCREENS[U.screen]) html = U.SCREENS[U.screen]();
+    else
+      switch (U.screen) {
+        case 'title':
+          html = U.renderHome ? U.renderHome() : renderTitle();
+          break;
+        case 'host':
+          html = U.renderHost ? U.renderHost() : renderTitle();
+          break;
+        case 'join':
+          html = U.renderJoin ? U.renderJoin() : renderTitle();
+          break;
+        case 'draft':
+          html = renderDraft();
+          break;
+        case 'map':
+          html = U.shell ? U.shell('route', renderMap()) : renderMap(); // the route sits in the app's frame
+          break;
+        case 'mission':
+          html = U.renderMission();
+          break;
+        case 'reward':
+          html = U.renderReward();
+          break;
+        case 'haven':
+          html = U.renderHaven();
+          break;
+        case 'event':
+          html = U.renderEvent();
+          break;
+        case 'summary':
+          html = U.renderSummary();
+          break;
+        case 'codex':
+          html = renderCodex();
+          break;
+        case 'lobby':
+          // the table as Home draws it (src/ui/home.js), else net.js's own
+          html = U.tableScreen && U.net ? U.tableScreen() : U.renderLobby ? U.renderLobby() : '';
+          break;
+        case 'atlas':
+          html = U.renderAtlas();
+          break;
+        case 'help':
+          html = `<div class="wrap">${header('How to Play', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="panel">${U.helpHTML()}</div></div>`;
+          break;
+      }
+    if (U.modal)
+      html += `<div class="modal-bg${U.modal.sheet ? ' sheet' : ''}${U.modal.side ? ' side' : ''}" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
     html += tutorialHTML();
+    // the web version lays the loading screen over a mission until its paintings are here (src/ui/shell.js)
+    if (U.loadingGate) html += U.loadingGate() || '';
     root.innerHTML = html;
     // #app is the page's scroller: a new screen starts at its top, a re-render stays where it was
     if (shown !== U.screen) root.scrollTop = 0;
+    // a new screen slides in (src/ui/feel.css; a fade on Reduced motion, nothing on Off)
+    if (shown != null && shown !== U.screen && root.classList) {
+      root.classList.remove('screen-in');
+      void root.offsetWidth;
+      root.classList.add('screen-in');
+      clearTimeout(U.render.t);
+      U.render.t = setTimeout(() => root.classList.remove('screen-in'), 450);
+    }
     shown = U.screen;
     if (U.screen === 'mission') U.afterMissionRender();
     if (U.modal && U.modal.onMount) U.modal.onMount();
     if (U.canonRestore) U.canonRestore();
+    if (U.seaApply) U.seaApply();
+    if (U.prefsApply) U.prefsApply();
+    if (U.noteSeen) U.noteSeen();
   };
 
   /* ───────────── ACTION DISPATCH (event delegation) ───────────── */
@@ -1158,8 +1174,11 @@
     const arg = t.getAttribute('data-arg');
     // an add-on (the playtest panel) sees every action first and may take it
     if (U.extraAct && U.extraAct(act, arg, t, e)) return;
+    // the app shell's screens (shell, pilots, cards, settings, how to play and the codex) answer theirs first
+    for (const h of U.ACTS || []) if (h(act, arg, t, e)) return;
     if (U.atlasAct && U.atlasAct(act, arg)) return;
     if (U.canonAct && U.canonAct(act, arg)) return;
+    if (U.seaAct && U.seaAct(act, arg)) return;
     // with players on other screens, each acts only for their own pilots (src/ui/party.js)
     if (U.gate && !U.gate(act, arg, t)) return;
     if (U.handleMissionAct && U.screen === 'mission' && U.handleMissionAct(act, arg, t, e)) return;
@@ -1276,7 +1295,10 @@
       }
       case 'goNode': {
         const r = T.chooseNode(U.run, parseInt(arg, 10));
-        if (!r.ok) return;
+        if (!r.ok) {
+          if (r.why) U.toast(r.why);
+          return;
+        }
         U.sfx.click();
         if (U.run.phase === 'mission') {
           U.screen = 'mission';
@@ -1293,6 +1315,22 @@
         const [cid, i] = arg.split('|');
         const r = U.exec({ op: 'takeCard', hero: parseInt(i, 10), card: cid });
         if (!r.ok) U.toast(r.why);
+        U.sfx.click();
+        U.render();
+        return;
+      }
+      case 'swapPick': {
+        // a full kit chose a trait to exchange for: next, which trait goes
+        const [cid, i] = (arg || '').split('|');
+        U.swapPick = cid ? { card: cid, hero: parseInt(i, 10) } : null;
+        U.render();
+        return;
+      }
+      case 'swapDrop': {
+        const [cid, i, drop] = arg.split('|');
+        const r = U.exec({ op: 'takeCard', hero: parseInt(i, 10), card: cid, drop });
+        if (!r.ok) U.toast(r.why);
+        else U.swapPick = null;
         U.sfx.click();
         U.render();
         return;
@@ -1384,8 +1422,31 @@
     }
     if (U.screen === 'draft') draftAct(act, arg);
   });
+  /**
+   * The expedition is over: every pilot this screen made and flew takes its growth home (T.progressRecord), to
+   * set out next time at the level it reached. Once a run; another player's pilot is theirs to keep.
+   */
+  const keptRuns = new Set();
+  U.keepProgress = function (run) {
+    const key = run.seed + ':' + run.launched;
+    if (keptRuns.has(key)) return U.keptNow || [];
+    keptRuns.add(key);
+    const mine = T.loadMade();
+    U.keptNow = [];
+    run.heroes.forEach((h, i) => {
+      const prev = h && h.madeId && mine.find((x) => x.id === h.madeId);
+      if (!prev || !T.mayActFor(run, U.seats, i)) return;
+      const kept = T.keepMade(T.progressRecord(h, prev, new Date().toISOString()));
+      if (!kept) return;
+      if (U.heroesShare) U.heroesShare(kept);
+      U.keptNow.push({ name: h.name, level: T.pilotLevel(h), was: h.level || 1 });
+    });
+    return U.keptNow;
+  };
   function finishRunMeta() {
+    U.keepProgress(U.run);
     const meta = T.loadMeta();
+    if (U.am) U.am.bestBefore = meta.runs ? meta.bestRow : null; // the end screen compares this run with the best before it
     meta.runs++;
     if (U.run.won) meta.wins++;
     const row = U.run.nodeId != null ? U.run.map.all[U.run.nodeId].row + 1 : 0;

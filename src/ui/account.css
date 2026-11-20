@@ -1,0 +1,34 @@
+/* Accounts (src/ui/account.js): the title line and the account box. Only drawn when there is a server. */
+.title .acct-line {
+  margin-top: 14px;
+  max-width: 560px;
+  text-align: center;
+  line-height: 1.8;
+}
+.acct {
+  max-width: 520px;
+}
+.acct p {
+  margin: 8px 0;
+}
+.acct-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  margin: 10px 0;
+}
+.acct-row input {
+  flex: 1 1 12em;
+  min-width: 0;
+}
+.acct-reason {
+  color: var(--gold);
+}
+.acct-msg {
+  color: var(--glow);
+}
+.acct-end {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}

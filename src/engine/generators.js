@@ -257,7 +257,8 @@
         'The vault sits on a ledge no road reaches. The water is rising. Space verbs get you up there; the winch lever is the long way.',
       gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
-        const seals = 2 + up.need;
+        // the ledge is a narrow place: a bigger or more seasoned squad finds one more seal there at most
+        const seals = 2 + up.need - Math.max(0, ((tide && tide.squadNeed) || 0) - 1);
         const b = boardFor(rng, page, 4, 3, { corridors: 1 });
         const ledgeAnchors = [b.at['3,0'], b.at['2,0']];
         const ledge = addHeight(b, ledgeAnchors, 'D');
@@ -437,7 +438,7 @@
           spawns: [],
           hazardSpread: { origin: b.at['4,2'], everyRounds: 1, delayed: 0, dormant: true },
           bonus: [
-            { id: 'both', text: 'Both heroes standing at the end' },
+            { id: 'both', text: 'Every pilot standing at the end' },
             { id: 'spawners', text: 'Destroy both Spawners' },
           ],
         };
@@ -492,7 +493,8 @@
             text: `Carry ${need} of the ${need + 1} crates to the near edge (A): Interact beside one to pick it up, one at a time each`,
           },
           clock: {
-            value: [8, 7, 7][tier - 1] - up.clock,
+            // more hands carry more at once: a bigger squad races a faster tide (one round less per two pilots past two)
+            value: [8, 7, 7][tier - 1] - up.clock - Math.floor(((tide && tide.squadNeed) || 0) / 2),
             label: 'Rounds before the water takes the wreck',
             onZero: 'lose',
           },
@@ -511,7 +513,7 @@
         'Survey marks are scattered across the whole board, and night is coming. Tag them by standing on one and Interacting, for 2 AP or a die of the mark’s element. A veiled mark must be sighted first: stand within 1 of it, or reach it with a reveal. Two pilots can split up, and foes here are a cost, not the point.',
       gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
-        const need = [4, 5, 6][tier - 1] + up.need;
+        let need = [4, 5, 6][tier - 1] + up.need;
         const b = boardFor(rng, page, 5, 3, { corridors: 2 });
         const starts = [b.at['0,0'], b.at['0,2']];
         // two more marks than you need, at least one in every column past the start: the board is the route
@@ -527,7 +529,8 @@
           rng,
           cols.flatMap((c) => c.slice(1)),
         );
-        while (marks.length < need + 2) marks.push(rest.shift());
+        while (marks.length < need + 2 && rest.length) marks.push(rest.shift());
+        need = Math.min(need, marks.length - 2); // a big squad's survey still leaves two marks spare
         // half of them, the farther ones first, are veiled until sighted
         const veiled = new Set(
           marks
@@ -553,7 +556,12 @@
             done: 0,
             text: `Tag ${need} of the ${marks.length} survey marks (Interact standing on one, for 2 AP or a die of the mark's element); a veiled mark must be sighted first, from within 1 or by a reveal`,
           },
-          clock: { value: [6, 6, 5][tier - 1] - up.clock, label: 'Rounds before nightfall', onZero: 'lose' },
+          // more pilots split the board further: a bigger squad has an earlier nightfall (as the salvage's tide)
+          clock: {
+            value: Math.max(3, [6, 6, 5][tier - 1] - up.clock - Math.floor(((tide && tide.squadNeed) || 0) / 2)),
+            label: 'Rounds before nightfall',
+            onZero: 'lose',
+          },
           spawns: [],
           bonus: [
             { id: 'fast', text: 'Finish with 2+ rounds to spare', clockLeft: 2 },
@@ -565,10 +573,26 @@
   });
 
   /* ───────────────────────────── TIDE MAP ───────────────────────────── */
-  // 7 rows. Row 0: three openers. Rows 1-5 mixed. Row 6: boss. Each node connects to 1-2 nodes in the next row.
-  T.genTideMap = function (rng) {
+  /**
+   * How long an expedition is (Shombith, 2026-11-20: "Short 5 stops / Full"), chosen when the table is made.
+   * Full is the route the game has always had. Short keeps its shape with fewer stops: openers (tier 1), three
+   * tier-2 rows (a crossing, an elite or a haven, a last crossing with a haven), then the boss (tier 3).
+   */
+  T.LENGTHS = { short: { stops: 5 }, full: { stops: 7 } };
+  const SHORT_ROWS = [
+    { tier: 1, types: (rng) => shuffle(rng, ['swarm', 'vault', 'cascade']) },
+    { tier: 2, types: (rng) => shuffle(rng, ['hidden', 'event', 'salvage']) },
+    { tier: 2, types: () => ['haven', 'elite', 'vault'] },
+    { tier: 2, types: (rng) => shuffle(rng, ['survey', 'haven', 'swarm']) },
+    { tier: 3, types: () => ['boss'] },
+  ];
+  // Full: 7 rows. Row 0: three openers. Rows 1-5 mixed. Row 6: boss. Each node connects to 1-2 nodes in the next row.
+  T.genTideMap = function (rng, length) {
     const rows = [];
+    const short = length === 'short';
+    const nRows = short ? SHORT_ROWS.length : 7;
     const typesFor = (r) => {
+      if (short) return SHORT_ROWS[r].types(rng);
       if (r === 0) return shuffle(rng, ['swarm', 'vault', 'cascade']);
       if (r === 1) return shuffle(rng, ['hidden', 'event', 'salvage']);
       if (r === 2) return shuffle(rng, ['elite', 'haven', 'vault']);
@@ -577,9 +601,9 @@
       if (r === 5) return shuffle(rng, ['vault', 'salvage', 'event']);
       return ['boss'];
     };
-    const tierFor = (r) => (r <= 1 ? 1 : r <= 4 ? 2 : 3);
+    const tierFor = (r) => (short ? SHORT_ROWS[r].tier : r <= 1 ? 1 : r <= 4 ? 2 : 3);
     let id = 0;
-    for (let r = 0; r < 7; r++) {
+    for (let r = 0; r < nRows; r++) {
       const ts = typesFor(r);
       rows.push(
         ts.map((t, c) => ({
@@ -594,7 +618,7 @@
         })),
       );
     }
-    for (let r = 0; r < 6; r++) {
+    for (let r = 0; r < nRows - 1; r++) {
       const cur = rows[r],
         nxt = rows[r + 1];
       cur.forEach((n) => {
