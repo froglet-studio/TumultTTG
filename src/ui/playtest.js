@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.73.0',
+    version: '2.73.1',
     items: [
+      {
+        text: 'Online play: a partner’s moves no longer undo themselves. A move the host’s screen was slow to hear used to be dropped after 15 seconds, and the partner’s turn snapped back. Now each move is numbered, kept and sent again until the host’s screen confirms it, and the host also checks for moves every few seconds. If the host’s screen stops answering, the partner is told so instead. The host must still keep Tumult open. Partners: does a long, thoughtful turn now stand? Does anything still snap back?',
+      },
       {
         text: 'A balance pass on every ability. No card can be played twice in one turn any more (the cheap moves and Read were being chained), and the cheapest moves go one step less. Nothing settles a problem outright now: sensing reaches as far as the card is upgraded instead of the whole board, Shield breakers chip by their level instead of deleting it, the squad-wide hazard shelters cover your ally for this round and you for longer, a lock-on lasts some rounds rather than the mission, and nothing works a ledge from the floor. Thirty-odd faces that ignored upgrades now grow with them, and Pace now moves you. Does any card you liked feel flat now? Is anything still the one answer you always reach for?',
       },
