@@ -34,8 +34,11 @@ npm run dev:web                   http://localhost:5173, the web version as Page
 
 ## Deploying
 
-- **Pull requests and `bleeding-edge`:** `.github/workflows/preview.yml` deploys `dist/web` to the Cloudflare Pages project `tumult` and puts the link on the pull request as the `preview` deployment. It needs the repository secrets `CLOUDFLARE_API_TOKEN` (Pages: Edit, that account only) and `CLOUDFLARE_ACCOUNT_ID`; until they exist it builds and skips the deploy.
-- **GitHub Pages:** `.github/workflows/pages.yml` publishes `dist/web`, with the offline file at `/TUMULT.html`. It is manual until the custom domain is set up; then it publishes from `main` (`docs/BRANCHING_AND_RELEASE.md`).
+Addresses, workflows and the admin setup are in `HOSTING.md`. In short:
+
+- **Pull requests and `bleeding-edge`:** `.github/workflows/preview.yml` deploys `dist/web` to the Cloudflare Pages project `tumult` (`bleeding-edge` at tumult.pages.dev, each pull request at its branch's address, linked on the PR). It needs the repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; until they exist it builds and skips the deploy.
+- **`main`:** `.github/workflows/pages.yml` publishes `dist/web` to GitHub Pages at tumult.froglet.games on every push, with the offline file at `/TUMULT.html`.
+- **`development`:** `.github/workflows/playtest.yml` builds the playtest file; a Claude session puts it on the claude.ai page with `/playtest-publish`.
 
 ## The backend seam
 
