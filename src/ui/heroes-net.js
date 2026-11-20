@@ -1,5 +1,5 @@
 /* ============================================================================
-   TUMULT — HEROES PLAYERS MADE, SHARED (test page only)
+   TUMULT — HEROES PLAYERS MADE, SHARED (the playtest page and the web version)
    Every pilot built in the draft is kept on the device (T.keepMade). On the
    test page and Tumult Online it is also written to the page's store, so
    everyone who plays the page can choose it beside the pre-made heroes.
@@ -78,17 +78,19 @@
   U.heroesShare = () => push();
   U.heroesForget = () => push();
 
-  if (T.Backend && T.Backend.available()) {
+  // look now, and again whenever who is playing changes (a sign-in on the web version)
+  function start() {
+    if (!(T.Backend && T.Backend.available())) return;
     Promise.all([T.Backend.use('db'), T.Backend.use('user')])
       .then(async ([d, u]) => {
         if (!d || !u) return;
         db = d;
         user = u;
-        const id = await u.id();
-        if (!id) return load();
-        uid = id;
+        uid = (await u.id()) || null;
         load();
       })
       .catch(() => {});
   }
+  start();
+  if (T.Backend && T.Backend.onChange) T.Backend.onChange(start);
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

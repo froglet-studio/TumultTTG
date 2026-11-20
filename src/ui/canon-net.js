@@ -1,5 +1,5 @@
 /* ============================================================================
-   TUMULT — THE CANON INBOX (test page only)
+   TUMULT — THE CANON INBOX (the playtest page and the web version)
    On the test page, every canon note a player writes (src/ui/canon.js) is
    also sent to the page's private store, and the lore lead reviews them
    there: canon, rejected or still proposed, public or private, with the
@@ -82,12 +82,19 @@
   };
 
   // light up once the page's host answers; a saved copy of the page never will
-  if (T.Backend && T.Backend.available()) {
+  // look now, and again whenever who is playing changes (a sign-in on the web version)
+  function start() {
+    if (!(T.Backend && T.Backend.available())) return;
     Promise.all([T.Backend.use('db'), T.Backend.use('user')])
       .then(async ([d, u]) => {
         if (!d || !u) return;
         const id = await u.id();
-        if (!id) return;
+        // canon notes are sent from an account; a guest's stay on the device until they sign in
+        if (!id || (typeof u.guest === 'function' && u.guest())) {
+          Object.assign(C, { ready: false, reviewer: false, lead: false });
+          uid = null;
+          return;
+        }
         db = d;
         user = u;
         uid = id;
@@ -99,6 +106,8 @@
       })
       .catch(() => {});
   }
+  start();
+  if (T.Backend && T.Backend.onChange) T.Backend.onChange(start);
 
   /* ───────────── reviewing ───────────── */
   async function loadInbox() {

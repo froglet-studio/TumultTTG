@@ -6,7 +6,7 @@ Tumult has two builds from one source (`src/manifest.json`):
 |---|---|---|
 | Command | `npm run build` | `npm run build:web` |
 | Output | `dist/TUMULT.html`, one file (~8 MB) | `dist/web/`, a small page plus `assets/` |
-| Network | none, ever | its own files; later Froglet's own services only |
+| Network | none, ever | its own files and Froglet Analytics (anonymous play data, `docs/reference/ANALYTICS.md`); later Froglet's backend |
 | Where it goes | sent to anyone, played from disk | GitHub Pages (tumult.froglet.games), Cloudflare previews |
 
 Both contain the same engine and screens. The playtest panel and the online screens (`manifest.playtest`) are in neither; they stay in the playtest build for the claude.ai page.
@@ -41,4 +41,6 @@ npm run dev:web                   http://localhost:5173, the web version as Page
 
 The online screens reach a server only through `T.Backend` (`src/ui/backend.js`), never through a host page's API. A provider is `{ name, available(), use(capability) }`; the newest available one serves every call, and with none the game plays solo, exactly as before. The capabilities are `db` (the shared store), `room` (an optional live channel) and `user` (who is playing); `src/ui/net.js`, `heroes-net.js` and `canon-net.js` show the calls each makes.
 
-Built in today is `claude-artifact`, the claude.ai page that hosts the playtest build (`window.claude.use`). The Cloudflare Workers backend will register a provider with the same three capabilities (`T.Backend.register`), and the online screens will then join the web version's manifest list.
+A provider may name the capabilities it offers (`capabilities: [...]`); one without a list offers the online three. The web version registers `froglet-analytics`, which offers only `analytics`, the anonymous play data (`src/web/analytics.js`, `docs/reference/ANALYTICS.md`); it never makes the game look online.
+
+Built in is `claude-artifact`, the claude.ai page that hosts the playtest build (`window.claude.use`). The web version registers `tumult-worker` (`src/web/backend-worker.js`), Tumult's own Cloudflare Worker, with the same three capabilities and a fourth, `lobby` (who is online), and carries the online screens in its manifest list (`manifest.web`). How the server works and how to deploy it: `docs/reference/BACKEND.md`.
