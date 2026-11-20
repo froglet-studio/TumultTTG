@@ -50,7 +50,9 @@ HTTP: `GET/PUT/DELETE /api/doc/<path>`, `GET /api/docs/<collection>`, `GET /api/
 
 **Cloud saves.** While someone is signed in (a guest included), each save of the run and the record also goes to `saves/<user>`, a few seconds later. A device with no run of its own takes the cloud's; one that has a run is never overwritten unasked; the record takes the best of both. When a guest links a sign-in that already had an account, everything moves to that account (`mergeUser`: pilots joined, the newer save kept); deleting an account deletes its documents (`deleteUser`).
 
-**Storage on the device** (web version only): `tumult_v2_cloud_at` (localStorage, when the cloud save was last matched); `tumult_v2_api` and `tumult_v2_invites` (sessionStorage: a `?api=` server for this tab, and invite tokens from links).
+**Storage on the device** (web version only): `tumult_v2_cloud_at` (localStorage, when the cloud save was last matched); `tumult_v2_api` and `tumult_v2_invites` (sessionStorage: a `?api=` server for this tab on localhost, and invite tokens from links).
+
+**The address.** `server/address.json` names the Worker; the build writes it into `src/web/server.js`. Today it is the workers.dev address (see below); empty, the web version plays solo only.
 
 ## Running it locally
 
@@ -61,7 +63,7 @@ echo INVITE_SECRET=dev > .dev.vars
 npx wrangler dev                      # http://localhost:8787
 ```
 
-Then open the web version with `?api=http://localhost:8787` (`npm run dev:web`). Until the sign-in module is merged nobody is signed in, so only reads work. `npm test` runs the server's rules, rooms, lobby and a two-screen game over them in Node, without Cloudflare (`test/server.test.js`, `test/server-harness.js`).
+Then open the web version with `?api=http://localhost:8787` (`npm run dev:web`). Only a page served from localhost honours `?api=`, so a link cannot send a player's session to another server. Until the sign-in module is merged nobody is signed in, so only reads work. `npm test` runs the server's rules, rooms, lobby and a two-screen game over them in Node, without Cloudflare (`test/server.test.js`, `test/server-harness.js`).
 
 ## Putting it on Cloudflare
 
@@ -72,9 +74,13 @@ Admin steps, for Shombith (one time, about 15 minutes), from `server/`:
 3. `npx wrangler d1 create tumult`, and put the `database_id` it prints into `server/wrangler.toml` (the id is not a secret; commit it).
 4. `npx wrangler d1 migrations apply tumult --remote`
 5. `npx wrangler secret put INVITE_SECRET`, pasting a long random string (`openssl rand -base64 32`). Keep it only in Cloudflare.
-6. `npx wrangler deploy`. Check `https://tumult-api.<account>.workers.dev/api/health` answers `{"ok":true,…}`.
-7. The address: if `froglet.games` is on Cloudflare DNS, uncomment the `routes` line in `wrangler.toml` and deploy again for `https://api.tumult.froglet.games` (the game's default, `src/web/server.js`). If not, set `DEFAULT` in `src/web/server.js` to the workers.dev address.
+6. `npx wrangler deploy`. It prints the Worker's address, `https://tumult-api.<account>.workers.dev`. Check that `<address>/api/health` answers `{"ok":true,…}`.
+7. Put that address in `server/address.json` (`"url"`) and commit it on a branch into `bleeding-edge`: the web version is built with it, and the sign-in callbacks use the same host (`docs/reference/ACCOUNTS.md`). While the file is empty the web version plays solo only.
 8. Once sign-in is live, put the lore lead's user id in `CANON_LEADS` (and reviewers in `CANON_REVIEWERS`) and deploy.
+
+### A custom address later
+
+`froglet.games` is on Google Cloud DNS, not Cloudflare, so the Worker launches on its workers.dev address. To serve it at `https://api.tumult.froglet.games` instead: move the `froglet.games` DNS zone to Cloudflare (GitHub Pages keeps working: its records move with the zone), add `routes = [{ pattern = "api.tumult.froglet.games", custom_domain = true }]` to `server/wrangler.toml` and deploy, then change `server/address.json` and the Google and Discord redirect URIs to the new host. Players' sessions carry over: they are bearer tokens, not cookies tied to a host.
 
 The sign-in module's own secrets (Google, Discord, email) are in `docs/reference/ACCOUNTS.md`.
 

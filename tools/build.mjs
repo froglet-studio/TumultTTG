@@ -71,6 +71,14 @@ export function analyticsConfig() {
   return { url, key };
 }
 
+/** Where the web version finds Tumult's Worker (server/address.json): an https origin, or '' for solo only. */
+export function serverAddress() {
+  const { url } = JSON.parse(readFileSync(join(root, 'server', 'address.json'), 'utf8'));
+  if (url !== '' && !/^https:\/\/[a-z0-9.-]+$/.test(url))
+    throw new Error('server/address.json needs an https origin (no path), or an empty url');
+  return url;
+}
+
 /** The game's script and stylesheet, art aside: the sources in manifest order, each under a banner. */
 function sources({ playtest = false, web = false } = {}) {
   const manifest = JSON.parse(read('manifest.json'));
@@ -85,7 +93,9 @@ function sources({ playtest = false, web = false } = {}) {
   const fill = (rel, body) =>
     rel === 'web/analytics.js'
       ? body.replace("/*__ANALYTICS__*/ { url: '', key: '' }", () => JSON.stringify(analyticsConfig()))
-      : body;
+      : rel === 'web/server.js'
+        ? body.replace("/*__SERVER__*/ ''", () => JSON.stringify(serverAddress()))
+        : body;
   // The page knows which build it is: the playtest panel shows it and puts it in its reports.
   const stamp = `window.T = window.T || {};\nwindow.T.BUILD = ${JSON.stringify({ version: pkg.version, playtest })};\n`;
   const js = once([...manifest.engine, ...manifest.ui, ...webJs, ...extra.js])
