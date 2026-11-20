@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.78.0 — 2026-11-20 — join an expedition under way
+
+Garrett: "is there a way the two players mid game could save their game, we update, and then I join in?"
+
+- **A newcomer joins on the route.** Between missions one more player can join, up to five: online with the game's code, while the squad is on the route (`T.canAddPlayer`, `T.addPlayer`). They bring a pilot, drafted or one they made, and the route waits for it (`T.squadReady`). A lone player's second pilot passes to the newcomer instead.
+- **Catching up.** A late pilot gets spare upgrade points to match the least-grown pilot already flying (`T.joinPilot`), and its player's purse starts as full as the emptiest. It keeps the level it came with; the next mission scales for the bigger squad.
+- **Updating a live game.** An online game from 2.74 to 2.77 resumes on this version: the host picks "Rejoin game" and the guests follow (checked by loading a 2.74 save mid-mission and playing it out). No save change: a party simply has more players and pilots.
+- **Balance.** No change for any squad that does not take a newcomer: `node tools/sim.js 40` is byte-identical to 2.77.
+
 ## 2.77.0 — 2026-11-20 — a held trait is never offered again
 
 Garrett: "lets no longer have them gain extra points for drawing the card again. they just have a smaller pool. which gives them more reliability in their late game adaptive swaps."

@@ -495,12 +495,20 @@ test('online: three screens join one game, draft a pilot each and set out', { sk
   C.act('confirmHero');
   await until(() => [A, B, C].every((P) => P.U.screen === 'map'), 'every screen on the map');
   assert.equal(A.U.run.heroes.map((h, i) => A.T.ownerOf(A.U.run, i)).join(','), '0,1,2', 'a pilot each');
-  // a fourth screen cannot join an expedition that has set out
+  // a fourth screen joins on the route (2.78): it brings a pilot, and the route waits for it
   const D = await open(html, db);
   D.type('netName', 'Di');
   D.type('netCode', A.U.net.code);
   D.act('netJoin');
-  await new Promise((r) => setTimeout(r, 100));
-  assert.equal(D.U.net.role, null, 'too late to join');
-  assert.deepEqual(A.errors.concat(B.errors, C.errors), []);
+  await until(() => D.U.net.seat === 3, 'the newcomer to take the next seat');
+  await until(() => A.U.run.party.players.length === 4, 'the host to let the newcomer in');
+  assert.equal(A.U.run.party.owner.length, 4, 'the newcomer brings a pilot of its own');
+  await until(() => D.U.screen === 'draft' && D.U.draft && D.U.draft.heroIdx === 3, "the newcomer's draft");
+  assert.equal(A.T.chooseNode(A.U.run, A.U.run.available[0]).ok, false, 'the route waits for its pilot');
+  D.act('prebuilt', ids[3]);
+  D.act('confirmHero');
+  await until(() => A.U.run.heroes.length === 4 && D.U.screen === 'map', 'the newcomer on the route');
+  await until(() => [B, C, D].every((P) => P.U.run.heroes.length === 4), 'every screen sees four pilots');
+  assert.equal(A.T.scaleFor(A.U.run).size, 2, 'the next mission scales for four');
+  assert.deepEqual(A.errors.concat(B.errors, C.errors, D.errors), []);
 });

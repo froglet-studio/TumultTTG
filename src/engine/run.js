@@ -514,6 +514,7 @@
   const ELITE_STANDS_IN = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey'];
   T.chooseNode = function (run, nodeId) {
     if (!run.available.includes(nodeId)) return { ok: false };
+    if (T.squadReady && !T.squadReady(run)) return { ok: false, why: 'a pilot is still being drafted' };
     const node = run.map.all[nodeId];
     run.nodeId = nodeId;
     run.map.current = nodeId;

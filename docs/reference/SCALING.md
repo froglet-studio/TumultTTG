@@ -7,7 +7,7 @@ Everything here is a number a table can work out before the mission starts.
 ## Two numbers about the squad
 
 - **Size past two** — `size = pilots − 2`. One player flies two pilots; two to five players fly one each (`T.pilotsFor`).
-- **Level past one** — `level = floor(average of (pilot level − 1))`, each pilot's level as it **set out** on this expedition. Growth during the expedition does not count: that is the run's own curve, which the tiers already answer.
+- **Level past one** — `level = floor(average of (pilot level − 1))`, each pilot's level as it **set out** on this expedition (a pilot that joined on the route counts with the level it came with). Growth during the expedition does not count: that is the run's own curve, which the tiers already answer.
 
 A **pilot's level** is `1 + floor(growth / 6)`, where growth is every upgrade point it holds past the six a new pilot starts with (spent, spare, or bound to a card) plus **2** for every trait past its first six (`T.pilotPower`, `LEVEL_UP`, `CARD_UP`). Six points is about what a tier of a run gives (`T.addProgression`). A new pilot is level 1; a pilot back from one expedition is usually level 2 to 6; a pilot with nine traits all at P 3 / E 3 is about level 10.
 

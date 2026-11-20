@@ -863,6 +863,7 @@
     return `<div class="wrap">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${U.scalePill(run)}${titleBtn()}`)}
       ${renderPassage(run)}
       ${partyBar(run)}
+      ${T.squadReady(run) ? '' : `<div class="panel small" style="margin-top:8px">Waiting for ${esc(T.ownerName(run, run.heroes.length))} to bring a pilot: the route opens again once it joins.</div>`}
       ${renderChoices(run)}
       <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">The whole route, from the top. Glowing stops are reachable; hover one to see what it holds.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
   }
@@ -1315,7 +1316,10 @@
       }
       case 'goNode': {
         const r = T.chooseNode(U.run, parseInt(arg, 10));
-        if (!r.ok) return;
+        if (!r.ok) {
+          if (r.why) U.toast(r.why);
+          return;
+        }
         U.sfx.click();
         if (U.run.phase === 'mission') {
           U.screen = 'mission';
