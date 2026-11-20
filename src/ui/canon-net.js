@@ -82,8 +82,8 @@
   };
 
   // light up once the page's host answers; a saved copy of the page never will
-  if (window.claude && typeof window.claude.use === 'function') {
-    Promise.all([window.claude.use('db'), window.claude.use('user')])
+  if (T.Backend && T.Backend.available()) {
+    Promise.all([T.Backend.use('db'), T.Backend.use('user')])
       .then(async ([d, u]) => {
         if (!d || !u) return;
         const id = await u.id();

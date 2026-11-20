@@ -14,7 +14,9 @@
   "scripts": {
     "build": "node tools/build.mjs --check",
     "build:playtest": "node tools/build.mjs --playtest --check",
+    "build:web": "node tools/build.mjs --web --check",
     "dev": "node tools/dev-server.mjs",
+    "dev:web": "node tools/dev-server.mjs --web",
     "test": "node --test",
     "sim": "node tools/sim.js",
     "mission-log": "node tools/mission-log.js",
@@ -24,7 +26,7 @@
     "ui-test": "node tools/ui-drive.js",
     "format": "prettier --write \"src/**/*.{js,css,html,json}\" \"tools/**/*.{js,mjs}\" \"test/**/*.js\"",
     "format:check": "prettier --check \"src/**/*.{js,css,html,json}\" \"tools/**/*.{js,mjs}\" \"test/**/*.js\"",
-    "check": "npm run build && npm test"
+    "check": "npm run build && npm run build:web && npm test"
   },
   "devDependencies": {
     "jsdom": "^24.1.3",

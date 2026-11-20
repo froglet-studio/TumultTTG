@@ -37,9 +37,9 @@ Named `type/area-short-description` (`feature/`, `bugfix/`, `hotfix/`, `chore/`)
 | Build | Source branch | Where it goes | Status |
 |---|---|---|---|
 | **Offline file** (`npm run build` → `dist/TUMULT.html`) | any | sent to anyone; plays with no network | built today |
-| **Preview** | `bleeding-edge` and pull requests | a Cloudflare preview link | planned |
+| **Preview** (`npm run build:web`) | `bleeding-edge` and pull requests | a Cloudflare preview link (`.github/workflows/preview.yml`) | built; deploys once the Cloudflare secrets are set |
 | **Playtest page** (`npm run build:playtest`) | `development` | the claude.ai playtest artifact (online play lives here today, `src/ui/net.js`) | rebuilt by hand, below |
-| **Hosted web build** | `main` | GitHub Pages on froglet.games | planned |
+| **Hosted web build** (`npm run build:web`, `docs/reference/WEB_BUILD.md`) | `main` | GitHub Pages on froglet.games | built; published by hand until the domain is set up |
 
 The offline file stays one self-contained HTML file that makes no network requests. The hosted web build is a second output of the same source: it may talk to Froglet's own services (the backend and sign-in Worker, Froglet Analytics), and nothing else, and it must still play solo when those are unreachable. Anyone can play solo; online play needs sign-in or an invite.
 
