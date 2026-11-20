@@ -338,7 +338,10 @@
       const r = await call('GET', '/api/profiles?ids=' + ids.map(encodeURIComponent).join(','));
       return (r && r.profiles) || {};
     },
-    signIn: () => A() && typeof A().signIn === 'function' && A().signIn(),
+    // the sign-in module's account box (src/ui/account.js); A().signIn(provider) leaves for one provider
+    signIn: (reason) => {
+      if (T.UI && typeof T.UI.askSignIn === 'function') T.UI.askSignIn(reason || 'Hosting a game needs an account.');
+    },
     guest: () => {
       const u = me();
       return !u || !!u.guest;

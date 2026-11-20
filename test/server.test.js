@@ -353,7 +353,12 @@ async function page(js, server, user, token) {
       w.addEventListener('error', (e) => errors.push('window.error: ' + ((e.error && e.error.stack) || e.message)));
       w.fetch = server.fetch;
       w.WebSocket = server.socketClass();
-      // the sign-in module, as far as the backend asks it
+      // the sign-in module, as far as the backend asks it. The real one (src/ui/account.js) is in the build
+      // and keeps this object but sets its methods, reading the session from the device, so put it there too.
+      w.localStorage.setItem(
+        'tumult_v2_account',
+        JSON.stringify({ token, user: { id: user.userId, name: user.name, guest: user.guest } }),
+      );
       w.T = {
         Account: {
           token: () => token,
@@ -409,6 +414,10 @@ test(
     B.act('netJoin');
     await until(() => B.toasts.some((t) => /invite link/.test(t)), 'the guest to be told about invites');
     assert.equal(B.U.net.role, null);
+    // the account box opens too (an invite or an account gets a player in); close it as a player would
+    if (B.U.modal) B.U.closeModal();
+    B.type('netName', 'Cy'); // closing it redraws the title
+    B.type('netCode', code);
     // with it, they are in
     const link = new URL(A.U.net.invite);
     assert.equal(link.searchParams.get('join'), code);
