@@ -456,3 +456,51 @@ test(
     assert.deepEqual(A.errors.concat(B.errors), []);
   },
 );
+
+test('online: three screens join one game, draft a pilot each and set out', { skip, timeout: 60_000 }, async () => {
+  const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const html = build({ playtest: true }).html;
+  const db = fakeDb();
+  const A = await open(html, db);
+  const B = await open(html, db);
+  const C = await open(html, db);
+  A.type('netName', 'Ana');
+  A.act('netHost');
+  await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+  B.type('netName', 'Bo');
+  B.type('netCode', A.U.net.code);
+  B.act('netJoin');
+  await until(() => A.U.net.names[1] === 'Bo', 'the host to see the first guest');
+  C.type('netName', 'Cy');
+  C.type('netCode', A.U.net.code);
+  C.act('netJoin');
+  await until(() => A.U.net.names[2] === 'Cy', 'the host to see the second guest');
+  assert.equal(C.U.net.seat, 2, 'the second guest takes the next seat');
+  assert.match(A.d.querySelector('[data-act="netStart"]').textContent, /3 players/);
+
+  A.act('netStart');
+  A.U.run.seed = SEED;
+  A.U.run.rngs = {};
+  A.U.net.publish();
+  assert.equal(A.U.run.party.owner.length, 3, 'three players fly three pilots');
+  await until(() => C.U.screen === 'draft' && C.U.draft && C.U.draft.heroIdx === 2, "the second guest's draft");
+  const ids = A.T.PREBUILTS.map((p) => p.id);
+  A.act('prebuilt', ids[0]);
+  A.act('confirmHero');
+  B.act('prebuilt', ids[1]);
+  B.act('confirmHero');
+  await new Promise((r) => setTimeout(r, 50));
+  assert.equal(A.U.screen, 'draft', 'the map waits for every pilot');
+  C.act('prebuilt', ids[2]);
+  C.act('confirmHero');
+  await until(() => [A, B, C].every((P) => P.U.screen === 'map'), 'every screen on the map');
+  assert.equal(A.U.run.heroes.map((h, i) => A.T.ownerOf(A.U.run, i)).join(','), '0,1,2', 'a pilot each');
+  // a fourth screen cannot join an expedition that has set out
+  const D = await open(html, db);
+  D.type('netName', 'Di');
+  D.type('netCode', A.U.net.code);
+  D.act('netJoin');
+  await new Promise((r) => setTimeout(r, 100));
+  assert.equal(D.U.net.role, null, 'too late to join');
+  assert.deepEqual(A.errors.concat(B.errors, C.errors), []);
+});

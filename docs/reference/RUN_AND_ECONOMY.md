@@ -18,6 +18,10 @@ A hero is **Human + two bloodlines**, **6 trait cards** to start, **6 Upgrade Po
 
 Store rules for it (added to the page's `db` rules beside the canon ones in `docs/reference/CANON.md`): `{ "path": "heroes", "read": "view", "write": "owner" }, { "path": "heroes/{self}", "read": "view", "write": "interact" }`. Flying someone else's pilot does not copy it into your own list.
 
+**Pilots keep their growth (2.76).** When an expedition ends, won or lost, every pilot a player made and flew comes home with its traits, the points on them and the points it had not spent (`T.progressRecord`), under the same recipe (`madeId`), one more expedition flown (`runs`). Gear, boons and crystals stay with the expedition. Chosen again, it sets out as it came home: up to nine traits, at its level (`T.pilotLevel`), and the missions of that expedition grow to meet it (`docs/reference/SCALING.md`). Online, each player's screen keeps its own player's pilot. A pilot made by someone else, or a pre-made hero, is not kept. A recipe that has flown may hold more than a new pilot's six points (`T.validMade` checks it against the caps instead).
+
+**Squads of two to five (2.76).** One player flies two pilots; two to five players fly one each, at one screen or online (`T.MAX_PLAYERS` 5, `T.pilotsFor`). "Your ally" in a card's text is, with more than two pilots, the nearest ally standing; Rally and revives reach the nearest ally down (`T.allyOf`, `T.downedAllyOf`).
+
 **P vs E (the v1.0 grammar, unchanged).** P deepens the Physical face's numbers — reliable, AP-fed. E awakens the Ethereal face — it cannot be played until its card has E 1 — and then scales its *capability*, something P can never buy at any level. A new hero sets out with at least two cards awakened (`T.RULES.START_AWAKE`): the pre-made heroes are written that way, and a drafted hero's first two E points go to its strongest signatures from the starting six UP (the player can move them; Confirm tops the count back up to two if UP is left). Hover a face to see its exact numbers at the hero's current P/E.
 
 ## The round (what the player actually does)

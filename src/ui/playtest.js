@@ -19,8 +19,14 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.75.1',
+    version: '2.76.0',
     items: [
+      {
+        text: 'Up to five players. Pick 3, 4 or 5 players on the title (or host online and let up to four join with the code): each player drafts and flies one pilot, and you take turns. A bigger squad meets bigger missions: tougher foes, more of them, and more to do; the ⚖ pill on the route says how much. Does a squad of four feel as pressed as a squad of two? Is the board too crowded?',
+      },
+      {
+        text: 'Pilots you made now keep their growth. When an expedition ends, won or lost, a pilot you built comes home with its traits and points, at a level, and shows it in the list next time. Fly it again and the missions grow to meet it. Does a veteran feel stronger and still challenged? Is anything you expected to keep (gear, boons) missing?',
+      },
       {
         text: 'Three clades take Cosmic Shore’s names: the Honey Badger is now the Ratel, the Hawk is the Red-tailed Hawk (a real species), and the Orca keeps its name. Saved pilots of those clades load as before. Cards that move dice from your pool now say “draw”, not “pull”, so Pull’s tip only shows where a foe is moved. Does every clade name read as a real animal?',
         cards: ['fly_photo', 'jer_cache', 'gec_basking'],

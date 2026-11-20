@@ -10,14 +10,18 @@
    Seat 0 is the host: it makes the squad's shared choices (route, events, havens).
    ========================================================================== */
 (function (T) {
-  T.MAX_PLAYERS = 2;
+  T.MAX_PLAYERS = 5; // Garrett, 2026-11-20 (2 until 2.77)
 
-  /** A new party: n players; heroes are dealt to seats in turn (hero i → seat i mod n). */
+  /** How many pilots a party of n players flies: two at least (one player flies both), else one each. */
+  T.pilotsFor = (n) => Math.max(2, n | 0);
+  /** A new party: n players; its pilots (T.pilotsFor) are dealt to seats in turn (pilot i → seat i mod n). */
   T.newParty = function (n, names) {
     n = Math.max(1, Math.min(T.MAX_PLAYERS, n | 0 || 1));
     const players = [];
     for (let i = 0; i < n; i++) players.push({ name: (names && names[i]) || 'Player ' + (i + 1) });
-    return { players, owner: [0, 1].map((i) => i % n), ready: players.map(() => false) };
+    const owner = [];
+    for (let i = 0; i < T.pilotsFor(n); i++) owner.push(i % n);
+    return { players, owner, ready: players.map(() => false) };
   };
   /** The seat that plays hero i. */
   T.ownerOf = (run, i) => (run.party ? run.party.owner[i] || 0 : 0);
