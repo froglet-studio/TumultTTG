@@ -253,7 +253,7 @@
 }
 .mission.hud .side-in {
   flex: 0 1 auto;
-  min-height: 90px;
+  min-height: 170px;
   overflow: auto;
 }
 .mission.hud .p-squad {
@@ -660,13 +660,8 @@
   z-index: 60;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(
-      60% 60% at 50% 45%,
-      color-mix(in srgb, var(--sea1, #0a2238) 70%, transparent),
-      var(--sea2, #030812)
-    ),
-    var(--ink);
+  background: radial-gradient(60% 60% at 50% 45%, rgba(10, 34, 56, 0.96), rgba(3, 8, 18, 0.99));
+  color: #dbe7f5;
   animation: passIn 0.35s ease-out both;
 }
 .mission.hud .pass[hidden] {
