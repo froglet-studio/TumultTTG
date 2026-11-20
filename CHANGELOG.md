@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.75.0 — 2026-11-20 — a full kit grows by exchange
+
+Garrett: "after getting 9 cards total, players should be able to swap cards at similar points exchanging an old card for a new one but keeping the 9 card max."
+
+- **Exchanges.** A pilot with nine traits used to get an empty trait offer after a mission. Now it gets up to three traits of its bloodline it could take by giving one up (`T.swapCard`, `T.swapDrops`, `T.isSwapOffer`). The new trait arrives unupgraded and the free points on the old one come back; a second copy's bound point goes with its card. The 3-of-9 cap holds after the exchange. A second copy the pilot can still take is offered first, and skipping still pays 2 ◇.
+- **Online.** The `takeCard` command carries the trait given up (`drop`); older commands without it are unchanged.
+- **Balance.** Exchange offers draw from a stream of their own and the simulated players pass on them. The one thing that changes for them is that a full kit's pass now pays 2 ◇, as any skipped offer does (before, a full kit had nothing to skip). `node tools/sim.js 40`: the mission tables are identical to 2.74.0; full runs: heuristic 5/40 → 5/40, look-ahead 26/40 → 25/40 (one seed, 24, went the other way at its last mission).
+
 ## 2.74.0 — 2026-11-20 — online: quicker, and a reload can rejoin
 
 Garrett, after 2.73.1: "it feels slow often… like it is waiting for the network to process a simple move." The engine answers a move in about 7 ms; the wait was the page store's live delivery, which can fall back to a refresh every half minute.

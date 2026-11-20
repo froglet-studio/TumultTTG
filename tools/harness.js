@@ -101,7 +101,9 @@ function createHarness(T = loadTumult()) {
         const rw = run.lastReward;
         run.heroes.forEach((h, hi) => {
           if (rw.picked[hi]) return;
-          if (rw.offers[hi].length) T.takeOfferedCard(run, rw.offers[hi][0], hi);
+          // the simulated players never exchange a trait: a full kit passes on an exchange, as it always has
+          if (rw.offers[hi].length && !T.isSwapOffer(run, hi, rw.offers[hi][0]))
+            T.takeOfferedCard(run, rw.offers[hi][0], hi);
           else T.skipOfferedCard(run, hi);
         });
         if (rw.boons) run.heroes.forEach((h, hi) => T.takeBoon(run, rw.boons[hi][0], hi));

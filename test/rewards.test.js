@@ -113,3 +113,70 @@ test('a save from 2.22 on the reward screen loads with an offer for each hero', 
   T.finishNode(run);
   assert.ok(H.playRun(run).run.over);
 });
+
+/** A won reward for a squad whose first hero holds nine traits. */
+function fullKitReward(seed) {
+  const run = T.newRun(seed);
+  H.prebuiltSquad(run, 0, 1);
+  const h = run.heroes[0];
+  for (const c of T.CARDS)
+    if (h.cards.length < T.RULES.MAX_CARDS && T.canAddCard(h, c.id).ok && !h.cards.includes(c.id)) T.addCard(h, c.id);
+  T.autoAllocate(h);
+  T.launchMission(run, 'swarm', 1);
+  const m = run.mission;
+  m.won = true;
+  m.over = true;
+  T.missionRewards(run, m);
+  T.applyMissionResult(run);
+  return { run, h, rw: run.lastReward };
+}
+
+test('a full kit is offered exchanges: a new trait in, an old one out, nine kept (Garrett, 2026-11-20)', () => {
+  for (let seed = 1; seed <= 12; seed++) {
+    const { run, h, rw } = fullKitReward(seed);
+    assert.equal(h.cards.length, T.RULES.MAX_CARDS);
+    assert.ok(rw.offers[0].length > 0, 'a full kit still gets an offer');
+    const cid = rw.offers[0].find((c) => T.isSwapOffer(run, 0, c));
+    if (!cid) continue;
+    assert.equal(T.takeOfferedCard(run, cid, 0).ok, false, 'an exchange names the trait it gives up');
+    const drop = T.swapDrops(h, cid)[0];
+    const pts = h.upUnspent + h.up[drop][0] + h.up[drop][1] - ((h.bound && h.bound[drop] && h.bound[drop][1]) || 0);
+    assert.ok(T.takeOfferedCard(run, cid, 0, drop).ok);
+    assert.equal(h.cards.length, T.RULES.MAX_CARDS, 'still nine');
+    assert.ok(h.cards.includes(cid) && !h.cards.includes(drop));
+    assert.deepEqual(h.up[cid], [0, 0]);
+    assert.equal(h.up[drop], undefined);
+    assert.equal(h.upUnspent, pts, "the old trait's free points come back");
+    assert.ok(T.cladeSlots(h, h.cards), 'the 3-of-9 cap holds');
+    assert.ok(rw.picked[0]);
+    return;
+  }
+  assert.fail('no seed offered an exchange');
+});
+
+test('an exchange is refused when it would break the cap, or when the kit has room', () => {
+  const { run, h } = fullKitReward(3);
+  const other = run.heroes[1];
+  const outside = T.CARDS.find((c) => !c.clades.some((sp) => h.species.includes(sp)));
+  assert.equal(T.canSwapCard(h, outside.id, h.cards[0]).ok, false, 'not of the bloodline');
+  assert.equal(T.canSwapCard(h, h.cards[1], h.cards[0]).ok, false, 'already held');
+  const spare = T.CARDS.find((c) => T.canAddCard(other, c.id).ok && !other.cards.includes(c.id));
+  assert.equal(T.canSwapCard(other, spare.id, other.cards[0]).ok, false, 'six cards: take it, do not exchange');
+  // a trait of one clade can only come in for a trait that frees a slot of that clade, when that clade is full
+  for (const c of T.CARDS) {
+    if (h.cards.includes(c.id) || !c.clades.some((sp) => h.species.includes(sp))) continue;
+    for (const d of h.cards) {
+      const ok = T.canSwapCard(h, c.id, d).ok;
+      assert.equal(ok, !!T.cladeSlots(h, h.cards.filter((x) => x !== d).concat(c.id)));
+    }
+  }
+});
+
+test('an exchange goes through the party command', () => {
+  const { run, rw } = fullKitReward(5);
+  const cid = rw.offers[0].find((c) => T.isSwapOffer(run, 0, c));
+  if (!cid) return;
+  const drop = T.swapDrops(run.heroes[0], cid)[0];
+  assert.ok(T.execCommand(run, { op: 'takeCard', hero: 0, card: cid, drop }, null).ok);
+  assert.ok(run.heroes[0].cards.includes(cid));
+});

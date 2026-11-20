@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.74.0',
+    version: '2.75.0',
     items: [
+      {
+        text: 'A pilot that holds nine traits keeps growing: after a mission its trait offer becomes an exchange. Pick “Exchange for…” on a new trait, then choose which of your nine gives way. The new one starts unupgraded and the points you had spent on the old one come back to spend again. Did you find a trade worth making? Did losing an old favourite sting in a good way or a bad one?',
+      },
       {
         text: 'Online play should feel quicker: the other player’s moves, the handoff at the end of a turn and the enemy phase now cross between the two screens over a live channel, instead of waiting on the page’s store, which could take up to half a minute. If the channel drops, the partner’s screen still checks every 2 seconds. And either player can now reload and pick up the game: the title offers “Rejoin game ABCD”. Does the partner’s screen keep up now? Did a rejoin put you back where you were?',
       },
