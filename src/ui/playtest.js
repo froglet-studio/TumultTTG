@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.73.1',
+    version: '2.74.0',
     items: [
+      {
+        text: 'Online play should feel quicker: the other player’s moves, the handoff at the end of a turn and the enemy phase now cross between the two screens over a live channel, instead of waiting on the page’s store, which could take up to half a minute. If the channel drops, the partner’s screen still checks every 2 seconds. And either player can now reload and pick up the game: the title offers “Rejoin game ABCD”. Does the partner’s screen keep up now? Did a rejoin put you back where you were?',
+      },
       {
         text: 'Online play: a partner’s moves no longer undo themselves. A move the host’s screen was slow to hear used to be dropped after 15 seconds, and the partner’s turn snapped back. Now each move is numbered, kept and sent again until the host’s screen confirms it, and the host also checks for moves every few seconds. If the host’s screen stops answering, the partner is told so instead. The host must still keep Tumult open. Partners: does a long, thoughtful turn now stand? Does anything still snap back?',
       },
