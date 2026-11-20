@@ -11,8 +11,8 @@
 (function (T) {
   const U = (T.UI = T.UI || {});
   const esc = (s) => U.esc(s);
-  const reduced = () =>
-    typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // anything less than Full motion (the player's pick in Look, else the system's setting: src/ui/sea.js)
+  const reduced = () => (U.motion ? U.motion() !== 'full' : false);
 
   /* ───────────── the day ───────────── */
   /**
@@ -152,7 +152,8 @@
   }
   function flash(uid, cls, delay) {
     const el = U.ms && U.ms.svg && U.ms.svg.querySelector('#tok-' + uid);
-    if (!el || reduced()) return;
+    // a flash is not movement: it stays on Reduced (without the shake, feel.css) and goes only on Off
+    if (!el || (U.motion && U.motion() === 'off')) return;
     setTimeout(() => {
       el.classList.remove(cls);
       el.getBoundingClientRect(); // restart the animation
