@@ -1,0 +1,50 @@
+# Tumult's online backend (docs/reference/BACKEND.md). Deploy from this folder: npx wrangler deploy
+name = "tumult-api"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+# The engine the server checks shared pilots and canon notes with: built from src/ before every dev and deploy.
+[build]
+command = "node ../tools/build-server.mjs"
+watch_dir = ["../src/engine", "../src/data"]
+
+# Pages allowed to call the API (comma list; "https://*.x" matches subdomains). Secrets are set with
+# `npx wrangler secret put NAME`: INVITE_SECRET here; the sign-in module's are in docs/reference/ACCOUNTS.md.
+[vars]
+ALLOWED_ORIGIN = "https://tumult.froglet.games,https://www.froglet.games,https://tumult.pages.dev,https://*.tumult.pages.dev,http://localhost:5173"
+CANON_LEADS = ""
+CANON_REVIEWERS = ""
+
+# The shared store and the sign-in tables. `npx wrangler d1 create tumult` prints the id to paste here.
+[[d1_databases]]
+binding = "DB"
+database_name = "tumult"
+database_id = "REPLACE_WITH_D1_ID"
+migrations_dir = "migrations"
+
+# One live room per game code.
+[[durable_objects.bindings]]
+name = "ROOMS"
+class_name = "GameRoom"
+
+# Who is online now (the game's Lobby): one object for everyone.
+[[durable_objects.bindings]]
+name = "LOBBY"
+class_name = "Presence"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["GameRoom", "Presence"]
+
+# Sign-in uses this, when present, to slow down guest creation and email codes.
+[[ratelimits]]
+name = "AUTH_LIMITER"
+namespace_id = "1001"
+simple = { limit = 20, period = 60 }
+
+# Once a day: tidy expired sessions and idle guests (the sign-in module's sweepAuth).
+[triggers]
+crons = ["17 4 * * *"]
+
+# The API's own address. Needs froglet.games on Cloudflare DNS; until then use the workers.dev address.
+# routes = [{ pattern = "api.tumult.froglet.games", custom_domain = true }]

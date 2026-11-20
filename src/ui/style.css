@@ -2924,6 +2924,16 @@ html.calm .combo-mark {
   }
 }
 
+/* the title screen's line about anonymous play data (src/ui/telemetry.js) */
+.privacy-line {
+  max-width: 520px;
+  text-align: center;
+  margin-top: 12px;
+}
+.privacy-line button {
+  text-decoration: underline;
+}
+
 /* ---------- Mission screen, 2.76: calmer ---------- */
 /* one menu, one conditions chip, the story box on request: the top bar keeps the objective, the clock and End Round */
 .mission .endgrp {

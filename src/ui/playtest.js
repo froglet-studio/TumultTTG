@@ -19,7 +19,7 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.83.0',
+    version: '2.84.0',
     items: [
       {
         text: 'The pages around the game are new. Across the top (a bar at the bottom on a phone, with More for the rest): Pilots, a wall of the crew in their scenes with a page each and Make a pilot (two clades, a name and callsign, three story questions, then save or draft their cards); Cards, a binder of every trait you have found, as foil relics that catch the light; Atlas, every kind of place by land, sea and air, each a model of its board on a table; Canon, your notes pinned up by subject; and Settings, which shows the change on a sample as you make it, plus a quick panel from ⚙ on a mission. How to play is now seven short pages with a picture each, and the codex has tabs for words, foes, gear, dice and clades. Which page did you open more than once? Was anything you looked for missing, or in two places?',

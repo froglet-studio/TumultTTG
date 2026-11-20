@@ -20,6 +20,7 @@ npm install            once
 npm run dev            dev server at http://localhost:5173 (rebuilds on refresh)
 npm run build          → dist/TUMULT.html (single self-contained file) + syntax check
 npm run build:playtest → dist/TUMULT.playtest.html: the game plus a panel for testers (mission jump, rule switch, report)
+npm run build:server   → server/src/engine.gen.js, the engine the Worker checks pilots and notes with (wrangler runs it)
 npm run build:web      → dist/web/: the hosted web version, split into content-named cacheable files (docs/reference/WEB_BUILD.md)
 npm run dev:web        the web version on the dev server, service worker included
 npm test               all tests (~15 s; includes two full runs through the real UI in jsdom)
@@ -53,7 +54,13 @@ src/engine/scaling.js     how a mission grows with the squad's size and level (T
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
 src/ui/                   screens, SVG board, input (browser only)
 src/ui/backend.js         T.Backend: the one seam the online screens reach a server through
-src/web/                  the web version's page, service worker and Cloudflare headers
+src/ui/welcome.js         new players: Play now, the guided first mission, keep your squad, invites (docs/reference/WELCOME.md)
+src/ui/telemetry.js       anonymous play data: the events (docs/analytics/EVENT_SCHEMA.json, docs/reference/ANALYTICS.md)
+src/ui/account.js         T.Account: guest-first sign-in on Tumult's Worker (inert without T.Server)
+server/src/auth/          the Worker's accounts: guests, Google, Discord, email codes, sessions
+src/web/                  the web version's page, service worker, Cloudflare headers, and its Froglet Analytics sender
+src/web/backend-worker.js the web version's T.Backend provider: Tumult's Worker (docs/reference/BACKEND.md)
+server/                   the online backend: a Cloudflare Worker, live rooms, the Lobby, the store (docs/reference/BACKEND.md)
 src/ui/playtest.*         the playtest panel — only in the playtest build; its NOTES are rewritten every release
 tools/                    build, dev server, harness, simulators, doc generators, UI driver
 test/                     node --test suites
@@ -69,7 +76,7 @@ docs/archive/v1.0/        the original design bundle — frozen, never edit
 - **The engine never touches the DOM** and is deterministic for a given seed. Keep it that way — the simulators, the audit and the tests depend on it. Never call `Math.random()` in `src/engine` or `src/data`.
 - **Two simulated players measure the game**: the heuristic and the look-ahead player (`docs/reference/PLAYERS.md`). Anything that shows or decides what would happen — a preview, a hint, a planner — works on `T.imagine(m)`, never on the mission: the copy holds no dice to come and no hidden cache. Do not fit `T.EVAL` to the win rates.
 - **A run and its mission are plain data** — no functions, no `undefined`, nothing held in two places — so a mission can be copied (`T.clone`), saved mid-round and resumed exactly. A random stream is a number in that state: draw with `T.stream(m.rngs, 'dice')` or `T.runStream(run, 'loot')`, and give a new purpose a stream of its own. `docs/reference/STATE_AND_SAVES.md` has the rules; `test/state.test.js` enforces them. A change to the saved shape raises `T.SAVE_VERSION` and adds a migration and a fixture.
-- **UI** lives under `T.UI`: string-template rendering, one delegated click handler keyed on `data-act` / `data-arg`. Saves use `localStorage` keys `tumult_v2_run`, `tumult_v2_meta`, `tumult_v2_tut`, `tumult_v2_ui` for what the mission screen keeps folded, `tumult_v2_look` for the sea theme, accent and motion setting (`src/ui/sea.js`), and `tumult_v2_prefs` for the other settings (effects volume, text size, hints, End Round confirm, contrast; `src/ui/settings.js`); `tumult_v2_meta` also records the places and cards a player has met (`seenPages`, `seenCards`) for the Atlas and the binder; canon notes written in play are kept in `tumult_v2_canon`, and the pilots players build in `tumult_v2_heroes`, both apart from any run; the online game a screen is in is `tumult_v2_net` (`docs/reference/CANON.md`, `docs/reference/RUN_AND_ECONOMY.md`).
+- **UI** lives under `T.UI`: string-template rendering, one delegated click handler keyed on `data-act` / `data-arg`. Saves use `localStorage` keys `tumult_v2_run`, `tumult_v2_meta`, `tumult_v2_tut`, `tumult_v2_ui` for what the mission screen keeps folded, `tumult_v2_look` for the sea theme, accent and motion setting (`src/ui/sea.js`), and `tumult_v2_prefs` for the other settings (effects volume, text size, hints, End Round confirm, contrast; `src/ui/settings.js`); `tumult_v2_meta` also records the places and cards a player has met (`seenPages`, `seenCards`) for the Atlas and the binder; canon notes written in play are kept in `tumult_v2_canon`, and the pilots players build in `tumult_v2_heroes`, both apart from any run; the online game a screen is in is `tumult_v2_net`; the anonymous play-data id and counts are `tumult_v2_anon` (and `tumult_v2_anon_queue`, events a closing page could not send); the web version's sign-in session `tumult_v2_account` and its cloud-save mark `tumult_v2_cloud_at` (`docs/reference/BACKEND.md`) (`docs/reference/ACCOUNTS.md`, `docs/reference/ANALYTICS.md`, `docs/reference/CANON.md`, `docs/reference/RUN_AND_ECONOMY.md`).
 - The code still says `hero` and `species`; the design docs say *pilot* and *clade*. Do not rename piecemeal — it happens once, in roadmap milestone C1.
 
 ## Rules of the game that must not break

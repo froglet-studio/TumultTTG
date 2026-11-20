@@ -1,0 +1,504 @@
+{
+  "$comment": "Tumult's anonymous play data: every event the web version sends to its Froglet Analytics server, and every field. The server accepts only the events named here (it reads this file from the repository's bleeding-edge branch each night). The game names the events in src/ui/telemetry.js; src/web/analytics.js adds the envelope and sends them. Change this file together with telemetry.js, and bump schema_version (also in telemetry.js) when a field's meaning changes. docs/reference/ANALYTICS.md is the prose.",
+  "schema_version": 1,
+  "game": "tumult",
+  "privacy": "Anonymous: a random id made on the player's device, no account, no names a player typed, no save, no IP address stored (the server keeps only a two-letter country). A player turns it off on the title screen; a browser with Global Privacy Control or Do Not Track sends nothing.",
+  "common_envelope": {
+    "distinct_id": {
+      "type": "string",
+      "description": "The anonymous player id: 't_' and 24 hex digits, made at random on the device's first visit and kept in localStorage (tumult_v2_anon)."
+    },
+    "session_id": {
+      "type": "string",
+      "description": "One page visit."
+    },
+    "app_version": {
+      "type": "string",
+      "description": "The game's version (package.json)."
+    },
+    "platform": {
+      "type": "string",
+      "description": "Always 'web'."
+    },
+    "build_kind": {
+      "type": "string",
+      "description": "release (tumult.froglet.games, froglet.games) | development (previews, localhost)."
+    },
+    "host": {
+      "type": "string",
+      "description": "The page's host name."
+    },
+    "device": {
+      "type": "string",
+      "description": "web_desktop | web_mobile."
+    },
+    "os": {
+      "type": "string",
+      "description": "iOS | Android | ChromeOS | Windows | macOS | Linux | other, from the browser."
+    },
+    "form_factor": {
+      "type": "string",
+      "description": "desktop | tablet | phone (touch screen and its short side)."
+    },
+    "touch": {
+      "type": "bool",
+      "description": "The screen takes touch."
+    },
+    "schema_version": {
+      "type": "int",
+      "description": "This file's schema_version when the event was made."
+    },
+    "timestamp_utc_ms": {
+      "type": "long",
+      "description": "The device's clock when the event was made, Unix epoch milliseconds."
+    }
+  },
+  "events": {
+    "session_started": {
+      "description": "The game's page opened (a visit). The first step of the new-player funnel.",
+      "properties": {
+        "first_visit": {
+          "type": "bool",
+          "description": "No anonymous id existed on this device before this visit."
+        },
+        "visit": {
+          "type": "int",
+          "description": "Visits on this device, this one included."
+        },
+        "days_since_first": {
+          "type": "int",
+          "description": "Whole days since this device's first visit."
+        },
+        "runs_before": {
+          "type": "int",
+          "description": "Expeditions started on this device before this visit."
+        },
+        "missions_before": {
+          "type": "int",
+          "description": "Missions finished on this device before this visit."
+        },
+        "has_save": {
+          "type": "bool",
+          "description": "A run in progress was saved (the title offers Continue)."
+        },
+        "referrer": {
+          "type": "string",
+          "description": "direct | self | other | the froglet.games / froglet.studio host the visit came from. Never a full address."
+        }
+      }
+    },
+    "session_ended": {
+      "description": "The page was closed or left (pagehide).",
+      "properties": {
+        "seconds": {
+          "type": "int",
+          "description": "Seconds since the page opened."
+        },
+        "screen": {
+          "type": "string",
+          "description": "The screen it was closed on (title, draft, map, mission, reward, ...)."
+        },
+        "missions_ended": {
+          "type": "int",
+          "description": "Missions finished during this visit."
+        },
+        "mission_round": {
+          "type": "int",
+          "description": "The round of a mission left unfinished on the mission screen; null otherwise."
+        }
+      }
+    },
+    "tutorial_shown": {
+      "description": "A first-time tip was shown (once per device per tip).",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "map | mission (src/ui/core.js TUT)."
+        }
+      }
+    },
+    "guide_step": {
+      "description": "The guided first mission (src/ui/welcome.js): the player moved through its five steps, finished it or skipped it.",
+      "properties": {
+        "step": {
+          "type": "int",
+          "description": "The step the player was on, 1 to 5."
+        },
+        "key": {
+          "type": "string",
+          "description": "That step: dice | cards | intent | forecast | end."
+        },
+        "action": {
+          "type": "string",
+          "description": "next | back | finished | skipped."
+        }
+      }
+    },
+    "signin_prompt": {
+      "description": "Keep your squad: the offer to sign in under the first won mission's report (src/ui/welcome.js), and what came of it. Only where accounts are available.",
+      "properties": {
+        "where": {
+          "type": "string",
+          "description": "first_win (the only place it is offered today)."
+        },
+        "action": {
+          "type": "string",
+          "description": "shown | opened (the sign-in box) | later (Not now) | signed_in."
+        }
+      }
+    },
+    "invite_link": {
+      "description": "An invite to an online game: a link opened, joined or declined, or a host copying theirs.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "opened | joined | declined | copied."
+        },
+        "can_join": {
+          "type": "bool",
+          "description": "This page could reach online play when it happened."
+        }
+      }
+    },
+    "run_started": {
+      "description": "An expedition begins: New Expedition (the draft) or, on a first visit, Play now (two pre-made pilots, straight to the map).",
+      "properties": {
+        "first_run": {
+          "type": "bool",
+          "description": "The first expedition started on this device."
+        },
+        "runs_before": {
+          "type": "int",
+          "description": "Expeditions started on this device before this one."
+        },
+        "tide": {
+          "type": "string",
+          "description": "The chosen difficulty."
+        },
+        "play_now": {
+          "type": "bool",
+          "description": "Started with Play now (src/ui/welcome.js), not the draft."
+        }
+      }
+    },
+    "draft_completed": {
+      "description": "The squad is drafted and the Tide Map opens.",
+      "properties": {
+        "squad": {
+          "type": "array",
+          "description": "The squad, one entry per pilot: {pilot: a pre-made pilot's id (game content) or 'made' for one a player built, clades: [two clade ids], cards: how many cards in the kit}. A made pilot's name is never sent."
+        },
+        "tide": {
+          "type": "string",
+          "description": "The run's difficulty."
+        },
+        "players": {
+          "type": "int",
+          "description": "Players sharing the squad."
+        }
+      }
+    },
+    "mission_started": {
+      "description": "A mission's board opened for the first time (a mission resumed from a save is not counted again).",
+      "properties": {
+        "match_id": {
+          "type": "string",
+          "description": "The mission: '<run seed>:<missions the run had launched>'. Groups a mission's start, end or leaving."
+        },
+        "archetype": {
+          "type": "string",
+          "description": "Mission archetype (vault, boss, ...; src/engine/generators.js)."
+        },
+        "tier": {
+          "type": "int",
+          "description": "Mission tier, 1-3."
+        },
+        "boss": {
+          "type": "bool",
+          "description": "The run's final mission."
+        },
+        "mission_number": {
+          "type": "int",
+          "description": "Which mission of the run this is, from 1."
+        },
+        "tide": {
+          "type": "string",
+          "description": "The run's difficulty (a key of T.TIDES); null for a quick mission."
+        },
+        "quick": {
+          "type": "bool",
+          "description": "A mission started on its own, not on an expedition."
+        },
+        "players": {
+          "type": "int",
+          "description": "Players sharing the squad (1 solo)."
+        },
+        "squad": {
+          "type": "array",
+          "description": "The squad, one entry per pilot: {pilot: a pre-made pilot's id (game content) or 'made' for one a player built, clades: [two clade ids], cards: how many cards in the kit}. A made pilot's name is never sent."
+        },
+        "first_mission": {
+          "type": "bool",
+          "description": "No mission had been finished on this device before."
+        }
+      }
+    },
+    "mission_ended": {
+      "description": "A mission reached its end, won or lost. The playtest report's fields, sent.",
+      "properties": {
+        "match_id": {
+          "type": "string",
+          "description": "The mission: '<run seed>:<missions the run had launched>'. Groups a mission's start, end or leaving."
+        },
+        "archetype": {
+          "type": "string",
+          "description": "Mission archetype (vault, boss, ...; src/engine/generators.js)."
+        },
+        "tier": {
+          "type": "int",
+          "description": "Mission tier, 1-3."
+        },
+        "boss": {
+          "type": "bool",
+          "description": "The run's final mission."
+        },
+        "mission_number": {
+          "type": "int",
+          "description": "Which mission of the run this is, from 1."
+        },
+        "tide": {
+          "type": "string",
+          "description": "The run's difficulty (a key of T.TIDES); null for a quick mission."
+        },
+        "quick": {
+          "type": "bool",
+          "description": "A mission started on its own, not on an expedition."
+        },
+        "players": {
+          "type": "int",
+          "description": "Players sharing the squad (1 solo)."
+        },
+        "squad": {
+          "type": "array",
+          "description": "The squad, one entry per pilot: {pilot: a pre-made pilot's id (game content) or 'made' for one a player built, clades: [two clade ids], cards: how many cards in the kit}. A made pilot's name is never sent."
+        },
+        "outcome": {
+          "type": "string",
+          "description": "won | lost."
+        },
+        "rounds": {
+          "type": "int",
+          "description": "Rounds played."
+        },
+        "seconds": {
+          "type": "int",
+          "description": "Seconds from the mission's start to its end on this device (a resumed mission counts from its first start)."
+        },
+        "kills": {
+          "type": "int",
+          "description": "Foes destroyed."
+        },
+        "hp": {
+          "type": "array",
+          "description": "Each pilot's hit points at the end, in squad order."
+        },
+        "max_hp": {
+          "type": "array",
+          "description": "Each pilot's maximum hit points, in squad order."
+        },
+        "downed": {
+          "type": "int",
+          "description": "Pilots down at the end."
+        },
+        "bonus_achieved": {
+          "type": "int",
+          "description": "Bonus objectives achieved."
+        },
+        "bonus_total": {
+          "type": "int",
+          "description": "Bonus objectives offered."
+        },
+        "faces_physical": {
+          "type": "int",
+          "description": "Physical faces played."
+        },
+        "faces_ethereal": {
+          "type": "int",
+          "description": "Ethereal faces played."
+        },
+        "faces_ethereal_at_e0": {
+          "type": "int",
+          "description": "Ethereal faces played on a card at E 0 (only when ETHEREAL_MIN_E allows it)."
+        },
+        "faces": {
+          "type": "object",
+          "description": "Plays per face: {'<card id>:<P|E>': count}. Card ids are in docs/reference/CARDS.md. A take-back removes the play it undid."
+        },
+        "gear_uses": {
+          "type": "int",
+          "description": "Gear abilities used."
+        },
+        "basic_uses": {
+          "type": "int",
+          "description": "Basic actions used."
+        },
+        "items_used": {
+          "type": "int",
+          "description": "Consumables used."
+        },
+        "walks": {
+          "type": "int",
+          "description": "Moves made."
+        },
+        "take_backs": {
+          "type": "int",
+          "description": "Moves taken back with Undo."
+        },
+        "first_mission": {
+          "type": "bool",
+          "description": "The first mission finished on this device."
+        }
+      }
+    },
+    "mission_left": {
+      "description": "The player went back to the title with the mission unfinished (it stays saved).",
+      "properties": {
+        "match_id": {
+          "type": "string",
+          "description": "The mission: '<run seed>:<missions the run had launched>'. Groups a mission's start, end or leaving."
+        },
+        "archetype": {
+          "type": "string",
+          "description": "Mission archetype (vault, boss, ...; src/engine/generators.js)."
+        },
+        "tier": {
+          "type": "int",
+          "description": "Mission tier, 1-3."
+        },
+        "boss": {
+          "type": "bool",
+          "description": "The run's final mission."
+        },
+        "mission_number": {
+          "type": "int",
+          "description": "Which mission of the run this is, from 1."
+        },
+        "tide": {
+          "type": "string",
+          "description": "The run's difficulty (a key of T.TIDES); null for a quick mission."
+        },
+        "quick": {
+          "type": "bool",
+          "description": "A mission started on its own, not on an expedition."
+        },
+        "players": {
+          "type": "int",
+          "description": "Players sharing the squad (1 solo)."
+        },
+        "squad": {
+          "type": "array",
+          "description": "The squad, one entry per pilot: {pilot: a pre-made pilot's id (game content) or 'made' for one a player built, clades: [two clade ids], cards: how many cards in the kit}. A made pilot's name is never sent."
+        },
+        "round": {
+          "type": "int",
+          "description": "The round it was left in."
+        },
+        "seconds": {
+          "type": "int",
+          "description": "Seconds since the mission started."
+        }
+      }
+    },
+    "run_ended": {
+      "description": "An expedition ended: the Heart won, or the squad lost.",
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "description": "won | lost."
+        },
+        "missions": {
+          "type": "int",
+          "description": "Missions played."
+        },
+        "missions_won": {
+          "type": "int",
+          "description": "Missions won."
+        },
+        "rounds": {
+          "type": "int",
+          "description": "Rounds fought across the run."
+        },
+        "kills": {
+          "type": "int",
+          "description": "Foes destroyed across the run."
+        },
+        "lifeline_used": {
+          "type": "bool",
+          "description": "The run's lifeline was spent."
+        },
+        "tide": {
+          "type": "string",
+          "description": "The run's difficulty."
+        },
+        "squad": {
+          "type": "array",
+          "description": "The squad, one entry per pilot: {pilot: a pre-made pilot's id (game content) or 'made' for one a player built, clades: [two clade ids], cards: how many cards in the kit}. A made pilot's name is never sent."
+        }
+      }
+    },
+    "pilot_saved": {
+      "description": "A player kept a pilot they built (the character workshop). Never its name.",
+      "properties": {
+        "clades": {
+          "type": "array",
+          "description": "The pilot's two clades."
+        },
+        "cards": {
+          "type": "int",
+          "description": "Cards in its kit."
+        }
+      }
+    },
+    "analytics_turned_off": {
+      "description": "The player turned play data off on the title screen (the last event this device sends).",
+      "properties": {}
+    },
+    "analytics_turned_on": {
+      "description": "The player turned play data back on.",
+      "properties": {}
+    },
+    "client_exception": {
+      "description": "A script error on the page (at most five a visit).",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "The error's message, at most 200 characters."
+        },
+        "where": {
+          "type": "string",
+          "description": "<file>:<line>, the file's content hash removed."
+        },
+        "screen": {
+          "type": "string",
+          "description": "The screen it happened on."
+        }
+      }
+    }
+  },
+  "funnels": {
+    "new_player": [
+      "session_started (first_visit)",
+      "run_started (play_now)",
+      "draft_completed",
+      "tutorial_shown (map)",
+      "mission_started (first_mission)",
+      "tutorial_shown (mission)",
+      "guide_step (finished or skipped)",
+      "mission_ended (first_mission)",
+      "signin_prompt (first_win)",
+      "mission_started (mission_number 2)",
+      "second_day"
+    ],
+    "invite": ["invite_link (opened)", "invite_link (joined)", "draft_completed", "mission_started"]
+  }
+}

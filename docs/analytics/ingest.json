@@ -1,0 +1,4 @@
+{
+  "$comment": "Where the web version sends anonymous play data: Tumult's Froglet Analytics server (docs/reference/ANALYTICS.md). tools/build.mjs writes it, with ingest_key.public, into src/web/analytics.js.",
+  "url": "https://tumult-analytics.130-210-34-146.sslip.io"
+}

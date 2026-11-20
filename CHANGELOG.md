@@ -4,9 +4,11 @@
 
 - **A web version for froglet.games.** `npm run build:web` writes `dist/web/`: a 2 KB page that loads the game's script, stylesheet, font and each painting as separate files named by their content. A first visit downloads about 300 KB before the title screen draws, against 8 MB for the single file; a painting is fetched when a screen shows it; a returning player downloads only what changed. A service worker keeps the files for offline play. The offline single file is unchanged.
 - **Previews.** Every pull request and push to `bleeding-edge` deploys the web version to Cloudflare Pages once the secrets are set; GitHub Pages publishes it with the offline file beside it.
+- **Accounts, guest first.** Solo play needs no account and never reaches a server. The first time a player goes online, the web version makes them a guest account on Tumult's Worker; they can link Google, Discord or an email code at any time to keep it, with their pilots and saves, on any device. Hosting a game needs a linked account; a guest joins from an invite link. The account box on the title screen renames, signs out and deletes the account. The server keeps no token, code or email address in the clear (`server/src/auth/`, `src/ui/account.js`, `docs/reference/ACCOUNTS.md`).
+- **Online play on Tumult's own server.** A Cloudflare Worker (`server/`, `docs/reference/BACKEND.md`) replaces claude.ai's page storage for the web version: a live room per game code (a Durable Object; up to five players; the room keeps the latest state, so a reload or a returning host catches up), a Lobby of who is online, and a store for shared pilots, canon notes and cloud saves, with pilots and notes checked by the game's own rules on the server. Hosting needs an account; a guest joins with the host's invite link. The online screens are now in the web version; the offline file still has none. Rules unchanged.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
-## 2.83.0 — 2026-11-21 — the pages around the game
+## 2.84.0 — 2026-11-21 — the pages around the game
 
 From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
 
@@ -19,7 +21,7 @@ From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
 - **How to play and the codex.** Seven short pages, one rule and one picture each; the codex in tabs for words, foes, gear, dice and clades, with a search (`src/ui/guide.js`). Empty states for no canon, no cards and being offline.
 - **Tests.** The new pilot fields in `test/heroes.test.js`.
 
-## 2.82.1 — 2026-11-21 — a living sea, a calmer mission screen, and motion
+## 2.83.0 — 2026-11-21 — a living sea, a calmer mission screen, and motion
 
 Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, motion kit). No rule changes.
 
