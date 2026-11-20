@@ -3,21 +3,77 @@
    A run has one to MAX_PLAYERS players. Each hero belongs to one player (its seat);
    one player may hold several. The rules do not change with the number of players:
    the same squad meets the same missions. What changes is who may act for whom, and
-   that players take turns: in a mission's hero phase one player acts at a time, the
-   others wait, and the round's enemy turn comes once every player has had theirs. Seats
-   always go in the same order, host first, so nobody takes two turns in a row and each
-   player can plan their next turn while the others take theirs (Garrett, 2026-11-15).
+   and how a round is shared out: players take turns, in the order they choose, or all
+   play at once (T.ROUND_MODES); the round's enemy turn comes once every player is done.
    Seat 0 is the host: it makes the squad's shared choices (route, events, havens).
    ========================================================================== */
 (function (T) {
-  T.MAX_PLAYERS = 2;
+  T.MAX_PLAYERS = 5; // Garrett, 2026-11-20 (2 until 2.76)
 
-  /** A new party: n players; heroes are dealt to seats in turn (hero i → seat i mod n). */
+  /** How many pilots a party of n players flies: two at least (one player flies both), else one each. */
+  T.pilotsFor = (n) => Math.max(2, n | 0);
+  /** A new party: n players; its pilots (T.pilotsFor) are dealt to seats in turn (pilot i → seat i mod n). */
   T.newParty = function (n, names) {
     n = Math.max(1, Math.min(T.MAX_PLAYERS, n | 0 || 1));
     const players = [];
     for (let i = 0; i < n; i++) players.push({ name: (names && names[i]) || 'Player ' + (i + 1) });
-    return { players, owner: [0, 1].map((i) => i % n), ready: players.map(() => false) };
+    const owner = [];
+    for (let i = 0; i < T.pilotsFor(n); i++) owner.push(i % n);
+    return { players, owner, ready: players.map(() => false), active: null, rounds: 'turns' };
+  };
+  /**
+   * Two ways to play a round with friends (2.81; Garrett, 2026-11-20). 'turns': players take turns in the order
+   * they choose, and each rolls their next dice as their turn ends. 'live': nobody takes turns; every player
+   * spends their AP whenever they like, in whatever order they agree at the table, and everyone rolls together
+   * when the round begins ("we do all roll together at the end of the round and players can all play in real
+   * time without taking turns"). The host's screen carries out every command one at a time, so two players
+   * acting at once are simply taken in the order they arrive.
+   */
+  T.ROUND_MODES = ['turns', 'live'];
+  T.liveRounds = (run) => !!(run.party && run.party.rounds === 'live');
+  /**
+   * A player joins an expedition already under way (2.79; Garrett, 2026-11-20: "is there a way the two players
+   * mid game could save their game, we update, and then I join in?"). Only on the route, between missions,
+   * and never past MAX_PLAYERS. With two players or more the newcomer brings a pilot of its own, drafted or
+   * made, which joins with T.joinPilot; a lone player's second pilot passes to the newcomer instead.
+   */
+  T.canAddPlayer = (run) =>
+    !!run.party && run.phase === 'map' && !run.over && run.party.players.length < T.MAX_PLAYERS && T.squadReady(run);
+  T.addPlayer = function (run, name) {
+    if (!T.canAddPlayer(run)) return { ok: false, why: 'not now' };
+    const p = run.party;
+    const seat = p.players.length;
+    p.players.push({ name: name || 'Player ' + (seat + 1) });
+    p.ready.push(false);
+    if (p.active === undefined) p.active = null;
+    if (run.purses) run.purses.push(Math.min(...run.purses)); // a purse as full as the emptiest
+    let hero = p.owner.indexOf(0, 1); // a lone player's second pilot, when there is one
+    if (seat === 1 && hero > 0) p.owner[hero] = 1;
+    else {
+      hero = p.owner.length;
+      p.owner.push(seat);
+    }
+    return { ok: true, seat, hero };
+  };
+  /** Has every seat its pilot? The route waits for a pilot still being drafted. */
+  T.squadReady = (run) => {
+    // every seat counted, holes too: every() skips a hole, so a guest's pilot arriving before the host's
+    // once set out a squad with the host's pilot missing (2.74–2.79.0)
+    const n = Math.max(run.party ? run.party.owner.length : 2, run.heroes.length);
+    for (let i = 0; i < n; i++) if (!run.heroes[i]) return false;
+    return true;
+  };
+  /**
+   * A late pilot catches up with the least grown: it gets as many spare points as the least-grown pilot
+   * already flying has grown past it (T.pilotPower). Its level, which scales missions, is the one it came with.
+   */
+  T.joinPilot = function (run, i, h) {
+    const others = run.heroes.filter((x, j) => x && j !== i);
+    const behind = others.length ? Math.min(...others.map(T.pilotPower)) - T.pilotPower(h) : 0;
+    if (behind > 0) h.upUnspent = (h.upUnspent || 0) + behind;
+    if (h.level == null) h.level = 1;
+    run.heroes[i] = h;
+    return { ok: true, caughtUp: Math.max(0, behind) };
   };
   /** The seat that plays hero i. */
   T.ownerOf = (run, i) => (run.party ? run.party.owner[i] || 0 : 0);
@@ -106,28 +162,69 @@
     return p.ready.every(Boolean);
   };
   T.clearReady = function (run) {
-    if (run.party) run.party.ready = run.party.players.map(() => false);
+    if (!run.party) return;
+    run.party.ready = run.party.players.map(() => false);
+    run.party.active = null;
   };
 
   /**
-   * Whose turn it is in a mission's hero phase: a seat, or null when turns do not apply (one
-   * player, or no hero phase under way). Seats go in order, 0 first, every round, so no player
-   * ever takes two turns in a row; party.ready marks the players who have had their turn. A player whose pilots are all down has no turn to take.
+   * Players take turns, in the order they choose each round (Garrett, 2026-11-20: "players should take turns in
+   * the order of their choice each round"). A player begins their turn by acting for one of their pilots;
+   * while that turn lasts nobody else acts (so a duo power stays the acting player's to plan), and ending it
+   * leaves the next turn open to whoever has not had one. party.ready marks the players who have had their
+   * turn this round, party.active the one taking it now. A player whose pilots are all down has no turn.
    */
-  T.turnSeat = function (run) {
+  const turnsApply = (run) => {
     const m = run.mission;
     const p = run.party;
-    if (!p || p.players.length < 2 || !m || m.over || m.phase !== 'hero') return null;
-    const n = p.players.length;
-    const first = 0;
-    for (let k = 0; k < n; k++) {
-      const s = (first + k) % n;
-      if (p.ready[s]) continue;
-      if (!T.heroesOf(run, s).some((i) => m.heroes[i] && !m.heroes[i].downed)) continue;
-      return s;
-    }
-    return null;
+    return !!(p && p.players.length >= 2 && p.rounds !== 'live' && m && !m.over && m.phase === 'hero');
   };
+  /**
+   * In live rounds, the seats that still play this round: not yet ready, with a pilot standing. The round ends
+   * once there are none.
+   */
+  T.seatsPlaying = function (run) {
+    const m = run.mission;
+    const p = run.party;
+    if (!p || !m) return [];
+    return p.players
+      .map((x, s) => s)
+      .filter((s) => !p.ready[s] && T.heroesOf(run, s).some((i) => m.heroes[i] && !m.heroes[i].downed));
+  };
+  /** Seats that still have a turn to take this round. */
+  T.seatsToPlay = function (run) {
+    if (!turnsApply(run)) return [];
+    const m = run.mission;
+    const p = run.party;
+    return p.players
+      .map((x, s) => s)
+      .filter((s) => !p.ready[s] && T.heroesOf(run, s).some((i) => m.heroes[i] && !m.heroes[i].downed));
+  };
+  /**
+   * Whose turn it is: the seat taking it now, or the only one left to take one. Null when the next turn is
+   * open to choose (T.turnOpen), or when turns do not apply (one player, or no hero phase under way).
+   */
+  T.turnSeat = function (run) {
+    if (!turnsApply(run)) return null;
+    const left = T.seatsToPlay(run);
+    const a = run.party.active;
+    if (a != null && left.includes(a)) return a;
+    return left.length === 1 ? left[0] : null;
+  };
+  /** Is the next turn open: several players still to take one, and none of them begun? */
+  T.turnOpen = (run) => turnsApply(run) && T.turnSeat(run) == null && T.seatsToPlay(run).length > 1;
+  /**
+   * End a player's turn: they have had it this round, and their standing pilots roll the next round's dice
+   * at once (Garrett, 2026-11-20: "each player should roll their dice as soon as they end their turn"), so
+   * they can plan while the others play. Returns true when every player has had their turn.
+   */
+  function endTurn(run, seat) {
+    const m = run.mission;
+    run.party.ready[seat] = true;
+    run.party.active = null;
+    for (const i of T.heroesOf(run, seat)) T.rollAhead(m, m.heroes[i]);
+    return T.seatsToPlay(run).length === 0;
+  }
 
   /* ───────────── commands: every change a player makes, as data ───────────── */
   /**
@@ -162,7 +259,7 @@
     adjustUp: (run, m, h, c) => T.adjustUp(h, c.card, c.which, c.delta),
     autoUp: (run, m, h) => (T.autoAllocate(h), { ok: true }),
     sellGear: (run, m, h, c) => (T.sellGear(run, c.hero, c.gi), { ok: true }),
-    takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero),
+    takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero, typeof c.drop === 'string' ? c.drop : undefined),
     skipCard: (run, m, h, c) => T.skipOfferedCard(run, c.hero),
     takeBoon: (run, m, h, c) => T.takeBoon(run, c.boon, c.hero),
     buyGear: (run, m, h, c) => T.buyGear(run, c.gear, c.hero),
@@ -186,7 +283,7 @@
     'reroll',
     'walk',
   ]);
-  T.COMMAND_OPS = Object.keys(HERO_OPS).concat(['ready', 'addHero']);
+  T.COMMAND_OPS = Object.keys(HERO_OPS).concat(['ready', 'addHero', 'rounds']);
 
   T.execCommand = function (run, cmd, seats) {
     const op = cmd && cmd.op;
@@ -194,25 +291,52 @@
       // the player whose turn it is ends it; once every player has had theirs, the round goes on
       const m = run.mission;
       if (!m || m.over || m.phase !== 'hero') return { ok: false, why: 'not now' };
-      const turn = T.turnSeat(run);
-      if (turn != null) {
-        if (seats && !seats.includes(turn)) return { ok: false, why: `It is ${run.party.players[turn].name}'s turn.` };
-        run.party.ready[turn] = true;
-        const next = T.turnSeat(run);
-        if (next != null) return { ok: true, passed: true, to: next };
+      if (T.liveRounds(run) && T.playerCount(run) >= 2) {
+        // live rounds: these seats are done (or, pressed again on a player's own screen, not done after all)
+        const p = run.party;
+        const mine = p.players.map((x, s) => s).filter((s) => !seats || seats.includes(s));
+        if (seats && mine.every((s) => p.ready[s])) {
+          mine.forEach((s) => (p.ready[s] = false));
+          return { ok: true, unready: true };
+        }
+        mine.forEach((s) => (p.ready[s] = true));
+        if (T.seatsPlaying(run).length) return { ok: true, waiting: true };
+      } else if (turnsApply(run)) {
+        // the turn under way ends; with none under way, a player ends their own turn without acting
+        const turn = T.turnSeat(run);
+        const left = T.seatsToPlay(run);
+        let seat = turn;
+        if (seat == null) {
+          const mine = left.filter((s) => !seats || seats.includes(s));
+          seat = cmd.seat != null && mine.includes(cmd.seat) ? cmd.seat : mine.length === 1 || seats ? mine[0] : null;
+        }
+        if (seat == null) return { ok: false, why: 'whose turn is that?' };
+        if (seats && !seats.includes(seat)) return { ok: false, why: `It is ${run.party.players[seat].name}'s turn.` };
+        if (!endTurn(run, seat)) return { ok: true, passed: true, to: T.turnSeat(run) };
       } else if (!T.setReady(run, seats)) return { ok: true, waiting: true };
       T.clearReady(run);
       T.endHeroPhase(m);
       m.heroes.forEach((x) => (x.freeMove = 0));
       return { ok: true, ended: true };
     }
+    if (op === 'rounds') {
+      // how rounds go is the host's choice, and may change at any time; a turn under way is let go
+      if (!run.party || !T.ROUND_MODES.includes(cmd.mode)) return { ok: false, why: 'no such way to play' };
+      if (!T.mayLead(run, seats)) return { ok: false, why: `${run.party.players[0].name} chooses how rounds go.` };
+      run.party.rounds = cmd.mode;
+      run.party.active = null;
+      return { ok: true };
+    }
     if (op === 'addHero') {
       // a player's drafted pilot joins the squad in that player's place
       const i = cmd.hero;
-      if (run.phase !== 'draft' || !T.mayActFor(run, seats, i) || run.heroes[i]) return { ok: false, why: 'not now' };
+      const late = run.phase === 'map' && run.party && i < run.party.owner.length;
+      if ((run.phase !== 'draft' && !late) || !T.mayActFor(run, seats, i) || run.heroes[i])
+        return { ok: false, why: 'not now' };
       const h = cmd.pilot;
       // two screens draft apart, so two ids could meet: the second one gives way
       if (run.heroes.some((x) => x && x.id === h.id)) h.id += '_' + i;
+      if (late) return T.joinPilot(run, i, h);
       run.heroes[i] = h;
       return { ok: true };
     }
@@ -220,14 +344,37 @@
     if (!f) return { ok: false, why: 'unknown command ' + op };
     if (!T.mayActFor(run, seats, cmd.hero)) return { ok: false, why: "that is another player's pilot" };
     const m = run.mission;
+    // a line of story may be written any time in a mission, on another player's turn too (Garrett,
+    // 2026-11-20: "we should be able to keep adding things during other players turns"): it changes nothing in play
+    if (op === 'note') {
+      if (!m || m.over) return { ok: false, why: 'not now' };
+      return Object.assign({}, T.addNote(m, cmd.hero, cmd.text), { ctx: cmd.ctx || {} });
+    }
     if (MISSION_OPS.has(op) && (!m || m.over || m.phase !== 'hero')) return { ok: false, why: 'not now' };
     const turn = MISSION_OPS.has(op) ? T.turnSeat(run) : null;
     if (turn != null && T.ownerOf(run, cmd.hero) !== turn)
       return { ok: false, why: `It is ${run.party.players[turn].name}'s turn.` };
+    // the next turn is open: acting for a pilot begins its player's turn, if they have not had one
+    if (
+      MISSION_OPS.has(op) &&
+      T.liveRounds(run) &&
+      T.playerCount(run) >= 2 &&
+      run.party.ready[T.ownerOf(run, cmd.hero)]
+    )
+      return { ok: false, why: `${T.ownerName(run, cmd.hero)} is ready: press Waiting to keep playing.` };
+    let began = false;
+    if (MISSION_OPS.has(op) && turn == null && turnsApply(run)) {
+      const s = T.ownerOf(run, cmd.hero);
+      if (!T.seatsToPlay(run).includes(s))
+        return { ok: false, why: `${run.party.players[s].name} has had a turn this round.` };
+      run.party.active = s;
+      began = true;
+    }
     const h = MISSION_OPS.has(op) ? m.heroes[cmd.hero] : run.heroes[cmd.hero];
     if (!h) return { ok: false, why: 'no such hero' };
     if (MISSION_OPS.has(op) && cmd.ctx == null) cmd.ctx = {};
     const r = f(run, m, h, cmd) || { ok: false };
+    if (began && !r.ok) run.party.active = null; // nothing done: the turn is not begun
     return Object.assign({}, r, { ctx: cmd.ctx });
   };
 

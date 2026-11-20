@@ -308,6 +308,8 @@
   T.foeHp = (hp) => Math.round((hp * (R().FOE_HP || 100)) / 100);
   T.spawnEnemy = function (m, type, tier, pos) {
     const e = makeEnemy(type, tier, pos);
+    // a bigger or more seasoned squad meets tougher foes (T.scaleFor): m.foeHp is that, in percent
+    if (m.foeHp && m.foeHp !== 100) e.hp = e.maxHp = Math.round((e.maxHp * m.foeHp) / 100);
     e.uid = nextUid(m);
     m.enemies.push(e);
     return e;
@@ -395,6 +397,7 @@
       eliteKind: spec.eliteKind || null,
       spawnedCount: 0,
     };
+    if (spec.foeHp && spec.foeHp !== 100) m.foeHp = spec.foeHp; // only when it scales: a two-pilot save is unchanged
     m.heroes.forEach((h) => (h.uid = nextUid(m)));
     spec.enemies.forEach((en) => T.spawnEnemy(m, en.type, tier, en.node));
     m.heroes.forEach((h, i) => {
@@ -478,6 +481,16 @@
     // which dice were rolled, and where they were banked, so the screen can roll them (feel.js)
     fx(m, { t: 'roll', hero: h.uid, faces: out, kinds, at });
     return out;
+  };
+  /**
+   * Roll the next round's dice now, at the end of this pilot's player's turn (2.81; Garrett, 2026-11-20), so
+   * the player can plan them while the others play. They are banked at once and the round's start rolls no
+   * more for this pilot (h.rolledAhead, cleared as the round begins). Only when players take turns.
+   */
+  T.rollAhead = function (m, h) {
+    if (!h || h.downed || h.rolledAhead) return;
+    T.rollDice(m, h);
+    h.rolledAhead = true;
   };
   T.apValue = (h) => h.held.concat(h.temp).reduce((s, f) => s + (f === 'AP' ? 1 : f === 'AP2' ? 2 : 0), 0);
   T.elCount = (h, kind) => h.held.concat(h.temp).filter((f) => f === kind).length;
@@ -675,7 +688,39 @@
   T.liveEnemies = (m) => m.enemies.filter((e) => e.alive);
   T.liveHeroes = (m) => m.heroes.filter((h) => !h.downed);
   T.foesFor = (m, actor) => (actor.kind === 'hero' ? T.liveEnemies(m) : T.liveHeroes(m).concat(m.decoys));
-  T.allyOf = (m, h) => m.heroes.find((x) => x !== h);
+  /**
+   * "Your ally": with two pilots, the other one. With more, the nearest ally standing (the first in squad order
+   * on a tie), or if none stands, the nearest one down, so a face that reaches "your ally" reaches the
+   * one a player at the table would point to.
+   */
+  const byNearness = (m, h, list) =>
+    list
+      .map((x, k) => ({ x, d: B.dist(m.board, h.pos, x.pos), k }))
+      .sort((a, b) => a.d - b.d || a.k - b.k)
+      .map((o) => o.x);
+  T.allyOf = function (m, h) {
+    const others = m.heroes.filter((x) => x !== h);
+    if (others.length < 2) return others[0];
+    return (
+      byNearness(
+        m,
+        h,
+        others.filter((x) => !x.downed),
+      )[0] || byNearness(m, h, others)[0]
+    );
+  };
+  /** The ally a Rally or a revive reaches: with two pilots the other one; with more, the nearest one down. */
+  T.downedAllyOf = function (m, h) {
+    const others = m.heroes.filter((x) => x !== h);
+    if (others.length < 2) return others[0];
+    return (
+      byNearness(
+        m,
+        h,
+        others.filter((x) => x.downed),
+      )[0] || T.allyOf(m, h)
+    );
+  };
 
   /* ───────────────────────────── DAMAGE PIPELINE ───────────────────────────── */
   // opts: {kind:'melee'|'los'|'area'|'true'|'any', pierce, trueDmg, ambush, source, label, noReveal, strike}
@@ -1851,7 +1896,7 @@
         break;
       }
       case 'revive': {
-        const t = ally;
+        const t = isHero ? T.downedAllyOf(m, actor) : ally;
         if (!t || !t.downed) break;
         if (f.adjacent && !B.adjacent(bd, actor.pos, t.pos)) {
           say(m, 'No downed ally adjacent.', 'sys');
@@ -2220,7 +2265,7 @@
     return { ok: true };
   };
   T.rally = function (m, h) {
-    const ally = T.allyOf(m, h);
+    const ally = T.downedAllyOf(m, h);
     if (!ally || !ally.downed) return { ok: false, why: 'no downed ally' };
     if (!B.adjacent(m.board, h.pos, ally.pos)) return { ok: false, why: 'not adjacent' };
     if (T.apValue(h) < R().RALLY_AP) return { ok: false, why: 'need 2 AP' };
@@ -2323,6 +2368,7 @@
       T.sightAround(m, h);
       T.heroTurnStart(m, h);
     }
+    for (const h of m.heroes) delete h.rolledAhead;
     m.fx.push({ t: 'round', round: m.round });
   };
   function spawnWave(m) {
@@ -2366,7 +2412,7 @@
       }
     }
     if (h.states.Hover && !h.states.Hover.noAp) T.mint(h, 'AP', 1);
-    T.rollDice(m, h);
+    if (!h.rolledAhead) T.rollDice(m, h);
     // zones hide heroes
     for (const z of m.zones)
       if (z.hideHeroes && B.dist(m.board, z.node, h.pos, true) <= z.radius) setHidden(m, h, 1, false);

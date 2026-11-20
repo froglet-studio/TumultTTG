@@ -27,3 +27,35 @@
 .net-lobby .row {
   justify-content: center;
 }
+/* the list of games on the title (2.80) */
+.title .net-games {
+  flex-basis: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 6px 0;
+  text-align: left;
+}
+.net-game {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--line2);
+  border-radius: 8px;
+  background: #0b1222;
+}
+.net-game-who {
+  flex: 1;
+  min-width: 0;
+}
+.net-game.quiet {
+  opacity: 0.6;
+}
+.net-quiet summary {
+  cursor: pointer;
+  margin: 2px 0 4px;
+}
+.net-quiet .net-game {
+  margin-bottom: 4px;
+}

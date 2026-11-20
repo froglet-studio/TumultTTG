@@ -78,7 +78,7 @@
         if (chk.ok)
           for (const r of resolutions(chk.tg, b)) out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
       }
-      const ally = T.allyOf(m, h);
+      const ally = T.downedAllyOf(m, h);
       if (ally && ally.downed && ap >= R().RALLY_AP && B.adjacent(m.board, h.pos, ally.pos))
         out.push({ t: 'rally', hero });
       h.gear.forEach((g, gear) =>
