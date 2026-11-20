@@ -59,3 +59,37 @@
 .net-quiet .net-game {
   margin-bottom: 4px;
 }
+/* the table's choices in the lobby, and the strip that says a player has dropped (2.84) */
+.net-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  margin: 10px 0;
+}
+.net-seg {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.net-away {
+  position: fixed;
+  left: 50%;
+  top: 12px;
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: min(640px, calc(100vw - 32px));
+}
+.net-away-row {
+  background: rgba(10, 20, 36, 0.94);
+  border: 1px solid var(--line2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}

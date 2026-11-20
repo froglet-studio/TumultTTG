@@ -8,7 +8,7 @@
 - **Online play on Tumult's own server.** A Cloudflare Worker (`server/`, `docs/reference/BACKEND.md`) replaces claude.ai's page storage for the web version: a live room per game code (a Durable Object; up to five players; the room keeps the latest state, so a reload or a returning host catches up), a Lobby of who is online, and a store for shared pilots, canon notes and cloud saves, with pilots and notes checked by the game's own rules on the server. Hosting needs an account; a guest joins with the host's invite link. The online screens are now in the web version; the offline file still has none. Rules unchanged.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
-## 2.84.0 — 2026-11-20 — the mission HUD, the draft and the route, as designed
+## 2.86.0 — 2026-11-21 — the mission HUD, the draft and the route, as designed
 
 From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
 
@@ -21,13 +21,37 @@ From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
 - **The draft** keeps today's cards and flow in a frosted panel; the kit fills up along its foot as you pick, the next slot lit. The build screen says "Pilot n of N" for any squad.
 - **The route as a journey column (Route 3).** The Heart at the top with how many stops away it is, the legs to come as bands of their art, the next stops as big art cards, the stops passed below with how each went. The pilots stand in a column beside it. The chart of the whole route stays underneath, folded. A newcomer joining on the route gets a card saying who is bringing a pilot.
 
-## 2.83.0 — 2026-11-20 — a living sea, a calmer mission screen, and motion
+## 2.85.0 — 2026-11-21 — AI seats, dropped players, Short expeditions
+
+Shombith: host a table "offers Co-op/Versus, Short/Full length, and filling empty seats with AI", the waiting room says "AI fills it", and when someone drops an AI flies their pilot (the table only waited before). Versus is left out for now.
+
+- **AI fills empty seats.** In an online lobby the host chooses how many seats the AI fills (up to five). Each AI seat flies a pre-made pilot nobody else is flying, named "AI · Rosh", and plays it with the look-ahead player. A host alone can now set out with the AI. A person who joins later, even mid-mission, takes an AI seat over, pilot and all.
+- **When the AI plays.** AI pilots move once every person has had their turn (in rounds played all at once, once everyone else is done). Between missions they take the first trait offered that needs no exchange, the first boon, and spend their points.
+- **A player who drops.** A guest's screen says it is still here every few seconds. After 30 s of silence every screen shows that the player lost connection, with a one-minute countdown. Then an AI pilot holds the seat, plays it safe, and finishes a turn they had begun. The host can give the seat to the AI at once or wait for them. Reloading the page puts the player back in their seat.
+- **Short or Full.** The host chooses the expedition's length: Full is the seven-stop route as before; Short has five stops: openers, three tier-2 stops, then the Heart. With fewer missions to grow on it is harder at the Heart (80 runs: the look-ahead player wins 35 Short against 50 Full, the heuristic 10 against 12).
+- **Saves** are version 19: the run keeps its length and each seat whether the AI plays it. A 2.83 save is a Full expedition with people in every seat (fixture `save-2.83.json`).
+- **Tools.** `node tools/sim.js 80 runs --length short` plays Short expeditions.
+
+## 2.84.0 — 2026-11-20 — after a mission and the end of an expedition
+
+The finalised Frogma boards for rows 8 and 9 (after a mission, the end of an expedition), desktop and phone. No rule changes: every button sends the command the old screens sent.
+
+- **Victory and rewards on one screen.** The place's painting behind a gold VICTORY; the objectives and the squad's vitality on the left; on the right each pilot's reward behind a tab of their own (a dot until they have chosen, a tick after). Tap a trait to read both its faces, then Take it, or Skip for 2 ◇; after an elite, the boons sit underneath. Onward waits until every pilot has chosen and says how many have.
+- **The full kit's exchange.** A trait offered to a full kit opens its own view: the trait coming in, the nine held (the ones the bloodline rule keeps are dimmed and say why), the one going out marked, and the points that come back and each bloodline's count before Swap.
+- **Grow one card.** The Train sheet becomes the upgrade view: the kit down the side, the chosen card large with sparks rising, its two faces as buttons (Awaken for a sleeping one), the face's words before and after side by side, Grow it, a burst of light when it grows, and a way to take a point back. Other pilots and Auto are a tap away. A pilot with points is offered it from the reward, the haven and a respec event.
+- **A loss the lifeline carries** is told in red over the greyed painting: what happened, the hearts left, the squad, and Onward.
+- **The haven** sits beside its painting: Rest, Trade, Train and Listen as four cards, the squad, then the stalls (gear and supplies, bought per pilot). **Events** use the same layout: the story, the choices as cards with their price, the result in a quote bar.
+- **The end of an expedition** has three tabs. _The end_: THE HEART with the squad's portraits and the route played as painted tiles, or _The expedition ends here_ over the greyed art with what carries over (pilots coming home, lines of story, places played, the best run so far). _Logbook_: the expedition as a page of a printed log, each stop with its painting and the last line written there, the passages between stops, Copy as text and Print (prints the page alone). _Numbers_: stops, rounds, foes destroyed and missions won, each pilot's damage dealt and taken, and the kits they finished with.
+- **Phones.** Everything stacks; offers and kits scroll sideways a card at a time; the call to act sits in a bar at the foot of the screen. These screens keep a dark wash over the painting whatever the sea, so the words read on the light Shore sea too, and their motion follows Look (Reduced stills the sparks, the shimmer and the slow pan).
+- **Code.** The screens moved out of `src/ui/core.js` into `src/ui/after.js` and `src/ui/after.css`. `test/after.test.js` drives them through the real interface.
+
+## 2.83.0 — 2026-11-21 — a living sea, a calmer mission screen, and motion
 
 Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, motion kit). No rule changes.
 
 - **The sea around the board.** Behind every screen the water moves: a deep gradient, slow glows, sea lines drifting across, light coming down and motes rising (`src/ui/sea.js`, `src/ui/sea.css`). The map art stays; only the blue around it changes. Four themes: **Deep Sea**, **Shore** (the light twin), **Glow** and **Storm**. By default the sea follows the expedition: Shore in the shallows, Deep Sea mid-route, Glow in the deep stops, Storm at the Heart, darker every stop. **Look** (the ☰ menu on a mission, the title, the strip at the top of other screens) pins a theme, picks an accent for the call to act (Tide, Jade, Ruby, Gold) and sets motion. Kept in `tumult_v2_look`.
 - **Motion: Full, Reduced or Off.** It follows the device's reduce-motion setting until the player picks one. Reduced keeps the sea slow and without motes and turns walks and hits into short fades, with no shake or tumbling dice; Off stops everything, and the log and forecast still say what happened. Every reduce-motion rule in the styles now follows this setting.
-- **A calmer mission screen.** Plan, Report, sound, help, Look and Title sit behind one ☰ menu. Gravity, weather and the hour fold into one "N conditions" chip, and the round joins the clock. The story box opens from ✎. The intents panel is headed *Enemy plans*, without the sentence. The ally is a compact pill. A card with nothing it can do now folds small; a face's reason it cannot be played waits in its tip. Four basic actions stay in view (Strike, Brace, Shove, Spot, and Interact or Rally when they can be used), the rest under *More actions*. The how-to line above the board shows in the first two missions only. A soft wash over the map art and a halo under each node let the board read on top of the painting.
+- **A calmer mission screen.** Plan, Report, sound, help, Look and Title sit behind one ☰ menu. Gravity, weather and the hour fold into one "N conditions" chip, and the round joins the clock. The story box opens from ✎. The intents panel is headed _Enemy plans_, without the sentence. The ally is a compact pill. A card with nothing it can do now folds small; a face's reason it cannot be played waits in its tip. Four basic actions stay in view (Strike, Brace, Shove, Spot, and Interact or Rally when they can be used), the rest under _More actions_. The how-to line above the board shows in the first two missions only. A soft wash over the map art and a halo under each node let the board read on top of the painting.
 - **The motion kit.** A pilot or foe walks its path node by node (0.25 s a step) instead of jumping; a shove or swap slides. A striker leans into the blow (the engine's damage effect now says who struck, `by`; no rule reads it), the target flashes and shakes, the number floats up. The forecast chip whose figure changed pulses. At a new round the cards on the track step one column toward Ready. A new screen slides in. The dice still tumble and land one after another.
 - **Tests.** `test/sea.test.js`: the sea by route depth, the Look panel and its storage, the calm screen's folds through the real interface, and a walk that ends where the engine put the pilot, or no walk at all with motion Off.
 
@@ -45,7 +69,7 @@ Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
 
 Garrett, from a playtest of Three Caches on Mast-Crop Hills: "it seemed like our abilities would allow us to go through guys 4 spaces away (hyperspeed), but the card said no spaces available."
 
-- **Exactly 4 means four steps.** Hyperspeed and Top Speed (cheetah) and Sky Dash and Sky Burst (hawk) run exactly 4. The engine used to offer only the spaces whose *shortest* way was 4, which is not what a player counts, and on a small, well-joined board there are few: on Mast-Crop Hills, from any space of the threshing floor (B2, C1, C2, D2, C3) everything is 3 or fewer away, so the card had nowhere to go even on an empty board. Now a run of exactly 4 is four steps, past foes and allies, never on the same space twice, ending on an empty space: count it on the board, as at the table (`T.reachableWalk`). Every space of every page off high ground now has somewhere to run (tested), and the highlighted spaces are the ones the card accepts.
+- **Exactly 4 means four steps.** Hyperspeed and Top Speed (cheetah) and Sky Dash and Sky Burst (hawk) run exactly 4. The engine used to offer only the spaces whose _shortest_ way was 4, which is not what a player counts, and on a small, well-joined board there are few: on Mast-Crop Hills, from any space of the threshing floor (B2, C1, C2, D2, C3) everything is 3 or fewer away, so the card had nowhere to go even on an empty board. Now a run of exactly 4 is four steps, past foes and allies, never on the same space twice, ending on an empty space: count it on the board, as at the table (`T.reachableWalk`). Every space of every page off high ground now has somewhere to run (tested), and the highlighted spaces are the ones the card accepts.
 - **Balance.** `node tools/sim.js 40` is unchanged to the digit (no pre-made squad in the simulator carries either card). No save change.
 
 ## 2.81.0 — 2026-11-20 — take turns in any order, or play all at once
@@ -87,6 +111,7 @@ Garrett: "is there a way the two players mid game could save their game, we upda
 - **Catching up.** A late pilot gets spare upgrade points to match the least-grown pilot already flying (`T.joinPilot`), and its player's purse starts as full as the emptiest. It keeps the level it came with; the next mission scales for the bigger squad.
 - **Updating a live game.** An online game from 2.74 to 2.77 resumes on this version: the host picks "Rejoin game" and the guests follow (checked by loading a 2.74 save mid-mission and playing it out). No save change: a party simply has more players and pilots.
 - **Balance.** No change for any squad that does not take a newcomer: `node tools/sim.js 40` is byte-identical to 2.78.
+
 ## 2.78.0 — 2026-11-20 — made pilots on Froglet's character sheet
 
 Garrett: "Whenever a player creates or updates a character, add or update their row in the Google Sheet … Leave the Pilot columns alone."

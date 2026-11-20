@@ -276,7 +276,7 @@ test(
       const third = await boot(html, (w) => w.localStorage.setItem(RUN, after));
       third.act('continueRun');
       assert.equal(third.U.screen, 'reward');
-      assert.match(third.d.getElementById('app').textContent, /\d+ rounds, \d+ foes destroyed|the Lifeline holds once/);
+      assert.match(third.d.getElementById('app').textContent, /won in round \d+|the lifeline holds/i);
       assert.deepEqual(third.errors, []);
     }
     assert.deepEqual([...first.errors, ...second.errors], []);
