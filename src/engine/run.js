@@ -145,8 +145,14 @@
     const b = boundOf(h, cardId);
     return b ? b[0] - b[1] : 0;
   };
+  /**
+   * A trait leaves the kit (an exchange, a molt or a trade): every upgrade point on it comes back to spend
+   * again, and so do the points a second copy bound to it, spent or not (Garrett, 2026-11-20: "when players
+   * lose a card they should get their points refunded"). With the card gone, they are free points.
+   */
   T.removeCard = function (h, cardId) {
-    h.upUnspent += freeSpent(h, cardId);
+    const b = boundOf(h, cardId);
+    h.upUnspent += freeSpent(h, cardId) + (b ? b[0] : 0);
     h.cards = h.cards.filter((c) => c !== cardId);
     delete h.up[cardId];
     if (h.bound) delete h.bound[cardId];

@@ -106,7 +106,7 @@ test('taken twice, a trait with points already on it still gains every bound poi
   assert.equal(h.upUnspent, 2, 'a respec gives back the two free points');
   assert.equal(T.boundLeft(h, 'hum_tool'), R.DOUBLE_UP, 'and keeps the bound ones for the card');
   T.removeCard(h, 'hum_tool');
-  assert.equal(h.upUnspent, 2, 'dropping the card loses only what was bound to it');
+  assert.equal(h.upUnspent, 2 + R.DOUBLE_UP, 'a card that leaves gives back every point, bound ones too');
 });
 
 test('a 2.47 save keeps its bound points, counted as spent on the card the way 2.42 counted them', () => {
@@ -120,4 +120,18 @@ test('a 2.47 save keeps its bound points, counted as spent on the card the way 2
   assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run));
   H.playRun(run);
   assert.ok(run.over);
+});
+
+test('a trait lost to a molt or a trade gives back every point on it, bound ones too', () => {
+  const run = T.newRun(11);
+  const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
+  run.heroes = [h];
+  h.upUnspent = 3;
+  T.addCard(h, 'hum_tool'); // the second copy: a bound point
+  T.autoAllocate(h);
+  const before = h.upUnspent + h.cards.reduce((s, c) => s + h.up[c][0] + h.up[c][1], 0) + T.boundLeft(h, 'hum_tool');
+  T.tradeCard(run, 0, 'hum_tool');
+  const after = h.upUnspent + h.cards.reduce((s, c) => s + h.up[c][0] + h.up[c][1], 0);
+  assert.ok(!h.cards.includes('hum_tool') || h.up.hum_tool.every((x) => x === 0));
+  assert.equal(after, before, 'no point is lost with the card');
 });
