@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.73.1 — 2026-11-20 — online: a partner's turn no longer resets
+
+A playtest was halted because the partner's (guest's) turn kept snapping back while the host's screen was fine.
+
+- **The cause.** A guest plays each command on its own screen at once and sends it to the host. If the host's screen had not carried it out within 15 seconds, the guest dropped it and its screen fell back to the host's state, so the turn reset. The store's live delivery to the host can lag or stop (the live game in the halted playtest still holds two of the guest's commands the host never heard), so a slow turn was a lost turn.
+- **The fix: a reliable, ordered channel.** Each guest numbers its commands; the host carries out number n only after n − 1 and writes the last one it carried out for each seat with the state. A guest keeps every command until it is acknowledged, plays it again on top of each state the host writes, and writes it again every 3 seconds meanwhile. The host reads the commands live and every 2.5 seconds, opens a new live view if one dies, and writes a state again if a write fails. A guest whose commands wait reads the state itself, and after 8 seconds is told it is waiting for the host's screen. A command is sent as it was made, not as the guest's own play filled it in.
+- **Tests.** Two new online tests run a store whose live delivery to the host stops, and one whose writes fail; both failed before the fix.
+
 ## 2.73.0 — 2026-11-19 — a balance and utility pass: no keys, no chains, everything grows
 
 Garrett's ask: nothing categorically better than anything else, everything useful from the first mission to the Heart, and combos that feel cinematic because of their depth, not because one card is the key to a lock.

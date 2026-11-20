@@ -19,12 +19,19 @@ try {
 const skip = hasJsdom ? false : 'jsdom is not installed (run `npm install`)';
 const { until } = require('../tools/ui-drive');
 
-/** A stand-in for the db capability: documents at paths, live listeners, leases. */
-function fakeDb() {
+/**
+ * A stand-in for the db capability: documents at paths, live listeners, leases. `opt` makes it
+ * behave like the real store on a bad day: `lag` (ms) delays every live delivery, `deaf(path)` says
+ * whether live delivery to listeners at that path has stopped, and `failWrite(path)` whether a write
+ * there is refused as unavailable (once per call to it that says so).
+ */
+function fakeDb(opt = {}) {
   const store = new Map(); // path → JSON text
   const docSubs = new Map(); // path → Set(fn)
   const colSubs = []; // { path, fn, seen: Map(id → text), order }
-  const later = (f) => setTimeout(f, 1);
+  const later = (f) => setTimeout(f, opt.lag || 1);
+  const deaf = (p) => !!(opt.deaf && opt.deaf(p));
+  const unavailable = () => Promise.reject({ code: 'unavailable', message: 'the store did not answer' });
   const parent = (p) => p.split('/').slice(0, -1).join('/');
   const snap = (p) => {
     const t = store.get(p);
@@ -38,8 +45,8 @@ function fakeDb() {
   };
   function notify(p) {
     later(() => {
-      for (const fn of docSubs.get(p) || []) fn(snap(p));
-      for (const s of colSubs) if (s.path === parent(p)) fire(s);
+      if (!deaf(p)) for (const fn of docSubs.get(p) || []) fn(snap(p));
+      for (const s of colSubs) if (s.path === parent(p) && !deaf(s.path)) fire(s);
     });
   }
   function fire(s) {
@@ -56,7 +63,8 @@ function fakeDb() {
     if (s.order) changes.sort((a, b) => (a.doc.data() || {})[s.order] - (b.doc.data() || {})[s.order]);
     if (changes.length || s.first) {
       s.first = false;
-      s.fn({ docs: changes.map((c) => c.doc), size: ids.length, empty: !ids.length, docChanges: () => changes });
+      const docs = ids.map((id) => snap(s.path + '/' + id));
+      s.fn({ docs, size: ids.length, empty: !ids.length, docChanges: () => changes });
     }
   }
   const leases = new Map();
@@ -66,6 +74,7 @@ function fakeDb() {
       path: p,
       get: async () => snap(p),
       set: async (d) => {
+        if (opt.failWrite && opt.failWrite(p)) return unavailable();
         store.set(p, JSON.stringify(d));
         notify(p);
       },
@@ -97,6 +106,10 @@ function fakeDb() {
       path: p,
       doc: (id) => doc(p + '/' + id),
       orderBy: (f) => col(p, f),
+      get: async () => {
+        const ids = [...store.keys()].filter((k) => parent(k) === p);
+        return { docs: ids.map(snap), size: ids.length, empty: !ids.length };
+      },
       onSnapshot: (fn) => {
         const s = { path: p, fn, seen: new Map(), order, first: true };
         colSubs.push(s);
@@ -107,6 +120,9 @@ function fakeDb() {
   }
   return { doc, collection: col, store };
 }
+
+const windows = [];
+test.after(() => windows.forEach((w) => w.close())); // their timers would keep the run alive
 
 async function open(html, db) {
   const { JSDOM } = require('jsdom');
@@ -123,6 +139,7 @@ async function open(html, db) {
     },
   });
   const w = dom.window;
+  windows.push(w);
   const d = w.document;
   await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
   await until(() => w.T.UI.net.available, 'the store');
@@ -226,3 +243,103 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
   assert.equal(B.T.serializeRun(B.U.run), A.T.serializeRun(A.U.run), 'both screens hold the same game');
   assert.deepEqual(A.errors.concat(B.errors), []);
 });
+
+/** Host and guest in the first mission, on the guest's turn. */
+async function toGuestTurn(db) {
+  const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const html = build({ playtest: true }).html;
+  const A = await open(html, db);
+  const B = await open(html, db);
+  A.type('netName', 'Ana');
+  A.act('netHost');
+  await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+  B.type('netName', 'Bo');
+  B.type('netCode', A.U.net.code);
+  B.act('netJoin');
+  await until(() => A.U.net.names[1] === 'Bo', 'the host to see the guest');
+  A.act('netStart');
+  A.U.run.seed = SEED;
+  A.U.run.rngs = {};
+  A.U.net.publish();
+  await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
+  A.act('prebuilt', 'cavitt');
+  A.act('confirmHero');
+  B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
+  B.act('confirmHero');
+  await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);
+  const node = A.U.run.available.find((id) => !['haven', 'event'].includes(A.U.run.map.all[id].type));
+  A.act('goNode', node);
+  await until(() => B.U.screen === 'mission', "the guest's mission", 10000);
+  A.act('endRound');
+  if (A.U.ms.endConfirm) A.act('endRound');
+  await until(() => B.U.run.party.ready[0], "the guest's turn", 10000);
+  return { A, B };
+}
+
+/** Every walk the guest's pilot can take from where it stands, one node at a time. */
+function steps(B, n) {
+  const m = B.U.run.mission;
+  const h = m.heroes[1];
+  return B.T.reachableWalk(m, h, B.T.apValue(h), false).slice(0, n);
+}
+
+test(
+  'online: a guest move the live delivery never brings is not lost or undone',
+  { skip, timeout: 60_000 },
+  async () => {
+    let deafCmds = false;
+    const db = fakeDb({ lag: 40, deaf: (p) => deafCmds && /\/cmds$/.test(p) });
+    const { A, B } = await toGuestTurn(db);
+    const mA = () => A.U.run.mission;
+    const mB = () => B.U.run.mission;
+    // the host's live view of the commands stops, as it did in the halted playtest
+    deafCmds = true;
+    const [to] = steps(B, 1);
+    assert.ok(to != null, 'the guest has somewhere to walk');
+    B.U.exec({ op: 'walk', hero: 1, node: to });
+    assert.equal(mB().heroes[1].pos, to, 'the guest moves at once');
+    // meanwhile the host writes a state that has not reached the walk (here: a name changes)
+    A.U.net.names[1] = 'Bo.';
+    A.U.net.publish();
+    await new Promise((r) => setTimeout(r, 300));
+    assert.equal(mB().heroes[1].pos, to, 'a state without the walk does not undo it');
+    // the host's look at the commands, every few seconds, finds it
+    await until(() => mA().heroes[1].pos === to, 'the host to carry out the walk', 8000);
+    await until(() => B.U.net.rev === A.U.net.rev, "the host's state on the guest's screen");
+    assert.equal(mB().heroes[1].pos, to, 'the walk stands on both screens');
+    assert.equal(B.T.serializeRun(B.U.run), A.T.serializeRun(A.U.run), 'both screens hold the same game');
+    assert.deepEqual(A.errors.concat(B.errors), []);
+  },
+);
+
+test(
+  'online: a command whose write fails is sent again, and commands are carried out in order',
+  { skip, timeout: 60_000 },
+  async () => {
+    let failNext = 0;
+    const db = fakeDb({
+      lag: 20,
+      failWrite: (p) => /\/cmds\//.test(p) && failNext > 0 && failNext-- > 0,
+    });
+    const { A, B } = await toGuestTurn(db);
+    const mA = () => A.U.run.mission;
+    const mB = () => B.U.run.mission;
+    const start = mB().heroes[1].pos;
+    // the first walk's write is refused; the second goes through at once and must wait for it
+    failNext = 1;
+    const [a] = steps(B, 1);
+    B.U.exec({ op: 'walk', hero: 1, node: a });
+    const back = B.T.reachableWalk(mB(), mB().heroes[1], B.T.apValue(mB().heroes[1]), false).find(
+      (n) => n !== a && n !== start,
+    );
+    assert.ok(back != null, 'somewhere to walk on to');
+    B.U.exec({ op: 'walk', hero: 1, node: back });
+    assert.equal(mB().heroes[1].pos, back);
+    await new Promise((r) => setTimeout(r, 400));
+    assert.equal(mA().heroes[1].pos, start, 'the second walk waits for the first');
+    await until(() => mA().heroes[1].pos === back, 'both walks, in order, on the host', 10000);
+    await until(() => B.U.net.rev === A.U.net.rev, "the host's state on the guest's screen");
+    assert.equal(B.T.serializeRun(B.U.run), A.T.serializeRun(A.U.run), 'both screens hold the same game');
+    assert.deepEqual(A.errors.concat(B.errors), []);
+  },
+);

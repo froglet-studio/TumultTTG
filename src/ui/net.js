@@ -11,9 +11,17 @@
    joins late, or reloads, is caught up by the next state.
 
    Store layout, under games/<CODE>:
-     games/<CODE>               { rev, run (a save, T.serializeRun), fx, results, host, names, at }
+     games/<CODE>               { rev, run (a save, T.serializeRun), fx, results, acks, host, names, at }
      games/<CODE>/seats/<n>     { name, holder }       a guest's claim on seat n
-     games/<CODE>/cmds/<id>     { cmd, seats, at }     a guest's command, deleted once carried out
+     games/<CODE>/cmds/<n>-<seq> { cmd, seat, seq, holder, at }   a guest's command, deleted once carried out
+
+   Commands are a reliable, ordered channel (2.74; the pattern of client prediction and server
+   reconciliation that networked action games use). Each guest numbers its commands 1, 2, 3…; the host
+   carries out seq n only after n-1, and writes the last one it carried out for each seat in `acks`. A
+   guest keeps every command the host has not acknowledged, plays it again on top of each state the host
+   writes, and sends it again until it is acknowledged. Nothing is dropped for being slow: the store's
+   live delivery can lag or stop (a hidden tab, a dropped stream), so the host also reads the commands
+   every few seconds, and a guest reads the state when its own commands wait too long.
    ========================================================================== */
 (function (T) {
   const U = T.UI;
@@ -73,29 +81,93 @@
   /* ───────────── the host ───────────── */
   let lastWritten = null;
   let writing = Promise.resolve();
-  const results = {}; // command id → { ok, why, ctx }, the latest few
+  const results = {}; // "<seat>-<seq>" → { ok, why, ctx }, the latest few
+  const acks = {}; // seat → the last seq carried out
+  const holders = {}; // seat → the screen (tab) that holds it now
   /** Write the state if it changed. One write at a time; a burst coalesces into the last one. */
   N.publish = function () {
     if (N.role !== 'host' || !U.run) return;
     const run = T.serializeRun(U.run);
     const fx = U.run.mission ? U.run.mission.fx : [];
-    const body = JSON.stringify([run, fx.length, N.names, Object.keys(results).length]);
+    const body = JSON.stringify([run, fx.length, N.names, results, acks]);
     if (body === lastWritten) return;
     lastWritten = body;
-    N.rev++;
+    // a revision only grows, even across a reload of the host's page
+    N.rev = Math.max(N.rev + 1, Date.now());
     const doc = {
       rev: N.rev,
       run,
       fx: JSON.stringify(fx),
       results: JSON.stringify(results),
+      acks: Object.assign({}, acks),
       host: tab,
       names: N.names.slice(),
       at: Date.now(),
     };
     writing = writing
       .then(() => gameDoc().set(doc))
-      .catch((e) => U.toast('Could not reach the other player: ' + esc((e && e.code) || e)));
+      .catch((e) => {
+        lastWritten = null; // write it again with the next change, or the next look at the commands
+        U.toast('Could not reach the other player: ' + esc((e && e.code) || e));
+      });
   };
+
+  /**
+   * Carry out the guests' commands found in the store, each seat's in order. A command already carried
+   * out is only tidied away; one that skips ahead waits for the one before it, which is on its way.
+   */
+  const tidying = new Set();
+  const tidy = (id) => {
+    if (tidying.has(id)) return;
+    tidying.add(id);
+    db.doc(`games/${N.code}/cmds/${id}`)
+      .delete()
+      .catch(() => {})
+      .then(() => setTimeout(() => tidying.delete(id), 30000));
+  };
+  N.drain = function (docs) {
+    if (N.role !== 'host') return;
+    const list = docs
+      .map((d) => ({ id: d.id, data: d.exists === false ? null : d.data && d.data() }))
+      .filter((d) => d.data && d.data.cmd && Number.isInteger(d.data.seq) && Number.isInteger(d.data.seat))
+      .sort((a, b) => a.data.seat - b.data.seat || a.data.seq - b.data.seq);
+    for (const { id, data } of list) {
+      const seat = data.seat;
+      if (seat < 1 || seat >= N.names.length) continue;
+      if (holders[seat] && data.holder && data.holder !== holders[seat]) {
+        tidy(id); // from a screen that has since given up the seat
+        continue;
+      }
+      const last = acks[seat] || 0;
+      if (data.seq <= last) tidy(id);
+      else if (data.seq === last + 1) {
+        acks[seat] = data.seq;
+        N.carryOut(seat + '-' + data.seq, data.cmd, [seat]);
+        tidy(id);
+      }
+    }
+  };
+  let pollTimer = null;
+  const POLL_MS = 2500;
+  const poll = () => {
+    if (N.role !== 'host' || !N.code) return;
+    const q = db.collection(`games/${N.code}/cmds`);
+    if (typeof q.get === 'function')
+      q.get()
+        .then((snap) => N.drain(snap.docs || []))
+        .catch(() => {});
+    // a write that failed is tried again here, once the store answers
+    if (lastWritten === null) N.publish();
+  };
+  const watchCmds = () => {
+    unsubs.push(
+      db.collection(`games/${N.code}/cmds`).onSnapshot(
+        (snap) => N.drain(snap.docs || []),
+        () => N.role === 'host' && setTimeout(watchCmds, 1000), // the listener died: open a new one
+      ),
+    );
+  };
+  const onVisible = () => document.visibilityState === 'visible' && poll();
 
   N.host = async function (name) {
     if (!db) return;
@@ -112,7 +184,7 @@
     N.status = 'Waiting for player 2…';
     U.render();
     try {
-      await gameDoc().set({ rev: 0, run: null, host: tab, names: N.names, at: Date.now() });
+      await gameDoc().set({ rev: 0, run: null, acks: {}, host: tab, names: N.names, at: Date.now() });
     } catch (e) {
       U.toast(why(e), 9000);
       N.leave();
@@ -123,26 +195,17 @@
       db.doc(`games/${N.code}/seats/1`).onSnapshot((snap) => {
         const d = snap.exists ? snap.data() : null;
         N.names[1] = d ? String(d.name || 'Player 2').slice(0, 24) : '';
+        holders[1] = d && d.holder ? String(d.holder) : null;
         if (U.run && U.run.party && U.run.party.players[1]) U.run.party.players[1].name = N.names[1] || 'Player 2';
         N.status = N.names[1] ? `${N.names[1]} is here.` : 'Waiting for player 2…';
         if (U.screen === 'lobby') U.render();
         N.publish();
       }),
     );
-    // guests' commands, oldest first
-    unsubs.push(
-      db
-        .collection(`games/${N.code}/cmds`)
-        .orderBy('at')
-        .onSnapshot((snap) => {
-          snap.docChanges().forEach((ch) => {
-            if (ch.type !== 'added') return;
-            const d = ch.doc.data() || {};
-            ch.doc.ref ? ch.doc.ref.delete() : db.doc(`games/${N.code}/cmds/${ch.doc.id}`).delete();
-            N.carryOut(ch.doc.id, d.cmd, [1]);
-          });
-        }),
-    );
+    // guests' commands: live, and read again every few seconds in case the live delivery lags
+    watchCmds();
+    pollTimer = setInterval(poll, POLL_MS);
+    document.addEventListener('visibilitychange', onVisible);
   };
   /** Carry out a guest's command on this (the host's) screen, then tell everyone. */
   N.carryOut = function (id, cmd, seats) {
@@ -150,7 +213,7 @@
     done.add(id);
     cmd = JSON.parse(JSON.stringify(cmd)); // plain data of this page's own, whatever the store hands over
     const r = T.execCommand(U.run, cmd, seats);
-    results[id] = { ok: !!r.ok, why: r.why || '', ctx: r.ctx || null };
+    results[id] = { ok: !!r.ok, why: r.why || '' };
     const keys = Object.keys(results);
     if (keys.length > 12) delete results[keys[0]];
     N.afterChange();
@@ -186,31 +249,70 @@
   });
 
   /* ───────────── a guest ───────────── */
-  const sent = new Map(); // command id → the hero it was for
   /**
-   * This screen's commands the host has not carried out yet. A guest plays each command on its own copy
-   * at once, so the click answers without waiting for the round trip: the engine is deterministic, so the
-   * host works out the same thing. The host's state still wins. Each state it writes is taken as it comes,
-   * and the commands it has not reached yet are played again on top.
+   * This screen's commands the host has not carried out yet, in order. A guest plays each command on its
+   * own copy at once, so the click answers without waiting for the round trip: the engine is
+   * deterministic, so the host works out the same thing. The host's state still wins. Each state it
+   * writes is taken as it comes, and the commands it has not acknowledged yet are played again on top.
+   * A command stays until the host acknowledges it, however long that takes; it is sent again meanwhile.
    */
-  let pending = [];
-  const PENDING_MS = 15000; // a command the host never answers stops being shown after this
+  let pending = []; // { seq, cmd, at, sentAt }
+  let seq = 0; // the last command this screen numbered
+  const RESEND_MS = 3000; // a command not acknowledged by then is written again (same id: harmless)
+  const STALL_MS = 8000; // past this, say that the host's screen is not answering
+  const cmdId = (n) => `${N.seat}-${String(n).padStart(9, '0')}`;
+  const write = (p) => {
+    p.sentAt = Date.now();
+    return db
+      .doc(`games/${N.code}/cmds/${cmdId(p.seq)}`)
+      .set({ cmd: p.cmd, seat: N.seat, seq: p.seq, holder: tab, at: p.at });
+  };
   N.send = function (cmd) {
+    // what goes over the wire is the command as made; the local play below fills in its ctx
+    const wire = JSON.parse(JSON.stringify(cmd));
     cmd = JSON.parse(JSON.stringify(cmd));
     // a drafted pilot is not played ahead: the map opens on the host's word, once both are in
     const ahead = U.run && cmd.op !== 'addHero';
     const r = ahead ? T.execCommand(U.run, cmd, U.seats) : { ok: true, ctx: {} };
     if (r && r.ok === false) return r; // refused here: the host would refuse it too, so say why now
-    const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-    sent.set(id, cmd.hero);
-    if (ahead) pending.push({ id, cmd, at: Date.now() });
-    db.doc(`games/${N.code}/cmds/${id}`)
-      .set({ cmd, seats: U.seats, at: Date.now() })
-      .catch((e) => {
-        pending = pending.filter((p) => p.id !== id);
+    const p = { seq: ++seq, cmd: wire, at: Date.now(), ahead };
+    pending.push(p);
+    write(p).catch((e) => {
+      if (/denied|grant|permission|not_writer|forbidden|unauth/i.test(String((e && (e.code || e.message)) || e))) {
+        pending = pending.filter((x) => x !== p);
         U.toast(why(e), 6000);
-      });
+      } // anything else is tried again by the resend
+    });
     return Object.assign({ sent: true }, r, { ok: true, ctx: (r && r.ctx) || {} });
+  };
+  let guestTimer = null;
+  let stallSaid = 0;
+  const guestTick = () => {
+    if (N.role !== 'guest' || !pending.length) {
+      N.stalled = false;
+      return;
+    }
+    const now = Date.now();
+    for (const p of pending) if (now - p.sentAt >= RESEND_MS) write(p).catch(() => {});
+    // the live state may be lagging: read it
+    if (now - pending[0].at >= RESEND_MS)
+      gameDoc()
+        .get()
+        .then((s) => s.exists && N.receive(s.data()))
+        .catch(() => {});
+    N.stalled = now - pending[0].at >= STALL_MS;
+    if (N.stalled && now - stallSaid > 15000) {
+      stallSaid = now;
+      U.toast(`Waiting for ${esc(N.names[0] || 'the host')}'s screen… Tumult must stay open there.`, 4000);
+    }
+  };
+  const watchGame = () => {
+    unsubs.push(
+      gameDoc().onSnapshot(
+        (s) => s.exists && N.receive(s.data()),
+        () => N.role === 'guest' && setTimeout(watchGame, 1000),
+      ),
+    );
   };
 
   N.join = async function (code, name) {
@@ -245,6 +347,8 @@
         return;
       }
       await seatDoc.set({ name: name || 'Player 2', holder: tab });
+      // carry on numbering from what the host has already carried out for this seat
+      seq = (snap.data().acks && +snap.data().acks[1]) || 0;
     } catch (e) {
       N.code = null;
       U.toast(why(e), 9000);
@@ -259,7 +363,8 @@
     N.realSave = N.realSave || T.saveRun;
     T.saveRun = () => true;
     U.render();
-    unsubs.push(gameDoc().onSnapshot((s) => s.exists && N.receive(s.data())));
+    watchGame();
+    guestTimer = setInterval(guestTick, 1000);
   };
 
   /** A guest takes in the state the host wrote. */
@@ -274,10 +379,21 @@
     const run = T.deserializeRun(d.run);
     if (run.mission) run.mission.fx = JSON.parse(d.fx || '[]');
     const res = JSON.parse(d.results || '{}');
+    const acked = (d.acks && +d.acks[N.seat]) || 0;
+    // what came of this screen's own commands: what followed from each was shown when it was played here,
+    // so only a refusal is news (the host's state had moved on); a pick it opened is closed again
+    let refused = false;
+    for (const p of pending) {
+      if (p.seq > acked) break;
+      const r = res[N.seat + '-' + p.seq];
+      if (r && !r.ok) {
+        refused = true;
+        if (r.why) U.toast(esc(r.why));
+      }
+    }
     // play again what this screen has done that the host has not reached yet
-    const now = Date.now();
-    pending = pending.filter((p) => !(p.id in res) && now - p.at < PENDING_MS);
-    for (const p of pending) T.execCommand(run, p.cmd, U.seats);
+    pending = pending.filter((p) => p.seq > acked);
+    for (const p of pending) if (p.ahead) T.execCommand(run, JSON.parse(JSON.stringify(p.cmd)), U.seats);
     U.run = run;
     // which screen: the run's phase decides, except the draft, which each player does on their own
     const sameMission =
@@ -297,16 +413,7 @@
       if (U.screen === 'mission') U.modal = null;
       U.screen = ['reward', 'haven', 'event', 'summary'].includes(run.phase) ? run.phase : 'map';
     }
-    // what came of this screen's own commands: what followed from each was shown when it was played here,
-    // so only a refusal is news (the host's state had moved on); a pick it opened is closed again
-    for (const [id, r] of Object.entries(res)) {
-      if (!sent.has(id)) continue;
-      sent.delete(id);
-      if (!r.ok) {
-        if (r.why) U.toast(esc(r.why));
-        if (U.screen === 'mission' && U.ms && U.ms.mode !== 'idle') U.ms.mode = 'idle';
-      }
-    }
+    if (refused && U.screen === 'mission' && U.ms && U.ms.mode !== 'idle') U.ms.mode = 'idle';
     // effects already shown are not shown again; if the host's state has fewer, start counting from there
     if (sameMission && U.ms && run.mission && run.mission.fx.length < U.ms.fxDone) U.ms.fxDone = run.mission.fx.length;
     if (sameMission) U.updateMission();
@@ -321,7 +428,13 @@
   N.leave = function () {
     stop();
     pending = [];
-    sent.clear();
+    seq = 0;
+    clearInterval(pollTimer);
+    clearInterval(guestTimer);
+    document.removeEventListener('visibilitychange', onVisible);
+    for (const o of [acks, holders, results]) for (const k of Object.keys(o)) delete o[k];
+    done.clear();
+    lastWritten = null;
     if (N.realSave) T.saveRun = N.realSave;
     Object.assign(N, { code: null, role: null, seat: null, rev: 0, status: '' });
     U.seats = null;
