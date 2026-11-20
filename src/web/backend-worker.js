@@ -226,14 +226,8 @@
         return call('PUT', '/api/doc/' + enc(path), { data });
       },
       delete: () => call('DELETE', '/api/doc/' + enc(path)),
-      // the store outside a live game is read when asked; a watcher hears it once
-      onSnapshot: (fn, err) => {
-        let on = true;
-        doc(path)
-          .get()
-          .then((s) => on && fn(s), err);
-        return () => (on = false);
-      },
+      // the store outside a live game has no live delivery: a watcher hears it now and every 20 s
+      onSnapshot: (fn, err) => polled(() => doc(path).get(), fn, err),
     };
   }
   function collection(path) {
@@ -250,13 +244,23 @@
     }
     return {
       get: () => call('GET', '/api/docs/' + enc(path)).then((r) => shape(r.docs)),
-      onSnapshot: (fn, err) => {
-        let on = true;
-        collection(path)
-          .get()
-          .then((s) => on && fn(s), err);
-        return () => (on = false);
-      },
+      onSnapshot: (fn, err) => polled(() => collection(path).get(), fn, err),
+    };
+  }
+  const POLL_MS = 20000;
+  function polled(read, fn, err) {
+    let on = true;
+    let timer = null;
+    const look = () =>
+      read().then(
+        (s) => on && fn(s),
+        (e) => on && err && err(e),
+      );
+    look();
+    timer = setInterval(() => on && look(), POLL_MS);
+    return () => {
+      on = false;
+      clearInterval(timer);
     };
   }
   const db = {
@@ -320,6 +324,10 @@
     id: async () => {
       const u = me();
       return (u && u.id) || null;
+    },
+    me: async () => {
+      const u = me();
+      return u ? { id: u.id, name: u.name || '' } : null;
     },
     // the server decides each write; the screens are not told in advance
     can: async () => null,

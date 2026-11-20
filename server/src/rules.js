@@ -58,7 +58,7 @@ function validHeroes(data) {
     const rec = T.validMade(r);
     if (rec && !seen.has(rec.id)) (seen.add(rec.id), kept.push(rec));
   }
-  return { list: kept, at: str(data.at, 30) };
+  return { list: kept, at: str(data.at, 30), who: str(data.who, 60) };
 }
 
 function validNote(data, id) {
