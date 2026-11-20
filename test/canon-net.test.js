@@ -89,7 +89,7 @@ test(
     await until(() => [...db.store.keys()].some((k) => k.startsWith('canon/u_tester/notes/')), 'the note in the store');
     assert.ok(db.store.has('canon/u_tester'), 'the contributor is listed');
     A.click('[data-act="atlasBack"]');
-    A.click('[data-act="tab"][data-arg="canon"]');
+    A.click('[data-act="tab"][data-arg="canon"]'); // the Canon tab holds the list
     A.click('[data-act="canonList"]');
     assert.match(A.d.querySelector('.modal').textContent, /1 of 1 sent/);
     assert.ok(!A.d.querySelector('[data-act="canonInbox"]'), 'a tester has no inbox');

@@ -301,13 +301,12 @@ test(
     assert.equal(records().length, 1);
     // the list on the title screen turns the asking off
     click('[data-act="quitToTitle"]');
-    click('[data-act="tab"][data-arg="canon"]');
+    click('[data-act="tab"][data-arg="canon"]'); // the Canon tab holds the list
     click('[data-act="canonList"]');
     assert.equal(d.querySelectorAll('.canon-row').length, 1);
     click('[data-act="canonAsk"]');
     click('[data-act="closeModal"]');
-    click('.sh-logo[data-act="tab"]'); // home
-    click('[data-act="newRun"]');
+    d.defaultView.T.UI.startDraft(); // a new expedition's draft, however Home is laid out
     click('[data-act="prebuilt"][data-arg="ossa"]');
     assert.ok(!d.querySelector('.canon-ask'), 'no question once turned off');
     assert.deepEqual(errors, []);
