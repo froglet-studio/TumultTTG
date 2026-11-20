@@ -329,6 +329,7 @@
     U.run = T.newRun();
     U.run.tide = chosenTide(T.loadMeta());
     if (U.chosenPlayers) U.run.party = T.newParty(U.chosenPlayers(T.loadMeta()));
+    if (U.roundsPref) U.run.party.rounds = U.roundsPref(); // the playtest panel's way to play
     U.beginDraft(0);
     U.render();
   };

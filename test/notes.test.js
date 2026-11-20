@@ -40,6 +40,7 @@ test("a line of story is a command for the player's own pilot, written on anyone
   // Garrett, 2026-11-20: "we should be able to keep adding things during other players turns"
   const run = T.quickMission({ seed: 14, type: 'vault', tier: 1 });
   run.party = T.newParty(2);
+  T.execCommand(run, { op: 'dump', hero: 0, di: 0 }, [0]); // the host begins their turn
   assert.equal(T.turnSeat(run), 0, "the host's turn");
   assert.ok(T.execCommand(run, { op: 'note', hero: 1, text: 'Waiting, watching.' }, [1]).ok, "on someone else's turn");
   assert.equal(

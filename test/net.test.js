@@ -243,11 +243,15 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
     if (P.U.ms.endConfirm) P.act('endRound');
   };
   const round = mA().round;
-  // players take turns, the host first in round 1: the guest waits
-  assert.match(B.d.querySelector('[data-act="endRound"]').textContent, /'s turn…/);
+  // players take turns in the order they choose: the round opens with either free to go first
+  assert.match(B.d.querySelector('[data-act="endRound"]').textContent, /End Bo's turn/);
+  assert.match(A.d.querySelector('[data-act="endRound"]').textContent, /End Ana's turn/);
+  const held = mA().heroes[0].held.length;
   ready(A);
   await until(() => B.U.run.party.ready[0], 'the guest to see the host end their turn');
   assert.equal(mA().round, round, "the host's turn ends; the round does not");
+  assert.ok(mA().heroes[0].rolledAhead, "the host's pilot rolls next round's dice as the turn ends");
+  assert.ok(mA().heroes[0].held.length > held, 'and banks them at once, to plan with');
   assert.match(B.d.querySelector('[data-act="endRound"]').textContent, /End Round/);
 
   // the guest walks their pilot: carried out on the host's screen, seen on both
@@ -622,6 +626,77 @@ test(
     // the host leaves: the game leaves the list
     A.act('netLeave');
     await until(() => !db.store.has('lobby/' + code), 'the game off the list');
+    assert.deepEqual(A.errors.concat(B.errors), []);
+  },
+);
+
+test(
+  'online: all at once, two screens act at the same moment and both moves stand',
+  { skip, timeout: 60_000 },
+  async () => {
+    // Garrett, 2026-11-20: "players can all play in real time without taking turns"
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const html = build({ playtest: true }).html;
+    const db = fakeDb({ lag: 40 });
+    const A = await open(html, db);
+    const B = await open(html, db);
+    A.act('pt-rounds', 'live');
+    A.type('netName', 'Ana');
+    A.act('netHost');
+    await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+    B.type('netName', 'Bo');
+    B.type('netCode', A.U.net.code);
+    B.act('netJoin');
+    await until(() => A.U.net.names[1] === 'Bo', 'the host to see the guest');
+    A.act('netStart');
+    A.U.run.seed = SEED;
+    A.U.run.rngs = {};
+    A.U.net.publish();
+    await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
+    assert.equal(A.U.run.party.rounds, 'live', "the host's way to play");
+    A.act('prebuilt', 'cavitt');
+    A.act('confirmHero');
+    B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
+    B.act('confirmHero');
+    await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);
+    const node = A.U.run.available.find((id) => !['haven', 'event'].includes(A.U.run.map.all[id].type));
+    A.act('goNode', node);
+    await until(() => B.U.screen === 'mission', "the guest's mission", 10000);
+    const mA = () => A.U.run.mission;
+    assert.equal(B.U.run.party.rounds, 'live');
+    assert.match(B.d.querySelector('[data-act="endRound"]').textContent, /Done/);
+    // both walk at once: the guest's walk is on its way to the host while the host walks its own pilot
+    const walkTo = (P, i) => {
+      const m = P.U.run.mission;
+      const blocked = new Set(m.heroes.map((h) => h.pos));
+      return P.T.reachableWalk(m, m.heroes[i], P.T.apValue(m.heroes[i]), false).find((n) => !blocked.has(n));
+    };
+    const toB = walkTo(B, 1);
+    const toA = A.T.reachableWalk(mA(), mA().heroes[0], A.T.apValue(mA().heroes[0]), false).find(
+      (n) => n !== toB && !mA().heroes.some((h) => h.pos === n),
+    );
+    assert.ok(toA != null && toB != null, 'both have somewhere to walk');
+    assert.ok(B.U.exec({ op: 'walk', hero: 1, node: toB }).ok !== false);
+    assert.ok(A.U.exec({ op: 'walk', hero: 0, node: toA }).ok);
+    A.U.net.publish();
+    await until(
+      () =>
+        B.U.run.mission.heroes[0].pos === toA && mA().heroes[1].pos === toB && B.U.run.mission.heroes[1].pos === toB,
+      'both walks on both screens',
+    );
+    const round = mA().round;
+    B.act('endRound');
+    if (B.U.ms.endConfirm) B.act('endRound');
+    await until(() => A.U.run.party.ready[1], 'the host to see the guest done');
+    assert.equal(mA().round, round, 'the round waits for the host');
+    assert.ok(!mA().heroes[1].rolledAhead, 'nobody rolls ahead');
+    A.act('endRound');
+    if (A.U.ms.endConfirm) A.act('endRound');
+    await until(
+      () => (mA().round > round || mA().over) && B.U.run.mission.round === mA().round,
+      'the next round on both',
+    );
+    await until(() => B.T.serializeRun(B.U.run) === A.T.serializeRun(A.U.run), 'both screens hold the same game');
     assert.deepEqual(A.errors.concat(B.errors), []);
   },
 );

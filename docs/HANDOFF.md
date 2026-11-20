@@ -85,7 +85,7 @@ What that means day to day is in `CONTRIBUTING.md` and `CLAUDE.md` ("This reposi
 1. The frame: is "a season as guides on Tumult, ending with a berth on the Cosmic Shore" right? ([design/01](design/01-frame-and-campaign.md) lists five specific questions.)
 2. Squad size: three by default, two supported — agreed?
 3. ~~Basic actions, Channel and Overcast.~~ **DECIDED (Garrett, 2026-11-12):** basic actions and Channel join the core; Overcast and Debt wait for the frame (C1), because Debt clears at beacons. Strike, Brace and Shove are built (2.5.0).
-4. ~~Ethereal faces at E 0.~~ **DECIDED (Garrett, 2026-11-12):** Ethereal faces are magic that must be awakened — a face needs E 1 on its card — but every hero begins with a few awakened, so they start with some toys. Built in 2.4.0 (`ETHEREAL_MIN_E: 1`, `START_AWAKE: 2`); the playtest build keeps the old rule one switch away.
+4. ~~Ethereal faces at E 0.~~ **DECIDED (Garrett, 2026-11-12):** Ethereal faces are magic that must be awakened — a face needs E 1 on its card — but every hero begins with a few awakened, so they start with some toys. Built in 2.4.0 (`ETHEREAL_MIN_E: 1`, `START_AWAKE: 2`); the playtest build kept the old rule one switch away until 2.81, when the switch made way for the choice of how rounds go with friends.
 
 ## Known issues and debt
 

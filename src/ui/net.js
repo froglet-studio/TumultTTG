@@ -593,6 +593,7 @@
     if (N.role !== 'host' || N.joined() < 2) return;
     U.startDraft();
     U.run.party = T.newParty(N.joined(), N.names);
+    if (U.roundsPref) U.run.party.rounds = U.roundsPref();
     U.draft.heroIdx = 0;
     N.publish();
   };
