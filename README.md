@@ -24,6 +24,8 @@ or build the single-file game, which works offline and can be sent to anyone:
 npm run build      # → dist/TUMULT.html
 ```
 
+The hosted web version is the same game split into cacheable files (`npm run build:web` → `dist/web/`, `docs/reference/WEB_BUILD.md`).
+
 **Testing it?** `npm run build:playtest` (or `http://localhost:5173/?playtest` on the dev server) builds the same game with a panel on the title screen: start any mission at any tier with a seed, switch the rule that is waiting on a decision, and copy a report of what happened.
 
 ## Where things stand
@@ -53,8 +55,9 @@ npm run build      # → dist/TUMULT.html
 | `npm run dev` | dev server, rebuilds on refresh |
 | `npm run build` | builds `dist/TUMULT.html` and syntax-checks it |
 | `npm run build:playtest` | builds `dist/TUMULT.playtest.html`: the game plus the playtest panel |
+| `npm run build:web` | builds `dist/web/`, the hosted web version (`npm run dev:web` serves it) |
 | `npm test` | runs all tests |
-| `npm run check` | build + tests — run before opening a pull request |
+| `npm run check` | both builds + tests — run before opening a pull request |
 | `npm run format` | formats code with Prettier |
 | `npm run docs` | regenerates the card catalog and the ability audit |
 | `node tools/sim.js 40` | balance tables from simulated missions and runs, for a weak and a strong simulated player (`--player weak` for the quick look) |

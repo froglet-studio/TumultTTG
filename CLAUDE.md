@@ -20,8 +20,10 @@ npm install            once
 npm run dev            dev server at http://localhost:5173 (rebuilds on refresh)
 npm run build          → dist/TUMULT.html (single self-contained file) + syntax check
 npm run build:playtest → dist/TUMULT.playtest.html: the game plus a panel for testers (mission jump, rule switch, report)
+npm run build:web      → dist/web/: the hosted web version, split into content-named cacheable files (docs/reference/WEB_BUILD.md)
+npm run dev:web        the web version on the dev server, service worker included
 npm test               all tests (~15 s; includes two full runs through the real UI in jsdom)
-npm run check          build + test — run before calling any change done
+npm run check          both builds + test — run before calling any change done
 npm run format         Prettier (src/data/ is deliberately excluded)
 npm run docs           regenerate docs/reference/CARDS.md and ABILITY_AUDIT.md
 
@@ -49,6 +51,8 @@ src/engine/ai.js          enemy intents + execution; heuristic hero autoplayer (
 src/engine/lookahead.js   actions as data, the shared evaluation, the look-ahead player (the strong one)
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
 src/ui/                   screens, SVG board, input (browser only)
+src/ui/backend.js         T.Backend: the one seam the online screens reach a server through
+src/web/                  the web version's page, service worker and Cloudflare headers
 src/ui/playtest.*         the playtest panel — only in the playtest build; its NOTES are rewritten every release
 tools/                    build, dev server, harness, simulators, doc generators, UI driver
 test/                     node --test suites
