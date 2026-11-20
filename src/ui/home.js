@@ -49,7 +49,7 @@
     const t = meta.table || {};
     return {
       length: lengths() && t.length === 'short' ? 'short' : 'full',
-      aiFill: t.aiFill !== false,
+      aiFill: t.aiFill === true, // off until the host asks: friends fill a table first
       seats: Math.max(2, Math.min(T.MAX_PLAYERS, +t.seats || T.MAX_PLAYERS)),
     };
   };
@@ -478,7 +478,7 @@
       ? `<div class="panel hm-people"><div class="hs-lab">From the Lobby${onlineCount() ? ` · ${onlineCount()} online` : ''}</div><div id="hostPeople">${peopleRows(true)}</div></div>`
       : '';
     const aiN = t.aiFill && T.fillSeats ? Math.max(0, t.seats - n) : 0;
-    const startLbl = aiN ? `Start with ${n} players + ${aiN} AI ▶` : `Start with ${n} players ▶`;
+    const startLbl = `Start with ${n} player${n > 1 ? 's' : ''}${aiN ? ` + ${aiN} AI` : ''} ▶`;
     const go = host
       ? `<div class="hm-go"><span class="mute small">${esc(N.status || '')}</span><button class="ghost" data-act="netLeave">Close the table</button><button class="primary hm-cta" data-act="netStart" ${n > 1 || aiN ? '' : 'disabled'}>${startLbl}</button></div>`
       : `<div class="hm-go"><span class="mute small">${esc(N.status || 'Waiting for the host to start…')}</span><button class="ghost" data-act="netLeave">Leave</button></div>`;

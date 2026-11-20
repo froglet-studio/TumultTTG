@@ -9,6 +9,30 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.85.0 — 2026-11-21 — AI seats, dropped players, Short expeditions
+
+Shombith: host a table "offers Co-op/Versus, Short/Full length, and filling empty seats with AI", the waiting room says "AI fills it", and when someone drops an AI flies their pilot (the table only waited before). Versus is left out for now.
+
+- **AI fills empty seats.** In an online lobby the host chooses how many seats the AI fills (up to five). Each AI seat flies a pre-made pilot nobody else is flying, named "AI · Rosh", and plays it with the look-ahead player. A host alone can now set out with the AI. A person who joins later, even mid-mission, takes an AI seat over, pilot and all.
+- **When the AI plays.** AI pilots move once every person has had their turn (in rounds played all at once, once everyone else is done). Between missions they take the first trait offered that needs no exchange, the first boon, and spend their points.
+- **A player who drops.** A guest's screen says it is still here every few seconds. After 30 s of silence every screen shows that the player lost connection, with a one-minute countdown. Then an AI pilot holds the seat, plays it safe, and finishes a turn they had begun. The host can give the seat to the AI at once or wait for them. Reloading the page puts the player back in their seat.
+- **Short or Full.** The host chooses the expedition's length: Full is the seven-stop route as before; Short has five stops: openers, three tier-2 stops, then the Heart. With fewer missions to grow on it is harder at the Heart (80 runs: the look-ahead player wins 35 Short against 50 Full, the heuristic 10 against 12).
+- **Saves** are version 19: the run keeps its length and each seat whether the AI plays it. A 2.83 save is a Full expedition with people in every seat (fixture `save-2.83.json`).
+- **Tools.** `node tools/sim.js 80 runs --length short` plays Short expeditions.
+
+## 2.84.0 — 2026-11-20 — after a mission and the end of an expedition
+
+The finalised Frogma boards for rows 8 and 9 (after a mission, the end of an expedition), desktop and phone. No rule changes: every button sends the command the old screens sent.
+
+- **Victory and rewards on one screen.** The place's painting behind a gold VICTORY; the objectives and the squad's vitality on the left; on the right each pilot's reward behind a tab of their own (a dot until they have chosen, a tick after). Tap a trait to read both its faces, then Take it, or Skip for 2 ◇; after an elite, the boons sit underneath. Onward waits until every pilot has chosen and says how many have.
+- **The full kit's exchange.** A trait offered to a full kit opens its own view: the trait coming in, the nine held (the ones the bloodline rule keeps are dimmed and say why), the one going out marked, and the points that come back and each bloodline's count before Swap.
+- **Grow one card.** The Train sheet becomes the upgrade view: the kit down the side, the chosen card large with sparks rising, its two faces as buttons (Awaken for a sleeping one), the face's words before and after side by side, Grow it, a burst of light when it grows, and a way to take a point back. Other pilots and Auto are a tap away. A pilot with points is offered it from the reward, the haven and a respec event.
+- **A loss the lifeline carries** is told in red over the greyed painting: what happened, the hearts left, the squad, and Onward.
+- **The haven** sits beside its painting: Rest, Trade, Train and Listen as four cards, the squad, then the stalls (gear and supplies, bought per pilot). **Events** use the same layout: the story, the choices as cards with their price, the result in a quote bar.
+- **The end of an expedition** has three tabs. _The end_: THE HEART with the squad's portraits and the route played as painted tiles, or _The expedition ends here_ over the greyed art with what carries over (pilots coming home, lines of story, places played, the best run so far). _Logbook_: the expedition as a page of a printed log, each stop with its painting and the last line written there, the passages between stops, Copy as text and Print (prints the page alone). _Numbers_: stops, rounds, foes destroyed and missions won, each pilot's damage dealt and taken, and the kits they finished with.
+- **Phones.** Everything stacks; offers and kits scroll sideways a card at a time; the call to act sits in a bar at the foot of the screen. These screens keep a dark wash over the painting whatever the sea, so the words read on the light Shore sea too, and their motion follows Look (Reduced stills the sparks, the shimmer and the slow pan).
+- **Code.** The screens moved out of `src/ui/core.js` into `src/ui/after.js` and `src/ui/after.css`. `test/after.test.js` drives them through the real interface.
+
 ## 2.83.0 — 2026-11-21 — a living sea, a calmer mission screen, and motion
 
 Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, motion kit). No rule changes.

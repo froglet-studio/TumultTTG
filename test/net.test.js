@@ -742,3 +742,99 @@ test('online: a player writes a line of story while another takes their turn', {
   B.U.net.leave();
   A.U.net.leave();
 });
+
+test('online: a host alone sets out with the AI filling the empty seats', { skip, timeout: 60_000 }, async () => {
+  const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const html = build({ playtest: true }).html;
+  const db = fakeDb();
+  const A = await open(html, db);
+  A.act('hostOpen');
+  A.act('setAiFill', 'open');
+  A.type('netName', 'Ana');
+  A.act('netHost');
+  await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+  assert.ok(A.d.querySelector('[data-act="netStart"]').disabled, 'alone, with no AI, the table cannot set out');
+  A.act('setAiFill', 'ai');
+  A.act('setSeats', 3);
+  A.act('setLength', 'short');
+  assert.match(A.d.querySelector('.hm-seats').textContent, /AI fills it/);
+  assert.match(A.d.querySelector('[data-act="netStart"]').textContent, /1 player \+ 2 AI/);
+  // a guest's lobby shows what the host chose
+  const B = await open(html, db);
+  B.act('joinOpen');
+  B.type('netName', 'Bo');
+  B.type('netCode', A.U.net.code);
+  B.act('netJoin');
+  await until(() => A.U.net.names[1] === 'Bo', 'the host to see the guest');
+  await until(() => B.U.net.tableOpts.seats === 3 && B.U.net.tableOpts.length === 'short', "the host's choices");
+  A.act('netStart');
+  A.U.run.seed = SEED;
+  A.U.run.rngs = {};
+  A.U.net.publish();
+  const run = () => A.U.run;
+  assert.equal(run().length, 'short');
+  assert.equal(
+    JSON.stringify(run().party.players.map((p) => p.ai || false)),
+    '[false,false,"fill"]',
+    'two people and the AI in the third seat',
+  );
+  assert.ok(run().heroes[2], "the AI's pilot is drafted at once");
+  await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
+  A.act('prebuilt', 'cavitt');
+  A.act('confirmHero');
+  B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt' && p.name !== run().heroes[2].name).id);
+  B.act('confirmHero');
+  await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);
+  assert.equal(run().map.rows.length, 5, 'a Short route');
+  const node = run().available.find((id) => !['haven', 'event'].includes(run().map.all[id].type));
+  A.act('goNode', node);
+  await until(() => B.U.screen === 'mission', "the guest's mission", 10000);
+  const m = () => run().mission;
+  const round = m().round;
+  A.act('endRound');
+  if (A.U.ms.endConfirm) A.act('endRound');
+  await new Promise((r) => setTimeout(r, 1000));
+  assert.equal(m().round, round, 'the AI waits for every person');
+  B.act('endRound');
+  if (B.U.ms.endConfirm) B.act('endRound');
+  await until(() => m().round > round || m().over, 'the AI to take its turn and the round to go on', 10000);
+  await until(() => B.U.run.mission.round === m().round, 'the guest to see it');
+  assert.deepEqual(A.errors.concat(B.errors), []);
+});
+
+test(
+  'online: a guest drops, the AI holds their seat, and they take it back by reloading',
+  { skip, timeout: 60_000 },
+  async () => {
+    const db = fakeDb();
+    const rooms = fakeRooms();
+    const { A, B } = await toGuestTurn(db, rooms);
+    A.U.net.DROP_MS = 300;
+    A.U.net.HOLD_MS = 600;
+    const m = () => A.U.run.mission;
+    const round = m().round;
+    B.U.net.leave(); // the guest's page goes quiet, mid-turn (it says nothing more and hears nothing)
+    await until(() => A.U.net.away[1] != null, 'the host to see the guest drop', 5000);
+    assert.match(A.d.getElementById('netAway').textContent, /Bo lost connection/);
+    assert.ok(A.d.querySelector('[data-act="netGiveAI"]'), 'the host may give the seat to the AI at once');
+    await until(() => A.T.botKind(A.U.run, 1) === 'hold', 'the countdown to run out', 5000);
+    await until(() => m().round > round || m().over, "the AI to finish Bo's turn", 10000);
+    assert.equal(A.U.run.party.players[1].name, 'Bo', 'the seat keeps its name');
+    // Bo reloads and rejoins: the seat is theirs again
+    const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+    const B2 = await open(build({ playtest: true }).html, db, rooms);
+    B2.act('joinOpen');
+    B2.type('netName', 'Bo');
+    B2.type('netCode', A.U.net.code);
+    B2.act('netJoin');
+    await until(() => B2.U.net.seat === 1, 'Bo to take their seat again', 10000);
+    await until(() => !A.T.isBot(A.U.run, 1), 'the AI to give it back', 5000);
+    await until(() => B2.U.screen === 'mission', "Bo's mission", 5000);
+    assert.equal(A.d.getElementById('netAway'), null, 'nothing to say any more');
+    // the host may also wait instead of handing the seat over
+    A.U.net.DROP_MS = 1e9;
+    A.U.net.waitFor(1);
+    assert.equal(A.U.net.away[1], undefined);
+    assert.deepEqual(A.errors.concat(B2.errors), []);
+  },
+);

@@ -573,10 +573,26 @@
   });
 
   /* ───────────────────────────── TIDE MAP ───────────────────────────── */
-  // 7 rows. Row 0: three openers. Rows 1-5 mixed. Row 6: boss. Each node connects to 1-2 nodes in the next row.
-  T.genTideMap = function (rng) {
+  /**
+   * How long an expedition is (Shombith, 2026-11-20: "Short 5 stops / Full"), chosen when the table is made.
+   * Full is the route the game has always had. Short keeps its shape with fewer stops: openers (tier 1), three
+   * tier-2 rows (a crossing, an elite or a haven, a last crossing with a haven), then the boss (tier 3).
+   */
+  T.LENGTHS = { short: { stops: 5 }, full: { stops: 7 } };
+  const SHORT_ROWS = [
+    { tier: 1, types: (rng) => shuffle(rng, ['swarm', 'vault', 'cascade']) },
+    { tier: 2, types: (rng) => shuffle(rng, ['hidden', 'event', 'salvage']) },
+    { tier: 2, types: () => ['haven', 'elite', 'vault'] },
+    { tier: 2, types: (rng) => shuffle(rng, ['survey', 'haven', 'swarm']) },
+    { tier: 3, types: () => ['boss'] },
+  ];
+  // Full: 7 rows. Row 0: three openers. Rows 1-5 mixed. Row 6: boss. Each node connects to 1-2 nodes in the next row.
+  T.genTideMap = function (rng, length) {
     const rows = [];
+    const short = length === 'short';
+    const nRows = short ? SHORT_ROWS.length : 7;
     const typesFor = (r) => {
+      if (short) return SHORT_ROWS[r].types(rng);
       if (r === 0) return shuffle(rng, ['swarm', 'vault', 'cascade']);
       if (r === 1) return shuffle(rng, ['hidden', 'event', 'salvage']);
       if (r === 2) return shuffle(rng, ['elite', 'haven', 'vault']);
@@ -585,9 +601,9 @@
       if (r === 5) return shuffle(rng, ['vault', 'salvage', 'event']);
       return ['boss'];
     };
-    const tierFor = (r) => (r <= 1 ? 1 : r <= 4 ? 2 : 3);
+    const tierFor = (r) => (short ? SHORT_ROWS[r].tier : r <= 1 ? 1 : r <= 4 ? 2 : 3);
     let id = 0;
-    for (let r = 0; r < 7; r++) {
+    for (let r = 0; r < nRows; r++) {
       const ts = typesFor(r);
       rows.push(
         ts.map((t, c) => ({
@@ -602,7 +618,7 @@
         })),
       );
     }
-    for (let r = 0; r < 6; r++) {
+    for (let r = 0; r < nRows - 1; r++) {
       const cur = rows[r],
         nxt = rows[r + 1];
       cur.forEach((n) => {
