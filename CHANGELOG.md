@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.79.2 — 2026-11-20 — story on anyone's turn
+
+Garrett: "make sure we keep the container that adds flavor during other players turns. we should be able to keep adding things during other players turns"
+
+- **The story box stays open.** With players taking turns, the box beside End turn used to show only on your own turn, and a line written outside it was refused. Now every player can write a line of story for their own pilot at any time in a mission: while others take their turns, after their own, during the foes' turn. It is still one line a pilot a round (the latest kept), still never for someone else's pilot, and it still changes nothing in play. On a screen looking at another player's pilot, the box writes for your own.
+
 ## 2.79.1 — 2026-11-20 — an online squad waits for the host's pilot
 
 Garrett: "we tried a 5 and 2 player test and we were not able to start either. it was hanging on the upgrade screen and not accepting my upgrades then i could net press the set out button"
