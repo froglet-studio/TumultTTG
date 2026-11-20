@@ -743,6 +743,7 @@
   /** The countdown for each dropped seat, as a strip over whatever screen is showing; the host's has its two choices. */
   function showAway() {
     if (typeof document === 'undefined' || !document || !document.body) return;
+    if (U.tickAway) U.tickAway(); // the mission screen shows the same countdowns in its squad and side column
     let el = document.getElementById('netAway');
     const run = U.run;
     const now = Date.now();

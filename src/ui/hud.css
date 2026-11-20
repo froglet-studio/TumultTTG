@@ -1002,3 +1002,34 @@ html[data-motion='off'] .mission.hud .pass {
   transition: none;
   animation: none;
 }
+
+/* ---------- online: a seat gone quiet, a seat the AI holds (src/ui/net.js) ---------- */
+/* on the mission screen the squad and the side column show these, so the strip over other screens steps aside */
+body:has(.mission.hud) .net-away {
+  display: none;
+}
+.seat-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.seat-row {
+  border-left: 3px solid var(--gold);
+  padding: 2px 0 2px 10px;
+}
+.seat-row.held {
+  border-left-color: var(--glow);
+}
+.seat-row .seat-acts {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+.mission.hud .sq-st.away {
+  color: var(--gold);
+}
+.mission.hud .sq-st.ai,
+.mission.hud .sq-st.ai.done {
+  color: var(--glow);
+}

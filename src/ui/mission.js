@@ -756,7 +756,8 @@
     const foes = T.liveEnemies(m).length;
     const changed = setHTML(
       $('#mside'),
-      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b class="lab" data-tip="Declared before you act: each foe does what it says, adapting only to close distance. Each also carries its plan on the board.">Enemy plans</b><span class="dim small right">${open ? (live.length ? `${live.length} act at round end` : '') : `${foes} foe${foes === 1 ? '' : 's'}`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
+      seatPanel(m) +
+        `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b class="lab" data-tip="Declared before you act: each foe does what it says, adapting only to close distance. Each also carries its plan on the board.">Enemy plans</b><span class="dim small right">${open ? (live.length ? `${live.length} act at round end` : '') : `${foes} foe${foes === 1 ? '' : 's'}`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
         waitPanel(m),
     );
     renderSquad(m);
@@ -781,15 +782,73 @@
     const here = !U.seats || U.seats.includes(s);
     const down = T.heroesOf(run, s).every((i) => !m.heroes[i] || m.heroes[i].downed);
     if (down) return { k: 'down', t: 'down' };
-    if (T.liveRounds(run)) return p.ready[s] ? { k: 'done', t: 'done ✓' } : { k: 'play', t: 'playing' };
-    if (p.ready[s]) return { k: 'done', t: 'done ✓' };
+    // online: a player who has gone quiet (the countdown before the AI takes the seat), or a seat the AI flies
+    const away = U.net && U.net.away && U.net.away[s];
+    if (away != null) return { k: 'away', t: 'lost connection', until: +away };
+    const bot = T.botKind ? T.botKind(run, s) : false;
+    const ai = (st) =>
+      bot ? Object.assign(st, { ai: bot, t: st.k === 'turn' || st.k === 'play' ? 'AI playing' : st.t }) : st;
+    if (bot === 'hold' && !p.ready[s] && !T.liveRounds(run) && T.turnSeat(run) !== s)
+      return { k: 'ai', t: 'AI holds the seat', ai: bot };
+    if (T.liveRounds(run)) return ai(p.ready[s] ? { k: 'done', t: 'done ✓' } : { k: 'play', t: 'playing' });
+    if (p.ready[s]) return ai({ k: 'done', t: 'done ✓' });
     const turn = T.turnSeat(run);
-    if (turn === s) return { k: 'turn', t: here && U.seats ? 'your turn' : 'their turn' };
+    if (turn === s) return ai({ k: 'turn', t: here && U.seats ? 'your turn' : 'their turn' });
     const left = T.seatsToPlay(run);
-    if (turn == null && left.includes(s)) return { k: 'next', t: left.length > 1 ? 'any order' : 'next' };
-    return { k: 'wait', t: 'waiting' };
+    if (turn == null && left.includes(s)) return ai({ k: 'next', t: left.length > 1 ? 'any order' : 'next' });
+    return ai({ k: 'wait', t: 'waiting' });
   }
   U.seatState = seatState;
+  /** m:ss until a time (ms), for a countdown. */
+  const clockTo = (until) => {
+    const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    return `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+  };
+  /** The countdowns on the mission screen tick with the one over every screen (src/ui/net.js calls this). */
+  U.tickAway = function () {
+    if (typeof document === 'undefined') return;
+    document.querySelectorAll('[data-until]').forEach((el) => {
+      el.textContent = clockTo(+el.getAttribute('data-until'));
+    });
+    const m = U.run && U.run.mission;
+    if (!m || !document.querySelector('.mission.hud')) return;
+    // a seat went quiet or came back since the last draw: draw the squad and the seat card again
+    const key = JSON.stringify(Object.keys((U.net && U.net.away) || {})) + (T.botSeats ? T.botSeats(U.run).join() : '');
+    if (key !== U.ms.awayKey) {
+      U.ms.awayKey = key;
+      renderSide(m);
+    }
+  };
+
+  /**
+   * Online, in play: a card for each seat that has gone quiet (the countdown, and on the host's screen its two
+   * choices) and each seat an AI holds for a player who dropped. It stands in for the strip over other screens.
+   */
+  function seatPanel(m) {
+    const run = U.run;
+    const N = U.net;
+    if (!N || !N.role || !run.party || m.over) return '';
+    const name = (s) => esc((N.names && N.names[s]) || run.party.players[s].name || 'Player ' + (s + 1));
+    const rows = [];
+    for (const k of Object.keys(N.away || {})) {
+      const s = +k;
+      const mine = N.role === 'guest' && s === N.seat;
+      rows.push(`<div class="seat-row away"><b>${mine ? 'You seem to be offline' : name(s) + ' lost connection'}</b>
+        <div class="small">An AI pilot takes the seat in <span class="mono" data-until="${+N.away[k]}">${clockTo(+N.away[k])}</span> and plays it safe until they are back.</div>${
+          N.role === 'host'
+            ? `<div class="seat-acts"><button class="sm" data-act="netGiveAI" data-arg="${s}">Give it to the AI</button><button class="sm ghost" data-act="netWait" data-arg="${s}">Wait for them</button></div>`
+            : ''
+        }</div>`);
+    }
+    (T.botSeats ? T.botSeats(run) : [])
+      .filter((s) => T.botKind(run, s) === 'hold')
+      .forEach((s) =>
+        rows.push(
+          `<div class="seat-row held"><b>An AI pilot holds ${name(s)}'s seat</b><div class="small">until they are back. Reloading the page puts them back in it.</div></div>`,
+        ),
+      );
+    return rows.length ? `<div class="panel tight seat-panel">${rows.join('')}</div>` : '';
+  }
 
   /** One line under End: who goes after this turn, and whose turn ends the round. */
   function turnLine(run) {
@@ -823,7 +882,7 @@
         const sel = i === U.ms.heroIdx;
         const st = seatState(run, T.ownerOf(run, i));
         const status = st
-          ? `<span class="sq-st ${st.k}">${st.t}</span>`
+          ? `<span class="sq-st ${st.k}${st.ai ? ' ai' : ''}">${st.t}${st.until ? ` <span class="mono" data-until="${st.until}">${clockTo(st.until)}</span>` : ''}</span>`
           : `<span class="sq-st ${sel ? 'turn' : 'wait'}">${sel ? 'flying' : h.downed ? 'down' : 'Tab ⇄'}</span>`;
         const els = ['M', 'C', 'S', 'T', 'O']
           .map((e) => ({ e, n: h.held.filter((f) => f === e).length }))
