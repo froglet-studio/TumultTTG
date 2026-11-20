@@ -9,6 +9,9 @@
   Cache-Control: no-cache
 /sw.js
   Cache-Control: no-cache
+# Only previews are served from Cloudflare (players get GitHub Pages), so noindex keeps them out of
+# search results.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
+  X-Robots-Tag: noindex
