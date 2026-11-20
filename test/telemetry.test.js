@@ -60,6 +60,14 @@ test('the schema is the server’s shape: events with described fields, and an e
   );
   for (const [, name] of telemetry.matchAll(/TL\.track\(\s*'([a-z_]+)'/g))
     assert.ok(SCHEMA.events[name], `telemetry.js sends '${name}', which the schema does not list`);
+  const welcome = fs.readFileSync(path.join(root, 'src', 'ui', 'welcome.js'), 'utf8');
+  const fromWelcome = [...welcome.matchAll(/track\(\s*'([a-z_]+)',\s*\{([^}]*)\}/g)];
+  assert.ok(fromWelcome.length >= 5, 'welcome.js names its events');
+  for (const [, name, fields] of fromWelcome) {
+    assert.ok(SCHEMA.events[name], `welcome.js sends '${name}', which the schema does not list`);
+    for (const [, f] of fields.matchAll(/([a-z_]+):/g))
+      assert.ok(SCHEMA.events[name].properties[f], `welcome.js sends ${name}.${f}, which the schema does not list`);
+  }
 });
 
 test('only the web version carries the sender, filled with the address and the public key', async () => {

@@ -239,7 +239,8 @@
       <div class="kick">An expedition on Tumult</div>
       <h1>TUMULT</h1>
       <div class="sub">Draft two pilots from eleven bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</div>
-      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button data-act="canonList" data-tip="Answers and corrections you have written while playing">Canon</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
+      ${U.welcomeTitle ? U.welcomeTitle(meta, hasSave) : ''}
+      <div class="btns">${U.isNewPlayer && U.isNewPlayer(meta, hasSave) ? '<button data-act="newRun" data-tip="Draft your own two pilots from the bloodlines, card by card.">Build your own squad</button>' : '<button class="primary" data-act="newRun">New Expedition</button>'}${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button data-act="canonList" data-tip="Answers and corrections you have written while playing">Canon</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
       ${tidePicker(meta)}
       ${U.partyPicker ? U.partyPicker(meta) : ''}
       ${U.titleNet ? U.titleNet() : ''}
@@ -1091,6 +1092,8 @@
     U.tut = key;
   };
   function tutorialHTML() {
+    // the first mission is guided step by step (src/ui/welcome.js); the tip below is its fallback
+    if (U.tut === 'mission' && U.guideHTML) return U.guideHTML();
     if (!U.tut || !TUT[U.tut]) return '';
     return `<div class="tutorial">${TUT[U.tut]}<div class="row" style="margin-top:8px"><button class="sm primary" data-act="tutClose">Got it</button></div></div>`;
   }

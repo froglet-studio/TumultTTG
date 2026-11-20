@@ -24,8 +24,11 @@ Every event carries the envelope (`common_envelope` in the schema: the anonymous
 | Event | When |
 |---|---|
 | `session_started` | the page opens: first visit or not, visits, days since the first, runs and missions before, a save to continue |
-| `run_started`, `draft_completed` | New Expedition; the squad drafted (each pilot's pre-made id or `made`, clades, card count) |
+| `run_started`, `draft_completed` | New Expedition or Play now (`play_now`); the squad set out (each pilot's pre-made id or `made`, clades, card count) |
 | `tutorial_shown` | a first-time tip (`map`, `mission`) |
+| `guide_step` | the guided first mission: next, back, finished or skipped, and the step (`docs/reference/WELCOME.md`) |
+| `signin_prompt` | sign-in offered (after the first win, on the title, before hosting) and how it was answered; only where the page has accounts |
+| `invite_link` | an invite link opened, joined or declined, or copied by a host |
 | `mission_started` | a mission's board opens for the first time (a mission resumed from a save is not counted twice) |
 | `mission_ended` | won or lost: the playtest report's fields (rounds, kills, hit points, bonus objectives, Physical and Ethereal faces and those at E 0) plus every face's play count (`'<card id>:<P|E>'`), gear, basics, items, moves, take-backs and seconds |
 | `mission_left` | back to the title with the mission unfinished, and the round |
@@ -36,7 +39,7 @@ Every event carries the envelope (`common_envelope` in the schema: the anonymous
 
 A mission's events share a `match_id` (`<run seed>:<missions launched>`), so its start, end or leaving group together. A take-back (Undo) removes the play it undid from the counts.
 
-The new-player funnel, as the server's Funnel builder reads it: `session_started` (first visit) → `run_started` → `draft_completed` → `tutorial_shown` (map) → `mission_started` (first mission) → `mission_ended` (first mission) → a second mission → a second day.
+The new-player funnel, as the server's Funnel builder reads it: `session_started` (first visit) → `run_started` (Play now) → `draft_completed` → `tutorial_shown` (map) → `mission_started` (first mission) → `guide_step` (finished or skipped) → `mission_ended` (first mission) → `signin_prompt` (first win) → a second mission → a second day. Invites: `invite_link` opened → joined → `draft_completed` → `mission_started`.
 
 ## How it is sent
 

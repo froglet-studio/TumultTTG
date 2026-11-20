@@ -117,8 +117,51 @@
         }
       }
     },
+    "guide_step": {
+      "description": "The guided first mission (src/ui/welcome.js): the player moved through its five steps, finished it or skipped it.",
+      "properties": {
+        "step": {
+          "type": "int",
+          "description": "The step the player was on, 1 to 5."
+        },
+        "key": {
+          "type": "string",
+          "description": "That step: dice | cards | intent | forecast | end."
+        },
+        "action": {
+          "type": "string",
+          "description": "next | back | finished | skipped."
+        }
+      }
+    },
+    "signin_prompt": {
+      "description": "An offer to sign in: shown, or answered. Only where the page has accounts.",
+      "properties": {
+        "where": {
+          "type": "string",
+          "description": "first_win (under the first won mission's report) | title | host (hosting a game)."
+        },
+        "action": {
+          "type": "string",
+          "description": "shown | later | the sign-in method chosen (google, discord, apple, github, email)."
+        }
+      }
+    },
+    "invite_link": {
+      "description": "An invite to an online game: a link opened, joined or declined, or a host copying theirs.",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "opened | joined | declined | copied."
+        },
+        "can_join": {
+          "type": "bool",
+          "description": "This page could reach online play when it happened."
+        }
+      }
+    },
     "run_started": {
-      "description": "New Expedition pressed: the draft begins.",
+      "description": "An expedition begins: New Expedition (the draft) or, on a first visit, Play now (two pre-made pilots, straight to the map).",
       "properties": {
         "first_run": {
           "type": "bool",
@@ -131,6 +174,10 @@
         "tide": {
           "type": "string",
           "description": "The chosen difficulty."
+        },
+        "play_now": {
+          "type": "bool",
+          "description": "Started with Play now (src/ui/welcome.js), not the draft."
         }
       }
     },
@@ -441,13 +488,17 @@
   "funnels": {
     "new_player": [
       "session_started (first_visit)",
-      "run_started",
+      "run_started (play_now)",
       "draft_completed",
       "tutorial_shown (map)",
       "mission_started (first_mission)",
+      "tutorial_shown (mission)",
+      "guide_step (finished or skipped)",
       "mission_ended (first_mission)",
+      "signin_prompt (first_win)",
       "mission_started (mission_number 2)",
       "second_day"
-    ]
+    ],
+    "invite": ["invite_link (opened)", "invite_link (joined)", "draft_completed", "mission_started"]
   }
 }

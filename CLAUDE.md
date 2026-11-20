@@ -52,6 +52,7 @@ src/engine/lookahead.js   actions as data, the shared evaluation, the look-ahead
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
 src/ui/                   screens, SVG board, input (browser only)
 src/ui/backend.js         T.Backend: the one seam the online screens reach a server through
+src/ui/welcome.js         new players: Play now, the guided first mission, keep your squad, invites (docs/reference/WELCOME.md)
 src/ui/telemetry.js       anonymous play data: the events (docs/analytics/EVENT_SCHEMA.json, docs/reference/ANALYTICS.md)
 src/web/                  the web version's page, service worker, Cloudflare headers, and its Froglet Analytics sender
 src/ui/playtest.*         the playtest panel — only in the playtest build; its NOTES are rewritten every release

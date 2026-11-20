@@ -619,8 +619,19 @@
   };
   U.renderLobby = function () {
     const host = N.role === 'host';
-    return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Online game</div><h2>Code <span class="mono">${esc(N.code || '')}</span></h2>
-      <p>${esc(N.names[0] || 'Player 1')} (host)${N.names[1] ? ' · ' + esc(N.names[1]) : ''}</p>
+    const W = U.welcome || {};
+    const link = W.inviteLink ? W.inviteLink(N.code || '') : null;
+    const share = link || N.code || '';
+    // the link (or, inside another page, the code) and a copy button: a friend needs nothing else
+    const invite = host
+      ? `<div class="invite-box"><span class="dim small">${link ? 'Invite link' : 'Game code'}</span><div class="row"><input id="inviteField" class="mono" readonly value="${esc(share)}"><button class="primary" data-act="inviteCopy" data-arg="${esc(N.code || '')}">Copy</button></div>
+        <div class="small dim">${link ? 'Anyone with the link can join this game with only a name.' : 'Your friend opens this page and joins with the code.'}</div></div>`
+      : '';
+    const seat = (name, who, here) =>
+      `<div class="seat${here ? '' : ' waiting'}"><span class="seat-dot" aria-hidden="true"></span><div><b>${esc(name)}</b><div class="small dim">${esc(who)}</div></div><span class="right small">${here ? 'Joined' : 'Waiting…'}</span></div>`;
+    return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Play with a friend</div><h2>Expedition <span class="mono">${esc(N.code || '')}</span></h2>
+      ${invite}
+      <div class="seats">${seat(N.names[0] || 'Player 1', 'host', true)}${seat(N.names[1] || 'Seat 2', N.names[1] ? 'guest' : 'waiting for your friend', !!N.names[1])}</div>
       <p class="dim">${esc(N.status)}</p>
       <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.names[1] ? '' : 'disabled'}>Start the expedition</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
   };

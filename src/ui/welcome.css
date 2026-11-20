@@ -1,0 +1,253 @@
+/* Welcoming new players (src/ui/welcome.js): Play now, the guided first mission, keep your squad, invites. */
+
+.welcome-start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 18px 0 6px;
+}
+.welcome-start .small {
+  max-width: 420px;
+  text-align: center;
+}
+.play-now {
+  font-size: 20px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 14px 40px;
+  min-height: 52px;
+}
+.account-line {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* the guided first mission: the lit part of the screen, and the card beside it */
+.guide-spot {
+  position: fixed;
+  z-index: 60;
+  border: 2px solid var(--gold);
+  border-radius: 10px;
+  box-shadow:
+    0 0 0 4000px rgba(2, 5, 12, 0.6),
+    0 0 24px rgba(242, 193, 78, 0.45);
+  pointer-events: none;
+  transition:
+    left 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+    top 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+    width 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+    height 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.guide-coach {
+  position: fixed;
+  z-index: 61;
+  left: 14px;
+  bottom: 14px;
+  width: 340px;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+  padding: 14px 16px;
+  background: #0d1d31;
+  border: 1px solid var(--gold);
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(242, 193, 78, 0.2);
+  transition:
+    left 0.35s cubic-bezier(0.3, 0.7, 0.2, 1),
+    top 0.35s cubic-bezier(0.3, 0.7, 0.2, 1);
+}
+.guide-coach.floating {
+  top: auto !important;
+  left: auto !important;
+  right: calc(14px + env(safe-area-inset-right, 0px));
+  bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+}
+.guide-coach .kick {
+  color: var(--gold);
+}
+.guide-coach h3 {
+  margin: 4px 0 6px;
+}
+.guide-coach p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.guide-coach p b {
+  color: var(--gold);
+}
+.guide-dots {
+  display: flex;
+  gap: 6px;
+  margin: 12px 0;
+}
+.guide-dots span {
+  width: 22px;
+  height: 4px;
+  background: var(--line2);
+}
+.guide-dots span.on {
+  background: var(--gold);
+}
+.guide-coach .row button {
+  min-height: 40px;
+}
+@media (max-width: 640px) {
+  /* on a phone the card spans the screen, at the top or the foot: away from the lit part (welcome.js) */
+  .guide-coach {
+    left: 8px !important;
+    right: 8px;
+    width: auto;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .guide-spot,
+  .guide-coach {
+    transition: none;
+  }
+}
+
+/* keep your squad: after the first won mission, under the report */
+.keep-squad {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--gold);
+  border-radius: 10px;
+  background: #0d1d31;
+  animation: keepSquadUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s both;
+}
+.keep-squad .kick {
+  color: var(--gold);
+}
+.keep-squad p {
+  margin: 0;
+}
+.keep-squad-modal {
+  margin-top: 0;
+  border: 0;
+  padding: 0;
+  background: none;
+  animation: none;
+}
+.signin-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 46px;
+  font-weight: 600;
+}
+.signin-google {
+  background: #f4f7fb;
+  color: #111a28;
+  border-color: #f4f7fb;
+}
+.signin-discord {
+  background: #2b3260;
+  color: #eef0ff;
+  border-color: #4a54a0;
+}
+.signin-mark {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+}
+@keyframes keepSquadUp {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .keep-squad {
+    animation: none;
+  }
+}
+
+/* invites: arriving by a link, and the lobby that hands one out */
+.invite-card {
+  max-width: 520px;
+  margin: 18px auto 6px;
+  padding: 16px 18px;
+  border: 1px solid var(--cyan);
+  border-radius: 12px;
+  background: var(--panel);
+  text-align: left;
+}
+.invite-card .kick {
+  color: var(--gold);
+}
+.invite-card h3 {
+  margin: 4px 0 6px;
+}
+.invite-card input {
+  flex: 1;
+  min-width: 140px;
+}
+.invite-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 10px 0 14px;
+}
+.invite-box input {
+  flex: 1;
+  min-width: 0;
+  font-size: 16px;
+}
+.invite-box .copied {
+  background: #1d6b4a;
+}
+.seats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 8px 0;
+}
+.seat {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border: 1px solid var(--cyan);
+  border-radius: 10px;
+  background: var(--panel2);
+}
+.seat.waiting {
+  border-style: dashed;
+  border-color: var(--line2);
+}
+.seat-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--green);
+}
+.seat.waiting .seat-dot {
+  background: none;
+  border: 2px dashed var(--cyan);
+  animation: seatBreathe 1.4s ease-in-out infinite;
+}
+@keyframes seatBreathe {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .seat.waiting .seat-dot {
+    animation: none;
+  }
+}

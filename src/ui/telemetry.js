@@ -275,7 +275,12 @@
   function install() {
     wrap(U, 'startDraft', () => {
       const r = load();
-      TL.track('run_started', { first_run: r.runs === 0, runs_before: r.runs, tide: U.run && U.run.tide });
+      TL.track('run_started', {
+        first_run: r.runs === 0,
+        runs_before: r.runs,
+        tide: U.run && U.run.tide,
+        play_now: !!U.playingNow,
+      });
       r.runs++;
       save();
     });
