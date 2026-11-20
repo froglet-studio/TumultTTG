@@ -10,7 +10,7 @@ Where each build of Tumult is served from, what publishes it, and the one-time s
 | https://&lt;branch&gt;.tumult.pages.dev | a pull request's branch, `/` written as `-` | the same | every push to the pull request; the link is on the PR as the `preview` deployment |
 | the claude.ai playtest page | `development`, with the playtest panel and online play | a Claude session, `/playtest-publish` | after each promotion to `development` |
 
-This mirrors the Froglet website (`froglet-studio/Cosmic-Shore-landing-page`): GitHub Pages serves what players see, Cloudflare Pages serves previews, and the domain's DNS is on Cloudflare. The one difference is that Tumult's previews are uploaded by a workflow (`wrangler pages deploy`) rather than built by Cloudflare's Git integration, because the build is `npm run build:web`, not Jekyll.
+This mirrors the Froglet website (`froglet-studio/Cosmic-Shore-landing-page`): GitHub Pages serves what players see, and Cloudflare Pages serves previews on `pages.dev`. The domain's DNS is **not** on Cloudflare: froglet.games uses Google's nameservers (`ns-cloud-a1..a4.googledomains.com`, recorded in Cosmic Shore's `Docs/WEBGL_TOYBOX.md` §5.2 on 2026-10-14), so every froglet.games record below is added there, at the Google DNS host (Google Cloud DNS, or Squarespace Domains for a domain that came from Google Domains). Previews need no froglet.games record at all. The one difference is that Tumult's previews are uploaded by a workflow (`wrangler pages deploy`) rather than built by Cloudflare's Git integration, because the build is `npm run build:web`, not Jekyll.
 
 Cloudflare reads `dist/web/_headers` (long caching for `assets/`, `noindex` so previews stay out of search results); GitHub Pages ignores it.
 
@@ -20,10 +20,10 @@ Nothing in the repository can do these. Each is undone by reversing it in the sa
 
 ### 1. GitHub Pages at tumult.froglet.games
 
-1. **Verify the domain for the organisation**, if `froglet.games` is not already listed: GitHub → organisation `froglet-studio` → Settings → Pages → Add a domain → `froglet.games`. GitHub shows a TXT record (`_github-pages-challenge-froglet-studio`); add it in Cloudflare DNS (step 2's screen), then press Verify. This stops anyone else's repository claiming a `froglet.games` subdomain.
-2. **DNS:** Cloudflare → `froglet.games` → DNS → Records → Add record:
-   - Type `CNAME`, Name `tumult`, Target `froglet-studio.github.io`
-   - Proxy status **DNS only** (grey cloud), so GitHub can issue and renew the HTTPS certificate.
+1. **Verify the domain for the organisation**, if `froglet.games` is not already listed: GitHub → organisation `froglet-studio` → Settings → Pages → Add a domain → `froglet.games`. GitHub shows a TXT record (`_github-pages-challenge-froglet-studio`); add it at froglet.games' DNS host (Google, step 2), then press Verify. This stops anyone else's repository claiming a `froglet.games` subdomain.
+2. **DNS:** at froglet.games' DNS host (Google Cloud DNS → the froglet.games zone → Add standard, or Squarespace Domains → froglet.games → DNS → Custom records), add:
+   - Type `CNAME`, Host `tumult`, Data `froglet-studio.github.io.` (Google Cloud DNS wants the trailing dot), TTL 1 hour.
+   GitHub issues and renews the HTTPS certificate itself once this resolves.
 3. **Pages source:** TumultTTG → Settings → Pages → Build and deployment → Source: **GitHub Actions**.
 4. **Custom domain:** same screen → Custom domain → `tumult.froglet.games` → Save. Wait for the DNS check to turn green (minutes, sometimes an hour), then tick **Enforce HTTPS**.
 5. **Let `main` deploy:** Settings → Environments → `github-pages` → Deployment branches and tags. GitHub limits it to the default branch (`bleeding-edge`); add a rule for `main`, and remove `bleeding-edge` so only a release can go live.
@@ -52,3 +52,7 @@ The playtest artifact is published from `development` by a Claude session, never
 Playtest page: _(not recorded yet: add the artifact's claude.ai link here)_
 
 The `Playtest build` workflow also builds `TUMULT.playtest.html` on every push to `development` and keeps it on the run for 90 days, for anyone who wants the file without building it.
+
+## The API's address
+
+The backend Worker (`docs/reference/BACKEND.md`) is served from its `workers.dev` address at launch, because a Worker's custom domain needs the domain's DNS on Cloudflare, and a CNAME from Google's DNS to `workers.dev` is refused by Cloudflare. Moving froglet.games' DNS to Cloudflare's free plan (export the zone first, copy the MX records, keep the GitHub Pages records "DNS only") is a later step, already planned for Cosmic Shore's browser Toybox; after it, `api.tumult.froglet.games` takes over by the `routes` line in `server/wrangler.toml`, the default in `src/web/server.js` and the Google and Discord redirect addresses.
