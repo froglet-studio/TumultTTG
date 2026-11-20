@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.75.0',
+    version: '2.75.1',
     items: [
+      {
+        text: 'Three clades take Cosmic Shore’s names: the Honey Badger is now the Ratel, the Hawk is the Red-tailed Hawk (a real species), and the Orca keeps its name. Saved pilots of those clades load as before. Cards that move dice from your pool now say “draw”, not “pull”, so Pull’s tip only shows where a foe is moved. Does every clade name read as a real animal?',
+        cards: ['fly_photo', 'jer_cache', 'gec_basking'],
+      },
       {
         text: 'A pilot that holds nine traits keeps growing: after a mission its trait offer becomes an exchange. Pick “Exchange for…” on a new trait, then choose which of your nine gives way. The new one starts unupgraded and the points you had spent on the old one come back to spend again. Did you find a trade worth making? Did losing an old favourite sting in a good way or a bad one?',
       },

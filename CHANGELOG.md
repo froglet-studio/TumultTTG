@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.75.1 — 2026-11-20 — Cosmic Shore's clade names, and dice are drawn
+
+Garrett: "Hawk is not a species. photosynthesis uses the word pull in references to dice, which collides with the use elsewhere… lets use ratel for honey badger to be consistent. and orca for killer whale."
+
+- **Names.** The Honey Badger is the **Ratel** and the Hawk is the **Red-tailed Hawk**, matching its painted head. The Orca was already the Orca; no card or name said "killer whale". Clade ids (`badger`, `hawk`) do not change, so saved runs, saved pilots, online games and canon notes load exactly as before.
+- **Draw, not pull.** Photosynthesis (Bask), Cheek Caching (Stash) and Solar Basking (Bask) said "pull" a die, which lit up the Pull keyword and its tip about moving foes. They now say "draw", as every other dice card does. The tortoise's Withdraw and the snail's shell faces no longer say "pull" either (Tuck In, Retreat into your shell, Shell Watch). Text only: no rule changes.
+
 ## 2.75.0 — 2026-11-20 — a full kit grows by exchange
 
 Garrett: "after getting 9 cards total, players should be able to swap cards at similar points exchanging an old card for a new one but keeping the 9 card max."
