@@ -390,6 +390,10 @@
     renderSide(m);
     renderLog(m);
     updateBoard(m);
+    // a new round: every resting card steps one column toward Ready, together
+    if (U.ms.trackRound != null && U.ms.trackRound !== m.round)
+      document.querySelectorAll('.mission .track').forEach((t) => t.classList.add('slide'));
+    U.ms.trackRound = m.round;
     scheduleCombos();
     playFx(m);
     if (U.feelUpdate) U.feelUpdate(m);
@@ -417,26 +421,35 @@
       prog = t ? `${t.name} ${Math.max(0, t.hp)}/${t.maxHp}` : 'destroyed';
     }
     const clock = m.clock
-      ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label)}">⏳ ${m.clock.value}</span>`
-      : '';
-    // the place's rules today: gravity and weather, a pill each, the rule in its tip
+      ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label + ' · round ' + m.round)}">⏳ ${m.clock.value}<small class="rnd">R${m.round}</small></span>`
+      : `<span class="pill mono">Round ${m.round}</span>`;
+    // the place's rules today: gravity, weather and the hour, folded into one chip; each rule in its tip
     const pl = m.place || {};
     const gb = T.GRAVITY.find((b) => b.id === pl.gravity);
     const wx = T.WEATHER[pl.weather];
-    const place =
-      (gb && gb.text ? `<span class="pill" data-tip="${esc(gb.text)}">${esc(gb.name)}</span>` : '') +
-      (wx && wx.text
+    const conds = [
+      gb && gb.text ? `<span class="pill" data-tip="${esc(gb.text)}">${esc(gb.name)}</span>` : '',
+      wx && wx.text
         ? `<span class="pill" data-tip="${esc(wx.text)}">${pl.weather === 'wind' ? (pl.wind > 0 ? 'Wind → E' : 'Wind ← A') : 'Fog'}</span>`
-        : '');
+        : '',
+      U.dayPill ? U.dayPill(m) : '',
+    ].filter(Boolean);
+    const ms = U.ms;
+    const condsChip = conds.length
+      ? `<span class="conds${ms.conds ? ' open' : ''}"><button class="pill conds-btn" data-act="conds" aria-expanded="${!!ms.conds}" data-tip="The place's rules today: gravity, weather and the hour">${conds.length} condition${conds.length === 1 ? '' : 's'} ${ms.conds ? '▴' : '▾'}</button><span class="conds-list">${conds.join('')}</span></span>`
+      : '';
+    // the screen's own buttons, behind one menu: the playtest's Plan and Report, sound, help, look, the way out
+    const menuBtn = `<button class="ghost sm mmenu-btn${ms.menu ? ' on' : ''}" data-act="mmenu" aria-expanded="${!!ms.menu}" aria-label="Menu" data-tip="Sound, help, look and the way out">☰</button>`;
+    const menu = `<div class="mmenu${ms.menu ? ' open' : ''}">${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊 Sound' : '🔇 Sound'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="look">Look</button>${U.titleBtn()}</div>`;
     const ae = document.activeElement;
     const typing = ae && ae.id === 'turnNote' ? [ae.selectionStart, ae.selectionEnd] : null;
+    const noteOpen = ms.noteOpen || !!typing || !!ms.noteDraft;
     const changed = setHTML(
       $('#mtop'),
       `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
       <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
-      <div class="tpills">${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span>${U.purseHTML(m, true)}</div>
-      <div class="endgrp"><div class="endrow"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${undoBtn(m)}</div>${noteBox(m)}</div>
-      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`,
+      <div class="tpills">${clock}${condsChip}${U.purseHTML(m, true)}</div>
+      <div class="endgrp${noteOpen ? ' note-open' : ''}"><div class="endrow"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${undoBtn(m)}<button class="ghost sm note-btn${noteOpen ? ' on' : ''}" data-act="noteOpen" aria-expanded="${noteOpen}" data-tip="Give this turn a line of story">✎</button>${menuBtn}</div>${noteBox(m)}${menu}</div></div>`,
     );
     const box = changed && typing && $('#turnNote');
     if (box) {
@@ -477,6 +490,13 @@
     if (r && r.ok === false && r.why) U.toast(esc(r.why));
   }
   U.commitNote = commitNote;
+  // the menu closes when anything else on the page is clicked
+  document.addEventListener('click', (e) => {
+    if (!U.ms || !U.ms.menu || U.screen !== 'mission' || !U.run || !U.run.mission) return;
+    if (e.target && e.target.closest && e.target.closest('.mmenu, .mmenu-btn')) return;
+    U.ms.menu = false;
+    renderTop(M());
+  });
   document.addEventListener('input', (e) => {
     if (!e.target || e.target.id !== 'turnNote' || !U.ms) return;
     if (U.ms.noteDraft == null) {
@@ -500,7 +520,9 @@
     const el = $('#mtarget');
     if (!el) return;
     if (ms.mode === 'idle') {
-      el.innerHTML = `<div class="hint">${hintText(m)}</div>`;
+      // the how-to line is for the first missions; after that the board speaks for itself and help is in the menu
+      const young = !U.run || !U.run.stats || (U.run.stats.missions || 0) < 2;
+      el.innerHTML = young ? `<div class="hint">${hintText(m)}</div>` : '';
       return;
     }
     let txt = '';
@@ -613,7 +635,7 @@
     const foes = T.liveEnemies(m).length;
     const changed = setHTML(
       $('#mside'),
-      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b>Enemy intents</b><span class="dim small right">${open ? 'declared — they adapt only to close distance' : `${foes} foe${foes === 1 ? '' : 's'} · shown on the board`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
+      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b data-tip="Declared before you act: each foe does what it says, adapting only to close distance. Each also carries its plan on the board.">Enemy plans</b><span class="dim small right">${open ? '' : `${foes} foe${foes === 1 ? '' : 's'}`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
         // the pilots not being played, folded: the ally's vitality, dice and (on request) cards
         m.heroes
           .map((h, i) => i)
@@ -641,13 +663,15 @@
    * in a strip under the board that is always in view. While a play is previewed (hovered, or tapped once on
    * a touch screen), the strip shows what ending the round would do after that play instead, beside now.
    */
-  function forecastChips(m, f, was) {
+  function forecastChips(m, f, was, prev) {
     const chips = f.heroes
-      .map((x, i) => ({ x, i, w: was && was.heroes[i] }))
+      .map((x, i) => ({ x, i, w: was && was.heroes[i], p: prev && prev.heroes[i] }))
       .filter(({ i }) => !m.heroes[i].downed)
-      .map(({ x, w }) => {
+      .map(({ x, w, p }) => {
         const d = x.hp - x.after;
         const changed = w && (w.after !== x.after || w.downed !== x.downed);
+        // since the last move, the figure moved: the chip says so with a short pulse
+        const bump = p && (p.after !== x.after || p.downed !== x.downed || p.hp !== x.hp) ? ' bump' : '';
         const tone = x.downed || d > 0 ? 'bad' : d < 0 ? 'good' : 'ok';
         const what = x.downed
           ? 'goes down'
@@ -659,7 +683,7 @@
         const from = changed
           ? `<s class="dim">${w.downed ? 'down' : w.hp - w.after > 0 ? '−' + (w.hp - w.after) : w.hp - w.after < 0 ? '+' + (w.after - w.hp) : 'untouched'}</s> `
           : '';
-        return `<span class="fc-chip ${tone}${changed ? ' changed' : ''}"><b>${esc(x.name)}</b> ${from}${what}</span>`;
+        return `<span class="fc-chip ${tone}${changed ? ' changed' : ''}${bump}"><b>${esc(x.name)}</b> ${from}${what}</span>`;
       });
     const falls = f.foes.filter((x) => x.falls).length;
     const fellBefore = was ? was.foes.filter((x) => x.falls).length : falls;
@@ -684,10 +708,12 @@
       'Worked out from the declared intents, hazards and effects in play. Nothing in an enemy turn is random: this is what will happen if you end the round as things stand.';
     if (after)
       return `<div class="forecast preview" data-tip="${esc(tip)}"><span class="fc-lab">After this play, ending the round:</span>${forecastChips(m, after, f)}</div>`;
-    return `<div class="forecast" data-tip="${esc(tip)}"><span class="fc-lab">End the round now:</span>${forecastChips(m, f)}</div>`;
+    return `<div class="forecast" data-tip="${esc(tip)}"><span class="fc-lab">End the round now:</span>${forecastChips(m, f, null, U.ms.fcPrev)}</div>`;
   }
   function renderForecast(m, after) {
     setHTML($('#mfc'), m.over ? '' : forecastHTML(m, after));
+    // the next redraw compares with this one; a preview's redraw does not count as a move
+    if (!after) U.ms.fcPrev = U.ms.forecast;
   }
   function heroPanel(m, h, i) {
     const sel = U.ms.heroIdx === i;
@@ -745,7 +771,10 @@
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
           return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
-        return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
+        // a card with nothing it can do now folds small; hovering it brings it back
+        const idle =
+          m.over || h.downed || (!T.canPlay(m, h, cid, 'P').ok && !T.canPlay(m, h, cid, 'E').ok) ? ' idle' : '';
+        return `<div class="hcard${idle}" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
       })
       .join('');
     const gear = h.gear
@@ -789,20 +818,36 @@
     const down = T.downedAllyOf(m, h);
     const canRally = !h.downed && down && down.downed && B.adjacent(m.board, h.pos, down.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
-    const actions = `<div class="actions">
-        ${T.BASIC.map((b) => {
-          const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
-          if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
-          const tip = b.el
-            ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
-            : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
-          const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
-          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` <span class="acost">${b.ap}</span>` : ''}</button>`;
-        }).join('')}
-        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact <span class="acost">2</span></button>
-        <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally <span class="acost">2</span></button>
-        <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>
-        <button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>
+    // the four basic actions used most stay in view; the rest (and the channelled ones) wait behind More
+    const MAIN = ['strike', 'brace', 'shove', 'spot'];
+    const basicBtn = (b) => {
+      const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
+      if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
+      const tip = b.el
+        ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
+        : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
+      const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
+      return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` <span class="acost">${b.ap}</span>` : ''}</button>`;
+    };
+    const interactB = `<button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact <span class="acost">2</span></button>`;
+    const rallyB = `<button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally <span class="acost">2</span></button>`;
+    const main = T.BASIC.filter((b) => MAIN.includes(b.id)).map(basicBtn);
+    const more = T.BASIC.filter((b) => !MAIN.includes(b.id))
+      .map(basicBtn)
+      .filter(Boolean);
+    // Interact and Rally join the four when they can be used: they are what the moment is about
+    (canInteract ? main : more).push(interactB);
+    (canRally ? main : more).push(rallyB);
+    more.push(
+      `<button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>`,
+      `<button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>`,
+    );
+    const channelled = T.BASIC.filter((b) => b.el && !m.over && T.canUseBasic(m, h, b.id).ok).length;
+    const moreOpen = !!U.ms.moreActs;
+    const actions = `<div class="actions${moreOpen ? ' more-open' : ''}">
+        ${main.join('')}
+        <button class="sm ghost more-btn" data-act="moreActs" aria-expanded="${moreOpen}" data-tip="Every other basic action${channelled ? ', including ' + channelled + ' you can channel now' : ''}">${moreOpen ? 'Fewer actions ▴' : `More actions (${more.length})${channelled ? ' <span class="more-el">+◆</span>' : ''} ▾`}</button>
+        <span class="more-acts">${more.join('')}</span>
       </div>`;
     const gearRow = gear || cons ? `<div class="gearrow">${gear}${cons}</div>` : '';
     if (sel) {
@@ -1034,8 +1079,10 @@
         el = svgEl('g', { id, class: 'token ' + cls }, tk);
         build(el);
       }
-      el.setAttribute('transform', `translate(${g.px(n)},${g.py(n)})`);
-      el.setAttribute('class', 'token ' + cls);
+      // where it stands; a token mid-walk keeps walking and goes home when it arrives (walkToken)
+      el._home = `translate(${g.px(n)},${g.py(n)})`;
+      if (!el._walking) el.setAttribute('transform', el._home);
+      el.setAttribute('class', 'token ' + cls + (el._walking ? ' walking' : ''));
       upd(el);
       seen.add(id);
       return el;
@@ -1547,6 +1594,111 @@
       if (b) b.innerHTML = '';
     }, 1700);
   }
+  /* ───────────── motion: walks and blows (src/ui/sea.js U.motion says how much moves) ───────────── */
+  const motion = () => (U.motion ? U.motion() : 'full');
+  const raf = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : null;
+  const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+  /** Each step of a walk takes this long, node to node along the route the engine walked. */
+  U.STEP_MS = 250;
+  const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+  /**
+   * Walk a token node by node from where it stood to where it stands now, starting after `delay` and after any
+   * walk it is already on. Never a teleport: on Full it walks, on Reduced it fades in where it lands, on Off
+   * it is simply there. Returns how long the walk takes, so what follows can wait for it.
+   */
+  function walkToken(m, f, delay) {
+    const el = U.ms.svg && U.ms.svg.querySelector('#tok-' + f.ent);
+    const g = U.ms.g;
+    const N = m.board.nodes;
+    if (!el || !g || !N[f.from] || !N[f.to] || f.from === f.to) return 0;
+    const mo = motion();
+    if (mo === 'off') return 0;
+    if (mo === 'reduced' || !raf) {
+      setTimeout(() => {
+        el.classList.remove('arrive');
+        el.getBoundingClientRect();
+        el.classList.add('arrive');
+        setTimeout(() => el.classList.remove('arrive'), 400);
+      }, delay);
+      return 0;
+    }
+    // a walk follows the board's paths; a shove, a pull or a swap slides straight there
+    const ids = f.how === 'walk' ? B.path(m.board, f.from, f.to, null, true) || [f.from, f.to] : [f.from, f.to];
+    const pts = ids.map((id) => [g.px(N[id]), g.py(N[id])]);
+    const steps = pts.length - 1;
+    const stepMs = f.how === 'walk' ? U.STEP_MS : 180;
+    const ends = (U.ms.walkEnds = U.ms.walkEnds || {});
+    const t0 = Math.max(now() + delay, ends[f.ent] || 0);
+    const dur = steps * stepMs;
+    ends[f.ent] = t0 + dur;
+    const put = ([x, y]) => el.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)})`);
+    if (!el._walking) put(pts[0]);
+    el._walking = (el._walking || 0) + 1;
+    el.classList.add('walking');
+    let started = false;
+    const tick = () => {
+      const t = (now() - t0) / stepMs;
+      if (t < 0) {
+        if (started || el._walking === 1) put(pts[0]);
+        return raf(tick);
+      }
+      started = true;
+      if (t < steps) {
+        const i = Math.floor(t);
+        const k = ease(t - i);
+        const [ax, ay] = pts[i];
+        const [bx, by] = pts[i + 1];
+        put([ax + (bx - ax) * k, ay + (by - ay) * k]);
+        return raf(tick);
+      }
+      el._walking--;
+      if (!el._walking) {
+        el.classList.remove('walking');
+        if (el._home) el.setAttribute('transform', el._home);
+      } else put(pts[steps]);
+    };
+    raf(tick);
+    return Math.max(0, t0 + dur - now() - delay);
+  }
+  /** The striker leans into the blow: a short lunge toward the target and back (Full motion only). */
+  function lunge(m, f, delay) {
+    if (motion() !== 'full' || f.by == null || !raf) return;
+    const el = U.ms.svg && U.ms.svg.querySelector('#tok-' + f.by);
+    const src =
+      m.heroes.find((h) => h.uid === f.by) ||
+      m.enemies.find((e) => e.uid === f.by) ||
+      m.decoys.find((d) => d.uid === f.by);
+    const g = U.ms.g;
+    const a = src && m.board.nodes[src.pos];
+    const b = m.board.nodes[f.pos];
+    if (!el || !a || !b || src.pos === f.pos) return;
+    const ax = g.px(a);
+    const ay = g.py(a);
+    const dx = g.px(b) - ax;
+    const dy = g.py(b) - ay;
+    const reach = Math.min(0.4, 22 / (Math.hypot(dx, dy) || 1));
+    const OUT = 110;
+    const BACK = 260;
+    setTimeout(
+      () => {
+        if (el._walking) return;
+        const t0 = now();
+        const tick = () => {
+          const t = now() - t0;
+          if (el._walking) return;
+          const k = t < OUT ? ease(t / OUT) : 1 - ease(Math.min(1, (t - OUT) / BACK));
+          el.setAttribute(
+            'transform',
+            `translate(${(ax + dx * reach * k).toFixed(1)},${(ay + dy * reach * k).toFixed(1)})`,
+          );
+          if (t < OUT + BACK) raf(tick);
+          else if (el._home) el.setAttribute('transform', el._home);
+        };
+        raf(tick);
+      },
+      Math.max(0, delay - OUT),
+    );
+  }
   function playFx(m) {
     const q = m.fx.slice(U.ms.fxDone);
     U.ms.fxDone = m.fx.length;
@@ -1560,9 +1712,15 @@
             m.decoys.find((d) => d.uid === f.ent)
           : null;
       const node = f.pos != null ? f.pos : ent ? ent.pos : null;
+      if (f.t === 'move') {
+        // the walk plays out before what follows it; a long enemy turn is kept to a few seconds
+        const took = walkToken(m, f, delay);
+        if (took && delay < 4000) delay += Math.min(took, 1500);
+      }
       if (U.feelFx) U.feelFx(m, f, ent, node, delay);
       switch (f.t) {
         case 'dmg':
+          lunge(m, f, delay);
           if (node != null) floater(node, '−' + f.amount, 'dmg', delay);
           hitSound = true;
           delay += 160;
@@ -1619,7 +1777,7 @@
       .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
       .join('');
     U.openModal(
-      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}${U.momentQuestion ? U.momentQuestion(m) : ''}${U.placeQuestion ? U.placeQuestion(m) : ''}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
+      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}${U.momentQuestion ? U.momentQuestion(m) : ''}${U.placeQuestion ? U.placeQuestion(m) : ''}${U.missionOverExtra ? U.missionOverExtra(m) : ''}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
     );
   }
 
@@ -1807,7 +1965,25 @@
     const m = M();
     const ms = U.ms;
     if ((act === 'face' || act === 'basic' || act === 'gear') && previewFirst(act, arg, el)) return true;
+    if (act !== 'mmenu' && ms.menu) ms.menu = false;
     switch (act) {
+      // the screen's own folds: they change only what is shown on this screen
+      case 'mmenu':
+      case 'conds':
+      case 'noteOpen': {
+        const k = act === 'mmenu' ? 'menu' : act;
+        ms[k] = !ms[k];
+        renderTop(m);
+        if (act === 'noteOpen' && ms.noteOpen) {
+          const box = $('#turnNote');
+          if (box) box.focus();
+        }
+        return true;
+      }
+      case 'moreActs':
+        ms.moreActs = !ms.moreActs;
+        renderSide(m);
+        return true;
       case 'undo':
         takeBack();
         return true;

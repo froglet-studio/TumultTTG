@@ -207,7 +207,7 @@
 
   /* ───────────── header strip ───────────── */
   function header(title, right) {
-    return `<div class="row" style="margin-bottom:10px"><span class="kick">Tumult</span><h2 style="margin:0 6px">${title}</h2><span class="right row"><button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="atlas">Atlas</button><button class="ghost sm" data-act="codex">Codex</button>${right || ''}</span></div>`;
+    return `<div class="row" style="margin-bottom:10px"><span class="kick">Tumult</span><h2 style="margin:0 6px">${title}</h2><span class="right row"><button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="atlas">Atlas</button><button class="ghost sm" data-act="codex">Codex</button><button class="ghost sm" data-act="look" data-tip="The sea behind the game, its accent and how much moves">Look</button>${right || ''}</span></div>`;
   }
   U.header = header;
   /** The way out of a run screen: to the title (the run is saved), or out of an online game. */
@@ -238,13 +238,16 @@
       <div class="kick">An expedition on Tumult</div>
       <h1>TUMULT</h1>
       <div class="sub">Draft a squad of pilots from Tumult's bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</div>
-      <div class="btns"><button class="primary" data-act="newRun">New Expedition</button>${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button data-act="canonList" data-tip="Answers and corrections you have written while playing">Canon</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button></div>
+      ${U.welcomeTitle ? U.welcomeTitle(meta, hasSave) : ''}
+      <div class="btns">${U.isNewPlayer && U.isNewPlayer(meta, hasSave) ? '<button data-act="newRun" data-tip="Draft your own pilots from the bloodlines, card by card.">Build your own squad</button>' : '<button class="primary" data-act="newRun">New Expedition</button>'}${hasSave ? '<button data-act="continueRun">Continue</button>' : ''}<button data-act="atlas">Atlas</button><button data-act="codex">Codex</button><button data-act="help">How to Play</button><button data-act="canonList" data-tip="Answers and corrections you have written while playing">Canon</button><button class="ghost" data-act="toggleSound">${U.sound ? '🔊 Sound on' : '🔇 Sound off'}</button><button class="ghost" data-act="look" data-tip="The sea behind the game, its accent and how much moves">Look</button></div>
       ${tidePicker(meta)}
       ${U.partyPicker ? U.partyPicker(meta) : ''}
+      ${U.titleAccount ? U.titleAccount() : ''}
       ${U.titleNet ? U.titleNet() : ''}
       <div class="mute small" style="margin-top:14px">Expeditions: ${meta.runs} · Hearts ended: ${meta.wins} · Furthest stop: ${meta.bestRow}/6</div>
       <div class="mute small" style="max-width:520px;text-align:center;margin-top:16px;font-family:var(--serif);font-style:italic">${esc(T.FLAVOR.terminalIntro[meta.runs % T.FLAVOR.terminalIntro.length])}</div>
       ${U.titleExtra ? U.titleExtra() : ''}
+      ${U.privacyLine ? U.privacyLine() : ''}
     </div>`;
   }
 
@@ -1132,6 +1135,8 @@
     U.tut = key;
   };
   function tutorialHTML() {
+    // the first mission is guided step by step (src/ui/welcome.js); the tip below is its fallback
+    if (U.tut === 'mission' && U.guideHTML) return U.guideHTML();
     if (!U.tut || !TUT[U.tut]) return '';
     return `<div class="tutorial">${TUT[U.tut]}<div class="row" style="margin-top:8px"><button class="sm primary" data-act="tutClose">Got it</button></div></div>`;
   }
@@ -1185,10 +1190,19 @@
     root.innerHTML = html;
     // #app is the page's scroller: a new screen starts at its top, a re-render stays where it was
     if (shown !== U.screen) root.scrollTop = 0;
+    // a new screen slides in (src/ui/feel.css; a fade on Reduced motion, nothing on Off)
+    if (shown != null && shown !== U.screen && root.classList) {
+      root.classList.remove('screen-in');
+      void root.offsetWidth;
+      root.classList.add('screen-in');
+      clearTimeout(U.render.t);
+      U.render.t = setTimeout(() => root.classList.remove('screen-in'), 450);
+    }
     shown = U.screen;
     if (U.screen === 'mission') U.afterMissionRender();
     if (U.modal && U.modal.onMount) U.modal.onMount();
     if (U.canonRestore) U.canonRestore();
+    if (U.seaApply) U.seaApply();
   };
 
   /* ───────────── ACTION DISPATCH (event delegation) ───────────── */
@@ -1202,6 +1216,7 @@
     if (U.extraAct && U.extraAct(act, arg, t, e)) return;
     if (U.atlasAct && U.atlasAct(act, arg)) return;
     if (U.canonAct && U.canonAct(act, arg)) return;
+    if (U.seaAct && U.seaAct(act, arg)) return;
     // with players on other screens, each acts only for their own pilots (src/ui/party.js)
     if (U.gate && !U.gate(act, arg, t)) return;
     if (U.handleMissionAct && U.screen === 'mission' && U.handleMissionAct(act, arg, t, e)) return;

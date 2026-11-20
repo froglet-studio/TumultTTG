@@ -24,17 +24,43 @@
     "ui/icons.js",
     "ui/keywords.js",
     "ui/core.js",
+    "ui/sea.js",
     "ui/party.js",
     "ui/pilots.js",
     "ui/mission.js",
     "ui/feel.js",
     "ui/atlas.js",
-    "ui/canon.js"
+    "ui/canon.js",
+    "ui/welcome.js",
+    "ui/telemetry.js",
+    "ui/account.js"
   ],
-  "css": ["ui/style.css", "ui/theme.css", "ui/party.css", "ui/atlas.css", "ui/canon.css", "ui/feel.css"],
+  "css": [
+    "ui/style.css",
+    "ui/theme.css",
+    "ui/party.css",
+    "ui/atlas.css",
+    "ui/canon.css",
+    "ui/feel.css",
+    "ui/account.css",
+    "ui/welcome.css",
+    "ui/sea.css"
+  ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
     "css": ["ui/playtest.css", "ui/net.css"]
+  },
+  "web": {
+    "comment": "Only in the web version (npm run build:web): the scripts that talk to Froglet's own services, Tumult's Worker (server/, docs/reference/BACKEND.md) and Froglet Analytics, and the online screens they serve. The offline file never contains them. The backend provider comes before the online screens, which look for it as they load.",
+    "js": [
+      "web/server.js",
+      "web/backend-worker.js",
+      "ui/net.js",
+      "ui/canon-net.js",
+      "ui/heroes-net.js",
+      "web/analytics.js"
+    ],
+    "css": ["ui/net.css"]
   },
   "art": {
     "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",

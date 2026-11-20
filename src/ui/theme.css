@@ -341,11 +341,11 @@ button.ghost {
   filter: grayscale(1) brightness(0.5);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .title-scene {
-    animation: none;
-  }
+/* reduced or no motion (src/ui/sea.js U.motion) */
+html.calm .title-scene {
+  animation: none;
 }
+
 @media (max-width: 640px) {
   .title h1 {
     font-size: 56px;
@@ -508,10 +508,9 @@ button.ghost {
     background: linear-gradient(180deg, transparent 55%, var(--panel) 100%);
   }
 }
-@media (prefers-reduced-motion: reduce) {
-  .scene-art {
-    animation: none;
-  }
+/* reduced or no motion (src/ui/sea.js U.motion) */
+html.calm .scene-art {
+  animation: none;
 }
 
 /* ───── passages between stops ───── */
@@ -563,10 +562,9 @@ button.ghost {
   text-transform: uppercase;
   color: var(--gold);
 }
-@media (prefers-reduced-motion: reduce) {
-  .passage-card {
-    animation: none;
-  }
+/* reduced or no motion (src/ui/sea.js U.motion) */
+html.calm .passage-card {
+  animation: none;
 }
 
 /* who sent the expedition: domains are ways of living, tinted, never teams */

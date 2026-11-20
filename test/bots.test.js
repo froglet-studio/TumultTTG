@@ -173,8 +173,8 @@ test('Full is the route it always was; Short has five stops: tier 1, three of ti
   assert.equal(back.length, 'short');
 });
 
-test('a 2.82 save (version 18) loads as a Full expedition with people in every seat, and plays on', () => {
-  const old = require('./fixtures/save-2.82.json');
+test('a 2.83 save (version 18) loads as a Full expedition with people in every seat, and plays on', () => {
+  const old = require('./fixtures/save-2.83.json');
   assert.equal(old.v, 18, 'the fixture is a version-18 save');
   const run = T.deserializeRun(JSON.stringify(old));
   assert.equal(run.v, T.SAVE_VERSION);

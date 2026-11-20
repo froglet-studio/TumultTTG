@@ -740,7 +740,7 @@ test('online: a host alone sets out with the AI filling the empty seats', { skip
   assert.ok(A.d.querySelector('[data-act="netStart"]').disabled, 'alone, the table cannot set out');
   A.act('netSeats', 3);
   A.act('netLength', 'short');
-  assert.match(A.d.querySelector('.net-lobby').textContent, /Open seat · AI fills it/);
+  assert.match(A.d.querySelector('.net-lobby').textContent, /AI fills it/);
   assert.match(A.d.querySelector('[data-act="netStart"]').textContent, /3 seats, 2 AI/);
   // a guest's lobby shows what the host chose
   const B = await open(html, db);

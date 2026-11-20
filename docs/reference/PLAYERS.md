@@ -118,7 +118,7 @@ all: 1713 turns — idle 13%, forced 28%, open 59%, 2.3 close choices a turn
 
 About two turns in five are dull, and tier 1 is the worst: in a tier-1 vault or elite, most turns either do not matter or have one clear answer. This is the number the next steps (rules for places, missions that are not fights, moves that pilots make together) are meant to bring down.
 
-## In a seat at the table (AI seats, 2.83)
+## In a seat at the table (AI seats, 2.84)
 
 The look-ahead player also plays a seat in a real game (`src/engine/bots.js`). It is told which pilots are its own (`T.planHeroPhase(m, { only })`) and moves nothing else. A seat is the AI's when the host had it **fill** an empty seat (it flies a pre-made pilot, named `AI · <pilot>`, and a person who joins later takes the seat over with its pilot), or when it **holds** the seat of a player who dropped online, until they rejoin.
 

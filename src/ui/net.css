@@ -59,7 +59,7 @@
 .net-quiet .net-game {
   margin-bottom: 4px;
 }
-/* the table's choices in the lobby, and the strip that says a player has dropped (2.83) */
+/* the table's choices in the lobby, and the strip that says a player has dropped (2.84) */
 .net-opts {
   display: flex;
   flex-direction: column;

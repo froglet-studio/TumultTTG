@@ -1143,7 +1143,7 @@
       if (r.party) Object.assign(r.party, { active: null, rounds: 'turns' });
       r.v = 18;
     },
-    // 2.83 lets an expedition be Short or Full (`length`) and an AI play a seat (`party.players[s].ai`). Every
+    // 2.84 lets an expedition be Short or Full (`length`) and an AI play a seat (`party.players[s].ai`). Every
     // older run was Full, and a person played every seat.
     18(r) {
       r.length = 'full';
