@@ -4,7 +4,7 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [bleeding-edge, development, main]
   pull_request:
 
 permissions:

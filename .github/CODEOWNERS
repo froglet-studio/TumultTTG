@@ -5,6 +5,6 @@
 # GitHub never lets a PR's author approve it, so a change authored by any owner still needs one of
 # the others, and an owner's approval means a person read the change.
 #
-# This only blocks a merge while a ruleset on `main` requires review from Code Owners
-# (docs/HANDOFF.md, "Repository settings").
+# This only blocks a merge while a ruleset on the branch requires review from Code Owners
+# (docs/BRANCHING_AND_RELEASE.md, "Repository settings").
 /.github/ @Shombith03 @FenrysUnchained @gradies @YsKhan61

@@ -5,7 +5,13 @@ Tumult is a tabletop RPG crossed with a board game, playable in a browser. It ha
 1. **Be a good game** — fun to replay, at a table or on a screen.
 2. **Be a character workshop** — playing it should help Froglet create and understand its pilots and their backstories.
 
-New here? Read `docs/HANDOFF.md` (state of the project), then `docs/ROADMAP.md` (what to build next). `docs/design/` holds the design: `00-pillars.md` is settled; everything else there is a proposal until Garrett says otherwise.
+Tumult has two co-owners, **Shombith and Garrett** (2026-11-20). Where this file or the docs say to ask Garrett, either co-owner can answer.
+
+New here? Read `docs/HANDOFF.md` (state of the project), then `docs/ROADMAP.md` (what to build next). `docs/design/` holds the design: `00-pillars.md` is settled; everything else there is a proposal until a co-owner says otherwise.
+
+## Branches (2026-11-20)
+
+`bleeding-edge` → `development` → `main`, as in Cosmic Shore (`docs/BRANCHING_AND_RELEASE.md`). Branch from `bleeding-edge` and open every pull request into `bleeding-edge`; both co-owners push there. `development` is what testers get, and the claude.ai playtest page is rebuilt from it; `main` is the release players get. Promotions are fast-forwards; never commit straight to `development` or `main`.
 
 ## Commands
 
@@ -91,12 +97,12 @@ Litmus test for any new card, gear, enemy or mission: *can you describe it witho
 
 - Before finishing: `npm run check`, `npm run format`, and `npm run docs` if cards, enemies or missions changed. Commit the regenerated docs with the change.
 - A rules change needs a test. A balance change needs before/after numbers from `node tools/sim.js 40` in the commit or PR description.
-- Small, reviewable commits on a branch; open a PR into `main`; CI runs format check, build and tests.
+- Small, reviewable commits on a branch from `bleeding-edge`; open a PR into `bleeding-edge` (squash and merge); CI runs format check, build and tests. Promotions to `development` and `main` follow `docs/BRANCHING_AND_RELEASE.md`.
 - Commit messages: `type(scope): summary` (`feat`, `fix`, `refactor`, `chore`, `docs`, `test`, `perf`), imperative, about 72 characters at most, one logical change each — Froglet's git rules, as in Cosmic Shore. Keep the `Co-Authored-By:` and `Claude-Session:` trailers: AI-written work is labelled.
-- The build stays one self-contained HTML file that makes no network requests.
+- Two builds, one source. The offline build (`npm run build`) stays one self-contained HTML file that makes no network requests. The hosted web build on froglet.games (2026-11-20) may talk to Froglet's own services (its backend and sign-in Worker, Froglet Analytics) and nothing else, and still plays solo when they are unreachable. The engine stays network-free in both.
 - Write for the table as well as the screen: anything the engine does should be explainable in a sentence a player could resolve by hand.
 - Design docs are part of the product. When an implementation settles a proposal, update the proposal's status line and move the settled description into `docs/reference/`.
-- If two readings of a design are plausible, or a change would touch the pillars, **ask Garrett rather than guessing.**
+- If two readings of a design are plausible, or a change would touch the pillars, **ask a co-owner (Garrett or Shombith) rather than guessing.**
 
 ## This repository is public
 
