@@ -78,8 +78,8 @@
   U.heroesShare = () => push();
   U.heroesForget = () => push();
 
-  if (window.claude && typeof window.claude.use === 'function') {
-    Promise.all([window.claude.use('db'), window.claude.use('user')])
+  if (T.Backend && T.Backend.available()) {
+    Promise.all([T.Backend.use('db'), T.Backend.use('user')])
       .then(async ([d, u]) => {
         if (!d || !u) return;
         db = d;

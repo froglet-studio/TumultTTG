@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased — the web version
+
+- **A web version for froglet.games.** `npm run build:web` writes `dist/web/`: a 2 KB page that loads the game's script, stylesheet, font and each painting as separate files named by their content. A first visit downloads about 300 KB before the title screen draws, against 8 MB for the single file; a painting is fetched when a screen shows it; a returning player downloads only what changed. A service worker keeps the files for offline play. The offline single file is unchanged.
+- **Previews.** Every pull request and push to `bleeding-edge` deploys the web version to Cloudflare Pages once the secrets are set; GitHub Pages publishes it with the offline file beside it.
+- **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
+
 ## 2.74.0 — 2026-11-20 — online: quicker, and a reload can rejoin
 
 Garrett, after 2.73.1: "it feels slow often… like it is waiting for the network to process a simple move." The engine answers a move in about 7 ms; the wait was the page store's live delivery, which can fall back to a refresh every half minute.
