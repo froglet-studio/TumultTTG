@@ -662,7 +662,8 @@
     }
     const inode = h.downed ? null : interactNode(m, h);
     const canInteract = inode != null && (T.apValue(h) >= 2 || !!T.markPay(h, m.board.nodes[inode].objective));
-    const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
+    const down = T.downedAllyOf(m, h);
+    const canRally = !h.downed && down && down.downed && B.adjacent(m.board, h.pos, down.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
     const actions = `<div class="actions">
         ${T.BASIC.map((b) => {
@@ -1865,7 +1866,7 @@
     }
     if (e.key === 'Tab') {
       e.preventDefault();
-      U.ms.heroIdx = 1 - U.ms.heroIdx;
+      U.ms.heroIdx = (U.ms.heroIdx + 1) % U.run.mission.heroes.length;
       U.updateMission();
     }
     if (e.key === 'e' || e.key === 'E') {

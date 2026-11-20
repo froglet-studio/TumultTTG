@@ -132,7 +132,7 @@
   U.chosenPlayers = (meta) => Math.max(1, Math.min(T.MAX_PLAYERS, meta.players || 1));
   U.partyPicker = function (meta) {
     const cur = U.chosenPlayers(meta);
-    const btns = [1, 2]
+    const btns = Array.from({ length: T.MAX_PLAYERS }, (x, k) => k + 1)
       .map(
         (n) =>
           `<button class="${n === cur ? 'primary' : 'ghost'} sm" data-act="pickPlayers" data-arg="${n}">${n === 1 ? 'Solo' : n + ' players'}</button>`,
@@ -141,7 +141,7 @@
     const txt =
       cur === 1
         ? 'You fly both pilots.'
-        : 'Each player drafts and flies one pilot, passing the screen. The rules are the same as solo.';
+        : `Each player drafts and flies one pilot, passing the screen, and you take turns.${cur > 2 ? ` A squad of ${cur} meets bigger missions: tougher foes, more of them, and more to do.` : ''}`;
     return `<div class="tide-pick"><span class="dim small">Players</span>${btns}<div class="mute small">${txt}</div></div>`;
   };
 })((window.T = window.T || {}));
