@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.79.1 — 2026-11-20 — an online squad waits for the host's pilot
+
+Garrett: "we tried a 5 and 2 player test and we were not able to start either. it was hanging on the upgrade screen and not accepting my upgrades then i could net press the set out button"
+
+- **Fix.** When a guest confirmed their pilot before the host did, the squad's list of pilots had a hole where the host's would go. The check "has everyone drafted?" skipped the hole, so the expedition set out without the host's pilot, and the host's draft screen broke on it (upgrades and Set out did nothing). Every seat is now counted, holes too (`T.squadReady`), and the pilot art skips a seat still drafting. A test drives exactly this: a guest who sets out first, then the host upgrading and setting out.
+
 ## 2.79.0 — 2026-11-20 — join an expedition under way
 
 Garrett: "is there a way the two players mid game could save their game, we update, and then I join in?"
