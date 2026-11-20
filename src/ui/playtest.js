@@ -21,11 +21,6 @@
   const NOTES = {
     version: '2.82.0',
     items: [
-    version: '2.76.0',
-    items: [
-      {
-        text: 'The sea comes alive and the mission screen is calmer. Behind every screen the water now drifts: sea lines, slow light and rising motes. The sea follows the expedition down the route, from the light Shore in the shallows through the Deep Sea and Glow to a violet Storm at the Heart, a little darker every stop; Look (in the ☰ menu on a mission, or on the title) pins a theme, picks an accent and sets motion to Full, Reduced or Off. On the mission screen, Plan, Report, sound, help and Title sit behind ☰, the place’s rules fold into one chip, the story box opens from ✎, four basic actions show with the rest under More, cards with nothing to do fold small, and the how-to line goes after the first two missions. Pilots now walk their path node by node, strikers lean into their blows, a hit shakes, the forecast pulses when it changes and the track steps toward Ready at a new round. Is anything you used often now too far away? Does any animation slow a turn down?',
-      },
       {
         text: 'The sea comes alive and the mission screen is calmer. Behind every screen the water now drifts: sea lines, slow light and rising motes. The sea follows the expedition down the route, from the light Shore in the shallows through the Deep Sea and Glow to a violet Storm at the Heart, a little darker every stop; Look (in the ☰ menu on a mission, or on the title) pins a theme, picks an accent and sets motion to Full, Reduced or Off. On the mission screen, Plan, Report, sound, help and Title sit behind ☰, the place’s rules fold into one chip, the story box opens from ✎, four basic actions show with the rest under More, cards with nothing to do fold small, and the how-to line goes after the first two missions. Pilots now walk their path node by node, strikers lean into their blows, a hit shakes, the forecast pulses when it changes and the track steps toward Ready at a new round. Is anything you used often now too far away? Does any animation slow a turn down?',
       },
