@@ -372,7 +372,7 @@
     if (d.step === 'mode') {
       const free = (pb) => !run.heroes.some((h) => h && h.name === pb.name);
       const made = U.madeHeroes().filter((x) => free(x.rec));
-      body = `<div class="panel"><h3>Pilot ${n} of ${squadOf(run)} ${who}· choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
+      body = `<div class="panel"><h3>Pilot ${n} ${who}· choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
         <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span>${draftOut(d)}</div>
         <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
         <div class="prebuilt-grid">${T.PREBUILTS.filter(free)
@@ -380,7 +380,7 @@
           .join('')}</div>
         ${made.length ? `<h3 style="margin-top:14px">…or play a pilot someone made</h3><p class="dim small">Every pilot built in the draft is kept here, ${U.heroesShared && U.heroesShared() ? 'for everyone who plays this page' : 'on this device'}, ready to fly again.</p><div class="prebuilt-grid">${made.map((x) => pilotCard(x.rec, x.who, x.mine)).join('')}</div>` : ''}</div>`;
     } else if (d.step === 'species') {
-      body = `<div class="panel"><h3>Hero ${n} ${who}: choose two bloodlines (Human is always the third)</h3>
+      body = `<div class="panel"><h3>Pilot ${n} ${who}: choose two bloodlines (Human is always the third)</h3>
         <div class="row" style="margin:8px 0">${U.portrait({ name: d.name, species: ['human'].concat(d.species) }, 'lg')}<span class="small dim">The portrait follows the two bloodlines: a painting of that exact pair when one exists, else the nearest stand-in.</span></div>
         <div class="row" style="margin:8px 0"><label class="small dim">Name</label><input id="heroName" value="${esc(d.name)}" style="background:#0b1222;border:1px solid var(--line2);color:var(--txt);padding:5px 8px;border-radius:6px"></div>
         <div class="species-grid">${T.SPECIES_ORDER.filter((s) => s !== 'human')
@@ -1109,7 +1109,7 @@
           html = renderDraft();
           break;
         case 'map':
-          html = renderMap();
+          html = U.shell ? U.shell('route', renderMap()) : renderMap(); // the route sits in the app's frame
           break;
         case 'mission':
           html = U.renderMission();
