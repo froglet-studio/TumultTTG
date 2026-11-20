@@ -938,11 +938,27 @@
   };
   U.renderLobby = function () {
     const host = N.role === 'host';
-    const here = N.names.map((x, s) => (s === 0 ? esc(x || 'Player 1') + ' (host)' : x ? esc(x) : '')).filter(Boolean);
-    return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Online game</div><h2>Code <span class="mono">${esc(N.code || '')}</span></h2>
-      <p>${here.join(' · ')}</p>
+    const W = U.welcome || {};
+    // the server's invite (with its token) when there is one, else a plain ?join= link, else the code
+    const link = N.invite || (W.inviteLink ? W.inviteLink(N.code || '') : null);
+    const share = link || N.code || '';
+    const room = N.joined() < T.MAX_PLAYERS;
+    // the link (or, inside another page, the code) and a copy button: a friend needs nothing else
+    const invite =
+      host && room
+        ? `<div class="invite-box"><span class="dim small">${link ? 'Invite link' : 'Game code'}</span><div class="row"><input id="inviteField" class="mono" readonly value="${esc(share)}"><button class="primary" data-act="inviteCopy" data-arg="${esc(N.code || '')}">Copy</button></div>
+        <div class="small dim">${link ? 'Anyone with the link can join this game with only a name.' : 'Your friend opens this page and joins with the code.'}</div></div>`
+        : '';
+    const seat = (name, who, here) =>
+      `<div class="seat${here ? '' : ' waiting'}"><span class="seat-dot" aria-hidden="true"></span><div><b>${esc(name)}</b><div class="small dim">${esc(who)}</div></div><span class="right small">${here ? 'Joined' : 'Waiting…'}</span></div>`;
+    const seats = N.names
+      .map((x, s) => (s === 0 ? seat(x || 'Player 1', 'host', true) : x ? seat(x, 'guest', true) : ''))
+      .join('');
+    const open = room ? seat('Seat ' + (N.joined() + 1), 'waiting for a friend', false) : '';
+    return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Play with friends</div><h2>Expedition <span class="mono">${esc(N.code || '')}</span></h2>
+      ${invite}
+      <div class="seats">${seats}${open}</div>
       <p class="dim">${esc(N.status)}</p>
-      ${host && N.invite && N.joined() < T.MAX_PLAYERS ? `<p class="small">Invite link, for a player without an account: <input class="net-invite" readonly value="${esc(N.invite)}" onclick="this.select()"></p>` : ''}
       <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.joined() > 1 ? '' : 'disabled'}>Start the expedition${N.joined() > 1 ? ` (${N.joined()} players)` : ''}</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
   };
 

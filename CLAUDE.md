@@ -54,6 +54,7 @@ src/engine/scaling.js     how a mission grows with the squad's size and level (T
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
 src/ui/                   screens, SVG board, input (browser only)
 src/ui/backend.js         T.Backend: the one seam the online screens reach a server through
+src/ui/welcome.js         new players: Play now, the guided first mission, keep your squad, invites (docs/reference/WELCOME.md)
 src/ui/telemetry.js       anonymous play data: the events (docs/analytics/EVENT_SCHEMA.json, docs/reference/ANALYTICS.md)
 src/ui/account.js         T.Account: guest-first sign-in on Tumult's Worker (inert without T.Server)
 server/src/auth/          the Worker's accounts: guests, Google, Discord, email codes, sessions

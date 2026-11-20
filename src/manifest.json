@@ -29,6 +29,7 @@
     "ui/feel.js",
     "ui/atlas.js",
     "ui/canon.js",
+    "ui/welcome.js",
     "ui/telemetry.js",
     "ui/account.js"
   ],
@@ -39,7 +40,8 @@
     "ui/atlas.css",
     "ui/canon.css",
     "ui/feel.css",
-    "ui/account.css"
+    "ui/account.css",
+    "ui/welcome.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
