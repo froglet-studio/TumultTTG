@@ -2923,3 +2923,13 @@ button:disabled .acost {
     min-height: 40px;
   }
 }
+
+/* the title screen's line about anonymous play data (src/ui/telemetry.js) */
+.privacy-line {
+  max-width: 520px;
+  text-align: center;
+  margin-top: 12px;
+}
+.privacy-line button {
+  text-decoration: underline;
+}

@@ -57,15 +57,37 @@ export function art(manifest, url = dataUri) {
 export const outFile = ({ playtest = false, fragment = false } = {}) =>
   `dist/TUMULT${playtest ? '.playtest' : ''}${fragment ? '.fragment' : ''}.html`;
 
+/**
+ * Where the web version sends its anonymous play data: Tumult's Froglet Analytics server and the public,
+ * write-only ingest key that server accepts (docs/reference/ANALYTICS.md). The key file is the same one the
+ * server reads from this repository, so the two cannot drift.
+ */
+export function analyticsConfig() {
+  const dir = join(root, 'docs', 'analytics');
+  const { url } = JSON.parse(readFileSync(join(dir, 'ingest.json'), 'utf8'));
+  const key = readFileSync(join(dir, 'ingest_key.public'), 'utf8').trim();
+  if (!/^https:\/\/[a-z0-9.-]+$/.test(url) || !/^fa_in_public_[A-Za-z0-9_-]{16,}$/.test(key))
+    throw new Error('docs/analytics/ingest.json needs an https url and ingest_key.public a public ingest key');
+  return { url, key };
+}
+
 /** The game's script and stylesheet, art aside: the sources in manifest order, each under a banner. */
-function sources({ playtest = false } = {}) {
+function sources({ playtest = false, web = false } = {}) {
   const manifest = JSON.parse(read('manifest.json'));
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
   const extra = playtest ? manifest.playtest : { js: [], css: [] };
+  // The web version's own scripts (Froglet Analytics); never in the offline file, which makes no network requests.
+  const webJs = web ? (manifest.web && manifest.web.js) || [] : [];
   const banner = (rel) => `\n/* ───── ${rel} ───── */\n`;
+  const fill = (rel, body) =>
+    rel === 'web/analytics.js'
+      ? body.replace("/*__ANALYTICS__*/ { url: '', key: '' }", () => JSON.stringify(analyticsConfig()))
+      : body;
   // The page knows which build it is: the playtest panel shows it and puts it in its reports.
   const stamp = `window.T = window.T || {};\nwindow.T.BUILD = ${JSON.stringify({ version: pkg.version, playtest })};\n`;
-  const js = [...manifest.engine, ...manifest.ui, ...extra.js].map((rel) => banner(rel) + read(rel)).join('\n');
+  const js = [...manifest.engine, ...manifest.ui, ...extra.js, ...webJs]
+    .map((rel) => banner(rel) + fill(rel, read(rel)))
+    .join('\n');
   const css = [...manifest.css, ...extra.css].map((rel) => banner(rel) + read(rel)).join('\n');
   return { manifest, pkg, stamp, js, css };
 }
@@ -106,7 +128,7 @@ export const webDir = ({ playtest = false } = {}) => `dist/web${playtest ? '-pla
  * has not changed. Returns { files: Map(path → Buffer|string), js } without writing anything.
  */
 export function buildWeb({ playtest = false } = {}) {
-  const s = sources({ playtest });
+  const s = sources({ playtest, web: true });
   const files = new Map();
   const put = (path, body) => (files.set(path, body), path);
   // art and fonts: copied as they are, under a content-hashed name; the script and stylesheet name them

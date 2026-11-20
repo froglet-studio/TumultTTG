@@ -22,14 +22,18 @@ async function until(ready, what, ms = 5000) {
   }
 }
 
-async function driveRun(html, { seed = 1, auto = true, maxSteps = 40, tide = 'rising' } = {}) {
+async function driveRun(
+  html,
+  { seed = 1, auto = true, maxSteps = 40, tide = 'rising', url = 'http://localhost/', setup = null, after = null } = {},
+) {
   const { JSDOM } = require('jsdom');
   const errors = [];
   const dom = new JSDOM(html, {
     runScripts: 'dangerously',
     pretendToBeVisual: true,
-    url: 'http://localhost/',
+    url,
     beforeParse(w) {
+      if (setup) setup(w);
       w.console.error = (...a) => errors.push('console.error: ' + a.map(String).join(' '));
       w.addEventListener('error', (e) => errors.push('window.error: ' + ((e.error && e.error.stack) || e.message)));
     },
@@ -166,6 +170,7 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40, tide = 'ri
       }
     }
     step('end');
+    if (after) await after(w);
     return { log, nodes, missions, tide: U.run.tide, over: !!U.run.over, won: !!U.run.won, screen: U.screen, errors };
   } finally {
     w.close();
