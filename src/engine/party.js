@@ -270,6 +270,12 @@
     if (!f) return { ok: false, why: 'unknown command ' + op };
     if (!T.mayActFor(run, seats, cmd.hero)) return { ok: false, why: "that is another player's pilot" };
     const m = run.mission;
+    // a line of story may be written any time in a mission, on another player's turn too (Garrett,
+    // 2026-11-20: "we should be able to keep adding things during other players turns"): it changes nothing in play
+    if (op === 'note') {
+      if (!m || m.over) return { ok: false, why: 'not now' };
+      return Object.assign({}, T.addNote(m, cmd.hero, cmd.text), { ctx: cmd.ctx || {} });
+    }
     if (MISSION_OPS.has(op) && (!m || m.over || m.phase !== 'hero')) return { ok: false, why: 'not now' };
     const turn = MISSION_OPS.has(op) ? T.turnSeat(run) : null;
     if (turn != null && T.ownerOf(run, cmd.hero) !== turn)
