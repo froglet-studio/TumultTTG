@@ -198,7 +198,12 @@ test('room: one host, seats for five, commands only for your own seat, invites f
 
   // a watcher hears each change
   await a.ask({ op: 'watch', wid: 'w1', path: g + '/seats' });
-  await b.ask({ op: 'set', path: g + '/seats/1', data: { name: 'Bo', holder: 'tab-b' } });
+  await b.ask({ op: 'set', path: g + '/seats/1', data: { name: 'Bo', holder: 'tab-b', at: 5, junk: 'x' } });
+  assert.deepEqual(
+    (await b.ask({ op: 'get', path: g + '/seats/1' })).data,
+    { name: 'Bo', holder: 'tab-b', at: 5 },
+    'a seat keeps its heartbeat',
+  );
   await refusedWith(c.ask({ op: 'set', path: g + '/seats/1', data: { name: 'Cy' } }), 'permission-denied');
   for (const n of [2, 3, 4]) await c.ask({ op: 'set', path: `${g}/seats/${n}`, data: { name: 'Cy' + n } });
   await refusedWith(

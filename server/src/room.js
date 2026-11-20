@@ -255,7 +255,9 @@ export class GameRoom {
       const holder = meta.seats[at.seat];
       if (holder && holder !== who.uid) no('permission-denied', 'that seat is taken');
       if (!data || typeof data !== 'object') no('invalid-argument', 'a seat is { name, holder }');
+      const at = +data.at;
       data = { name: String(data.name || '').slice(0, 24), holder: String(data.holder || '').slice(0, 32) };
+      if (Number.isFinite(at) && at > 0) data.at = at; // the holder's heartbeat: the host tells who has dropped
       meta.seats[at.seat] = who.uid;
     } else if (at.kind === 'cmd') {
       const seat = data && data.seat;
