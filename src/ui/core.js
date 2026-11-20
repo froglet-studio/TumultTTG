@@ -133,7 +133,6 @@
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
       <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : ''}>${U.icClade(shownSp)} ${esc(c.kin || sp.name)}</span></div>
       ${U.cardArt(c, false, shownSp)}${face('P')}${face('E')}
-      ${o.double ? `<div class="small double-note">Already held: taking it again gives ${T.RULES.DOUBLE_UP} UP to spend on this card alone.</div>` : ''}
       ${o.bound ? `<div class="small double-note">${o.bound} UP bound to this card</div>` : ''}
       ${o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button> &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button></div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P} · E${E}</div>` : ''}
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
@@ -391,7 +390,7 @@
       const h = d.hero;
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' ')}</span></div>
         <p class="dim small">Each pack mixes your three bloodlines. ★ marks a species' signature traits. Hover any face for exact numbers at your current P/E.</p>
-        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', double: h.cards.includes(cid), clades: h.species })).join('')}</div>
+        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', clades: h.species })).join('')}</div>
         <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button></div>
         ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
     } else if (d.step === 'wait') {
@@ -474,8 +473,6 @@
         return;
       }
       U.sfx.click();
-      // a trait taken a second time is upgrade points on it, not a card: the kit still needs its six
-      if (r.double) U.toast(`${T.CARD[arg].name} taken twice: ${T.RULES.DOUBLE_UP} UP to spend on it alone.`);
       d.picks = d.hero.cards.length;
       if (d.picks >= T.RULES.START_CARDS) {
         T.awaken(d.hero);
@@ -920,7 +917,7 @@
                 : `<p class="dim small">${full ? `${esc(h.name)} holds nine traits, the most a pilot can. Exchange one of them for a trait below, or skip for +2 ◇.` : `Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.`}</p><div class="pack">${cards
                     .map((cid) => {
                       const ex = T.isSwapOffer(run, i, cid);
-                      return `<div class="offer">${U.cardHTML(cid, { flavor: false, double: h.cards.includes(cid), clades: h.species })}<div class="row" style="margin-top:6px">${ex ? `<button class="sm primary" data-act="swapPick" data-arg="${cid}|${i}" data-tip="Give up one of ${esc(h.name)}'s nine traits for this one.">Exchange for…</button>` : `<button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button>`}</div></div>`;
+                      return `<div class="offer">${U.cardHTML(cid, { flavor: false, clades: h.species })}<div class="row" style="margin-top:6px">${ex ? `<button class="sm primary" data-act="swapPick" data-arg="${cid}|${i}" data-tip="Give up one of ${esc(h.name)}'s nine traits for this one.">Exchange for…</button>` : `<button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button>`}</div></div>`;
                     })
                     .join(
                       '',

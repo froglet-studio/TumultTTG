@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.77.0 — 2026-11-20 — a held trait is never offered again
+
+Garrett: "lets no longer have them gain extra points for drawing the card again. they just have a smaller pool. which gives them more reliability in their late game adaptive swaps."
+
+- **No second copies.** A trait a pilot holds is never offered to it again, in the draft, a reward or an event (`T.canAddCard` says "already held"). From 2.42 a pilot whose two clades shared a trait could take it a second time as 1 upgrade point bound to it; that pick is gone, so a two-clade pilot draws from a smaller pool and meets the traits it is after more often, which matters most for exchanges once its kit is full.
+- **Old saves.** A run or a made pilot that already holds bound points keeps them and spends them as before; if the card leaves, they come back as free points (2.76.1). No save change. `tools/double-up.js`, which measured the second pick, is removed.
+- **Balance** (`node tools/sim.js 40`, against 2.76.1): look-ahead runs 25/40 both ways, mission win 90%; heuristic runs 5 → 6 of 40, mission win 72% → 73%. Single cells move by a point or two at most: noise from the draft drawing from a different pool.
+
 ## 2.76.1 — 2026-11-20 — a lost card gives back every point
 
 Garrett: "when players loose a card they should get their points refunded."

@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.76.1',
+    version: '2.77.0',
     items: [
+      {
+        text: 'A trait a pilot already holds is never offered to it again. Pilots of two clades that share traits (a primate with a human side, two cats) used to be offered a shared trait a second time for 1 upgrade point; now the draft and every reward draw only traits it could take, so its pool is smaller and the ones it is after come up more often. Pilots saved with such a point keep it. Did the late exchanges offer what you were hoping for?',
+      },
       {
         text: 'A trait you lose now gives back every point on it. Exchange one of nine traits for a new one, or lose one to the Molt or Trade events, and all its upgrade points return to spend again, including the point a second copy of that trait added. Did the refund show up where you expected it?',
       },
