@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.81.0 — 2026-11-20 — take turns in any order, or play all at once
+
+Garrett: "each player should roll their dice as soon as they end their turn. players should take turns in the order of their choice each round." And: "lets replace that [the A/B test] with a different way to play where we do all roll together at the end of the round and players can all play in real time without taking turns."
+
+- **Turns in any order.** With players taking turns, the order is no longer host first: each round, whoever acts first for one of their pilots takes the next turn, and nobody else acts until they end it, so a duo power is still yours to plan. A player can also end their turn without acting. The End turn button names whose turn it ends; a player who has had their turn sees who is still to go.
+- **Roll as your turn ends.** Ending your turn rolls your next round's dice at once, so you can plan while the others play (`T.rollAhead`). Those are the dice you hold when the round begins; nobody rolls twice, and the pool and bank still make fifteen.
+- **All at once, a second way to play.** The playtest panel's Ethereal rule switch (an A/B test settled in 2.4) is gone; in its place, "Way to play with friends": Take turns (as above, the default) or All at once. All at once has no turns: every player spends AP whenever they like, in whatever order the table agrees, and presses Done (press Waiting to take it back); once everyone with a pilot standing is done, the foes act and everyone rolls together. The host chooses, before or during an expedition. Online, the host's screen carries out moves one at a time in the order they arrive, so two players acting at the same moment are both kept, and a move the board no longer allows is refused (tested with two screens walking at once).
+- **The story box** stays open to everyone in both ways (2.79.2).
+- **Saves** are version 18: the party keeps the turn under way (`active`) and the way to play (`rounds`), and a pilot may be marked as having rolled ahead. A 2.80 save mid-round loads taking turns and plays on (fixture `save-2.80.json`). Solo play is unchanged.
+
 ## 2.80.0 — 2026-11-20 — see who is playing and join their game
 
 Garrett: "now lets have it work more like cosmic shore where we can just see who is playing and jump into their game."

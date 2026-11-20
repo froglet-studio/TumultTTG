@@ -202,24 +202,22 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
     act('endRound');
     if (U.ms.endConfirm) act('endRound');
   };
-  // players take turns: round 1 is the host's first, so the guest's end-turn does nothing yet
-  assert.match(d.querySelector('[data-act="endRound"]').textContent, /Player 1's turn/);
-  ready();
-  assert.equal(m.round, round, "a player cannot end someone else's turn");
-  U.seats = [0];
+  // players take turns in the order they choose: the round opens, and this screen (seat 1) may go first
   U.updateMission();
-  assert.match(d.querySelector('[data-act="endRound"]').textContent, /End Player 1's turn/);
+  assert.match(d.querySelector('[data-act="endRound"]').textContent, /End Player 2's turn/);
   ready();
-  assert.equal(m.round, round, "ending the first player's turn passes it on; the round goes on");
-  assert.equal(w.T.turnSeat(U.run), 1);
-  U.seats = [1];
+  assert.equal(m.round, round, "ending one player's turn passes it on; the round goes on");
+  assert.ok(m.heroes[1].rolledAhead, "and that player's pilot rolls next round's dice at once");
+  assert.equal(w.T.turnSeat(U.run), 0, 'the host is the only one left');
+  ready();
+  assert.equal(m.round, round, "a player cannot end someone else's turn, nor take a second");
+  U.seats = [0];
   U.updateMission();
   assert.match(d.querySelector('[data-act="endRound"]').textContent, /End Round/);
   ready();
   assert.ok(m.round > round || m.over, "the last player's turn ends the round");
   assert.equal(JSON.stringify(U.run.party.ready), '[false,false]', 'and the next round starts with nobody done');
-  if (!m.over)
-    assert.equal(w.T.turnSeat(U.run), 0, 'and the same player goes first again: nobody takes two turns in a row');
+  if (!m.over) assert.ok(w.T.turnOpen(U.run), 'and with the order open again');
 
   // a purse each, and each screen shows only its own player's buttons in the shop and the upgrades
   const T = w.T;
@@ -229,6 +227,7 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
   U.run.haven = T.havenStock(U.run);
   U.run.purses[0] = 40;
   U.screen = 'haven';
+  U.seats = [1];
   U.render();
   const buys = () =>
     [...d.querySelectorAll('[data-act="buyGear"]')].map((b) => b.getAttribute('data-arg').split('|')[1]);
@@ -251,36 +250,136 @@ test('a command does what the direct call does, and only for its own player', ()
   };
   const a = make();
   const b = make();
-  // round 1: the host's turn first; the guest may not move yet
+  // round 1: the order is open; the guest goes first by acting, and the host waits
   const h = a.mission.heroes[1];
   const to = T.reachableWalk(a.mission, h, T.apValue(h), false)[0];
   assert.ok(to != null);
-  const early = T.execCommand(b, { op: 'walk', hero: 1, node: to }, [1]);
-  assert.equal(early.ok, false, "a player cannot act in someone else's turn");
-  assert.match(early.why, /Player 1's turn/);
-  assert.equal(T.execCommand(b, { op: 'ready' }, [1]).ok, false, 'nor end it');
-  assert.deepEqual(T.execCommand(b, { op: 'ready' }, [0]), { ok: true, passed: true, to: 1 });
-  a.party.ready[0] = true;
-  T.walk(a.mission, h, to);
+  assert.ok(T.turnOpen(b));
   const r = T.execCommand(b, { op: 'walk', hero: 1, node: to }, [1]);
-  assert.ok(r.ok);
+  assert.ok(r.ok, 'the guest takes the first turn');
+  a.party.active = 1;
+  T.walk(a.mission, h, to);
   assert.equal(T.serializeRun(b), T.serializeRun(a));
-  const refused = T.execCommand(b, { op: 'walk', hero: 0, node: to }, [1]);
+  assert.equal(T.turnSeat(b), 1);
+  const h0 = b.mission.heroes[0];
+  const to0 = T.reachableWalk(b.mission, h0, T.apValue(h0), false)[0];
+  const early = T.execCommand(b, { op: 'walk', hero: 0, node: to0 }, [0]);
+  assert.equal(early.ok, false, "a player cannot act in someone else's turn");
+  assert.match(early.why, /Player 2's turn/);
+  assert.equal(T.execCommand(b, { op: 'ready' }, [0]).ok, false, 'nor end it');
+  const refused = T.execCommand(b, { op: 'walk', hero: 0, node: to0 }, [1]);
   assert.equal(refused.ok, false, "a guest's command for the host's pilot is refused");
   assert.equal(T.serializeRun(b), T.serializeRun(a), 'and changes nothing');
+  assert.deepEqual(T.execCommand(b, { op: 'ready' }, [1]), { ok: true, passed: true, to: 0 });
+  assert.equal(T.execCommand(b, { op: 'walk', hero: 1, node: to }, [1]).ok, false, 'one turn a round');
   const round = b.mission.round;
-  assert.ok(T.execCommand(b, { op: 'ready' }, [1]).ended);
+  assert.ok(T.execCommand(b, { op: 'ready' }, [0]).ended);
   assert.ok(b.mission.round > round || b.mission.over);
-  if (!b.mission.over) assert.equal(T.turnSeat(b), 0, 'the host leads every round');
+  if (!b.mission.over) assert.ok(T.turnOpen(b), 'every round opens with the order to choose');
   assert.equal(T.execCommand(b, { op: 'nonsense', hero: 0 }, null).ok, false);
+});
+
+test('a player may end their turn without acting; on one screen, the turn named', () => {
+  const run = T.quickMission({ seed: 14, type: 'vault', tier: 1 });
+  run.party = T.newParty(3);
+  run.heroes.push(T.heroFromPrebuilt(run, T.PREBUILTS[4]));
+  assert.ok(T.turnOpen(run));
+  assert.equal(T.execCommand(run, { op: 'ready' }, null).ok, false, 'one screen for all: say whose turn ends');
+  assert.ok(T.execCommand(run, { op: 'ready', seat: 2 }, null).passed);
+  assert.deepEqual(run.party.ready, [false, false, true]);
+  assert.ok(T.turnOpen(run), 'two still to play, in either order');
+  assert.ok(T.execCommand(run, { op: 'ready' }, [0]).passed, 'a screen of one player ends its own');
+  assert.equal(T.turnSeat(run), 1, 'the last one left');
+});
+
+test('ending a turn rolls the next dice at once; the round deals them no second roll', () => {
+  const run = T.quickMission({ seed: 9, type: 'vault', tier: 1 });
+  run.party = T.newParty(2);
+  const m = run.mission;
+  const [a, b] = m.heroes;
+  const total = (h) => h.pool + h.held.length;
+  T.execCommand(run, { op: 'ready' }, [0]);
+  assert.ok(a.rolledAhead && !b.rolledAhead);
+  const aHeld = a.held.slice();
+  assert.equal(total(a), T.RULES.POOL, 'pool and bank still make fifteen');
+  const round = m.round;
+  T.execCommand(run, { op: 'ready' }, [1]);
+  if (m.over) return;
+  assert.equal(m.round, round + 1);
+  assert.ok(!a.rolledAhead && !b.rolledAhead, 'cleared as the round begins');
+  assert.deepEqual(a.held.slice(0, aHeld.length), aHeld, 'the dice rolled ahead are the ones it holds');
+  [a, b].forEach((h) => assert.equal(total(h), T.RULES.POOL));
 });
 
 test('players take turns; a player with every pilot down is skipped', () => {
   const run = T.quickMission({ seed: 11, type: 'vault', tier: 1 });
   assert.equal(T.turnSeat(run), null, 'one player: no turns');
+  assert.equal(T.turnOpen(run), false);
   run.party = T.newParty(2);
-  assert.equal(T.turnSeat(run), 0);
+  assert.equal(T.turnSeat(run), null, 'two players: the order is open');
+  assert.ok(T.turnOpen(run));
   run.mission.heroes[0].downed = true;
   assert.equal(T.turnSeat(run), 1, 'a downed pilot has no turn to take');
   assert.equal(T.execCommand(run, { op: 'ready' }, [1]).ended, true, 'so the other player ends the round');
+});
+
+test('all at once: no turns, everyone plays whenever, and the round ends when everyone is done', () => {
+  const run = T.quickMission({ seed: 14, type: 'vault', tier: 1 });
+  run.party = T.newParty(2);
+  const m = run.mission;
+  assert.equal(T.execCommand(run, { op: 'rounds', mode: 'live' }, [1]).ok, false, 'the host chooses how rounds go');
+  assert.equal(T.execCommand(run, { op: 'rounds', mode: 'sideways' }, [0]).ok, false);
+  assert.ok(T.execCommand(run, { op: 'rounds', mode: 'live' }, [0]).ok);
+  assert.equal(T.turnSeat(run), null, 'nobody has the turn');
+  assert.equal(T.turnOpen(run), false);
+  // two players act in any order, back and forth, without a turn to begin or end
+  const dumpFor = (i) => T.execCommand(run, { op: 'dump', hero: i, di: 0 }, [T.ownerOf(run, i)]);
+  for (const i of [1, 0, 1, 1, 0]) if (m.heroes[i].held.length) assert.ok(dumpFor(i).ok, 'pilot ' + i + ' acts');
+  assert.equal(run.party.active, null);
+  const round = m.round;
+  // a player who is done can say so and take it back; while done, their pilot waits
+  assert.ok(T.execCommand(run, { op: 'ready' }, [0]).waiting);
+  assert.match(T.execCommand(run, { op: 'dump', hero: 0, di: 0 }, [0]).why, /is ready/);
+  assert.ok(!m.heroes[0].rolledAhead, 'nobody rolls ahead: everyone rolls together as the round begins');
+  assert.ok(T.execCommand(run, { op: 'ready' }, [0]).unready);
+  assert.deepEqual(run.party.ready, [false, false]);
+  // a story line may be written by anyone, any time
+  assert.ok(T.execCommand(run, { op: 'note', hero: 1, text: 'Waits by the sluice.' }, [1]).ok);
+  T.execCommand(run, { op: 'ready' }, [0]);
+  assert.equal(m.round, round, 'one player still playing');
+  const r = T.execCommand(run, { op: 'ready' }, [1]);
+  assert.ok(r.ended || m.over);
+  if (!m.over) {
+    assert.equal(m.round, round + 1);
+    assert.deepEqual(run.party.ready, [false, false], 'the next round starts with nobody done');
+    m.heroes.forEach((h) => assert.equal(h.pool + h.held.length, T.RULES.POOL));
+  }
+  // on one screen, End Round ends it for everyone
+  if (!m.over) assert.ok(T.execCommand(run, { op: 'ready' }, null).ended || m.over);
+  // and back to turns: the order is open again
+  assert.ok(T.execCommand(run, { op: 'rounds', mode: 'turns' }, null).ok);
+  if (!m.over) assert.ok(T.turnOpen(run));
+});
+
+test('all at once: a player with every pilot down is not waited for', () => {
+  const run = T.quickMission({ seed: 11, type: 'vault', tier: 1 });
+  run.party = T.newParty(2);
+  run.party.rounds = 'live';
+  run.mission.heroes[0].downed = true;
+  assert.equal(T.execCommand(run, { op: 'ready' }, [1]).ended, true);
+});
+
+test('a 2.80 save, mid-round with the host done, loads taking turns and plays on', () => {
+  const old = require('./fixtures/save-2.80.json');
+  assert.equal(old.v, 17, 'the fixture is a version-17 save');
+  assert.deepEqual(old.party.ready, [true, false]);
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  assert.equal(run.party.rounds, 'turns');
+  assert.equal(run.party.active, null);
+  assert.equal(T.turnSeat(run), 1, 'the guest is the one left to take a turn');
+  assert.ok(!run.mission.heroes[0].rolledAhead, 'nothing was rolled ahead before 2.81');
+  assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run), 'it saves again unchanged');
+  assert.ok(T.execCommand(run, { op: 'ready' }, [1]).ended || run.mission.over);
+  assert.ok(H.playMission(run.mission).over);
 });

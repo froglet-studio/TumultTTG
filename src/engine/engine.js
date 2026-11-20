@@ -482,6 +482,16 @@
     fx(m, { t: 'roll', hero: h.uid, faces: out, kinds, at });
     return out;
   };
+  /**
+   * Roll the next round's dice now, at the end of this pilot's player's turn (2.81; Garrett, 2026-11-20), so
+   * the player can plan them while the others play. They are banked at once and the round's start rolls no
+   * more for this pilot (h.rolledAhead, cleared as the round begins). Only when players take turns.
+   */
+  T.rollAhead = function (m, h) {
+    if (!h || h.downed || h.rolledAhead) return;
+    T.rollDice(m, h);
+    h.rolledAhead = true;
+  };
   T.apValue = (h) => h.held.concat(h.temp).reduce((s, f) => s + (f === 'AP' ? 1 : f === 'AP2' ? 2 : 0), 0);
   T.elCount = (h, kind) => h.held.concat(h.temp).filter((f) => f === kind).length;
   T.omniCount = (h) => h.held.concat(h.temp).filter((f) => f === 'O').length;
@@ -2358,6 +2368,7 @@
       T.sightAround(m, h);
       T.heroTurnStart(m, h);
     }
+    for (const h of m.heroes) delete h.rolledAhead;
     m.fx.push({ t: 'round', round: m.round });
   };
   function spawnWave(m) {
@@ -2401,7 +2412,7 @@
       }
     }
     if (h.states.Hover && !h.states.Hover.noAp) T.mint(h, 'AP', 1);
-    T.rollDice(m, h);
+    if (!h.rolledAhead) T.rollDice(m, h);
     // zones hide heroes
     for (const z of m.zones)
       if (z.hideHeroes && B.dist(m.board, z.node, h.pos, true) <= z.radius) setHidden(m, h, 1, false);

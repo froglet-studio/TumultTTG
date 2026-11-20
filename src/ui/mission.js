@@ -354,10 +354,23 @@
     U.ms.forecast = T.forecast(m);
     // players take turns: when the turn passes, say whose it is and pick up their pilot
     const turn = U.turn();
-    const tkey = turn ? m.round + ':' + turn.seat : null;
+    const tkey = turn ? m.round + ':' + (turn.open ? 'open' + turn.left.join('') : turn.seat) : null;
     if (tkey !== U.ms.lastTurn) {
       U.ms.lastTurn = tkey;
-      if (turn) {
+      if (turn && turn.open) {
+        // whoever acts first takes the next turn
+        if (turn.here) {
+          const mine = turn.left
+            .filter((s) => !U.seats || U.seats.includes(s))
+            .flatMap((s) => T.heroesOf(U.run, s))
+            .filter((i) => !m.heroes[i].downed);
+          if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
+          U.toast(
+            U.seats ? 'Take your turn whenever you like: act to begin it.' : 'Anyone can go next: act to begin a turn.',
+          );
+        }
+        if (U.sfx.turn) U.sfx.turn();
+      } else if (turn) {
         if (turn.here) {
           const mine = T.heroesOf(U.run, turn.seat).filter((i) => !m.heroes[i].downed);
           if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
@@ -1827,11 +1840,13 @@
         // with two players, this ends the turn of the one playing; the last turn ends the round
         const t = U.turn && U.turn();
         if (t && !t.here) {
-          U.toast(`It is ${esc(t.name)}'s turn.`);
+          U.toast(t.open ? 'Your turn is over for this round.' : `It is ${esc(t.name)}'s turn.`);
           return true;
         }
         commitNote();
-        U.exec({ op: 'ready' });
+        // with the next turn open, a player may end theirs without acting: on one screen, the selected pilot's
+        const seat = t && t.open && !U.seats ? T.ownerOf(U.run, ms.heroIdx) : undefined;
+        U.exec(seat != null ? { op: 'ready', seat } : { op: 'ready' });
         U.sfx.click();
         afterAction();
         return true;
