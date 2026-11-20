@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.82.0',
+    version: '2.83.0',
     items: [
+      {
+        text: 'The pages around the game are new. Across the top (a bar at the bottom on a phone, with More for the rest): Pilots, a wall of the crew in their scenes with a page each and Make a pilot (two clades, a name and callsign, three story questions, then save or draft their cards); Cards, a binder of every trait you have found, as foil relics that catch the light; Atlas, every kind of place by land, sea and air, each a model of its board on a table; Canon, your notes pinned up by subject; and Settings, which shows the change on a sample as you make it, plus a quick panel from ⚙ on a mission. How to play is now seven short pages with a picture each, and the codex has tabs for words, foes, gear, dice and clades. Which page did you open more than once? Was anything you looked for missing, or in two places?',
+      },
       {
         text: 'The sea comes alive and the mission screen is calmer. Behind every screen the water now drifts: sea lines, slow light and rising motes. The sea follows the expedition down the route, from the light Shore in the shallows through the Deep Sea and Glow to a violet Storm at the Heart, a little darker every stop; Look (in the ☰ menu on a mission, or on the title) pins a theme, picks an accent and sets motion to Full, Reduced or Off. On the mission screen, Plan, Report, sound, help and Title sit behind ☰, the place’s rules fold into one chip, the story box opens from ✎, four basic actions show with the rest under More, cards with nothing to do fold small, and the how-to line goes after the first two missions. Pilots now walk their path node by node, strikers lean into their blows, a hit shakes, the forecast pulses when it changes and the track steps toward Ready at a new round. Is anything you used often now too far away? Does any animation slow a turn down?',
       },
