@@ -440,7 +440,7 @@
       : '';
     // the screen's own buttons, behind one menu: the playtest's Plan and Report, sound, help, look, the way out
     const menuBtn = `<button class="ghost sm mmenu-btn${ms.menu ? ' on' : ''}" data-act="mmenu" aria-expanded="${!!ms.menu}" aria-label="Menu" data-tip="Sound, help, look and the way out">☰</button>`;
-    const menu = `<div class="mmenu${ms.menu ? ' open' : ''}">${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊 Sound' : '🔇 Sound'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="look">Look</button>${U.titleBtn()}</div>`;
+    const menu = `<div class="mmenu${ms.menu ? ' open' : ''}">${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊 Sound' : '🔇 Sound'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="${U.openQuick ? 'quick' : 'look'}" data-tip="Theme, sound, hints and the way out">⚙ Settings</button>${U.titleBtn()}</div>`;
     const ae = document.activeElement;
     const typing = ae && ae.id === 'turnNote' ? [ae.selectionStart, ae.selectionEnd] : null;
     const noteOpen = ms.noteOpen || !!typing || !!ms.noteDraft;
@@ -521,7 +521,7 @@
     if (!el) return;
     if (ms.mode === 'idle') {
       // the how-to line is for the first missions; after that the board speaks for itself and help is in the menu
-      const young = !U.run || !U.run.stats || (U.run.stats.missions || 0) < 2;
+      const young = U.showHints ? U.showHints(U.run) : !U.run || !U.run.stats || (U.run.stats.missions || 0) < 2;
       el.innerHTML = young ? `<div class="hint">${hintText(m)}</div>` : '';
       return;
     }
@@ -2150,7 +2150,7 @@
         ms.mode = 'idle';
         ms.pending = null;
         const unspent = m.heroes.filter((x, i) => !x.downed && T.apValue(x) >= 4 && (!U.mine || U.mine(i))).length;
-        if (unspent && !ms.endConfirm) {
+        if (unspent && !ms.endConfirm && !(U.prefs && U.prefs.confirmEnd === false)) {
           ms.endConfirm = true;
           U.toast('A hero still has 4+ AP banked — banking is fine. Click End Round again to confirm.', 2600);
           setTimeout(() => {
