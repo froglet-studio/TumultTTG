@@ -1,4 +1,5 @@
-# Publishes the playable single-file build to GitHub Pages so anyone can play from a link.
+# Publishes the web version (npm run build:web → dist/web: a small page plus content-named,
+# cacheable files) to GitHub Pages, with the offline single file beside it at /TUMULT.html.
 #
 # Manual only: nothing is published until someone presses "Run workflow" on the Actions tab.
 # One-time setup: repository Settings → Pages → Build and deployment → Source: "GitHub Actions".
@@ -26,7 +27,8 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
-      - run: mkdir _site && cp dist/TUMULT.html _site/index.html
+      - run: npm run build:web
+      - run: cp -r dist/web _site && cp dist/TUMULT.html _site/TUMULT.html
       # Versions as documented in the two actions' READMEs (checked 2026-11), pinned to commit SHAs;
       # bump the pair together, SHA and version comment both.
       - uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
