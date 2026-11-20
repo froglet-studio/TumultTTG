@@ -2,14 +2,14 @@
 
 Nobody can playtest forty missions of every kind after every change, so the game is measured by players made of code. There are two, and the gap between them is itself a measurement: how much a mission rewards thinking. Built in v2.2.0 (roadmap F2); the proposal it settles is `docs/design/09-engineering.md` §2. `test/lookahead.test.js` holds it in place.
 
-| | the heuristic (weak) | the look-ahead player (strong) |
-|---|---|---|
-| where | `T.autoHeroPhase`, `src/engine/ai.js` | `T.smartHeroPhase`, `src/engine/lookahead.js` |
-| how it chooses | a chain of hand-written rules: rally, interact, walk to the objective, the best strike by a rule of thumb | tries every legal action on a copy of the mission, lets the round play out there, keeps the line that scores best |
-| what it can play | faces it has a rule for: 131 of 198 | every face, every gear ability, every consumable — it needs no rule |
-| reads enemy intents | no | yes: the declared enemy turn is played out before anything is scored |
-| cost | a millisecond a mission | about a tenth of a second a mission |
-| what it is | a floor: a player who never reads the board | a careful player who thinks one round ahead and no further |
+|                     | the heuristic (weak)                                                                                      | the look-ahead player (strong)                                                                                    |
+| ------------------- | --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| where               | `T.autoHeroPhase`, `src/engine/ai.js`                                                                     | `T.smartHeroPhase`, `src/engine/lookahead.js`                                                                     |
+| how it chooses      | a chain of hand-written rules: rally, interact, walk to the objective, the best strike by a rule of thumb | tries every legal action on a copy of the mission, lets the round play out there, keeps the line that scores best |
+| what it can play    | faces it has a rule for: 131 of 198                                                                       | every face, every gear ability, every consumable — it needs no rule                                               |
+| reads enemy intents | no                                                                                                        | yes: the declared enemy turn is played out before anything is scored                                              |
+| cost                | a millisecond a mission                                                                                   | about a tenth of a second a mission                                                                               |
+| what it is          | a floor: a player who never reads the board                                                               | a careful player who thinks one round ahead and no further                                                        |
 
 Neither is a person. What a person reports outranks both.
 
@@ -17,15 +17,15 @@ Neither is a person. What a person reports outranks both.
 
 An action is a plain object. `hero` is an index into `m.heroes`.
 
-| `t` | fields | what it is |
-|---|---|---|
-| `face` | `card`, `face` (`'P'` or `'E'`), `target` (a uid) or `node`, `choice` (`'push'` or `'pull'`) where the face asks | play a card face |
-| `walk` | `node` | walk there, one AP a step |
-| `interact` | `node` | work the objective on or beside the hero |
-| `rally` | | put a downed ally back on their feet |
-| `gear` | `gear`, `ability`, and `target`, `node` or `choice` as for a face | use a gear ability |
-| `item` | `item` | use a consumable |
-| `valve` | | fold one of each etherion into an Omni |
+| `t`        | fields                                                                                                           | what it is                               |
+| ---------- | ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| `face`     | `card`, `face` (`'P'` or `'E'`), `target` (a uid) or `node`, `choice` (`'push'` or `'pull'`) where the face asks | play a card face                         |
+| `walk`     | `node`                                                                                                           | walk there, one AP a step                |
+| `interact` | `node`                                                                                                           | work the objective on or beside the hero |
+| `rally`    |                                                                                                                  | put a downed ally back on their feet     |
+| `gear`     | `gear`, `ability`, and `target`, `node` or `choice` as for a face                                                | use a gear ability                       |
+| `item`     | `item`                                                                                                           | use a consumable                         |
+| `valve`    |                                                                                                                  | fold one of each etherion into an Omni   |
 
 - `T.legalActions(m)` lists every action the squad could take next. Every playable face is in it once for each way it can be resolved, and everything in it works.
 - `T.applyAction(m, action)` does one, and returns what the engine returns.
@@ -42,6 +42,7 @@ One thing is decided for the player: a face that lets its player reroll banked d
    - an unfound cache is wherever a searcher would look first — the unsearched one nearest the squad — whichever the real one is.
 
    Hidden foes are not hidden from it, and need not be: the board draws them, dimmed, and lists their intents.
+
 2. **It searches a few actions deep with a beam.** From each position kept, every legal action is tried on a fresh copy; the two best results are kept (`width`), four actions deep (`depth`). A step that only sets up the next one survives if what follows makes it one of the best lines.
 3. **Each position is scored as if the squad stopped there.** `T.finishRound` plays out the rest of the round — the enemies have declared what they will do, and nothing in it is random — and `T.evaluate` scores what is left.
 4. **It plays the best line it found, and plans again** if the search ran out of depth, or if the dice did something no plan could know.
@@ -52,22 +53,22 @@ One thing is decided for the player: a face that lets its player reroll banked d
 
 One measure for every mission, in points of about one hero vitality each (`T.EVAL`):
 
-| weight | points | for |
-|---|---|---|
-| `win` | 1000 | the mission won (lost: the same, negative) |
-| `progress` | 70 | the whole objective; `T.objectiveProgress(m)` runs from 0 to 1 for every kind of mission |
-| `heroHp` | 1 | each point of vitality a hero has |
-| `heroDown` | 18 | a hero down, on top of the vitality lost |
-| `foeHp` | 0.9 | each point of vitality and shield a foe still has; a Marked foe counts 2 less, since its next hit deals +2 |
-| `foeAlive` | 4 | each foe still standing: it will act again |
-| `clock` | 2.5 | each round left on a clock |
-| `approach` | 1.6 | each step between a hero and where the objective needs someone — the nearest hero in full, the next at half |
-| `dice` | 0.5 | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that) |
-| `short` | 5 | each AP held by a hero who stands where the objective takes an Interact and cannot yet pay for one |
-| `cooldown` | 0.25 | each column a played card still has to travel |
-| `crystal`, `item` | 0.4, 2 | crystals and consumables kept |
-| `ahead` | 0.6 | the share counted of what a hero has bought for later rounds: a regen engine (up to the vitality it can restore), AP to come, a strike bonus not yet spent; and two hits' worth on a Studied foe (since 2.73) |
-| `spare` | 0.5 | each temporary die minted and not yet spent — counted only while the search ranks its lines, so a line that has just minted dice is not dropped before it spends them (since 2.73) |
+| weight            | points | for                                                                                                                                                                                                           |
+| ----------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `win`             | 1000   | the mission won (lost: the same, negative)                                                                                                                                                                    |
+| `progress`        | 70     | the whole objective; `T.objectiveProgress(m)` runs from 0 to 1 for every kind of mission                                                                                                                      |
+| `heroHp`          | 1      | each point of vitality a hero has                                                                                                                                                                             |
+| `heroDown`        | 18     | a hero down, on top of the vitality lost                                                                                                                                                                      |
+| `foeHp`           | 0.9    | each point of vitality and shield a foe still has; a Marked foe counts 2 less, since its next hit deals +2                                                                                                    |
+| `foeAlive`        | 4      | each foe still standing: it will act again                                                                                                                                                                    |
+| `clock`           | 2.5    | each round left on a clock                                                                                                                                                                                    |
+| `approach`        | 1.6    | each step between a hero and where the objective needs someone — the nearest hero in full, the next at half                                                                                                   |
+| `dice`            | 0.5    | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that)                                                                                                                                   |
+| `short`           | 5      | each AP held by a hero who stands where the objective takes an Interact and cannot yet pay for one                                                                                                            |
+| `cooldown`        | 0.25   | each column a played card still has to travel                                                                                                                                                                 |
+| `crystal`, `item` | 0.4, 2 | crystals and consumables kept                                                                                                                                                                                 |
+| `ahead`           | 0.6    | the share counted of what a hero has bought for later rounds: a regen engine (up to the vitality it can restore), AP to come, a strike bonus not yet spent; and two hits' worth on a Studied foe (since 2.73) |
+| `spare`           | 0.5    | each temporary die minted and not yet spent — counted only while the search ranks its lines, so a line that has just minted dice is not dropped before it spends them (since 2.73)                            |
 
 A face's free step (`move` with `free`) is a walk the player may take later in the same turn: the interface asks for it at once, this player keeps it for the turn (`h.freeMove`) so the search can place it where it serves best.
 
@@ -89,7 +90,7 @@ Garrett's aim for two players is that both have interesting decisions every turn
 - **forced**: one outcome is clearly best, so the turn plays itself.
 - **open**: two or more different outcomes come close to the best (within 3 points, or a quarter of what is at stake). Two moves that end in the same place count once.
 
-`node tools/turns.js 10` plays 10 missions of every archetype and tier with the look-ahead player, asks this of each standing hero at the start of every round, and prints the share of idle, forced and open turns, with *dull* (idle or forced) for each pilot. Both heroes are measured from the round's start, before either acts, so it is an estimate for whoever goes second.
+`node tools/turns.js 10` plays 10 missions of every archetype and tier with the look-ahead player, asks this of each standing hero at the start of every round, and prints the share of idle, forced and open turns, with _dull_ (idle or forced) for each pilot. Both heroes are measured from the round's start, before either acts, so it is an estimate for whoever goes second.
 
 The baseline at 2.25.0:
 
@@ -116,6 +117,14 @@ all: 1713 turns — idle 13%, forced 28%, open 59%, 2.3 close choices a turn
 ```
 
 About two turns in five are dull, and tier 1 is the worst: in a tier-1 vault or elite, most turns either do not matter or have one clear answer. This is the number the next steps (rules for places, missions that are not fights, moves that pilots make together) are meant to bring down.
+
+## In a seat at the table (AI seats, 2.83)
+
+The look-ahead player also plays a seat in a real game (`src/engine/bots.js`). It is told which pilots are its own (`T.planHeroPhase(m, { only })`) and moves nothing else. A seat is the AI's when the host had it **fill** an empty seat (it flies a pre-made pilot, named `AI · <pilot>`, and a person who joins later takes the seat over with its pilot), or when it **holds** the seat of a player who dropped online, until they rejoin.
+
+When it plays, in a sentence for the table: AI pilots move once every person has had their turn this round (in rounds played all at once, once everyone else has ended), and an AI holding a dropped player's seat mid-turn finishes that turn at once. Then its turn ends as a person's does (`T.execCommand` `ready`). Between missions it takes the first trait it is offered that needs no exchange (otherwise the crystals), the first boon, and spends its points with `T.autoAllocate`. `T.botStep(run)` does whatever the AI seats owe the table now; online, the host's screen calls it after every change (`src/ui/net.js`).
+
+Online, a guest's screen says it is here every few seconds (a `here` beat in the game's room, and its seat doc's `at`). A seat silent for 30 s has dropped: every screen shows a one-minute countdown, after which the AI holds the seat; the host can hand it over at once, or wait for the player as the table always did. Reloading the page puts the player back in their seat.
 
 ## Using them
 

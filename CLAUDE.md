@@ -51,6 +51,7 @@ src/engine/ai.js          enemy intents + execution; heuristic hero autoplayer (
 src/engine/lookahead.js   actions as data, the shared evaluation, the look-ahead player (the strong one)
 src/engine/scaling.js     how a mission grows with the squad's size and level (T.SCALING)
 src/engine/run.js         draft, upgrades, map, rewards, havens, events, save/load
+src/engine/bots.js        AI seats: a seat the AI fills or holds for a dropped player, played by the look-ahead player
 src/ui/                   screens, SVG board, input (browser only)
 src/ui/backend.js         T.Backend: the one seam the online screens reach a server through
 src/web/                  the web version's page, service worker and Cloudflare headers

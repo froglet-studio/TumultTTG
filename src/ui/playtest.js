@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.82.0',
+    version: '2.83.0',
     items: [
+      {
+        text: 'Online, the host can have the AI fill empty seats (up to five) and choose a Short (5 stops) or Full expedition; a host alone can now set out with the AI. AI pilots move once every person has ended their turn. If a player drops, everyone sees a countdown, then an AI pilot holds their seat until they reload the page. Did the AI pilots pull their weight? Did a drop ever leave the table stuck?',
+      },
       {
         text: 'The mission screen fits phones and tablets now. On a phone: the board, then a one-line forecast, then your pilot with a hand you swipe a card at a time; nothing runs off the side. Tap a card face once to see what it would do on the board, and what ending the round would do after it; tap it again to play it. On any screen the forecast now has its own strip under the board, and ↶ Undo sits beside End Round (Ctrl+Z on a keyboard): take back a step or a play, as long as it rolled no dice and revealed nothing. Did you ever need to undo something that would not go back? Did a tap ever play a card you only meant to look at?',
       },

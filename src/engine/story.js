@@ -32,7 +32,8 @@
   /** The same, to head a line or a screen: "The Standing Storm". */
   T.threatTitle = (run) => T.threatName(run).replace(/^the /, 'The ');
   /** The name of the leg a map row belongs to. */
-  T.legName = (run, row) => (run.map ? run.map.actNames[T.actOf(Math.min(row, 5))].replace(/^The /, 'the ') : '');
+  T.legName = (run, row) =>
+    run.map ? run.map.actNames[T.actOf(Math.min(row, 5), run.map)].replace(/^The /, 'the ') : '';
 
   /**
    * Draw this run's expedition (src/data/expeditions.js) from its own stream: who sent it, what waits at
@@ -96,7 +97,7 @@
   /** The ground ('land' | 'sea' | 'air') of the leg a map row belongs to, or null. */
   T.groundAt = function (run, row) {
     const ex = run.story && run.story.expedition;
-    return ex && row != null ? ex.legs[T.actOf(Math.min(row, 5))].ground : null;
+    return ex && row != null ? ex.legs[T.actOf(Math.min(row, 5), run.map)].ground : null;
   };
 
   /**
@@ -128,7 +129,8 @@
     const b = heroes.length > 1 ? (a + 1) % heroes.length : a;
     const nextRow = node ? node.row + 1 : 0;
     const nextIsBoss = run.available.some((id) => run.map.all[id].type === 'boss');
-    const newLeg = node && run.map && T.actOf(Math.min(nextRow, 5)) !== T.actOf(node.row) && !nextIsBoss;
+    const newLeg =
+      node && run.map && T.actOf(Math.min(nextRow, 5), run.map) !== T.actOf(node.row, run.map) && !nextIsBoss;
     const nobody = { name: 'the squad', species: [] };
     const tok = (sp, ot) => ({
       A: (heroes[sp] || nobody).name,
@@ -177,7 +179,7 @@
       title: passageTitle(run, kind, logKind, node, nextRow),
       scene:
         logKind === 'leg' && ex
-          ? ex.legs[T.actOf(Math.min(nextRow, 5))].scene
+          ? ex.legs[T.actOf(Math.min(nextRow, 5), run.map)].scene
           : rng.pick(T.PASSAGE_SCENES[sceneKind] || T.PASSAGE_SCENES.win),
       lines,
     };

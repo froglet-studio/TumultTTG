@@ -406,14 +406,16 @@
    *   width  how many lines of play are kept at each step
    *   depth  how many actions ahead it looks
    */
-  T.planHeroPhase = function (m, { width = 2, depth = 4 } = {}) {
+  T.planHeroPhase = function (m, { width = 2, depth = 4, only = null } = {}) {
     const root = T.imagine(m);
+    // `only`: the heroes this player may move (an AI flying one seat's pilots, src/engine/bots.js)
+    const legal = only ? (c) => T.legalActions(c).filter((a) => only.includes(a.hero)) : T.legalActions;
     let best = { seq: [], score: worthIfStopped(scratch(root)) };
     let beam = [{ m: root, seq: [], score: best.score }];
     for (let d = 0; d < depth && beam.length; d++) {
       const kids = [];
       for (const node of beam)
-        for (const a of T.legalActions(node.m)) {
+        for (const a of legal(node.m)) {
           const c = scratch(node.m);
           if (!T.applyAction(c, a).ok) continue;
           const spare = loose(c);

@@ -32,6 +32,7 @@
       stats: { missions: 0, kills: 0, rounds: 0, lifelineUsed: false },
       lifeline: 1,
       tide: 'rising', // difficulty: a key of T.TIDES
+      length: 'full', // how long the expedition is: a key of T.LENGTHS, set before the route opens
       party: T.newParty(1), // who plays which hero (src/engine/party.js)
       won: false,
       over: false,
@@ -502,14 +503,28 @@
   /* ───────────────────────────── MAP ───────────────────────────── */
   T.startMap = function (run) {
     T.settlePurses(run);
-    run.map = T.genTideMap(T.runStream(run, 'map'));
+    run.map = T.genTideMap(T.runStream(run, 'map'), run.length);
     run.phase = 'map';
     run.available = run.map.rows[0].slice();
     run.nodeId = null;
     T.beginExpedition(run);
     T.writePassage(run, 'start', null);
   };
-  T.actOf = (row) => (row <= 1 ? 0 : row <= 4 ? 1 : 2);
+  /**
+   * The leg (act) a row of the route belongs to: its tier, less one. Without the map, the Full route's rows.
+   * A row past the end is the last leg.
+   */
+  T.actOf = (row, map) => {
+    if (!map) return row <= 1 ? 0 : row <= 4 ? 1 : 2;
+    const ids = map.rows[Math.max(0, Math.min(row, map.rows.length - 1))];
+    return map.all[ids[0]].tier - 1;
+  };
+  /** Set how long the expedition is ('short' or 'full', T.LENGTHS) before its route opens. */
+  T.setLength = function (run, length) {
+    if (!T.LENGTHS[length] || run.map) return false;
+    run.length = length;
+    return true;
+  };
   /** The mission types an elite may stand in for when the run owes one (T.chooseNode). */
   const ELITE_STANDS_IN = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey'];
   T.chooseNode = function (run, nodeId) {
@@ -979,7 +994,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 18;
+  T.SAVE_VERSION = 19;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1127,6 +1142,12 @@
     17(r) {
       if (r.party) Object.assign(r.party, { active: null, rounds: 'turns' });
       r.v = 18;
+    },
+    // 2.83 lets an expedition be Short or Full (`length`) and an AI play a seat (`party.players[s].ai`). Every
+    // older run was Full, and a person played every seat.
+    18(r) {
+      r.length = 'full';
+      r.v = 19;
     },
   };
   T.deserializeRun = function (json) {

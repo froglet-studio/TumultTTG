@@ -4,6 +4,7 @@
  * Headless balance harness.
  *
  *   node tools/sim.js [N=40] [missions|runs|cards|all] [--player weak|strong|both] [--tide rising|flood]
+ *                     [--length short|full]
  *                     [--rule NAME=VALUE ...]
  *
  *   missions  N auto-played missions per archetype × tier: win %, length, 8–14-round band, HP, kills
@@ -17,6 +18,7 @@
  *             a mission rewards thinking. The strong player takes about a tenth of a second a mission;
  *             `--player weak` is the quick look.
  *   --tide    the run's difficulty, a key of T.TIDES (default rising).
+ *   --length  how long a run's expedition is, a key of T.LENGTHS (default full; runs only).
  *   --pilots  the squad's size, 2 to 5 (default 2); the missions scale to it (src/engine/scaling.js).
  *   --level   every pilot's level (default 1): what pilots bring back from earlier expeditions.
  *   --noscale the missions do not answer the squad's size or level (to see what the scaling buys).
@@ -35,6 +37,7 @@ const argv = process.argv.slice(2);
 const args = [];
 let players = ['weak', 'strong'];
 let tide = 'rising';
+let length = 'full';
 let pilots = 2;
 let level = 1;
 for (let i = 0; i < argv.length; i++) {
@@ -54,6 +57,15 @@ for (let i = 0; i < argv.length; i++) {
       process.exit(2);
     }
     console.log(`tide ${tide}`);
+    continue;
+  }
+  if (argv[i] === '--length') {
+    length = argv[++i];
+    if (!T.LENGTHS[length]) {
+      console.error(`--length wants one of: ${Object.keys(T.LENGTHS).join(', ')}`);
+      process.exit(2);
+    }
+    console.log(`length ${length}`);
     continue;
   }
   if (argv[i] === '--pilots') {
@@ -129,6 +141,7 @@ if (mode === 'all' || mode === 'missions') {
           // Both players get the same squad on the same board with the same dice to come.
           const run = T.newRun(1000 + i);
           run.tide = tide;
+          T.setLength(run, length);
           if (i % 3 === 2) H.draftedSquad(run, pilots);
           else if (pilots === 2) H.prebuiltSquad(run, i % 6, (i + 1 + (i % 5)) % 6);
           else H.prebuiltSquad(run, H.squadIds(i, pilots));
@@ -181,6 +194,7 @@ if (mode === 'all' || mode === 'runs') {
     for (let i = 0; i < N; i++) {
       const run = T.newRun(5000 + i * 31);
       run.tide = tide;
+      T.setLength(run, length);
       try {
         if (i % 2) H.draftedSquad(run, pilots);
         else H.prebuiltSquad(run, H.squadIds(i, pilots));
