@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.79.1',
+    version: '2.79.2',
     items: [
+      {
+        text: 'The story box beside End turn now stays open on other players’ turns: write what your pilot is doing while you wait. Did you add more lines of story this way?',
+      },
       {
         text: 'Online, a guest can now finish drafting before the host: the squad waits for the host’s pilot, and the host’s upgrades and Set out work. Did every player get to set out?',
       },

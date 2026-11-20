@@ -555,3 +555,31 @@ test(
     assert.deepEqual(A.errors.concat(B.errors), []);
   },
 );
+
+test('online: a player writes a line of story while another takes their turn', { skip, timeout: 60_000 }, async () => {
+  // Garrett, 2026-11-20: "we should be able to keep adding things during other players turns"
+  const db = fakeDb();
+  const { A, B } = await toGuestTurn(db);
+  assert.equal(A.T.turnSeat(A.U.run), 1, "the guest's turn");
+  A.U.updateMission();
+  const box = A.d.getElementById('turnNote');
+  assert.ok(box, 'the host still has the story box');
+  box.value = 'Cavitt watches the ledge while Bo climbs.';
+  box.dispatchEvent(new A.w.Event('input', { bubbles: true }));
+  box.dispatchEvent(new A.w.Event('change', { bubbles: true }));
+  assert.ok(A.T.notesOf(A.U.run.mission).some((n) => n.hero === 0 && /watches the ledge/.test(n.text)));
+  // and the guest, its turn ended, writes one while the round goes on elsewhere
+  await until(() => B.d.getElementById('turnNote'), "the guest's story box");
+  const gb = B.d.getElementById('turnNote');
+  gb.value = 'Bo hums to the rope.';
+  gb.dispatchEvent(new B.w.Event('input', { bubbles: true }));
+  gb.dispatchEvent(new B.w.Event('change', { bubbles: true }));
+  await until(
+    () => A.T.notesOf(A.U.run.mission).some((n) => n.hero === 1 && /hums/.test(n.text)),
+    "the guest's line on the host",
+  );
+  assert.deepEqual(A.errors.concat(B.errors), []);
+  // stop both screens' timers: the windows close when the file's tests end
+  B.U.net.leave();
+  A.U.net.leave();
+});

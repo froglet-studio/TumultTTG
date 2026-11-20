@@ -428,15 +428,17 @@
   }
 
   /**
-   * The story box beside End turn: the player whose turn it is may give it a line of story, as the
-   * pilot they have selected. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
+   * The story box beside End turn: every player may give the round a line of story, as the pilot they have
+   * selected (or their own, when they are looking at someone else's), on their own turn or while others take
+   * theirs. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
    */
   function noteBox(m) {
     const ms = U.ms;
-    const t = U.turn && U.turn();
-    const i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    const own = (j) => !U.run || T.mayActFor(U.run, U.seats, j);
+    let i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    if (!own(i)) i = m.heroes.findIndex((x, j) => x && own(j));
     const h = m.heroes[i];
-    if (m.over || !h || (t && !t.here) || (U.mine && !U.mine(i))) return '';
+    if (m.over || !h || !own(i)) return '';
     const noted = m.log.find((l) => l.who === 'note' && l.hero === i && l.r === m.round);
     const val = ms.noteDraft != null ? ms.noteDraft : noted ? noted.text : '';
     const tip =
@@ -459,7 +461,11 @@
   U.commitNote = commitNote;
   document.addEventListener('input', (e) => {
     if (!e.target || e.target.id !== 'turnNote' || !U.ms) return;
-    if (U.ms.noteDraft == null) U.ms.noteHero = U.ms.heroIdx;
+    if (U.ms.noteDraft == null) {
+      const m = M();
+      const own = (j) => !U.run || T.mayActFor(U.run, U.seats, j);
+      U.ms.noteHero = own(U.ms.heroIdx) || !m ? U.ms.heroIdx : m.heroes.findIndex((x, j) => x && own(j));
+    }
     U.ms.noteDraft = e.target.value;
   });
   document.addEventListener('change', (e) => {
