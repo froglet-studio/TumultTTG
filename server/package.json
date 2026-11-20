@@ -1,0 +1,6 @@
+{
+  "name": "tumult-api",
+  "private": true,
+  "type": "module",
+  "description": "Tumult's online backend: a Cloudflare Worker (docs/reference/BACKEND.md). No runtime dependencies."
+}
