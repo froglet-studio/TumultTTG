@@ -4,6 +4,7 @@
 
 - **A web version for froglet.games.** `npm run build:web` writes `dist/web/`: a 2 KB page that loads the game's script, stylesheet, font and each painting as separate files named by their content. A first visit downloads about 300 KB before the title screen draws, against 8 MB for the single file; a painting is fetched when a screen shows it; a returning player downloads only what changed. A service worker keeps the files for offline play. The offline single file is unchanged.
 - **Previews.** Every pull request and push to `bleeding-edge` deploys the web version to Cloudflare Pages once the secrets are set; GitHub Pages publishes it with the offline file beside it.
+- **Accounts, guest first.** Solo play needs no account and never reaches a server. The first time a player goes online, the web version makes them a guest account on Tumult's Worker; they can link Google, Discord or an email code at any time to keep it, with their pilots and saves, on any device. Hosting a game needs a linked account; a guest joins from an invite link. The account box on the title screen renames, signs out and deletes the account. The server keeps no token, code or email address in the clear (`server/src/auth/`, `src/ui/account.js`, `docs/reference/ACCOUNTS.md`).
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
 ## 2.75.0 — 2026-11-20 — the mission screen: undo, a forecast strip, phones and tablets
