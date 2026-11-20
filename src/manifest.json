@@ -39,7 +39,8 @@
     "ui/settings.js",
     "ui/crew.js",
     "ui/binder.js",
-    "ui/guide.js"
+    "ui/guide.js",
+    "ui/home.js"
   ],
   "css": [
     "ui/style.css",
@@ -52,7 +53,8 @@
     "ui/welcome.css",
     "ui/sea.css",
     "ui/after.css",
-    "ui/shell.css"
+    "ui/shell.css",
+    "ui/home.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],

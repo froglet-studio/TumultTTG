@@ -197,11 +197,13 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
   const db = fakeDb();
   const A = await open(html, db);
   const B = await open(html, db);
-  assert.ok(A.d.querySelector('[data-act="netHost"]'), 'the title offers to play online');
+  assert.ok(A.d.querySelector('[data-act="hostOpen"]'), 'the title offers to host a table');
 
+  A.act('hostOpen');
   A.type('netName', 'Ana');
   A.act('netHost');
   await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+  B.act('joinOpen');
   B.type('netName', 'Bo');
   B.type('netCode', A.U.net.code.toLowerCase());
   B.act('netJoin');
@@ -289,9 +291,11 @@ async function toGuestTurn(db, rooms) {
   const html = build({ playtest: true }).html;
   const A = await open(html, db, rooms);
   const B = await open(html, db, rooms);
+  A.act('hostOpen');
   A.type('netName', 'Ana');
   A.act('netHost');
   await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+  B.act('joinOpen');
   B.type('netName', 'Bo');
   B.type('netCode', A.U.net.code);
   B.act('netJoin');
@@ -468,13 +472,16 @@ test('online: three screens join one game, draft a pilot each and set out', { sk
   const A = await open(html, db);
   const B = await open(html, db);
   const C = await open(html, db);
+  A.act('hostOpen');
   A.type('netName', 'Ana');
   A.act('netHost');
   await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+  B.act('joinOpen');
   B.type('netName', 'Bo');
   B.type('netCode', A.U.net.code);
   B.act('netJoin');
   await until(() => A.U.net.names[1] === 'Bo', 'the host to see the first guest');
+  C.act('joinOpen');
   C.type('netName', 'Cy');
   C.type('netCode', A.U.net.code);
   C.act('netJoin');
@@ -501,6 +508,7 @@ test('online: three screens join one game, draft a pilot each and set out', { sk
   assert.equal(A.U.run.heroes.map((h, i) => A.T.ownerOf(A.U.run, i)).join(','), '0,1,2', 'a pilot each');
   // a fourth screen joins on the route (2.79): it brings a pilot, and the route waits for it
   const D = await open(html, db);
+  D.act('joinOpen');
   D.type('netName', 'Di');
   D.type('netCode', A.U.net.code);
   D.act('netJoin');
@@ -528,9 +536,11 @@ test(
     const db = fakeDb();
     const A = await open(html, db);
     const B = await open(html, db);
+    A.act('hostOpen');
     A.type('netName', 'Ana');
     A.act('netHost');
     await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+    B.act('joinOpen');
     B.type('netName', 'Bo');
     B.type('netCode', A.U.net.code);
     B.act('netJoin');
@@ -581,13 +591,15 @@ test(
     );
     const A = await open(html, db);
     const B = await open(html, db);
-    await until(() => B.d.getElementById('netGames'), 'the list on the title');
+    B.act('joinOpen');
+    await until(() => B.d.getElementById('netGames'), 'the list on the Join screen');
     await until(
       () => /Quiet and finished games \(1\)/.test(B.d.getElementById('netGames').textContent),
       'the quiet game, folded',
     );
     assert.equal(B.d.querySelector('[data-act="netJoinGame"]'), null, 'a quiet game offers no way in');
 
+    A.act('hostOpen');
     A.type('netName', 'Ana');
     A.act('netHost');
     await until(() => A.U.net.code && db.store.has('lobby/' + A.U.net.code), 'the game to be listed');
@@ -641,9 +653,11 @@ test(
     const A = await open(html, db);
     const B = await open(html, db);
     A.act('pt-rounds', 'live');
+    A.act('hostOpen');
     A.type('netName', 'Ana');
     A.act('netHost');
     await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
+    B.act('joinOpen');
     B.type('netName', 'Bo');
     B.type('netCode', A.U.net.code);
     B.act('netJoin');
@@ -734,16 +748,20 @@ test('online: a host alone sets out with the AI filling the empty seats', { skip
   const html = build({ playtest: true }).html;
   const db = fakeDb();
   const A = await open(html, db);
+  A.act('hostOpen');
+  A.act('setAiFill', 'open');
   A.type('netName', 'Ana');
   A.act('netHost');
   await until(() => A.U.net.code && db.store.has('games/' + A.U.net.code), 'the game to open');
-  assert.ok(A.d.querySelector('[data-act="netStart"]').disabled, 'alone, the table cannot set out');
-  A.act('netSeats', 3);
-  A.act('netLength', 'short');
-  assert.match(A.d.querySelector('.net-lobby').textContent, /AI fills it/);
-  assert.match(A.d.querySelector('[data-act="netStart"]').textContent, /3 seats, 2 AI/);
+  assert.ok(A.d.querySelector('[data-act="netStart"]').disabled, 'alone, with no AI, the table cannot set out');
+  A.act('setAiFill', 'ai');
+  A.act('setSeats', 3);
+  A.act('setLength', 'short');
+  assert.match(A.d.querySelector('.hm-seats').textContent, /AI fills it/);
+  assert.match(A.d.querySelector('[data-act="netStart"]').textContent, /1 player \+ 2 AI/);
   // a guest's lobby shows what the host chose
   const B = await open(html, db);
+  B.act('joinOpen');
   B.type('netName', 'Bo');
   B.type('netCode', A.U.net.code);
   B.act('netJoin');
@@ -805,6 +823,7 @@ test(
     // Bo reloads and rejoins: the seat is theirs again
     const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
     const B2 = await open(build({ playtest: true }).html, db, rooms);
+    B2.act('joinOpen');
     B2.type('netName', 'Bo');
     B2.type('netCode', A.U.net.code);
     B2.act('netJoin');

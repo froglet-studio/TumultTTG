@@ -437,11 +437,13 @@ test(
     const B = await page(js, server, GUEST, 'tok-cy');
     assert.equal(A.T.Backend.name(), 'tumult-worker');
 
+    A.act('hostOpen');
     A.type('netName', 'Ana');
     A.act('netHost');
     await until(() => A.U.net.code && A.U.net.invite, 'the game and its invite link', 5000);
     const code = A.U.net.code;
     // without the invite, a guest is turned away and told how to get in
+    B.act('joinOpen');
     B.type('netName', 'Cy');
     B.type('netCode', code);
     B.act('netJoin');
@@ -449,7 +451,7 @@ test(
     assert.equal(B.U.net.role, null);
     // the account box opens too (an invite or an account gets a player in); close it as a player would
     if (B.U.modal) B.U.closeModal();
-    B.type('netName', 'Cy'); // closing it redraws the title
+    B.type('netName', 'Cy'); // closing it redraws the Join screen
     B.type('netCode', code);
     // with it, they are in
     const link = new URL(A.U.net.invite);

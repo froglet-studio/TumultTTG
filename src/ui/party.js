@@ -176,7 +176,7 @@
       .join('');
     const txt =
       cur === 1
-        ? 'You fly both pilots.'
+        ? 'You fly the whole squad.'
         : `Each player drafts and flies one pilot, passing the screen, and you ${U.roundsPref && U.roundsPref() === 'live' ? 'all play each round at once' : 'take turns'}.${cur > 2 ? ` A squad of ${cur} meets bigger missions: tougher foes, more of them, and more to do.` : ''}`;
     return `<div class="tide-pick"><span class="dim small">Players</span>${btns}<div class="mute small">${txt}</div></div>`;
   };

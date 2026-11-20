@@ -315,7 +315,7 @@
   function showGames() {
     if (typeof document === 'undefined' || !document) return; // the page is closing
     const el = document.getElementById('netGames');
-    if (el && U.screen === 'title') el.innerHTML = U.gamesList();
+    if (el && (U.screen === 'title' || U.screen === 'join')) el.innerHTML = U.gamesList();
   }
   const ago = (ms) => {
     const m = Math.round(ms / 60000);
@@ -379,7 +379,7 @@
     if (!N.games.length) return;
     gamesTimer = setTimeout(() => {
       gamesTimer = null;
-      if (U.screen === 'title') {
+      if (U.screen === 'title' || U.screen === 'join') {
         showGames();
         readGames();
       }
@@ -396,7 +396,7 @@
     else readGames();
   };
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && U.screen === 'title') readGames();
+    if (document.visibilityState === 'visible' && (U.screen === 'title' || U.screen === 'join')) readGames();
   });
 
   /**
@@ -651,7 +651,8 @@
     U.run.party = T.newParty(N.joined(), N.names);
     if (N.tableOpts.aiFill) T.fillSeats(U.run, N.tableSize());
     T.setLength(U.run, N.tableOpts.length || 'full');
-    if (U.roundsPref) U.run.party.rounds = U.roundsPref();
+    const rounds = U.homeRounds ? U.homeRounds() : U.roundsPref ? U.roundsPref() : null;
+    if (rounds) U.run.party.rounds = rounds;
     T.botPilots(U.run); // the AI seats bring pre-made pilots
     U.draft.heroIdx = 0;
     N.publish();

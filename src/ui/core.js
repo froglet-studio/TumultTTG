@@ -335,7 +335,10 @@
     U.run = T.newRun();
     U.run.tide = chosenTide(T.loadMeta());
     if (U.chosenPlayers) U.run.party = T.newParty(U.chosenPlayers(T.loadMeta()));
-    if (U.roundsPref) U.run.party.rounds = U.roundsPref(); // the playtest panel's way to play
+    // how rounds go: Home's setup (src/ui/home.js), else the playtest panel's switch
+    const rounds = U.homeRounds ? U.homeRounds() : U.roundsPref ? U.roundsPref() : null;
+    if (rounds) U.run.party.rounds = rounds;
+    if (U.applyTable) U.applyTable(U.run); // the expedition's length, when the engine has lengths
     U.beginDraft(0);
     U.render();
   };
@@ -402,7 +405,9 @@
         ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
     } else if (d.step === 'wait') {
       const other = run.party.players.find((p, s) => !run.heroes[s]);
-      body = `<div class="panel"><h3>Your pilot is ready</h3><p class="dim">Waiting for ${esc(other ? other.name : 'the other player')} to finish drafting…</p></div>`;
+      body = U.waitingRoom
+        ? U.waitingRoom(run)
+        : `<div class="panel"><h3>Your pilot is ready</h3><p class="dim">Waiting for ${esc(other ? other.name : 'the other player')} to finish drafting…</p></div>`;
     } else if (d.step === 'up') {
       const h = d.hero;
       body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
@@ -998,7 +1003,13 @@
     else
       switch (U.screen) {
         case 'title':
-          html = renderTitle();
+          html = U.renderHome ? U.renderHome() : renderTitle();
+          break;
+        case 'host':
+          html = U.renderHost ? U.renderHost() : renderTitle();
+          break;
+        case 'join':
+          html = U.renderJoin ? U.renderJoin() : renderTitle();
           break;
         case 'draft':
           html = renderDraft();
@@ -1025,7 +1036,8 @@
           html = renderCodex();
           break;
         case 'lobby':
-          html = U.renderLobby ? U.renderLobby() : '';
+          // the table as Home draws it (src/ui/home.js), else net.js's own
+          html = U.tableScreen && U.net ? U.tableScreen() : U.renderLobby ? U.renderLobby() : '';
           break;
         case 'atlas':
           html = U.renderAtlas();

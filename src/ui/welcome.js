@@ -105,7 +105,7 @@
     if (W.invite) out += inviteHTML();
     else if (U.isNewPlayer(meta, hasSave))
       out += `<div class="welcome-start"><button class="primary play-now" data-act="playNow">Play now</button>
-        <div class="small dim">Free, no account needed. You set out with two pilots, and your first mission teaches you as you go.</div></div>`;
+        <div class="small dim">Free, no account needed. You set out with a ready-made squad, and your first mission teaches you as you go.</div></div>`;
     return out;
   };
   /* ───────────── the guided first mission ───────────── */

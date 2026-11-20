@@ -82,7 +82,7 @@ test(
     try {
       // the title of a first visit: Play now first, the draft a click away, sign-in offered but not pushed
       assert.ok(p.d.querySelector('[data-act="playNow"]'), 'Play now on a first visit');
-      assert.match(p.html(), /Build your own squad/);
+      assert.ok(p.d.querySelector('[data-act="newRun"]'), 'and a setup to build your own squad');
 
       assert.ok(click('[data-act="playNow"]'));
       assert.equal(U.screen, 'map', 'Play now goes straight to the route');
@@ -234,7 +234,7 @@ test(
       U.screen = 'lobby';
       U.render();
       assert.equal(p.d.getElementById('inviteField').value, 'https://tumult.froglet.games/?join=ABCD');
-      assert.match(p.html(), /waiting for your friend/);
+      assert.match(p.html(), /Open seat/);
       assert.ok(p.d.querySelector('[data-act="netStart"][disabled]'));
       U.net.names[1] = 'Bo';
       U.render();
