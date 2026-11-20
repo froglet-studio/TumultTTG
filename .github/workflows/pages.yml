@@ -1,9 +1,12 @@
-# Publishes the web version (npm run build:web → dist/web: a small page plus content-named,
-# cacheable files) to GitHub Pages, with the offline single file beside it at /TUMULT.html.
+# The fallback address: publishes main's web version (npm run build:web → dist/web) to this
+# repository's own GitHub Pages site, https://froglet-studio.github.io/TumultTTG/, with the offline
+# single file beside it at /TUMULT.html.
 #
-# Manual only: nothing is published until someone presses "Run workflow" on the Actions tab.
-# One-time setup: repository Settings → Pages → Build and deployment → Source: "GitHub Actions".
-name: Publish playable build
+# Players get the game from the Froglet website (site.yml, www.froglet.games/tumult/play/); this is
+# for when that cannot be used. Manual only: "Run workflow" on the Actions tab, on main.
+# Admin setup, once (docs/reference/HOSTING.md): Settings → Pages → Source "GitHub Actions", and main
+# allowed in the github-pages environment. No custom domain.
+name: Publish fallback build
 
 on:
   workflow_dispatch:
@@ -37,6 +40,8 @@ jobs:
 
   deploy:
     needs: build
+    # Only main is published; a run started from another branch builds and stops here.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       pages: write

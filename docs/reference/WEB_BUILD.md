@@ -7,7 +7,7 @@ Tumult has two builds from one source (`src/manifest.json`):
 | Command | `npm run build` | `npm run build:web` |
 | Output | `dist/TUMULT.html`, one file (~8 MB) | `dist/web/`, a small page plus `assets/` |
 | Network | none, ever | its own files; later Froglet's own services only |
-| Where it goes | sent to anyone, played from disk | GitHub Pages (tumult.froglet.games), Cloudflare previews |
+| Where it goes | sent to anyone, played from disk | www.froglet.games/tumult/play/, Cloudflare previews |
 
 Both contain the same engine and screens. The playtest panel and the online screens (`manifest.playtest`) are in neither; they stay in the playtest build for the claude.ai page.
 
@@ -34,8 +34,11 @@ npm run dev:web                   http://localhost:5173, the web version as Page
 
 ## Deploying
 
-- **Pull requests and `bleeding-edge`:** `.github/workflows/preview.yml` deploys `dist/web` to the Cloudflare Pages project `tumult` and puts the link on the pull request as the `preview` deployment. It needs the repository secrets `CLOUDFLARE_API_TOKEN` (Pages: Edit, that account only) and `CLOUDFLARE_ACCOUNT_ID`; until they exist it builds and skips the deploy.
-- **GitHub Pages:** `.github/workflows/pages.yml` publishes `dist/web`, with the offline file at `/TUMULT.html`. It is manual until the custom domain is set up; then it publishes from `main` (`docs/BRANCHING_AND_RELEASE.md`).
+Addresses, workflows and the admin setup are in `HOSTING.md`. In short:
+
+- **Pull requests and `bleeding-edge`:** `.github/workflows/preview.yml` deploys `dist/web` to the Cloudflare Pages project `tumult` (`bleeding-edge` at tumult.pages.dev, each pull request at its branch's address, linked on the PR). It needs the repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; until they exist it builds and skips the deploy.
+- **`main`:** `.github/workflows/site.yml` copies `dist/web` into the Froglet website's `tumult/play/` folder on every push, and GitHub Pages serves it at www.froglet.games/tumult/play/. `pages.yml` is a manual fallback at froglet-studio.github.io/TumultTTG/.
+- **`development`:** `.github/workflows/playtest.yml` builds the playtest file; a Claude session puts it on the claude.ai page with `/playtest-publish`.
 
 ## The backend seam
 

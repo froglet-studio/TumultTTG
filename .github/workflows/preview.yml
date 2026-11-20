@@ -1,12 +1,17 @@
 # A Cloudflare Pages preview of the web version for every pull request and every push to
 # bleeding-edge, so the team can play a change from a link before it merges.
 #
-# One-time setup (an admin): a Cloudflare Pages project named "tumult" (Direct Upload), and two
-# repository secrets, CLOUDFLARE_API_TOKEN (scoped to "Cloudflare Pages: Edit" on that account
-# only) and CLOUDFLARE_ACCOUNT_ID. Until both exist the deploy step is skipped and the job passes.
-# Pull requests from forks never get the secrets, so they build but do not deploy.
+#   bleeding-edge      https://tumult.pages.dev (the project's production branch)
+#   a pull request     https://<branch name, "/" as "-">.tumult.pages.dev, also on the PR as
+#                      the "preview" deployment
 #
-# The link appears on the pull request as the "preview" environment's deployment.
+# One-time setup (an admin, docs/reference/HOSTING.md): two repository secrets,
+# CLOUDFLARE_API_TOKEN (Account → Cloudflare Pages: Edit, Froglet's account only) and
+# CLOUDFLARE_ACCOUNT_ID. The first deploy creates the Pages project "tumult" itself. Until both
+# secrets exist the deploy step is skipped and the job passes. Pull requests from forks never get
+# the secrets, so they build but do not deploy.
+#
+# Players get the game from the Froglet website (site.yml); nothing here reaches froglet.games.
 name: Preview
 
 on:
@@ -47,6 +52,9 @@ jobs:
             exit 0
           fi
           # wrangler is pinned to an exact version; bump it deliberately.
+          # Creates the project on the first run; afterwards this says it exists and carries on.
+          npx --yes wrangler@4.42.0 pages project create tumult --production-branch bleeding-edge \
+            || echo "Using the existing Pages project."
           npx --yes wrangler@4.42.0 pages deploy dist/web --project-name tumult --branch "$BRANCH" \
             --commit-hash "${{ github.event.pull_request.head.sha || github.sha }}" | tee deploy.log
           url=$(grep -oE 'https://[a-zA-Z0-9.-]+\.pages\.dev' deploy.log | tail -1)
