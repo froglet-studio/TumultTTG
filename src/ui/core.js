@@ -874,16 +874,31 @@
             // a partner's upgrade is theirs to choose: shown, never offered to this screen
             if (!own(i))
               return `<hr><h3>${esc(h.name)}'s upgrade</h3><p class="dim small">${rw.picked[i] && (!rw.boons || rw.boonPicked[i]) ? '✓ Chosen.' : `${esc(T.ownerName(run, i))} is choosing…`}</p>`;
+            const full = h.cards.length >= T.RULES.MAX_CARDS;
+            const sw = U.swapPick && U.swapPick.hero === i && !rw.picked[i] ? U.swapPick.card : null;
             const trait = rw.picked[i]
               ? `<p class="dim small">✓ Trait chosen.</p>`
-              : `<p class="dim small">Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.</p><div class="pack">${cards
-                  .map(
-                    (cid) =>
-                      `<div class="offer">${U.cardHTML(cid, { flavor: false, double: h.cards.includes(cid), clades: h.species })}<div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button></div></div>`,
+              : sw
+                ? // a full kit: the trait comes in only if another goes out
+                  `<p class="dim small">${esc(h.name)}'s kit is full. Choose the trait to give up for <b>${esc(T.CARD[sw].name)}</b>. The points spent on it come back to spend again${h.bound && Object.keys(h.bound).length ? ' (points a second copy bound to it go with it)' : ''}.</p><div class="pack">${T.swapDrops(
+                    h,
+                    sw,
                   )
-                  .join(
-                    '',
-                  )}</div><div class="row" style="margin-top:8px"><button class="ghost" data-act="skipCard" data-arg="${i}">Skip (+2 ◇)</button></div>`;
+                    .map(
+                      (d) =>
+                        `<div class="offer">${U.cardHTML(d, { flavor: false, P: h.up[d][0], E: h.up[d][1], showUp: true, clades: h.species })}<div class="row" style="margin-top:6px"><button class="sm" data-act="swapDrop" data-arg="${sw}|${i}|${d}">Give up ${esc(T.CARD[d].name)}</button></div></div>`,
+                    )
+                    .join(
+                      '',
+                    )}</div><div class="row" style="margin-top:8px"><button class="ghost" data-act="swapPick" data-arg="">Back to the offer</button></div>`
+                : `<p class="dim small">${full ? `${esc(h.name)} holds nine traits, the most a pilot can. Exchange one of them for a trait below, or skip for +2 ◇.` : `Pick a trait for ${esc(h.name)} (3-of-9 cap per species, 9 cards max), or skip for +2 ◇.`}</p><div class="pack">${cards
+                    .map((cid) => {
+                      const ex = T.isSwapOffer(run, i, cid);
+                      return `<div class="offer">${U.cardHTML(cid, { flavor: false, double: h.cards.includes(cid), clades: h.species })}<div class="row" style="margin-top:6px">${ex ? `<button class="sm primary" data-act="swapPick" data-arg="${cid}|${i}" data-tip="Give up one of ${esc(h.name)}'s nine traits for this one.">Exchange for…</button>` : `<button class="sm primary" data-act="takeCard" data-arg="${cid}|${i}">Take for ${esc(h.name)}</button>`}</div></div>`;
+                    })
+                    .join(
+                      '',
+                    )}</div><div class="row" style="margin-top:8px"><button class="ghost" data-act="skipCard" data-arg="${i}">Skip (+2 ◇)</button></div>`;
             const boon = !rw.boons
               ? ''
               : rw.boonPicked[i]
@@ -1293,6 +1308,22 @@
         const [cid, i] = arg.split('|');
         const r = U.exec({ op: 'takeCard', hero: parseInt(i, 10), card: cid });
         if (!r.ok) U.toast(r.why);
+        U.sfx.click();
+        U.render();
+        return;
+      }
+      case 'swapPick': {
+        // a full kit chose a trait to exchange for: next, which trait goes
+        const [cid, i] = (arg || '').split('|');
+        U.swapPick = cid ? { card: cid, hero: parseInt(i, 10) } : null;
+        U.render();
+        return;
+      }
+      case 'swapDrop': {
+        const [cid, i, drop] = arg.split('|');
+        const r = U.exec({ op: 'takeCard', hero: parseInt(i, 10), card: cid, drop });
+        if (!r.ok) U.toast(r.why);
+        else U.swapPick = null;
         U.sfx.click();
         U.render();
         return;

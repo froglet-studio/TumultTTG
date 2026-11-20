@@ -151,6 +151,37 @@
     delete h.up[cardId];
     if (h.bound) delete h.bound[cardId];
   };
+  /**
+   * A pilot whose kit is full (MAX_CARDS) grows by exchange: a new trait comes in and an old one goes out,
+   * so the kit stays at nine (Garrett, 2026-11-20). The new card must be of the pilot's bloodline, not held,
+   * and fit the 3-of-9 cap once the old card has gone.
+   */
+  T.canSwapCard = function (h, cardId, dropId) {
+    const c = T.CARD[cardId];
+    if (!c || !T.CARD[dropId]) return { ok: false, why: 'unknown' };
+    if (h.cards.length < R().MAX_CARDS) return { ok: false, why: 'the kit has room: take the trait instead' };
+    if (!h.cards.includes(dropId)) return { ok: false, why: 'not held' };
+    if (h.cards.includes(cardId)) return { ok: false, why: 'already held' };
+    if (!c.clades.some((sp) => h.species.includes(sp))) return { ok: false, why: 'not your bloodline' };
+    if (!T.cladeSlots(h, h.cards.filter((x) => x !== dropId).concat(cardId)))
+      return { ok: false, why: 'that would break the 3-of-9 cap' };
+    return { ok: true };
+  };
+  /** The held traits a full kit could give up for this one. */
+  T.swapDrops = (h, cardId) => h.cards.filter((d) => T.canSwapCard(h, cardId, d).ok);
+  /**
+   * Exchange: the old trait leaves and the new one takes its place in the kit, unupgraded. The points
+   * spent on the old one come back to the free pool, except those a second copy bound to it, which go with it.
+   */
+  T.swapCard = function (h, cardId, dropId) {
+    const r = T.canSwapCard(h, cardId, dropId);
+    if (!r.ok) return r;
+    const at = h.cards.indexOf(dropId);
+    T.removeCard(h, dropId);
+    h.cards.splice(at, 0, cardId);
+    h.up[cardId] = [0, 0];
+    return { ok: true, swapped: dropId };
+  };
   T.draftPack = function (run, h, size) {
     size = size || 4;
     // pool: every card of the hero's clades they could still take (a trait two of them share, a second
@@ -624,7 +655,7 @@
   T.cardOffers = function (run, n) {
     const rng = T.runStream(run, 'loot');
     const given = new Set();
-    return run.heroes.map((h) => {
+    const offers = run.heroes.map((h) => {
       const cands = T.CARDS.filter((c) => !given.has(c.id) && T.canAddCard(h, c.id).ok);
       const pick = rng
         .shuffle(cands)
@@ -633,6 +664,24 @@
       pick.forEach((id) => given.add(id));
       return pick;
     });
+    // a full kit is offered exchanges instead: traits it could take by giving one up (T.isSwapOffer). They
+    // come from a stream of their own, so the loot a run draws is the same whether anyone's kit is full.
+    run.heroes.forEach((h, i) => {
+      if (h.cards.length < R().MAX_CARDS || offers[i].length >= n) return;
+      const cands = T.CARDS.filter((c) => !given.has(c.id) && T.swapDrops(h, c.id).length);
+      const more = T.runStream(run, 'swap')
+        .shuffle(cands)
+        .slice(0, n - offers[i].length)
+        .map((c) => c.id);
+      more.forEach((id) => given.add(id));
+      offers[i] = offers[i].concat(more); // a second copy it may still take comes first
+    });
+    return offers;
+  };
+  /** Is this offered trait an exchange for this hero (their kit is full and it is not a second copy)? */
+  T.isSwapOffer = (run, heroIdx, cardId) => {
+    const h = run.heroes[heroIdx];
+    return h.cards.length >= R().MAX_CARDS && !h.cards.includes(cardId);
   };
   /** One boon offer for each hero: n boons nobody in the squad has, no boon offered to two heroes. */
   T.boonOffers = function (run, n) {
@@ -724,12 +773,19 @@
     });
     run.phase = 'reward';
   };
-  /** A hero takes a card from their own offer. */
-  T.takeOfferedCard = function (run, cardId, heroIdx) {
+  /** A hero takes a card from their own offer; a hero whose kit is full names the trait it gives up for it. */
+  T.takeOfferedCard = function (run, cardId, heroIdx, dropId) {
     const rw = run.lastReward;
     if (rw.picked[heroIdx] || !rw.offers[heroIdx].includes(cardId))
       return { ok: false, why: 'that trait is not on offer to this hero' };
-    const r = T.addCard(run.heroes[heroIdx], cardId);
+    const h = run.heroes[heroIdx];
+    if (h.cards.length >= R().MAX_CARDS && !h.cards.includes(cardId)) {
+      if (!dropId) return { ok: false, why: 'the kit is full (9): choose a trait to give up for it' };
+      const s = T.swapCard(h, cardId, dropId);
+      if (s.ok) rw.picked[heroIdx] = true;
+      return s;
+    }
+    const r = T.addCard(h, cardId);
     if (r.ok) rw.picked[heroIdx] = true;
     return r;
   };
