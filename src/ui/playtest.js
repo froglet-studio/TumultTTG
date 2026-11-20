@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.79.2',
+    version: '2.80.0',
     items: [
+      {
+        text: 'Play online now lists the games being played: who hosts, who is in, their pilots and where they are. Type your name and press Join, no code needed; a game in a mission says you can join between missions. Did you find your friends’ game? Did a game you left, or one whose host closed the page, read as quiet?',
+      },
       {
         text: 'The story box beside End turn now stays open on other players’ turns: write what your pilot is doing while you wait. Did you add more lines of story this way?',
       },
