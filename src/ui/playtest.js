@@ -19,10 +19,17 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.75.0',
+    version: '2.76.0',
     items: [
       {
         text: 'The mission screen fits phones and tablets now. On a phone: the board, then a one-line forecast, then your pilot with a hand you swipe a card at a time; nothing runs off the side. Tap a card face once to see what it would do on the board, and what ending the round would do after it; tap it again to play it. On any screen the forecast now has its own strip under the board, and ↶ Undo sits beside End Round (Ctrl+Z on a keyboard): take back a step or a play, as long as it rolled no dice and revealed nothing. Did you ever need to undo something that would not go back? Did a tap ever play a card you only meant to look at?',
+      },
+      {
+        text: 'Three clades take Cosmic Shore’s names: the Honey Badger is now the Ratel, the Hawk is the Red-tailed Hawk (a real species), and the Orca keeps its name. Saved pilots of those clades load as before. Cards that move dice from your pool now say “draw”, not “pull”, so Pull’s tip only shows where a foe is moved. Does every clade name read as a real animal?',
+        cards: ['fly_photo', 'jer_cache', 'gec_basking'],
+      },
+      {
+        text: 'A pilot that holds nine traits keeps growing: after a mission its trait offer becomes an exchange. Pick “Exchange for…” on a new trait, then choose which of your nine gives way. The new one starts unupgraded and the points you had spent on the old one come back to spend again. Did you find a trade worth making? Did losing an old favourite sting in a good way or a bad one?',
       },
       {
         text: 'Online play should feel quicker: the other player’s moves, the handoff at the end of a turn and the enemy phase now cross between the two screens over a live channel, instead of waiting on the page’s store, which could take up to half a minute. If the channel drops, the partner’s screen still checks every 2 seconds. And either player can now reload and pick up the game: the title offers “Rejoin game ABCD”. Does the partner’s screen keep up now? Did a rejoin put you back where you were?',

@@ -608,13 +608,13 @@
     'She leads, and the clan eats in her order.');
 
   /* ───────────────────────── WEASEL KIN ─────────────────────────
-     sea otter · honey badger · red panda. Musk and Dense Fur are every one's; Ferocity the otter's and the
+     sea otter · ratel · red panda. Musk and Dense Fur are every one's; Ferocity the otter's and the
      badger's. The otter also uses tools (Human's Tool Use); the red panda has Human's Opposable Grip (a false
      thumb) and climbs down headfirst like the ocelot (Headfirst Descent). */
   const WEASEL = ['otter','badger','red_panda'];
   S('otter', { name: 'Sea Otter', lean: 'C/M', branch: 'Weasel kin', icon: '🦦',
     tagline: 'Floats on its back, cracks shells on a rock, holds hands while it sleeps.' });
-  S('badger', { name: 'Honey Badger', lean: 'M/T', branch: 'Weasel kin', icon: '🦡',
+  S('badger', { name: 'Ratel', lean: 'M/T', branch: 'Weasel kin', icon: '🦡',
     tagline: 'Loose skin, no fear, and a habit of eating things that sting.' });
   S('red_panda', { name: 'Red Panda', lean: 'T/S', branch: 'Weasel kin', icon: '🐼',
     tagline: 'Treetop dweller in a thick red coat. Stands tall when it means it.' });
@@ -689,7 +689,7 @@
       txt:(P,E)=>`Feel the water within 3 for ${1+E} rounds; every foe within 2 is Marked.` },
     'Dark water, and every ripple in it.');
 
-  // Honey badger: Musk, Dense Fur, Ferocity, and these six
+  // Ratel (honey badger): Musk, Dense Fur, Ferocity, and these six
   K(['badger'],'bad_venom','Venom Shrug','T',0,
     { n:'Shrug', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'heal', n:(P,E)=>1+h(P)},{v:'statusImmune', dur:1}],
@@ -721,7 +721,7 @@
     { n:'Kick the Hive', ap:1, el:1, cd:3, dur:0, tgt:'node_r2',
       fx:[{v:'dot', val:(P,E)=>1+h(E), dur:2, kind:'venom', area:'nodeArea'},{v:'hazardImmune', dur:2}],
       txt:(P,E)=>`Kick a hive open at a node within 2: every foe on or beside it is stung, ${1+h(E)} a round for 2 rounds. Stings don't bother you for 2.` },
-    'The bees mind. The badger doesn\'t.');
+    'The bees mind. The ratel doesn\'t.');
   K(['badger'],'bad_never','Never Retreat','M',2,
     { n:'Stand', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'anchor', who:'self', dur:1},{v:'empower', val:(P,E)=>1+P, uses:1, dur:2}],
@@ -1909,13 +1909,13 @@
       txt:(P,E)=>`Leave a puzzle where you stood (a decoy for ${1+E} rounds), slip to a node within 2, and your next hit deals +${1+E}.` },
     'The first scientists to see one thought it was a hoax.');
   /* ───────────────────────── BIRDS OF PREY AND OWLS ─────────────────────────
-     bald eagle · hawk, with the barn owl. Hollow Bones and Talon Strike are the owl's, and every raptor's;
+     bald eagle · red-tailed hawk, with the barn owl. Hollow Bones and Talon Strike are the owl's, and every raptor's;
      Keen Sight and Stoop are the day hunters'. The hawk's Sky Hyperspeed is the cheetah's run, taken to the air. */
   T.SPECIES.owl.branch = 'Birds of prey and owls';
   S('eagle', { name: 'Bald Eagle', lean: 'M/C', branch: 'Birds of prey and owls', icon: '🦅',
     tagline: 'Broad wings, a voice like a rusty hinge, and a grip nothing breaks.' });
-  S('hawk', { name: 'Hawk', lean: 'S/M', branch: 'Birds of prey and owls', icon: '🦅',
-    tagline: 'Quick in the hedges, quicker in the open. Hangs on the wind and drops.' });
+  S('hawk', { name: 'Red-tailed Hawk', lean: 'S/M', branch: 'Birds of prey and owls', icon: '🦅',
+    tagline: 'A brick-red tail and a long scream. Quick in the hedges, quicker in the open; hangs on the wind and drops.' });
   T.shareTrait('owl_bones', 'eagle', 'hawk');
   T.shareTrait('owl_talon', 'eagle', 'hawk');
 
@@ -1978,7 +1978,7 @@
       txt:(P,E)=>`Both heroes hold Shield ${1+E} for 2 rounds and heal 1 at the start of each turn for 2 rounds.` },
     'A nest the size of a car, and it comes back every year.');
 
-  // Hawk: Hollow Bones, Talon Strike, Keen Sight, Stoop, and these five
+  // Red-tailed hawk: Hollow Bones, Talon Strike, Keen Sight, Stoop, and these five
   K(['hawk'],'haw_hyper','Sky Hyperspeed','S',0,
     { n:'Sky Dash', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:4, exact:true, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'empower', val:(P,E)=>P, uses:1, dur:1}],
@@ -3109,9 +3109,9 @@
       txt:(P,E)=>`Shear with the beak's edge: melee ${3+E} that ignores Shield, and it is Weakened 1 this round.` },
     'No teeth, just an edge like shears.');
   K(['tortoise'],'tor_withdraw','Withdraw','T',0,
-    { n:'Pull In', ap:1, el:0, cd:2, dur:0, tgt:'self',
+    { n:'Tuck In', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>3+P, dur:1},{v:'heal', n:1},{v:'anchor', who:'self', dur:1}],
-      txt:(P,E)=>`Pull everything in: Shield ${3+P} this round, heal 1, and nothing can push or pull you.` },
+      txt:(P,E)=>`Tuck everything in: Shield ${3+P} this round, heal 1, and nothing can push or pull you.` },
     { n:'Wait It Out', ap:1, el:1, cd:5, dur:1, tgt:'self',
       fx:[{v:'stasis', dur:1},{v:'heal', n:(P,E)=>2+E},{v:'cleanse'}],
       txt:(P,E)=>`Wait it out inside: nothing can target you through the next enemy phase; heal ${2+E} and shake off Anchored and Weakened.` },
@@ -3476,7 +3476,7 @@
   K(['snail'],'snl_seal','Seal In','M',0,
     { n:'Withdraw', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>2+P, dur:1},{v:'anchor', who:'self', dur:1}],
-      txt:(P,E)=>`Pull into your shell: Shield ${2+P} this round, and nothing can push or pull you.` },
+      txt:(P,E)=>`Retreat into your shell: Shield ${2+P} this round, and nothing can push or pull you.` },
     { n:'Epiphragm', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'stasis', dur:1},{v:'heal', n:(P,E)=>1+E},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
       txt:(P,E)=>`Seal the door with dried slime: heal ${1+E}, nothing can touch you until your next turn, and your next hit deals +${1+E}.` },
@@ -3501,9 +3501,9 @@
     { n:'Peek', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:1, reflect:0}],
       txt:(P,E)=>`Raise your eyes on their stalks: see within ${2+P}, and the next hit on you is 1 less.` },
-    { n:'Pull In', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+    { n:'Shell Watch', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'locate', dur:2},{v:'studied', n:1},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
-      txt:(P,E)=>`Watch one foe, ready to pull in: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is ${1+E} less.` },
+      txt:(P,E)=>`Watch one foe from the shell's edge: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is ${1+E} less.` },
     'Two eyes on stalks, quick to duck.');
 
   // Jellyfish: Boneless Squeeze, Regeneration, Buoyancy Control (a variant: it drifts like a fish but is none), and these six

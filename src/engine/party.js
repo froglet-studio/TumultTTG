@@ -162,7 +162,7 @@
     adjustUp: (run, m, h, c) => T.adjustUp(h, c.card, c.which, c.delta),
     autoUp: (run, m, h) => (T.autoAllocate(h), { ok: true }),
     sellGear: (run, m, h, c) => (T.sellGear(run, c.hero, c.gi), { ok: true }),
-    takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero),
+    takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero, typeof c.drop === 'string' ? c.drop : undefined),
     skipCard: (run, m, h, c) => T.skipOfferedCard(run, c.hero),
     takeBoon: (run, m, h, c) => T.takeBoon(run, c.boon, c.hero),
     buyGear: (run, m, h, c) => T.buyGear(run, c.gear, c.hero),

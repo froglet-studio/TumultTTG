@@ -6,7 +6,7 @@
 - **Previews.** Every pull request and push to `bleeding-edge` deploys the web version to Cloudflare Pages once the secrets are set; GitHub Pages publishes it with the offline file beside it.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
-## 2.75.0 — 2026-11-20 — the mission screen: undo, a forecast strip, phones and tablets
+## 2.76.0 — 2026-11-20 — the mission screen: undo, a forecast strip, phones and tablets
 
 Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
 
@@ -15,6 +15,21 @@ Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
 - **Previews on a touch screen.** A phone cannot hover, so the first tap on a face, an action or a gear ability shows its preview on the board and in the strip, and the second tap plays it.
 - **Phones and tablets.** The screen is one column that no longer runs off the right edge: the top bar, the board sized to its map, the forecast, the dock, then the intents, the ally and the log. The hand is swiped and snaps a card at a time; every play is at least 40 px tall on a touch screen; the dock has a button to fly each other pilot. On a phone the top bar keeps End Round and Undo beside the mission's name and folds the objective to one line.
 - **Tests.** `test/undo.test.js`: what can and cannot be taken back, on hundreds of moves, and Undo through the real interface.
+
+## 2.75.1 — 2026-11-20 — Cosmic Shore's clade names, and dice are drawn
+
+Garrett: "Hawk is not a species. photosynthesis uses the word pull in references to dice, which collides with the use elsewhere… lets use ratel for honey badger to be consistent. and orca for killer whale."
+
+- **Names.** The Honey Badger is the **Ratel** and the Hawk is the **Red-tailed Hawk**, matching its painted head. The Orca was already the Orca; no card or name said "killer whale". Clade ids (`badger`, `hawk`) do not change, so saved runs, saved pilots, online games and canon notes load exactly as before.
+- **Draw, not pull.** Photosynthesis (Bask), Cheek Caching (Stash) and Solar Basking (Bask) said "pull" a die, which lit up the Pull keyword and its tip about moving foes. They now say "draw", as every other dice card does. The tortoise's Withdraw and the snail's shell faces no longer say "pull" either (Tuck In, Retreat into your shell, Shell Watch). Text only: no rule changes.
+
+## 2.75.0 — 2026-11-20 — a full kit grows by exchange
+
+Garrett: "after getting 9 cards total, players should be able to swap cards at similar points exchanging an old card for a new one but keeping the 9 card max."
+
+- **Exchanges.** A pilot with nine traits used to get an empty trait offer after a mission. Now it gets up to three traits of its bloodline it could take by giving one up (`T.swapCard`, `T.swapDrops`, `T.isSwapOffer`). The new trait arrives unupgraded and the free points on the old one come back; a second copy's bound point goes with its card. The 3-of-9 cap holds after the exchange. A second copy the pilot can still take is offered first, and skipping still pays 2 ◇.
+- **Online.** The `takeCard` command carries the trait given up (`drop`); older commands without it are unchanged.
+- **Balance.** Exchange offers draw from a stream of their own and the simulated players pass on them. The one thing that changes for them is that a full kit's pass now pays 2 ◇, as any skipped offer does (before, a full kit had nothing to skip). `node tools/sim.js 40`: the mission tables are identical to 2.74.0; full runs: heuristic 5/40 → 5/40, look-ahead 26/40 → 25/40 (one seed, 24, went the other way at its last mission).
 
 ## 2.74.0 — 2026-11-20 — online: quicker, and a reload can rejoin
 
