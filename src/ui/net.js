@@ -954,7 +954,7 @@
     const seats = N.names
       .map((x, s) => (s === 0 ? seat(x || 'Player 1', 'host', true) : x ? seat(x, 'guest', true) : ''))
       .join('');
-    const open = room ? seat('Seat ' + (N.joined() + 1), 'waiting for a friend', false) : '';
+    const open = room ? seat('Seat ' + (N.joined() + 1), 'waiting for your friend', false) : '';
     return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Play with friends</div><h2>Expedition <span class="mono">${esc(N.code || '')}</span></h2>
       ${invite}
       <div class="seats">${seats}${open}</div>

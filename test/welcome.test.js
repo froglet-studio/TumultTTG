@@ -20,15 +20,20 @@ const skip = hasJsdom ? false : 'jsdom is not installed (run `npm install`)';
 /** A stand-in for T.Account and its sign-in box (src/ui/account.js, the sign-in thread): a guest until asked. */
 function fakeAccount() {
   const fake = { asked: [], user: { guest: true }, listeners: [] };
+  const methods = {
+    available: () => true,
+    user: () => fake.user,
+    onChange: (fn) => fake.listeners.push(fn),
+  };
+  const ask = (why) => fake.asked.push(why);
   fake.install = (w) => {
-    w.T = {
-      Account: {
-        available: () => true,
-        user: () => fake.user,
-        onChange: (fn) => fake.listeners.push(fn),
-      },
-      UI: { askSignIn: (why) => fake.asked.push(why) },
-    };
+    w.T = { Account: Object.assign({}, methods), UI: { askSignIn: ask } };
+  };
+  // the real sign-in module is in the build and sets its own methods as it loads: put these back over them
+  fake.after = (w) => {
+    Object.assign(w.T.Account, methods);
+    w.T.UI.askSignIn = ask;
+    if (w.T.UI.render) w.T.UI.render();
   };
   fake.signIn = () => {
     fake.user = { guest: false, name: 'Tester' };
@@ -54,6 +59,7 @@ async function open(html, { url = 'https://tumult.froglet.games/', account = nul
   });
   const w = dom.window;
   await until(() => w.T && w.T.UI && w.T.UI.welcome && w.T.UI.welcome.started, 'the welcome to start');
+  if (account && account.after) account.after(w);
   await new Promise((r) => setTimeout(r, 5));
   const d = w.document;
   const click = (sel) => {
