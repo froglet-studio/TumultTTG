@@ -253,7 +253,10 @@
    */
   T.progressRecord = function (h, prev, at) {
     const r = T.madeFrom(h, at || (prev && prev.at) || '');
-    if (prev) r.id = prev.id;
+    if (prev) {
+      r.id = prev.id;
+      ['callsign', 'domain', 'story'].forEach((k) => prev[k] != null && (r[k] = prev[k]));
+    }
     r.runs = ((prev && prev.runs) || 0) + 1;
     return r;
   };
@@ -346,6 +349,13 @@
     };
     if (spare != null) out.spare = spare;
     if (runs) out.runs = runs;
+    // who a pilot made in Make a pilot is (2.83): a callsign, a domain, and three short answers. Optional.
+    const word = (v, n) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, n) : '');
+    const call = word(rec.callsign, 12).toUpperCase();
+    if (call && /^[A-Z0-9 -]+$/.test(call)) out.callsign = call;
+    if (['jade', 'ruby', 'gold'].includes(rec.domain)) out.domain = rec.domain;
+    if (Array.isArray(rec.story) && rec.story.length <= 3 && rec.story.some((a) => word(a, 280)))
+      out.story = rec.story.map((a) => word(a, 280));
     return out;
   };
   /** The heroes made on this device, newest first (none when storage is unavailable). */
