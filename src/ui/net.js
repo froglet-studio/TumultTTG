@@ -367,7 +367,7 @@
   };
   const done = new Set();
   /**
-   * A player who took the next seat after the expedition set out joins it on the route (2.78, T.addPlayer):
+   * A player who took the next seat after the expedition set out joins it on the route (2.79, T.addPlayer):
    * their screen then drafts or brings a pilot, and the route waits for it.
    */
   N.admit = function () {
@@ -520,7 +520,7 @@
       // a seat already in this name is taken again (a reload); else the first seat nobody holds. Once the
       // expedition has set out, only its own seats are open.
       const g = snap.data();
-      // on the route between missions one more seat opens for a newcomer (2.78)
+      // on the route between missions one more seat opens for a newcomer (2.79)
       let onRoute = false;
       try {
         onRoute = !!g.run && T.canAddPlayer(T.deserializeRun(g.run));
@@ -619,7 +619,7 @@
     // which screen: the run's phase decides, except the draft, which each player does on their own
     const sameMission =
       before && before.mission && run.mission && before.launched === run.launched && U.screen === 'mission';
-    // a newcomer on the route makes the pilot it brings (2.78): the seat's pilot the run is still waiting for
+    // a newcomer on the route makes the pilot it brings (2.79): the seat's pilot the run is still waiting for
     const owed =
       run.phase === 'map' && run.party ? run.party.owner.findIndex((s, i) => s === N.seat && !run.heroes[i]) : -1;
     if (run.phase === 'draft') {

@@ -495,7 +495,7 @@ test('online: three screens join one game, draft a pilot each and set out', { sk
   C.act('confirmHero');
   await until(() => [A, B, C].every((P) => P.U.screen === 'map'), 'every screen on the map');
   assert.equal(A.U.run.heroes.map((h, i) => A.T.ownerOf(A.U.run, i)).join(','), '0,1,2', 'a pilot each');
-  // a fourth screen joins on the route (2.78): it brings a pilot, and the route waits for it
+  // a fourth screen joins on the route (2.79): it brings a pilot, and the route waits for it
   const D = await open(html, db);
   D.type('netName', 'Di');
   D.type('netCode', A.U.net.code);

@@ -24,7 +24,7 @@
     return { players, owner, ready: players.map(() => false) };
   };
   /**
-   * A player joins an expedition already under way (2.78; Garrett, 2026-11-20: "is there a way the two players
+   * A player joins an expedition already under way (2.79; Garrett, 2026-11-20: "is there a way the two players
    * mid game could save their game, we update, and then I join in?"). Only on the route, between missions,
    * and never past MAX_PLAYERS. With two players or more the newcomer brings a pilot of its own, drafted or
    * made, which joins with T.joinPilot; a lone player's second pilot passes to the newcomer instead.

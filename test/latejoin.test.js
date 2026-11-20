@@ -1,6 +1,6 @@
 'use strict';
 /**
- * A player joins an expedition under way (2.78): on the route, between missions, a newcomer takes the next
+ * A player joins an expedition under way (2.79): on the route, between missions, a newcomer takes the next
  * seat and brings a pilot; the route waits for it, and the next mission scales for the bigger squad.
  */
 const test = require('node:test');
