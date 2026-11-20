@@ -78,6 +78,9 @@ function sources({ playtest = false, web = false } = {}) {
   const extra = playtest ? manifest.playtest : { js: [], css: [] };
   // The web version's own scripts (Froglet Analytics); never in the offline file, which makes no network requests.
   const webJs = web ? (manifest.web && manifest.web.js) || [] : [];
+  const webCss = web ? (manifest.web && manifest.web.css) || [] : [];
+  // each file once, where it first comes: the web version's backend before the playtest panel's online screens
+  const once = (list) => [...new Set(list)];
   const banner = (rel) => `\n/* ───── ${rel} ───── */\n`;
   const fill = (rel, body) =>
     rel === 'web/analytics.js'
@@ -85,10 +88,12 @@ function sources({ playtest = false, web = false } = {}) {
       : body;
   // The page knows which build it is: the playtest panel shows it and puts it in its reports.
   const stamp = `window.T = window.T || {};\nwindow.T.BUILD = ${JSON.stringify({ version: pkg.version, playtest })};\n`;
-  const js = [...manifest.engine, ...manifest.ui, ...extra.js, ...webJs]
+  const js = once([...manifest.engine, ...manifest.ui, ...webJs, ...extra.js])
     .map((rel) => banner(rel) + fill(rel, read(rel)))
     .join('\n');
-  const css = [...manifest.css, ...extra.css].map((rel) => banner(rel) + read(rel)).join('\n');
+  const css = once([...manifest.css, ...webCss, ...extra.css])
+    .map((rel) => banner(rel) + read(rel))
+    .join('\n');
   return { manifest, pkg, stamp, js, css };
 }
 

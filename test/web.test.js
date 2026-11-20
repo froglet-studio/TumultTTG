@@ -30,7 +30,14 @@ test('the web version: a small page, every file it names exists, every asset is 
   // the same game as the single file: every source, and the script compiles
   const manifest = require(path.join(root, 'src', 'manifest.json'));
   for (const rel of [...manifest.engine, ...manifest.ui]) assert.ok(js.includes(`───── ${rel} ─────`), rel);
-  for (const rel of manifest.playtest.js) assert.ok(!js.includes(`───── ${rel} ─────`), `${rel} leaked in`);
+  // the playtest panel stays out; the online screens are in, served by the web version's own backend
+  for (const rel of manifest.playtest.js)
+    if (!manifest.web.js.includes(rel)) assert.ok(!js.includes(`───── ${rel} ─────`), `${rel} leaked in`);
+  for (const rel of manifest.web.js) assert.ok(js.includes(`───── ${rel} ─────`), `${rel} is missing`);
+  assert.ok(
+    js.indexOf('───── web/backend-worker.js') < js.indexOf('───── ui/net.js'),
+    'the backend provider loads before the online screens look for it',
+  );
   assert.doesNotThrow(() => new vm.Script(js, { filename: 'tumult.js' }));
   assert.ok(!js.includes('data:image/'), 'paintings are files, not inlined');
   // every painting the game can show is a file, under the same key as in the single file
