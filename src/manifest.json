@@ -46,8 +46,16 @@
     "css": ["ui/playtest.css", "ui/net.css"]
   },
   "web": {
-    "comment": "Only in the web version (npm run build:web): the Froglet Analytics provider, the one script that may talk to a Froglet service. The offline file never contains it.",
-    "js": ["web/analytics.js"]
+    "comment": "Only in the web version (npm run build:web): the scripts that talk to Froglet's own services, Tumult's Worker (server/, docs/reference/BACKEND.md) and Froglet Analytics, and the online screens they serve. The offline file never contains them. The backend provider comes before the online screens, which look for it as they load.",
+    "js": [
+      "web/server.js",
+      "web/backend-worker.js",
+      "ui/net.js",
+      "ui/canon-net.js",
+      "ui/heroes-net.js",
+      "web/analytics.js"
+    ],
+    "css": ["ui/net.css"]
   },
   "art": {
     "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",

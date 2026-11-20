@@ -13,12 +13,13 @@
            deleted and watched (see net.js for the calls each screen makes)
      room  join(name) — an optional live channel between the screens open on one game
      user  id(), can(permission), canEdit(), isOwner(), profiles(ids) — who is playing
+     lobby watch(fn(players)) → stop — who is online now; web version only (src/web/backend-worker.js)
      analytics  track(event, props), flush(leaving) — anonymous play data (src/ui/telemetry.js);
            offered on its own by the web version's Froglet Analytics provider (src/web/analytics.js)
 
    Built in: 'claude-artifact', the claude.ai page that hosts the playtest build
-   (window.claude.use). A Cloudflare Workers provider registers itself the same way
-   (T.Backend.register) when the hosted web build has a server. With no provider the game
+   (window.claude.use). The web version adds 'tumult-worker' (src/web/backend-worker.js), Tumult's
+   own Cloudflare Worker (server/, docs/reference/BACKEND.md), registered the same way. With no provider the game
    plays exactly as before, solo and offline.
    ========================================================================== */
 (function (T) {
@@ -46,6 +47,24 @@
     if (!p) return Promise.resolve(null);
     return Promise.resolve(p.use(capability)).then((c) => c || null);
   };
+
+  /**
+   * Who is playing changed (a sign-in, a sign-out, an account merged): a provider says so with
+   * B.changed(), and the online screens that read the player's own documents look again.
+   */
+  const listeners = B._listeners || (B._listeners = []);
+  B.onChange = (fn) => {
+    listeners.push(fn);
+    return () => listeners.splice(listeners.indexOf(fn) >>> 0, 1);
+  };
+  B.changed = () =>
+    listeners.slice().forEach((fn) => {
+      try {
+        fn();
+      } catch (e) {
+        /* one screen's trouble is not another's */
+      }
+    });
 
   if (!providers.some((p) => p.name === 'claude-artifact'))
     providers.push({

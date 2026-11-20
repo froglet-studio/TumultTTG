@@ -46,4 +46,4 @@ The online screens reach a server only through `T.Backend` (`src/ui/backend.js`)
 
 A provider may name the capabilities it offers (`capabilities: [...]`); one without a list offers the online three. The web version registers `froglet-analytics`, which offers only `analytics`, the anonymous play data (`src/web/analytics.js`, `docs/reference/ANALYTICS.md`); it never makes the game look online.
 
-Built in today is `claude-artifact`, the claude.ai page that hosts the playtest build (`window.claude.use`). The Cloudflare Workers backend will register a provider with the same three capabilities (`T.Backend.register`), and the online screens will then join the web version's manifest list.
+Built in is `claude-artifact`, the claude.ai page that hosts the playtest build (`window.claude.use`). The web version registers `tumult-worker` (`src/web/backend-worker.js`), Tumult's own Cloudflare Worker, with the same three capabilities and a fourth, `lobby` (who is online), and carries the online screens in its manifest list (`manifest.web`). How the server works and how to deploy it: `docs/reference/BACKEND.md`.
