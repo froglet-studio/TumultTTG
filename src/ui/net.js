@@ -1,8 +1,9 @@
 /* ============================================================================
-   TUMULT — PLAY ONLINE (test page only).
-   Two screens, one game, through the shared store of the page that hosts the build
-   (the `db` capability through T.Backend, ui/backend.js; on claude.ai, window.claude.use('db')). Only the playtest build has
-   this file; with no such store, it shows nothing and the game is as it was.
+   TUMULT — PLAY ONLINE (the playtest page and the web version).
+   Two screens, one game, through a shared store (the `db` capability through T.Backend, ui/backend.js):
+   on claude.ai the page's own (window.claude.use('db')); in the web version a live room per game code
+   on Tumult's Cloudflare Worker (src/web/backend-worker.js, server/room.js). The offline file has no
+   such store, and this file shows nothing there.
 
    The host's screen holds the game. A guest's screen shows the state the host last
    wrote and sends commands (T.execCommand) for its own pilot; the host carries them out
@@ -45,6 +46,7 @@
   const newCode = () => Array.from({ length: 4 }, () => LETTERS[Math.floor(Math.random() * LETTERS.length)]).join('');
 
   let db = null;
+  let usr = null; // who is playing, when the page says
   let rooms = null; // the page's live channel, when it has one
   let lane = null; // this game's room
   const leaveLane = () => {
@@ -100,7 +102,10 @@
       .then((d) => {
         db = d;
         N.available = !!d;
-        if (d) watchGames();
+        if (d) {
+          watchGames();
+          N.fromLink();
+        }
         if (d && U.screen === 'title') U.render();
         return T.Backend.use('room').then(
           (r) => {
@@ -111,6 +116,7 @@
         );
       })
       .then(async (u) => {
+        usr = u;
         if (!u || typeof u.can !== 'function') return;
         const c = await u.can('data.write');
         N.canWrite = c == null ? null : !!c;
@@ -123,6 +129,8 @@
   const NO_ACCESS =
     "Your access to this page lets you look but not write, so you can't host or join. Ask the page's owner to invite you by email as an Editor (on a page that isn't shared by link), or to add you to their organization as a Contributor.";
   const why = (e) => {
+    const own = db && typeof db.explain === 'function' ? db.explain(e) : null;
+    if (own) return esc(own);
     const code = String((e && (e.code || e.message)) || e || '');
     return /denied|grant|permission|not_writer|forbidden|unauth/i.test(code)
       ? NO_ACCESS
@@ -449,14 +457,31 @@
     U.screen = 'lobby';
     N.status = lobbyStatus();
     U.render();
-    try {
-      await gameDoc().set({ rev: 0, run: null, acks: {}, host: tab, names: N.names, at: Date.now() });
-    } catch (e) {
-      U.toast(why(e), 9000);
-      N.leave();
-      return;
+    for (let tries = 0; ; tries++) {
+      try {
+        await gameDoc().set({ rev: 0, run: null, acks: {}, host: tab, names: N.names, at: Date.now() });
+        break;
+      } catch (e) {
+        if (e && e.code === 'already-exists' && tries < 4) {
+          N.code = newCode(); // someone else's game has this code: take another
+          U.render();
+          continue;
+        }
+        U.toast(why(e), 9000);
+        if (e && /needs-account|unauthenticated/.test(String(e.code)) && usr && usr.signIn) usr.signIn();
+        N.leave();
+        return;
+      }
     }
     remember({ code: N.code, role: 'host', name: N.names[0] });
+    N.invite = null;
+    if (typeof db.invite === 'function')
+      db.invite(N.code)
+        .then((link) => {
+          N.invite = link;
+          if (U.screen === 'lobby') U.render();
+        })
+        .catch(() => {});
     listenAsHost();
   };
   function listenAsHost() {
@@ -759,6 +784,7 @@
     } catch (e) {
       N.code = null;
       U.toast(why(e), 9000);
+      if (e && /needs-account|unauthenticated/.test(String(e.code)) && usr && usr.signIn) usr.signIn();
       return;
     }
     N.role = 'guest';
@@ -860,7 +886,7 @@
     done.clear();
     lastWritten = null;
     if (N.realSave) T.saveRun = N.realSave;
-    Object.assign(N, { code: null, role: null, seat: null, rev: 0, status: '' });
+    Object.assign(N, { code: null, role: null, seat: null, rev: 0, status: '', invite: null });
     U.seats = null;
     U.run = null;
     U.modal = null;
@@ -880,16 +906,58 @@
     return `<div class="net-pick"><span class="dim small">Play online</span>${back}
       <input id="netName" placeholder="Your name" maxlength="24">
       <button class="sm" data-act="netHost">Host a game</button>
-      <input id="netCode" placeholder="CODE" maxlength="4" style="width:5em;text-transform:uppercase">
+      <input id="netCode" placeholder="CODE" maxlength="4" style="width:5em;text-transform:uppercase" value="${esc(N.linked || '')}">
       <button class="sm" data-act="netJoin">Join</button>
       <div class="net-games" id="netGames">${U.gamesList()}</div>
-      <div class="mute small">Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns. Join a game from the list, or with the code its host gives you; the host keeps this page open. Players need write access to this page (an email invite as Editor, or Contributor in your organization). A view-only link can't join.</div></div>`;
+      <div class="mute small">${esc(N.howTo())}</div></div>`;
+  };
+  N.howTo = () =>
+    db && typeof db.invite === 'function'
+      ? `Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns. Join a game from the list, or with the code its host gives you. The host signs in, keeps this page open and shares the code, or an invite link for a player without an account.`
+      : `Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns. Join a game from the list, or with the code its host gives you; the host keeps this page open. Players need write access to this page (an email invite as Editor, or Contributor in your organization). A view-only link can't join.`;
+  /** A link with ?join=CODE&invite=TOKEN: keep the invite for this tab and fill in the code. */
+  N.fromLink = function () {
+    if (typeof location === 'undefined') return;
+    let q;
+    try {
+      q = new URLSearchParams(location.search);
+    } catch (e) {
+      return;
+    }
+    const code = String(q.get('join') || '')
+      .toUpperCase()
+      .replace(/[^A-Z]/g, '');
+    if (code.length !== 4) return;
+    if (q.get('invite') && db && typeof db.useInvite === 'function') db.useInvite(code, q.get('invite'));
+    N.linked = code;
+    try {
+      history.replaceState(null, '', location.pathname); // the code is in the box; the link need not stay in the bar
+    } catch (e) {
+      /* the bar keeps it */
+    }
   };
   U.renderLobby = function () {
     const host = N.role === 'host';
-    const here = N.names.map((x, s) => (s === 0 ? esc(x || 'Player 1') + ' (host)' : x ? esc(x) : '')).filter(Boolean);
-    return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Online game</div><h2>Code <span class="mono">${esc(N.code || '')}</span></h2>
-      <p>${here.join(' · ')}</p>
+    const W = U.welcome || {};
+    // the server's invite (with its token) when there is one, else a plain ?join= link, else the code
+    const link = N.invite || (W.inviteLink ? W.inviteLink(N.code || '') : null);
+    const share = link || N.code || '';
+    const room = N.joined() < T.MAX_PLAYERS;
+    // the link (or, inside another page, the code) and a copy button: a friend needs nothing else
+    const invite =
+      host && room
+        ? `<div class="invite-box"><span class="dim small">${link ? 'Invite link' : 'Game code'}</span><div class="row"><input id="inviteField" class="mono" readonly value="${esc(share)}"><button class="primary" data-act="inviteCopy" data-arg="${esc(N.code || '')}">Copy</button></div>
+        <div class="small dim">${link ? 'Anyone with the link can join this game with only a name.' : 'Your friend opens this page and joins with the code.'}</div></div>`
+        : '';
+    const seat = (name, who, here) =>
+      `<div class="seat${here ? '' : ' waiting'}"><span class="seat-dot" aria-hidden="true"></span><div><b>${esc(name)}</b><div class="small dim">${esc(who)}</div></div><span class="right small">${here ? 'Joined' : 'Waiting…'}</span></div>`;
+    const seats = N.names
+      .map((x, s) => (s === 0 ? seat(x || 'Player 1', 'host', true) : x ? seat(x, 'guest', true) : ''))
+      .join('');
+    const open = room ? seat('Seat ' + (N.joined() + 1), 'waiting for your friend', false) : '';
+    return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Play with friends</div><h2>Expedition <span class="mono">${esc(N.code || '')}</span></h2>
+      ${invite}
+      <div class="seats">${seats}${open}</div>
       <p class="dim">${esc(N.status)}</p>
       <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.joined() > 1 ? '' : 'disabled'}>Start the expedition${N.joined() > 1 ? ` (${N.joined()} players)` : ''}</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
   };
