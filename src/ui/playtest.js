@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.74.0',
+    version: '2.75.0',
     items: [
+      {
+        text: 'The mission screen fits phones and tablets now. On a phone: the board, then a one-line forecast, then your pilot with a hand you swipe a card at a time; nothing runs off the side. Tap a card face once to see what it would do on the board, and what ending the round would do after it; tap it again to play it. On any screen the forecast now has its own strip under the board, and ↶ Undo sits beside End Round (Ctrl+Z on a keyboard): take back a step or a play, as long as it rolled no dice and revealed nothing. Did you ever need to undo something that would not go back? Did a tap ever play a card you only meant to look at?',
+      },
       {
         text: 'Online play should feel quicker: the other player’s moves, the handoff at the end of a turn and the enemy phase now cross between the two screens over a live channel, instead of waiting on the page’s store, which could take up to half a minute. If the channel drops, the partner’s screen still checks every 2 seconds. And either player can now reload and pick up the game: the title offers “Rejoin game ABCD”. Does the partner’s screen keep up now? Did a rejoin put you back where you were?',
       },
@@ -476,6 +479,7 @@
     if (!m || m.over) return;
     for (const a of plan) if (!T.applyAction(m, a).ok || m.over) break;
     plan = [];
+    U.ms.undo = []; // played straight on the mission: nothing before it to go back to
     U.updateMission();
     T.saveRun(U.run);
   }

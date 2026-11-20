@@ -347,10 +347,10 @@ test(
       click('.mission .bottom [data-act="fold"]');
       assert.ok(!d.getElementById('mlog').classList.contains('folded'));
       assert.equal(JSON.parse(w.localStorage.getItem('tumult_v2_ui')).log, true);
-      // the intents fold to the forecast
+      // the intents fold away; the forecast has a strip of its own under the board
       click('#mside [data-act="fold"][data-arg="intents"]');
       assert.ok(!d.querySelector('#mside .intents'), 'the intents are folded away');
-      assert.ok(d.querySelector('#mside .forecast'), 'the forecast stays');
+      assert.ok(d.querySelector('#mfc .forecast'), 'the forecast stays');
       // an update that changes nothing leaves the panels as they are
       const side = d.querySelector('#mside .hero');
       U.updateMission();

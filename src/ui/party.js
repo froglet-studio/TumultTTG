@@ -90,7 +90,11 @@
    */
   U.exec = function (cmd) {
     if (U.net && U.net.isGuest()) return U.net.send(cmd);
-    return T.execCommand(U.run, cmd, U.seats);
+    // the mission screen keeps what a move can be taken back to (mission.js, T.canTakeBack)
+    const before = U.takeBackBefore ? U.takeBackBefore(cmd) : null;
+    const r = T.execCommand(U.run, cmd, U.seats);
+    if (U.takeBackAfter) U.takeBackAfter(cmd, r, before);
+    return r;
   };
   /** May this screen move or act for hero i on the board? */
   U.mine = (i) => {

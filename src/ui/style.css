@@ -2636,3 +2636,290 @@ button:disabled .acost {
   color: var(--gold);
   margin-top: 6px;
 }
+
+/* ---------- Mission screen, 2.75: forecast strip, undo, touch previews, a layout that fits any screen ---------- */
+/* the forecast: what ending the round now would do, a chip a pilot, always in view under the board */
+.mfc:empty {
+  display: none;
+}
+.mfc .forecast {
+  margin: 0;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel2);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+.mfc .forecast.preview {
+  border-color: var(--cyan);
+  background: linear-gradient(90deg, rgba(94, 200, 216, 0.1), transparent 70%), var(--panel2);
+}
+.fc-lab {
+  color: var(--mute);
+  margin-right: 2px;
+}
+.fc-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line2);
+  white-space: nowrap;
+}
+.fc-chip.bad {
+  color: #ffb3c7;
+  border-color: rgba(229, 106, 143, 0.5);
+  background: rgba(229, 106, 143, 0.08);
+}
+.fc-chip.good {
+  color: var(--green);
+  border-color: rgba(127, 208, 138, 0.45);
+  background: rgba(127, 208, 138, 0.07);
+}
+.fc-chip.changed {
+  box-shadow: 0 0 0 1px var(--cyan);
+}
+/* End Round with Undo beside it */
+.endrow {
+  display: flex;
+  gap: 5px;
+}
+.endrow > .primary {
+  flex: 1;
+  min-width: 0;
+}
+.endrow > .undo {
+  flex: none;
+  padding: 7px 10px;
+}
+/* a touch screen's first tap on a play: previewed, waiting for the second */
+.mission .armed {
+  border-color: var(--cyan) !important;
+  box-shadow:
+    0 0 0 2px var(--cyan),
+    0 0 14px rgba(94, 200, 216, 0.4);
+}
+/* the other pilots, beside the one being flown */
+.dk-swaps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+.dk-swap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 3px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+.dk-swap .pfp {
+  width: 22px;
+  height: 22px;
+}
+.dk-swap.downed {
+  opacity: 0.6;
+}
+
+/* tablets and phones: one column that never runs off the side; the dock is a sheet at the foot */
+@media (max-width: 980px) {
+  .mission {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+  /* the hand comes straight after the board and its forecast; what changes (intents, ally, log) follows */
+  .mission .dock {
+    grid-row: 3;
+    position: static;
+    margin: 0;
+  }
+  .mission .side {
+    grid-row: 4;
+    padding-bottom: 12px;
+  }
+  .dock-hero {
+    max-height: none;
+    overflow: visible;
+    border-radius: 12px;
+    box-shadow: none;
+  }
+  .mission .board {
+    flex: none;
+    min-height: 240px;
+  }
+  /* the hand is swiped: cards snap into place, the page does not move with them */
+  .dock-hero .hand {
+    grid-auto-columns: 148px;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scroll-padding: 0 4px;
+    -webkit-mask-image: linear-gradient(90deg, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, #000 92%, transparent);
+  }
+  .dock-hero .hand > .hcard {
+    scroll-snap-align: start;
+  }
+  .dock-hero .actions {
+    scroll-snap-type: x proximity;
+    overscroll-behavior-x: contain;
+  }
+  .dock-hero .dk-res {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 8px;
+    align-items: center;
+  }
+  .dock-hero .dk-res > * {
+    grid-column: 1 / -1;
+  }
+  .dock-hero .dk-res > .hh {
+    grid-column: 1;
+  }
+  .dock-hero .dk-res > .dk-swaps {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0;
+  }
+  .dock-hero .dk-res > .dk-purse {
+    grid-column: 1;
+  }
+  .dock-hero .dk-res > .dice {
+    grid-column: 2;
+    margin: 0;
+  }
+  .dock-hero .dk-purse {
+    margin-top: 0;
+  }
+  /* the board takes the shape of its map, so a wide map leaves no empty band */
+  .mission .board {
+    height: auto;
+    aspect-ratio: var(--ar, 4 / 3);
+    max-height: 62vh;
+  }
+}
+@media (max-width: 700px) {
+  .mission {
+    padding: 8px 10px 0;
+  }
+  /* the top bar: name and End Round on the first line, the objective on one line, the rest small */
+  .mission .top {
+    padding: 8px 10px;
+  }
+  .mission .topbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 6px;
+    align-items: center;
+  }
+  .mission .topbar > div:first-child {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+  .mission .topbar > div:first-child h3 {
+    font-size: 16px;
+  }
+  .mission .topbar .kick {
+    font-size: 10px;
+  }
+  .mission .topbar > .endgrp {
+    order: 1;
+    width: auto;
+    max-width: 52vw;
+  }
+  .mission .topbar > .endgrp .turn-note {
+    display: none;
+  }
+  .mission .topbar > .obj {
+    order: 2;
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+  .mission .topbar > .obj:not(.open) .obj-txt {
+    -webkit-line-clamp: 1;
+    font-size: 13px;
+  }
+  .mission .topbar > .tpills {
+    order: 3;
+    flex: 1 1 100%;
+    min-width: 0;
+    max-width: none;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  /* the screen's own buttons (help, sound, title…) stay, small, at the end of the pill row */
+  .mission .topbar > button {
+    order: 4;
+    flex: none;
+    padding: 3px 7px;
+    font-size: 11px;
+  }
+  .mission .topbar .pill {
+    font-size: 11px;
+    padding: 1px 7px;
+  }
+  .mission .topbar .clock {
+    font-size: 14px;
+    padding: 1px 8px;
+    white-space: nowrap;
+  }
+  .mission .endrow > .primary {
+    white-space: nowrap;
+    padding: 8px 12px;
+  }
+  .mission .board {
+    min-height: 200px;
+    max-height: 46vh;
+  }
+  .mission .topbar .pill,
+  .fc-lab {
+    white-space: nowrap;
+  }
+  /* the idle hint is the dock's job on a phone; aiming and previews still show here */
+  .mission #mtarget .hint {
+    display: none;
+  }
+  .mfc .forecast {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    font-size: 12px;
+    padding: 5px 8px;
+  }
+  .dock-hero {
+    padding: 8px 10px;
+  }
+  .dock-hero .hh .pfp {
+    width: 34px;
+    height: 34px;
+  }
+  .dock-hero .hh .nm {
+    font-size: 16px;
+  }
+  .dock-hero .dk-purse {
+    margin-top: 0;
+  }
+  .res-ap b {
+    font-size: 26px;
+  }
+  .dock-hero .hand {
+    grid-auto-columns: 136px;
+  }
+  .dock-hero .track {
+    display: none;
+  }
+}
+/* fingers, not pointers: every play is at least 40 px tall */
+@media (pointer: coarse) {
+  .dock-hero .fbtn,
+  .dock-hero .actions button,
+  .dk-swap,
+  .endrow > button {
+    min-height: 40px;
+  }
+}

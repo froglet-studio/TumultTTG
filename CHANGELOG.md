@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.75.0 — 2026-11-20 — the mission screen: undo, a forecast strip, phones and tablets
+
+Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
+
+- **Undo.** ↶ Undo beside End Round, or Ctrl+Z, takes back the last move. Anything can be taken back until something comes out the player could not have known: a die rolled, anything drawn at random, a cache searched, a veiled mark or a Hidden foe seen, a foe arriving, the round or the mission ending (`T.canTakeBack`). A move that does one of those clears what could be taken back before it, so an undo never re-rolls or un-sees. Lines of story written since stay. Online games have no Undo yet: the host's mission is shared.
+- **The forecast has its own strip** under the board, a chip a pilot, always in view. While a play is previewed, it shows what ending the round would do after that play, with the changes ringed and the old figure struck through.
+- **Previews on a touch screen.** A phone cannot hover, so the first tap on a face, an action or a gear ability shows its preview on the board and in the strip, and the second tap plays it.
+- **Phones and tablets.** The screen is one column that no longer runs off the right edge: the top bar, the board sized to its map, the forecast, the dock, then the intents, the ally and the log. The hand is swiped and snaps a card at a time; every play is at least 40 px tall on a touch screen; the dock has a button to fly each other pilot. On a phone the top bar keeps End Round and Undo beside the mission's name and folds the objective to one line.
+- **Tests.** `test/undo.test.js`: what can and cannot be taken back, on hundreds of moves, and Undo through the real interface.
+
 ## 2.74.0 — 2026-11-20 — online: quicker, and a reload can rejoin
 
 Garrett, after 2.73.1: "it feels slow often… like it is waiting for the network to process a simple move." The engine answers a move in about 7 ms; the wait was the page store's live delivery, which can fall back to a refresh every half minute.
