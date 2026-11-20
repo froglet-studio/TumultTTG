@@ -806,7 +806,10 @@
     }
     if (dmg > 0) {
       target.hp -= dmg;
-      fx(m, { t: 'dmg', ent: target.uid, amount: dmg, pos: target.pos, kind });
+      // `by`: who struck, for the screen to show the blow coming from them (no rule reads it)
+      const hit = { t: 'dmg', ent: target.uid, amount: dmg, pos: target.pos, kind };
+      if (source && source.uid != null && kind !== 'area' && kind !== 'true') hit.by = source.uid;
+      fx(m, hit);
       if (source && source.kind === 'hero') source.stats.dmgDealt += dmg;
       if (target.kind === 'hero') {
         target.stats.dmgTaken += dmg;
