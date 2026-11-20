@@ -137,7 +137,7 @@ test('Calm: one menu, one conditions chip, the story box and More on request', {
     assert.ok(d.querySelector('#mtop .conds-list .pill.day'), 'the hour is one of them');
     click('#mtop [data-act="conds"]');
     assert.ok(d.querySelector('#mtop .conds.open'));
-    if (m.clock) assert.match(d.querySelector('#mtop .clock').textContent, /R1/);
+    if (m.clock) assert.match(d.querySelector('#mtop .clock').textContent, /round 1/);
     // the story box waits behind ✎
     assert.ok(!d.querySelector('#mtop .endgrp.note-open'));
     click('#mtop [data-act="noteOpen"]');
