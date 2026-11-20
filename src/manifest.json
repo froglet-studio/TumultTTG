@@ -16,6 +16,7 @@
     "engine/scaling.js",
     "engine/story.js",
     "engine/run.js",
+    "engine/bots.js",
     "engine/canon.js"
   ],
   "ui": [

@@ -8,6 +8,17 @@
 - **Online play on Tumult's own server.** A Cloudflare Worker (`server/`, `docs/reference/BACKEND.md`) replaces claude.ai's page storage for the web version: a live room per game code (a Durable Object; up to five players; the room keeps the latest state, so a reload or a returning host catches up), a Lobby of who is online, and a store for shared pilots, canon notes and cloud saves, with pilots and notes checked by the game's own rules on the server. Hosting needs an account; a guest joins with the host's invite link. The online screens are now in the web version; the offline file still has none. Rules unchanged.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
+## 2.85.0 — 2026-11-21 — AI seats, dropped players, Short expeditions
+
+Shombith: host a table "offers Co-op/Versus, Short/Full length, and filling empty seats with AI", the waiting room says "AI fills it", and when someone drops an AI flies their pilot (the table only waited before). Versus is left out for now.
+
+- **AI fills empty seats.** In an online lobby the host chooses how many seats the AI fills (up to five). Each AI seat flies a pre-made pilot nobody else is flying, named "AI · Rosh", and plays it with the look-ahead player. A host alone can now set out with the AI. A person who joins later, even mid-mission, takes an AI seat over, pilot and all.
+- **When the AI plays.** AI pilots move once every person has had their turn (in rounds played all at once, once everyone else is done). Between missions they take the first trait offered that needs no exchange, the first boon, and spend their points.
+- **A player who drops.** A guest's screen says it is still here every few seconds. After 30 s of silence every screen shows that the player lost connection, with a one-minute countdown. Then an AI pilot holds the seat, plays it safe, and finishes a turn they had begun. The host can give the seat to the AI at once or wait for them. Reloading the page puts the player back in their seat.
+- **Short or Full.** The host chooses the expedition's length: Full is the seven-stop route as before; Short has five stops: openers, three tier-2 stops, then the Heart. With fewer missions to grow on it is harder at the Heart (80 runs: the look-ahead player wins 35 Short against 50 Full, the heuristic 10 against 12).
+- **Saves** are version 19: the run keeps its length and each seat whether the AI plays it. A 2.83 save is a Full expedition with people in every seat (fixture `save-2.83.json`).
+- **Tools.** `node tools/sim.js 80 runs --length short` plays Short expeditions.
+
 ## 2.84.0 — 2026-11-20 — after a mission and the end of an expedition
 
 The finalised Frogma boards for rows 8 and 9 (after a mission, the end of an expedition), desktop and phone. No rule changes: every button sends the command the old screens sent.
@@ -87,6 +98,7 @@ Garrett: "is there a way the two players mid game could save their game, we upda
 - **Catching up.** A late pilot gets spare upgrade points to match the least-grown pilot already flying (`T.joinPilot`), and its player's purse starts as full as the emptiest. It keeps the level it came with; the next mission scales for the bigger squad.
 - **Updating a live game.** An online game from 2.74 to 2.77 resumes on this version: the host picks "Rejoin game" and the guests follow (checked by loading a 2.74 save mid-mission and playing it out). No save change: a party simply has more players and pilots.
 - **Balance.** No change for any squad that does not take a newcomer: `node tools/sim.js 40` is byte-identical to 2.78.
+
 ## 2.78.0 — 2026-11-20 — made pilots on Froglet's character sheet
 
 Garrett: "Whenever a player creates or updates a character, add or update their row in the Google Sheet … Leave the Pilot columns alone."

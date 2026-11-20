@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.84.0',
+    version: '2.85.0',
     items: [
+      {
+        text: 'Online, the host can have the AI fill empty seats (up to five) and choose a Short (5 stops) or Full expedition; a host alone can now set out with the AI. AI pilots move once every person has ended their turn. If a player drops, everyone sees a countdown, then an AI pilot holds their seat until they reload the page. Did the AI pilots pull their weight? Did a drop ever leave the table stuck?',
+      },
       {
         text: "New screens after a mission and at the end of an expedition, from the finalised Frogma boards. A win is one screen: VICTORY over the painting of the place, the objectives and the squad on the left, and on the right each pilot's reward behind their own tab: tap a trait to read both faces, then Take it (or Skip for 2 ◇); after an elite a boon sits underneath. A full kit opens the exchange: the trait coming in, the nine you hold, tap the one that goes out and see its points come back and the bloodline counts, then Swap. Grow a card (the old Train) is now a view of its own: the kit down the side, the card large, each face's words before and after, and a burst of light when it grows. A loss the lifeline carries says so in red, with the hearts left. The haven is four choices (Rest, Trade, Train, Listen) beside its painting, with the stalls below; events sit beside their painting too. The end of an expedition has three tabs: The Heart reached (or the expedition ending, with what carries over), a Logbook page you can copy or print, and the Numbers. Is any choice now harder to find than before? Does the logbook read like your expedition?",
       },

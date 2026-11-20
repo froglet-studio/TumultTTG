@@ -68,6 +68,10 @@
             if (msg.isMe || !d || typeof d !== 'object') return;
             N.drain([{ id: `${+d.seat}-${String(+d.seq).padStart(9, '0')}`, data: () => d }]);
           }),
+          r.on('here', (msg) => {
+            const d = msg && msg.data;
+            if (!msg.isMe && d && Number.isInteger(+d.seat)) seen(+d.seat);
+          }),
         );
       else
         unsubs.push(
@@ -92,6 +96,10 @@
     names: ['', '', '', '', ''], // one a seat, host first; '' is a seat nobody has taken
     rev: 0,
     status: '',
+    // the host's choices for the table (the host-a-table screen sets them): how many seats, whether the AI fills
+    // the empty ones, and how long the expedition is (T.LENGTHS)
+    tableOpts: { seats: 0, aiFill: false, length: 'full' },
+    away: {}, // seat → when the AI takes the seat of a player who has dropped (ms); the countdown every screen shows
     isGuest: () => N.role === 'guest',
     online: () => !!N.role,
   });
@@ -144,7 +152,10 @@
   /** Who is here, for the lobby. */
   const lobbyStatus = () => {
     const n = N.names.filter((x, s) => s > 0 && x).length;
-    if (!n) return 'Waiting for players… share the code (two to ' + T.MAX_PLAYERS + ' can play).';
+    if (!n)
+      return N.tableOpts && N.tableOpts.aiFill
+        ? 'Share the code, or start now: the AI fills the empty seats.'
+        : 'Waiting for players… share the code (two to ' + T.MAX_PLAYERS + ' can play).';
     return `${n + 1} here. ${n + 1 < T.MAX_PLAYERS ? 'More can join until you start.' : 'The squad is full.'}`;
   };
   const unsubs = [];
@@ -180,9 +191,10 @@
   N.publish = function () {
     list();
     if (N.role !== 'host' || !U.run) return;
+    botsSoon();
     const run = T.serializeRun(U.run);
     const fx = U.run.mission ? U.run.mission.fx : [];
-    const body = JSON.stringify([run, fx.length, N.names, results, acks]);
+    const body = JSON.stringify([run, fx.length, N.names, results, acks, N.away]);
     if (body === lastWritten) return;
     lastWritten = body;
     // a revision only grows, even across a reload of the host's page
@@ -195,6 +207,7 @@
       acks: Object.assign({}, acks),
       host: tab,
       names: N.names.slice(),
+      away: Object.assign({}, N.away),
       at: Date.now(),
     };
     writing = writing
@@ -413,6 +426,7 @@
         continue;
       }
       const last = acks[seat] || 0;
+      seen(seat);
       if (data.seq <= last) tidy(id);
       else if (data.seq === last + 1) {
         acks[seat] = data.seq;
@@ -497,8 +511,15 @@
           const d = snap.exists ? snap.data() : null;
           N.names[s] = d ? String(d.name || 'Player ' + (s + 1)).slice(0, 24) : '';
           holders[s] = d && d.holder ? String(d.holder) : null;
-          if (U.run && U.run.party && U.run.party.players[s])
-            U.run.party.players[s].name = N.names[s] || 'Player ' + (s + 1);
+          if (d) seen(s);
+          const run = U.run;
+          if (run && run.party && run.party.players[s]) {
+            // a person sits down in a seat the AI fills: the seat and its pilot are theirs from now on
+            if (N.names[s] && T.botKind(run, s) === 'fill') {
+              T.takeOverSeat(run, s, N.names[s]);
+              U.toast(esc(N.names[s]) + ' takes over from the AI.');
+            } else if (!T.isBot(run, s)) run.party.players[s].name = N.names[s] || 'Player ' + (s + 1);
+          }
           N.admit();
           N.status = lobbyStatus();
           if (U.screen === 'lobby') U.render();
@@ -508,6 +529,8 @@
     // guests' commands: live, and read again every few seconds in case the live delivery lags
     watchCmds();
     pollTimer = setInterval(poll, POLL_MS);
+    clearInterval(seatTimer);
+    seatTimer = setInterval(watchSeats, 1000);
     document.addEventListener('visibilitychange', onVisible);
   }
 
@@ -534,6 +557,7 @@
     N.names = blankNames('Player 1').map((x, s) => String((d.names && d.names[s]) || x));
     N.rev = +d.rev || 0;
     U.seats = [0];
+    N.away = Object.assign({}, d.away || {});
     Object.assign(acks, d.acks || {});
     try {
       Object.assign(results, JSON.parse(d.results || '{}'));
@@ -563,6 +587,7 @@
     lastWritten = null;
     U.render();
     listenAsHost();
+    botsSoon();
     U.toast('Back in game ' + esc(code) + '.');
   };
   /** Carry out a guest's command on this (the host's) screen, then tell everyone. */
@@ -598,6 +623,7 @@
     const run = U.run;
     if (N.role !== 'host' || !run) return;
     N.admit();
+    botsSoon();
     // a guest's pilot can arrive before the host's, leaving a hole: count every seat, holes too (every()
     // skips them, which set out a squad with the host's pilot missing, 2.74–2.79.0)
     if (run.phase === 'draft' && T.squadReady(run)) {
@@ -613,14 +639,148 @@
     while (n < T.MAX_PLAYERS && N.names[n]) n++;
     return n;
   };
+  /** How many will set out: the players here, and with the AI filling empty seats, as many seats as the host chose. */
+  N.tableSize = () => {
+    const o = N.tableOpts || {};
+    const seats = Math.max(0, Math.min(T.MAX_PLAYERS, o.seats | 0));
+    return o.aiFill ? Math.max(N.joined(), seats || 2) : N.joined();
+  };
   N.start = function () {
-    if (N.role !== 'host' || N.joined() < 2) return;
+    if (N.role !== 'host' || N.tableSize() < 2) return;
     U.startDraft();
     U.run.party = T.newParty(N.joined(), N.names);
+    if (N.tableOpts.aiFill) T.fillSeats(U.run, N.tableSize());
+    T.setLength(U.run, N.tableOpts.length || 'full');
     if (U.roundsPref) U.run.party.rounds = U.roundsPref();
+    T.botPilots(U.run); // the AI seats bring pre-made pilots
     U.draft.heroIdx = 0;
     N.publish();
   };
+
+  /* ───────────── the AI's seats, on the host's screen ───────────── */
+  /**
+   * The AI plays its seats on the host's screen, where the game is: a seat the host asked it to fill, and the
+   * seat of a player who has dropped, once the countdown runs out (src/engine/bots.js). It waits a moment after
+   * each change, so the move that led to its turn is seen first.
+   */
+  let botTimer = null;
+  const BOT_DELAY_MS = 700;
+  function botsSoon() {
+    if (N.role !== 'host' || botTimer || !U.run || !T.botSeats(U.run).length) return;
+    botTimer = setTimeout(() => {
+      botTimer = null;
+      if (N.role !== 'host' || !U.run || !T.botStep(U.run)) return;
+      N.afterChange();
+      refresh();
+      N.publish();
+    }, BOT_DELAY_MS);
+  }
+  N.botsSoon = botsSoon;
+
+  /**
+   * Who is still here. A guest's screen says so every few seconds (a 'here' beat in the game's room, and its
+   * seat doc's `at` now and then), and every command it sends says so too. A seat with a pilot that has said
+   * nothing for N.DROP_MS has dropped: every screen sees a countdown, and when it runs out the AI holds the seat
+   * (T.holdSeat) until the player is back. The host may give the seat to the AI at once, or wait for them.
+   */
+  N.DROP_MS = 30 * 1000; // quiet this long: dropped
+  N.HOLD_MS = 60 * 1000; // the countdown
+  const lastSeen = {}; // seat → when the host last heard from it
+  const waiting = new Set(); // seats the host chose to wait for
+  function seen(s) {
+    lastSeen[s] = Date.now();
+    if (N.role !== 'host' || !U.run) return;
+    const back = N.away[s] != null || T.botKind(U.run, s) === 'hold';
+    if (!back) return;
+    delete N.away[s];
+    waiting.delete(s);
+    if (T.releaseSeat(U.run, s)) U.toast(`${esc(N.names[s] || 'Player ' + (s + 1))} is back in their seat.`);
+    showAway();
+    refresh();
+    N.publish();
+  }
+  /** Look at every person's seat: start a countdown for one gone quiet, and hand it to the AI when it runs out. */
+  function watchSeats() {
+    const run = U.run;
+    if (N.role !== 'host' || !run || !run.party || run.over) return;
+    const now = Date.now();
+    let changed = false;
+    run.party.players.forEach((p, s) => {
+      if (s === 0 || T.isBot(run, s) || !N.names[s]) return;
+      if (lastSeen[s] == null) lastSeen[s] = now; // first look since this screen took the game: give them time
+      const quiet = now - lastSeen[s] >= N.DROP_MS;
+      if (!quiet || waiting.has(s)) return;
+      if (N.away[s] == null) {
+        N.away[s] = now + N.HOLD_MS;
+        U.toast(`${esc(N.names[s])} lost connection. An AI pilot takes their seat in a minute.`, 5000);
+        changed = true;
+      } else if (now >= N.away[s]) N.giveToAI(s);
+    });
+    showAway();
+    if (changed) N.publish();
+  }
+  /** The host gives a dropped player's seat to the AI now. */
+  N.giveToAI = function (s) {
+    if (N.role !== 'host' || !U.run || !T.holdSeat(U.run, s)) return;
+    delete N.away[s];
+    waiting.delete(s);
+    U.toast(`An AI pilot holds ${esc(N.names[s] || 'their')}'s seat until they are back.`, 5000);
+    showAway();
+    refresh();
+    N.publish();
+    botsSoon();
+  };
+  /** The host waits for a dropped player instead: no countdown, and the table waits as it always did. */
+  N.waitFor = function (s) {
+    if (N.role !== 'host') return;
+    waiting.add(s);
+    delete N.away[s];
+    if (U.run) T.releaseSeat(U.run, s);
+    showAway();
+    refresh();
+    N.publish();
+  };
+  /** The countdown for each dropped seat, as a strip over whatever screen is showing; the host's has its two choices. */
+  function showAway() {
+    if (typeof document === 'undefined' || !document || !document.body) return;
+    let el = document.getElementById('netAway');
+    const run = U.run;
+    const now = Date.now();
+    const rows = [];
+    for (const k of Object.keys(N.away || {})) {
+      const s = +k;
+      const left = Math.max(0, Math.ceil((N.away[k] - now) / 1000));
+      const who = esc(N.names[s] || 'Player ' + (s + 1));
+      const mine = N.role === 'guest' && s === N.seat;
+      rows.push(
+        `<div class="net-away-row"><b>${mine ? 'You seem to be offline' : who + ' lost connection'}</b> <span class="small">An AI pilot takes the seat in <span class="mono">${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}</span> and plays it safe until they are back. Reloading the page puts a player back in their seat.</span>${
+          N.role === 'host'
+            ? ` <button class="sm" data-act="netGiveAI" data-arg="${s}">Give the seat to the AI</button><button class="sm ghost" data-act="netWait" data-arg="${s}">Wait for them</button>`
+            : ''
+        }</div>`,
+      );
+    }
+    if (run && run.party)
+      T.botSeats(run)
+        .filter((s) => T.botKind(run, s) === 'hold')
+        .forEach((s) =>
+          rows.push(
+            `<div class="net-away-row"><b>An AI pilot holds ${esc(N.names[s] || 'Player ' + (s + 1))}'s seat</b> <span class="small">until they are back. Reloading the page puts them back in it.</span></div>`,
+          ),
+        );
+    if (!rows.length) {
+      if (el) el.remove();
+      return;
+    }
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'netAway';
+      el.className = 'net-away';
+      document.body.appendChild(el);
+    }
+    el.innerHTML = rows.join('');
+  }
+  let seatTimer = null;
   // anything the host does on its own screen is written after the click that did it
   const later = () => setTimeout(() => N.publish(), 0);
   document.addEventListener('click', later);
@@ -685,9 +845,26 @@
       .then(() => (reading = false));
   }
   const READ_MS = 2000; // the live delivery can lag by half a minute: read at least this often
+  const BEAT_MS = 5000; // a 'here' in the game's room this often
+  const SEAT_BEAT_MS = 20000; // and the seat doc's `at` this often, for a page with no room
+  let beatAt = 0;
+  let seatBeatAt = 0;
+  const beat = (now) => {
+    if (now - beatAt >= BEAT_MS) {
+      beatAt = now;
+      ping('here', { seat: N.seat });
+    }
+    if (now - seatBeatAt >= SEAT_BEAT_MS) {
+      seatBeatAt = now;
+      db.doc(`games/${N.code}/seats/${N.seat}`)
+        .set({ name: N.myName || 'Player ' + (N.seat + 1), holder: tab, at: now })
+        .catch(() => {}); // the next beat tries again
+    }
+  };
   const guestTick = () => {
     if (N.role !== 'guest') return;
     const now = Date.now();
+    beat(now);
     if (now - lastRead >= READ_MS) readState();
     if (!pending.length) {
       N.stalled = false;
@@ -735,14 +912,18 @@
       // a seat already in this name is taken again (a reload); else the first seat nobody holds. Once the
       // expedition has set out, only its own seats are open.
       const g = snap.data();
-      // on the route between missions one more seat opens for a newcomer (2.79)
-      let onRoute = false;
+      // once the expedition has set out, a seat is open to a newcomer when the AI fills it, and on the route
+      // between missions one more seat opens (2.79)
+      let gameRun = null;
       try {
-        onRoute = !!g.run && T.canAddPlayer(T.deserializeRun(g.run));
+        gameRun = g.run ? T.deserializeRun(g.run) : null;
       } catch {
         /* a state this screen cannot read: no seat for a newcomer */
       }
-      const open = g.run ? (g.names || []).filter((x, s) => s > 0 && x).length + (onRoute ? 2 : 1) : T.MAX_PLAYERS;
+      const openSeat = (s) =>
+        !g.run ||
+        (gameRun &&
+          (T.botKind(gameRun, s) === 'fill' || (s === gameRun.party.players.length && T.canAddPlayer(gameRun))));
       const names = await Promise.all(
         Array.from({ length: T.MAX_PLAYERS - 1 }, (x, k) =>
           db
@@ -753,7 +934,7 @@
       );
       const order = [];
       names.forEach((x, k) => x && x === name && order.push(k + 1));
-      names.forEach((x, k) => !x && k + 1 < open && order.push(k + 1));
+      names.forEach((x, k) => !x && openSeat(k + 1) && order.push(k + 1));
       let seat = null;
       for (const s of order) {
         const seatDoc = db.doc(`games/${code}/seats/${s}`);
@@ -765,7 +946,7 @@
         }
         const taken = (await seatDoc.get()).data();
         if (!lease.acquired || (taken && taken.name && taken.name !== name)) continue;
-        await seatDoc.set({ name: name || 'Player ' + (s + 1), holder: tab });
+        await seatDoc.set({ name: name || 'Player ' + (s + 1), holder: tab, at: Date.now() });
         seat = s;
         break;
       }
@@ -773,12 +954,13 @@
         N.code = null;
         U.toast(
           g.run
-            ? 'That expedition is in a mission or full. A newcomer can join on the route, between missions.'
+            ? 'That expedition is in a mission or full. A newcomer can join on the route, between missions, or take a seat the AI fills.'
             : `That game already has ${T.MAX_PLAYERS} players.`,
         );
         return;
       }
       N.seat = seat;
+      N.myName = name || 'Player ' + (seat + 1);
       // carry on numbering from what the host has already carried out for this seat
       seq = (g.acks && +g.acks[seat]) || 0;
     } catch (e) {
@@ -805,8 +987,20 @@
   /** A guest takes in the state the host wrote. */
   N.receive = function (d) {
     lastRead = Date.now(); // a state arrived, by whatever road: no need to read it again yet
+    if (d && d.away && typeof d.away === 'object') {
+      N.away = Object.assign({}, d.away);
+      showAway();
+    }
     if (!d || !d.run || d.rev <= N.rev) {
       if (d && d.names) N.names = d.names.map(String);
+      if (d && !d.run && d.table && typeof d.table === 'object') {
+        N.tableOpts = {
+          seats: Math.min(T.MAX_PLAYERS, +d.table.seats | 0),
+          aiFill: !!d.table.aiFill,
+          length: T.LENGTHS[d.table.length] ? d.table.length : 'full',
+        };
+        if (U.screen === 'lobby') U.render();
+      }
       return;
     }
     N.rev = d.rev;
@@ -832,6 +1026,7 @@
     if (acked > seq) seq = acked; // a command from before a reload was carried out after this screen took its number
     for (const p of pending) if (p.ahead) T.execCommand(run, JSON.parse(JSON.stringify(p.cmd)), U.seats);
     U.run = run;
+    showAway();
     // which screen: the run's phase decides, except the draft, which each player does on their own
     const sameMission =
       before && before.mission && run.mission && before.launched === run.launched && U.screen === 'mission';
@@ -881,12 +1076,19 @@
     seq = 0;
     clearInterval(pollTimer);
     clearInterval(guestTimer);
+    clearInterval(seatTimer);
+    clearTimeout(botTimer);
+    botTimer = null;
+    N.away = {};
+    waiting.clear();
+    for (const k of Object.keys(lastSeen)) delete lastSeen[k];
+    showAway();
     document.removeEventListener('visibilitychange', onVisible);
     for (const o of [acks, holders, results]) for (const k of Object.keys(o)) delete o[k];
     done.clear();
     lastWritten = null;
     if (N.realSave) T.saveRun = N.realSave;
-    Object.assign(N, { code: null, role: null, seat: null, rev: 0, status: '', invite: null });
+    Object.assign(N, { code: null, role: null, seat: null, rev: 0, status: '', invite: null, myName: '' });
     U.seats = null;
     U.run = null;
     U.modal = null;
@@ -913,8 +1115,8 @@
   };
   N.howTo = () =>
     db && typeof db.invite === 'function'
-      ? `Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns. Join a game from the list, or with the code its host gives you. The host signs in, keeps this page open and shares the code, or an invite link for a player without an account.`
-      : `Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns. Join a game from the list, or with the code its host gives you; the host keeps this page open. Players need write access to this page (an email invite as Editor, or Contributor in your organization). A view-only link can't join.`;
+      ? `Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns, and the AI can fill the empty seats. Join a game from the list, or with the code its host gives you. The host signs in, keeps this page open and shares the code, or an invite link for a player without an account.`
+      : `Two to ${T.MAX_PLAYERS} players, a screen each: each flies one pilot and you take turns, and the AI can fill the empty seats. Join a game from the list, or with the code its host gives you; the host keeps this page open. Players need write access to this page (an email invite as Editor, or Contributor in your organization). A view-only link can't join.`;
   /** A link with ?join=CODE&invite=TOKEN: keep the invite for this tab and fill in the code. */
   N.fromLink = function () {
     if (typeof location === 'undefined') return;
@@ -951,15 +1153,48 @@
         : '';
     const seat = (name, who, here) =>
       `<div class="seat${here ? '' : ' waiting'}"><span class="seat-dot" aria-hidden="true"></span><div><b>${esc(name)}</b><div class="small dim">${esc(who)}</div></div><span class="right small">${here ? 'Joined' : 'Waiting…'}</span></div>`;
+    const o = N.tableOpts;
+    const size = N.tableSize();
+    // a seat the AI will fill says so; with no AI, one open seat waits for a friend
+    const ai = (s) =>
+      `<div class="seat waiting"><span class="seat-dot" aria-hidden="true"></span><div><b>Seat ${s + 1}</b><div class="small dim">open seat</div></div><span class="right small">AI fills it</span></div>`;
     const seats = N.names
-      .map((x, s) => (s === 0 ? seat(x || 'Player 1', 'host', true) : x ? seat(x, 'guest', true) : ''))
+      .map((x, s) =>
+        s === 0 ? seat(x || 'Player 1', 'host', true) : x ? seat(x, 'guest', true) : s < size ? ai(s) : '',
+      )
       .join('');
-    const open = room ? seat('Seat ' + (N.joined() + 1), 'waiting for your friend', false) : '';
+    const open = room && size <= N.joined() ? seat('Seat ' + (N.joined() + 1), 'waiting for your friend', false) : '';
+    const seg = (act, items, on) =>
+      `<span class="net-seg">${items.map(([v, label]) => `<button class="sm${String(v) === String(on) ? ' primary' : ' ghost'}" ${host ? `data-act="${act}" data-arg="${v}"` : 'disabled'}>${label}</button>`).join('')}</span>`;
+    const opts = `<div class="net-opts">
+      <div><span class="dim small">Length</span> ${seg(
+        'netLength',
+        Object.keys(T.LENGTHS).map((k) => [k, `${k === 'short' ? 'Short' : 'Full'} · ${T.LENGTHS[k].stops} stops`]),
+        o.length,
+      )}</div>
+      <div><span class="dim small">Empty seats</span> ${seg('netSeats', [[0, 'Leave open']].concat([2, 3, 4, 5].filter((n) => n <= T.MAX_PLAYERS).map((n) => [n, `AI fills to ${n}`])), o.aiFill ? o.seats : 0)}</div></div>`;
+    const go = size > 1;
     return `<div class="wrap"><div class="panel net-lobby"><div class="kick">Play with friends</div><h2>Expedition <span class="mono">${esc(N.code || '')}</span></h2>
       ${invite}
       <div class="seats">${seats}${open}</div>
+      ${opts}
       <p class="dim">${esc(N.status)}</p>
-      <div class="row">${host ? `<button class="primary" data-act="netStart" ${N.joined() > 1 ? '' : 'disabled'}>Start the expedition${N.joined() > 1 ? ` (${N.joined()} players)` : ''}</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
+      <div class="row">${host ? `<button class="primary" data-act="netStart" ${go ? '' : 'disabled'}>Start the expedition${go ? ` (${size} ${size - N.joined() ? `seats, ${size - N.joined()} AI` : 'players'})` : ''}</button>` : ''}<button class="ghost" data-act="netLeave">Leave</button></div></div></div>`;
+  };
+  /** Before the expedition sets out, the game doc carries the table's choices, so a guest's lobby shows them. */
+  N.writeTable = function () {
+    if (N.role !== 'host' || !db || U.run) return;
+    gameDoc()
+      .set({
+        rev: 0,
+        run: null,
+        acks: {},
+        host: tab,
+        names: N.names.slice(),
+        table: Object.assign({}, N.tableOpts),
+        at: Date.now(),
+      })
+      .catch(() => {});
   };
 
   const val = (id) => {
@@ -986,6 +1221,23 @@
       }
       case 'netStart':
         N.start();
+        return true;
+      case 'netGiveAI':
+        N.giveToAI(parseInt(arg, 10));
+        return true;
+      case 'netWait':
+        N.waitFor(parseInt(arg, 10));
+        return true;
+      case 'netSeats':
+        N.tableOpts.seats = parseInt(arg, 10) || 0;
+        N.tableOpts.aiFill = N.tableOpts.seats > 0;
+        N.writeTable();
+        U.render();
+        return true;
+      case 'netLength':
+        if (T.LENGTHS[arg]) N.tableOpts.length = arg;
+        N.writeTable();
+        U.render();
         return true;
       case 'netLeave':
         N.leave();

@@ -642,9 +642,10 @@
     };
     const legs = [];
     for (let r = 0; r < map.rows.length;) {
-      const a = T.actOf(r);
+      const a = T.actOf(r, map);
       let r2 = r;
-      while (r2 + 1 < map.rows.length && T.actOf(r2 + 1) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss') r2++;
+      while (r2 + 1 < map.rows.length && T.actOf(r2 + 1, map) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss')
+        r2++;
       legs.push({ act: a, from: r, to: r2 });
       r = r2 + 1;
     }
