@@ -23,6 +23,7 @@
     "ui/icons.js",
     "ui/keywords.js",
     "ui/core.js",
+    "ui/sea.js",
     "ui/party.js",
     "ui/pilots.js",
     "ui/mission.js",
@@ -41,7 +42,8 @@
     "ui/canon.css",
     "ui/feel.css",
     "ui/account.css",
-    "ui/welcome.css"
+    "ui/welcome.css",
+    "ui/sea.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
