@@ -198,11 +198,11 @@
         <h1 class="hm-display">Your squad.<br>One tide.<br>No second try.</h1>
         <p class="hm-lede">Draft a squad of pilots, cross Tumult by land, sea and air to the Heart, and write the world as you play. In your browser, on your own or with friends at the table.</p>
         <div class="hm-ctas"><button class="primary hm-cta" data-act="${play}">Play now ▶</button>${host}</div>
-        <p class="hm-fine">No account needed to play.${acct() ? ' Sign in later to keep your squad.' : ''}</p>
+        <p class="hm-fine">No account needed to play.${acct() ? ' Sign in later to keep your squad.' : ''}</p>${U.privacyLine ? U.privacyLine() : ''}
         ${rejoinTile()}${setupPanel(meta, false)}${U.titleExtra ? U.titleExtra() : ''}
       </section>
       <aside class="hm-tiles" aria-label="What Tumult is">
-        <div class="hm-tile"><b>◆ ${T.CARDS ? T.CARDS.length : 99} cards</b><span>Two faces each, and they grow as you play</span></div>
+        <div class="hm-tile"><b>◆ Cards with two faces</b><span>Physical and Ethereal, and they grow as you play</span></div>
         <div class="hm-tile"><b>⛵ A route to the Heart</b><span>Every board is different</span></div>
         <div class="hm-tile"><b>✎ Write the world</b><span>Your notes can become canon</span></div>
       </aside>`,
@@ -315,13 +315,18 @@
     const stats = `<div class="hm-stats mute small">Expeditions: ${meta.runs || 0} · Hearts ended: ${meta.wins || 0} · Furthest stop: ${meta.bestRow || 0}/6</div>`;
     return framed(
       'play',
-      `${backdrop(meta)}<section class="hm-hero">${hero}${setupPanel(meta, !run)}<div class="hm-acts">${back}${tiles.join('')}</div>
-        ${stats}
+      `${backdrop(meta)}<section class="hm-hero">${invited()}${hero}${setupPanel(meta, !run)}<div class="hm-acts">${back}${tiles.join('')}</div>
+        ${stats}${U.privacyLine ? U.privacyLine() : ''}
         <div class="mute small hm-flavor">${esc(T.FLAVOR.terminalIntro[(meta.runs || 0) % T.FLAVOR.terminalIntro.length])}</div>
         ${U.titleExtra ? U.titleExtra() : ''}</section>${squad}${U.lobbyOpen ? lobbyPanelHTML() : ''}`,
       run ? 'has-run' : '',
     );
   }
+  /** An invite link opened this page (src/ui/welcome.js): its card leads Home. */
+  const invited = () =>
+    U.welcome && U.welcome.invite && U.welcomeTitle
+      ? `<div class="hm-invited">${U.welcomeTitle(T.loadMeta(), !!T.loadRun())}</div>`
+      : '';
   /** Is this a first visit: nothing played, nothing saved, nobody sent here by an invite? */
   const firstVisit = (meta, hasSave) =>
     U.isNewPlayer ? U.isNewPlayer(meta, hasSave) : !hasSave && !(meta.runs || 0) && !(net() && net().linked);
@@ -431,6 +436,7 @@
     const N = net();
     if (!N || !N.code) return '';
     if (N.invite) return N.invite;
+    if (U.welcome && U.welcome.inviteLink) return U.welcome.inviteLink(N.code);
     const here =
       typeof location !== 'undefined' && /^https?:/.test(location.protocol) ? location.origin + location.pathname : '';
     return here ? `${here}?join=${N.code}` : N.code;
@@ -461,7 +467,7 @@
     }
     const n = N.joined ? N.joined() : N.names.filter(Boolean).length;
     const invite = host
-      ? `<div class="panel hm-invite"><span class="hs-lab">Invite</span><code class="hm-code" aria-label="Table code">${esc(N.code || '')}</code><input class="hm-link-box" id="inviteLink" readonly value="${esc(inviteLink())}" aria-label="Invite link"><button class="primary sm" data-act="copyInvite">Copy</button></div>`
+      ? `<div class="panel hm-invite"><span class="hs-lab">Invite</span><code class="hm-code" aria-label="Table code">${esc(N.code || '')}</code><input class="hm-link-box" id="inviteField" readonly value="${esc(inviteLink())}" aria-label="Invite link"><button class="primary sm" data-act="copyInvite">Copy</button></div>`
       : '';
     const people = host
       ? `<div class="panel hm-people"><div class="hs-lab">From the Lobby${onlineCount() ? ` · ${onlineCount()} online` : ''}</div><div id="hostPeople">${peopleRows(true)}</div></div>`
@@ -666,7 +672,7 @@
         } catch (err) {
           done();
         }
-        const box = typeof document !== 'undefined' && document.getElementById('inviteLink');
+        const box = typeof document !== 'undefined' && document.getElementById('inviteField');
         if (box && box.select) box.select();
         return true;
       }
