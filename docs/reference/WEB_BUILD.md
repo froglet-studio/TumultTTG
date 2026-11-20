@@ -6,8 +6,8 @@ Tumult has two builds from one source (`src/manifest.json`):
 |---|---|---|
 | Command | `npm run build` | `npm run build:web` |
 | Output | `dist/TUMULT.html`, one file (~8 MB) | `dist/web/`, a small page plus `assets/` |
-| Network | none, ever | its own files and Froglet Analytics (anonymous play data, `docs/reference/ANALYTICS.md`); later Froglet's backend |
-| Where it goes | sent to anyone, played from disk | GitHub Pages (tumult.froglet.games), Cloudflare previews |
+| Network | none, ever | its own files and Froglet Analytics (anonymous play data, `docs/reference/ANALYTICS.md`); Tumult's own Worker for online play and sign-in |
+| Where it goes | sent to anyone, played from disk | www.froglet.games/tumult/play/, Cloudflare previews |
 
 Both contain the same engine and screens. The playtest panel and the online screens (`manifest.playtest`) are in neither; they stay in the playtest build for the claude.ai page.
 
@@ -37,7 +37,7 @@ npm run dev:web                   http://localhost:5173, the web version as Page
 Addresses, workflows and the admin setup are in `HOSTING.md`. In short:
 
 - **Pull requests and `bleeding-edge`:** `.github/workflows/preview.yml` deploys `dist/web` to the Cloudflare Pages project `tumult` (`bleeding-edge` at tumult.pages.dev, each pull request at its branch's address, linked on the PR). It needs the repository secrets `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; until they exist it builds and skips the deploy.
-- **`main`:** `.github/workflows/pages.yml` publishes `dist/web` to GitHub Pages at tumult.froglet.games on every push, with the offline file at `/TUMULT.html`.
+- **`main`:** `.github/workflows/site.yml` copies `dist/web` into the Froglet website's `tumult/play/` folder on every push, and GitHub Pages serves it at www.froglet.games/tumult/play/. `pages.yml` is a manual fallback at froglet-studio.github.io/TumultTTG/.
 - **`development`:** `.github/workflows/playtest.yml` builds the playtest file; a Claude session puts it on the claude.ai page with `/playtest-publish`.
 
 ## The backend seam
