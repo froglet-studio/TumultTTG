@@ -164,6 +164,7 @@ function fakeDb() {
 }
 const fakeUser = (id) => ({
   id: async () => id,
+  me: async () => ({ id, name: id === 'u_tess' ? 'Tess' : 'Bo' }),
   isOwner: async () => false,
   canEdit: async () => false,
   profiles: async (ids) => Object.fromEntries(ids.map((i) => [i, { id: i, name: i === 'u_tess' ? 'Tess' : 'Bo' }])),
@@ -213,6 +214,7 @@ test(
     A.act('confirmHero');
     await until(() => db.store.has('heroes/u_tess'), 'the pilot in the store');
     assert.equal(JSON.parse(db.store.get('heroes/u_tess')).list[0].name, made.name);
+    assert.equal(JSON.parse(db.store.get('heroes/u_tess')).who, 'Tess', 'with the name of the player who made it');
     assert.equal(A.w.T.loadMade().length, 1, 'kept on the device too');
     // a pre-made hero is not kept again
     A.act('prebuilt', 'cavitt');
