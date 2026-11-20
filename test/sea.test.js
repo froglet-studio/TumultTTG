@@ -126,7 +126,7 @@ test('Calm: one menu, one conditions chip, the story box and More on request', {
     const before = JSON.stringify(m);
     // the screen's own buttons sit behind one menu
     assert.ok(!d.querySelector('#mtop .mmenu.open'));
-    for (const a of ['toggleSound', 'help', 'look']) assert.ok(d.querySelector(`#mtop .mmenu [data-act="${a}"]`), a);
+    for (const a of ['toggleSound', 'help', 'quick']) assert.ok(d.querySelector(`#mtop .mmenu [data-act="${a}"]`), a);
     click('#mtop [data-act="mmenu"]');
     assert.ok(d.querySelector('#mtop .mmenu.open'), 'the menu opens');
     click('#board');
