@@ -17,7 +17,7 @@
 (function (T) {
   const B = T.Backend;
   const S = T.Server;
-  if (!B || !S || !S.base) return;
+  if (!B || !S || !S.base) return; // no server yet (server/address.json): the web version plays solo
   const A = () => T.Account || null;
   const token = () => (A() && typeof A().token === 'function' && A().token()) || null;
   const me = () => (A() && typeof A().user === 'function' && A().user()) || null;

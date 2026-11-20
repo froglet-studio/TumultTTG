@@ -39,7 +39,7 @@ Named `type/area-short-description` (`feature/`, `bugfix/`, `hotfix/`, `chore/`)
 | **Offline file** (`npm run build` → `dist/TUMULT.html`) | any | sent to anyone; plays with no network | built today |
 | **Preview** (`npm run build:web`) | `bleeding-edge` and pull requests | tumult.pages.dev and a link per pull request (`.github/workflows/preview.yml`) | deploys once the Cloudflare secrets are set (`docs/reference/HOSTING.md`) |
 | **Playtest page** (`npm run build:playtest`) | `development` | the claude.ai playtest artifact (online play lives here today, `src/ui/net.js`) | built on every push (`.github/workflows/playtest.yml`); a Claude session republishes it with `/playtest-publish` |
-| **Hosted web build** (`npm run build:web`, `docs/reference/WEB_BUILD.md`) | `main` | GitHub Pages at tumult.froglet.games (`.github/workflows/pages.yml`) | published on every push to `main` once the admin setup in `docs/reference/HOSTING.md` is done |
+| **Hosted web build** (`npm run build:web`, `docs/reference/WEB_BUILD.md`) | `main` | www.froglet.games/tumult/play/, inside the Froglet website (`.github/workflows/site.yml`) | published on every push to `main` once the admin setup in `docs/reference/HOSTING.md` is done |
 
 The offline file stays one self-contained HTML file that makes no network requests. The hosted web build is a second output of the same source: it may talk to Froglet's own services (the backend and sign-in Worker, Froglet Analytics), and nothing else, and it must still play solo when those are unreachable. Anyone can play solo; online play needs sign-in or an invite.
 
@@ -96,7 +96,7 @@ Release from `development`, not `bleeding-edge`: `development` is what testers h
 
    or a pull request from `development` into `main` with **Create a merge commit**.
 
-3. Tag it `vX.Y.Z` on `main`. The push to `main` publishes the hosted web build to tumult.froglet.games.
+3. Tag it `vX.Y.Z` on `main`. The push to `main` publishes the hosted web build to www.froglet.games/tumult/play/.
 
 ## Repository settings (admin only)
 
@@ -107,4 +107,4 @@ These are set on GitHub by a repository admin (Shombith). Nothing in the reposit
 3. **A ruleset on `development` and `main`**: block force pushes and deletion, require the CI checks, and leave **Require linear history** unticked so a promotion's merge commit is allowed. Add the two co-owners (or the admin role) to the bypass list for pushes, so the `--ff-only` promotions above can be pushed directly; everyone else goes through a pull request.
 4. **Merging:** Settings → General → Pull Requests: allow squash merging (the default for feature branches) and merge commits (for promotions); turn off rebase merging.
 5. **Actions → Fork pull request workflows:** require approval for all external contributors.
-6. **Pages and previews:** the domain, Pages source, `github-pages` environment and Cloudflare secrets, step by step, are in `docs/reference/HOSTING.md`.
+6. **Publishing and previews:** the website deploy key, the `froglet-games` environment and the Cloudflare secrets, step by step, are in `docs/reference/HOSTING.md`.
