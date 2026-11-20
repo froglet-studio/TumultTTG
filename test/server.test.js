@@ -198,7 +198,12 @@ test('room: one host, seats for five, commands only for your own seat, invites f
 
   // a watcher hears each change
   await a.ask({ op: 'watch', wid: 'w1', path: g + '/seats' });
-  await b.ask({ op: 'set', path: g + '/seats/1', data: { name: 'Bo', holder: 'tab-b' } });
+  await b.ask({ op: 'set', path: g + '/seats/1', data: { name: 'Bo', holder: 'tab-b', at: 5, junk: 'x' } });
+  assert.deepEqual(
+    (await b.ask({ op: 'get', path: g + '/seats/1' })).data,
+    { name: 'Bo', holder: 'tab-b', at: 5 },
+    'a seat keeps its heartbeat',
+  );
   await refusedWith(c.ask({ op: 'set', path: g + '/seats/1', data: { name: 'Cy' } }), 'permission-denied');
   for (const n of [2, 3, 4]) await c.ask({ op: 'set', path: `${g}/seats/${n}`, data: { name: 'Cy' + n } });
   await refusedWith(
@@ -326,6 +331,34 @@ test('worker: health, CORS for Tumult pages only, sign-in routes go to the sign-
   assert.equal((await W.fetch(new Request('https://api.test/api/me'), ENV, {})).status, 401);
 });
 
+test('the web version: no server address, no online play; another server only from localhost', async () => {
+  const { buildWeb } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const { js } = buildWeb({});
+  const { JSDOM } = require('jsdom');
+  const look = (url) => {
+    const dom = new JSDOM('<!doctype html><div id="app"></div>', { url, runScripts: 'outside-only' });
+    const w = dom.window;
+    w.fetch = async () => {
+      throw new Error('no request expected');
+    };
+    w.WebSocket = function () {};
+    w.eval(js);
+    const out = { base: w.T.Server.base, backend: w.T.Backend.name('db') };
+    w.close();
+    return out;
+  };
+  const addr = require('../server/address.json').url;
+  assert.deepEqual(
+    look('https://tumult.froglet.games/?api=https://evil.example'),
+    {
+      base: addr,
+      backend: addr ? 'tumult-worker' : 'offline',
+    },
+    'a link cannot send a player to another server',
+  );
+  assert.equal(look('http://localhost:5173/?api=http://localhost:8787').base, 'http://localhost:8787');
+});
+
 test('builds: the offline file has no server code; the web version talks only to its own server', async () => {
   const { build, buildWeb } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
   const offline = build({}).html;
@@ -347,7 +380,7 @@ async function page(js, server, user, token) {
   const dom = new JSDOM('<!doctype html><div id="app"></div>', {
     runScripts: 'dangerously',
     pretendToBeVisual: true,
-    url: 'https://tumult.test/?api=https://api.test',
+    url: 'http://localhost/?api=https://api.test',
     beforeParse(w) {
       w.console.error = (...a) => errors.push('console.error: ' + a.map(String).join(' '));
       w.addEventListener('error', (e) => errors.push('window.error: ' + ((e.error && e.error.stack) || e.message)));
