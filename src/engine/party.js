@@ -10,7 +10,7 @@
    Seat 0 is the host: it makes the squad's shared choices (route, events, havens).
    ========================================================================== */
 (function (T) {
-  T.MAX_PLAYERS = 5; // Garrett, 2026-11-20 (2 until 2.77)
+  T.MAX_PLAYERS = 5; // Garrett, 2026-11-20 (2 until 2.76)
 
   /** How many pilots a party of n players flies: two at least (one player flies both), else one each. */
   T.pilotsFor = (n) => Math.max(2, n | 0);
@@ -22,6 +22,43 @@
     const owner = [];
     for (let i = 0; i < T.pilotsFor(n); i++) owner.push(i % n);
     return { players, owner, ready: players.map(() => false) };
+  };
+  /**
+   * A player joins an expedition already under way (2.79; Garrett, 2026-11-20: "is there a way the two players
+   * mid game could save their game, we update, and then I join in?"). Only on the route, between missions,
+   * and never past MAX_PLAYERS. With two players or more the newcomer brings a pilot of its own, drafted or
+   * made, which joins with T.joinPilot; a lone player's second pilot passes to the newcomer instead.
+   */
+  T.canAddPlayer = (run) =>
+    !!run.party && run.phase === 'map' && !run.over && run.party.players.length < T.MAX_PLAYERS && T.squadReady(run);
+  T.addPlayer = function (run, name) {
+    if (!T.canAddPlayer(run)) return { ok: false, why: 'not now' };
+    const p = run.party;
+    const seat = p.players.length;
+    p.players.push({ name: name || 'Player ' + (seat + 1) });
+    p.ready.push(false);
+    if (run.purses) run.purses.push(Math.min(...run.purses)); // a purse as full as the emptiest
+    let hero = p.owner.indexOf(0, 1); // a lone player's second pilot, when there is one
+    if (seat === 1 && hero > 0) p.owner[hero] = 1;
+    else {
+      hero = p.owner.length;
+      p.owner.push(seat);
+    }
+    return { ok: true, seat, hero };
+  };
+  /** Has every seat its pilot? The route waits for a pilot still being drafted. */
+  T.squadReady = (run) => run.heroes.length >= (run.party ? run.party.owner.length : 2) && run.heroes.every(Boolean);
+  /**
+   * A late pilot catches up with the least grown: it gets as many spare points as the least-grown pilot
+   * already flying has grown past it (T.pilotPower). Its level, which scales missions, is the one it came with.
+   */
+  T.joinPilot = function (run, i, h) {
+    const others = run.heroes.filter((x, j) => x && j !== i);
+    const behind = others.length ? Math.min(...others.map(T.pilotPower)) - T.pilotPower(h) : 0;
+    if (behind > 0) h.upUnspent = (h.upUnspent || 0) + behind;
+    if (h.level == null) h.level = 1;
+    run.heroes[i] = h;
+    return { ok: true, caughtUp: Math.max(0, behind) };
   };
   /** The seat that plays hero i. */
   T.ownerOf = (run, i) => (run.party ? run.party.owner[i] || 0 : 0);
@@ -213,10 +250,13 @@
     if (op === 'addHero') {
       // a player's drafted pilot joins the squad in that player's place
       const i = cmd.hero;
-      if (run.phase !== 'draft' || !T.mayActFor(run, seats, i) || run.heroes[i]) return { ok: false, why: 'not now' };
+      const late = run.phase === 'map' && run.party && i < run.party.owner.length;
+      if ((run.phase !== 'draft' && !late) || !T.mayActFor(run, seats, i) || run.heroes[i])
+        return { ok: false, why: 'not now' };
       const h = cmd.pilot;
       // two screens draft apart, so two ids could meet: the second one gives way
       if (run.heroes.some((x) => x && x.id === h.id)) h.id += '_' + i;
+      if (late) return T.joinPilot(run, i, h);
       run.heroes[i] = h;
       return { ok: true };
     }

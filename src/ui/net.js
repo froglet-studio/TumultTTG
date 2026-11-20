@@ -286,6 +286,7 @@
           holders[s] = d && d.holder ? String(d.holder) : null;
           if (U.run && U.run.party && U.run.party.players[s])
             U.run.party.players[s].name = N.names[s] || 'Player ' + (s + 1);
+          N.admit();
           N.status = lobbyStatus();
           if (U.screen === 'lobby') U.render();
           N.publish();
@@ -365,10 +366,25 @@
     N.publish();
   };
   const done = new Set();
-  /** What follows from a change on the host: every pilot drafted → the map. */
+  /**
+   * A player who took the next seat after the expedition set out joins it on the route (2.79, T.addPlayer):
+   * their screen then drafts or brings a pilot, and the route waits for it.
+   */
+  N.admit = function () {
+    const run = U.run;
+    if (N.role !== 'host' || !run || !run.party) return;
+    while (N.names[run.party.players.length] && T.canAddPlayer(run)) {
+      const s = run.party.players.length;
+      T.addPlayer(run, N.names[s]);
+      U.toast(esc(N.names[s]) + ' joins the expedition and is bringing a pilot.');
+      if (U.screen === 'map') U.render();
+    }
+  };
+  /** What follows from a change on the host: every pilot drafted → the map; a newcomer waiting → in. */
   N.afterChange = function () {
     const run = U.run;
     if (N.role !== 'host' || !run) return;
+    N.admit();
     const squad = run.party ? run.party.owner.length : 2;
     if (run.phase === 'draft' && run.heroes.length >= squad && run.heroes.every(Boolean)) {
       T.startMap(run);
@@ -504,7 +520,14 @@
       // a seat already in this name is taken again (a reload); else the first seat nobody holds. Once the
       // expedition has set out, only its own seats are open.
       const g = snap.data();
-      const open = g.run ? (g.names || []).filter((x, s) => s > 0 && x).length + 1 : T.MAX_PLAYERS;
+      // on the route between missions one more seat opens for a newcomer (2.79)
+      let onRoute = false;
+      try {
+        onRoute = !!g.run && T.canAddPlayer(T.deserializeRun(g.run));
+      } catch {
+        /* a state this screen cannot read: no seat for a newcomer */
+      }
+      const open = g.run ? (g.names || []).filter((x, s) => s > 0 && x).length + (onRoute ? 2 : 1) : T.MAX_PLAYERS;
       const names = await Promise.all(
         Array.from({ length: T.MAX_PLAYERS - 1 }, (x, k) =>
           db
@@ -533,7 +556,11 @@
       }
       if (seat == null) {
         N.code = null;
-        U.toast(g.run ? 'That expedition has already set out.' : `That game already has ${T.MAX_PLAYERS} players.`);
+        U.toast(
+          g.run
+            ? 'That expedition is in a mission or full. A newcomer can join on the route, between missions.'
+            : `That game already has ${T.MAX_PLAYERS} players.`,
+        );
         return;
       }
       N.seat = seat;
@@ -592,9 +619,15 @@
     // which screen: the run's phase decides, except the draft, which each player does on their own
     const sameMission =
       before && before.mission && run.mission && before.launched === run.launched && U.screen === 'mission';
+    // a newcomer on the route makes the pilot it brings (2.79): the seat's pilot the run is still waiting for
+    const owed =
+      run.phase === 'map' && run.party ? run.party.owner.findIndex((s, i) => s === N.seat && !run.heroes[i]) : -1;
     if (run.phase === 'draft') {
       if (run.heroes[N.seat]) U.draft = Object.assign(U.draft || {}, { step: 'wait' });
       else if (!U.draft || U.screen !== 'draft') U.beginDraft(N.seat);
+      U.screen = 'draft';
+    } else if (owed >= 0) {
+      if (!U.draft || U.draft.heroIdx !== owed || U.screen !== 'draft') U.beginDraft(owed);
       U.screen = 'draft';
     } else if (run.phase === 'mission' && run.mission) {
       if (!sameMission) {

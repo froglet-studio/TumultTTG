@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.78.0',
+    version: '2.79.0',
     items: [
+      {
+        text: 'Someone can join an expedition already under way. While the squad is on the route between missions, a newcomer enters the game code, makes or brings a pilot, and the route waits until it joins. A late pilot gets spare points to match the least-grown pilot already flying, and the next mission grows for the bigger squad. Did joining feel smooth? Was the newcomer caught up enough?',
+      },
       {
         text: 'A pilot you share now carries your name, so the list of pilots says who made each one and Froglet can follow up on the ones worth painting. Pilots you shared before show your name after you next open the page. Does “Made by” show the name you expect?',
       },
