@@ -363,7 +363,7 @@
     if (d.step === 'mode') {
       const free = (pb) => !run.heroes.some((h) => h && h.name === pb.name);
       const made = U.madeHeroes().filter((x) => free(x.rec));
-      body = `<div class="panel"><h3>Hero ${n} of 2 ${who}— choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
+      body = `<div class="panel"><h3>Pilot ${n} of ${squadOf(run)} ${who}· choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
         <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span>${draftOut(d)}</div>
         <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
         <div class="prebuilt-grid">${T.PREBUILTS.filter(free)
@@ -388,12 +388,21 @@
           .join('')}</div>
         <div class="row" style="margin-top:12px"><button class="primary" data-act="openPacks" ${d.species.length === 2 ? '' : 'disabled'}>Open the first pack</button><button class="ghost" data-act="draftBack">Back</button></div></div>`;
     } else if (d.step === 'packs') {
+      // the draft (Frogma "Finalised UI", D-Draft-v2): the pack across the middle, the kit filling up along the foot
       const h = d.hero;
-      body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="right small dim">Kit: ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' ')}</span></div>
-        <p class="dim small">Each pack mixes your three bloodlines. ★ marks a species' signature traits. Hover any face for exact numbers at your current P/E.</p>
+      const slots = [];
+      for (let k = 0; k < T.RULES.START_CARDS; k++) {
+        const cid = h.cards[k];
+        slots.push(
+          cid
+            ? `<span class="kit-slot full" style="--c:${EL[(T.CARD[cid].E && T.CARD[cid].E.elt) || T.CARD[cid].el].color}" data-tip="${esc(T.CARD[cid].name)}">${esc(T.CARD[cid].name)}</span>`
+            : `<span class="kit-slot${k === h.cards.length ? ' next' : ''}">${k === h.cards.length ? 'pick ' + (k + 1) : ''}</span>`,
+        );
+      }
+      body = `<div class="panel draft2"><div class="d2-head"><h3>${esc(h.name)} · pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="d2-tab on">New pack · ${d.pack.length}</span><span class="right small dim">Kit ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' · ')}</span></div>
+        <p class="dim small">This pack mixes your three bloodlines: click a card to take it, or pass the pack. ★ marks a bloodline's signature traits. Hover any face for exact numbers at your current P/E.</p>
         <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', clades: h.species })).join('')}</div>
-        <div class="row" style="margin-top:12px"><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button></div>
-        ${h.cards.length ? `<hr><div class="small dim">Picked so far: ${h.cards.map((c) => esc(T.CARD[c].name)).join(' · ')}</div>` : ''}</div>`;
+        <div class="d2-kit"><span class="lab">Kit</span>${slots.join('')}<span class="d2-acts"><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button></span></div></div>`;
     } else if (d.step === 'wait') {
       const other = run.party.players.find((p, s) => !run.heroes[s]);
       body = `<div class="panel"><h3>Your pilot is ready</h3><p class="dim">Waiting for ${esc(other ? other.name : 'the other player')} to finish drafting…</p></div>`;
@@ -841,11 +850,14 @@
     const foes = p.foes.map((f) => (f.n > 1 ? f.n + ' ' : '') + esc(f.name)).join(', ');
     return `<div class="small" style="margin-top:4px"><b>${GOAL_VERB[p.goal] || 'Win'}:</b> ${esc(p.objective)}</div><div class="small dim">${p.clock ? '⏳ ' + p.clock.value + ' rounds · ' : ''}${foes}${p.spawns.length ? ' · and more keep coming' : ''}</div>`;
   }
-  /** The stops the squad can reach next, side by side, at the top of the route. */
-  function renderChoices(run) {
-    if (run.phase !== 'map' || !run.available.length) return '';
-    return `<div class="choices"><div class="row"><span class="kick">Choose the next stop</span><span class="dim small">${expeditionLine(run)}${esc(T.threatTitle(run))} waits at the end of the route.</span></div><div class="stopcards">${run.available.map((id) => stopCard(run, id)).join('')}</div></div>`;
-  }
+  // the chart of the whole route stays open or folded as the player left it
+  document.addEventListener(
+    'toggle',
+    (e) => {
+      if (e.target && e.target.classList && e.target.classList.contains('route-panel')) U.routeOpen = e.target.open;
+    },
+    true,
+  );
   // a stop card and its roundel on the route light up together
   document.addEventListener('mouseover', (e) => {
     const card = e.target && e.target.closest && e.target.closest('.stopcard[data-node]');
@@ -858,15 +870,97 @@
       if (n) n.classList.add('hl');
     }
   });
+  /**
+   * The route as a journey column (Frogma "Finalised UI", Route 3): the Heart at the top, the legs still to
+   * come as bands, the leg the squad is on with its next stops as big art cards, and the stops passed below.
+   */
+  function legsOf(map) {
+    const legs = [];
+    for (let r = 0; r < map.rows.length;) {
+      const a = T.actOf(r);
+      let r2 = r;
+      while (r2 + 1 < map.rows.length && T.actOf(r2 + 1) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss') r2++;
+      legs.push({ act: a, from: r, to: r2, boss: map.all[map.rows[r][0]].type === 'boss' });
+      r = r2 + 1;
+    }
+    return legs;
+  }
+  function stopName(run, nd) {
+    const pg = nd.page && T.PAGE_BY[nd.page];
+    return nd.type === 'boss' ? T.threatTitle(run) : pg ? pg.name : NODE_NAME[nd.type];
+  }
+  function renderJourney(run) {
+    const map = run.map;
+    const ex = T.expeditionOf(run);
+    const at = run.nodeId != null ? run.nodeId : null;
+    const here = at != null ? map.all[at].row : -1;
+    const legs = legsOf(map);
+    const next = Math.min(here + 1, map.rows.length - 1);
+    const cur = legs.find((l) => next >= l.from && next <= l.to) || legs[0];
+    const bossLeg = legs.find((l) => l.boss);
+    const away = map.rows.length - 1 - here;
+    const heart = `<div class="j-heart${cur === bossLeg ? ' near' : ''}${bossLeg && ex ? ' ' + U.artClass(ex.legs[2].scene) : ''}"><span class="j-heart-t">${esc(T.threatTitle(run))}</span><span class="small">${away <= 1 ? 'the next stop' : away + ' stops away'}</span></div>`;
+    const legName = (l) => {
+      const leg = ex && ex.legs[l.act];
+      return `Leg ${ROMAN[l.act]}${leg ? ' · ' + GROUND_NAME[leg.ground] : ''}`;
+    };
+    const ahead = legs
+      .filter((l) => !l.boss && l.from > cur.to)
+      .reverse()
+      .map((l) => {
+        const leg = ex && ex.legs[l.act];
+        const art = U.artClass(leg ? leg.scene : U.LEG_SCENES[l.act]);
+        return `<div class="j-leg ${art}"><span class="j-shade"></span><span class="j-leg-t"><b>${legName(l)}</b> <span class="dim small">· ${esc(map.actNames[l.act])} · ${l.to - l.from + 1} stop${l.to > l.from ? 's' : ''}</span></span></div>`;
+      })
+      .join('');
+    const choosing = run.phase === 'map' && run.available.length && T.squadReady(run);
+    const now = cur.boss
+      ? ''
+      : `<div class="j-now"><div class="row"><span class="kick">${legName(cur)}</span><span class="dim small">${esc(map.actNames[cur.act])}${choosing ? ' · you are here · choose the next stop' : ''}</span></div></div>`;
+    // the stops passed, newest first; a mission's line says how it went
+    const missions = run.history.slice();
+    const passed = Object.values(map.all)
+      .filter((nd) => nd.done)
+      .sort((x, y) => x.row - y.row)
+      .map((nd) => {
+        let how = nd.type === 'haven' ? 'rested' : nd.type === 'event' ? 'a fork in the road' : '';
+        if (T.MISSIONS[nd.type] && nd.type !== 'haven' && nd.type !== 'event') {
+          const h = missions.shift();
+          if (h)
+            how = `${h.won ? 'won' : 'lost'} · ${h.rounds} round${h.rounds === 1 ? '' : 's'}${h.kills ? ' · ' + h.kills + ' foe' + (h.kills === 1 ? '' : 's') + ' down' : ''}`;
+        }
+        const pg = nd.page && T.PAGE_BY[nd.page];
+        const art = U.artClass(pg ? pg.plate : null);
+        return `<div class="j-past ${art}"><span class="j-shade"></span><span class="j-past-t"><span class="ok">✓</span> <b>${esc(stopName(run, nd))}</b> <span class="dim small">${NODE_NAME[nd.type]}${how ? ' · ' + esc(how) : ''}</span></span></div>`;
+      })
+      .reverse()
+      .join('');
+    const start = `<div class="j-past j-start"><span class="j-past-t"><span class="ok">${at == null ? '●' : '✓'}</span> <b>The Ark</b> <span class="dim small">${at == null ? 'setting out' : 'where the route began'}</span></span></div>`;
+    return `<div class="journey">${heart}${ahead}${now}${choosing ? `<div class="stopcards">${run.available.map((id) => stopCard(run, id)).join('')}</div>` : ''}${passed}${start}</div>`;
+  }
+  /**
+   * A newcomer joining on the route (2.79): the squad sees them bringing a pilot, and the route waits for them.
+   */
+  function joinCard(run) {
+    if (T.squadReady(run)) return '';
+    const name = esc(T.ownerName(run, run.heroes.length));
+    const seats = run.heroes
+      .filter(Boolean)
+      .map(
+        (h, i) =>
+          `<span class="j-seat">${U.portrait(h, 'sm')}<span class="small">${esc(T.ownerName(run, i))}</span><span class="dim small">ready</span></span>`,
+      )
+      .join('');
+    return `<div class="panel joincard"><span class="kick">A new player joined</span><h3>${name} is bringing a pilot</h3><p class="dim small">They join at this stop, at the squad's level. From the next mission the squad is ${run.heroes.length + 1}, and missions grow to match. The route opens again once the pilot joins.</p><div class="j-seats">${seats}<span class="j-seat waiting"><span class="pfp sm none">?</span><span class="small">${name}</span><span class="small pulse-t">drafting…</span></span></div></div>`;
+  }
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    return `<div class="wrap">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${U.scalePill(run)}${titleBtn()}`)}
+    return `<div class="wrap route-screen">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${U.scalePill(run)}${titleBtn()}`)}
       ${renderPassage(run)}
-      ${partyBar(run)}
-      ${T.squadReady(run) ? '' : `<div class="panel small" style="margin-top:8px">Waiting for ${esc(T.ownerName(run, run.heroes.length))} to bring a pilot: the route opens again once it joins.</div>`}
-      ${renderChoices(run)}
-      <div class="panel route-panel" style="margin-top:12px"><div class="row"><span class="dim small">The whole route, from the top. Glowing stops are reachable; hover one to see what it holds.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></div>${renderRoute(run)}</div></div>`;
+      ${joinCard(run)}
+      <div class="route3"><div class="r3-squad">${partyBar(run)}</div><div class="r3-main">${run.phase === 'map' && run.available.length ? `<div class="small dim r3-line">${expeditionLine(run)}${esc(T.threatTitle(run))} waits at the end of the route.</div>` : ''}${renderJourney(run)}</div></div>
+      <details class="panel route-panel" style="margin-top:12px"${U.routeOpen ? ' open' : ''}><summary class="row"><span class="dim small">The whole route, as a chart: every road and stop from the top. Glowing stops are reachable; hover one to see what it holds.</span><span class="right small dim">Stop ${run.nodeId != null ? map.all[run.nodeId].row + 1 : 0} of ${map.rows.length}</span></summary>${renderRoute(run)}</details></div>`;
   }
 
   /* ───────────── TRAIN / KIT modals ───────────── */

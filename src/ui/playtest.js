@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.83.0',
+    version: '2.84.0',
     items: [
+      {
+        text: 'The mission screen, the draft and the route now follow the designs picked on the Frogma board. On a mission the board sits in a frame with the sea around it; ⛶ Full screen lets it fill the screen, and the foes’ plans and your hand become trays you can slide away. A Squad panel lists every pilot and, with friends, whose turn it is, who is done and who still has one to take. Taking turns at one screen, a cover goes over the board between turns and names who is up, so nobody sees the last hand. On a phone the foot of the screen is one sheet with tabs: Hand, Plans, Squad and Log. The draft fills your kit along the bottom as you pick, and the route reads like a climb: the Heart at the top, your next stops as big cards, the stops you passed below. Is anything you used often harder to find? Did the cover between turns ever get in the way?',
+      },
       {
         text: 'The sea comes alive and the mission screen is calmer. Behind every screen the water now drifts: sea lines, slow light and rising motes. The sea follows the expedition down the route, from the light Shore in the shallows through the Deep Sea and Glow to a violet Storm at the Heart, a little darker every stop; Look (in the ☰ menu on a mission, or on the title) pins a theme, picks an accent and sets motion to Full, Reduced or Off. On the mission screen, Plan, Report, sound, help and Title sit behind ☰, the place’s rules fold into one chip, the story box opens from ✎, four basic actions show with the rest under More, cards with nothing to do fold small, and the how-to line goes after the first two missions. Pilots now walk their path node by node, strikers lean into their blows, a hit shakes, the forecast pulses when it changes and the track steps toward Ready at a new round. Is anything you used often now too far away? Does any animation slow a turn down?',
       },

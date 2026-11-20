@@ -39,7 +39,8 @@
     "ui/canon.css",
     "ui/feel.css",
     "ui/sea.css",
-    "ui/hud.css"
+    "ui/hud.css",
+    "ui/journey.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],

@@ -999,3 +999,11 @@
     height: 120px;
   }
 }
+
+/* motion Off: the trays and the cover appear without sliding */
+html[data-motion='off'] .mission.hud .side,
+html[data-motion='off'] .mission.hud .dock,
+html[data-motion='off'] .mission.hud .pass {
+  transition: none;
+  animation: none;
+}

@@ -6,6 +6,19 @@
 - **Previews.** Every pull request and push to `bleeding-edge` deploys the web version to Cloudflare Pages once the secrets are set; GitHub Pages publishes it with the offline file beside it.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 
+## 2.84.0 — 2026-11-20 — the mission HUD, the draft and the route, as designed
+
+From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
+
+- **The mission HUD (HUD 1×2).** The board sits in a frame with the sea around it. The mission runs across the top on the water: kind, tier, place and conditions, its name, the objective with a progress bar and the bonuses, then the clock (with the round), the purse, Undo, ✎, ☰ and End as one pill in the accent. The hint and the forecast sit inside the frame along its foot. The right column holds the foes' plans (with a vitality bar each), the squad and the log; the foot holds the pilot being flown, the track as a strip over its hand, and the actions. The per-pilot swap buttons in the dock are gone: the squad panel does that job.
+- **Full screen (HUD 1+).** ⛶ Full screen lets the board fill the screen. The plans and the hand become trays that slide away and back (Plans ▸, Hand ▾); ⤡ returns to the frame. The choice is kept with the folds (`tumult_v2_ui`).
+- **The squad, for 2 to 5.** One row a pilot: its player, vitality, etherions, AP, and where its player stands this round (their turn, done, any order still to play; in live rounds, playing or done, with a count). Under End, a line says who goes after this turn and whose turn ends the round. Click a row to fly that pilot, or Cards to look at its hand.
+- **Passing the screen.** Players taking turns at one screen get a cover between turns: it names who is up (or asks who goes next, when several still have a turn) and hides the last hand until its player has the screen again (`test/squad.ui.test.js`).
+- **Online in play.** A player who has ended their turn, or is done in live rounds, sees who the table is waiting on; in live rounds they can take it back.
+- **Phones.** The foot of the screen is one sheet: the pilot with its AP, the tabs Hand, Plans, Squad and Log with End beside them, and the tab's pane. Its grip folds it down to the pilot and the tabs.
+- **The draft** keeps today's cards and flow in a frosted panel; the kit fills up along its foot as you pick, the next slot lit. The build screen says "Pilot n of N" for any squad.
+- **The route as a journey column (Route 3).** The Heart at the top with how many stops away it is, the legs to come as bands of their art, the next stops as big art cards, the stops passed below with how each went. The pilots stand in a column beside it. The chart of the whole route stays underneath, folded. A newcomer joining on the route gets a card saying who is bringing a pilot.
+
 ## 2.83.0 — 2026-11-20 — a living sea, a calmer mission screen, and motion
 
 Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, motion kit). No rule changes.
