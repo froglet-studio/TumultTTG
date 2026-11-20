@@ -70,7 +70,7 @@ test('Sea: the Look panel sets theme, accent and motion, and they are kept', { s
     assert.ok(d.querySelectorAll('#sea .sea-mote').length >= 8, 'and motes');
     assert.equal(root.getAttribute('data-sea'), 'deep', 'the title is in the Deep Sea');
     assert.equal(root.getAttribute('data-motion'), 'full', 'with no reduce-motion setting, everything moves');
-    click('[data-act="look"]');
+    U.openLook(); // Home in the app shell has no Look button; the mission menu and Settings do
     assert.ok(d.querySelector('.modal .look'), 'Look opens');
     click('[data-act="lookTheme"][data-arg="glow"]');
     click('[data-act="lookAccent"][data-arg="ruby"]');
