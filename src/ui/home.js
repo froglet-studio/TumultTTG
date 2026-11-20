@@ -459,8 +459,13 @@
     const host = N.role === 'host';
     const t = tableOf(meta);
     // the host's choices go to the online game, which reads them when the expedition starts (N.start)
-    if (host) N.tableOpts = { seats: t.seats, aiFill: t.aiFill && !!T.fillSeats, length: t.length };
-    else {
+    if (host) {
+      const o = { seats: t.seats, aiFill: t.aiFill && !!T.fillSeats, length: t.length };
+      const changed = JSON.stringify(o) !== JSON.stringify(N.tableOpts || null);
+      N.tableOpts = o;
+      // a guest's waiting room shows the host's choices from the game doc (net.js, before setting out)
+      if (changed && typeof N.writeTable === 'function') setTimeout(() => N.writeTable(), 0);
+    } else {
       const o = N.tableOpts || {};
       t.seats = Math.max(N.names.filter(Boolean).length, +o.seats || N.names.length);
       t.aiFill = !!o.aiFill;
