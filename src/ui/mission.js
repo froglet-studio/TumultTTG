@@ -53,7 +53,16 @@
    */
   const LAYOUT_KEY = 'tumult_v2_ui';
   U.layout = (() => {
-    const base = { log: false, intents: true, obj: false, peek: {} };
+    const base = {
+      log: false,
+      intents: true,
+      obj: false,
+      full: false,
+      noHand: false,
+      noPlans: false,
+      tab: 'hand',
+      peek: {},
+    };
     try {
       return Object.assign(base, JSON.parse(localStorage.getItem(LAYOUT_KEY) || '{}'), { peek: {} });
     } catch {
@@ -62,8 +71,8 @@
   })();
   function saveLayout() {
     try {
-      const { log, intents, obj } = U.layout;
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj }));
+      const { log, intents, obj, full, noHand, noPlans, tab } = U.layout;
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj, full, noHand, noPlans, tab }));
     } catch {
       /* no storage: the choice lasts for this page */
     }
@@ -107,17 +116,44 @@
   }
 
   /* ───────────── skeleton ───────────── */
+  /**
+   * The mission HUD (Frogma "Finalised UI", HUD 1×2): the board in a frame with the sea around it, the mission
+   * across the top, the foes' plans, the squad and the log on the right, the pilot being flown and its hand
+   * along the foot. ⛶ Full screen (HUD 1+) lets the board fill the screen; the plans and the hand become trays
+   * that slide away. On a phone the foot is one sheet with tabs: Hand, Plans, Squad and Log.
+   * Which of these is chosen is kept for this browser with the folds (tumult_v2_ui).
+   */
+  const TABS = [
+    ['hand', 'Hand'],
+    ['plans', 'Plans'],
+    ['squad', 'Squad'],
+    ['log', 'Log'],
+  ];
+  U.hudClass = function () {
+    const L = U.layout;
+    return `mission hud${L.full ? ' full' : ''}${L.noHand ? ' nohand' : ''}${L.full && L.noPlans ? ' noplans' : ''}`;
+  };
   U.renderMission = function () {
     // the board sits in a place: its atlas page's plate (or, on a board with no page, the lead pilot's world)
     const m = U.run && U.run.mission;
     const page = m && m.page && T.PAGE_BY[m.page];
     const lead = m && m.heroes[0];
     const scene = (page && T.ART && T.ART[page.plate]) || (lead && U.sceneSrc(U.pilotOf(lead)));
-    return `<div class="mission">
-      <div class="top panel tight" id="mtop"></div>
-      <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div><div class="mfc" id="mfc" aria-live="polite"></div></div>
-      <div class="side"><div class="side-in" id="mside"></div><div class="bottom">${foldBtn('log', 'the log')}<div class="log${U.layout.log ? '' : ' folded'}" id="mlog"></div></div></div>
-      <div class="dock" id="mdock"></div>
+    const L = U.layout;
+    const tab = TABS.some(([k]) => k === L.tab) ? L.tab : 'hand';
+    const tabs = TABS.map(
+      ([k, n]) =>
+        `<button class="ptab${k === tab ? ' on' : ''}" data-act="hudTab" data-arg="${k}" aria-pressed="${k === tab}">${n}</button>`,
+    ).join('');
+    return `<div class="${U.hudClass()}" data-tab="${tab}">
+      <div class="top" id="mtop"></div>
+      <div class="boardwrap"><div id="mtarget"></div><div class="board${page ? ' paged' : ''}" id="board"${scene ? ` style="--scene:url(${scene})"` : ''}><div class="banner" id="banner"></div></div><button class="ghost fsbtn" data-act="hudFull" id="mfull">${L.full ? '⤡ Back to frame' : '⛶ Full screen'}</button><div class="mfc" id="mfc" aria-live="polite"></div></div>
+      <div class="tray">
+        <div class="ptabs">${tabs}<button class="primary endbtn2" data-act="endRound" id="mend2">End Round ▶</button></div>
+        <div class="side"><button class="grab grab-plans" data-act="hudTray" data-arg="plans" aria-label="Slide the plans tray">${L.noPlans ? '◂ Plans' : 'Plans ▸'}</button><div class="side-in pane p-plans" id="mside"></div><div class="pane p-squad" id="msquad"></div><div class="bottom pane p-log">${foldBtn('log', 'the log')}<div class="log${L.log ? '' : ' folded'}" id="mlog"></div></div></div>
+        <div class="dock"><button class="grab grab-hand" data-act="hudTray" data-arg="hand" aria-label="Slide the hand tray">${L.noHand ? 'Hand ▴' : 'Hand ▾'}</button><div class="pane p-hand" id="mdock"></div></div>
+      </div>
+      <div class="pass" id="mpass" hidden></div>
     </div>`;
   };
   U.afterMissionRender = function () {
@@ -358,10 +394,23 @@
     U.ms.forecast = T.forecast(m);
     // players take turns: when the turn passes, say whose it is and pick up their pilot
     const turn = U.turn();
-    const tkey = turn ? m.round + ':' + turn.seat : null;
+    const tkey = turn ? m.round + ':' + (turn.open ? 'open' + turn.left.join('') : turn.seat) : null;
     if (tkey !== U.ms.lastTurn) {
       U.ms.lastTurn = tkey;
-      if (turn) {
+      if (turn && turn.open) {
+        // whoever acts first takes the next turn
+        if (turn.here) {
+          const mine = turn.left
+            .filter((s) => !U.seats || U.seats.includes(s))
+            .flatMap((s) => T.heroesOf(U.run, s))
+            .filter((i) => !m.heroes[i].downed);
+          if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
+          U.toast(
+            U.seats ? 'Take your turn whenever you like: act to begin it.' : 'Anyone can go next: act to begin a turn.',
+          );
+        }
+        if (U.sfx.turn) U.sfx.turn();
+      } else if (turn) {
         if (turn.here) {
           const mine = T.heroesOf(U.run, turn.seat).filter((i) => !m.heroes[i].downed);
           if (mine.length && !mine.includes(U.ms.heroIdx)) U.ms.heroIdx = mine[0];
@@ -376,7 +425,12 @@
     renderForecast(m);
     renderSide(m);
     renderLog(m);
+    showPass(m);
     updateBoard(m);
+    // a new round: every resting card steps one column toward Ready, together
+    if (U.ms.trackRound != null && U.ms.trackRound !== m.round)
+      document.querySelectorAll('.mission .track').forEach((t) => t.classList.add('slide'));
+    U.ms.trackRound = m.round;
     scheduleCombos();
     playFx(m);
     if (U.feelUpdate) U.feelUpdate(m);
@@ -385,6 +439,85 @@
       setTimeout(() => showMissionOver(m), U.MISSION_OVER_DELAY);
     }
   };
+
+  /** Put the HUD's chosen shape on the screen without drawing it again. */
+  function applyHud() {
+    const root = $('.mission.hud');
+    if (!root) return;
+    const L = U.layout;
+    root.className = U.hudClass();
+    root.setAttribute('data-tab', TABS.some(([k]) => k === L.tab) ? L.tab : 'hand');
+    document.querySelectorAll('.mission .ptab').forEach((b) => {
+      const on = b.getAttribute('data-arg') === root.getAttribute('data-tab');
+      b.classList.toggle('on', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    const fs = $('#mfull');
+    if (fs) fs.textContent = L.full ? '⤡ Back to frame' : '⛶ Full screen';
+    const gh = $('.mission .grab-hand');
+    if (gh) gh.textContent = L.noHand ? 'Hand ▴' : 'Hand ▾';
+    const gp = $('.mission .grab-plans');
+    if (gp) gp.textContent = L.noPlans ? '◂ Plans' : 'Plans ▸';
+    // the board keeps its proportions in its new frame
+    if (U.feelResize) U.feelResize();
+  }
+  U.applyHud = applyHud;
+
+  /**
+   * Pass the screen: players taking turns at one screen hand it on between turns. The cover names who is up
+   * and hides the hand that was just played until its player has the screen back. In an open round, where
+   * players choose their order, it asks who goes next. Online each player has their own screen: no cover.
+   */
+  function passState(m) {
+    const run = U.run;
+    if (U.seats || !run.party || T.playerCount(run) < 2 || T.liveRounds(run) || m.over || m.phase !== 'hero')
+      return null;
+    const p = run.party;
+    if (!p.ready.some(Boolean)) return null; // the round's first turn: the table is already looking
+    const turn = T.turnSeat(run);
+    const left = T.seatsToPlay(run);
+    if (turn != null && p.active === turn) return null; // a turn under way: it was begun on this screen
+    if (!left.length) return null;
+    return { key: m.round + ':' + p.ready.map((x) => (x ? 1 : 0)).join(''), turn, left };
+  }
+  function showPass(m) {
+    const el = $('#mpass');
+    if (!el) return;
+    const st = passState(m);
+    U.ms.passKey = st && st.key;
+    if (!st || U.ms.passShown === st.key) {
+      el.hidden = true;
+      el.innerHTML = '';
+      return;
+    }
+    const run = U.run;
+    const p = run.party;
+    const name = (s) => esc(p.players[s].name);
+    const done = p.players.map((x, s) => s).filter((s) => p.ready[s]);
+    const n = p.players.length;
+    const pilotOf = (s) => m.heroes[T.heroesOf(run, s).find((i) => !m.heroes[i].downed)];
+    const heads = `<span class="dim small">${done.length ? done.map(name).join(', ') + (done.length > 1 ? ' are' : ' is') + ' done' : ''}</span>`;
+    let html;
+    if (st.turn != null || st.left.length === 1) {
+      const s = st.turn != null ? st.turn : st.left[0];
+      const h = pilotOf(s);
+      const after = st.left.filter((x) => x !== s);
+      html = `<div class="pass-in">${h ? U.portrait(h, 'xl') : ''}<span class="kick">Round ${m.round} · turn ${done.length + 1} of ${n}</span><h2>Pass to ${name(s)}</h2><p>${h ? esc(h.name) + "'s turn. " : ''}The last hand stays hidden until its player has the screen again.</p><button class="primary" data-act="passOk" data-arg="${s}">I'm ${name(s)} · show my turn</button>${after.length ? `<span class="dim small">${after.map(name).join(' and ')} go after ${name(s)}</span>` : ''}${heads}</div>`;
+    } else {
+      const btns = st.left
+        .map((s) => {
+          const h = pilotOf(s);
+          return `<button class="pass-who" data-act="passOk" data-arg="${s}">${h ? U.portrait(h, 'lg') : ''}<b>${name(s)}</b><span class="dim small">${h ? esc(h.name) : ''}</span></button>`;
+        })
+        .join('');
+      html = `<div class="pass-in"><span class="kick">Round ${m.round} · turn ${done.length + 1} of ${n}</span><h2>Pass the screen</h2><p>Who goes next? Players choose their order each round. The last hand stays hidden until its player has the screen again.</p><div class="pass-row">${btns}</div>${heads}</div>`;
+    }
+    if (el._html !== html) {
+      el.innerHTML = html;
+      el._html = html;
+    }
+    el.hidden = false;
+  }
 
   function renderTop(m) {
     const ob = m.objective;
@@ -404,27 +537,41 @@
       prog = t ? `${t.name} ${Math.max(0, t.hp)}/${t.maxHp}` : 'destroyed';
     }
     const clock = m.clock
-      ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label)}">⏳ ${m.clock.value}</span>`
-      : '';
-    // the place's rules today: gravity and weather, a pill each, the rule in its tip
+      ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label + ' · round ' + m.round)}"><span class="cv">⏳ ${m.clock.value}</span><small class="rnd">round ${m.round}</small></span>`
+      : `<span class="pill mono">Round ${m.round}</span>`;
+    // the place's rules today: gravity, weather and the hour, folded into one chip; each rule in its tip
     const pl = m.place || {};
     const gb = T.GRAVITY.find((b) => b.id === pl.gravity);
     const wx = T.WEATHER[pl.weather];
-    const place =
-      (gb && gb.text ? `<span class="pill" data-tip="${esc(gb.text)}">${esc(gb.name)}</span>` : '') +
-      (wx && wx.text
+    const conds = [
+      gb && gb.text ? `<span class="pill" data-tip="${esc(gb.text)}">${esc(gb.name)}</span>` : '',
+      wx && wx.text
         ? `<span class="pill" data-tip="${esc(wx.text)}">${pl.weather === 'wind' ? (pl.wind > 0 ? 'Wind → E' : 'Wind ← A') : 'Fog'}</span>`
-        : '');
+        : '',
+      U.dayPill ? U.dayPill(m) : '',
+    ].filter(Boolean);
+    const ms = U.ms;
+    const condsChip = conds.length
+      ? `<span class="conds${ms.conds ? ' open' : ''}"><button class="pill conds-btn" data-act="conds" aria-expanded="${!!ms.conds}" data-tip="The place's rules today: gravity, weather and the hour">${conds.length} condition${conds.length === 1 ? '' : 's'} ${ms.conds ? '▴' : '▾'}</button><span class="conds-list">${conds.join('')}</span></span>`
+      : '';
+    // the screen's own buttons, behind one menu: the playtest's Plan and Report, sound, help, look, the way out
+    const menuBtn = `<button class="ghost sm mmenu-btn${ms.menu ? ' on' : ''}" data-act="mmenu" aria-expanded="${!!ms.menu}" aria-label="Menu" data-tip="Sound, help, look and the way out">☰</button>`;
+    const menu = `<div class="mmenu${ms.menu ? ' open' : ''}">${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊 Sound' : '🔇 Sound'}</button><button class="ghost sm" data-act="help">? Help</button><button class="ghost sm" data-act="${U.openQuick ? 'quick' : 'look'}" data-tip="Theme, sound, hints and the way out">⚙ Settings</button>${U.titleBtn()}</div>`;
     const ae = document.activeElement;
     const typing = ae && ae.id === 'turnNote' ? [ae.selectionStart, ae.selectionEnd] : null;
+    const noteOpen = ms.noteOpen || !!typing || !!ms.noteDraft;
     const changed = setHTML(
       $('#mtop'),
-      `<div class="topbar"><div><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span><h3 style="margin:0">${esc(m.title)}</h3></div>
-      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '○ ' + esc(b.text)).join(' &nbsp; ')}</div></div>
-      <div class="tpills">${place}${clock}${U.dayPill ? U.dayPill(m) : ''}<span class="pill mono">Round ${m.round}</span>${U.purseHTML(m, true)}</div>
-      <div class="endgrp"><div class="endrow"><button class="primary" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button>${undoBtn(m)}</div>${noteBox(m)}</div>
-      ${U.missionTopExtra ? U.missionTopExtra(m) : ''}<button class="ghost sm" data-act="toggleSound">${U.sound ? '🔊' : '🔇'}</button><button class="ghost sm" data-act="help">?</button>${U.titleBtn()}</div>`,
+      `<div class="topbar"><div class="mhead"><div class="kickrow"><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span>${condsChip}</div><h3 style="margin:0">${esc(m.title)}</h3>
+      <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="obj-bar" style="--p:${Math.round(100 * T.objectiveProgress(m))}%"><i></i></span><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '<span class="bonus">○ ' + esc(b.text) + '</span>').join(' ')}</div></div></div>
+      <div class="tpills">${clock}${U.purseHTML(m, true)}</div>
+      <div class="endgrp${noteOpen ? ' note-open' : ''}"><div class="endrow">${undoBtn(m)}<button class="ghost sm note-btn${noteOpen ? ' on' : ''}" data-act="noteOpen" aria-expanded="${noteOpen}" aria-label="Write a line of story" data-tip="Give this turn a line of story">✎</button>${menuBtn}<button class="primary endbtn" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button></div><div class="turnline small">${turnLine(U.run)}</div>${noteBox(m)}${menu}</div></div>`,
     );
+    const end2 = $('#mend2');
+    if (end2) {
+      end2.textContent = U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶';
+      end2.disabled = !!m.over;
+    }
     const box = changed && typing && $('#turnNote');
     if (box) {
       box.focus();
@@ -433,15 +580,17 @@
   }
 
   /**
-   * The story box beside End turn: the player whose turn it is may give it a line of story, as the
-   * pilot they have selected. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
+   * The story box beside End turn: every player may give the round a line of story, as the pilot they have
+   * selected (or their own, when they are looking at someone else's), on their own turn or while others take
+   * theirs. It is kept with the mission's log (T.addNote) and goes on to the chronicle.
    */
   function noteBox(m) {
     const ms = U.ms;
-    const t = U.turn && U.turn();
-    const i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    const own = (j) => !U.run || T.mayActFor(U.run, U.seats, j);
+    let i = ms.noteHero != null && ms.noteDraft != null ? ms.noteHero : ms.heroIdx;
+    if (!own(i)) i = m.heroes.findIndex((x, j) => x && own(j));
     const h = m.heroes[i];
-    if (m.over || !h || (t && !t.here) || (U.mine && !U.mine(i))) return '';
+    if (m.over || !h || !own(i)) return '';
     const noted = m.log.find((l) => l.who === 'note' && l.hero === i && l.r === m.round);
     const val = ms.noteDraft != null ? ms.noteDraft : noted ? noted.text : '';
     const tip =
@@ -462,9 +611,20 @@
     if (r && r.ok === false && r.why) U.toast(esc(r.why));
   }
   U.commitNote = commitNote;
+  // the menu closes when anything else on the page is clicked
+  document.addEventListener('click', (e) => {
+    if (!U.ms || !U.ms.menu || U.screen !== 'mission' || !U.run || !U.run.mission) return;
+    if (e.target && e.target.closest && e.target.closest('.mmenu, .mmenu-btn')) return;
+    U.ms.menu = false;
+    renderTop(M());
+  });
   document.addEventListener('input', (e) => {
     if (!e.target || e.target.id !== 'turnNote' || !U.ms) return;
-    if (U.ms.noteDraft == null) U.ms.noteHero = U.ms.heroIdx;
+    if (U.ms.noteDraft == null) {
+      const m = M();
+      const own = (j) => !U.run || T.mayActFor(U.run, U.seats, j);
+      U.ms.noteHero = own(U.ms.heroIdx) || !m ? U.ms.heroIdx : m.heroes.findIndex((x, j) => x && own(j));
+    }
     U.ms.noteDraft = e.target.value;
   });
   document.addEventListener('change', (e) => {
@@ -481,7 +641,9 @@
     const el = $('#mtarget');
     if (!el) return;
     if (ms.mode === 'idle') {
-      el.innerHTML = `<div class="hint">${hintText(m)}</div>`;
+      // the how-to line is for the first missions; after that the board speaks for itself and help is in the menu
+      const young = U.showHints ? U.showHints(U.run) : !U.run || !U.run.stats || (U.run.stats.missions || 0) < 2;
+      el.innerHTML = young ? `<div class="hint">${hintText(m)}</div>` : '';
       return;
     }
     let txt = '';
@@ -582,26 +744,23 @@
 
   /* ───────────── side panels ───────────── */
   function renderSide(m) {
+    const live = T.liveEnemies(m).filter((e) => e.intent);
     const intents =
-      T.liveEnemies(m)
-        .filter((e) => e.intent)
+      live
         .map(
           (e) =>
-            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
+            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span class="who"><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span><i class="ehp"><i style="width:${Math.round((100 * Math.max(0, e.hp)) / (e.maxHp || 1))}%"></i></i></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
     const open = U.layout.intents;
     const foes = T.liveEnemies(m).length;
     const changed = setHTML(
       $('#mside'),
-      `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b>Enemy intents</b><span class="dim small right">${open ? 'declared — they adapt only to close distance' : `${foes} foe${foes === 1 ? '' : 's'} · shown on the board`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
-        // the pilots not being played, folded: the ally's vitality, dice and (on request) cards
-        m.heroes
-          .map((h, i) => i)
-          .filter((i) => i !== U.ms.heroIdx)
-          .map((i) => heroPanel(m, m.heroes[i], i))
-          .join(''),
+      seatPanel(m) +
+        `<div class="panel tight intents-panel${open ? '' : ' folded'}"><div class="row fold-head" data-act="fold" data-arg="intents"><b class="lab" data-tip="Declared before you act: each foe does what it says, adapting only to close distance. Each also carries its plan on the board.">Enemy plans</b><span class="dim small right">${open ? (live.length ? `${live.length} act at round end` : '') : `${foes} foe${foes === 1 ? '' : 's'}`}</span>${foldBtn('intents', 'the enemy intents')}</div>${open ? `<div class="intents" style="margin-top:6px">${intents}</div>` : ''}</div>` +
+        waitPanel(m),
     );
+    renderSquad(m);
     // the pilot being played stays in the dock: its hand, AP, dice and actions always on screen, never folded
     const sel = m.heroes[U.ms.heroIdx];
     setHTML($('#mdock'), sel ? heroPanel(m, sel, U.ms.heroIdx) : '');
@@ -610,6 +769,162 @@
       document
         .querySelectorAll('#mside [data-tipid]')
         .forEach((el) => el.setAttribute('data-tip', tipFor(el.getAttribute('data-tipid'))));
+  }
+
+  /**
+   * Where each player stands this round, in words: whose turn it is, who is done, who still has one to take.
+   * Null for one player. `here` says whether this screen holds that seat.
+   */
+  function seatState(run, s) {
+    const p = run.party;
+    if (!p || T.playerCount(run) < 2) return null;
+    const m = run.mission;
+    const here = !U.seats || U.seats.includes(s);
+    const down = T.heroesOf(run, s).every((i) => !m.heroes[i] || m.heroes[i].downed);
+    if (down) return { k: 'down', t: 'down' };
+    // online: a player who has gone quiet (the countdown before the AI takes the seat), or a seat the AI flies
+    const away = U.net && U.net.away && U.net.away[s];
+    if (away != null) return { k: 'away', t: 'lost connection', until: +away };
+    const bot = T.botKind ? T.botKind(run, s) : false;
+    const ai = (st) =>
+      bot ? Object.assign(st, { ai: bot, t: st.k === 'turn' || st.k === 'play' ? 'AI playing' : st.t }) : st;
+    if (bot === 'hold' && !p.ready[s] && !T.liveRounds(run) && T.turnSeat(run) !== s)
+      return { k: 'ai', t: 'AI holds the seat', ai: bot };
+    if (T.liveRounds(run)) return ai(p.ready[s] ? { k: 'done', t: 'done ✓' } : { k: 'play', t: 'playing' });
+    if (p.ready[s]) return ai({ k: 'done', t: 'done ✓' });
+    const turn = T.turnSeat(run);
+    if (turn === s) return ai({ k: 'turn', t: here && U.seats ? 'your turn' : 'their turn' });
+    const left = T.seatsToPlay(run);
+    if (turn == null && left.includes(s)) return ai({ k: 'next', t: left.length > 1 ? 'any order' : 'next' });
+    return ai({ k: 'wait', t: 'waiting' });
+  }
+  U.seatState = seatState;
+  /** m:ss until a time (ms), for a countdown. */
+  const clockTo = (until) => {
+    const left = Math.max(0, Math.ceil((until - Date.now()) / 1000));
+    return `${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}`;
+  };
+  /** The countdowns on the mission screen tick with the one over every screen (src/ui/net.js calls this). */
+  U.tickAway = function () {
+    if (typeof document === 'undefined') return;
+    document.querySelectorAll('[data-until]').forEach((el) => {
+      el.textContent = clockTo(+el.getAttribute('data-until'));
+    });
+    const m = U.run && U.run.mission;
+    if (!m || !document.querySelector('.mission.hud')) return;
+    // a seat went quiet or came back since the last draw: draw the squad and the seat card again
+    const key = JSON.stringify(Object.keys((U.net && U.net.away) || {})) + (T.botSeats ? T.botSeats(U.run).join() : '');
+    if (key !== U.ms.awayKey) {
+      U.ms.awayKey = key;
+      renderSide(m);
+    }
+  };
+
+  /**
+   * Online, in play: a card for each seat that has gone quiet (the countdown, and on the host's screen its two
+   * choices) and each seat an AI holds for a player who dropped. It stands in for the strip over other screens.
+   */
+  function seatPanel(m) {
+    const run = U.run;
+    const N = U.net;
+    if (!N || !N.role || !run.party || m.over) return '';
+    const name = (s) => esc((N.names && N.names[s]) || run.party.players[s].name || 'Player ' + (s + 1));
+    const rows = [];
+    for (const k of Object.keys(N.away || {})) {
+      const s = +k;
+      const mine = N.role === 'guest' && s === N.seat;
+      rows.push(`<div class="seat-row away"><b>${mine ? 'You seem to be offline' : name(s) + ' lost connection'}</b>
+        <div class="small">An AI pilot takes the seat in <span class="mono" data-until="${+N.away[k]}">${clockTo(+N.away[k])}</span> and plays it safe until they are back.</div>${
+          N.role === 'host'
+            ? `<div class="seat-acts"><button class="sm" data-act="netGiveAI" data-arg="${s}">Give it to the AI</button><button class="sm ghost" data-act="netWait" data-arg="${s}">Wait for them</button></div>`
+            : ''
+        }</div>`);
+    }
+    (T.botSeats ? T.botSeats(run) : [])
+      .filter((s) => T.botKind(run, s) === 'hold')
+      .forEach((s) =>
+        rows.push(
+          `<div class="seat-row held"><b>An AI pilot holds ${name(s)}'s seat</b><div class="small">until they are back. Reloading the page puts them back in it.</div></div>`,
+        ),
+      );
+    return rows.length ? `<div class="panel tight seat-panel">${rows.join('')}</div>` : '';
+  }
+
+  /** One line under End: who goes after this turn, and whose turn ends the round. */
+  function turnLine(run) {
+    if (!run || !run.party || T.playerCount(run) < 2) return '';
+    const p = run.party;
+    const name = (s) => esc(p.players[s].name);
+    if (T.liveRounds(run)) {
+      const n = p.ready.filter(Boolean).length;
+      return n && n < p.players.length
+        ? `You can still play after Done, until the last player is done · ${n}/${p.players.length} done`
+        : 'Everyone plays at once: foes move when the last player is done';
+    }
+    const left = T.seatsToPlay(run);
+    const turn = T.turnSeat(run);
+    const after = left.filter((s) => s !== turn);
+    if (turn != null && !after.length) return `${name(turn)} ends the round`;
+    if (turn != null) return `Then ${after.map(name).join(', ')}, in any order · the last turn ends the round`;
+    if (left.length > 1) return `${left.map(name).join(', ')} still to play, in any order`;
+    return '';
+  }
+
+  /** The squad: every pilot, its player, its vitality and dice, where it stands this round. Click to fly it. */
+  function renderSquad(m) {
+    const run = U.run;
+    const players = T.playerCount(run);
+    const mode = players < 2 ? '' : T.liveRounds(run) ? 'all at once' : 'take turns';
+    const p = run.party;
+    const done = p && players >= 2 ? p.ready.filter(Boolean).length : 0;
+    const rows = m.heroes
+      .map((h, i) => {
+        const sel = i === U.ms.heroIdx;
+        const st = seatState(run, T.ownerOf(run, i));
+        const status = st
+          ? `<span class="sq-st ${st.k}${st.ai ? ' ai' : ''}">${st.t}${st.until ? ` <span class="mono" data-until="${st.until}">${clockTo(st.until)}</span>` : ''}</span>`
+          : `<span class="sq-st ${sel ? 'turn' : 'wait'}">${sel ? 'flying' : h.downed ? 'down' : 'Tab ⇄'}</span>`;
+        const els = ['M', 'C', 'S', 'T', 'O']
+          .map((e) => ({ e, n: h.held.filter((f) => f === e).length }))
+          .filter((x) => x.n)
+          .map((x) => `<span class="res-el" style="--c:${EL[x.e].color}">${U.ic('el.' + x.e, x.e)}<b>${x.n}</b></span>`)
+          .join('');
+        return `<div class="sq-row${sel ? ' sel' : ''}${h.downed ? ' downed' : ''}" data-act="selHero" data-arg="${i}" data-tip="${esc(sel ? `Flying ${h.name}` : `Fly ${h.name} (Tab)`)}">
+          ${U.portrait(h, 'sm')}
+          <span class="sq-main"><span class="sq-name"><b>${esc(h.name)}</b>${players >= 2 ? ` <span class="dim">· ${esc(T.ownerName(run, i))}</span>` : ''}</span><i class="sq-hp"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></i><span class="sq-res">${els}<span class="ap-chip">${T.apValue(h)} AP</span></span></span>
+          <span class="sq-side"><span class="mono small">${h.downed ? 'down' : h.hp}${heading(i)}</span>${status}${sel ? '' : `<button class="ghost sm peek" data-act="peek" data-arg="${i}" aria-expanded="${!!U.layout.peek[i]}">${U.layout.peek[i] ? 'Hide cards ▴' : 'Cards ▾'}</button>`}</span>
+        </div>`;
+      })
+      .join('');
+    const peeks = m.heroes.map((h, i) => (i !== U.ms.heroIdx && U.layout.peek[i] ? heroPanel(m, h, i) : '')).join('');
+    setHTML(
+      $('#msquad'),
+      `<div class="panel tight squad-panel"><div class="row"><b class="lab">Squad · ${m.heroes.length}${mode ? ' · ' + mode : ''}</b><span class="dim small right">${T.liveRounds(run) && players >= 2 ? `${done} of ${players} done` : ''}</span></div><div class="sq-rows">${rows}</div>${peeks}</div>`,
+    );
+  }
+
+  /**
+   * Online, on a player's own screen: once they have ended their turn (or are done, in live rounds), or while
+   * another player takes theirs, a card says who the table is waiting on and how to take it back.
+   */
+  function waitPanel(m) {
+    const run = U.run;
+    if (!U.seats || !run.party || T.playerCount(run) < 2 || m.over) return '';
+    const p = run.party;
+    const name = (s) => `<b>${esc(p.players[s].name)}</b>`;
+    const list = (a) =>
+      a.length > 1 ? a.slice(0, -1).map(name).join(', ') + ' and ' + name(a[a.length - 1]) : a.map(name).join('');
+    const mine = U.seats.every((s) => p.ready[s]);
+    if (T.liveRounds(run)) {
+      if (!mine) return '';
+      const left = T.seatsPlaying(run);
+      return `<div class="panel tight wait-panel"><b class="lab ok">You are done with the round</b><div>Waiting on ${list(left)}. Foes act when everyone is done.</div><button class="ghost" data-act="endRound">Take it back</button><div class="dim small">You can still change your moves until the round resolves.</div></div>`;
+    }
+    const turn = T.turnSeat(run);
+    const left = T.seatsToPlay(run);
+    const waitingOn = turn != null ? [turn] : left;
+    if (waitingOn.some((s) => U.seats.includes(s))) return '';
+    return `<div class="panel tight wait-panel"><b class="lab ok">${mine ? 'You ended your turn' : 'Not your turn yet'}</b><div>Waiting on ${list(waitingOn)}. ${mine ? 'Your dice for the next round are rolled: plan while they play.' : 'Watch the board; your turn comes when theirs ends.'}</div></div>`;
   }
   /** Beside a hero's vitality: where it will stand if the round ends now, when that is somewhere else. */
   function heading(i) {
@@ -622,13 +937,15 @@
    * in a strip under the board that is always in view. While a play is previewed (hovered, or tapped once on
    * a touch screen), the strip shows what ending the round would do after that play instead, beside now.
    */
-  function forecastChips(m, f, was) {
+  function forecastChips(m, f, was, prev) {
     const chips = f.heroes
-      .map((x, i) => ({ x, i, w: was && was.heroes[i] }))
+      .map((x, i) => ({ x, i, w: was && was.heroes[i], p: prev && prev.heroes[i] }))
       .filter(({ i }) => !m.heroes[i].downed)
-      .map(({ x, w }) => {
+      .map(({ x, w, p }) => {
         const d = x.hp - x.after;
         const changed = w && (w.after !== x.after || w.downed !== x.downed);
+        // since the last move, the figure moved: the chip says so with a short pulse
+        const bump = p && (p.after !== x.after || p.downed !== x.downed || p.hp !== x.hp) ? ' bump' : '';
         const tone = x.downed || d > 0 ? 'bad' : d < 0 ? 'good' : 'ok';
         const what = x.downed
           ? 'goes down'
@@ -640,7 +957,7 @@
         const from = changed
           ? `<s class="dim">${w.downed ? 'down' : w.hp - w.after > 0 ? '−' + (w.hp - w.after) : w.hp - w.after < 0 ? '+' + (w.after - w.hp) : 'untouched'}</s> `
           : '';
-        return `<span class="fc-chip ${tone}${changed ? ' changed' : ''}"><b>${esc(x.name)}</b> ${from}${what}</span>`;
+        return `<span class="fc-chip ${tone}${changed ? ' changed' : ''}${bump}"><b>${esc(x.name)}</b> ${from}${what}</span>`;
       });
     const falls = f.foes.filter((x) => x.falls).length;
     const fellBefore = was ? was.foes.filter((x) => x.falls).length : falls;
@@ -665,10 +982,12 @@
       'Worked out from the declared intents, hazards and effects in play. Nothing in an enemy turn is random: this is what will happen if you end the round as things stand.';
     if (after)
       return `<div class="forecast preview" data-tip="${esc(tip)}"><span class="fc-lab">After this play, ending the round:</span>${forecastChips(m, after, f)}</div>`;
-    return `<div class="forecast" data-tip="${esc(tip)}"><span class="fc-lab">End the round now:</span>${forecastChips(m, f)}</div>`;
+    return `<div class="forecast" data-tip="${esc(tip)}"><span class="fc-lab">End the round now:</span>${forecastChips(m, f, null, U.ms.fcPrev)}</div>`;
   }
   function renderForecast(m, after) {
     setHTML($('#mfc'), m.over ? '' : forecastHTML(m, after));
+    // the next redraw compares with this one; a preview's redraw does not count as a move
+    if (!after) U.ms.fcPrev = U.ms.forecast;
   }
   function heroPanel(m, h, i) {
     const sel = U.ms.heroIdx === i;
@@ -705,7 +1024,7 @@
     for (let c = 1; c <= T.RULES.TRACK; c++) {
       const items = h.track.filter((t) => t.left === c);
       trackCols.push(
-        `<div class="tcol"><span class="n">${c}</span>${items.map((t) => `<span class="tpill ${t.phase}" data-tip="${esc(T.CARD[t.card].name)} — ${t.phase === 'dur' ? 'active (duration), then cools ' + t.cd : 'cooling'}; returns to hand in ${t.left + (t.phase === 'dur' ? t.cd : 0)}">${t.phase === 'dur' ? '●' : '○'} ${esc(T.CARD[t.card].name)}</span>`).join('')}</div>`,
+        `<div class="tcol"><span class="n" data-tip="${c === 1 ? 'Back in hand next round' : 'Back in ' + c + ' rounds'}">${c}</span><span class="tlab">${c === 1 ? 'next round' : 'in ' + c}</span>${items.map((t) => `<span class="tpill ${t.phase}" data-tip="${esc(T.CARD[t.card].name)} — ${t.phase === 'dur' ? 'active (duration), then cools ' + t.cd : 'cooling'}; returns to hand in ${t.left + (t.phase === 'dur' ? t.cd : 0)}">${t.phase === 'dur' ? '●' : '○'} ${esc(T.CARD[t.card].name)}</span>`).join('')}</div>`,
       );
     }
     const hand = h.cards
@@ -726,7 +1045,10 @@
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
           return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
-        return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
+        // a card with nothing it can do now folds small; hovering it brings it back
+        const idle =
+          m.over || h.downed || (!T.canPlay(m, h, cid, 'P').ok && !T.canPlay(m, h, cid, 'E').ok) ? ' idle' : '';
+        return `<div class="hcard${idle}" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
       })
       .join('');
     const gear = h.gear
@@ -767,22 +1089,39 @@
     }
     const inode = h.downed ? null : interactNode(m, h);
     const canInteract = inode != null && (T.apValue(h) >= 2 || !!T.markPay(h, m.board.nodes[inode].objective));
-    const canRally = !h.downed && ally && ally.downed && B.adjacent(m.board, h.pos, ally.pos) && T.apValue(h) >= 2;
+    const down = T.downedAllyOf(m, h);
+    const canRally = !h.downed && down && down.downed && B.adjacent(m.board, h.pos, down.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
-    const actions = `<div class="actions">
-        ${T.BASIC.map((b) => {
-          const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
-          if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
-          const tip = b.el
-            ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
-            : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
-          const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
-          return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` <span class="acost">${b.ap}</span>` : ''}</button>`;
-        }).join('')}
-        <button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact <span class="acost">2</span></button>
-        <button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally <span class="acost">2</span></button>
-        <button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>
-        <button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>
+    // the four basic actions used most stay in view; the rest (and the channelled ones) wait behind More
+    const MAIN = ['strike', 'brace', 'shove', 'spot'];
+    const basicBtn = (b) => {
+      const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
+      if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
+      const tip = b.el
+        ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
+        : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
+      const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
+      return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` <span class="acost">${b.ap}</span>` : ''}</button>`;
+    };
+    const interactB = `<button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact <span class="acost">2</span></button>`;
+    const rallyB = `<button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally <span class="acost">2</span></button>`;
+    const main = T.BASIC.filter((b) => MAIN.includes(b.id)).map(basicBtn);
+    const more = T.BASIC.filter((b) => !MAIN.includes(b.id))
+      .map(basicBtn)
+      .filter(Boolean);
+    // Interact and Rally join the four when they can be used: they are what the moment is about
+    (canInteract ? main : more).push(interactB);
+    (canRally ? main : more).push(rallyB);
+    more.push(
+      `<button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>`,
+      `<button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>`,
+    );
+    const channelled = T.BASIC.filter((b) => b.el && !m.over && T.canUseBasic(m, h, b.id).ok).length;
+    const moreOpen = !!U.ms.moreActs;
+    const actions = `<div class="actions${moreOpen ? ' more-open' : ''}">
+        ${main.join('')}
+        <button class="sm ghost more-btn" data-act="moreActs" aria-expanded="${moreOpen}" data-tip="Every other basic action${channelled ? ', including ' + channelled + ' you can channel now' : ''}">${moreOpen ? 'Fewer actions ▴' : `More actions (${more.length})${channelled ? ' <span class="more-el">+◆</span>' : ''} ▾`}</button>
+        <span class="more-acts">${more.join('')}</span>
       </div>`;
     const gearRow = gear || cons ? `<div class="gearrow">${gear}${cons}</div>` : '';
     if (sel) {
@@ -797,28 +1136,18 @@
             `<span class="res-el" style="--c:${EL[x.e].color}" data-tip="${esc(`${x.n} ${EL[x.e].name} banked: pays a face's ${x.e === 'O' ? 'etherion of any element' : EL[x.e].name + ' cost'}, or channels an action.`)}">${U.ic('el.' + x.e, x.e)}<b>${x.n}</b></span>`,
         )
         .join('');
-      // the other pilots, one tap away: on a phone their panels are further down the page
-      const swap = m.heroes
-        .map((x, j) =>
-          j === i
-            ? ''
-            : `<button class="sm ghost dk-swap${x.downed ? ' downed' : ''}" data-act="selHero" data-arg="${j}" data-tip="${esc(`Fly ${x.name} (Tab)`)}">${U.portrait(x, 'xs')}<span>${esc(x.name)}</span><span class="mono dim">${x.downed ? 'down' : x.hp}${heading(j)}</span></button>`,
-        )
-        .join('');
       return `<div class="hero dock-hero active ${h.downed ? 'downed' : ''}" data-arg="${i}">
       <div class="dk-res">
         ${head}
-        ${swap ? `<div class="dk-swaps">${swap}</div>` : ''}
         <div class="dk-purse">
           <span class="res-ap${ap ? '' : ' empty'}" data-tip="${esc(`Action points banked this turn: ${ap}. Faces, steps (1 AP each), Strike, Brace, Shove, Interact and Rally spend them. What is not spent stays banked.`)}"><b>${ap}</b><span>AP</span></span>
           <span class="res-els">${els || '<span class="dim small">no etherions</span>'}</span>
           <span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool}</span>
         </div>
         <div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span></div>
-        ${h.track.length ? `<div class="track">${trackCols.join('')}</div>` : ''}
         ${U.diceKey()}
       </div>
-      <div class="hand">${hand}</div>
+      <div class="dk-hand"><div class="track dk-track${h.track.length ? '' : ' empty'}"><span class="tlab tready" data-tip="Cards in hand, ready to play">Track · ready ${h.cards.length - h.track.length}</span>${trackCols.join('')}</div><div class="hand">${hand}</div></div>
       <div class="dk-acts">${actions}${gearRow}</div>
     </div>`;
     }
@@ -1014,8 +1343,10 @@
         el = svgEl('g', { id, class: 'token ' + cls }, tk);
         build(el);
       }
-      el.setAttribute('transform', `translate(${g.px(n)},${g.py(n)})`);
-      el.setAttribute('class', 'token ' + cls);
+      // where it stands; a token mid-walk keeps walking and goes home when it arrives (walkToken)
+      el._home = `translate(${g.px(n)},${g.py(n)})`;
+      if (!el._walking) el.setAttribute('transform', el._home);
+      el.setAttribute('class', 'token ' + cls + (el._walking ? ' walking' : ''));
       upd(el);
       seen.add(id);
       return el;
@@ -1527,6 +1858,111 @@
       if (b) b.innerHTML = '';
     }, 1700);
   }
+  /* ───────────── motion: walks and blows (src/ui/sea.js U.motion says how much moves) ───────────── */
+  const motion = () => (U.motion ? U.motion() : 'full');
+  const raf = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : null;
+  const now = () => (typeof performance !== 'undefined' ? performance.now() : Date.now());
+  /** Each step of a walk takes this long, node to node along the route the engine walked. */
+  U.STEP_MS = 250;
+  const ease = (k) => (k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2);
+  /**
+   * Walk a token node by node from where it stood to where it stands now, starting after `delay` and after any
+   * walk it is already on. Never a teleport: on Full it walks, on Reduced it fades in where it lands, on Off
+   * it is simply there. Returns how long the walk takes, so what follows can wait for it.
+   */
+  function walkToken(m, f, delay) {
+    const el = U.ms.svg && U.ms.svg.querySelector('#tok-' + f.ent);
+    const g = U.ms.g;
+    const N = m.board.nodes;
+    if (!el || !g || !N[f.from] || !N[f.to] || f.from === f.to) return 0;
+    const mo = motion();
+    if (mo === 'off') return 0;
+    if (mo === 'reduced' || !raf) {
+      setTimeout(() => {
+        el.classList.remove('arrive');
+        el.getBoundingClientRect();
+        el.classList.add('arrive');
+        setTimeout(() => el.classList.remove('arrive'), 400);
+      }, delay);
+      return 0;
+    }
+    // a walk follows the board's paths; a shove, a pull or a swap slides straight there
+    const ids = f.how === 'walk' ? B.path(m.board, f.from, f.to, null, true) || [f.from, f.to] : [f.from, f.to];
+    const pts = ids.map((id) => [g.px(N[id]), g.py(N[id])]);
+    const steps = pts.length - 1;
+    const stepMs = f.how === 'walk' ? U.STEP_MS : 180;
+    const ends = (U.ms.walkEnds = U.ms.walkEnds || {});
+    const t0 = Math.max(now() + delay, ends[f.ent] || 0);
+    const dur = steps * stepMs;
+    ends[f.ent] = t0 + dur;
+    const put = ([x, y]) => el.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)})`);
+    if (!el._walking) put(pts[0]);
+    el._walking = (el._walking || 0) + 1;
+    el.classList.add('walking');
+    let started = false;
+    const tick = () => {
+      const t = (now() - t0) / stepMs;
+      if (t < 0) {
+        if (started || el._walking === 1) put(pts[0]);
+        return raf(tick);
+      }
+      started = true;
+      if (t < steps) {
+        const i = Math.floor(t);
+        const k = ease(t - i);
+        const [ax, ay] = pts[i];
+        const [bx, by] = pts[i + 1];
+        put([ax + (bx - ax) * k, ay + (by - ay) * k]);
+        return raf(tick);
+      }
+      el._walking--;
+      if (!el._walking) {
+        el.classList.remove('walking');
+        if (el._home) el.setAttribute('transform', el._home);
+      } else put(pts[steps]);
+    };
+    raf(tick);
+    return Math.max(0, t0 + dur - now() - delay);
+  }
+  /** The striker leans into the blow: a short lunge toward the target and back (Full motion only). */
+  function lunge(m, f, delay) {
+    if (motion() !== 'full' || f.by == null || !raf) return;
+    const el = U.ms.svg && U.ms.svg.querySelector('#tok-' + f.by);
+    const src =
+      m.heroes.find((h) => h.uid === f.by) ||
+      m.enemies.find((e) => e.uid === f.by) ||
+      m.decoys.find((d) => d.uid === f.by);
+    const g = U.ms.g;
+    const a = src && m.board.nodes[src.pos];
+    const b = m.board.nodes[f.pos];
+    if (!el || !a || !b || src.pos === f.pos) return;
+    const ax = g.px(a);
+    const ay = g.py(a);
+    const dx = g.px(b) - ax;
+    const dy = g.py(b) - ay;
+    const reach = Math.min(0.4, 22 / (Math.hypot(dx, dy) || 1));
+    const OUT = 110;
+    const BACK = 260;
+    setTimeout(
+      () => {
+        if (el._walking) return;
+        const t0 = now();
+        const tick = () => {
+          const t = now() - t0;
+          if (el._walking) return;
+          const k = t < OUT ? ease(t / OUT) : 1 - ease(Math.min(1, (t - OUT) / BACK));
+          el.setAttribute(
+            'transform',
+            `translate(${(ax + dx * reach * k).toFixed(1)},${(ay + dy * reach * k).toFixed(1)})`,
+          );
+          if (t < OUT + BACK) raf(tick);
+          else if (el._home) el.setAttribute('transform', el._home);
+        };
+        raf(tick);
+      },
+      Math.max(0, delay - OUT),
+    );
+  }
   function playFx(m) {
     const q = m.fx.slice(U.ms.fxDone);
     U.ms.fxDone = m.fx.length;
@@ -1540,9 +1976,15 @@
             m.decoys.find((d) => d.uid === f.ent)
           : null;
       const node = f.pos != null ? f.pos : ent ? ent.pos : null;
+      if (f.t === 'move') {
+        // the walk plays out before what follows it; a long enemy turn is kept to a few seconds
+        const took = walkToken(m, f, delay);
+        if (took && delay < 4000) delay += Math.min(took, 1500);
+      }
       if (U.feelFx) U.feelFx(m, f, ent, node, delay);
       switch (f.t) {
         case 'dmg':
+          lunge(m, f, delay);
           if (node != null) floater(node, '−' + f.amount, 'dmg', delay);
           hitSound = true;
           delay += 160;
@@ -1599,7 +2041,7 @@
       .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
       .join('');
     U.openModal(
-      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}${U.momentQuestion ? U.momentQuestion(m) : ''}${U.placeQuestion ? U.placeQuestion(m) : ''}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
+      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}${U.momentQuestion ? U.momentQuestion(m) : ''}${U.placeQuestion ? U.placeQuestion(m) : ''}${U.missionOverExtra ? U.missionOverExtra(m) : ''}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
     );
   }
 
@@ -1787,7 +2229,52 @@
     const m = M();
     const ms = U.ms;
     if ((act === 'face' || act === 'basic' || act === 'gear') && previewFirst(act, arg, el)) return true;
+    if (act !== 'mmenu' && ms.menu) ms.menu = false;
     switch (act) {
+      // the screen's own folds: they change only what is shown on this screen
+      case 'mmenu':
+      case 'conds':
+      case 'noteOpen': {
+        const k = act === 'mmenu' ? 'menu' : act;
+        ms[k] = !ms[k];
+        renderTop(m);
+        if (act === 'noteOpen' && ms.noteOpen) {
+          const box = $('#turnNote');
+          if (box) box.focus();
+        }
+        return true;
+      }
+      // the HUD's own shape: framed or full screen, the trays, the phone's tabs (kept with the folds)
+      case 'hudFull':
+      case 'hudTray':
+      case 'hudTab': {
+        const L = U.layout;
+        if (act === 'hudFull') {
+          L.full = !L.full;
+          L.noHand = L.noPlans = false;
+        } else if (act === 'hudTray') {
+          const k = arg === 'plans' ? 'noPlans' : 'noHand';
+          L[k] = !L[k];
+        } else if (TABS.some(([k]) => k === arg)) L.tab = arg;
+        saveLayout();
+        applyHud();
+        return true;
+      }
+      case 'passOk': {
+        // the player named on the pass cover takes the screen; in an open round, the one who said "me"
+        if (arg != null && arg !== '') {
+          const mine = T.heroesOf(U.run, +arg).filter((i) => !m.heroes[i].downed);
+          if (mine.length) ms.heroIdx = mine[0];
+        }
+        ms.passShown = ms.passKey;
+        showPass(m);
+        U.updateMission();
+        return true;
+      }
+      case 'moreActs':
+        ms.moreActs = !ms.moreActs;
+        renderSide(m);
+        return true;
       case 'undo':
         takeBack();
         return true;
@@ -1954,7 +2441,7 @@
         ms.mode = 'idle';
         ms.pending = null;
         const unspent = m.heroes.filter((x, i) => !x.downed && T.apValue(x) >= 4 && (!U.mine || U.mine(i))).length;
-        if (unspent && !ms.endConfirm) {
+        if (unspent && !ms.endConfirm && !(U.prefs && U.prefs.confirmEnd === false)) {
           ms.endConfirm = true;
           U.toast('A hero still has 4+ AP banked — banking is fine. Click End Round again to confirm.', 2600);
           setTimeout(() => {
@@ -1966,11 +2453,13 @@
         // with two players, this ends the turn of the one playing; the last turn ends the round
         const t = U.turn && U.turn();
         if (t && !t.here) {
-          U.toast(`It is ${esc(t.name)}'s turn.`);
+          U.toast(t.open ? 'Your turn is over for this round.' : `It is ${esc(t.name)}'s turn.`);
           return true;
         }
         commitNote();
-        U.exec({ op: 'ready' });
+        // with the next turn open, a player may end theirs without acting: on one screen, the selected pilot's
+        const seat = t && t.open && !U.seats ? T.ownerOf(U.run, ms.heroIdx) : undefined;
+        U.exec(seat != null ? { op: 'ready', seat } : { op: 'ready' });
         U.sfx.click();
         afterAction();
         return true;
@@ -2016,7 +2505,7 @@
     }
     if (e.key === 'Tab') {
       e.preventDefault();
-      U.ms.heroIdx = 1 - U.ms.heroIdx;
+      U.ms.heroIdx = (U.ms.heroIdx + 1) % U.run.mission.heroes.length;
       U.updateMission();
     }
     if (e.key === 'e' || e.key === 'E') {

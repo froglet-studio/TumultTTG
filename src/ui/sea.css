@@ -1,0 +1,333 @@
+/* ============================================================================
+   TUMULT — THE SEA AROUND THE BOARD (src/ui/sea.js)
+   Four themes re-colour only the blue around the map art: the page behind,
+   the top bar, the side panels and the dock. The board's painting stays.
+   The data-sea, data-accent and data-motion attributes on the root element are set by U.seaApply.
+   ========================================================================== */
+
+/* ---------- the four seas ---------- */
+:root,
+:root[data-sea='deep'] {
+  --sea1: #0a2238;
+  --sea2: #030812;
+  --sea-line: rgba(99, 211, 226, 0.2);
+  --sea-glow: rgba(63, 180, 220, 0.16);
+  --sea-ray: rgba(127, 227, 240, 0.05);
+  --sea-mote: #7fe3f0;
+  --sea-spd: 1;
+}
+:root[data-sea='deep'] {
+  --panel: rgba(8, 18, 32, 0.74);
+  --panel2: rgba(8, 16, 30, 0.86);
+  --line: rgba(127, 227, 240, 0.16);
+  --line2: rgba(127, 227, 240, 0.3);
+}
+/* the light twin: the water is foam and sand; the panels are sea glass, dark enough for the game's light type */
+:root[data-sea='shore'] {
+  --sea1: #eef6f4;
+  --sea2: #9fc6cb;
+  --sea-line: rgba(19, 102, 122, 0.3);
+  --sea-glow: rgba(255, 255, 255, 0.55);
+  --sea-ray: rgba(255, 255, 255, 0.28);
+  --sea-mote: #ffffff;
+  --sea-spd: 1.2;
+  --panel: rgba(18, 58, 72, 0.84);
+  --panel2: rgba(16, 52, 66, 0.9);
+  --line: rgba(160, 230, 236, 0.26);
+  --line2: rgba(160, 230, 236, 0.42);
+  --glow: #9ff0f6;
+}
+:root[data-sea='glow'] {
+  --sea1: #03201a;
+  --sea2: #000604;
+  --sea-line: rgba(120, 255, 190, 0.16);
+  --sea-glow: rgba(60, 255, 170, 0.12);
+  --sea-ray: rgba(120, 255, 190, 0.035);
+  --sea-mote: #9dffcf;
+  --sea-spd: 1.4;
+  --panel: rgba(4, 18, 16, 0.8);
+  --panel2: rgba(3, 14, 12, 0.88);
+  --line: rgba(111, 224, 160, 0.16);
+  --line2: rgba(111, 224, 160, 0.3);
+  --glow: #8ff5c4;
+}
+:root[data-sea='storm'] {
+  --sea1: #2a1840;
+  --sea2: #07040c;
+  --sea-line: rgba(181, 140, 255, 0.24);
+  --sea-glow: rgba(255, 107, 122, 0.13);
+  --sea-ray: rgba(201, 182, 255, 0.04);
+  --sea-mote: #c9b6ff;
+  --sea-spd: 0.55;
+  --panel: rgba(20, 12, 32, 0.8);
+  --panel2: rgba(16, 10, 26, 0.88);
+  --line: rgba(181, 140, 255, 0.18);
+  --line2: rgba(181, 140, 255, 0.34);
+  --glow: #c9b6ff;
+}
+
+/* ---------- accents: the call to act (End Round, Got it, Take) ---------- */
+:root,
+:root[data-accent='tide'] {
+  --accent: #1f8ea3;
+  --accent2: #0f5c6d;
+  --on-accent: #ffffff;
+}
+:root[data-accent='jade'] {
+  --accent: #2fbf8a;
+  --accent2: #17795a;
+  --on-accent: #04140d;
+}
+:root[data-accent='ruby'] {
+  --accent: #e8475e;
+  --accent2: #93243a;
+  --on-accent: #ffffff;
+}
+:root[data-accent='gold'] {
+  --accent: #f0c35a;
+  --accent2: #a77c22;
+  --on-accent: #1a1205;
+}
+:root[data-accent] button.primary {
+  background: linear-gradient(180deg, var(--accent), var(--accent2));
+  color: var(--on-accent);
+  border-color: color-mix(in srgb, var(--accent) 60%, #fff);
+}
+:root[data-accent] button.primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 80%, #fff), var(--accent));
+}
+
+/* ---------- the water ---------- */
+#sea {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(120% 90% at 30% 10%, var(--sea1), var(--sea2));
+  transition: background 0.8s;
+}
+/* the sea replaces the survey grid */
+html[data-sea] body::before {
+  display: none;
+}
+#sea .sea-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--sea-glow), transparent 70%);
+  animation: seaBlob calc(var(--sea-spd) * 26s) ease-in-out infinite alternate;
+}
+#sea .b1 {
+  left: -14vw;
+  top: -18vh;
+  width: 50vw;
+  height: 50vw;
+}
+#sea .b2 {
+  left: 55vw;
+  top: 30vh;
+  width: 42vw;
+  height: 42vw;
+  animation-delay: -9s;
+}
+#sea .b3 {
+  left: 18vw;
+  top: 62vh;
+  width: 36vw;
+  height: 36vw;
+  animation-delay: -17s;
+}
+@keyframes seaBlob {
+  from {
+    transform: translate(0, 0) scale(1);
+  }
+  to {
+    transform: translate(8vw, 6vh) scale(1.25);
+  }
+}
+/* light coming down through the water */
+#sea .sea-ray {
+  position: absolute;
+  top: -20vh;
+  height: 120vh;
+  width: 14vw;
+  background: linear-gradient(180deg, var(--sea-ray), transparent 75%);
+  transform-origin: 50% 0;
+  transform: rotate(14deg);
+  animation: seaRay calc(var(--sea-spd) * 18s) ease-in-out infinite alternate;
+}
+#sea .r1 {
+  left: 18vw;
+}
+#sea .r2 {
+  left: 46vw;
+  width: 8vw;
+  animation-delay: -6s;
+}
+#sea .r3 {
+  left: 70vw;
+  width: 11vw;
+  animation-delay: -12s;
+}
+@keyframes seaRay {
+  from {
+    transform: rotate(10deg);
+    opacity: 0.6;
+  }
+  to {
+    transform: rotate(18deg);
+    opacity: 1;
+  }
+}
+#sea .sea-lines {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+#sea .sea-line {
+  stroke: var(--sea-line);
+  animation: seaDrift linear infinite;
+}
+@keyframes seaDrift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-480px);
+  }
+}
+#sea .sea-mote {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--sea-mote);
+  box-shadow: 0 0 8px var(--sea-mote);
+  opacity: 0;
+  animation: seaMote calc(var(--sea-spd) * 14s) linear infinite;
+}
+@keyframes seaMote {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-70vh);
+    opacity: 0;
+  }
+}
+/* deeper down the route, darker water (only while the sea follows the route: sea.js sets the depth to 0 otherwise) */
+#sea .sea-dark {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: calc(var(--sea-depth, 0) * 0.32);
+  transition: opacity 0.8s;
+}
+
+/* ---------- motion ---------- */
+/* Reduced: the sea drifts three times slower and the motes go; Off: nothing in the sea moves */
+html[data-motion='reduced'] #sea {
+  --sea-spd: 3;
+}
+html[data-motion='reduced'] #sea .sea-motes,
+html[data-motion='off'] #sea .sea-motes {
+  display: none;
+}
+html[data-motion='off'] #sea * {
+  animation-play-state: paused;
+}
+/* Off: every animation in the game jumps to its end, every transition is instant */
+html[data-motion='off'] #app *,
+html[data-motion='off'] #app *::before,
+html[data-motion='off'] #app *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  animation-delay: 0s !important;
+  transition-duration: 0.001ms !important;
+}
+
+/* ---------- the Look panel ---------- */
+.look {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: min(440px, 86vw);
+}
+.look .lk-sec {
+  margin-top: 8px;
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.look .lk-themes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.look .lk-theme {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  text-align: left;
+}
+.look .lk-theme > span:last-child {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.look .lk-theme b {
+  font-family: var(--serif);
+  font-weight: 600;
+}
+.look .on {
+  border-color: var(--glow);
+  box-shadow: 0 0 0 1px var(--glow) inset;
+}
+.look .lk-sw {
+  flex: 0 0 36px;
+  height: 36px;
+  border: 1px solid var(--line2);
+}
+.look .lk-auto {
+  background: linear-gradient(135deg, #cfe3e2 0 25%, #0a2238 25% 50%, #03201a 50% 75%, #2a1840 75%);
+}
+.look .lk-accents,
+.look .lk-motions {
+  display: flex;
+  gap: 6px;
+}
+.look .lk-accent {
+  flex: 1;
+  height: 40px;
+  background: var(--c);
+  color: #fff;
+  font-family: var(--serif);
+  letter-spacing: 0.1em;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  border: 2px solid transparent;
+}
+.look .lk-accent.on {
+  border-color: #fff;
+}
+.look .lk-motion {
+  flex: 1;
+  height: 40px;
+  font-family: var(--serif);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.look .lk-motion.on {
+  background: var(--gold);
+  color: #1a1205;
+}

@@ -1,6 +1,6 @@
 {
   "name": "tumult-ttg",
-  "version": "2.75.0",
+  "version": "2.87.0",
   "description": "A character driven table top game about completing missions on Tumult",
   "license": "MIT",
   "private": true,
@@ -15,6 +15,7 @@
     "build": "node tools/build.mjs --check",
     "build:playtest": "node tools/build.mjs --playtest --check",
     "build:web": "node tools/build.mjs --web --check",
+    "build:server": "node tools/build-server.mjs",
     "dev": "node tools/dev-server.mjs",
     "dev:web": "node tools/dev-server.mjs --web",
     "test": "node --test",
@@ -24,8 +25,8 @@
     "audit": "node tools/audit.js",
     "docs": "node tools/catalog.js && node tools/audit.js",
     "ui-test": "node tools/ui-drive.js",
-    "format": "prettier --write \"src/**/*.{js,css,html,json}\" \"tools/**/*.{js,mjs}\" \"test/**/*.js\"",
-    "format:check": "prettier --check \"src/**/*.{js,css,html,json}\" \"tools/**/*.{js,mjs}\" \"test/**/*.js\"",
+    "format": "prettier --no-error-on-unmatched-pattern --write \"src/**/*.{js,css,html,json}\" \"tools/**/*.{js,mjs}\" \"test/**/*.js\" \"server/src/**/*.js\" \"server/test/**/*.js\"",
+    "format:check": "prettier --no-error-on-unmatched-pattern --check \"src/**/*.{js,css,html,json}\" \"tools/**/*.{js,mjs}\" \"test/**/*.js\" \"server/src/**/*.js\" \"server/test/**/*.js\"",
     "check": "npm run build && npm run build:web && npm test"
   },
   "devDependencies": {

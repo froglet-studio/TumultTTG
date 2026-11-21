@@ -36,22 +36,29 @@ test('a line of story is one per pilot a round, kept clean, and changes nothing 
   assert.deepEqual(H.plainProblems(m), []);
 });
 
-test("a line of story is a command: written in the player's own turn, for their own pilot", () => {
+test("a line of story is a command for the player's own pilot, written on anyone's turn", () => {
+  // Garrett, 2026-11-20: "we should be able to keep adding things during other players turns"
   const run = T.quickMission({ seed: 14, type: 'vault', tier: 1 });
   run.party = T.newParty(2);
-  const early = T.execCommand(run, { op: 'note', hero: 1, text: 'Too soon.' }, [1]);
-  assert.equal(early.ok, false, "not in someone else's turn");
+  T.execCommand(run, { op: 'dump', hero: 0, di: 0 }, [0]); // the host begins their turn
+  assert.equal(T.turnSeat(run), 0, "the host's turn");
+  assert.ok(T.execCommand(run, { op: 'note', hero: 1, text: 'Waiting, watching.' }, [1]).ok, "on someone else's turn");
   assert.equal(
     T.execCommand(run, { op: 'note', hero: 1, text: 'Not mine.' }, [0]).ok,
     false,
-    "nor for someone else's pilot",
+    "never for someone else's pilot",
   );
   assert.ok(T.execCommand(run, { op: 'note', hero: 0, text: 'The host sets the pace.' }, [0]).ok);
   assert.ok(T.execCommand(run, { op: 'ready' }, [0]).passed);
+  assert.ok(T.execCommand(run, { op: 'note', hero: 0, text: 'The host looks back.' }, [0]).ok, 'after their turn too');
   assert.ok(T.execCommand(run, { op: 'note', hero: 1, text: 'The guest follows the wind.' }, [1]).ok);
   assert.deepEqual(
-    T.notesOf(run.mission).map((n) => n.hero),
-    [0, 1],
+    T.notesOf(run.mission).map((n) => [n.hero, n.text]),
+    [
+      [0, 'The host looks back.'],
+      [1, 'The guest follows the wind.'],
+    ],
+    'one line a pilot a round, the latest kept',
   );
   assert.ok(T.COMMAND_OPS.includes('note'));
 });

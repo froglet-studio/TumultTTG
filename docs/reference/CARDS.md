@@ -83,7 +83,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Cheek Caching** · Space · `jer_cache`
 
-- *Phys — Stash* · 1 AP · CD 2 — Pull 1 die from your pool straight into your bank as AP. *(P3: Pull 2 die from your pool straight into your bank as AP.)*
+- *Phys — Stash* · 1 AP · CD 2 — Draw 1 die from your pool straight into your bank as AP. *(P3: Draw 2 die from your pool straight into your bank as AP.)*
 - *Eth — Pocket Fold* · 1 AP + 1 Space · CD 3 — Draw 1 pool dice as AP and mint 1 Omni from a pocket of folded space. *(P3/E3: Draw 3 pool dice as AP and mint 1 Omni from a pocket of folded space.)*
 
 **Vibrissae Sense** · Mass · `jer_vibrissae`
@@ -279,7 +279,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Solar Basking** · Charge · `gec_basking`
 
-- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: draw 1 pool die into your bank as AP. *(P3: Soak warmth: draw 2 pool die into your bank as AP.)*
 - *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
 
 **Scent Tongue** · Space · `gec_scent`
@@ -411,7 +411,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Photosynthesis** ★ · Charge · `fly_photo`
 
-- *Phys — Bask* · 1 AP · CD 1 — Bask: pull 1 pool die into your bank as AP. *(P3: Bask: pull 2 pool die into your bank as AP.)*
+- *Phys — Bask* · 1 AP · CD 1 — Bask: draw 1 pool die into your bank as AP. *(P3: Bask: draw 2 pool die into your bank as AP.)*
 - *Eth — Bloom Engine* · 1 AP + 1 Charge · CD 4 · Dur 4 — Engine for 4 rounds: each turn draw 1 guaranteed Charge from your pool. *(P3/E3: Engine for 4 rounds: each turn draw 1 guaranteed Charge from your pool, or mint 3 temporary Charge instead.)*
 
 **Carnivorous Digestion** · Time · `fly_digest`
@@ -1233,7 +1233,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 - *Phys — Whiskers* · 1 AP · CD 1 — Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and your hits on it deal +1. *(P3: Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and your hits on it deal +2.)*
 - *Eth — Murky Hunt* · 1 AP + 1 Space · CD 3 — Feel the water within 3 for 2 rounds; every foe within 2 is Marked. *(P3/E3: Feel the water within 3 for 4 rounds; every foe within 2 is Marked.)*
 
-## 25 · Honey Badger — leans M/T
+## 25 · Ratel — leans M/T
 
 *Loose skin, no fear, and a habit of eating things that sting.*
 
@@ -2409,9 +2409,9 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 - *Phys — Over the Nest* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round, and the first foe to hit you in melee takes 1. *(P3: You and an ally beside you hold Shield 4 this round, and the first foe to hit you in melee takes 1.)*
 - *Eth — Eyrie* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 for 2 rounds and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes hold Shield 4 for 2 rounds and heal 1 at the start of each turn for 2 rounds.)*
 
-## 49 · Hawk — leans S/M
+## 49 · Red-tailed Hawk — leans S/M
 
-*Quick in the hedges, quicker in the open. Hangs on the wind and drops.*
+*A brick-red tail and a long scream. Quick in the hedges, quicker in the open; hangs on the wind and drops.*
 
 **Talon Strike** · Mass · `owl_talon`
 
@@ -3253,7 +3253,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Solar Basking** · Charge · `gec_basking`
 
-- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: draw 1 pool die into your bank as AP. *(P3: Soak warmth: draw 2 pool die into your bank as AP.)*
 - *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
 
 **Scaled Hide** · Mass · `gec_hide`
@@ -3302,7 +3302,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Solar Basking** · Charge · `gec_basking`
 
-- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: draw 1 pool die into your bank as AP. *(P3: Soak warmth: draw 2 pool die into your bank as AP.)*
 - *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
 
 **Scaled Hide** · Mass · `gec_hide`
@@ -3351,7 +3351,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Solar Basking** · Charge · `gec_basking`
 
-- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: draw 1 pool die into your bank as AP. *(P3: Soak warmth: draw 2 pool die into your bank as AP.)*
 - *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
 
 **Scaled Hide** · Mass · `gec_hide`
@@ -3395,7 +3395,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Solar Basking** · Charge · `gec_basking`
 
-- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: draw 1 pool die into your bank as AP. *(P3: Soak warmth: draw 2 pool die into your bank as AP.)*
 - *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
 
 **Armoured Hide** · Mass · `rep_hide`
@@ -3444,7 +3444,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Solar Basking** · Charge · `gec_basking`
 
-- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: pull 1 pool die into your bank as AP. *(P3: Soak warmth: pull 2 pool die into your bank as AP.)*
+- *Phys — Bask* · 1 AP · CD 1 — Soak warmth: draw 1 pool die into your bank as AP. *(P3: Soak warmth: draw 2 pool die into your bank as AP.)*
 - *Eth — Photovoltaic* · 1 AP + 1 Charge · CD 4 · Dur 3 — Engine for 3 rounds: each turn draw 1 pool die as Charge. *(P3/E3: Engine for 3 rounds: each turn draw 1 pool die as Omni.)*
 
 **Long Life** · Time · `bir_life`
@@ -3479,7 +3479,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Withdraw** · Time · `tor_withdraw`
 
-- *Phys — Pull In* · 1 AP · CD 2 — Pull everything in: Shield 3 this round, heal 1, and nothing can push or pull you. *(P3: Pull everything in: Shield 6 this round, heal 1, and nothing can push or pull you.)*
+- *Phys — Tuck In* · 1 AP · CD 2 — Tuck everything in: Shield 3 this round, heal 1, and nothing can push or pull you. *(P3: Tuck everything in: Shield 6 this round, heal 1, and nothing can push or pull you.)*
 - *Eth — Wait It Out* · 1 AP + 1 Time · CD 5 · Dur 1 — Wait it out inside: nothing can target you through the next enemy phase; heal 3 and shake off Anchored and Weakened. *(P3/E3: Wait it out inside: nothing can target you through the next enemy phase; heal 5 and shake off Anchored and Weakened.)*
 
 **Steady Plod** · Space · `tor_plod`
@@ -3812,7 +3812,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Seal In** · Mass · `snl_seal`
 
-- *Phys — Withdraw* · 1 AP · CD 1 — Pull into your shell: Shield 2 this round, and nothing can push or pull you. *(P3: Pull into your shell: Shield 5 this round, and nothing can push or pull you.)*
+- *Phys — Withdraw* · 1 AP · CD 1 — Retreat into your shell: Shield 2 this round, and nothing can push or pull you. *(P3: Retreat into your shell: Shield 5 this round, and nothing can push or pull you.)*
 - *Eth — Epiphragm* · 1 AP + 1 Mass · CD 4 — Seal the door with dried slime: heal 2, nothing can touch you until your next turn, and your next hit deals +2. *(P3/E3: Seal the door with dried slime: heal 4, nothing can touch you until your next turn, and your next hit deals +4.)*
 
 **Radula** · Mass · `snl_radula`
@@ -3828,7 +3828,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Eye Stalks** · Charge · `snl_stalks`
 
 - *Phys — Peek* · 1 AP · CD 1 — Raise your eyes on their stalks: see within 2, and the next hit on you is 1 less. *(P3: Raise your eyes on their stalks: see within 5, and the next hit on you is 1 less.)*
-- *Eth — Pull In* · 1 AP + 1 Charge · CD 3 — Watch one foe, ready to pull in: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 2 less. *(P3/E3: Watch one foe, ready to pull in: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 4 less.)*
+- *Eth — Shell Watch* · 1 AP + 1 Charge · CD 3 — Watch one foe from the shell's edge: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 2 less. *(P3/E3: Watch one foe from the shell's edge: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 4 less.)*
 
 ## 78 · Jellyfish — leans C/T
 

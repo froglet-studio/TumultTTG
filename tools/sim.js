@@ -4,6 +4,7 @@
  * Headless balance harness.
  *
  *   node tools/sim.js [N=40] [missions|runs|cards|all] [--player weak|strong|both] [--tide rising|flood]
+ *                     [--length short|full]
  *                     [--rule NAME=VALUE ...]
  *
  *   missions  N auto-played missions per archetype × tier: win %, length, 8–14-round band, HP, kills
@@ -17,6 +18,11 @@
  *             a mission rewards thinking. The strong player takes about a tenth of a second a mission;
  *             `--player weak` is the quick look.
  *   --tide    the run's difficulty, a key of T.TIDES (default rising).
+ *   --length  how long a run's expedition is, a key of T.LENGTHS (default full; runs only).
+ *   --pilots  the squad's size, 2 to 5 (default 2); the missions scale to it (src/engine/scaling.js).
+ *   --level   every pilot's level (default 1): what pilots bring back from earlier expeditions.
+ *   --noscale the missions do not answer the squad's size or level (to see what the scaling buys).
+ *   --scaling try other scaling numbers, for this run only: --scaling size.hp=0.3,level.foes=1
  *   --rule    try a different value for a constant in T.RULES, for this run only:
  *             node tools/sim.js 40 missions --rule VITALITY=28 --rule ETHEREAL_MIN_E=1
  *
@@ -31,6 +37,9 @@ const argv = process.argv.slice(2);
 const args = [];
 let players = ['weak', 'strong'];
 let tide = 'rising';
+let length = 'full';
+let pilots = 2;
+let level = 1;
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--player') {
     const who = argv[++i];
@@ -48,6 +57,43 @@ for (let i = 0; i < argv.length; i++) {
       process.exit(2);
     }
     console.log(`tide ${tide}`);
+    continue;
+  }
+  if (argv[i] === '--length') {
+    length = argv[++i];
+    if (!T.LENGTHS[length]) {
+      console.error(`--length wants one of: ${Object.keys(T.LENGTHS).join(', ')}`);
+      process.exit(2);
+    }
+    console.log(`length ${length}`);
+    continue;
+  }
+  if (argv[i] === '--pilots') {
+    pilots = Math.max(2, Math.min(5, parseInt(argv[++i], 10) || 2));
+    console.log(`pilots ${pilots}`);
+    continue;
+  }
+  if (argv[i] === '--level') {
+    level = Math.max(1, parseInt(argv[++i], 10) || 1);
+    console.log(`level ${level}`);
+    continue;
+  }
+  if (argv[i] === '--scaling') {
+    for (const kv of String(argv[++i] || '').split(',')) {
+      const [path, v] = kv.split('=');
+      const [k, f] = path.split('.');
+      if (!T.SCALING[k] || !(f in T.SCALING[k]) || Number.isNaN(Number(v))) {
+        console.error('--scaling wants size.F=N or level.F=N, F one of: ' + Object.keys(T.SCALING.size).join(', '));
+        process.exit(2);
+      }
+      T.SCALING[k][f] = Number(v);
+    }
+    console.log('scaling', JSON.stringify(T.SCALING));
+    continue;
+  }
+  if (argv[i] === '--noscale') {
+    for (const k of ['size', 'level']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 0;
+    console.log('no scaling');
     continue;
   }
   if (argv[i] !== '--rule') {
@@ -95,9 +141,12 @@ if (mode === 'all' || mode === 'missions') {
           // Both players get the same squad on the same board with the same dice to come.
           const run = T.newRun(1000 + i);
           run.tide = tide;
-          if (i % 3 === 2) H.draftedSquad(run);
-          else H.prebuiltSquad(run, i % 6, (i + 1 + (i % 5)) % 6);
+          T.setLength(run, length);
+          if (i % 3 === 2) H.draftedSquad(run, pilots);
+          else if (pilots === 2) H.prebuiltSquad(run, i % 6, (i + 1 + (i % 5)) % 6);
+          else H.prebuiltSquad(run, H.squadIds(i, pilots));
           H.addProgression(run, tier);
+          if (level > 1) H.addLevel(run, level);
           try {
             T.launchMission(run, arch, tier);
             const m = H.playMission(run.mission, { player });
@@ -145,9 +194,11 @@ if (mode === 'all' || mode === 'runs') {
     for (let i = 0; i < N; i++) {
       const run = T.newRun(5000 + i * 31);
       run.tide = tide;
+      T.setLength(run, length);
       try {
-        if (i % 2) H.draftedSquad(run);
-        else H.prebuiltSquad(run, i % 6, (i + 2) % 6);
+        if (i % 2) H.draftedSquad(run, pilots);
+        else H.prebuiltSquad(run, H.squadIds(i, pilots));
+        if (level > 1) H.addLevel(run, level);
         const r = H.playRun(run, { player });
         if (r.won) wins++;
         rows += r.lastRow;

@@ -81,7 +81,7 @@ test(
 
     // a tester corrects a field note
     const A = await open(html, db, fakeUser('u_tester', false));
-    A.click('[data-act="atlas"]');
+    A.click('[data-act="tab"][data-arg="atlas"]');
     A.click('[data-act="atlasPage"][data-arg="quarry"]');
     A.click('.atlas-notes p:nth-of-type(2) [data-act="canonMark"]');
     A.d.getElementById('canonText').value = 'The ramp is rebuilt every season.';
@@ -89,13 +89,14 @@ test(
     await until(() => [...db.store.keys()].some((k) => k.startsWith('canon/u_tester/notes/')), 'the note in the store');
     assert.ok(db.store.has('canon/u_tester'), 'the contributor is listed');
     A.click('[data-act="atlasBack"]');
-    A.click('[data-act="atlasBack"]');
+    A.click('[data-act="tab"][data-arg="canon"]'); // the Canon tab holds the list
     A.click('[data-act="canonList"]');
     assert.match(A.d.querySelector('.modal').textContent, /1 of 1 sent/);
     assert.ok(!A.d.querySelector('[data-act="canonInbox"]'), 'a tester has no inbox');
 
     // the owner opens the inbox, edits the wording, marks it canon and public
     const B = await open(html, db, fakeUser('u_garrett', true));
+    B.click('[data-act="tab"][data-arg="canon"]');
     B.click('[data-act="canonList"]');
     B.click('[data-act="canonInbox"]');
     await until(() => B.d.querySelector('.canon-item'), 'the inbox');
