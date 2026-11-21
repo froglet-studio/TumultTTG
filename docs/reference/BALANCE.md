@@ -514,3 +514,7 @@ Status immunity became Cleanse for N (it now also sheds what is on you). Same se
 `locate` became a targeted `reveal`, and the Lane tooltip was cut; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after.
 
 **Dull turns** (`node tools/turns.js 10`, look-ahead player), 2.85.0 → 2.98.0, the whole sweep: idle 6% → 7%, forced 23% → 23%, open 71% → 70%, 2.7 → 2.8 close choices a turn. Swarm tier 1 is still the dullest cell (41% and 46% dull for the two pilots), then hidden, salvage and survey at tier 1 (about 40%).
+
+## v2.98.1 — the old words leave the card texts
+
+Text only (and the dead `noTrap` option); no rule or number changed.

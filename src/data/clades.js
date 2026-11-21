@@ -299,8 +299,8 @@
     'Down the trunk face first, ankles turned backwards.');
   K(['ocelot'],'oce_prowl','Night Prowl','T',0,
     { n:'Prowl', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'hidden', dur:1}],
-      txt:(P,E)=>`Move ${1+P} without setting off traps, and end Hidden 1.` },
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Move ${1+P}, and end Hidden 1.` },
     { n:'Night Shift', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'haste', n:(P,E)=>1+E},{v:'reveal', radius:2, dur:1}],
       txt:(P,E)=>`Haste: every card on your track returns ${1+E} columns sooner; see within 2 this round.` },
@@ -480,8 +480,8 @@
     'Never drinks. Doesn\'t need to.');
   K(['fennec'],'fen_night','Night Trot','S',0,
     { n:'Night Trot', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'reveal', radius:1, dur:1}],
-      txt:(P,E)=>`Move ${1+P} without setting off traps, seeing what is beside you as you go.` },
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'reveal', radius:1, dur:1}],
+      txt:(P,E)=>`Move ${1+P}, seeing what is beside you as you go.` },
     { n:'Moon Run', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+E, canMove:true},{v:'move', n:2, free:true}],
       txt:(P,E)=>`Hide for ${1+E} rounds, moving freely, and run 2 now.` },
@@ -805,7 +805,7 @@
       txt:(P,E)=>`Ignore hazards for 2 rounds, and heal ${1+h(P)}.` },
     { n:'Long Dive', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hazardImmune', dur:(P,E)=>2+E},{v:'heal', n:(P,E)=>2+E},{v:'cleanse'}],
-      txt:(P,E)=>`Ignore hazards for ${2+E} rounds, heal ${2+E}, and shed Anchored, Weakened and damage over time.` },
+      txt:(P,E)=>`Ignore hazards for ${2+E} rounds, heal ${2+E}, and cleanse (Anchored, Weakened, Wounds).` },
     'One breath, a long way down.', 'Sea mammals');
   K(['orca','narwhal'],'sea_echo','Echolocation','S',0,
     { n:'Click', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -855,7 +855,7 @@
       txt:(P,E)=>`Both heroes hold Shield ${1+h(P)} this round, and every foe beside you is Weakened 1.` },
     { n:'Herd Up', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>1+E, next:true, party:true},{v:'cleanse', party:true}],
-      txt:(P,E)=>`Both heroes shed Anchored, Weakened and damage over time, and Shield: the next hit on each is ${1+E} less.` },
+      txt:(P,E)=>`Both heroes cleanse (Anchored, Weakened, Wounds), and Shield: the next hit on each is ${1+E} less.` },
     'Heard for a mile across the floe.');
   K(['walrus'],'wal_suction','Suction Feed','M',0,
     { n:'Suck In', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
@@ -1024,7 +1024,7 @@
       txt:(P,E)=>`Heal 1 at the start of each turn for ${2+h(P)} rounds, and Haste: your track returns 1 column sooner.` },
     { n:'Four Stomachs', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+E},{v:'cleanse'},{v:'engine', kind:'regen', val:1, dur:2}],
-      txt:(P,E)=>`Heal ${2+E}, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.` },
+      txt:(P,E)=>`Heal ${2+E}, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds.` },
     'It eats now and digests later.', 'Hoofed animals');
   K(ANTLERED,'hoof_antlers','Antlers','M',0,
     { n:'Rake', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -1081,7 +1081,7 @@
   K(['bison'],'bis_wallow','Wallow','T',0,
     { n:'Dust Bath', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'heal', n:1}],
-      txt:(P,E)=>`Shed Anchored, Weakened and damage over time; Shield ${1+h(P)} this round, and heal 1.` },
+      txt:(P,E)=>`Cleanse (Anchored, Weakened, Wounds); Shield ${1+h(P)} this round, and heal 1.` },
     { n:'Mud Coat', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'shield', val:2, dur:2}],
       txt:(P,E)=>`Shield 2 for 2 rounds, and any foe that hits you in melee takes ${1+E}.` },
@@ -1227,7 +1227,7 @@
   K(['zebra'],'zeb_water','Waterhole','T',0,
     { n:'Drink', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'cleanse'}],
-      txt:(P,E)=>`Heal ${1+P}, and shed Anchored, Weakened and damage over time.` },
+      txt:(P,E)=>`Heal ${1+P}, and cleanse (Anchored, Weakened, Wounds).` },
     { n:'Drink in Turns', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'shield', val:1, dur:1, party:true}],
       txt:(P,E)=>`Both heroes heal ${1+E} and hold Shield 1 this round.` },
@@ -1288,11 +1288,11 @@
   // Mouse
   K(['mouse'],'mou_scurry','Scurry','S',0,
     { n:'Scurry', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true}],
-      txt:(P,E)=>`Move ${1+P}, setting off no traps.` },
+      fx:[{v:'move', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Move ${1+P}.` },
     { n:'Every Which Way', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>3+E, ignoreFoes:true, noTrap:true},{v:'shield', val:(P,E)=>1+E, next:true}],
-      txt:(P,E)=>`Move ${3+E}, through foes and past traps; Shield: the next hit on you is ${1+E} less.` },
+      fx:[{v:'move', n:(P,E)=>3+E, ignoreFoes:true},{v:'shield', val:(P,E)=>1+E, next:true}],
+      txt:(P,E)=>`Move ${3+E}, through foes; Shield: the next hit on you is ${1+E} less.` },
     'Along the wall, never across the floor.');
   K(['mouse'],'mou_gap','Through the Gap','S',0,
     { n:'Squeeze', ap:1, el:0, cd:1, dur:0, tgt:'node_tele',
@@ -1374,7 +1374,7 @@
       txt:(P,E)=>`Heal ${1+P}, and hold Shield 1 this round.` },
     { n:'Salt Lick', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E}],
-      txt:(P,E)=>`Shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for ${2+E} rounds.` },
+      txt:(P,E)=>`Cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for ${2+E} rounds.` },
     'It eats what nothing else will.');
   K(['porcupine'],'por_waddle','Waddle','S',0,
     { n:'Amble', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -1456,7 +1456,7 @@
       txt:(P,E)=>`Shield 1 this round, and heal 1 at the start of each turn for ${2+h(P)} rounds.` },
     { n:'Wait It Out', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+E},{v:'cleanse'},{v:'engine', kind:'ap', val:1, dur:1}],
-      txt:(P,E)=>`Heal ${2+E}, shed Anchored, Weakened and damage over time, and gain 1 AP next turn.` },
+      txt:(P,E)=>`Heal ${2+E}, cleanse (Anchored, Weakened, Wounds), and gain 1 AP next turn.` },
     'It needs very little, and it gets it.', 'Armoured and slow');
   K(ARMOURED,'arm_curl','Curl Up','T',0,
     { n:'Curl', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -1485,10 +1485,10 @@
   K(['hedgehog'],'hed_venom','Venom Shrug','T',0,
     { n:'Shrug It Off', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'heal', n:(P,E)=>1+P}],
-      txt:(P,E)=>`Shed Anchored, Weakened and damage over time, and heal ${1+P}.` },
+      txt:(P,E)=>`Cleanse (Anchored, Weakened, Wounds), and heal ${1+P}.` },
     { n:'Immune', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'cleanse', party:true, ward:(P,E)=>1+E},{v:'heal', n:(P,E)=>1+E, party:true}],
-      txt:(P,E)=>`Both heroes shed Anchored, Weakened and damage over time and heal ${1+E}; Cleanse, and you can't be Weakened or Anchored by a foe for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
+      txt:(P,E)=>`Both heroes cleanse (Anchored, Weakened, Wounds) and heal ${1+E}; Cleanse, and you can't be Weakened or Anchored by a foe for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
     'A snakebite slows it down for an hour.');
 
   // Sloth
@@ -1635,7 +1635,7 @@
   K(['pangolin'],'pan_ants','Ant Armour','C',0,
     { n:'Ant Bath', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'heal', n:1}],
-      txt:(P,E)=>`Shed Anchored, Weakened and damage over time; Shield ${1+h(P)} this round, and heal 1.` },
+      txt:(P,E)=>`Cleanse (Anchored, Weakened, Wounds); Shield ${1+h(P)} this round, and heal 1.` },
     { n:'Stinging Shield', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'cleanse', ward:2},{v:'thorns', val:(P,E)=>2+E, next:true, dur:2}],
       txt:(P,E)=>`Cleanse, and for 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes ${2+E}.` },
@@ -1655,8 +1655,8 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'reveal', radius:1, dur:1}],
       txt:(P,E)=>`Snuffle ${1+P}, and reveal within 1 of where you stop.` },
     { n:'Under the Hedge', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>2+E, noTrap:true},{v:'hidden', dur:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`Move ${2+E} under cover, setting off no traps; Hidden ${1+h(E)}.` },
+      fx:[{v:'move', n:(P,E)=>2+E},{v:'hidden', dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Move ${2+E} under cover; Hidden ${1+h(E)}.` },
     'It grunts like a small pig as it goes.');
   K(['hedgehog'],'heh_hibernate','Hibernate','T',0,
     { n:'Drowse', ap:1, el:0, cd:2, dur:0, tgt:'self',
@@ -1782,7 +1782,7 @@
       txt:(P,E)=>`Cool down: heal ${1+P}, and ignore hazards for 2 rounds.` },
     { n:'Rest in the Shade', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E, party:true},{v:'cleanse'}],
-      txt:(P,E)=>`Shed Anchored, Weakened and damage over time; both heroes heal 1 at the start of each turn for ${2+E} rounds.` },
+      txt:(P,E)=>`Cleanse (Anchored, Weakened, Wounds); both heroes heal 1 at the start of each turn for ${2+E} rounds.` },
     'It licks its arms to keep cool.');
 
   // Opossum
@@ -1813,10 +1813,10 @@
   K(['opossum'],'opo_groom','Clean Groom','T',0,
     { n:'Groom', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'heal', n:(P,E)=>1+P}],
-      txt:(P,E)=>`Shed Anchored, Weakened and damage over time, and heal ${1+P}.` },
+      txt:(P,E)=>`Cleanse (Anchored, Weakened, Wounds), and heal ${1+P}.` },
     { n:'Groom Each Other', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'cleanse', party:true},{v:'heal', n:(P,E)=>1+E, party:true}],
-      txt:(P,E)=>`Both heroes shed Anchored, Weakened and damage over time, and heal ${1+E}.` },
+      txt:(P,E)=>`Both heroes cleanse (Anchored, Weakened, Wounds), and heal ${1+E}.` },
     'Fastidious, and it eats the ticks.');
   K(['opossum'],'opo_thumb','Thumb Feet','S',0,
     { n:'Grip', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -1828,8 +1828,8 @@
     'Thumbs on its back feet, too.');
   K(['opossum'],'opo_wander','Night Wander','S',0,
     { n:'Wander', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'reveal', radius:1, dur:1}],
-      txt:(P,E)=>`Wander ${1+P}, setting off no traps, and reveal within 1 of where you stop.` },
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'reveal', radius:1, dur:1}],
+      txt:(P,E)=>`Wander ${1+P}, and reveal within 1 of where you stop.` },
     { n:'Under Cover of Night', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true}],
       txt:(P,E)=>`Move ${2+E}, passing foes; Hidden ${1+h(E)} even if you move.` },
@@ -1993,7 +1993,7 @@
       txt:(P,E)=>`Slip ${1+P} and hang on the wind: see within 2, and your next hit this turn deals +1.` },
     { n:'Hold the Wind', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hover', dur:(P,E)=>1+E},{v:'reveal', radius:(P,E)=>2+E, dur:1}],
-      txt:(P,E)=>`Hover for ${1+E} rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; see within ${2+E}.` },
+      txt:(P,E)=>`Hover for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; see within ${2+E}.` },
     'Perfectly still in a gale.');
   K(['hawk'],'haw_bind','Talon Bind','M',0,
     { n:'Bind', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -2013,8 +2013,8 @@
     'Wings down like a tent: mine.');
   K(['hawk'],'haw_hedge','Hedge Chase','S',0,
     { n:'Weave', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true, noTrap:true},{v:'empower', val:1, uses:1, dur:1}],
-      txt:(P,E)=>`Weave ${1+P} through cover, past foes and setting off no traps; your next hit this turn deals +1.` },
+      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Weave ${1+P} through cover, past foes and; your next hit this turn deals +1.` },
     { n:'Through the Hedge', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, revealTarget:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Burst out beside a foe within ${2+E}, hidden or not: melee ${2+E}, and you are Hidden 1.` },
@@ -2165,7 +2165,7 @@
       txt:(P,E)=>`Lift onto any node within ${1+P}, height included, and hold Shield 1 this round.` },
     { n:'Float', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'weightless', dur:(P,E)=>1+E},{v:'empower', val:1, uses:1, dur:2},{v:'heal', n:1}],
-      txt:(P,E)=>`Float for ${1+E} rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes; heal 1, and your next hit deals +1.` },
+      txt:(P,E)=>`Float for ${1+E} rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes; heal 1, and your next hit deals +1.` },
     'Up off the water without a splash.');
 
   // Ibis: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, and these four
@@ -2644,7 +2644,7 @@
       txt:(P,E)=>`Dart ${1+P} and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1.` },
     { n:'Hang in the Air', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hover', dur:(P,E)=>1+E},{v:'shield', val:1, dur:1}],
-      txt:(P,E)=>`Hover for ${1+E} rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; Shield 1 this round.` },
+      txt:(P,E)=>`Hover for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; Shield 1 this round.` },
     'Wings in a figure eight, and it does not move an inch.');
   K(['hummingbird'],'hmb_beats','Thousand Beats','T',0,
     { n:'Blur', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -2892,8 +2892,8 @@
     'Feet like tongs, and a tail that holds on by itself.');
   K(['chameleon'],'cha_sway','Slow Sway','T',0,
     { n:'Sway', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'hidden', dur:1, canMove:true}],
-      txt:(P,E)=>`Rock like a leaf in the wind: move ${1+P}, setting off no traps, Hidden 1.` },
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1, canMove:true}],
+      txt:(P,E)=>`Rock like a leaf in the wind: move ${1+P}, Hidden 1.` },
     { n:'Leaf in the Wind', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+E, canMove:true},{v:'reroll', n:1}],
       txt:(P,E)=>`Hidden ${1+E} even if you move, and reroll 1 banked die.` },
@@ -3121,8 +3121,8 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Plod ${1+P}, and hold Shield 1 this round.` },
     { n:'Through Anything', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'cleanse', ward:2},{v:'move', n:(P,E)=>2+E, noTrap:true},{v:'hazardImmune', dur:2}],
-      txt:(P,E)=>`Plod ${2+E} through anything, setting off no traps; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe.` },
+      fx:[{v:'cleanse', ward:2},{v:'move', n:(P,E)=>2+E},{v:'hazardImmune', dur:2}],
+      txt:(P,E)=>`Plod ${2+E} through anything; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe.` },
     'It goes where it is going, and it gets there.');
   /* ───────────────────────── AMPHIBIANS ─────────────────────────
      axolotl · newt · tree frog. The axolotl's Toxic Secretion and External Gills are every amphibian's; its
@@ -3142,8 +3142,8 @@
   // Newt: Regeneration, Toxic Secretion, External Gills, Lateral Line, and these five
   K(['newt'],'new_eft','Eft Wander','S',2,
     { n:'Wander', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'heal', n:1},{v:'empower', val:1, uses:1, dur:1}],
-      txt:(P,E)=>`Wander ${1+P} through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.` },
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'heal', n:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Wander ${1+P} through the leaf litter; heal 1, and your next hit this turn deals +1.` },
     { n:'Years on Land', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'cleanse', ward:2},{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'empower', val:1, uses:1, dur:2}],
       txt:(P,E)=>`Walk ${2+E}, past foes, bright and unbothered: Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1.` },
@@ -3371,8 +3371,8 @@
     'Fins like a net, closing.');
   K(['lionfish'],'lio_hover','Hover Stalk','T',0,
     { n:'Drift Closer', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, noTrap:true}],
-      txt:(P,E)=>`Drift ${1+P}, setting off no traps.` },
+      fx:[{v:'move', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Drift ${1+P}.` },
     { n:'Hang Still', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:1},{v:'empower', val:(P,E)=>2+E, uses:1, dur:2},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +${2+E}.` },
@@ -3534,7 +3534,7 @@
   K(['jellyfish'],'jel_glow','Bioluminescence','C',0,
     { n:'Glow', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
-      txt:(P,E)=>`Light up the water: see within ${2+P} (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.` },
+      txt:(P,E)=>`Light up the water: see within ${2+P} (breaks Hidden, finds hidden objectives), and your next hit this turn deals +1.` },
     { n:'Lure Light', ap:1, el:1, cd:3, dur:0, tgt:'node_r2',
       fx:[{v:'decoy', dur:(P,E)=>1+E},{v:'hidden', dur:1}],
       txt:(P,E)=>`Flash a ring of light at a node within 2: foes treat it as a hero for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and you go dark (Hidden 1).` },
@@ -3618,7 +3618,7 @@
   K(['lobster'],'lob_feelers','Long Feelers','C',0,
     { n:'Feel Out', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
-      txt:(P,E)=>`Sweep your feelers: see within ${2+P} (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.` },
+      txt:(P,E)=>`Sweep your feelers: see within ${2+P} (breaks Hidden, finds hidden objectives), and your next hit this turn deals +1.` },
     { n:'Taste the Water', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'reveal', target:true, dur:2},{v:'mark', n:(P,E)=>1+E, dur:3}],
       txt:(P,E)=>`Taste one foe on the water: Revealed for 2 rounds, and it is Marked +${1+E} for 3 rounds.` },
@@ -3705,7 +3705,7 @@
   K(BUGS,'ins_antennae','Antennae','C',0,
     { n:'Feel the Air', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'shield', val:1, next:true}],
-      txt:(P,E)=>`Feel the air: see within ${1+P} (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less.` },
+      txt:(P,E)=>`Feel the air: see within ${1+P} (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less.` },
     { n:'Scent Trail', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'reveal', target:true, dur:2},{v:'mark', n:(P,E)=>1+h(E), dur:3},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
       txt:(P,E)=>`Smell out one foe: Revealed for 2 rounds, it is Marked +${1+h(E)} for 3 rounds, and your ally's next hit deals +1.` },
@@ -3788,8 +3788,8 @@
     'A drinking straw, coiled like a watch spring.');
   K(['butterfly'],'but_flutter','Erratic Flight','S',0,
     { n:'Flutter', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true, noTrap:true}],
-      txt:(P,E)=>`Flit ${1+P} this way and that, past foes and over traps.` },
+      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true}],
+      txt:(P,E)=>`Flit ${1+P} this way and that, past foes.` },
     { n:'Zigzag', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'blink', reach:(P,E)=>2+E},{v:'shield', val:(P,E)=>2+E, next:true}],
       txt:(P,E)=>`Zigzag where no one can follow: go to any node within ${2+E}, and Shield: the next hit on you is ${2+E} less.` },
