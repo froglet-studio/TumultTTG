@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.86.0',
+    version: '2.87.0',
     items: [
+      {
+        text: 'A new keyword, Link (Charge): two foes joined for a few rounds, so damage, pushes, pulls and heals on one reach the other. Tesla Cascade, Override, Spasm, Its Own Voice, Every Step, Disarming and Drive the Shoal Link their target to the nearest foe. Redirect is gone. Try Linking two foes and pushing one into a Field, or Marking one end before you hit it. Is it clear on the board which two are Linked?',
+        cards: ['eel_discharge', 'eel_doublet', 'pel_line'],
+      },
       {
         text: 'Snares, spore clouds, triggers and sensing auras are now one keyword, Field: marked spaces that do their keywords to whatever enters them or ends the round there. Its harm falls on foes and its help on allies, Hover is above it, and a hazard is a Field of damage that belongs to nobody. A Field now springs when you push or pull a foe into it, and a Field’s Weaken now lasts into the next round. Try pushing a foe onto your Set Jaws or into a spore cloud. Does a Field read clearly on the board and in its tooltip?',
         cards: ['fly_snap', 'fly_hairs'],

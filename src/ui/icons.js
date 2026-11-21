@@ -372,7 +372,7 @@
     thorns: 'boon.thickhide',
     counter: 'boon.thickhide',
     hazardImmune: 'boon.thickhide',
-    redirect: 'basic.lend',
+    link: 'basic.lend',
     move: 'basic.scramble',
     climb: 'basic.scramble',
     hover: 'event.guide',

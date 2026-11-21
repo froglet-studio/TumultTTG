@@ -911,6 +911,17 @@
     } else {
       say(m, `${source ? source.name : 'The blow'} is fully blunted by ${target.name}.`);
     }
+    // link: the other unit takes the same
+    if (dmg > 0 && !opts.linked) {
+      const o = linkedTo(m, target);
+      if (o)
+        T.damage(m, source, o, dmg, {
+          kind: 'true',
+          trueDmg: true,
+          linked: true,
+          label: 'reaches through the Link to',
+        });
+    }
     // thorns
     if (kind === 'melee' && ts.Thorns && source && source.kind === 'enemy') {
       source.hp -= ts.Thorns.v;
@@ -992,7 +1003,15 @@
     }
     return moved;
   }
-  function pushAway(m, source, target, n) {
+  function pushAway(m, source, target, n, viaLink) {
+    if (!viaLink) {
+      const o = linkedTo(m, target);
+      if (o) {
+        const r = pushAway(m, source, target, n, true);
+        if (standing(o)) pushAway(m, source, o, n, true);
+        return r;
+      }
+    }
     if (forceImmune(target)) {
       say(m, `${target.name} holds fast.`);
       return 0;
@@ -1009,7 +1028,15 @@
     }
     return landed(m, source, target, moved);
   }
-  function pullToward(m, source, target, n) {
+  function pullToward(m, source, target, n, viaLink) {
+    if (!viaLink) {
+      const o = linkedTo(m, target);
+      if (o) {
+        const r = pullToward(m, source, target, n, true);
+        if (standing(o)) pullToward(m, source, o, n, true);
+        return r;
+      }
+    }
     if (forceImmune(target) || (target.kind === 'hero' && T.boonVals(target, 'noPull').length)) {
       say(m, `${target.name} holds fast.`);
       return 0;
@@ -1041,6 +1068,61 @@
   T.pullToward = pullToward;
 
   const heroBy = (m, uid) => m.heroes.find((h) => h.uid === uid) || null;
+
+  /* ───────────────────────────── LINK ─────────────────────────────
+   * Link (2.87): two units joined for N rounds. When one takes damage, a push or a pull, or a Heal, the other
+   * takes the same: the damage it was dealt (as true damage), the same push or pull from the same source,
+   * the same heal. A unit has one Link at a time; a new one replaces it, and it ends when either falls.
+   */
+  const unitBy = (m, uid) => m.heroes.find((h) => h.uid === uid) || m.enemies.find((e) => e.uid === uid) || null;
+  const standing = (u) => !!u && (u.kind === 'enemy' ? u.alive : !u.downed);
+  function linkedTo(m, u) {
+    const l = u && st(u).Linked;
+    if (!l) return null;
+    const o = unitBy(m, l.to);
+    return standing(o) && st(o).Linked && st(o).Linked.to === u.uid ? o : null;
+  }
+  T.linkedTo = linkedTo;
+  function unlink(m, u) {
+    const o = linkedTo(m, u);
+    delete st(u).Linked;
+    if (o) delete st(o).Linked;
+  }
+  function linkUnits(m, a, b, t) {
+    if (!standing(a) || !standing(b) || a === b || t <= 0) return false;
+    unlink(m, a);
+    unlink(m, b);
+    st(a).Linked = { to: b.uid, t };
+    st(b).Linked = { to: a.uid, t };
+    fx(m, { t: 'state', ent: a.uid, name: 'Linked' });
+    fx(m, { t: 'state', ent: b.uid, name: 'Linked' });
+    say(m, `${a.name} and ${b.name} are Linked for ${t} round${t === 1 ? '' : 's'}.`, 'hero');
+    return true;
+  }
+  T.linkUnits = linkUnits;
+  /** The nearest other standing unit of `u`'s side within `r` of it (ties: the earliest), or null. */
+  function nearestKin(m, u, r) {
+    const kin = u.kind === 'enemy' ? T.liveEnemies(m) : T.liveHeroes(m);
+    return (
+      kin
+        .filter((o) => o !== u)
+        .map((o) => [o, B.dist(m.board, u.pos, o.pos, true)])
+        .filter(([, d]) => d <= r)
+        .sort((x, y) => x[1] - y[1] || x[0].uid - y[0].uid)
+        .map(([o]) => o)[0] || null
+    );
+  }
+  function linkHeal(m, u, amt) {
+    const o = linkedTo(m, u);
+    if (!o || amt <= 0) return;
+    const before = o.hp;
+    o.hp = Math.min(o.maxHp, o.hp + amt);
+    if (o.hp > before) {
+      fx(m, { t: 'heal', ent: o.uid, amount: o.hp - before });
+      say(m, `The Link carries the heal to ${o.name} (${o.hp - before}).`, 'hero');
+    }
+  }
+  T.linkHeal = linkHeal;
 
   /* ───────────────────────────── FIELDS ─────────────────────────────
    * A Field (2.86) is a marked space, or a set of them, that does its keywords to whatever enters it or ends
@@ -1471,18 +1553,6 @@
           T.damage(m, actor, t, dmg, opts);
           if (f.onKill && t.kind === 'enemy' && !t.alive) T.applyEffect(m, actor, f.onKill, ctx);
           ctx.lastTarget = t;
-        }
-        if (f.chain && targets.length && targets[0].kind === 'enemy') {
-          const primary = targets[0];
-          const n = num(f.chain, P, E);
-          const cd = num(f.chainDmg, P, E);
-          const others = T.liveEnemies(m)
-            .filter((e) => e !== primary && B.dist(bd, primary.pos, e.pos, true) <= 1)
-            .slice(0, n);
-          for (const o of others) {
-            say(m, `The arc chains to ${o.name}.`, 'hero');
-            T.damage(m, actor, o, cd, { kind: 'area', label: 'arcs into' });
-          }
         }
         break;
       }
@@ -1973,6 +2043,7 @@
           const before = h.hp;
           h.hp = Math.min(h.maxHp, h.hp + amt);
           fx(m, { t: 'heal', ent: h.uid, amount: h.hp - before });
+          linkHeal(m, h, amt);
         });
         if (list.length)
           say(m, `${list.map((h) => h.name).join(' & ')} heal${list.length > 1 ? '' : 's'} ${n}.`, 'hero');
@@ -2151,11 +2222,18 @@
         T.doInteract(m, actor, node, true);
         break;
       }
-      case 'redirect': {
+      case 'link': {
+        // Link the target to the nearest other unit of its side within `within` of it.
         const t = targetEnt(m, ctx);
-        if (!t || t.kind !== 'enemy') break;
-        st(t).Redirect = { t: 1 };
-        say(m, `${t.name}'s nervous field is overridden — its next attack turns on its own.`, 'hero');
+        const dur = num(f.dur, P, E) || 1;
+        const within = num(f.within, P, E) || 1;
+        if (!standing(t)) break;
+        const o = nearestKin(m, t, within);
+        if (!o) {
+          say(m, `Nothing near ${t.name} to Link it to.`, 'sys');
+          break;
+        }
+        linkUnits(m, t, o, dur);
         break;
       }
       default:
@@ -2805,7 +2883,7 @@
       Slow: 'Cannot move.',
       SlowSelf: 'Cannot move this round.',
       NoTele: 'Cannot teleport.',
-      Redirect: 'Overridden — next attack hits an ally.',
+      Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,
       Dots: 'Taking damage over time.',
     };
     return map[k] || k;

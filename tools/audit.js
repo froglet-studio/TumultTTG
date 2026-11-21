@@ -145,9 +145,11 @@ function answersOf(x) {
       add('burst');
       if (x.all || x.party) add('crowd'); // many small hits
       break;
+    case 'link':
+      add('crowd'); // one hit, push or pull lands on two
+      break;
     case 'thorns':
     case 'decoy':
-    case 'redirect':
       add('crowd', 'burst');
       break;
     case 'weaken':
@@ -276,7 +278,7 @@ const ABLATIONS = [
     'no foe control',
     (x) =>
       (x.v === 'anchor' && (x.who === 'foe' || x.who === 'target')) ||
-      ['weaken', 'slow', 'force', 'redirect'].includes(x.v) ||
+      ['weaken', 'slow', 'force', 'link'].includes(x.v) ||
       (x.v === 'field' && x.fx.some((y) => ['anchor', 'weaken'].includes(y.kw))),
   ],
   [

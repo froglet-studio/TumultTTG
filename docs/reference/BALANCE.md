@@ -452,3 +452,7 @@ Boons and consumables stay until the keyword migration makes them gear. `node to
 ## v2.86.0 — Field
 
 Fourteen faces became Fields (`KEYWORDS.md`), a Field springs on a foe moved onto it, and a Field's Weaken now lasts into the next round. Same seeds, 2.85.0 → 2.86.0: `node tools/sim.js 40` identical in every cell (runs 3 → 3 and 18 → 18 of 40); `80 runs --player strong` 39 → 39; `120 runs --player weak` 10 → 10. The simulated squads rarely carry these cards, so nothing is retuned.
+
+## v2.87.0 — Link
+
+Seven Charge faces Link their target to the nearest foe; Redirect and the chain strike are cut. Same seeds, 2.86.0 → 2.87.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 18 of 40, mission cells unchanged but for cascade t2's kills (1.8 → 1.7, look-ahead); `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10. Not easier, so nothing is retuned.

@@ -569,8 +569,8 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P}],
       txt:(P,E)=>`Lane strike for ${2+P}.` },
     { n:'Tesla Cascade', ap:1, el:3, cd:4, dur:0, tgt:'foe_los',
-      fx:[{v:'stripShield', amount:(P,E)=>2+E},{v:'strike', kind:'los', dmg:(P,E)=>6+P, chain:(P,E)=>1+E, chainDmg:(P,E)=>3+E}],
-      txt:(P,E)=>`Strip ${2+E} of the target's Shield and strike it for ${6+P}; the arc chains to ${1+E} more foes within 1 of it for ${3+E} each.` },
+      fx:[{v:'stripShield', amount:(P,E)=>2+E},{v:'link', within:2, dur:(P,E)=>E},{v:'strike', kind:'los', dmg:(P,E)=>6+P}],
+      txt:(P,E)=>`Strip ${2+E} of the target's Shield, Link it to the nearest foe within 2 of it for ${E} ${E>1?'rounds':'round'}, and strike it for ${6+P}: the Linked foe takes the same.` },
     '600 volts.');
   C('eel','eel_electro','Electroreception','S',2,
     { n:'Sense', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -617,8 +617,8 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P, revealTarget:true},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Twin taps: zone strike ${1+P} that reveals a Hidden target and Weakens 1.` },
     { n:'Spasm', ap:1, el:1, cd:3, dur:0, tgt:'foe_los',
-      fx:[{v:'force', kind:'choose', n:(P,E)=>1+E},{v:'weaken', val:1, dur:1}],
-      txt:(P,E)=>`Drive an involuntary spasm: push or pull a foe in your zone ${1+E} and Weaken it 1.` },
+      fx:[{v:'link', within:2, dur:2},{v:'force', kind:'choose', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Drive an involuntary spasm: Link a foe in your zone to the nearest foe within 2 of it for 2 rounds, then push or pull it ${1+E} (the other moves the same).` },
     'Muscles that move on your command.');
   C('eel','eel_buoyancy','Buoyancy Control','M',0,
     { n:'Trim', ap:1, el:0, cd:1, dur:1, tgt:'self',
@@ -717,8 +717,8 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'choose', n:1}],
       txt:(P,E)=>`Sink tendrils in: melee ${2+P} and force one step (push or pull).` },
     { n:'Override', ap:0, el:3, cd:4, dur:0, tgt:'foe_any',
-      fx:[{v:'redirect'},{v:'strike', kind:'any', dmg:(P,E)=>3+E}],
-      txt:(P,E)=>`Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none), and it takes ${3+E}.` },
+      fx:[{v:'link', within:2, dur:(P,E)=>1+E},{v:'strike', kind:'any', dmg:(P,E)=>3+E}],
+      txt:(P,E)=>`Override its nervous field: Link any foe to the nearest foe within 2 of it for ${1+E} rounds, and it takes ${3+E} (so does the other).` },
     'A single simple move, never a whole turn.');
   C('cordyceps','cor_network','Mycelial Network','S',2,
     { n:'Link', ap:1, el:0, cd:1, dur:0, tgt:'ally',

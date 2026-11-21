@@ -39,6 +39,8 @@
     'kw.reveal': 'M2 12c3-5 6-7 10-7s7 2 10 7c-3 5-6 7-10 7S5 17 2 12zm10-4a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
     'kw.mint': 'M4 4h16v16H4zM11 7v4H7v2h4v4h2v-4h4v-2h-4V7z',
     'kw.decoy': 'M12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM5 22c0-6 3-10 7-10s7 4 7 10zM2 2l2 0 0 2-2 0z',
+    'kw.link':
+      'M9 7h4a5 5 0 0 1 0 10h-1v-2h1a3 3 0 0 0 0-6H9a3 3 0 0 0-2.8 2H4.1A5 5 0 0 1 9 7zm6 10h-4a5 5 0 0 1 0-10h1v2h-1a3 3 0 0 0 0 6h4a3 3 0 0 0 2.8-2h2.1A5 5 0 0 1 15 17z',
     'kw.trap': 'M2 14h20v3H2zM3 14l3-6 3 6zm6 0 3-6 3 6zm6 0 3-6 3 6z',
     'kw.hazard': 'M12 2 23 21H1zm-1 6v7h2V8zm0 9v2h2v-2z',
     'kw.height': 'M2 20h6v-5h5v-5h5V5h4v17H2z',
@@ -77,6 +79,14 @@
       tone: 'bad',
       state: 'Rooted',
       tip: 'Rooted: cannot walk while it lasts. It still acts.',
+    },
+    {
+      id: 'link',
+      re: 'Link(?:ed|s)?',
+      icon: 'kw.link',
+      tone: 'bad',
+      state: 'Linked',
+      tip: 'Linked: two units joined for some rounds. When one takes damage, a push or a pull, or a heal, the other takes the same.',
     },
     {
       id: 'mark',
