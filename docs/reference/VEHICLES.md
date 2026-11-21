@@ -1,6 +1,6 @@
 # Vehicles and big maps
 
-Since 2.101 the atlas has **big maps**: wide country, eight spaces across (A–H) and four deep (1–4), too far to
+Since 2.104 the atlas has **big maps**: wide country, eight spaces across (A–H) and four deep (1–4), too far to
 walk comfortably. A mission played on one, the **Crossing**, has each player pick a **pocket vehicle** for their
 pilot right before it starts (Garrett, 2026-11-21). The data is `src/data/vehicles.js` and the big pages are
 `T.BIG_ATLAS` in `src/data/atlas.js`; the rules are `src/engine/vehicles.js`; the garage screen is

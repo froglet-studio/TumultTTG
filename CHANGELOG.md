@@ -9,13 +9,22 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.103.0 — 2026-11-21 — pocket vehicles and big maps
+## 2.104.0 — 2026-11-21 — pocket vehicles and big maps
 
 - **Big maps.** Two new atlas pages eight spaces across and four deep, too far to walk comfortably: *Reed Delta* (sea; channels, reed beds and sandbars) and *Ashfall Salt Flat* (land; open salt, two fissures, vents). A space on a big map has a ground: open, rough (walkable), water or a gap (never walked). Every ground space can still be reached on foot, two ways across, so no mission needs a vehicle (`T.BIG_ATLAS`, `docs/reference/VEHICLES.md`).
 - **Pocket vehicles** (Garrett, 2026-11-21). Right before a mission that needs them, each player picks one for their pilot, one vehicle slot each: **Skiff** (2 seats, open and water), **Wing** (1 seat, anything, high ground too; its rider Hovers), **Crawler** (3 seats, open and rough, sealed against hazards, a Long Gun that reaches any foe), **Diver** (2 seats, water only, fast), **Runner** (1 seat, open only, fastest). Getting in or out costs 1 AP; so does each Drive, up to the vehicle's speed over its own ground with everyone inside. Each vehicle has two cards, once a round, some for the driver and some for any seat (a gunner); three carry guns. Blows on a rider land on the hull; at 0 the vehicle is wrecked and its riders are thrown clear.
 - **Mounted** (new keyword). Inside a vehicle a pilot plays only its cards and their own faces marked Mounted: a face that neither moves you nor needs to touch (ranged strikes, shields, marks, reveals, heals, squad buffs). Printed on every card face it applies to.
 - **The Crossing**, a new mission on the big maps: light most of the signal posts across the far side before dark, getting out to work each post on foot. It takes the place of an event in a tier-2 row of the route (Short row 2, Full row 4), and both simulated players drive, get out and fire the guns. Numbers in the PR.
 - **Saves** are version 28 (nothing to migrate: a mission may now hold `vehicles`, a pilot `ride`, a run waiting at the garage `garage`).
+
+## 2.103.0 — 2026-11-21 — Move, Climb, Trample and Guide
+
+- **Move N, and the ways a move differs.** Garrett settled the movement family: more choices, as long as each is distinct. A move may be *climbing* (its steps take the ledges), *past foes*, *trampling* (new: through foes, each pushed aside as you reach it), *exactly N*, *toward* a unit, or *carrying an ally* beside you (`docs/reference/KEYWORDS.md`).
+- **Climb is a Move now.** The 26 climbing faces and the Climbing Rig's Ascend were a jump to any space within N that ignored foes in the way; now Climb N walks the paths, ledges included, and foes block it. Their texts say Climb.
+- **Trample** comes first to the hoofed animals' Gallop: Move 3+E, trampling, in place of passing foes.
+- **Guide N** moves an ally (Call, Cue, Leg up, the Beacon and twelve more), so the Rally action, which raises a downed ally, no longer shares its word with them. Their texts say Guide.
+- Climb, Trample and Guide have tooltips.
+- No save change.
 
 ## 2.102.0 — 2026-11-21 — Hover lifts you off the ground
 

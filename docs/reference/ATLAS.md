@@ -69,7 +69,7 @@ Gravity and weather add no new verbs. They change what the existing ones are wor
 
 A mission launched without a route (the simulators, the playtest jump, `T.launchMission(run, type, tier, pageId)` with no page named) draws its page from its board's stream.
 
-## Big maps (since 2.103)
+## Big maps (since 2.104)
 
 `T.BIG_ATLAS` holds pages eight spaces across (A–H) and four deep (1–4), each space with a ground (open, rough, water,
 a gap) as well as its zones. Only a Crossing is played on them, with each pilot in a pocket vehicle; how the ground

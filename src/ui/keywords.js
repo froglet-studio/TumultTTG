@@ -321,11 +321,32 @@
       tip: 'Hazard: a Field of damage that belongs to nobody: whoever ends the round on it takes damage.',
     },
     {
+      id: 'climb',
+      re: 'Climb(?:s|ing)?',
+      icon: 'kw.height',
+      tone: 'good',
+      tip: 'Climb N (a Move, climbing): step N spaces along the paths, and the steps may take the ledges. Foes still block the way.',
+    },
+    {
+      id: 'trample',
+      re: 'trampl(?:e|es|ing)',
+      icon: 'kw.push',
+      tone: 'good',
+      tip: 'Trampling: the move goes through foes’ spaces, and each foe in the way is pushed aside as you reach it (into a Field or hazard, if that is where aside is).',
+    },
+    {
+      id: 'guide',
+      re: 'Guide[sd]?',
+      icon: 'kw.push',
+      tone: 'good',
+      tip: 'Guide N: move an ally up to N spaces along the paths, now, to a space you choose. (Rally is the basic action that raises a downed ally.)',
+    },
+    {
       id: 'height',
       re: 'height|ledge(?:s)?',
       icon: 'kw.height',
       tone: 'neutral',
-      tip: 'Height: a raised node. Walking up needs a Space verb (climb, blink) or a ramp; from height, foes below are easier to hit.',
+      tip: 'Height: a raised node. Getting up needs a climbing move, a Blink that says height, Hover, or the ramp; from height, foes below are easier to hit.',
     },
     {
       id: 'heal',

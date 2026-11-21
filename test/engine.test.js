@@ -413,7 +413,7 @@ test('at level 0, with no AP and no awakened card, every crystal still opens an 
   // and one of every colour needs nothing on the board to be worth taking
   for (const el of ['S', 'T'])
     assert.ok(
-      T.BASIC.some((b) => b.el === el && b.ap === 0 && (b.tgt === 'self' || b.tgt === 'node_climb')),
+      T.BASIC.some((b) => b.el === el && b.ap === 0 && (b.tgt === 'self' || b.tgt === 'node_move')),
       `${el} has a channelled action that needs no foe`,
     );
 });

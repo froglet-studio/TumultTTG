@@ -1,5 +1,5 @@
 'use strict';
-/* Pocket vehicles and big maps (2.101; Garrett, 2026-11-21): each player picks a vehicle before a Crossing,
+/* Pocket vehicles and big maps (2.104; Garrett, 2026-11-21): each player picks a vehicle before a Crossing,
    1 AP to get in or out, a Drive moves it over its own ground, only its cards and Mounted faces inside. */
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -231,8 +231,8 @@ test('both simulated players can play a Crossing to the end', () => {
     }
 });
 
-test('a save from 2.103 (mid-Crossing, a pilot in each vehicle) loads and plays on', () => {
-  const old = require('./fixtures/save-2.103.json');
+test('a save from 2.104 (mid-Crossing, a pilot in each vehicle) loads and plays on', () => {
+  const old = require('./fixtures/save-2.104.json');
   assert.equal(old.v, 28);
   const run = T.deserializeRun(JSON.stringify(old));
   const m = run.mission;
