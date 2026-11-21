@@ -9,6 +9,16 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.105.0 — 2026-11-21 — costly faces that do something new
+
+Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap faces in one; it must make a play that is not possible otherwise. Four of the nine that were bundles are reworked; the rest follow in the next release.
+
+- **Heavy Throw** (Throwing Arm) throws the ally beside you onto a free space within 2 + E of you, ledges included (`throw`, the target `ally_throw`). It was a zone strike, a pierce and a knockback.
+- **Become** (Impersonation) trades places with a foe within 1 + E; a foe that nothing can move holds fast (`swap` with `foe`). It was Hidden and an empowered strike.
+- **Resonance** (Stridulation) sets everything around you off now: within 1 + E, every Field and hazard springs on whoever stands in it and every Wound bites, none of them spent (`spring`, `T.springAround`). It was a zone strike and a Weaken.
+- **Second Wind** (Persistence) gives back at round end what you lose from playing it until then, up to 4 + 2E (`rewind`, the state `Rewind`). It was four turns of regeneration.
+- `foe_r2` reaches further when an effect on the face names a `reach`.
+
 ## 2.104.0 — 2026-11-21 — pocket vehicles and big maps
 
 - **Big maps.** Two new atlas pages eight spaces across and four deep, too far to walk comfortably: *Reed Delta* (sea; channels, reed beds and sandbars) and *Ashfall Salt Flat* (land; open salt, two fissures, vents). A space on a big map has a ground: open, rough (walkable), water or a gap (never walked). Every ground space can still be reached on foot, two ways across, so no mission needs a vehicle (`T.BIG_ATLAS`, `docs/reference/VEHICLES.md`).
