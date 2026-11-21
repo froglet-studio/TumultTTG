@@ -39,5 +39,10 @@ test('code atlas: strict build reaches every loop it links and every card', () =
   assert.ok(idx.kinds.entry >= T.CARDS.length, 'every card is an entry');
   assert.ok(idx.kinds.verb >= 40, 'the verbs of T.applyEffect are nodes');
   assert.ok(idx.loopCode.face > 0 && idx.loopCode['fleet/Rosh'] > 0, 'loops and pilots reach their code');
+  assert.ok(idx.views >= T.CARDS.length, 'every card has a view in the inspection window');
+  const vw = JSON.parse(fs.readFileSync(path.join(out, 'views', 'views.json'), 'utf8'));
+  for (const [id, entries] of Object.entries(vw.nodes))
+    for (const [v] of entries) assert.ok(vw.views[v], `${id} names a view that exists (${v})`);
+  assert.ok(vw.nodes['L:vessel/Rosh'] && vw.nodes['L:era'], 'pictures roll up to the pilots and the long game');
   fs.rmSync(out, { recursive: true, force: true });
 });

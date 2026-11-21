@@ -63,7 +63,9 @@ body { background: var(--ground); color: var(--text); }
 .la-insp-title small { display: block; font-weight: 400; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; color: var(--text-soft); }
 .la-insp .la-btn { min-height: 26px; padding: 3px 8px; font-size: 12px; }
 .la-insp canvas { display: block; width: 100%; height: 180px; background: var(--ground-deep); cursor: ew-resize; touch-action: none; }
-.la-insp[data-k="ui"] canvas { cursor: default; }
+.la-insp[data-k="ui"] canvas, .la-insp[data-k="card"] canvas, .la-insp[data-k="pic"] canvas { cursor: default; }
+.la-insp[data-k="card"] canvas { height: 320px; }
+.la-insp[data-k="card"][data-big="true"] canvas { height: min(560px, 70vh); }
 .la-insp[data-min="true"] canvas { display: none; }
 .la-insp[data-big="true"] { width: min(640px, calc(100% - 24px)); }
 .la-insp[data-big="true"] canvas { height: min(360px, 55vh); }
@@ -828,7 +830,7 @@ body { background: var(--ground); color: var(--text); }
     function inRender() {
       var v = inView(); if (!v || insp.hidden) { inSpin(false); return; }
       var r = CODE.recs[IN.key], e = IN.entries[IN.at];
-      inTitle.textContent = ''; inTitle.appendChild(el('small', null, 'Amoebius view · ' + (v.k === 'model' ? 'model' : 'screen') + (IN.entries.length > 1 ? ' ' + (IN.at + 1) + ' of ' + IN.entries.length : '')));
+      inTitle.textContent = ''; inTitle.appendChild(el('small', null, ({ model: 'Amoebius view · model', ui: 'Amoebius view · screen', card: 'Card', pic: 'Picture' }[v.k] || 'Amoebius view · screen') + (IN.entries.length > 1 ? ' ' + (IN.at + 1) + ' of ' + IN.entries.length : '')));
       inTitle.appendChild(document.createTextNode(v.n + (r && r.n && r.n !== v.n && e.length > 1 ? ' › ' + r.n : '')));
       inPrev.hidden = inNext.hidden = IN.entries.length < 2;
       insp.dataset.k = v.k;
@@ -836,14 +838,70 @@ body { background: var(--ground); color: var(--text); }
       var W = icv.clientWidth, H = icv.clientHeight, d = S.dpr || 1;
       if (icv.width !== Math.round(W * d) || icv.height !== Math.round(H * d)) { icv.width = Math.round(W * d); icv.height = Math.round(H * d); }
       ictx.setTransform(d, 0, 0, d, 0, 0); ictx.clearRect(0, 0, W, H);
-      if (v.k === 'model') paintModel(v, W, H); else paintScreen(v, e[1], W, H);
+      if (v.k === 'model') paintModel(v, W, H); else if (v.k === 'card') paintTraitCard(v, W, H); else if (v.k === 'pic') paintPic(v, W, H); else paintScreen(v, e[1], W, H);
       inSpin(v.k === 'model');
-      icv.setAttribute('aria-label', (v.k === 'model' ? 'The model ' : 'The layout of ') + v.n + ', drawn by Amoebius' + (v.k === 'model' ? '; drag to turn it.' : '.'));
+      icv.setAttribute('aria-label', v.k === 'card' ? 'The card ' + v.n + ': ' + (v.P ? v.P.n + ', ' + v.P.t1 : '') + (v.E ? ' / ' + v.E.n + ', ' + v.E.t1 : '') : v.k === 'pic' ? 'A picture: ' + v.n : (v.k === 'model' ? 'The model ' : 'The layout of ') + v.n + ', drawn by Amoebius' + (v.k === 'model' ? '; drag to turn it.' : '.'));
     }
     function inSpin(on) {
       var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (on && !still && !IN.spin) IN.spin = setInterval(function () { var v = inView(); if (!v || v.k !== 'model' || IN.drag) return; IN.frame = (IN.frame + 1) % v.frames; inRender(); }, 160);
       if (!on && IN.spin) { clearInterval(IN.spin); IN.spin = null; }
+    }
+    // a picture the view names, fitted whole (letterboxed) so a scene is never cropped
+    function paintPic(v, W, H) {
+      var im = IN.imgs[v.src];
+      if (!im) { im = IN.imgs[v.src] = new Image(); im.onload = function () { inRender(); }; im.src = CODE.base + 'views/' + v.src; }
+      if (!im.complete || !im.naturalWidth) return;
+      var k = Math.min(W / im.naturalWidth, H / im.naturalHeight), w = im.naturalWidth * k, h = im.naturalHeight * k;
+      ictx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h);
+    }
+    // a trait card drawn from its data: its element, both faces with their cost, and the text at the first level and at the cap
+    function cardText(t, x, y, maxW, lh, maxY) {
+      var words = String(t || '').split(/\s+/), line = '';
+      for (var i = 0; i < words.length; i++) {
+        var test = line ? line + ' ' + words[i] : words[i];
+        if (ictx.measureText(test).width > maxW && line) { if (y > maxY) return y; ictx.fillText(line, x, y); y += lh; line = words[i]; } else line = test;
+      }
+      if (line && y <= maxY) { ictx.fillText(line, x, y); y += lh; }
+      return y;
+    }
+    function paintTraitCard(v, W, H) {
+      var C = S.colors, pad = 10, cw = Math.min(W - 16, H * 0.82), x0 = (W - cw) / 2, y0 = 6, ch = H - 12, cut = 12;
+      var col = v.elc || C['tier-5'];
+      ictx.beginPath();
+      ictx.moveTo(x0 + cut, y0); ictx.lineTo(x0 + cw, y0); ictx.lineTo(x0 + cw, y0 + ch - cut); ictx.lineTo(x0 + cw - cut, y0 + ch); ictx.lineTo(x0, y0 + ch); ictx.lineTo(x0, y0 + cut); ictx.closePath();
+      ictx.fillStyle = C.surface; ictx.fill(); ictx.strokeStyle = col; ictx.lineWidth = 2; ictx.stroke();
+      ictx.fillStyle = col; ictx.fillRect(x0 + cut, y0, cw - cut, 4);
+      var x = x0 + pad, y = y0 + 22, maxW = cw - pad * 2, sc = Math.max(0.75, Math.min(1.3, cw / 260));
+      ictx.textBaseline = 'alphabetic'; ictx.textAlign = 'left';
+      ictx.font = '700 ' + Math.round(15 * sc) + 'px "Chakra Petch", system-ui, sans-serif'; ictx.fillStyle = C.text;
+      ictx.fillText(v.n, x, y);
+      ictx.font = '600 ' + Math.round(10 * sc) + 'px "Chakra Petch", system-ui, sans-serif'; ictx.fillStyle = C['text-soft'];
+      y += Math.round(14 * sc); ictx.fillText(((v.eln || v.el) + ' · ' + (v.sp || '')).toUpperCase(), x, y);
+      var lh = Math.round(13 * sc), bottom = y0 + ch - pad;
+      [['PHYSICAL', v.P, false], ['ETHEREAL', v.E, true]].forEach(function (f) {
+        var F = f[1]; if (!F) return;
+        y += Math.round(10 * sc);
+        ictx.fillStyle = C.line; ictx.fillRect(x, y - 4, maxW, 1);
+        y += Math.round(10 * sc);
+        ictx.font = '600 ' + Math.round(9 * sc) + 'px "Chakra Petch", system-ui, sans-serif'; ictx.fillStyle = f[2] ? col : C['text-soft'];
+        var cost = F.ap + ' AP' + (F.el ? ' + ' + F.el + ' ' + (v.eln || v.el) : '') + ' · cooldown ' + F.cd + (F.dur ? ' · lasts ' + F.dur : '');
+        ictx.fillText(f[0] + ' · ' + cost.toUpperCase(), x, y);
+        y += Math.round(15 * sc);
+        ictx.font = '700 ' + Math.round(13 * sc) + 'px "Chakra Petch", system-ui, sans-serif'; ictx.fillStyle = C.text;
+        ictx.fillText(F.n, x, y);
+        y += lh + 2;
+        ictx.font = Math.round(11.5 * sc) + 'px ' + 'Aldrich, system-ui, sans-serif'; ictx.fillStyle = C.text;
+        y = cardText(F.t1, x, y, maxW, lh, bottom);
+        if (F.t3 && F.t3 !== F.t1) {
+          ictx.fillStyle = C['text-soft'];
+          y = cardText('At 3: ' + F.t3, x, y + 2, maxW, lh, bottom);
+        }
+      });
+      if (v.fl && y + lh < bottom) {
+        ictx.font = 'italic ' + Math.round(10.5 * sc) + 'px Aldrich, system-ui, sans-serif'; ictx.fillStyle = C['text-soft'];
+        cardText(v.fl, x, Math.max(y + 8, bottom - lh * 2), maxW, lh, bottom);
+      }
     }
     function paintModel(v, W, H) {
       var im = IN.imgs[v.src];

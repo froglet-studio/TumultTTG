@@ -530,6 +530,99 @@ class Builder {
     }
   }
 
+  /**
+   * The inspection window's views: what the page draws for the node you are on (docs/loopatlas/CODE.md). A card is
+   * drawn from its data (both faces, their cost and their text at the first level and at the cap); a pilot, an atlas
+   * page and a place show their painted scene. A loop with no view of its own rolls up its code's and its children's,
+   * a few from each, so the long game shows the whole atlas at a glance. Returns how many views were written.
+   */
+  writeViews(out) {
+    const g = this.g;
+    const T = global.T;
+    if (!T || !T.CARDS) return 0;
+    require(path.join(REPO, 'src', 'ui', 'pilots.js'));
+    const U = T.UI || {};
+    const dir = path.join(out, 'views');
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(path.join(dir, 'img'), { recursive: true });
+    const views = {};
+    const nodes = {};
+    const add = (id, vid) => {
+      if (!g.recs.has(id) || !views[vid]) return;
+      const l = (nodes[id] = nodes[id] || []);
+      if (!l.some((e) => e[0] === vid)) l.push([vid]);
+    };
+    const at = (key, x) => {
+      const f = this.defs.get('T.' + key);
+      return f ? `o:${g.recs.get(f).path}#${key}/${x}` : null;
+    };
+    const text = (f, lv) => {
+      try {
+        return typeof f.txt === 'function' ? String(f.txt(lv, lv)) : String(f.txt || '');
+      } catch (_) {
+        return '';
+      }
+    };
+    const face = (f) =>
+      f && { n: f.n, ap: f.ap || 0, el: f.el || 0, cd: f.cd, dur: f.dur || 0, t1: text(f, 1), t3: text(f, 3) };
+    for (const c of T.CARDS) {
+      const vid = 'card:' + c.id;
+      const sp = T.SPECIES[c.sp];
+      views[vid] = {
+        k: 'card',
+        n: c.name,
+        el: c.el,
+        sp: sp ? sp.name : c.sp,
+        fl: c.flavor || '',
+        elc: (T.ETHERIONS[c.el] || {}).color,
+        eln: (T.ETHERIONS[c.el] || {}).name,
+        P: face(c.P),
+        E: face(c.E),
+      };
+      add(at('CARDS', c.id), vid);
+      for (const fx of [...((c.P && c.P.fx) || []), ...((c.E && c.E.fx) || [])])
+        if (fx && fx.v) add('m:verb.' + fx.v, vid);
+    }
+    const scene = (key, name) => {
+      const src = path.join(REPO, 'assets', 'scenes', key + '.webp');
+      if (!key || !fs.existsSync(src)) return null;
+      const vid = 'pic:' + key;
+      if (!views[vid]) {
+        fs.copyFileSync(src, path.join(dir, 'img', key + '.webp'));
+        views[vid] = { k: 'pic', n: name, src: 'img/' + key + '.webp' };
+      }
+      return vid;
+    };
+    for (const h of T.PREBUILTS || []) {
+      const a = U.pilotOf ? U.pilotOf({ id: h.id, name: h.name, species: h.species }) : null;
+      const id = at('PREBUILTS', h.id);
+      add(id, scene(a && a.key, h.name + ', ' + (h.title || '')));
+      for (const c of h.cards || []) add(id, 'card:' + c);
+    }
+    for (const p of T.ATLAS || []) add(at('ATLAS', p.id), scene(String(p.plate || '').replace(/^scene\//, ''), p.name));
+    // a loop: its code's views, then its children's, a few from each, best first (pictures before cards)
+    const memo = new Map();
+    const rollup = (id, depth) => {
+      if (memo.has(id)) return memo.get(id);
+      memo.set(id, []);
+      const r = g.recs.get(id);
+      const own = [...(nodes[id] || [])];
+      const from = [...((r.r && r.r.code) || []), ...(r.k === 'loop' ? r.c || [] : [])];
+      for (const c of from) {
+        const sub = c.startsWith('L:') && depth < 9 ? rollup(c, depth + 1) : nodes[c] || [];
+        for (const e of sub.slice(0, c.startsWith('L:') ? 3 : 8)) if (!own.some((o) => o[0] === e[0])) own.push(e);
+      }
+      own.sort((x, y) => (views[x[0]].k === 'pic' ? 0 : 1) - (views[y[0]].k === 'pic' ? 0 : 1));
+      const top = own.slice(0, 12);
+      memo.set(id, top);
+      return top;
+    };
+    for (const [id, r] of g.recs) if (r.k === 'loop') rollup(id, 0);
+    for (const [id, l] of memo) if (l.length) nodes[id] = l;
+    fs.writeFileSync(path.join(dir, 'views.json'), JSON.stringify({ views, nodes }));
+    return Object.keys(views).length;
+  }
+
   write(out) {
     const g = this.g;
     for (const r of g.recs.values()) if (r.r) for (const k of Object.keys(r.r)) r.r[k] = [...new Set(r.r[k])].sort();
@@ -582,7 +675,9 @@ class Builder {
       const key = i.startsWith('L:verb/') ? 'verb/' + i.slice(7) : r.lid;
       if (key) loopCode[key] = ((r.r && r.r.code) || []).length;
     }
+    const views = this.writeViews(out);
     const index = {
+      views,
       schema: 1,
       shards: count,
       shardFile: '{n}.gz.txt',

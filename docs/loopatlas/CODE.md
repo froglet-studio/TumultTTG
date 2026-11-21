@@ -23,9 +23,28 @@ It is a light scan, not a JS parser: comments and strings are blanked first, a d
 indents, and its body runs to the next one. `node tools/code-atlas.js self-test` proves the scan, the linker, the hash
 and the value rows refuse what they must; `build --strict` fails on a hand link that matches nothing.
 
+## The inspection window
+
+Garrett, on the map, 2026-11-21: "when inspecting its 9 cards i would expect to find a preview of the card in an
+inspection window ... other places should have similar art that can roll up into the main loop atlas and populate the
+inspection window." The window in the map's corner shows the node you are on, or the nearest node above it that has
+something to show; ‹ › step through its views and ⤢ makes it bigger.
+
+- **Cards** are drawn from their data, not from a picture: name, element and clade, then each face with its cost,
+  cooldown, name and text at the first level and at the cap, and the flavour line. Every card entry, every verb a card
+  uses and every pilot who flies it shows them.
+- **Pictures**: each pre-made pilot shows its painted scene (the same one the game picks, `U.pilotOf`), each atlas page
+  its plate. Only the scenes in use are copied, so the publish stays small.
+- **Rolling up**: a loop with no view of its own takes up to three from each of its children and up to eight from its
+  code, pictures first, twelve at most. A pilot's kit shows the pilot then its cards; the long game shows the pilots and
+  pages at a glance.
+
+`code-out/views/views.json` holds `{views: {id: view}, nodes: {node id: [[view id]]}}`, and `views/img/` the scenes.
+Cosmic Shore's Amoebius turntables and screen layouts are two more kinds of view in the same file; Tumult adds `card`
+and `pic`.
+
 ## Output
 
 `code-out/index.json` (a few KB: shard count, root, which loops have code), `names.json`, and `shards/NNN.gz.txt`
 (records by `fnv1a(id) % shards`, gzip as base64 text because claude.ai serves no `.gz`). About 3,700 nodes and 20,000
-values, half a megabyte, built in under a second. Pictures and Cosmic Shore's inspection window are not built for
-Tumult yet; the page runs without them.
+values, half a megabyte, built in under a second. The inspection window's views are under `views/` (above).
