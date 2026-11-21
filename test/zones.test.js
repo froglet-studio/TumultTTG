@@ -44,7 +44,7 @@ test('range is a shared zone: a node in two zones reaches both, and never itself
 });
 
 test('a zone strike hits every foe that shares any of your zones, and no other', () => {
-  const sc = H.arena('hop_strid', { up: [0, 1] });
+  const sc = H.arena('por_shed', { up: [0, 1] });
   const { m, h } = sc;
   const bd = m.board;
   const foes = T.liveEnemies(m);
@@ -54,7 +54,7 @@ test('a zone strike hits every foe that shares any of your zones, and no other',
   const expect = foes.filter((e) => B.los(bd, h.pos, e.pos)).map((e) => e.uid);
   assert.ok(expect.length >= 1, 'someone is in range');
   const before = Object.fromEntries(foes.map((e) => [e.uid, e.hp]));
-  const res = H.playIn(sc, 'hop_strid', 'E');
+  const res = H.playIn(sc, 'por_shed', 'E');
   assert.ok(res.ok, res.why);
   for (const e of foes) {
     const hit = e.hp < before[e.uid];

@@ -1,6 +1,6 @@
 # Pets
 
-A pet is a sidekick, the way Unmatched has them: a small unit of its own on the board, with its own vitality. Foes can see it, target it and hit it. It is not a decoy, because it lasts the whole mission and it acts. Built in 2.105.0 from Garrett's brief of 2026-11-21. The rules are in `src/data/pets.js`, the board in `src/engine/engine.js` (PETS), the run in `src/engine/run.js` (PETS), and the tests in `test/pets.test.js`.
+A pet is a sidekick, the way Unmatched has them: a small unit of its own on the board, with its own vitality. Foes can see it, target it and hit it. It is not a decoy, because it lasts the whole mission and it acts. Built in 2.107.0 from Garrett's brief of 2026-11-21. The rules are in `src/data/pets.js`, the board in `src/engine/engine.js` (PETS), the run in `src/engine/run.js` (PETS), and the tests in `test/pets.test.js`.
 
 ## At the table
 

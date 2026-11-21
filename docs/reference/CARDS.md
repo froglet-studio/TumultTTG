@@ -25,12 +25,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Persistence** · Time · `hum_persist`
 
 - *Phys — Pace* · 1 AP · CD 1 — Shrug off Anchored/Weakened, then move 1. *(P3: Shrug off Anchored/Weakened, then move 4.)*
-- *Eth — Second Wind* · 0 AP + 2 Time · CD 4 · Dur 4 — Engine: regenerate 4 vitality at the start of each of your turns. Dur 4. *(P3/E3: Engine: regenerate 6 vitality at the start of each of your turns. Dur 4.)*
+- *Eth — Second Wind* · 0 AP + 2 Time · CD 3 — Brace to recover: at round end, regain all the vitality you lose from now until then, up to 6. *(P3/E3: Brace to recover: at round end, regain all the vitality you lose from now until then, up to 10.)*
 
 **Throwing Arm** · Mass · `hum_throw`
 
 - *Phys — Hurl* · 1 AP · CD 1 — Zone strike for 2. *(P3: Zone strike for 5.)*
-- *Eth — Heavy Throw* · 0 AP + 2 Mass · CD 3 — Zone strike for 6, knockback 2. *(P3/E3: Zone strike for 11 that pierces Shield, knockback 4.)*
+- *Eth — Heavy Throw* · 0 AP + 2 Mass · CD 3 — Throw your ally from beside you onto a free space within 3 of you, ledges included. *(P3/E3: Throw your ally from beside you onto a free space within 5 of you, ledges included.)*
 
 **Language** ☆ · Charge · `hum_lang`
 
@@ -118,7 +118,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stridulation** ★ · Charge · `hop_strid`
 
 - *Phys — Rasp* · 1 AP · CD 1 — A sustained tone: adjacent foes Weakened 1. *(P3: A sustained tone: adjacent foes Weakened 1; an ally's next strike +3.)*
-- *Eth — Resonance* · 0 AP + 2 Charge · CD 4 — A harmful frequency: every foe in your zone takes 4 and is Weakened 1 this round. *(P3/E3: A harmful frequency: every foe in your zone takes 6 and is Weakened 2 this round.)*
+- *Eth — Resonance* · 0 AP + 2 Charge · CD 4 — A shattering note: within 2 of you, every Field and hazard springs on whoever stands in it and every Wound bites, now (each still does at round end). *(P3/E3: A shattering note: within 4 of you, every Field and hazard springs on whoever stands in it and every Wound bites, now (each still does at round end).)*
 
 **Tireless Respiration** · Time · `hop_tireless`
 
@@ -211,7 +211,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Impersonation** ★ · Space · `oct_imperson`
 
 - *Phys — Mimic* · 2 AP · CD 1 — Become something else: a decoy on an adjacent node draws attacks for 2 rounds. *(P3: Become something else: a decoy on an adjacent node draws attacks for 3 rounds.)*
-- *Eth — Become* · 1 AP + 2 Space · CD 3 — Take a borrowed form: Hidden 1, and your next strike pierces Shield and deals +3. *(P3/E3: Take a borrowed form: Hidden 1, and your next strike pierces Shield and deals +5.)*
+- *Eth — Become* · 1 AP + 2 Space · CD 3 — Take its place: trade spaces with a foe within 2 (not one that nothing can move). *(P3/E3: Take its place: trade spaces with a foe within 4 (not one that nothing can move).)*
 
 **Chromatic Cloak** ★ · Charge · `oct_cloak`
 

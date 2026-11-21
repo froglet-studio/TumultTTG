@@ -9,13 +9,23 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.105.0 — 2026-11-21 — pets
+## 2.107.0 — 2026-11-21 — pets
 
 - **Pets, sidekicks on the board.** A haven may have a stray: a hybrid of three clades, none of them human, with its own vitality (8). When it is found, one trait is drawn from each of its clades, and their three Physical faces make one pet card. Adopt it for 4 ◇ and the card joins the kit, where it counts toward the nine (a full kit takes it in exchange). A pilot keeps two pets at most. Pet cards grow with P; they have no Ethereal face (Garrett, 2026-11-21).
 - **The card plays from the pet.** The pilot pays with their own dice, and any one face sends the whole card to the track. Range, strikes, steps and states on "you" are the pet's; what a face does to dice, the track or the purse is the pilot's. Heel (1 AP) walks the pet up to 3.
 - **Safe on its pilot's node.** A pet may share its own pilot's node, and nothing can hurt it there; foes cannot target it. Off that node they can, and at 0 it dies: it leaves the board, and its card is out for the rest of the mission. It comes back, whole, for the next one (Garrett, 2026-11-21).
 - The look-ahead player plays pet faces and Heel, weighing a pet's vitality at 0.5 a point and its death at 12 (`T.EVAL`). `node tools/sim.js 40 missions --pets` gives every pilot a pet in place of a trait. Without pets nothing changes: the default tables are identical before and after.
 - **Saves** are version 29: every hero gains `pets`, a mission `pets`. `docs/reference/PETS.md`.
+
+## 2.105.0 — 2026-11-21 — costly faces that do something new
+
+Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap faces in one; it must make a play that is not possible otherwise. Four of the nine that were bundles are reworked; the rest follow in the next release.
+
+- **Heavy Throw** (Throwing Arm) throws the ally beside you onto a free space within 2 + E of you, ledges included (`throw`, the target `ally_throw`). It was a zone strike, a pierce and a knockback.
+- **Become** (Impersonation) trades places with a foe within 1 + E; a foe that nothing can move holds fast (`swap` with `foe`). It was Hidden and an empowered strike.
+- **Resonance** (Stridulation) sets everything around you off now: within 1 + E, every Field and hazard springs on whoever stands in it and every Wound bites, none of them spent (`spring`, `T.springAround`). It was a zone strike and a Weaken.
+- **Second Wind** (Persistence) gives back at round end what you lose from playing it until then, up to 4 + 2E (`rewind`, the state `Rewind`). It was four turns of regeneration.
+- `foe_r2` reaches further when an effect on the face names a `reach`.
 
 ## 2.104.0 — 2026-11-21 — pocket vehicles and big maps
 
