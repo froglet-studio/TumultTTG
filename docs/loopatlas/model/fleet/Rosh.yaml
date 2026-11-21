@@ -1,0 +1,152 @@
+# Tumult Loop Atlas: pilot Rosh (generated from the pre-made hero; combos invented).
+{
+ "label": "Rosh, the Brawler-in-the-Cloud",
+ "verbs": {
+  "Mass": {
+   "ability": "Jet Propulsion: Recoil Slam",
+   "does": "Melee 3, shove the foe 1, and recoil 1 node.",
+   "trigger": "Ethereal face: 2 AP + 1 Mass (Physical Jet: Burst 2 in any direction.)",
+   "scales": "At E 3: Melee 3, shove the foe 3, and recoil 1 node.",
+   "source": "src/data/ (card oct_jet)",
+   "arch": "reposition",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Charge": {
+   "ability": "Mob: Call the Mob",
+   "does": "Point the mob at a foe within 3: it is Marked, your hits on it deal +1, and both heroes' next hit deals +1.",
+   "trigger": "Ethereal face: 1 AP + 1 Charge (Physical Harry: Harry a foe within 2: it takes 3 and is Weakened 1 this round, and your ally's next hit deals +1.)",
+   "scales": "At E 3: Point the mob at a foe within 3: it is Marked, your hits on it deal +2, and both heroes' next hit deals +2.",
+   "source": "src/data/ (card rav_mob)",
+   "arch": "setup",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Space": {
+   "ability": "Carrion Wing: Pick the Weak",
+   "does": "Drop beside a foe within 3 and peck it for 3; if that leaves it at 2 hp or less, it falls.",
+   "trigger": "Ethereal face: 1 AP + 1 Space (Physical Circle Down: Circle down 2, over foes, and see everything beside where you land.)",
+   "scales": "At E 3: Drop beside a foe within 5 and peck it for 5; if that leaves it at 4 hp or less, it falls.",
+   "source": "src/data/ (card rav_carrion)",
+   "arch": "reposition",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Time": {
+   "ability": "Theory of Mind: Pre-empt",
+   "does": "Pre-arm: the next hit on you is reduced by 3. Dur 2.",
+   "trigger": "Ethereal face: 2 AP + 1 Time (Physical Read: Mark a foe: the next hit on it deals +2.)",
+   "scales": "At E 3: Pre-arm: the next hit on you is reduced by 7 and reflects 3 back. Dur 2.",
+   "source": "src/data/ (card hum_mind)",
+   "arch": "ward",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Omni": {
+   "ability": "Channel",
+   "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+   "trigger": "A banked etherion or Omni",
+   "scales": "",
+   "source": "src/data/world.js BASIC",
+   "arch": "omni",
+   "t": [
+    2,
+    10
+   ]
+  }
+ },
+ "board": {},
+ "missing": "",
+ "arenas": [
+  "Elite and the Heart",
+  "The Sought"
+ ],
+ "games": {
+  "Mass": [
+   "Jet Propulsion",
+   "Throwing Arm"
+  ],
+  "Charge": [
+   "Chromatic Cloak",
+   "Mob"
+  ],
+  "Space": [
+   "Carrion Wing"
+  ],
+  "Time": [
+   "Theory of Mind"
+  ]
+ },
+ "excused": [],
+ "lean": "striker",
+ "leanWhy": "Closes through cover and drops on whatever is weakest.",
+ "combos": [
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Mob and drop",
+   "t": [
+    20,
+    60
+   ],
+   "is": "Mark from range, then fall on the marked foe and finish it.",
+   "chain": [
+    [
+     "Charge",
+     "Call the Mob: Mark a foe within 3, both pilots +1"
+    ],
+    [
+     "Space",
+     "Pick the Weak: drop beside it and peck"
+    ],
+    [
+     "",
+     "If it is low, it falls"
+    ]
+   ],
+   "drivers": [
+    "break",
+    "crew"
+   ],
+   "feel": "Picking the moment the crowd turns."
+  },
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Vanish and slam",
+   "t": [
+    20,
+    90
+   ],
+   "is": "Hidden through the zone, then a melee that shoves the foe out of the fight.",
+   "chain": [
+    [
+     "Charge",
+     "Vanish: Hidden 2, moving"
+    ],
+    [
+     "",
+     "Walk up unseen"
+    ],
+    [
+     "Mass",
+     "Recoil Slam: melee 3, shove 1, recoil 1"
+    ]
+   ],
+   "drivers": [
+    "toy",
+    "solve"
+   ],
+   "feel": "Arriving from nowhere and leaving the same way."
+  }
+ ],
+ "doc": "src/data/world.js PREBUILTS"
+}

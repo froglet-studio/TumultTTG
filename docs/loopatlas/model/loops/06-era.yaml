@@ -1,0 +1,62 @@
+- id: era.release
+  parent: era
+  at: 4
+  name: Releases
+  tier: 7
+  kind: loop
+  t: [86400, 1209600]
+  is: bleeding-edge to development (testers, the playtest page) to main (players). Rules and content change here.
+  phases:
+  - n: A change merges
+  - n: Testers fly it
+  - n: Promoted to players
+  drivers: [find]
+  now:
+    s: built
+    note: 'Version bumps with every change; playtest NOTES rewritten each release.'
+  holes:
+  - 'on': npx
+    q: A player meeting a release learns of a new rule only by meeting it in play.
+    fill: 'The title names what changed in keywords: "New: Link. Stasis now also stops movement."'
+  src:
+  - CONTRIBUTING.md
+- id: era.atlas
+  parent: era
+  at: 4
+  name: The atlas grows
+  tier: 7
+  kind: loop
+  t: [604800, 7776000]
+  is: New pages of Tumult places, each grown from a Cosmic Shore pilot scene, each with its rules and field notes.
+  phases:
+  - n: A planetside scene is painted
+  - n: It becomes a page
+  - n: Players meet it on the route
+  - n: Field notes gather canon
+  drivers: [find, story]
+  now:
+    s: part
+    note: Nine pages (docs/reference/ATLAS.md); about 38 planetside scenes exist.
+  plan:
+    note: 'Phases 2.18 to 2.23: zones, pages, gravity and weather, journey, tell your own, the full atlas in print.'
+  src:
+  - docs/reference/ATLAS.md
+- id: era.shore
+  parent: era
+  at: 4
+  in: px
+  name: On to the Cosmic Shore
+  tier: 7
+  kind: loop
+  t: [2592000, 15552000]
+  is: A finished dossier is a pilot ready for the Hypersea; the fourth way onward is to leave Tumult.
+  phases:
+  - n: A dossier is finished
+  - n: The pilot leaves Tumult
+  - n: It flies in Cosmic Shore
+  drivers: [story, own]
+  plan:
+    note: The proposed campaign ends where the Hypersea begins (design/01).
+  src:
+  - docs/design/01-frame-and-campaign.md
+  - docs/LORE.md Guides

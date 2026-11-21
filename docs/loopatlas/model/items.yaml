@@ -1,0 +1,50 @@
+areas:
+- id: game
+  name: Game
+  is: Rules, content and balance that are not one loop on the map yet.
+- id: ui
+  name: Interface
+  is: Screens, tooltips, the dock, phones.
+- id: tooling
+  name: Tooling
+  is: Simulators, the audit, the census, this atlas.
+items:
+- id: kw-migration
+  name: Keyword migration plan
+  area: game
+  is: 'If P2 is accepted: rename verbs in cards.js in one pass (like the C1 rename), keep save ids, regenerate CARDS.md
+    and the audit.'
+  loops: [face]
+  in: x
+  prop:
+    s: add
+    note: One PR per keyword family, each with before and after numbers from tools/sim.js 40.
+  src: [proposal]
+- id: atlas-in-repo
+  name: This atlas in the repository
+  area: tooling
+  is: Copy Cosmic Shore's loop_atlas.py and the model folder into docs/loopatlas/, so the map is checked in CI like Cosmic
+    Shore's.
+  in: px
+  src: [proposal]
+  plan:
+    s: decided
+    note: 'Garrett 2026-11-21: yes, in the repo, with Cosmic Shore''s inspect-everything and advance-anything Board.'
+  build:
+    s: building
+    what: 'Garrett 2026-11-21: yes, in the repo, with Cosmic Shore''s inspect-everything and advance-anything Board.'
+    by: Garrett
+    at: '2026-11-21'
+    branch: claude/project-thread-g4abr1
+- id: card-previews
+  name: Pictures in the inspection window
+  area: tooling
+  is: A card's Code node shows a preview of the card in an inspection window, drawn from its data; pilots, places and foes
+    show their art, and the art rolls up to the loops above.
+  in: x
+  prop:
+    s: add
+    note: A card's Code node shows a preview of the card in an inspection window, drawn from its data; pilots, places and
+      foes show their art, and the art rolls up to the loops above.
+  src:
+  - map note 7oa4dt8durldvev7pv6f (Garrett, 2026-11-21)

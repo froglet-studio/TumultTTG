@@ -36,6 +36,8 @@ node tools/mission-log.js vault 2 7  one narrated mission: archetype, tier, seed
 node tools/mission-log.js --save f   carry on from a save (the playtest report's "Copy save") to the mission's end
 node tools/ui-drive.js 3 --manual    drive a whole run through the UI by clicking (seed 3)
 node tools/canon-pack.js recs.jsonl  storyteller pack from approved canon → dist/canon/ (`--public` updates docs/canon/public.jsonl)
+python3 tools/loop_atlas.py --check  the Loop Atlas model is valid and BOARD.md current; moves: propose/plan/develop/start/done/drop
+node tools/code-atlas.js build       the Code Atlas beneath the map (docs/loopatlas/CODE.md); the /loop-atlas skill publishes both
 ```
 
 Tools that take arguments are called with `node` directly, because PowerShell can swallow the `--` that `npm run x -- args` needs.
@@ -67,6 +69,7 @@ tools/                    build, dev server, harness, simulators, doc generators
 test/                     node --test suites
 docs/reference/           how the game works today (CARDS.md and ABILITY_AUDIT.md are generated)
 docs/design/              where it is going (pillars = settled, the rest = proposals)
+docs/loopatlas/           the Loop Atlas: loops as YAML, the work board, how ideas become build orders (PROCESS.md)
 docs/archive/v1.0/        the original design bundle — frozen, never edit
 ```
 

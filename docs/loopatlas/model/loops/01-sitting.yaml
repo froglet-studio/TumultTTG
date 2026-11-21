@@ -1,0 +1,56 @@
+- id: sitting
+  parent: era
+  at: 1
+  core: true
+  name: A sitting
+  tier: 5
+  kind: hub
+  t: [900, 5400]
+  is: One time you open the page. The title screen is the hub, and every change of place passes through it.
+  phases:
+  - n: Title
+    d: New expedition, Continue, the lobby, Atlas, Codex, Canon.
+  - n: Choose who flies
+    d: One to five players; pre-made, made or drafted pilots.
+  - n: Fly
+    d: The expedition, to the Heart or to a loss.
+  - n: The ending
+    d: Win or lose text, the pilot comes home with what it earned.
+  - n: Again, or leave
+  drivers: [crew, goal, find]
+  reps: null
+  repsOf: sittings per month
+  now:
+    s: built
+    note: 'Title, Continue mid-round, online lobby (2.80), Atlas, Codex and canon marks are all in.'
+  holes:
+  - 'on': np
+    q: The ending sends you back to the title. Nothing offers the next step that fits what just happened.
+    fill: 'The breath (new loop): after an expedition, one offered next step chosen from it: fly the same pilot again on
+      the Gale, open the page it lost on in the Atlas, answer one canon question about that pilot.'
+  src:
+  - docs/reference/OVERVIEW.md
+- id: breath
+  parent: sitting
+  at: 3
+  in: x
+  name: The breath
+  tier: 3
+  kind: loop
+  t: [20, 90]
+  is: Proposed. The pause after an expedition, treated as a loop of its own, where the game hands you up, down or across.
+  phases:
+  - n: See what you did
+    d: Stops cleared, the faces that decided them, what the pilot gained.
+  - n: One question
+    d: A canon prompt about the moment that mattered, never a blank form.
+  - n: One offered next step
+    d: The same pilot on a harder wind, or the page it lost on.
+  - n: Take it or go to the title
+  drivers: [story, make, mastery]
+  reps: '1'
+  repsOf: per expedition
+  prop:
+    s: add
+    note: Proposal P6. The canon prompts and the playtest report already know what happened; this adds the hand-off.
+  src: [proposal]

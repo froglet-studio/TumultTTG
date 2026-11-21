@@ -1,0 +1,6 @@
+# Tumult Loop Atlas: meta. Built on Cosmic Shore's Loop Atlas (Docs/LoopAtlas in froglet-studio/cosmic-shore).
+schema: 1
+updated: '2026-11-21'
+defaultVessel: Rosh
+artifact: https://claude.ai/artifact/BJc3vHJ8PUtjFwcLmbmM2T
+fleetOrder: [Rosh, Ekora, Nedira, Echo, Karenth, Slingshot]
