@@ -180,7 +180,15 @@
       icon: 'kw.hover',
       tone: 'good',
       state: 'Hover',
-      tip: 'Hover: off the ground, so hazards and Fields do not touch it, and it cannot be pushed or pulled.',
+      tip: 'Hover N: off the ground for N rounds. Hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges (height).',
+    },
+    {
+      id: 'ignorehazards',
+      re: "ignores? hazards|hazards (?:can’t|can't|don’t|don't) (?:touch|bother) you",
+      icon: 'kw.shield',
+      tone: 'good',
+      state: 'HazardImmune',
+      tip: 'Ignore hazards N: for N rounds a hazard does you no harm. You are still on the ground: Fields, pushes and pulls still reach you (Hover lifts you above all three).',
     },
     {
       id: 'empower',
@@ -261,6 +269,20 @@
       icon: 'kw.mint',
       tone: 'good',
       tip: 'Mint: adds dice to the bank for this round only. Minted dice never count toward the 15 and vanish at the end of the round.',
+    },
+    {
+      id: 'draw',
+      re: 'Draws?(?= (?:\\d|an? \\w+ die))',
+      icon: 'kw.mint',
+      tone: 'good',
+      tip: 'Draw N: take N dice of your choice from your pool and bank them showing that face (a plain die first; never one at random). They count toward your 15.',
+    },
+    {
+      id: 'reroll',
+      re: 'Reroll(?:s|ed)?',
+      icon: 'kw.mint',
+      tone: 'good',
+      tip: 'Reroll N: pick up to N of your banked dice and roll them again.',
     },
     {
       id: 'decoy',

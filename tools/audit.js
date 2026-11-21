@@ -116,10 +116,7 @@ function answersOf(x) {
       add('attrition', 'burst'); // the round's hits, given back
       break;
     case 'hover':
-      add('hazard', 'control');
-      break;
-    case 'weightless':
-      add('height', 'hazard', 'control'); // height is the card's promise; v2.0's pathing does not honour it yet
+      add('height', 'hazard', 'control'); // off the ground: over hazards and Fields, unmoved, onto ledges (2.102)
       break;
     case 'force':
       add('burst', 'single'); // shove an attacker out of reach; drag a kiter into reach, or anything into a hazard or trap
@@ -230,7 +227,7 @@ const ABLATIONS = [
     (x) =>
       (x.v === 'blink' && x.height) ||
       (x.v === 'throw' && x.height) ||
-      ['climb', 'weightless'].includes(x.v) ||
+      ['climb', 'hover'].includes(x.v) ||
       (x.v === 'morph' && x.climb) ||
       (x.v === 'interact' && x.height),
   ],
@@ -265,11 +262,7 @@ const ABLATIONS = [
     (x) => ['shield', 'stasis', 'hidden', 'thorns'].includes(x.v) || (x.v === 'heal' && x.ward != null),
   ],
   ['heal', 'no healing', (x) => x.v === 'heal' || x.v === 'rewind' || (x.v === 'engine' && x.kind === 'regen')],
-  [
-    'mobility',
-    'no movement abilities',
-    (x) => ['move', 'blink', 'climb', 'swap', 'throw', 'hover', 'weightless'].includes(x.v),
-  ],
+  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'climb', 'swap', 'throw', 'hover'].includes(x.v)],
   [
     'control',
     'no foe control',
@@ -282,7 +275,7 @@ const ABLATIONS = [
     'hazard',
     'no hazard answers',
     (x) =>
-      ['hazardImmune', 'hover', 'weightless'].includes(x.v) ||
+      ['hazardImmune', 'hover'].includes(x.v) ||
       (x.v === 'cleanse' && x.field != null) ||
       (x.v === 'anchor' && (x.who === 'self' || x.who === 'ally')),
   ],

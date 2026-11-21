@@ -129,7 +129,7 @@ test('the engine and data stay deterministic and DOM-free', () => {
   }
 });
 
-test('height: Weightless and a climbing form walk up to a ledge; nobody else does until the ramp drops', () => {
+test('height: Hover and a climbing form walk up to a ledge; nobody else does until the ramp drops', () => {
   const B = T.Board;
   // a hero on the floor beside the Vault's ledge, holding the two cards that promise the climb
   const below = (prepare) => {
@@ -148,7 +148,7 @@ test('height: Weightless and a climbing form walk up to a ledge; nobody else doe
   assert.equal(
     below((s) => assert.ok(H.playIn(s, 'owl_bones', 'E').ok)),
     true,
-    'Hollow Bones — Weightless can',
+    'Hollow Bones — Hover can',
   );
   assert.equal(
     below((s) => assert.ok(H.playIn(s, 'axo_neoteny', 'E').ok)),

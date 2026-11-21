@@ -264,7 +264,7 @@
       txt:(P,E)=>`Glide ${1+P}, over foes.` },
     { n:'Hover', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'hover', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`Hover-drift for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn.` },
+      txt:(P,E)=>`Hover-drift: Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).` },
     'Buzz the tegmina and drift.');
 
   /* ───────────────────────── 3 · BARN OWL (S/C) ───────────────────────── */
@@ -321,8 +321,8 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Move ${1+P}; hazards can't touch you this round.` },
     { n:'Weightless', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'weightless', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`Shed apparent weight for ${1+E} rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.` },
+      fx:[{v:'hover', dur:(P,E)=>1+E}],
+      txt:(P,E)=>`Shed apparent weight: Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).` },
     'So light you drift.');
   C('owl','owl_foresight','Binocular Foresight','T',0,
     { n:'Spot Threat', ap:0, el:0, cd:1, dur:0, tgt:'self',
@@ -625,8 +625,8 @@
       fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Hold depth: Anchored (nothing moves you, your own steps included) and Shield ${1+P}.` },
     { n:'Hover-Anchor', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'hover', dur:(P,E)=>1+E, noAp:true},{v:'anchor', who:'ally', dur:(P,E)=>E>=2?1+E:0, adjacent:true}],
-      txt:(P,E)=>`Alter your weight for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you${E>=2?'; an adjacent ally is anchored too':''}.` },
+      fx:[{v:'hover', dur:(P,E)=>1+E},{v:'anchor', who:'ally', dur:(P,E)=>E>=2?1+E:0, adjacent:true}],
+      txt:(P,E)=>`Alter your weight: Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges)${E>=2?'; an adjacent ally is Anchored too':''}.` },
     'Rise, sink, or hold.');
   C('eel','eel_galvanic','Galvanic Counterstrike','C',0,
     { n:'Static', ap:1, el:0, cd:1, dur:0, tgt:'self',
