@@ -102,7 +102,7 @@
       icon: 'kw.mark',
       tone: 'bad',
       state: 'Marked',
-      tip: 'Marked: the next hit on it, by anyone, deals +2. The mark is then spent.',
+      tip: 'Mark N: the next hit on it, by anyone, deals N more (2 unless it says), then the Mark is spent. A Mark for some rounds adds to every hit until it wears off; a Pierce Mark makes that next hit ignore Shield.',
     },
     {
       id: 'hidden',
@@ -126,7 +126,7 @@
       icon: 'kw.expose',
       tone: 'bad',
       state: 'Exposed',
-      tip: 'Exposed: the next hit on it ignores Shield and deals extra.',
+      tip: 'Exposed: since 2.92 a Pierce Mark: the next hit on it ignores Shield and deals extra.',
     },
     {
       id: 'shield',

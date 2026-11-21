@@ -812,15 +812,16 @@
         const flags = source.roundFlags || (source.roundFlags = {});
         flags.struck = true;
       }
-      if (ts.Studied) dmg += ts.Studied.n;
+      // Mark (2.92): the next hit on it deals `next` more (Pierce if `pierce`), and every hit `each` more while it lasts
       if (ts.Marked) {
-        dmg += 2;
-        delete ts.Marked;
-      }
-      if (ts.Exposed) {
-        dmg += ts.Exposed.bonus;
-        pierce = true;
-        delete ts.Exposed;
+        const mk = ts.Marked;
+        dmg += (mk.next || 0) + (mk.each || 0);
+        if (mk.next) {
+          if (mk.pierce) pierce = true;
+          delete mk.next;
+          delete mk.pierce;
+        }
+        if (!mk.each) delete ts.Marked;
       }
       if (ss.Weak) dmg = Math.max(0, dmg - ss.Weak.v);
     } else if (source && source.kind === 'enemy') {
@@ -1116,6 +1117,21 @@
   }
   T.linkHeal = linkHeal;
 
+  /** Mark a unit: the larger of each part stands (`next`, `pierce`, `each` for `t` rounds). */
+  function markUnit(m, u, o) {
+    const mk = st(u).Marked || {};
+    if (o.next) {
+      mk.next = Math.max(mk.next || 0, o.next);
+      if (o.pierce) mk.pierce = true;
+    }
+    if (o.each) {
+      mk.each = Math.max(mk.each || 0, o.each);
+      mk.t = Math.max(mk.t || 0, o.t || 1);
+    }
+    st(u).Marked = mk;
+    fx(m, { t: 'state', ent: u.uid, name: 'Marked' });
+  }
+  T.markUnit = markUnit;
   /** Heal a unit: restore vitality, or get a downed pilot up with that much (2.90: Heal raises the downed). */
   function healUnit(m, u, amt) {
     if (amt <= 0) return 0;
@@ -1198,7 +1214,7 @@
       else if (x.kw === 'weaken') weaken(m, u, x.n, t);
       else if (x.kw === 'anchor') {
         anchorEnt(m, u, t);
-      } else if (x.kw === 'mark') st(u).Marked = {};
+      } else if (x.kw === 'mark') markUnit(m, u, { next: x.n || 2 });
       else if (x.kw === 'hidden') setHidden(m, u, t, false);
       else if (x.kw === 'heal') healUnit(m, u, x.n);
       else if ((x.kw === 'pull' || x.kw === 'push') && owner && !SPRINGING.has(f)) {
@@ -1837,6 +1853,8 @@
         break;
       }
       case 'mark': {
+        // Mark N (2.92): the next hit on it deals N more (2 unless it says); `pierce`, that hit ignores Shield;
+        // `dur`, every hit on it deals N more for that many rounds. It absorbs Studied and Exposed.
         let targets = [];
         if (f.area) {
           const r = num(f.radius, P, E);
@@ -1845,29 +1863,20 @@
           const e = nearestFoe(m, actor);
           if (e) targets = [e];
         } else {
-          const t = targetEnt(m, ctx);
+          const t = targetEnt(m, ctx) || ctx.lastTarget;
           if (t) targets = [t];
         }
+        const n = f.n != null ? num(f.n, P, E) : 2;
+        const dur = f.dur != null ? num(f.dur, P, E) : 0;
         for (const t of targets)
-          if (t.kind === 'enemy') {
-            st(t).Marked = {};
-            fx(m, { t: 'state', ent: t.uid, name: 'Marked' });
-          }
-        if (targets.length) say(m, `${targets.map((t) => t.name).join(', ')} Marked.`, 'hero');
-        break;
-      }
-      case 'expose': {
-        const t = targetEnt(m, ctx);
-        if (!t || t.kind !== 'enemy') break;
-        st(t).Exposed = { bonus: num(f.bonus, P, E) };
-        say(m, `${t.name}'s weak point is exposed.`, 'hero');
-        break;
-      }
-      case 'studied': {
-        const t = targetEnt(m, ctx) || ctx.lastTarget;
-        if (!t || t.kind !== 'enemy') break;
-        st(t).Studied = { n: (st(t).Studied ? st(t).Studied.n : 0) + num(f.n, P, E) };
-        say(m, `${actor.name} studies ${t.name} (+${st(t).Studied.n} to hits).`, 'hero');
+          if (t.kind === 'enemy' && n > 0)
+            markUnit(m, t, dur > 0 ? { each: n, t: dur } : { next: n, pierce: !!f.pierce });
+        if (targets.length)
+          say(
+            m,
+            `${targets.map((t) => t.name).join(', ')} Marked +${n}${dur > 0 ? ` for ${dur} rounds` : ''}.`,
+            'hero',
+          );
         break;
       }
       /* ---------- SELF STATES ---------- */
@@ -2609,10 +2618,7 @@
       const near = T.liveEnemies(m)
         .filter((e) => !isHidden(e) && B.dist(m.board, h.pos, e.pos, true) <= r)
         .sort((a, b) => B.dist(m.board, h.pos, a.pos, true) - B.dist(m.board, h.pos, b.pos, true) || a.uid - b.uid)[0];
-      if (near && !st(near).Marked) {
-        st(near).Marked = {};
-        fx(m, { t: 'state', ent: near.uid, name: 'Marked' });
-      }
+      if (near && !(st(near).Marked && st(near).Marked.next)) markUnit(m, near, { next: 2 });
     }
   };
 
@@ -2765,6 +2771,13 @@
         if (k === 'Engines') {
           s[k] = v.filter((x) => --x.t > 0);
           if (!s[k].length) delete s[k];
+        } else if (k === 'Marked' && typeof v.t === 'number') {
+          // a lasting Mark wears off; a next-hit Mark on top of it stays until it is spent
+          if (--v.t <= 0) {
+            delete v.each;
+            delete v.t;
+            if (!v.next) delete s[k];
+          }
         } else if (k === 'Empower' || k === 'Freecast') {
           s[k] = v.filter((x) => x.t == null || --x.t > 0);
           if (!s[k].length) delete s[k];
@@ -2887,11 +2900,9 @@
       Hidden: 'Hidden — immune to zone (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
       Shield: `Shield ${v.v} — each hit is reduced by ${v.v}${v.all ? ', even area' : ' (area bypasses)'}. Pierce and true damage ignore it.`,
       Anchored: 'Anchored — nothing moves it: no push, no pull, and it cannot walk or blink. It still acts.',
-      Marked: 'Marked — the next hit on this foe deals +2.',
+      Marked: `Marked — ${[v.next ? `the next hit on it deals +${v.next}${v.pierce ? ' and ignores Shield' : ''}` : '', v.each ? `every hit deals +${v.each} for ${v.t}` : ''].filter(Boolean).join('; ')}.`,
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
       Located: 'Located — cannot Hide; can be targeted and struck across a zone even if Hidden.',
-      Studied: `Studied — hero hits deal +${v.n}.`,
-      Exposed: `Exposed — next hit ignores Shield and deals +${v.bonus}.`,
       Thorns: `Thorns ${v.v} — melee attackers take ${v.v}.`,
       Preempt: `Pre-empt — next hit taken is −${v.v}${v.reflect ? ', reflects ' + v.reflect : ''}.`,
       Counter: `Counter — next melee against you is turned back for ${v.dmg}.`,

@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.91.0',
+    version: '2.92.0',
     items: [
+      {
+        text: 'Mark is now one keyword with a number: the next hit on a Marked foe deals that much more (2 unless the card says). Faces that used to Study a foe ("your hits on it deal +1 permanently") now Mark it for 3 rounds: +1 to every hit until it wears off, not for the whole mission. Exposed is a Pierce Mark: the next hit ignores Shield. Does the number on a Mark read clearly on the foe?',
+        cards: ['che_tear', 'msh_colours'],
+      },
       {
         text: 'Anchor is now one keyword: nothing moves an Anchored unit, its own walking and blinking included, and it still acts. Rooted, Slowed, held and "can’t blink" are all Anchored now. That cuts both ways: Anchor yourself against a drag and you stay put for the round, so walk first. When a foe roots you, nothing can push you either. Does planning around your own Anchor feel like a fair price?',
         cards: ['fly_root'],

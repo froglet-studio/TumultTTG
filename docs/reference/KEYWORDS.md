@@ -108,3 +108,16 @@ It replaced `revive` and `phoenix`. In code: the verb `heal` (`n`, `party`, `tar
 
 In code: the verb `anchor` (`who`: self / foe / ally / target, `dur`), the state `Anchored`, `T.anchorEnt`,
 `T.isAnchored`; saves version 23.
+
+## Mark (2.92)
+
+> **Mark N.** The next hit on it, by anyone, deals N more.
+
+- **N** is 2 unless the face says. The Mark is spent by that hit.
+- **For N rounds:** every hit on it deals N more until the Mark wears off (what Studied did, for a whole mission,
+  until 2.92).
+- **Pierce:** that next hit ignores Shield (what Exposed did).
+- The larger of each part stands; a next-hit Mark and a lasting one can sit on the same foe.
+
+In code: the verb `mark` (`n`, `dur`, `pierce`, `nearest`, `area` + `radius`), the state `Marked`
+(`{ next, pierce, each, t }`), `T.markUnit`; saves version 24.

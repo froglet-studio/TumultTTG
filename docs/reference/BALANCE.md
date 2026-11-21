@@ -484,3 +484,7 @@ Every heal for both pilots or an ally now gets a downed pilot up; revive and pho
 ## v2.91.0 — Anchor
 
 Anchored, Held, Rooted, Slow, SlowSelf and NoTele became one Anchor (nothing moves it, its own steps included). Same seeds, 2.90.0 → 2.91.0: `80 runs --player strong` 40 → 41; `120 runs --player weak` 11 → 13; `node tools/sim.js 40` runs 6 → 7 and 22 → 23 of 40, mission wins 70% → 71% and 89% → 89%; `40 missions --player weak` average 76.1% → 75.9%. Each within the noise, but the sweep drifts the same way, so it gets one retune at its end with larger samples.
+
+## v2.92.0 — Mark
+
+Studied (+N to every hit for the whole mission) became a Mark for 3 rounds, and Exposed a Pierce Mark. Same seeds, 2.91.0 → 2.92.0: `80 runs --player strong` 41 → 39; `120 runs --player weak` 13 → 11; `node tools/sim.js 40` runs 7 → 6 and 23 → 21 of 40, mission wins 71% → 71% and 89% → 88%. A little harder, which takes back Anchor's drift: the sweep is at 39 of 80 and 11 of 120 against 2.85's 39 and 10.

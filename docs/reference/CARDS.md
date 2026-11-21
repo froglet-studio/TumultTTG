@@ -241,7 +241,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Chemo-Suckers** · Charge · `oct_chemo`
 
 - *Phys — Taste* · 1 AP · CD 1 — Taste by touch: reveal within 1 and Mark the nearest foe. *(P3: Taste by touch: reveal within 2 and Mark the nearest foe.)*
-- *Eth — Cling-Read* · 1 AP + 1 Charge · CD 3 — Tag a foe for 3 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently. *(P3/E3: Tag a foe for 5 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently.)*
+- *Eth — Cling-Read* · 1 AP + 1 Charge · CD 3 — Tag a foe for 3 rounds: it cannot Hide, is Weakened 1, and it is Marked +1 for 3 rounds. *(P3/E3: Tag a foe for 5 rounds: it cannot Hide, is Weakened 1, and it is Marked +1 for 3 rounds.)*
 
 **Paralytic Bite** · Time · `oct_bite`
 
@@ -250,7 +250,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Adaptive Intellect** · Charge · `oct_intellect`
 
-- *Phys — Study* · 1 AP · CD 1 — Study a foe: your hits on it deal +1, permanently and stacking. *(P3: Study a foe: your hits on it deal +2, permanently and stacking.)*
+- *Phys — Study* · 1 AP · CD 1 — Study a foe: it is Marked +1 for 3 rounds. *(P3: Study a foe: it is Marked +2 for 3 rounds.)*
 - *Eth — Counter-Model* · 2 AP + 1 Charge · CD 3 · Dur 2 — Model their next move: the next hit on you is −3, and you slip 1 node when it lands. Dur 2. *(P3/E3: Model their next move: the next hit on you is −3 and reflects 3, and you slip 1 node when it lands. Dur 2.)*
 
 ## 5 · Tokay Gecko — leans C/M
@@ -588,7 +588,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Patient Study** · Time · `ora_study`
 
-- *Phys — Watch* · 1 AP · CD 2 — Study a foe: your hits on it deal +1 from now on, and the next hit on it deals +2. *(P3: Study a foe: your hits on it deal +2 from now on, and the next hit on it deals +2.)*
+- *Phys — Watch* · 1 AP · CD 2 — Study a foe: it is Marked +1 for 3 rounds, and the next hit on it deals +2. *(P3: Study a foe: it is Marked +2 for 3 rounds, and the next hit on it deals +2.)*
 - *Eth — Outthink* · 1 AP + 1 Time · CD 3 · Dur 2 — The next hit on you is −3, and you slip 1 node when it lands. Dur 2. *(P3/E3: The next hit on you is −5, and you slip 1 node when it lands. Dur 2.)*
 
 **Fruit Memory** · Charge · `ora_memory`
@@ -730,7 +730,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tufted Ears** · Space · `cat_tufts`
 
-- *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +1. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +2.)*
+- *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and it is Marked +1 for 3 rounds. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and it is Marked +2 for 3 rounds.)*
 - *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear everything within 2 for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear everything within 4 for 4 rounds; every foe within 4 is Marked.)*
 
 **Snowshoe Paws** · Space · `lyn_snowshoe`
@@ -779,7 +779,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tufted Ears** · Space · `cat_tufts`
 
-- *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +1. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +2.)*
+- *Phys — Listen* · 1 AP · CD 1 — Hear the nearest foe, hidden or not: it is Located for 2 rounds and it is Marked +1 for 3 rounds. *(P3: Hear the nearest foe, hidden or not: it is Located for 2 rounds and it is Marked +2 for 3 rounds.)*
 - *Eth — Sound Map* · 1 AP + 1 Space · CD 3 — Hear everything within 2 for 2 rounds; every foe within 2 is Marked. *(P3/E3: Hear everything within 4 for 4 rounds; every foe within 4 is Marked.)*
 
 **Sky Swat** ★ · Charge · `car_swat`
@@ -887,7 +887,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Stripes** · Time · `tig_stripes`
 
-- *Phys — Stripes* · 1 AP · CD 2 — Watch a foe within 3 from the grass: your hits on it deal +1, and you are Hidden 1. *(P3: Watch a foe within 3 from the grass: your hits on it deal +2, and you are Hidden 1.)*
+- *Phys — Stripes* · 1 AP · CD 2 — Watch a foe within 3 from the grass: it is Marked +1 for 3 rounds, and you are Hidden 1. *(P3: Watch a foe within 3 from the grass: it is Marked +2 for 3 rounds, and you are Hidden 1.)*
 - *Eth — Tall Grass* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely; your next strike deals +3 through Shield. *(P3/E3: Hide for 4 rounds, moving freely; your next strike deals +5 through Shield.)*
 
 ## 18 · Cheetah — leans S/T
@@ -926,8 +926,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tear Marks** · Charge · `che_tear`
 
-- *Phys — Focus* · 1 AP · CD 1 — Fix a foe in sight: it is Located for 2 rounds and your hits on it deal +1. *(P3: Fix a foe in sight: it is Located for 2 rounds and your hits on it deal +2.)*
-- *Eth — Long Look* · 1 AP + 1 Charge · CD 3 — Pick out any foe: Located for 3 rounds, Marked, and your hits on it deal +2. *(P3/E3: Pick out any foe: Located for 5 rounds, Marked, and your hits on it deal +4.)*
+- *Phys — Focus* · 1 AP · CD 1 — Fix a foe in sight: it is Located for 2 rounds and it is Marked +1 for 3 rounds. *(P3: Fix a foe in sight: it is Located for 2 rounds and it is Marked +2 for 3 rounds.)*
+- *Eth — Long Look* · 1 AP + 1 Charge · CD 3 — Pick out any foe: Located for 3 rounds, and Marked: +2 to the next hit, +2 to every hit for 3 rounds. *(P3/E3: Pick out any foe: Located for 5 rounds, and Marked: +2 to the next hit, +4 to every hit for 3 rounds.)*
 
 **Sprinter's Claws** · Mass · `che_claws`
 
@@ -946,7 +946,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and it is Marked +3 for 3 rounds.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -965,7 +965,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Mousing Pounce** · Mass · `fox_pounce`
 
-- *Phys — Snow Dive* · 1 AP · CD 1 — Dive on a foe within 2 for 2, hidden or not, and your hits on it deal +1 after. *(P3: Dive on a foe within 2 for 5, hidden or not, and your hits on it deal +1 after.)*
+- *Phys — Snow Dive* · 1 AP · CD 1 — Dive on a foe within 2 for 2, hidden or not, and it is Marked +1 for 3 rounds. *(P3: Dive on a foe within 2 for 5, hidden or not, and it is Marked +1 for 3 rounds.)*
 - *Eth — High Arc* · 1 AP + 1 Mass · CD 3 — Arc through the air to beside a foe within 3, height included, and land on it for 4. *(P3/E3: Arc through the air to beside a foe within 5, height included, and land on it for 6.)*
 
 **Den** · Time · `fox_den`
@@ -995,7 +995,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and it is Marked +3 for 3 rounds.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1014,7 +1014,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Mousing Pounce** · Mass · `fox_pounce`
 
-- *Phys — Snow Dive* · 1 AP · CD 1 — Dive on a foe within 2 for 2, hidden or not, and your hits on it deal +1 after. *(P3: Dive on a foe within 2 for 5, hidden or not, and your hits on it deal +1 after.)*
+- *Phys — Snow Dive* · 1 AP · CD 1 — Dive on a foe within 2 for 2, hidden or not, and it is Marked +1 for 3 rounds. *(P3: Dive on a foe within 2 for 5, hidden or not, and it is Marked +1 for 3 rounds.)*
 - *Eth — High Arc* · 1 AP + 1 Mass · CD 3 — Arc through the air to beside a foe within 3, height included, and land on it for 4. *(P3/E3: Arc through the air to beside a foe within 5, height included, and land on it for 6.)*
 
 **Den** · Time · `fox_den`
@@ -1024,12 +1024,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Magnetic Sense** · Space · `fox_magnet`
 
-- *Phys — Line Up* · 1 AP · CD 1 — Line up on any foe: it can't Hide for 2 rounds, and your hits on it deal +1. *(P3: Line up on any foe: it can't Hide for 5 rounds, and your hits on it deal +1.)*
+- *Phys — Line Up* · 1 AP · CD 1 — Line up on any foe: it can't Hide for 2 rounds, and it is Marked +1 for 3 rounds. *(P3: Line up on any foe: it can't Hide for 5 rounds, and it is Marked +1 for 3 rounds.)*
 - *Eth — North Leap* · 1 AP + 1 Space · CD 3 — Leap the long way to beside a foe within 4, and land on it for 3. *(P3/E3: Leap the long way to beside a foe within 6, and land on it for 5.)*
 
 **Cunning** ★ · Time · `fox_cunning`
 
-- *Phys — Read It* · 1 AP · CD 1 — Work out a foe within 3: Weakened 1 for 1 round, and your hits on it deal +1. *(P3: Work out a foe within 3: Weakened 1 for 2 rounds, and your hits on it deal +1.)*
+- *Phys — Read It* · 1 AP · CD 1 — Work out a foe within 3: Weakened 1 for 1 round, and it is Marked +1 for 3 rounds. *(P3: Work out a foe within 3: Weakened 1 for 2 rounds, and it is Marked +1 for 3 rounds.)*
 - *Eth — Outfox* · 1 AP + 1 Time · CD 4 — Both heroes' next hit taken is 2 less, and the next card you play this turn doesn't go to the track. *(P3/E3: Both heroes' next hit taken is 4 less, and the next card you play this turn doesn't go to the track.)*
 
 **Brush Feint** · Space · `fox_brush`
@@ -1044,7 +1044,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and it is Marked +3 for 3 rounds.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1073,7 +1073,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pair Hunt** ★ · Charge · `jac_pair`
 
-- *Phys — Flank* · 1 AP · CD 1 — Melee 1, opening it up: both heroes' hits on it deal +1 after. *(P3: Melee 4, opening it up: both heroes' hits on it deal +1 after.)*
+- *Phys — Flank* · 1 AP · CD 1 — Melee 1, opening it up: it is Marked +1 for 3 rounds. *(P3: Melee 4, opening it up: it is Marked +1 for 3 rounds.)*
 - *Eth — Pair Hunt* · 1 AP + 1 Charge · CD 3 — Send your partner up to 2; both heroes' next strike deals +2. *(P3/E3: Send your partner up to 2; both heroes' next strike deals +4.)*
 
 **Golden Coat** · Time · `jac_coat`
@@ -1093,7 +1093,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and it is Marked +3 for 3 rounds.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1147,7 +1147,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Nose** · Space · `dog_nose`
 
 - *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and your hits on it deal +3.)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: it can't Hide for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Lock onto a foe's scent: it can't Hide for 5 rounds, and it is Marked +3 for 3 rounds.)*
 
 **Pack Howl** · Charge · `dog_howl`
 
@@ -1230,7 +1230,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Whisker Hunt** · Space · `ott_whisker`
 
-- *Phys — Whiskers* · 1 AP · CD 1 — Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and your hits on it deal +1. *(P3: Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and your hits on it deal +2.)*
+- *Phys — Whiskers* · 1 AP · CD 1 — Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and it is Marked +1 for 3 rounds. *(P3: Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and it is Marked +2 for 3 rounds.)*
 - *Eth — Murky Hunt* · 1 AP + 1 Space · CD 3 — Feel the water within 3 for 2 rounds; every foe within 2 is Marked. *(P3/E3: Feel the water within 3 for 4 rounds; every foe within 2 is Marked.)*
 
 ## 25 · Ratel — leans M/T
@@ -1358,7 +1358,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Whisker Feel** · Space · `wal_whisker`
 
 - *Phys — Feel the Floor* · 1 AP · CD 1 — Reveal within 1, Mark the nearest foe (the next hit on it deals +2), and heal 1. *(P3: Reveal within 4, Mark the nearest foe (the next hit on it deals +2), and heal 1.)*
-- *Eth — Read the Current* · 1 AP + 1 Space · CD 3 — Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and your hits on it deal +2. *(P3/E3: Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and your hits on it deal +4.)*
+- *Eth — Read the Current* · 1 AP + 1 Space · CD 3 — Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and it is Marked +2 for 3 rounds. *(P3/E3: Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and it is Marked +4 for 3 rounds.)*
 
 **Herd Bellow** · Charge · `wal_bellow`
 
@@ -2108,7 +2108,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Night Snuffle** · Charge · `adi_snuffle`
 
 - *Phys — Snuffle* · 1 AP · CD 1 — Reveal within 1, Mark the nearest foe (the next hit on it deals +2), and heal 1. *(P3: Reveal within 4, Mark the nearest foe (the next hit on it deals +2), and heal 1.)*
-- *Eth — Root Out* · 1 AP + 1 Charge · CD 3 — Root out any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Root out any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+- *Eth — Root Out* · 1 AP + 1 Charge · CD 3 — Root out any foe: it can't Hide for 3 rounds, and it is Marked +2 for 3 rounds. *(P3/E3: Root out any foe: it can't Hide for 3 rounds, and it is Marked +4 for 3 rounds.)*
 
 **Armour Shove** · Mass · `adi_shove`
 
@@ -2323,7 +2323,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Electroreception** · Charge · `pla_electro`
 
 - *Phys — Sense the Current* · 1 AP · CD 1 — Feel the electric field: reveal within 2, Mark the nearest foe (the next hit on it deals +2), and your next hit this turn deals +1. *(P3: Feel the electric field: reveal within 5, Mark the nearest foe (the next hit on it deals +2), and your next hit this turn deals +1.)*
-- *Eth — Every Heartbeat* · 1 AP + 1 Charge · CD 4 — Feel every heartbeat within 2 for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Feel every heartbeat within 4 for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+- *Eth — Every Heartbeat* · 1 AP + 1 Charge · CD 4 — Feel every heartbeat within 2 for 2 rounds; pick one foe: it can't Hide for 3 rounds, and it is Marked +2 for 3 rounds. *(P3/E3: Feel every heartbeat within 4 for 2 rounds; pick one foe: it can't Hide for 3 rounds, and it is Marked +4 for 3 rounds.)*
 
 **Venom Spur** · Mass · `pla_spur`
 
@@ -2343,7 +2343,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Eyes-Shut Hunt** · Charge · `pla_shut`
 
 - *Phys — Blind Strike* · 1 AP · CD 1 — Strike a foe within 2 for 2, hidden or not. *(P3: Strike a foe within 2 for 5, hidden or not.)*
-- *Eth — Find by Feel* · 1 AP + 1 Charge · CD 3 — Find any foe by feel: it takes 3, can't Hide for 2 rounds, and your hits on it deal +1. *(P3/E3: Find any foe by feel: it takes 5, can't Hide for 2 rounds, and your hits on it deal +1.)*
+- *Eth — Find by Feel* · 1 AP + 1 Charge · CD 3 — Find any foe by feel: it takes 3, can't Hide for 2 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Find any foe by feel: it takes 5, can't Hide for 2 rounds, and it is Marked +1 for 3 rounds.)*
 
 **Webbed Fold** · Space · `pla_web`
 
@@ -2377,7 +2377,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Sight** · Charge · `rap_sight`
 
 - *Phys — Spot* · 1 AP · CD 1 — See everything within 3, and Mark the nearest foe (the next hit on it deals +2). *(P3: See everything within 6, and Mark the nearest foe (the next hit on it deals +2).)*
-- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See everything within 3 this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See everything within 5 this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
+- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See everything within 3 this round; pick a foe: it can't Hide for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: See everything within 5 this round; pick a foe: it can't Hide for 5 rounds, and it is Marked +2 for 3 rounds.)*
 
 **Stoop** · Mass · `rap_stoop`
 
@@ -2426,7 +2426,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Keen Sight** · Charge · `rap_sight`
 
 - *Phys — Spot* · 1 AP · CD 1 — See everything within 3, and Mark the nearest foe (the next hit on it deals +2). *(P3: See everything within 6, and Mark the nearest foe (the next hit on it deals +2).)*
-- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See everything within 3 this round; pick a foe: it can't Hide for 3 rounds, and your hits on it deal +1. *(P3/E3: See everything within 5 this round; pick a foe: it can't Hide for 5 rounds, and your hits on it deal +2.)*
+- *Eth — Eye of the Sky* · 1 AP + 1 Charge · CD 3 — See everything within 3 this round; pick a foe: it can't Hide for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: See everything within 5 this round; pick a foe: it can't Hide for 5 rounds, and it is Marked +2 for 3 rounds.)*
 
 **Stoop** · Mass · `rap_stoop`
 
@@ -2588,12 +2588,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Plumes** · Charge · `egr_plumes`
 
 - *Phys — Display* · 1 AP · CD 1 — Flare your plumes and slip away: leave a decoy where you stood for 1 round, and move 1. *(P3: Flare your plumes and slip away: leave a decoy where you stood for 1 round, and move 4.)*
-- *Eth — Dazzle* · 1 AP + 1 Charge · CD 3 — Dazzle a foe within 3: it is Weakened 1 for 2 rounds and Marked, and your hits on it deal +1. *(P3/E3: Dazzle a foe within 3: it is Weakened 2 for 2 rounds and Marked, and your hits on it deal +1.)*
+- *Eth — Dazzle* · 1 AP + 1 Charge · CD 3 — Dazzle a foe within 3: it is Weakened 1 for 2 rounds and Marked: +2 to the next hit, +1 to every hit for 3 rounds. *(P3/E3: Dazzle a foe within 3: it is Weakened 2 for 2 rounds and Marked: +2 to the next hit, +1 to every hit for 3 rounds.)*
 
 **Foot Stir** · Time · `egr_stir`
 
 - *Phys — Stir* · 1 AP · CD 1 — Stir the mud with a yellow foot: see within 1, Mark the nearest foe, and your next hit this turn deals +1. *(P3: Stir the mud with a yellow foot: see within 4, Mark the nearest foe, and your next hit this turn deals +1.)*
-- *Eth — Flush Out* · 1 AP + 1 Time · CD 3 — Flush out any foe: it takes 1, can't Hide for 2 rounds, and your hits on it deal +1. *(P3/E3: Flush out any foe: it takes 1, can't Hide for 2 rounds, and your hits on it deal +2.)*
+- *Eth — Flush Out* · 1 AP + 1 Time · CD 3 — Flush out any foe: it takes 1, can't Hide for 2 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Flush out any foe: it takes 1, can't Hide for 2 rounds, and it is Marked +2 for 3 rounds.)*
 
 **Cattle Rider** · Space · `egr_cattle`
 
@@ -2926,7 +2926,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Mob** · Charge · `rav_mob`
 
 - *Phys — Harry* · 1 AP · CD 1 — Harry a foe within 2: it takes 1 and is Weakened 1 this round, and your ally's next hit deals +1. *(P3: Harry a foe within 2: it takes 4 and is Weakened 1 this round, and your ally's next hit deals +1.)*
-- *Eth — Call the Mob* · 1 AP + 1 Charge · CD 3 — Point the mob at a foe within 3: it is Marked, your hits on it deal +1, and both heroes' next hit deals +1. *(P3/E3: Point the mob at a foe within 3: it is Marked, your hits on it deal +2, and both heroes' next hit deals +2.)*
+- *Eth — Call the Mob* · 1 AP + 1 Charge · CD 3 — Point the mob at a foe within 3: it is Marked (+2 to the next hit, +1 to every hit for 3 rounds), and both heroes' next hit deals +1. *(P3/E3: Point the mob at a foe within 3: it is Marked (+2 to the next hit, +2 to every hit for 3 rounds), and both heroes' next hit deals +2.)*
 
 **Carrion Wing** · Space · `rav_carrion`
 
@@ -2936,7 +2936,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Raven Memory** · Time · `rav_memory`
 
 - *Phys — I Know You* · 1 AP · CD 1 — Remember a foe within 3: it can't Hide for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Remember a foe within 3: it can't Hide for 5 rounds and is Marked (the next hit on it deals +2).)*
-- *Eth — Old Grudge* · 1 AP + 1 Time · CD 3 — Name any foe: it can't Hide for 3 rounds, your hits on it deal +2, and the next hit on you is 1 less. *(P3/E3: Name any foe: it can't Hide for 3 rounds, your hits on it deal +4, and the next hit on you is 1 less.)*
+- *Eth — Old Grudge* · 1 AP + 1 Time · CD 3 — Name any foe: it can't Hide for 3 rounds, it is Marked +2 for 3 rounds, and the next hit on you is 1 less. *(P3/E3: Name any foe: it can't Hide for 3 rounds, it is Marked +4 for 3 rounds, and the next hit on you is 1 less.)*
 
 **Wolf Guide** · Charge · `rav_wolf`
 
@@ -3264,7 +3264,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Turret Eyes** · Time · `cha_turret`
 
 - *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
-- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +2, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +4, and you see within 2.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, it is Marked +2 for 3 rounds, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, it is Marked +4 for 3 rounds, and you see within 2.)*
 
 **Colour Shift** · Charge · `cha_colour`
 
@@ -3730,7 +3730,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Night Hunt** · Time · `lio_night`
 
 - *Phys — Dusk* · 1 AP · CD 1 — Hunt at dusk: see within 2, and Mark the nearest foe (the next hit on it deals +2). *(P3: Hunt at dusk: see within 5, and Mark the nearest foe (the next hit on it deals +2).)*
-- *Eth — Dark Reef* · 1 AP + 1 Time · CD 4 — Choose prey on the dark reef: it can't Hide for 2 rounds, your hits on it deal +2, and you are Hidden 1. *(P3/E3: Choose prey on the dark reef: it can't Hide for 2 rounds, your hits on it deal +4, and you are Hidden 1.)*
+- *Eth — Dark Reef* · 1 AP + 1 Time · CD 4 — Choose prey on the dark reef: it can't Hide for 2 rounds, it is Marked +2 for 3 rounds, and you are Hidden 1. *(P3/E3: Choose prey on the dark reef: it can't Hide for 2 rounds, it is Marked +4 for 3 rounds, and you are Hidden 1.)*
 
 ## 76 · Seahorse — leans T/S
 
@@ -3754,7 +3754,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Turret Eyes** · Time · `cha_turret`
 
 - *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
-- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +2, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +4, and you see within 2.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, it is Marked +2 for 3 rounds, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, it is Marked +4 for 3 rounds, and you see within 2.)*
 
 **Tail Anchor** ★ · Time · `sea_anchor`
 
@@ -3793,7 +3793,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Chemo-Suckers** · Charge · `oct_chemo`
 
 - *Phys — Taste* · 1 AP · CD 1 — Taste by touch: reveal within 1 and Mark the nearest foe. *(P3: Taste by touch: reveal within 2 and Mark the nearest foe.)*
-- *Eth — Cling-Read* · 1 AP + 1 Charge · CD 3 — Tag a foe for 3 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently. *(P3/E3: Tag a foe for 5 rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently.)*
+- *Eth — Cling-Read* · 1 AP + 1 Charge · CD 3 — Tag a foe for 3 rounds: it cannot Hide, is Weakened 1, and it is Marked +1 for 3 rounds. *(P3/E3: Tag a foe for 5 rounds: it cannot Hide, is Weakened 1, and it is Marked +1 for 3 rounds.)*
 
 **Regeneration** ★ · Time · `axo_regen`
 
@@ -3828,7 +3828,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Eye Stalks** · Charge · `snl_stalks`
 
 - *Phys — Peek* · 1 AP · CD 1 — Raise your eyes on their stalks: see within 2, and the next hit on you is 1 less. *(P3: Raise your eyes on their stalks: see within 5, and the next hit on you is 1 less.)*
-- *Eth — Shell Watch* · 1 AP + 1 Charge · CD 3 — Watch one foe from the shell's edge: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 2 less. *(P3/E3: Watch one foe from the shell's edge: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is 4 less.)*
+- *Eth — Shell Watch* · 1 AP + 1 Charge · CD 3 — Watch one foe from the shell's edge: it can't Hide for 2 rounds, it is Marked +1 for 3 rounds, and the next hit on you is 2 less. *(P3/E3: Watch one foe from the shell's edge: it can't Hide for 2 rounds, it is Marked +1 for 3 rounds, and the next hit on you is 4 less.)*
 
 ## 78 · Jellyfish — leans C/T
 
@@ -3921,7 +3921,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Feelers** · Charge · `lob_feelers`
 
 - *Phys — Feel Out* · 1 AP · CD 1 — Sweep your feelers: see within 2 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1. *(P3: Sweep your feelers: see within 5 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.)*
-- *Eth — Taste the Water* · 1 AP + 1 Charge · CD 3 — Taste one foe on the water: it can't Hide for 2 rounds, and your hits on it deal +2. *(P3/E3: Taste one foe on the water: it can't Hide for 2 rounds, and your hits on it deal +4.)*
+- *Eth — Taste the Water* · 1 AP + 1 Charge · CD 3 — Taste one foe on the water: it can't Hide for 2 rounds, and it is Marked +2 for 3 rounds. *(P3/E3: Taste one foe on the water: it can't Hide for 2 rounds, and it is Marked +4 for 3 rounds.)*
 
 **Rock Den** · Mass · `lob_den`
 
@@ -3935,7 +3935,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Turret Eyes** · Time · `cha_turret`
 
 - *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
-- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +2, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +4, and you see within 2.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, it is Marked +2 for 3 rounds, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, it is Marked +4 for 3 rounds, and you see within 2.)*
 
 **Molt** · Time · `crs_molt`
 
@@ -3994,7 +3994,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Antennae** · Charge · `ins_antennae`
 
 - *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
-- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Horn Lift** ★ · Mass · `btl_horn`
 
@@ -4048,7 +4048,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Antennae** · Charge · `ins_antennae`
 
 - *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
-- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Eyespots** ★ · Charge · `but_eyespots`
 
@@ -4092,7 +4092,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Antennae** · Charge · `ins_antennae`
 
 - *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
-- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Flash** ★ · Charge · `ffl_flash`
 
@@ -4141,7 +4141,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Antennae** · Charge · `ins_antennae`
 
 - *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.)*
-- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +1, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +2, and your ally's next hit deals +1.)*
+- *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: it can't Hide for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: it can't Hide for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Raptorial Strike** ★ · Mass · `man_strike`
 
@@ -4160,7 +4160,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Swivel Head** · Charge · `man_head`
 
-- *Phys — Turn and Look* · 1 AP · CD 1 — Turn your head to watch one foe: your hits on it deal +1, and you see within 1. *(P3: Turn your head to watch one foe: your hits on it deal +1, and you see within 2.)*
+- *Phys — Turn and Look* · 1 AP · CD 1 — Turn your head to watch one foe: it is Marked +1 for 3 rounds, and you see within 1. *(P3: Turn your head to watch one foe: it is Marked +1 for 3 rounds, and you see within 2.)*
 - *Eth — Measure* · 1 AP + 1 Charge · CD 3 — Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +2. *(P3/E3: Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +4.)*
 
 **Startle Display** · Charge · `man_wings`
@@ -4210,7 +4210,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Sand Sense** · Charge · `sco_sense`
 
 - *Phys — Feel the Ground* · 1 AP · CD 1 — Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less. *(P3: Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 2 less.)*
-- *Eth — Every Step* · 1 AP + 1 Charge · CD 3 — Read one foe through the ground: it can't Hide for 3 rounds, your hits on it deal +1, and it is Linked to the nearest foe within 2 of it for 2 rounds. *(P3/E3: Read one foe through the ground: it can't Hide for 5 rounds, your hits on it deal +1, and it is Linked to the nearest foe within 2 of it for 2 rounds.)*
+- *Eth — Every Step* · 1 AP + 1 Charge · CD 3 — Read one foe through the ground: it can't Hide for 3 rounds, it is Marked +1 for 3 rounds, and it is Linked to the nearest foe within 2 of it for 2 rounds. *(P3/E3: Read one foe through the ground: it can't Hide for 5 rounds, it is Marked +1 for 3 rounds, and it is Linked to the nearest foe within 2 of it for 2 rounds.)*
 
 **Burrow** · Time · `sco_burrow`
 
