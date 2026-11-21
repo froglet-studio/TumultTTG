@@ -71,3 +71,13 @@ rounds became Wound 2; 1+E for 3 rounds became Wound 2+E.
 
 In code: the verb `wound` (`n`, `area`, `healOwner`, `kind` for the log), the state `Wound`
 (`{ n, owner, heal, kind }`), saves version 21.
+
+## Gear: ethereal technology (2.89)
+
+Gear is the third line. It touches spaces, the dice, the clock and the downed; it is bought, not trained, so it
+never scales with P or E; and it **never strikes a unit directly**: a gear strike goes through a Field (the
+Turret), and a gear pull is a Field that pulls (the Winch). Each piece has one passive and two actives. The
+passives carry what boons did, and the actives what consumables did (`docs/reference/RUN_AND_ECONOMY.md` has the
+table).
+
+Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Push N** (away from it).

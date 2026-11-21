@@ -101,7 +101,10 @@ test('quick missions: a seed, a squad and a kit name one mission, and the Tide c
     'a piece of gear by tier 2',
   );
   const late = T.quickMission({ ...args, type: 'boss', tier: 3 });
-  assert.ok(late.heroes.every((h) => h.gear.length === 2 && h.boons.length === 1));
+  assert.ok(
+    late.heroes.every((h) => h.gear.length === 2 && h.boons.length === 0),
+    'two pieces of gear, no boons (2.89)',
+  );
 
   // the board belongs to the seed, the mission and the tier — not to the squad or its kit
   const board = (m) => JSON.stringify([m.board.nodes, m.board.edges, m.enemies.map((e) => [e.type, e.pos, e.hp])]);

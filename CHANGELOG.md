@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.89.0 — 2026-11-21 — boons and consumables fold into gear
+
+The keyword plan's third line, ethereal technology (`docs/reference/KEYWORDS.md`): gear works on spaces, the dice, the clock and the downed, is bought rather than trained, and strikes only through a Field.
+
+- **Every gear has a passive** (on while worn) and two actives (paid in ◇). The passives carry what boons did: Aegis Plate, every Shield +1 (Thick Hide); Scope, reveals +1 and Hidden foes beside you seen (Keen Sense); Chrono-shim, the track slides 1 extra as round 2 begins (Quick Hands); Medkit, once a mission rise at 10 (Second Wind); Climbing Rig, mag boots, you cannot be pulled (Anchor Soul); Capacitor, start each mission with 1 AP banked (Etherion-touched, gentler); Phase-brace, blinks reach 1 further; Storm Lantern, a foe beside you is Marked as your turn begins; Turret, your Fields last 1 round longer; Winch, your Fields push and pull 1 further.
+- **The actives carry what consumables did.** Medkit's Patch heals 6 (Rally Vial; was 4), Scope's Glance reveals within 2 (Flashpowder), Chrono-shim's Rewind gives the clock 2 (Windbreak Charm; was 1); Grit and the Omni Shard were already the Aegis Plate's Brace and the Capacitor's Store.
+- **The Grapnel is a Winch and the Harpoon Gun a Turret.** Tech never strikes a unit directly: Reel Line and Winch lay Fields that pull whoever enters (Field gains Pull and Push), Sentry and Skewer lay Fields that strike.
+- **Cut:** the Affinities and Omni Core (the element die is chosen every turn), Momentum, Defiant, Deep Pockets, Studious, and every consumable. Elites no longer offer a boon; they already pay 4 ◇ more. Three events that gave a boon give crystals or UP instead.
+- **Saves** are version 22: an older pilot's boons are refunded at 3 ◇ each and its consumables at their price, to its own purse (fixture `save-2.88.json`).
+- **Balance.** Foes keep 145% vitality: the fold does not let it come down. With every simulated squad wearing gear from tier 2, the passives make tiers 2 and 3 easier, so the Capacitor's banked die is an AP (an Omni measured easier) and the Lantern Marks only a foe beside you. Same seeds, 2.88.0 → 2.89.0 at 145%: `80 runs --player strong` 40 → 38; `120 runs --player weak` 10 → 11; `node tools/sim.js 40` runs 3 → 6 and 19 → 21 of 40, mission wins 69% → 70% and 87% → 88% (its mission table hands every tier 2 and 3 squad gear, so the passives show there most). At 140% it was 50 of 80, at 135% 47, at 130% 56: lowering vitality makes the game easier at once (`docs/reference/BALANCE.md`).
+
 ## 2.88.1 — 2026-11-21 — every ability does what it says
 
 Garrett: "make sure that decoys actually leave decoys, and all movement abilities actually grant their movement etc."
