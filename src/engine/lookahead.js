@@ -352,7 +352,10 @@
       s += W.heroHp * h.hp;
       const kept = T.apValue(h) + ETHERIONS.concat('O').reduce((n, f) => n + T.elCount(h, f), 0);
       s += W.dice * Math.min(kept, 4) + W.hoard * Math.max(0, kept - 4);
-      s -= W.cooldown * h.track.reduce((n, t) => n + t.left + (t.phase === 'dur' ? t.cd : 0), 0);
+      // a burnt card is gone for the mission: it weighs as a card at the far end of the track
+      s -=
+        W.cooldown *
+        h.track.reduce((n, t) => n + (t.phase === 'burnt' ? 6 : t.left + (t.phase === 'dur' ? t.cd : 0)), 0);
       s += W.item * h.consumables.length;
       s += W.ahead * banked(m, h);
     }

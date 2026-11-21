@@ -9,6 +9,13 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.119.0 — 2026-11-21 — Burn
+
+- **Burn** (new keyword, the shortlist's fifth pick). Once a Burn face resolves, its whole card is gone until the mission ends, both faces with it. Haste and every other effect cannot bring it back sooner, and it is back in hand at the next mission. A Burn face does something its card cannot do any other way, never the same effect doubled. The puzzle is when to spend it.
+- **Full Dose** (Scorpion, Tail Sting) is a Burn face: melee 2 + E, and the foe is Wounded 3 + E with a Wound that **holds** for 2 + E rounds before it starts to drop. It was a strike, a Wound and a Weaken.
+- **Boiling Burst** (Beetle, Bombardier Spray) is a Burn face: every foe on or beside a node within 2 is Wounded 2 + ½E, and the ground there boils until the mission ends (a Field: every foe that ends a round in it takes 1 + E). It was a Wound and a Weaken.
+- A burnt card shows 🔥 in the hand. In code: a face's `burn: true` (its track entry's phase is `burnt`, which `T.slideTrack` passes over), and a `wound`'s `stay`. No save change: the track already starts empty each mission.
+
 ## 2.118.0 — 2026-11-21 — Resonance
 
 - **Resonance** (new keyword, the shortlist's second pick). Every Ethereal face you play leaves its element in the air: strong this round, fading the next, then gone. A face that **draws on** an element takes it for a bonus, and the element is spent. Omni in the air stands in for any element. The squad shares the air, so playing a Charge face first can make a partner's Charge-drawing face land bigger. Every face still works with nothing in the air.

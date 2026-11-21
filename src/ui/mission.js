@@ -1149,6 +1149,8 @@
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
           return `<button class="fbtn ${fk === 'E' ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
+        if (onTrack && onTrack.phase === 'burnt')
+          return `<div class="hcard cooling burnt${c.pet ? ' petcard' : ''}" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is burnt: it is gone until this mission ends, and nothing brings it back sooner.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">🔥 burnt</span></div>${title}${T.faceKeys(cid).map(fb).join('')}</div>`;
         if (onTrack) {
           const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
           const what = onTrack.phase === 'dur' ? 'active, then cooling' : 'cooling';

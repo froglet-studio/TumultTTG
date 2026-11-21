@@ -4014,7 +4014,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Bombardier Spray** · Charge · `btl_spray`
 
 - *Phys — Pop* · 1 AP · CD 1 — Spray boiling chemicals at a foe within 2: 1, and it is Weakened 1. *(P3: Spray boiling chemicals at a foe within 2: 4, and it is Weakened 1.)*
-- *Eth — Boiling Burst* · 1 AP + 1 Charge · CD 4 — Burst at a node within 2: every foe on or beside it is scalded: Wounded 2; foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Burst at a node within 2: every foe on or beside it is scalded: Wounded 3; foes beside you are Weakened 1 for 2 rounds.)*
+- *Eth — Boiling Burst* · 1 AP + 1 Charge · CD 4 — Burn: empty both chambers on a node within 2. Every foe on or beside it is Wounded 2, and the ground there boils until the mission ends: a Field, and every foe that ends a round in it takes 2. *(P3/E3: Burn: empty both chambers on a node within 2. Every foe on or beside it is Wounded 3, and the ground there boils until the mission ends: a Field, and every foe that ends a round in it takes 4.)*
 
 **Strong Back** · Mass · `btl_strong`
 
@@ -4195,7 +4195,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Sting** ★ · Mass · `sco_sting`
 
 - *Phys — Sting* · 1 AP · CD 1 — Arch your tail and sting: melee 1; it is Wounded 2. *(P3: Arch your tail and sting: melee 4; it is Wounded 2.)*
-- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Spend the venom: melee 3; it is Wounded 2 and is Weakened 1 for 2 rounds. *(P3/E3: Spend the venom: melee 5; it is Wounded 3 and is Weakened 1 for 2 rounds.)*
+- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Burn: spend all the venom at once. Melee 3; it is Wounded 4, and the Wound does not drop for 3 rounds. *(P3/E3: Burn: spend all the venom at once. Melee 5; it is Wounded 6, and the Wound does not drop for 5 rounds.)*
 
 **Pincers** · Mass · `sco_pincers`
 
