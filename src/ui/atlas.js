@@ -93,7 +93,7 @@
   const LEGEND = [
     'A to E: from where you arrive to the far side. 1 to 3: the side of the board.',
     'Spaces joined by a line are a step apart. Two spaces in range share a zone (the coloured regions).',
-    'A dashed ring is high ground: reached by its ladder (dashed line), a teleport or a hover.',
+    'A dashed ring is high ground: reached by its ladder (dashed line), a blink or a hover.',
     'A red ring is a hazard: 2 damage to anyone on it at the end of the round.',
   ];
 

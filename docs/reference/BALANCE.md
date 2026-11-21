@@ -496,3 +496,7 @@ Counter became a next-hit Thorns. Same seeds, 2.92.0 → 2.93.0: `80 runs --play
 ## v2.94.0 — Shield absorbs Pre-empt, Guard and Absorb
 
 Pre-empt, Guard and Absorb became Shield. Same seeds, 2.93.0 → 2.94.0: `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10; `node tools/sim.js 40` runs 5 → 5 and 21 → 19 of 40, mission wins 71% → 71% and 88% → 87%. Nothing is retuned.
+
+## v2.95.0 — Blink
+
+`teleport` renamed `blink`; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after (the same seeds play the same missions).

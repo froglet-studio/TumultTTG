@@ -73,7 +73,7 @@
       desc:'Space for any build. Reaches height nodes.',
       passive:{ hook:'blinkReach', val:1, txt:'Your blinks reach 1 further.' },
       abilities:[
-        { n:'Blink', cost:2, cd:2, tgt:'node_tele', fx:[{v:'teleport', reach:f(2), height:true}], txt:()=>'Teleport to any node within 2 — height included.' },
+        { n:'Blink', cost:2, cd:2, tgt:'node_tele', fx:[{v:'blink', reach:f(2), height:true}], txt:()=>'Blink to any node within 2 — height included.' },
         { n:'Fade', cost:1, cd:2, tgt:'self', fx:[{v:'hidden', dur:f(1)}], txt:()=>'Hidden 1.' },
       ]},
     { id:'chronoshim', name:'Chrono-shim', price:7, icon:'⏳',

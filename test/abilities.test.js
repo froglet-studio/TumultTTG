@@ -234,7 +234,7 @@ test('every movement face moves its pilot as far as its text says, and the move 
     const P = 2,
       E = 2;
     const verb = face.fx.find(
-      (x) => ['move', 'teleport', 'climb', 'rally'].includes(x.v) && !CONDITIONS.some((c) => x[c] != null),
+      (x) => ['move', 'blink', 'climb', 'rally'].includes(x.v) && !CONDITIONS.some((c) => x[c] != null),
     );
     if (!verb) continue;
     const s = H.arena(card.id, { up: [P, E] });
@@ -248,7 +248,7 @@ test('every movement face moves its pilot as far as its text says, and the move 
     }
     const tg = chk.tg;
     const mover = verb.v === 'rally' ? s.ally : s.h;
-    const n = val(verb.v === 'teleport' || verb.v === 'climb' ? verb.reach : verb.v === 'rally' ? verb.move : verb.n);
+    const n = val(verb.v === 'blink' || verb.v === 'climb' ? verb.reach : verb.v === 'rally' ? verb.move : verb.n);
     if (!(n > 0)) continue;
     const ctx = { choice: 'pull' };
     let want = null;
@@ -272,11 +272,11 @@ test('every movement face moves its pilot as far as its text says, and the move 
     if (tg.need !== 'node') continue;
     const climb = verb.v === 'climb' || T.canClimb?.(mover) || false;
     const dist =
-      verb.v === 'teleport' || verb.v === 'climb'
+      verb.v === 'blink' || verb.v === 'climb'
         ? Object.fromEntries(nodeIds(m).map((x) => [x, B.dist(m.board, mover.pos, x, true)]))
         : walkDist(m, mover, n, climb);
     // the far end of the move: a free node exactly n away (by walking, or in a straight reach), if the board has one
-    const ok = (x) => !T.occupied(m, x) && (verb.v !== 'teleport' || verb.height || !m.board.nodes[x].height);
+    const ok = (x) => !T.occupied(m, x) && (verb.v !== 'blink' || verb.height || !m.board.nodes[x].height);
     const farthest = nodeIds(m).filter((x) => ok(x) && dist[x] != null && dist[x] <= n);
     const best = Math.max(...farthest.map((x) => dist[x]));
     const offered = tg.options.filter((x) => dist[x] === best && x !== mover.pos);
