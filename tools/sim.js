@@ -22,8 +22,8 @@
  *   --pilots  the squad's size, 2 to 5 (default 2); the missions scale to it (src/engine/scaling.js).
  *   --level   every pilot's level (default 1): what pilots bring back from earlier expeditions.
  *   --pets    every pilot has a pet (src/data/pets.js) in place of its last trait (missions only).
- *   --noscale the missions do not answer the squad's size or level (to see what the scaling buys).
- *   --scaling try other scaling numbers, for this run only: --scaling size.hp=0.3,level.foes=1
+ *   --noscale the missions do not answer the squad's power (to see what the scaling buys).
+ *   --scaling try other scaling numbers, for this run only: --scaling power.hp=0.04,PILOT=12
  *   --rule    try a different value for a constant in T.RULES, for this run only:
  *             node tools/sim.js 40 missions --rule VITALITY=28 --rule ETHEREAL_MIN_E=1
  *
@@ -84,11 +84,15 @@ for (let i = 0; i < argv.length; i++) {
     for (const kv of String(argv[++i] || '').split(',')) {
       const [path, v] = kv.split('=');
       const [k, f] = path.split('.');
-      if (!T.SCALING[k] || !(f in T.SCALING[k]) || Number.isNaN(Number(v))) {
-        console.error('--scaling wants size.F=N or level.F=N, F one of: ' + Object.keys(T.SCALING.size).join(', '));
+      const ok = f ? T.SCALING[k] && f in T.SCALING[k] : typeof T.SCALING[k] === 'number';
+      if (!ok || Number.isNaN(Number(v))) {
+        console.error(
+          '--scaling wants power.F=N, boss.F=N or PILOT=N, F one of: ' + Object.keys(T.SCALING.power).join(', '),
+        );
         process.exit(2);
       }
-      T.SCALING[k][f] = Number(v);
+      if (f) T.SCALING[k][f] = Number(v);
+      else T.SCALING[k] = Number(v);
     }
     console.log('scaling', JSON.stringify(T.SCALING));
     continue;
@@ -99,7 +103,7 @@ for (let i = 0; i < argv.length; i++) {
     continue;
   }
   if (argv[i] === '--noscale') {
-    for (const k of ['size', 'level']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 0;
+    for (const k of ['power', 'boss']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 0;
     console.log('no scaling');
     continue;
   }
