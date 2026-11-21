@@ -1644,6 +1644,22 @@ button:disabled .acost {
   stroke: var(--decoy);
   stroke-dasharray: 2 3;
 }
+.token.pet .body {
+  fill: #23362b;
+  stroke: var(--jade, #5fd39a);
+  stroke-width: 2;
+}
+.token.pet.safe .body {
+  stroke-dasharray: 4 2;
+  opacity: 0.85;
+}
+.state.pet.dead {
+  opacity: 0.55;
+  text-decoration: line-through;
+}
+.petmark {
+  font-size: 0.9em;
+}
 .token.targetable .body {
   stroke: var(--gold);
   stroke-width: 3;

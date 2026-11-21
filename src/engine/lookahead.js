@@ -68,7 +68,7 @@
       if (h.downed || h.rested) return;
       const ap = T.apValue(h);
       for (const card of h.cards)
-        for (const face of ['P', 'E']) {
+        for (const face of T.faceKeys(card)) {
           const chk = T.canPlay(m, h, card, face);
           if (!chk.ok) continue;
           for (const r of resolutionsByAlly(chk.tg, T.CARD[card][face], (a) => T.canPlay(m, h, card, face, a).tg))
@@ -95,6 +95,11 @@
         if (chk.ok)
           for (const r of resolutionsByAlly(chk.tg, b, (a) => T.canUseBasic(m, h, b.id, a).tg))
             out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
+      }
+      // Heel: a pet walks up to its speed (src/data/pets.js)
+      for (const p of T.petsOf(m, h)) {
+        const hc = T.canHeel(m, h, p.uid);
+        if (hc.ok) for (const node of hc.options) out.push({ t: 'heel', hero, pet: p.uid, node });
       }
       const ally = T.downedAllyOf(m, h);
       if (ally && ally.downed && ap >= R().RALLY_AP && B.adjacent(m.board, h.pos, ally.pos))
@@ -155,6 +160,8 @@
         return T.doInteract(m, h, a.node, false, a.pay);
       case 'rally':
         return T.rally(m, h);
+      case 'heel':
+        return T.heel(m, h, a.pet, a.node);
       case 'basic':
         return T.useBasic(m, h, a.basic, ctx);
       case 'gear':
@@ -174,7 +181,7 @@
     const h = m.heroes[a.hero];
     const at = a.node != null ? ` → node ${a.node}` : '';
     const who = (uid) => {
-      const e = m.enemies.concat(m.heroes, m.decoys).find((x) => x.uid === uid);
+      const e = m.enemies.concat(m.heroes, m.decoys, m.pets || []).find((x) => x.uid === uid);
       return e ? ` → ${e.name}` : '';
     };
     const tail =
@@ -188,6 +195,7 @@
       return `${h.name}: ${def.name} — ${def.abilities[a.ability].n}${tail}`;
     }
     if (a.t === 'pick') return `${h.name}: next roll ${(a.kinds || []).join(', ') || 'at random'}`;
+    if (a.t === 'heel') return `${h.name}: Heel ${who(a.pet).slice(3)}${at}`;
     if (a.t === 'item') return `${h.name}: ${T.CONSUMABLE_BY[h.consumables[a.item]].name}`;
     return `${h.name}: ${a.t}${at}`;
   };
@@ -282,6 +290,8 @@
     // bonus not yet used, a foe Marked for some rounds — counts at this share of what it will be worth, so a set-up
     // is not scored as nothing just because it pays off later than the round being looked at.
     ahead: 0.6,
+    petHp: 0.5, // per point of a pet's vitality: it soaks blows and acts, but it is not a pilot
+    petDead: 12, // a pet lost is a card lost for good
     spare: 0.5, // per temporary die minted and not yet spent, while the search is still choosing (see loose)
   };
   /** What a hero has bought for later rounds, in points before the `ahead` share. */
@@ -315,6 +325,7 @@
       s += W.item * h.consumables.length;
       s += W.ahead * banked(m, h);
     }
+    for (const p of m.pets || []) s += p.dead ? -W.petDead : W.petHp * p.hp;
     // a Mark is 2 damage already bought: the next hit on that foe, by anyone, deals it
     for (const e of m.enemies)
       if (e.alive) {

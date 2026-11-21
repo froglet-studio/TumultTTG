@@ -12,6 +12,8 @@
 
   // actions whose data-arg starts with the hero's index ("i|…"), or has it second ("…|i")
   const HERO_FIRST = new Set([
+    'heel',
+    'adoptPet',
     'face',
     'gear',
     'cons',

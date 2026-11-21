@@ -696,7 +696,7 @@
   /** Does this screen take touches rather than a pointer that hovers? (jsdom, with no matchMedia: no.) */
   U.touch = () => typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(hover: none)').matches;
   /** The moves a player can take back: those that only spend what is in hand, on the board in view. */
-  const TAKE_BACK = new Set(['face', 'basic', 'gear', 'item', 'interact', 'rally', 'valve', 'dump', 'walk']);
+  const TAKE_BACK = new Set(['face', 'basic', 'gear', 'item', 'interact', 'rally', 'heel', 'valve', 'dump', 'walk']);
   /** Take-backs are for one screen playing alone or passing the screen; online, the host's mission is shared. */
   const takeBackOn = () => !(U.net && U.net.online && U.net.online());
   /** Called by U.exec before a command: the mission as it stands, if the command could be taken back. */
@@ -1076,9 +1076,9 @@
         const P = T.heroP(h, cid),
           E = T.heroE(h, cid);
         const onTrack = h.track.find((t) => t.card === cid);
-        const asleep = E < T.RULES.ETHEREAL_MIN_E;
+        const asleep = !c.pet && E < T.RULES.ETHEREAL_MIN_E;
         const elC = EL[(c.E && c.E.elt) || c.el].color;
-        const title = `<div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>`;
+        const title = `<div class="hn">${c.pet ? '<span class="petmark" data-tip="A pet\'s card: its faces act from the pet">🐾</span> ' : ''}${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P}${c.pet ? '' : ' E' + E}</span></div>`;
         const fb = (fk) => {
           const f = c[fk];
           const elt = f.elt || c.el;
@@ -1087,19 +1087,18 @@
           const tip = U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;');
           // a card on the track still reads in full: its faces stay at full strength, only not pressable
           if (onTrack)
-            return `<div class="fbtn ${fk} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
+            return `<div class="fbtn ${fk === 'E' ? 'E' : 'P'} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
-          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
+          return `<button class="fbtn ${fk === 'E' ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
         if (onTrack) {
           const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
           const what = onTrack.phase === 'dur' ? 'active, then cooling' : 'cooling';
-          return `<div class="hcard cooling" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is on the track (${what}): back in hand in ${back}. Its faces read as usual.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">${onTrack.phase === 'dur' ? '●' : '○'} back in ${back}</span></div>${title}${fb('P')}${fb('E')}</div>`;
+          return `<div class="hcard cooling${c.pet ? ' petcard' : ''}" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is on the track (${what}): back in hand in ${back}. Its faces read as usual.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">${onTrack.phase === 'dur' ? '●' : '○'} back in ${back}</span></div>${title}${T.faceKeys(cid).map(fb).join('')}</div>`;
         }
         // a card with nothing it can do now folds small; hovering it brings it back
-        const idle =
-          m.over || h.downed || (!T.canPlay(m, h, cid, 'P').ok && !T.canPlay(m, h, cid, 'E').ok) ? ' idle' : '';
-        return `<div class="hcard${idle}" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
+        const idle = m.over || h.downed || !T.faceKeys(cid).some((fk) => T.canPlay(m, h, cid, fk).ok) ? ' idle' : '';
+        return `<div class="hcard${idle}${c.pet ? ' petcard' : ''}" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${T.faceKeys(cid).map(fb).join('')}</div>`;
       })
       .join('');
     const gear = h.gear
@@ -1121,7 +1120,15 @@
       .join('');
     const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
-      <div class="states">${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>`;
+      <div class="states">${T.petsOf(m, h)
+        .concat((m.pets || []).filter((p) => p.dead && p.owner === h.uid))
+        .map(
+          (p) =>
+            `<span class="state pet${p.dead ? ' dead' : ''}" data-tip="${esc(p.dead ? `${esc(p.name)} died: its card leaves the kit when the mission ends.` : `${esc(p.name)}, your pet: ${p.hp}/${p.maxHp}. Its card's faces act from it.`)}">🐾 ${esc(p.name)} ${p.dead ? '✝' : p.hp}</span>`,
+        )
+        .join(
+          '',
+        )}${h.carrying ? `<span class="state" data-tip="Carrying a crate: reach any space on the near edge (A) to set it down. Dropped if you go down.">Crate</span>` : ''}${states}</div>`;
     const diceRow = `<div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span><span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool}</span><span class="ap-chip" data-tip="Action points banked">${T.apValue(h)} AP</span></div>`;
     // a pilot not selected folds to its vitality and dice; its cards open on request
     if (!sel && !U.layout.peek[i]) {
@@ -1130,7 +1137,7 @@
           !h.track.some((t) => t.card === cid) &&
           !m.over &&
           !h.downed &&
-          (T.canPlay(m, h, cid, 'P').ok || T.canPlay(m, h, cid, 'E').ok),
+          T.faceKeys(cid).some((fk) => T.canPlay(m, h, cid, fk).ok),
       ).length;
       const onTrack = h.track.length;
       return `<div class="hero folded ${h.downed ? 'downed' : ''}" data-act="selHero" data-arg="${i}">
@@ -1163,6 +1170,13 @@
     // Interact and Rally join the four when they can be used: they are what the moment is about
     (canInteract ? main : more).push(interactB);
     (canRally ? main : more).push(rallyB);
+    // Heel: one button per pet, beside the four (src/data/pets.js)
+    for (const p of T.petsOf(m, h)) {
+      const ok = !m.over && T.canHeel(m, h, p.uid).ok;
+      main.push(
+        `<button class="sm" data-act="heel" data-arg="${i}|${p.uid}" ${ok ? '' : 'disabled'} data-tip="${esc(`Heel (${T.PET.HEEL_AP} AP): ${esc(p.name)} walks up to ${T.PET.SPEED}. On your node it cannot be hurt.`)}">🐾 Heel ${esc(p.name)} <span class="acost">${T.PET.HEEL_AP}</span></button>`,
+      );
+    }
     more.push(
       `<button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>`,
       `<button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>`,
@@ -1497,6 +1511,36 @@
         },
         () => {},
         m.heroes.some((h) => !h.downed && h.pos === d.pos),
+      );
+    });
+    // pets (src/data/pets.js): a small token, at the edge of its pilot's node when it shares it
+    (m.pets || []).forEach((p) => {
+      if (p.dead || !N[p.pos]) return;
+      const safe = T.sheltered(m, p);
+      upsert(
+        'tok-' + p.uid,
+        'pet' + (vt.has(p.uid) ? ' targetable' : '') + (safe ? ' safe' : ''),
+        N[p.pos],
+        (el) => {
+          el.setAttribute('data-act', 'tgtEnemy');
+          el.setAttribute('data-arg', String(p.uid));
+          svgEl('circle', { r: 16, class: 'body' }, el);
+          svgEl('text', { y: 5, class: 'initial', 'font-size': 12 }, el).textContent = p.name.slice(0, 2);
+          svgEl('rect', { x: -14, y: 20, width: 28, height: 4, rx: 2, class: 'hpb' }, el);
+          svgEl('rect', { x: -14, y: 20, width: 28, height: 4, rx: 2, class: 'hpf' }, el);
+          svgEl('text', { y: 32, class: 'hp' }, el);
+        },
+        (el) => {
+          el.querySelector('.hpf').setAttribute('width', (28 * Math.max(0, p.hp)) / p.maxHp);
+          el.querySelector('.hp').textContent = p.hp;
+          stateBadges(el, p, 16);
+          const owner = T.petOwner(m, p);
+          el.setAttribute(
+            'data-tip',
+            `<b>${esc(p.name)}</b> — ${esc(owner ? owner.name : '')}'s pet, a ${esc(p.species.map((sp) => (T.SPECIES[sp] ? T.SPECIES[sp].name : sp)).join(', '))} hybrid. ${p.hp}/${p.maxHp}.${safe ? ' On its pilot’s node: nothing can hurt it.' : ' Foes can target it. At 0 it dies, and its card is lost.'}`,
+          );
+        },
+        m.heroes.some((h) => !h.downed && h.pos === p.pos),
       );
     });
     // ally targetable (foeOrAlly)
@@ -2203,6 +2247,21 @@
       U.updateMission();
     }
   }
+  /** Heel (src/data/pets.js): pick where the pet walks to. */
+  function beginHeel(i, petUid) {
+    const m = M();
+    U.ms.heroIdx = i;
+    const h = hero();
+    const chk = T.canHeel(m, h, petUid);
+    if (!chk.ok) {
+      U.toast(chk.why || 'Cannot do that now.');
+      return;
+    }
+    const p = m.pets.find((x) => x.uid === petUid);
+    U.ms.pending = { kind: 'heel', pet: petUid, tg: { need: 'node', options: chk.options }, label: `Heel — ${p.name}` };
+    U.ms.mode = 'target';
+    U.updateMission();
+  }
   function beginBasic(i, id) {
     const m = M();
     U.ms.heroIdx = i;
@@ -2264,7 +2323,8 @@
     if (fullCtx.ally == null && p.tg.ally != null && m.heroes.length > 2) fullCtx.ally = p.tg.ally;
     const i = ms.heroIdx;
     // every change goes through a command, so it can be carried out on the host's screen (U.exec)
-    if (p.kind === 'card') r = U.exec({ op: 'face', hero: i, card: p.cardId, fk: p.fk, ctx: fullCtx });
+    if (p.kind === 'heel') r = U.exec({ op: 'heel', hero: i, pet: p.pet, node: fullCtx.node });
+    else if (p.kind === 'card') r = U.exec({ op: 'face', hero: i, card: p.cardId, fk: p.fk, ctx: fullCtx });
     else if (p.kind === 'basic') r = U.exec({ op: 'basic', hero: i, id: p.id, ctx: fullCtx });
     else r = U.exec({ op: 'gear', hero: i, gi: p.gi, ai: p.ai, ctx: fullCtx });
     ms.pending = null;
@@ -2480,6 +2540,15 @@
         if (!r.ok) U.toast(r.why);
         else U.sfx.click();
         afterAction();
+        return true;
+      }
+      case 'heel': {
+        const [i, uid] = arg.split('|').map(Number);
+        if (ms.mode !== 'idle') {
+          ms.mode = 'idle';
+          ms.pending = null;
+        }
+        beginHeel(i, uid);
         return true;
       }
       case 'rally': {
