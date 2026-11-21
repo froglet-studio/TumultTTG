@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.85.1 — 2026-11-21 — cards on the track stay readable
+
+Garrett: "the whole cards should still be readable when it is on cooldown"
+
+- **Cooling cards read in full.** A card on the track used to fade to 45% and drop its faces. Now it shows its name, P/E levels, both faces and their costs at full strength, and each face keeps its hover text. The art greys out behind a band that says "back in N", the frame turns dashed, and nothing on the card can be pressed. No rules or save change.
+
 ## 2.85.0 — 2026-11-21 — big Ethereal faces
 
 Garrett: "make some more powerful abilities that cost more elemental dice. simply so we don't need boons or consumables"
