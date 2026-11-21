@@ -366,6 +366,27 @@ hr {
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 10px;
 }
+/* the Kit view's loadout (2.107): a reserve trait to bring in, and the traits it could replace */
+.kit-pick {
+  cursor: pointer;
+  border-radius: 10px;
+  outline: 2px solid transparent;
+  transition: outline-color 0.15s;
+}
+.kit-pick:hover,
+.kit-pick:focus-visible {
+  outline-color: var(--line2);
+}
+.kit-pick.on {
+  outline-color: var(--gold, #d9b45a);
+}
+.kit-pick.dim {
+  cursor: default;
+  opacity: 0.55;
+}
+.pack.reserve .tcard {
+  filter: saturate(0.8);
+}
 
 /* ---------- Trait card ---------- */
 .tcard {

@@ -211,7 +211,7 @@
       icon: 'kw.empower',
       tone: 'good',
       state: 'Empower',
-      tip: 'Empowered: its next strike (or strikes) deal more.',
+      tip: 'Empowered N: its next strike (or strikes) deal N more; an Overcharge Empowers every strike of the weapon’s reach this round.',
     },
     {
       id: 'preempt',
