@@ -9,6 +9,16 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.111.0 — 2026-11-21 — the rest of the costly faces
+
+The other five of the nine bundled costly faces (2.105.0 has the rule).
+
+- **Apex Form** (Metamorphosis): for 1 + E rounds your melee strikes knock the foe back 1, and a foe you push that is stopped short **crashes**: it takes 3 + E, and so does the unit in the way (`morph` with `push` and `crash`). It was strikes +4, reach, move and Shield.
+- **Immovable Hold** (Clawed Grip) locks on to a foe beside you for 1 + E rounds: when you walk, it is dragged into the space you leave, or the free space beside you nearest it (`hold`, the states `Holding` and `Held`). It still acts; if it walks off or is Anchored, it is let go. It was two Anchors, a Weaken and a strike.
+- **Neurotoxin** (Paralytic Bite): melee 2 + P, and for E rounds after this one the foe repeats this round's intent, the same move at the same target (`fix`, the state `Fixed`). It still acts. It was a strike, a Weaken and an Anchor.
+- **Step Out of Time** drops its heal (untargetable and Haste stay). **Tesla Cascade** drops its Shield strip; its Link reaches 1 + E.
+- No save change.
+
 ## 2.110.0 — 2026-11-21 — missions sized by squad power
 
 - **Squad power.** An expedition is sized from its squad's power and the chosen wind (Garrett, 2026-11-21). A pilot's power is 10, and 1 more for every level past 1 it set out with; the squad's power is its pilots' added up. Every point past 20 (two new pilots) gives foes +5% vitality, and every 5 points one more foe, every 10 one more to do and a swarm 1 larger, so a third new pilot asks what it did before. A level now counts for every pilot who has it, not as the squad's average (`T.squadPower`, `T.pilotPowerFor`, `docs/reference/SCALING.md`).

@@ -86,6 +86,7 @@ function answersOf(x) {
       if (x.climb) add('height');
       if (x.move) add('tempo');
       if (x.shield) add('burst');
+      if (x.crash) add('crowd'); // a pushed foe crashes into another
       break;
     case 'stripShield':
       add('armor');
@@ -110,6 +111,12 @@ function answersOf(x) {
       break;
     case 'spring':
       add('crowd', 'single'); // every Field, hazard and Wound around you goes off now
+      break;
+    case 'hold':
+      add('single', 'burst'); // drag a foe where you want it, out of reach of its friends
+      break;
+    case 'fix':
+      add('burst'); // you know its next intents
       break;
     case 'rewind':
       add('attrition', 'burst'); // the round's hits, given back
@@ -268,7 +275,7 @@ const ABLATIONS = [
     'no foe control',
     (x) =>
       (x.v === 'anchor' && (x.who === 'foe' || x.who === 'target')) ||
-      ['weaken', 'slow', 'force', 'link'].includes(x.v) ||
+      ['weaken', 'slow', 'force', 'link', 'hold'].includes(x.v) ||
       (x.v === 'field' && x.fx.some((y) => ['anchor', 'weaken'].includes(y.kw))),
   ],
   [
