@@ -19,10 +19,14 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.114.0',
+    version: '2.116.0',
     items: [
       {
         text: 'Dice as AP: a banked Omni, or any two banked etherions (the same or different), now make 1 AP, at no cost and as often as you like. Press ◇→AP (it stands beside the four basic actions when spare dice would pay for a card you hold), then click an Omni or two element dice: they go back to the pool and you gain 1 AP for this turn. A face you could pay for this way says ◇→AP to pay. Folding one each of M, C, S and T into an Omni still works. Did you ever end a turn with an element you could not use? Was spending it as AP a real choice against saving it for an Ethereal face or an Overcharge?',
+      },
+      {
+        text: "Two new words. At dusk: a face placed now that lands at round end, after the foes act, on whoever is there then (Patience on the mantis, Under the Surface on the crocodile; a ring on the board shows where). Flanked: a foe with the squad on two spaces beside it, which the jackal's Flank, the hyena's Crunch and the orca's Take Down hit 2 harder.",
+        cards: ['man_still', 'cro_lurk', 'jac_pair', 'hye_crush', 'orc_apex'],
       },
       {
         text: "Some blows are Aimed now: the foe strikes a space, not a pilot. The Brute's Slam is Aimed, so step off the marked space and it lands on empty ground, or leave another foe there to take it. Pre-empt (Theory of Mind) makes any foe's attack Aimed for the round.",

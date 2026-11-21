@@ -141,6 +141,7 @@ function outcome(cardId, k, sit, aim, drop) {
   try {
     const ctx = Object.assign({ choice: 'pull' }, aim);
     const r = T.playFace(s.m, s.h, cardId, k, ctx);
+    if (r.ok && face.dusk) T.finishRound(s.m); // a Dusk face lands at round end
     return r.ok ? snapshot(s.m, r.ctx) : null;
   } finally {
     face.fx = fx;
