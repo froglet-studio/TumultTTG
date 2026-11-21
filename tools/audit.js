@@ -118,6 +118,9 @@ function answersOf(x) {
     case 'fix':
       add('burst'); // you know its next intents
       break;
+    case 'aim':
+      add('burst', 'crowd', 'single'); // step out of a blow, or leave a foe where it lands
+      break;
     case 'rewind':
       add('attrition', 'burst'); // the round's hits, given back
       break;
@@ -275,7 +278,7 @@ const ABLATIONS = [
     'no foe control',
     (x) =>
       (x.v === 'anchor' && (x.who === 'foe' || x.who === 'target')) ||
-      ['weaken', 'slow', 'force', 'link', 'hold'].includes(x.v) ||
+      ['weaken', 'slow', 'force', 'link', 'hold', 'aim'].includes(x.v) ||
       (x.v === 'field' && x.fx.some((y) => ['anchor', 'weaken'].includes(y.kw))),
   ],
   [

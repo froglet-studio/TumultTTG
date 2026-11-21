@@ -16,6 +16,12 @@
 - Both simulated players play gear cards like any other card (the heuristic never used gear before), and the harness flies a gear card bought with a full kit in place of the least-trained trait.
 - **Balance.** Foes have 155% of their listed vitality (was 150%). Without that, full runs got easier: `node tools/sim.js 200 runs --player strong` 92 → 108 of 200 on 2.110. With it, 91 → 88 of 200 on 2.111. `docs/reference/BALANCE.md` has the tables.
 - **Saves** are version 31: a pilot's worn gear gets its card, in the kit when there is room and in reserve when not (fixture `save-2.109.json`).
+## 2.112.0 — 2026-11-21 — Aimed blows
+
+- **Aimed** (new keyword, from the shortlist's first pick). An Aimed attack is telegraphed at a space, not a pilot: when the foe acts, it strikes whoever stands on that space, foe or pilot, and a melee foe walks to it first. Step away and the blow lands on empty ground; leave a foe there and it takes the hit. The foe still acts, so no turn is taken.
+- **The Brute's Slam is Aimed.** You can dodge its big blow by stepping off the marked space, or turn it on another foe.
+- **Pre-empt** (Theory of Mind) changes from a Shield into a read. For 0 AP and 2 etherions it makes a foe's attack this round Aimed, and from E 2 the attack of every foe within E − 1 of it too (`aim`).
+- The intent line on the board points at the aimed space. No save change.
 
 ## 2.111.0 — 2026-11-21 — the rest of the costly faces
 

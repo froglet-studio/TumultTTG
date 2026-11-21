@@ -2188,6 +2188,24 @@
         say(m, `${t.name} is fixed on what it means to do.`, 'hero');
         break;
       }
+      case 'aim': {
+        // Read a foe (and the foes within `radius` of it): its attack this round is Aimed, at the space its
+        // target stands on now.
+        const t = targetEnt(m, ctx);
+        if (!standing(t) || t.kind !== 'enemy') break;
+        const r = num(f.radius, P, E) || 0;
+        const foes = [t].concat(r > 0 ? foesWithin(m, t.pos, r).filter((x) => x !== t) : []);
+        let n = 0;
+        for (const e of foes) if (T.aimIntent && T.aimIntent(m, e)) n++;
+        say(
+          m,
+          n
+            ? `${actor.name} reads ${n === 1 ? t.name : n + ' foes'}: the blow is Aimed.`
+            : `${t.name} has nothing to aim.`,
+          'hero',
+        );
+        break;
+      }
       case 'spring': {
         // Everything set springs now: within `radius` of you, every Field and hazard on whoever stands in it,
         // and every Wound bites. They still do again at round end.

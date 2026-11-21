@@ -25,6 +25,10 @@
         text: "Gear runs on Omni now, and some of it has a card. Omnicrystals only buy gear: every gear ability is free or costs banked Omni dice. An ability with a cooldown lives on the gear's card, which joins your kit and counts toward your nine (but not toward a clade's three); with a full kit it waits in your reserve. Playing either face sends the card to your track. A weapon's Overcharge has no cooldown, so it stays on the gear. Did a gear card earn its place in your nine? Was it clear which abilities sit on the card and which on the gear?",
       },
       {
+        text: "Some blows are Aimed now: the foe strikes a space, not a pilot. The Brute's Slam is Aimed, so step off the marked space and it lands on empty ground, or leave another foe there to take it. Pre-empt (Theory of Mind) makes any foe's attack Aimed for the round.",
+        cards: ['hum_mind'],
+      },
+      {
         text: 'Five more costly faces now each do one thing nothing else does. Apex Form makes your melee strikes knock foes back, and a foe stopped short crashes into whatever is in the way: both take the hit. Immovable Hold locks on to a foe, which is dragged along beside you when you walk. Neurotoxin fixes a foe on its plan: it repeats this round’s intent for the next rounds, so you know what it will do. Step Out of Time no longer heals, and Tesla Cascade no longer strips Shield; their Link and untargetable parts stay. Did a crash, a drag or a fixed foe ever set up a turn you planned around?',
         cards: ['axo_meta', 'tar_claw', 'oct_bite', 'tar_crypto', 'eel_discharge'],
       },
