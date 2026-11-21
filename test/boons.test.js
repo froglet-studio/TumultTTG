@@ -267,7 +267,7 @@ test('weapons never strike on their own, and Overcharge takes banked Omni dice: 
   assert.ok(!(h.states.Empower || []).length, 'gone at round end');
 });
 
-/* Equipment cards (2.113; Garrett, 2026-11-21): a gear ability with a cooldown sits on the gear's card, which counts
+/* Equipment cards (2.117; Garrett, 2026-11-21): a gear ability with a cooldown sits on the gear's card, which counts
    toward the nine; it is free or paid in banked Omni dice, never in ◇. */
 test('gear cards: a bought gear card joins the kit, or the reserve when the kit is full, and goes when sold', () => {
   const run = T.newRun(5);

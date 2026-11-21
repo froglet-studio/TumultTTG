@@ -391,6 +391,7 @@
       enemies: [],
       decoys: [],
       pets: [],
+      dusk: [],
       fields: [],
       objective: spec.objective,
       clock: spec.clock ? Object.assign({}, spec.clock) : null,
@@ -585,7 +586,7 @@
   T.canPay = function (h, ap, elt, eln) {
     if (T.apValue(h) < (ap || 0)) return false;
     if (eln && elt) {
-      // an Omni cost (a gear card's face, 2.113) is paid in Omni alone, counted once
+      // an Omni cost (a gear card's face, 2.117) is paid in Omni alone, counted once
       if ((elt === 'O' ? 0 : T.elCount(h, elt)) + T.omniCount(h) < eln) return false;
     }
     return true;
@@ -819,6 +820,18 @@
     return p;
   };
   T.livePets = (m) => (m.pets || []).filter((p) => !p.dead);
+  /**
+   * Flanked (2.115): a unit with units of the other side on two different spaces beside it. For a foe,
+   * the other side is the squad: pilots standing, their pets and their decoys. For a pilot, it is foes.
+   */
+  T.isFlanked = function (m, u) {
+    if (!u || u.pos == null) return false;
+    const others = u.kind === 'enemy' ? T.liveHeroes(m).concat(T.livePets(m), m.decoys || []) : T.liveEnemies(m);
+    const spaces = new Set();
+    for (const o of others)
+      if (o.pos != null && o.pos !== u.pos && B.adjacent(m.board, u.pos, o.pos)) spaces.add(o.pos);
+    return spaces.size >= 2;
+  };
   T.petsOf = (m, h) => (m.pets || []).filter((p) => p.owner === h.uid && !p.dead);
   T.petOwner = (m, p) => m.heroes.find((h) => h.uid === p.owner) || null;
   /** The pet a pet card plays off, or null if that pet is not (or no longer) with its pilot. */
@@ -1833,7 +1846,19 @@
     const rctx = ctx || {};
     Object.assign(rctx, { P, E, card, faceKey });
     if (al.ally != null) rctx.ally = al.ally;
-    T.runEffects(m, body, face.fx, rctx);
+    if (face.dusk) {
+      // Dusk (2.115): the face is placed now and lands at round end, after the foes have acted. What it
+      // needs is kept as plain data (who, which face, its levels, the space chosen), not the effects.
+      (m.dusk = m.dusk || []).push({
+        uid: body.uid,
+        card: cardId,
+        face: faceKey,
+        P,
+        E,
+        node: rctx.node != null ? rctx.node : null,
+      });
+      say(m, `${body.name} waits for dusk.`, 'hero');
+    } else T.runEffects(m, body, face.fx, rctx);
     if (body !== h) delete rctx.pendingFreeMove; // a free step a pet's face grants is the pet's, and it has taken it
     T.afterAction(m);
     return { ok: true, ctx: rctx };
@@ -1896,11 +1921,12 @@
     const condOk = () => {
       if (f.ifOnHazard && !bd.nodes[actor.pos].hazard) return false;
       if (f.ifE && E < f.ifE) return false;
-      if (f.ifAnchored || f.ifAdjacent || f.ifHpBelow != null) {
+      if (f.ifAnchored || f.ifAdjacent || f.ifFlanked || f.ifHpBelow != null) {
         const t = targetEnt(m, ctx) || ctx.lastTarget;
         if (!t || t.alive === false || t.downed) return false;
         if (f.ifAnchored && !isAnchored(t)) return false;
         if (f.ifAdjacent && !B.adjacent(bd, actor.pos, t.pos)) return false;
+        if (f.ifFlanked && !T.isFlanked(m, t)) return false;
         if (f.ifHpBelow != null && t.hp >= num(f.ifHpBelow, P, E)) return false;
       }
       return true;
@@ -1924,7 +1950,7 @@
         else if (f.kind === 'zone_all') targets = T.liveEnemies(m).filter((e) => B.los(bd, actor.pos, e.pos));
         else if (f.kind === 'nodeArea') {
           const center = ctx.node != null ? ctx.node : actor.pos;
-          targets = foesWithin(m, center, 1);
+          targets = foesWithin(m, center, f.radius != null ? num(f.radius, P, E) : 1);
         } else if (f.nearest) {
           const e = nearestFoe(m, actor, f.kind === 'los');
           if (e) targets = [e];
@@ -1985,7 +2011,7 @@
         let targets = [];
         if (f.area === 'nodeArea') {
           const center = ctx.node != null ? ctx.node : actor.pos;
-          targets = foesWithin(m, center, 1);
+          targets = foesWithin(m, center, f.radius != null ? num(f.radius, P, E) : 1);
         } else {
           const t = targetEnt(m, ctx) || ctx.lastTarget;
           if (t) targets = [t];
@@ -3014,7 +3040,7 @@
     const ab = T.GEAR_BY[g.id].abilities[ai];
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
     if (h.ride != null) return { ok: false, why: 'inside a vehicle: its cards, or a Mounted face' };
-    // an ability with a cooldown is played from the gear's card in the kit (2.113), not from the gear
+    // an ability with a cooldown is played from the gear's card in the kit (2.117), not from the gear
     if (T.onGearCard(ab)) return { ok: false, why: 'on its card' };
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
     if (ab.omni && T.omniCount(h) < ab.omni) return { ok: false, why: 'need a banked Omni' };
@@ -3204,6 +3230,17 @@
   };
   T.roundEnd = function (m) {
     m.phase = 'end';
+    // Dusk faces land now, after the foes have acted, in the order they were placed (2.115)
+    const dusk = m.dusk || [];
+    m.dusk = [];
+    for (const d of dusk) {
+      if (m.over) break;
+      const actor = m.heroes.find((h) => h.uid === d.uid) || (m.pets || []).find((p) => p.uid === d.uid && !p.dead);
+      const card = T.CARD[d.card];
+      if (!actor || !card) continue;
+      say(m, `At dusk, ${actor.name}'s ${card[d.face].n} lands.`, 'hero');
+      T.runEffects(m, actor, card[d.face].fx, { P: d.P, E: d.E, card, faceKey: d.face, node: d.node });
+    }
     // decoy strikes
     for (const d of m.decoys.slice()) {
       if (d.strike) {

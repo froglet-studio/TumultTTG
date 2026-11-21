@@ -468,7 +468,7 @@
   // UP allocation
   T.adjustUp = function (h, cardId, which, delta) {
     const i = which === 'E' ? 1 : 0;
-    // a pet's card has no Ethereal face; a gear card is bought as it is, never trained (2.113)
+    // a pet's card has no Ethereal face; a gear card is bought as it is, never trained (2.117)
     const c = T.CARD[cardId];
     const cap = c && c.gear ? 0 : which === 'E' ? (c && c.pet ? 0 : R().E_CAP) : R().P_CAP;
     const cur = h.up[cardId] || [0, 0];
@@ -1003,7 +1003,7 @@
     return rec;
   };
   /**
-   * Where a card in a kit comes from: a clade's bloodline, a pet (src/data/pets.js) or a piece of gear (2.113).
+   * Where a card in a kit comes from: a clade's bloodline, a pet (src/data/pets.js) or a piece of gear (2.117).
    * Everything in h.cards counts toward the nine whatever its source.
    */
   T.cardSource = function (h, cardId) {
@@ -1063,7 +1063,7 @@
     return { ok: true };
   };
   /**
-   * Equip a piece of gear. Gear whose abilities go on cooldown has a card (src/data/world.js, 2.113): it joins
+   * Equip a piece of gear. Gear whose abilities go on cooldown has a card (src/data/world.js, 2.117): it joins
    * the kit when there is room and waits in the reserve when not, as a trait earned with a full kit does.
    */
   T.equipGear = function (h, gearId) {
@@ -1180,7 +1180,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 31;
+  T.SAVE_VERSION = 32;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1572,16 +1572,21 @@
       if (r.haven && r.haven.pet === undefined) r.haven.pet = null;
       r.v = 30;
     },
-    // 2.113 put every gear ability with a cooldown on a card in the nine (src/data/world.js): worn gear gets its
-    // card, in the kit when there is room and in the reserve when not. Its old per-ability cooldowns are kept.
+    // 2.115 added Dusk faces: a mission keeps the ones placed this round, to land at round end.
     30(r) {
+      if (r.mission && !Array.isArray(r.mission.dusk)) r.mission.dusk = [];
+      r.v = 31;
+    },
+    // 2.117 put every gear ability with a cooldown on a card in the nine (src/data/world.js): worn gear gets its
+    // card, in the kit when there is room and in the reserve when not. Its old per-ability cooldowns are kept.
+    31(r) {
       for (const h of r.heroes || []) {
         if (!h || !Array.isArray(h.gear) || !Array.isArray(h.cards)) continue;
         h.up = h.up || {};
         h.reserve = h.reserve || [];
         for (const g of h.gear) if (T.GEAR_BY[g.id]) migrateGearCard(h, g.id);
       }
-      r.v = 31;
+      r.v = 32;
     },
   };
   function migrateGearCard(h, gearId) {

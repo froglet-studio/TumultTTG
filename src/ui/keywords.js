@@ -97,6 +97,20 @@
       tip: 'Aimed: the attack lands on the space its target stood on when it was telegraphed. It strikes whoever stands there then, foe or pilot; an empty space and it misses.',
     },
     {
+      id: 'dusk',
+      re: 'At dusk',
+      icon: 'kw.mark',
+      tone: 'neutral',
+      tip: 'At dusk: the face is placed now and lands at round end, once the foes have acted (before hazards, Fields and Wounds). It strikes whoever is there then. A ring marks where.',
+    },
+    {
+      id: 'flanked',
+      re: 'Flanked',
+      icon: 'kw.mark',
+      tone: 'neutral',
+      tip: 'Flanked: a foe with the squad (pilots, pets or decoys) on two different spaces beside it. Some faces hit harder on a flanked foe; they still hit without one.',
+    },
+    {
       id: 'blink',
       re: 'Blink(?:s|ed|ing)?',
       icon: 'kw.hover',

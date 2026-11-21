@@ -260,7 +260,7 @@
   U.openTrain = function (i) {
     const run = U.run;
     const h = run.heroes[i];
-    // a gear card is bought as it is, never trained (2.113): the upgrade view leaves it out
+    // a gear card is bought as it is, never trained (2.117): the upgrade view leaves it out
     const trainable = h.cards.filter((c) => !T.CARD[c].gear);
     if (!am.up || am.up.hero !== i || !trainable.includes(am.up.card)) {
       // start on the first card with room to grow, a sleeping card first

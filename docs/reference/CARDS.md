@@ -1073,7 +1073,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pair Hunt** ★ · Charge · `jac_pair`
 
-- *Phys — Flank* · 1 AP · CD 1 — Melee 1, opening it up: it is Marked +1 for 3 rounds. *(P3: Melee 4, opening it up: it is Marked +1 for 3 rounds.)*
+- *Phys — Flank* · 1 AP · CD 1 — Melee 1, or 3 if it is Flanked, opening it up: it is Marked +1 for 3 rounds. *(P3: Melee 4, or 6 if it is Flanked, opening it up: it is Marked +1 for 3 rounds.)*
 - *Eth — Pair Hunt* · 1 AP + 1 Charge · CD 3 — Send an ally on: Guide them 2; all heroes' next strike deals +2. *(P3/E3: Send an ally on: Guide them 2; all heroes' next strike deals +4.)*
 
 **Golden Coat** · Time · `jac_coat`
@@ -1161,7 +1161,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bone Crush** ★ · Mass · `hye_crush`
 
-- *Phys — Crunch* · 1 AP · CD 1 — Melee 2; it is Weakened 1 this round. *(P3: Melee 5 through Shield; it is Weakened 1 this round.)*
+- *Phys — Crunch* · 1 AP · CD 1 — Melee 2, or 4 if it is Flanked; it is Weakened 1 this round. *(P3: Melee 5, or 7 if it is Flanked, through Shield; it is Weakened 1 this round.)*
 - *Eth — Bone Crack* · 1 AP + 1 Mass · CD 3 — Crack 2 off its Shield, melee 4, and it is Weakened 2 for 1 round. *(P3/E3: Crack 4 off its Shield, melee 6, and it is Weakened 2 for 2 rounds.)*
 
 **Clan Whoop** · Charge · `hye_whoop`
@@ -1421,7 +1421,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Apex** · Mass · `orc_apex`
 
-- *Phys — Take Down* · 1 AP · CD 1 — Melee 2; a foe left at 2 or less is finished. *(P3: Melee 5; a foe left at 5 or less is finished.)*
+- *Phys — Take Down* · 1 AP · CD 1 — Melee 2, or 4 if it is Flanked; a foe left at 2 or less is finished. *(P3: Melee 5, or 7 if it is Flanked; a foe left at 5 or less is finished.)*
 - *Eth — Top of the Sea* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Melee 7 that ignores Shield, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 **Beach Charge** · Mass · `orc_beach`
@@ -3416,7 +3416,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Lurk** · Time · `cro_lurk`
 
 - *Phys — Sink* · 1 AP · CD 1 — Sink until only your eyes show: Hidden 1, and your next hit within 2 rounds deals +1. *(P3: Sink until only your eyes show: Hidden 1, and your next hit within 2 rounds deals +4.)*
-- *Eth — Log in the River* · 1 AP + 1 Time · CD 4 — Drift 2 like a log: Hidden 1 even if you move, and your next hit within 3 rounds deals +3. *(P3/E3: Drift 4 like a log: Hidden 2 even if you move, and your next hit within 3 rounds deals +5.)*
+- *Eth — Under the Surface* · 1 AP + 1 Time · CD 4 — Choose a space within 3. At dusk: when the foes have acted, the foe standing on it then takes 7, through Shield. *(P3/E3: Choose a space within 5. At dusk: when the foes have acted, the foe standing on it then takes 11, through Shield.)*
 
 **Ambush Jaws** · Mass · `cro_jaws`
 
@@ -4151,7 +4151,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hold Still** · Time · `man_still`
 
 - *Phys — Wait* · 1 AP · CD 1 — Do nothing at all: Hidden 1, and your next hit within 2 rounds deals +1. *(P3: Do nothing at all: Hidden 1, and your next hit within 2 rounds deals +2.)*
-- *Eth — Patience* · 1 AP + 1 Time · CD 4 — Wait as long as it takes: Hidden 1, Shield: the next hit on you is 1 less, and your next hit within 2 rounds deals +3. *(P3/E3: Wait as long as it takes: Hidden 1, Shield: the next hit on you is 1 less, and your next hit within 2 rounds deals +5.)*
+- *Eth — Patience* · 1 AP + 1 Time · CD 4 — At dusk: when the foes have acted, every foe then beside you takes 5. Let them come to you. *(P3/E3: At dusk: when the foes have acted, every foe then beside you takes 7. Let them come to you.)*
 
 **Leaf Sway** · Space · `man_sway`
 

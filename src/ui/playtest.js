@@ -19,10 +19,14 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.113.0',
+    version: '2.117.0',
     items: [
       {
         text: "Gear runs on Omni now, and some of it has a card. Omnicrystals only buy gear: every gear ability is free or costs banked Omni dice. An ability with a cooldown lives on the gear's card, which joins your kit and counts toward your nine (but not toward a clade's three); with a full kit it waits in your reserve. Playing either face sends the card to your track. A weapon's Overcharge has no cooldown, so it stays on the gear. Did a gear card earn its place in your nine? Was it clear which abilities sit on the card and which on the gear?",
+      },
+      {
+        text: "Two new words. At dusk: a face placed now that lands at round end, after the foes act, on whoever is there then (Patience on the mantis, Under the Surface on the crocodile; a ring on the board shows where). Flanked: a foe with the squad on two spaces beside it, which the jackal's Flank, the hyena's Crunch and the orca's Take Down hit 2 harder.",
+        cards: ['man_still', 'cro_lurk', 'jac_pair', 'hye_crush', 'orc_apex'],
       },
       {
         text: "Some blows are Aimed now: the foe strikes a space, not a pilot. The Brute's Slam is Aimed, so step off the marked space and it lands on empty ground, or leave another foe there to take it. Pre-empt (Theory of Mind) makes any foe's attack Aimed for the round.",
