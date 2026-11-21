@@ -501,16 +501,35 @@
       return;
     }
     let txt = '';
-    if (ms.mode === 'target' && ms.pending.tg.allyMove != null) {
+    let allyBtns = '';
+    const tg = ms.mode === 'target' && ms.pending ? ms.pending.tg : null;
+    // three or more pilots: a face that reaches an ally lets its player choose which (buttons, or click the pilot)
+    const allyList = tg ? (tg.need === 'ally' ? tg.options : tg.allies) : null;
+    if (allyList)
+      allyBtns = allyList
+        .map((uid) => {
+          const a = m.heroes.find((x) => x.uid === uid);
+          const on = tg.need !== 'ally' && uid === tg.ally;
+          return a
+            ? `<button class="sm ${on ? 'primary' : ''}" data-act="pickAlly" data-arg="${uid}">${esc(a.name)}</button>`
+            : '';
+        })
+        .join('');
+    if (tg && tg.need === 'ally') {
+      txt = `<b>${esc(ms.pending.label)}</b> — choose an ally (highlighted).`;
+    } else if (ms.mode === 'target' && ms.pending.tg.allyMove != null) {
       const ally = m.heroes.find((x) => x.uid === ms.pending.tg.ally);
       txt = `<b>${esc(ms.pending.label)}</b> — choose where ${esc(ally ? ally.name : 'your ally')} goes (up to ${ms.pending.tg.allyMove}; click them to stay). They move now.`;
     } else if (ms.mode === 'target')
       txt = `<b>${esc(ms.pending.label)}</b> — choose a ${ms.pending.tg.need === 'node' ? 'node' : 'target'} (highlighted).`;
-    else if (ms.mode === 'choice') txt = `<b>${esc(ms.pending.label)}</b> — push or pull?`;
+    if (tg && tg.allies) {
+      const a = m.heroes.find((x) => x.uid === tg.ally);
+      txt += ` For ${esc(a ? a.name : 'your ally')}: click another pilot to choose them instead.`;
+    } else if (ms.mode === 'choice') txt = `<b>${esc(ms.pending.label)}</b> — push or pull?`;
     else if (ms.mode === 'reroll') txt = `<b>Reroll</b> — click up to ${ms.rerollLeft} banked dice, then confirm.`;
     else if (ms.mode === 'freeMove') txt = `<b>Free step</b> — click a highlighted node (up to ${ms.freeN}).`;
     else if (ms.mode === 'dump') txt = `<b>Return a die</b> — click a banked die to send it back to the pool.`;
-    el.innerHTML = `<div class="targeting">${txt}<span class="right row">${ms.mode === 'choice' ? '<button class="sm primary" data-act="choice" data-arg="push">Push</button><button class="sm primary" data-act="choice" data-arg="pull">Pull</button>' : ''}${ms.mode === 'reroll' ? '<button class="sm primary" data-act="rerollConfirm">Confirm</button>' : ''}<button class="sm ghost" data-act="cancelMode">${ms.mode === 'freeMove' || ms.mode === 'reroll' ? 'Skip' : 'Cancel'}</button></span></div>`;
+    el.innerHTML = `<div class="targeting">${txt}<span class="right row">${allyBtns}${ms.mode === 'choice' ? '<button class="sm primary" data-act="choice" data-arg="push">Push</button><button class="sm primary" data-act="choice" data-arg="pull">Pull</button>' : ''}${ms.mode === 'reroll' ? '<button class="sm primary" data-act="rerollConfirm">Confirm</button>' : ''}<button class="sm ghost" data-act="cancelMode">${ms.mode === 'freeMove' || ms.mode === 'reroll' ? 'Skip' : 'Cancel'}</button></span></div>`;
   }
   function hintText(m) {
     const h = hero();
@@ -819,7 +838,10 @@
   }
   function validTargets(m) {
     const ms = U.ms;
-    if (ms.mode === 'target' && (ms.pending.tg.need === 'foe' || ms.pending.tg.need === 'foeOrAlly'))
+    if (
+      ms.mode === 'target' &&
+      (ms.pending.tg.need === 'foe' || ms.pending.tg.need === 'foeOrAlly' || ms.pending.tg.need === 'ally')
+    )
       return new Set(ms.pending.tg.options);
     return new Set();
   }
@@ -1063,9 +1085,10 @@
         setTimeout(() => el.remove(), 420);
       }
     });
-    if (U.ms.mode === 'target' && U.ms.pending.tg.need === 'foeOrAlly')
+    const ptg = U.ms.mode === 'target' && U.ms.pending ? U.ms.pending.tg : null;
+    if (ptg && (ptg.need === 'foeOrAlly' || ptg.need === 'ally' || ptg.allies))
       m.heroes.forEach((h) => {
-        if (vt.has(h.uid)) {
+        if (vt.has(h.uid) || (ptg.allies && ptg.allies.includes(h.uid) && h.uid !== ptg.ally)) {
           const el = $('#tok-' + h.uid, svg);
           if (el) el.setAttribute('class', el.getAttribute('class') + ' targetable');
         }
@@ -1330,6 +1353,7 @@
   function ctxsFor(tg) {
     if (tg.need === 'none') return [{}];
     if (tg.need === 'foe' || tg.need === 'foeOrAlly') return (tg.options || []).map((target) => ({ target }));
+    if (tg.need === 'ally') return (tg.options || []).map((ally) => ({ ally }));
     return [];
   }
   /**
@@ -1406,7 +1430,10 @@
         ctx = { target: +tgArg };
       else if (tok.classList.contains('hero') && ms.pending.tg.need === 'foeOrAlly')
         ctx = { target: M().heroes[+tgArg].uid };
-      else if (ms.pending.tg.need === 'node') {
+      else if (tok.classList.contains('hero') && ms.pending.tg.need === 'ally') {
+        const uid = M().heroes[+tgArg].uid;
+        if (ms.pending.tg.options.includes(uid)) ctx = { ally: uid };
+      } else if (ms.pending.tg.need === 'node') {
         const node = tok.classList.contains('node')
           ? +tok.getAttribute('data-node')
           : tok.classList.contains('hero')
@@ -1415,6 +1442,7 @@
         if (node != null && ms.pending.tg.options.includes(node)) ctx = { node };
       }
       if (!ctx) return;
+      if (ms.pending.tg.allies) ctx.ally = ms.pending.tg.ally;
       const p =
         ms.pending.kind === 'card' ? { kind: 'card', cardId: ms.pending.cardId, fk: ms.pending.fk } : ms.pending;
       drawPreview(previewFor(p, [ctx]));
@@ -1651,6 +1679,33 @@
       U.updateMission();
     }
   }
+  /**
+   * Choose the ally a pending play reaches (3+ pilots). A play that needs only the ally goes ahead; one with
+   * a target of its own works its targets out again for that ally. Returns whether the click was used.
+   */
+  function pickAlly(m, uid) {
+    const ms = U.ms;
+    const p = ms.pending;
+    if (!p || !p.tg) return false;
+    if (p.tg.need === 'ally') {
+      if (!p.tg.options.includes(uid)) return false;
+      commitPending({ ally: uid });
+      return true;
+    }
+    if (!p.tg.allies || !p.tg.allies.includes(uid) || uid === p.tg.ally) return false;
+    const h = hero();
+    let tg = null;
+    if (p.kind === 'card') tg = T.canPlay(m, h, p.cardId, p.fk, uid).tg;
+    else if (p.kind === 'basic') tg = T.canUseBasic(m, h, p.id, uid).tg;
+    else {
+      const ab = T.GEAR_BY[h.gear[p.gi].id].abilities[p.ai];
+      tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0, uid);
+    }
+    if (!tg || tg.invalid || tg.ally !== uid) return false;
+    p.tg = tg;
+    U.updateMission();
+    return true;
+  }
   function commitPending(ctx) {
     const m = M();
     const ms = U.ms;
@@ -1664,6 +1719,8 @@
     }
     let r;
     const fullCtx = Object.assign({}, ctx);
+    // the ally this play reaches, as the player chose it (3+ pilots): the host works it out from this, not afresh
+    if (fullCtx.ally == null && p.tg.ally != null && m.heroes.length > 2) fullCtx.ally = p.tg.ally;
     const i = ms.heroIdx;
     // every change goes through a command, so it can be carried out on the host's screen (U.exec)
     if (p.kind === 'card') r = U.exec({ op: 'face', hero: i, card: p.cardId, fk: p.fk, ctx: fullCtx });
@@ -1735,6 +1792,7 @@
         return true;
       case 'selHeroTok': {
         const i = +arg;
+        if (ms.mode === 'target' && pickAlly(m, m.heroes[i].uid)) return true;
         if (
           ms.mode === 'target' &&
           ms.pending.tg.need === 'foeOrAlly' &&
@@ -1754,6 +1812,9 @@
         }
         return true;
       }
+      case 'pickAlly':
+        if (ms.mode === 'target') pickAlly(m, +arg);
+        return true;
       case 'tgtEnemy': {
         const uid = +arg;
         if (ms.mode === 'target' && ms.pending.tg.options.includes(uid)) {

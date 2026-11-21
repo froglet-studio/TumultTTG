@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.98.1',
+    version: '2.99.0',
     items: [
+      {
+        text: 'With three or more pilots, every face, gear ability and duet move that reaches an ally now lets you choose which one: Unity, Link, Lend and the like ask you to click the ally (or press their name above the board), and moves like Call or Cue let you click another pilot before you pick where they go. The texts say "an ally" and "all heroes" now, instead of "your ally" and "both heroes". With two pilots nothing changes. In a game of three or more, did you ever hand something to the wrong pilot?',
+        cards: ['hum_coop', 'hum_lang'],
+      },
       {
         text: 'Card texts no longer use the retired words: immune to push/pull is now Anchored (which since 2.91 also keeps you from walking), shedding damage over time is Cleanse, and traps are gone from the texts (there are only Fields now). Spot any old word still on a card? Send it in the report.',
         cards: ['tar_cling', 'jer_ears'],

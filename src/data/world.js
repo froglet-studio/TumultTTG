@@ -88,14 +88,14 @@
       passive:{ hook:'shieldBonus', val:1, txt:'Every Shield you gain is +1.' },
       abilities:[
         { n:'Brace', cost:1, cd:1, tgt:'self', fx:[{v:'shield', val:f(3), dur:f(1), all:true}], txt:()=>'Shield 3 against everything this round.' },
-        { n:'Bulwark', cost:2, cd:3, tgt:'party', fx:[{v:'shield', val:f(3), dur:f(2), all:true, party:true, allyRange:f(1)}], txt:()=>'Shield 3 against everything for 2 rounds, on you and an adjacent ally.' },
+        { n:'Bulwark', cost:2, cd:3, tgt:'party', fx:[{v:'shield', val:f(3), dur:f(2), all:true, party:true, allyRange:f(1)}], txt:()=>'Shield 3 against everything for 2 rounds, on you and every ally beside you.' },
       ]},
     { id:'lantern', name:'Storm Lantern', price:5, icon:'🏮',
-      desc:'Reveal + Mark, and a beacon for your ally.',
+      desc:'Reveal + Mark, and a beacon for an ally.',
       passive:{ hook:'spot', val:1, txt:'As your turn begins, a foe within 1 of you (beside you) is Marked.' },
       abilities:[
         { n:'Flare', cost:1, cd:2, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)},{v:'mark', area:true, radius:f(2)}], txt:()=>'Reveal within 2 and Mark every foe revealed.' },
-        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'rally', move:f(2)}], txt:()=>'Guide your ally up to 2 nodes, to a node you choose, now.' },
+        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'rally', move:f(2)}], txt:()=>'Guide an ally up to 2 nodes, to a node you choose, now.' },
       ]},
     { id:'harpoon', name:'Turret', price:6, icon:'🎯',
       desc:'Fields that strike. Set a turret down and it holds the ground around it.',

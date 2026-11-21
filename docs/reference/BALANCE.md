@@ -518,3 +518,7 @@ Status immunity became Cleanse for N (it now also sheds what is on you). Same se
 ## v2.98.1 — the old words leave the card texts
 
 Text only (and the dead `noTrap` option); no rule or number changed.
+
+## v2.99.0 — choose your ally
+
+With three or more pilots a face that reaches an ally lets its player choose which. Two pilots are untouched: `node tools/sim.js 40` is identical before and after. Three pilots (`node tools/sim.js 20 --pilots 3`): the heuristic player is identical (it takes the default ally); the look-ahead player, which now weighs every ally, averages 93.9% → 94.1% across the mission cells, and 9/20 → 7/20 full runs (within the noise of 20 runs).

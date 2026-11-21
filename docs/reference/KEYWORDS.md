@@ -86,7 +86,7 @@ Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Pu
 
 > **Heal N.** Restore N vitality; on a downed pilot, it gets up with N.
 
-- **Who.** You, your ally, both pilots, or a downed ally beside you, as the face says. A heal for both pilots
+- **Who.** You, an ally you choose, every pilot, or a downed ally beside you, as the face says. A heal for every pilot
   reaches a downed one wherever it lies.
 - **A held Heal** (`ward`): if you go down within N rounds, it lands then and you get up with its number.
 - **Tech heals only through a Field or the downed:** the Medkit's mending Field, and its Revive.
