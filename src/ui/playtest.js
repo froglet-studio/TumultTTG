@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.103.0',
+    version: '2.104.0',
     items: [
+      {
+        text: "Pocket vehicles and big maps. A new stop on the route, the Crossing, is played on a big map (Reed Delta or Ashfall Salt Flat: eight spaces across, with water, reeds, fissures and vents). Before it, each player picks a vehicle for their pilot: Skiff, Wing, Crawler, Diver or Runner, each with its own seats, speed, hull, ground it can cross and two cards (some carry long guns). Getting in or out is 1 AP, and so is each Drive. Inside you play only the vehicle's cards and your faces marked Mounted; blows land on the hull. Which vehicle did you pick, and did it pay for itself? Did you ever want to get out and walk?",
+      },
       {
         text: 'Movement has clearer words: Climb is a Move that may take ledges (foes now block it, as they block any walk), Guide moves an ally (Rally only raises the downed), and Gallop now tramples: it goes through foes and pushes each one aside, into a hazard or Field if that is where aside is. Did a climb that used to reach a ledge get stuck behind a foe? Did trampling give you a shove you could plan?',
       },

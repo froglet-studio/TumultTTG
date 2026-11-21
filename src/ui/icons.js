@@ -36,6 +36,7 @@
       'M2 6c4-3 6 3 10 0s6 3 10 0v4c-4 3-6-3-10 0S6 7 2 10zM2 14c4-3 6 3 10 0s6 3 10 0v4c-4 3-6-3-10 0s-6-3-10 0z', // water that runs
     'node.salvage': 'M3 8h18v13H3zM3 8l3-5h12l3 5M9 12h6v2H9z', // a crate, lid open
     'node.survey': 'M5 2h2v17H5zM7 3h11l-3 4 3 4H7zM2 20h20v2H2z', // a flag planted in the ground
+    'node.crossing': 'M3 15h14l2-5h2v2l-1.5 3H22v2H2v-2zM6 10h7l1 3H5zM4 20h16v2H4z', // a vehicle on the road
     'node.hidden':
       'M10 2a8 8 0 1 0 4.9 14.3L21 22.4l1.4-1.4-6.1-6.1A8 8 0 0 0 10 2zm0 3a5 5 0 1 1 0 10 5 5 0 0 1 0-10z', // a lens
     'node.elite': 'M4 2h4l4 6 4-6h4l-6 9 6 11h-4l-4-7-4 7H4l6-11z', // crossed blades, read as one mark
