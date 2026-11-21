@@ -9,6 +9,12 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.120.0 — 2026-11-21 — dice as AP
+
+- **Dice as AP** (Garrett, 2026-11-21: "make any two or any omni work as an AP"). A banked Omni, or any two banked etherions (the same or different), become 1 AP: no cost, as often as the bank allows. At the table, put the dice back in the pool and mint 1 AP; like any minted die it evaporates at the end of the hero phase. So a rolled element is never dead weight: with no face to pay, it still walks, strikes or works an objective. The anti-brick fold (one each of M, C, S and T into an Omni) stays.
+- **Self-explaining.** The ◇→AP button stands beside the four basic actions whenever spare dice would pay for a face in hand (under More otherwise); click it, then an Omni or two element dice. A face they would pay for says ◇→AP to pay.
+- **Foes have 166% of their listed vitality** (was 160%), so the game is not easier: `node tools/sim.js 200 runs --player strong` on top of 2.119.0 gives 84 of 200 before, 93 with dice as AP at 160%, 77 at 166% (`docs/reference/BALANCE.md`).
+- Both simulated players use it: the look-ahead player tries each different spend, the heuristic spends spare dice when that pays for a face with something to do. Engine: `T.spendAsAP`, `T.apSpends`, `T.canSpendAsAP`, `T.payableAsAP`; the command `asAP { dice }`. No save change.
 ## 2.119.0 — 2026-11-21 — gear runs on Omni, and some of it has a card
 
 - **Omnicrystals buy gear; Omni dice run it.** Every gear ability is free or costs banked Omni dice (Garrett, 2026-11-21, on the decision card: rolled Omni dice). The ◇ purse no longer fuels anything in a mission. What cost 1 ◇ is free, 2 ◇ is 1 Omni, and Rewind's 3 ◇ is 2 Omni. Capacitor's Store, a free Omni, cools down for 3 rounds instead of 1.
