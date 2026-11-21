@@ -1158,7 +1158,7 @@
           if (onTrack)
             return `<div class="fbtn ${fk === 'E' ? 'E' : 'P'} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
-          return `<button class="fbtn ${fk === 'E' ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}${!chk.ok && chk.why === 'cannot pay' && T.payableAsAP(h, f.ap, elt, fk === 'E' ? f.el || 0 : 0) ? `<span class="fwhy" data-tip="Spend spare dice as AP (◇→AP: an Omni, or two etherions, for 1 AP each) to pay for this">◇→AP to pay</span>` : ''}</button>`;
+          return `<button class="fbtn ${fk === 'E' ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}${!chk.ok && chk.why === 'cannot pay' && T.payableAsAP(h, f.ap, elt, f.el || 0) ? `<span class="fwhy" data-tip="Spend spare dice as AP (◇→AP: an Omni, or two etherions, for 1 AP each) to pay for this">◇→AP to pay</span>` : ''}</button>`;
         };
         if (onTrack) {
           const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
@@ -1261,7 +1261,7 @@
             const c = T.CARD[cid];
             const f = c[fk];
             if (fk === 'E' && T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) return false;
-            return T.payableAsAP(h, f.ap, f.elt || c.el, fk === 'E' ? f.el || 0 : 0);
+            return T.payableAsAP(h, f.ap, f.elt || c.el, f.el || 0);
           }),
       );
     const asAPB = `<button class="sm${U.ms.mode === 'asAP' && sel ? ' primary' : ''}" data-act="asAPMode" data-arg="${i}" ${canAsAP ? '' : 'disabled'} data-tip="${esc('Dice as AP (no cost): one banked Omni, or any two banked etherions (the same or different), become 1 AP. Click an Omni, or two element dice: they go back to the pool and you gain 1 AP until the end of this turn. As often as you like.')}">◇→AP</button>`;

@@ -690,7 +690,7 @@
         const f = card[fk];
         if (fk === 'E' && T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) continue;
         const elt = f.elt || card.el;
-        const eln = fk === 'E' ? f.el || 0 : 0;
+        const eln = f.el || 0;
         if (!T.payableAsAP(h, f.ap, elt, eln)) continue;
         // sketch it on a copy: spend until the face is paid for, and only if it then has something to do
         const c = T.clone(h);
