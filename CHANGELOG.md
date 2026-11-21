@@ -1,5 +1,145 @@
 # Changelog
 
+## 2.98.0 — 2026-11-21 — Reveal; Lane cut
+
+The twelfth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Reveal.** Everything within N is shown, and a Revealed foe cannot be Hidden while it lasts and a zone strike finds it. One verb for both: an area Reveal around you, or one foe (`target`, `nearest`) Revealed for N rounds, which is what `locate` did on 28 faces; their texts say Revealed.
+- **Cut: Lane.** Lanes were retired by zones in 2.18 but kept a tooltip; the three faces that still said *Lane strike* say *Zone strike*, which is what they did.
+- **The board names states by their keyword.** A pilot's chips, a foe's tooltip and the floating words say *Shield (next hit)*, *Revealed*, *Cleansed* and *Weakened* where the engine's older names (Preempt, Located, StatusImmune, Weak) showed through (`T.UI.stateName`).
+- No rule or save change (the state is still `Located`, shown as Revealed). The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
+## 2.97.0 — 2026-11-21 — Cleanse
+
+The eleventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Cleanse.** Remove every harmful state (Weakened, Anchored, Wound), or clear the ground of hazards and foes' Fields; **Cleanse for N** also turns away new ones: for N rounds no foe can Weaken or Anchor you. It absorbs status immunity (`statusImmune` on 33 faces is `cleanse` with `ward`).
+- **What changes.** Those 33 faces now also shed what is on you when you play them (they only kept new states off before). Where a face also Anchors you, the Cleanse comes first, so your own Anchor stands. Four faces that had both a Cleanse and an immunity have one Cleanse for N.
+- No save change (the state is still `StatusImmune`).
+- **Balance.** Same seeds, 2.94.0 → 2.97.0 (Blink and Haste were renames): `80 runs --player strong` 38 → 38; `120 runs --player weak` 10 → 9; `node tools/sim.js 40` runs 5 → 5 and 19 → 19 of 40, mission wins 71% and 87% both. Nothing is retuned.
+
+## 2.96.0 — 2026-11-21 — Haste
+
+The tenth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Haste N.** Your track slides N extra columns (your cards come home sooner), or the mission clock gains N rounds (`clock`), or the next N cards you play skip the track (`free`). One verb, `haste`, for `hasten` (23 faces and the Chrono-shim), `clock` (the Chrono-shim's Rewind) and `freecast` (5 faces); their texts say Haste.
+- No rule changed and no save changed. The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
+## 2.95.0 — 2026-11-21 — Blink
+
+The ninth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Blink N.** Leave the paths: appear on a free space within N (height only where the face says). The verb `teleport` is `blink` on 54 faces, the Phase-brace and the engine, and every text says Blink. An Anchored unit cannot blink (2.91).
+- No rule changed and no save changed: a rename. The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
+## 2.94.0 — 2026-11-21 — Shield absorbs Pre-empt, Guard and Absorb
+
+The eighth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Shield N.** Each hit it takes is N lower while it lasts; a **Shield against the next hit** is spent by that hit, and may send some back (`reflect`) or step you away (`reposition`): what Pre-empt did (`shield` with `next`).
+- **85 Pre-empt faces** are next-hit Shields, and their texts say Shield. **Guard** (ambushes halved) is a Shield 1 or 2 for as long; **Absorb** (the next ranged hits negated, minting Charge) is a Shield of 3+2E against the next hit and a Charge minted now.
+- **Saves** are version 26: a held Guard becomes Shield 1, a held Absorb a Shield of 3 against the next hit (fixture `save-2.93.json`).
+- **Balance.** Same seeds, 2.93.0 → 2.94.0: `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10; `node tools/sim.js 40` runs 5 → 5 and 21 → 19 of 40, mission wins 71% → 71% and 88% → 87%. Nothing is retuned.
+
+## 2.93.0 — 2026-11-21 — Thorns
+
+The seventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Thorns N.** Anything that strikes it in melee takes N, for as long as it lasts. A **next-hit Thorns** turns back only the next melee strike (and may push the striker): what Counter did. Both add up on that next hit (`thorns` with `val`, `dur`, `next`, `push`; state `Thorns` = `{ v, next, push, t }`).
+- **20 Counter faces** are next-hit Thorns, and their texts say Thorns.
+- **Saves** are version 25: a held Counter becomes a next-hit Thorns (fixture `save-2.92.json`).
+- **Balance.** Same seeds, 2.92.0 → 2.93.0: `80 runs --player strong` 39 → 39; `120 runs --player weak` 11 → 10; `node tools/sim.js 40` runs 6 → 5 and 21 → 21 of 40, mission wins unchanged (71%, 88%). Nothing is retuned.
+
+## 2.92.0 — 2026-11-21 — Mark
+
+The sixth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Mark N.** The next hit on it, by anyone, deals N more (2 unless the face says), then the Mark is spent. *For N rounds*: every hit deals N more until it wears off. *Pierce*: that next hit ignores Shield. The larger of each part stands (`mark` with `n`, `dur`, `pierce`; state `Marked` = `{ next, pierce, each, t }`).
+- **Studied is a Mark for 3 rounds.** Its +N to every hero hit used to last the whole mission and stack, a lock-on the 2.73 rule forbids; 29 faces now Mark +N for 3 rounds. **Exposed is a Pierce Mark** (5 faces).
+- **Saves** are version 24: a bare Mark is +2 to the next hit, Studied +n to every hit for 3 rounds, Exposed a Pierce Mark (fixture `save-2.91.json`).
+- **Balance.** Same seeds, 2.91.0 → 2.92.0: `80 runs --player strong` 41 → 39; `120 runs --player weak` 13 → 11; `node tools/sim.js 40` runs 7 → 6 and 23 → 21 of 40, mission wins 71% → 71% and 89% → 88%. Studied's end makes it a little harder, which takes back Anchor's drift; nothing is retuned.
+
+## 2.91.0 — 2026-11-21 — Anchor
+
+The fifth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Anchor.** Nothing moves an Anchored unit: no push or pull, and it cannot walk or blink. It still acts. One state, `Anchored`, in place of five: Anchored, Held, Rooted, Slow, SlowSelf and NoTele (`T.anchorEnt`).
+- **What changes.** A hero who Anchors itself no longer lets go by walking: it stays put for the round, so the order of a turn matters. A foe's root (the Binder's) is an Anchor, so a rooted pilot cannot be pushed either. An Anchored hero cannot blink. `slow` and `slowSelf` faces Anchor; `held` and the counted Field's no-blink went away, since every Anchor is both.
+- **Saves** are version 23: each old state becomes Anchored for as long as the longest of them (fixture `save-2.90.json`).
+- **Balance.** Same seeds, 2.90.0 → 2.91.0: `80 runs --player strong` 40 → 41; `120 runs --player weak` 11 → 13; `node tools/sim.js 40` runs 6 → 7 and 22 → 23 of 40, mission wins 70% → 71% and 89% → 89%. Each within the noise; the sweep's drift is retuned at its end with larger samples.
+
+## 2.90.0 — 2026-11-21 — Heal raises the downed
+
+The fourth keyword of the sweep (`docs/reference/KEYWORDS.md`; Garrett, 2026-11-21: Heal raises the downed, Rally stays the basic action).
+
+- **Heal N.** Restore N vitality; a downed pilot a Heal reaches gets up with N. Every heal for both pilots, or for your ally, now raises a downed one (`T.healUnit`).
+- **Revive and Phoenix are Heals.** Regrow's revive is *Heal 4 a downed ally beside you*; the five faces that brought you back are a **held Heal** (`ward`): if you go down within 3 rounds, it lands and you get up with that much.
+- **Medkit (tech heals only through a Field or the downed).** Patch lays a mending Field on and beside your space for 2 rounds (allies ending the round there Heal 3, a downed one gets up); Revive is Heal 10 a downed ally beside you. Field gained the Heal keyword.
+- **Rally** stays the basic action: 2 AP, a downed ally beside you gets up with 8.
+- **Balance.** Same seeds, 2.89.0 → 2.90.0: `80 runs --player strong` 38 → 40; `120 runs --player weak` 11 → 11; `node tools/sim.js 40` runs 6 → 6 and 21 → 22 of 40, mission wins 70% → 70% and 88% → 89%. Within the noise, so nothing is retuned. No save change (a held Heal is the old `Phoenix` state).
+
+## 2.89.0 — 2026-11-21 — boons and consumables fold into gear
+
+The keyword plan's third line, ethereal technology (`docs/reference/KEYWORDS.md`): gear works on spaces, the dice, the clock and the downed, is bought rather than trained, and strikes only through a Field.
+
+- **Every gear has a passive** (on while worn) and two actives (paid in ◇). The passives carry what boons did: Aegis Plate, every Shield +1 (Thick Hide); Scope, reveals +1 and Hidden foes beside you seen (Keen Sense); Chrono-shim, the track slides 1 extra as round 2 begins (Quick Hands); Medkit, once a mission rise at 10 (Second Wind); Climbing Rig, mag boots, you cannot be pulled (Anchor Soul); Capacitor, start each mission with 1 AP banked (Etherion-touched, gentler); Phase-brace, blinks reach 1 further; Storm Lantern, a foe beside you is Marked as your turn begins; Turret, your Fields last 1 round longer; Winch, your Fields push and pull 1 further.
+- **The actives carry what consumables did.** Medkit's Patch heals 6 (Rally Vial; was 4), Scope's Glance reveals within 2 (Flashpowder), Chrono-shim's Rewind gives the clock 2 (Windbreak Charm; was 1); Grit and the Omni Shard were already the Aegis Plate's Brace and the Capacitor's Store.
+- **The Grapnel is a Winch and the Harpoon Gun a Turret.** Tech never strikes a unit directly: Reel Line and Winch lay Fields that pull whoever enters (Field gains Pull and Push), Sentry and Skewer lay Fields that strike.
+- **Cut:** the Affinities and Omni Core (the element die is chosen every turn), Momentum, Defiant, Deep Pockets, Studious, and every consumable. Elites no longer offer a boon; they already pay 4 ◇ more. Three events that gave a boon give crystals or UP instead.
+- **Saves** are version 22: an older pilot's boons are refunded at 3 ◇ each and its consumables at their price, to its own purse (fixture `save-2.88.json`).
+- **Balance.** Foes keep 145% vitality: the fold does not let it come down. With every simulated squad wearing gear from tier 2, the passives make tiers 2 and 3 easier, so the Capacitor's banked die is an AP (an Omni measured easier) and the Lantern Marks only a foe beside you. Same seeds, 2.88.0 → 2.89.0 at 145%: `80 runs --player strong` 40 → 38; `120 runs --player weak` 10 → 11; `node tools/sim.js 40` runs 3 → 6 and 19 → 21 of 40, mission wins 69% → 70% and 87% → 88% (its mission table hands every tier 2 and 3 squad gear, so the passives show there most). At 140% it was 50 of 80, at 135% 47, at 130% 56: lowering vitality makes the game easier at once (`docs/reference/BALANCE.md`).
+
+## 2.88.1 — 2026-11-21 — every ability does what it says
+
+Garrett: "make sure that decoys actually leave decoys, and all movement abilities actually grant their movement etc."
+
+- **A new test plays every card face** (all 529 cards, both faces) in a dozen situations and checks that each effect on it changes the game somewhere, that every decoy face leaves its decoy where and for as long as its text says, that every move, blink, climb and rally reaches as far as its number and really moves the unit, and that the numbers a face prints are the numbers it plays (`test/abilities.test.js`).
+- **Fixed what it found.** Five decoys that stay where you are (Very Convincing, A Thousand Pink, Rainbow, Swarm, Door Stone) never appeared, because the hero was still on the node: the decoy now shares your node and keeps it when you go. Smoke Step dropped its Hidden as soon as you blinked; it now hides you after. No Retreat's own status immunity turned away its own anchor, so push and pull still moved you; a hero's own anchor is now a choice, not a status. A decoy cast at a node within 2 (Lure Light) could be aimed at an occupied node and vanish; it now offers empty nodes only. Strand's "drag it 1 toward you" on a foe already beside you never did anything, so the text now says what it does: melee and pin. Two texts now print a number they played without saying (Blink's decoy lasts 2; Lock Both Eyes sees within 2).
+- **The look-ahead player walks a free move in full** (it capped every walk at 3 steps, so free moves of 4 and 5 were cut short).
+- **Balance.** `node tools/sim.js 40`: every table identical before and after, on 2.88.0 (look-ahead 19/40 runs, heuristic 3/40). No save change.
+
+## 2.88.0 — 2026-11-21 — Wound
+
+The third keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Wound N.** At round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). It replaces damage over time and its fifteen names (venom, crush, corrode, rot, drain, sting…), which stay as the flavour word in the log. Its bite is true damage; a new Wound replaces a smaller one; Cleanse sheds it (`wound`, state `Wound`).
+- **28 faces.** A dot of 1 for 2 rounds is Wound 2; 1+h(E) for 2 is Wound 2+h(E); 1+E for 2 is Wound 1+E; 1+E for 3 is Wound 2+E; 2 for 2 is Wound 2. Deepen the parasitism keeps its heal at each bite and loses its +1 a round at E 2.
+- **Saves** are version 21: a foe's damage over time loads as one Wound dealing about as much in all (fixture `save-2.87.json`).
+- **Balance.** Same seeds, 2.87.0 → 2.88.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 19 of 40, mission wins 69% → 69% and 87% → 87%; `80 runs --player strong` 38 → 40; `120 runs --player weak` 10 → 10. Within the noise (two standard errors on 80 runs is about ±9). When Wounds added up, it was easier (41 of 80, 12 of 120), so the larger Wound stands instead. Nothing is retuned.
+
+## 2.87.0 — 2026-11-21 — Link
+
+The second keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Link (Charge).** Two units joined for N rounds: when one takes damage, a push or a pull, or a heal, the other takes the same (the damage it was dealt, after Shield, as true damage; the same push or pull from the same source; the same heal). A unit has one Link at a time, and it ends with its rounds or when either falls (`link`, state `Linked`).
+- **Seven Charge faces Link their target to the nearest foe.** Tesla Cascade (in place of its chain: Linked for E rounds, then struck for 6+P), Override, Its Own Voice and Every Step (in place of Redirect), Spasm and Drive the Shoal (in place of their Weaken: the push or pull moves both), and Disarming (in place of its +1 Studied).
+- **Cut: Redirect** (a foe's next attack turned on its own side bordered on turn theft) and the chain strike.
+- **Balance.** Same seeds, 2.86.0 → 2.87.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 18 of 40 (one cell's kills moved by 0.1); `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10. Not easier, so nothing is retuned. No save change: `Linked` is a state like any other.
+
+## 2.86.0 — 2026-11-21 — Field, the first keyword of the sweep
+
+Garrett approved the 22-keyword plan on 2026-11-21 (Field and Link in, tech as drawn, Heal raises the downed); it lands one keyword family per release (`docs/reference/KEYWORDS.md`).
+
+- **Field.** Snares, counted snares, spore, musk and ice zones, triggers and sensing auras are one keyword now: marked spaces that do their keywords (Strike, Weaken, Anchor, Mark, Hidden, Reveal) to whatever enters them or ends the round there, on a chosen space or around you. Its harm falls on its side's foes and its help on its own side; Hover and Weightless are above it; a hazard reads as a Field of damage. Fourteen faces changed words, not numbers, with these exceptions: a trigger's strike is now an area hit like a snare's; Enzymes' Field reaches Anchored foes within 2 of you (it reached every Anchored foe on the board and healed 1 a foe); Cilia Field Marks every foe that steps beside you, not only the first each round.
+- **Fields combine with movement.** A Field now springs on a foe pushed, pulled, blown or blinked onto it, not only one that walks in.
+- **Fixed: a zone's Weaken did nothing.** It was given for one round at round end and the round-end tick took it at once; a state a Field leaves at round end now lasts into the next round.
+- **Cleanse the ground** (`cleanse` with `field`) replaces `clearHazard`: hazards and foes' Fields within N are cleared, never yours.
+- **Saves** are version 20: a mission keeps `fields`, and a 2.85 save mid-round keeps its snares, zones, triggers and auras as Fields (fixture `save-2.85.json`).
+- **Balance.** No numbers moved: `node tools/sim.js 40`, 120 heuristic runs and 80 look-ahead runs are the same as 2.85.0 (the simulated squads rarely carry these cards), so nothing is retuned.
+
+## 2.85.1 — 2026-11-21 — cards on the track stay readable
+
+Garrett: "the whole cards should still be readable when it is on cooldown"
+
+- **Cooling cards read in full.** A card on the track used to fade to 45% and drop its faces. Now it shows its name, P/E levels, both faces and their costs at full strength, and each face keeps its hover text. The art greys out behind a band that says "back in N", the frame turns dashed, and nothing on the card can be pressed. No rules or save change.
+
+## 2.85.0 — 2026-11-21 — big Ethereal faces
+
+Garrett: "make some more powerful abilities that cost more elemental dice. simply so we don't need boons or consumables"
+
+- **Two and three etherions.** Twelve Ethereal faces now cost two or three etherions of their element and do much more, most of them for no AP. 2: Heavy Throw, Vacuum (every foe near you drawn in and Weakened), Resonance, Phase-tunnel, Fold-hop, Second Wind, Pre-empt. 3: Immovable Hold, Tesla Cascade, Override, Apex Form, Step Out of Time. Since you choose one element die a turn, a three-etherion face is one you save up for. This follows the keyword plan Garrett accepted: big etherion abilities are Ethereal faces; boons and consumables will become gear in the keyword migration, so they stay for now.
+- **Balance.** Runs got easier (80 runs, look-ahead 42 → 49), so every foe has **145%** of its listed vitality (was 140%): 80 runs look-ahead 42 → 39, 120 runs heuristic 13 → 10 (`docs/reference/BALANCE.md`). No save change.
+
 ## 2.84.0 — 2026-11-21 — Ethereal faces at 0 AP
 
 Garrett: "the underpowered elemental abilities and the ones that refund an ap die should have their ap cost reduced to zero instead"

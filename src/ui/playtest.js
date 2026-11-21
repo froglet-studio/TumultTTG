@@ -19,8 +19,74 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.84.0',
+    version: '2.98.0',
     items: [
+      {
+        text: 'Locate is now part of Reveal: a face that picks out one foe Reveals it for some rounds (it cannot be Hidden, and a zone strike finds it), and the faces say Revealed. The old Lane strike tooltip is gone: those faces say Zone strike, which is what they always did. Is Revealed clear on a foe token?',
+        cards: ['che_tear', 'adi_snuffle'],
+      },
+      {
+        text: 'Faces that made you immune to Weaken and Anchor now Cleanse you too: they shed Weakened, Anchored and Wounds at once, then keep foes from Weakening or Anchoring you for a few rounds. Do you notice the difference when a foe has already Anchored you?',
+        cards: ['pan_ants', 'heh_anoint'],
+      },
+      {
+        text: 'Cards that slide your track, buy rounds from the mission clock or let your next card skip the track now all say Haste. Nothing else changed. Is Haste a word you can play by at the table?',
+        cards: ['ora_memory', 'oct_arms'],
+      },
+      {
+        text: 'Teleport is now called Blink on every card and in every tooltip: leave the paths and appear on a free space within N (high ground only where the card says). Nothing else changed. Does Blink read better than teleport at the table?',
+        cards: ['oct_ink'],
+      },
+      {
+        text: 'Pre-empt is now a Shield against the next hit: the faces say Shield: the next hit on you is N less. Guard (ambushes halved) and Absorb are Shields too. Does the one word make it easier to see how protected your pilot is?',
+        cards: ['koi_shimmer', 'oct_intellect'],
+      },
+      {
+        text: 'Counter is now part of Thorns: a Thorns that lasts turns back every melee strike, and a next-hit Thorns turns back only the next one, sometimes with a push. The faces read "Thorns: the next foe to hit you in melee takes N". Is it clear on your pilot which kind you hold?',
+        cards: ['pan_ants', 'heh_anoint'],
+      },
+      {
+        text: 'Mark is now one keyword with a number: the next hit on a Marked foe deals that much more (2 unless the card says). Faces that used to Study a foe ("your hits on it deal +1 permanently") now Mark it for 3 rounds: +1 to every hit until it wears off, not for the whole mission. Exposed is a Pierce Mark: the next hit ignores Shield. Does the number on a Mark read clearly on the foe?',
+        cards: ['che_tear', 'msh_colours'],
+      },
+      {
+        text: 'Anchor is now one keyword: nothing moves an Anchored unit, its own walking and blinking included, and it still acts. Rooted, Slowed, held and "can’t blink" are all Anchored now. That cuts both ways: Anchor yourself against a drag and you stay put for the round, so walk first. When a foe roots you, nothing can push you either. Does planning around your own Anchor feel like a fair price?',
+        cards: ['fly_root'],
+      },
+      {
+        text: 'Heal now gets a downed pilot up: a Heal that reaches a downed ally raises it with that much (Bond, Raft and every heal for both pilots do it). Faces that used to revive you are a held Heal: if you go down within 3 rounds, it lands. The Medkit lays a mending Field (Heal 3 to allies ending the round on or beside your space). Rally is still the basic action (2 AP, beside you, up with 8). When a partner is down, do you now reach for a heal instead of walking over to Rally?',
+        cards: ['pri_groom', 'ott_raft'],
+      },
+      {
+        text: 'Boons and consumables are gone: their jobs are on gear now. Every piece of gear has a passive, always on while you wear it (the Aegis Plate gives +1 to every Shield, the Scope reaches further, the Medkit gets you up once a mission), and two actives you pay for in ◇ (the Medkit heals 6, the Chrono-shim buys 2 rounds of clock). The Grapnel is now a Winch and the Harpoon Gun a Turret: both lay Fields instead of hitting directly. Elites pay in crystals instead of a boon. Do you miss choosing a boon after an elite? Does a haven shop with passives make the choice of gear more interesting?',
+      },
+      {
+        text: 'Decoys that stay where you are now really appear: Very Convincing (Play Dead), A Thousand Pink, Rainbow, Swarm (Bloom) and Door Stone (Burrow) used to leave nothing, because you were still standing there. Now the decoy shares your space (a small token at its edge) and keeps it when you leave. Do foes go for it the way the card says?',
+        cards: ['opo_dead', 'fla_pink', 'msh_burrow'],
+      },
+      {
+        text: 'Smoke Step now leaves you Hidden after the blink (it used to drop Hidden as you moved), and No Retreat (Never Retreat) really stops you being pushed or pulled. Do they do what their cards say now?',
+        cards: ['oct_ink', 'bad_never'],
+      },
+      {
+        text: 'Damage over time is now one keyword, Wound: at round end the foe takes the Wound, then it drops by 1 (Wound 3 is 3, then 2, then 1). Venom, crush, corrode, rot and the rest are all Wounds now, and a new Wound replaces a smaller one. Is the number on the foe easy to follow from round to round?',
+        cards: ['gec_lockjaw', 'axo_toxic'],
+      },
+      {
+        text: 'A new keyword, Link (Charge): two foes joined for a few rounds, so damage, pushes, pulls and heals on one reach the other. Tesla Cascade, Override, Spasm, Its Own Voice, Every Step, Disarming and Drive the Shoal Link their target to the nearest foe. Redirect is gone. Try Linking two foes and pushing one into a Field, or Marking one end before you hit it. Is it clear on the board which two are Linked?',
+        cards: ['eel_discharge', 'eel_doublet', 'pel_line'],
+      },
+      {
+        text: 'Snares, spore clouds, triggers and sensing auras are now one keyword, Field: marked spaces that do their keywords to whatever enters them or ends the round there. Its harm falls on foes and its help on allies, Hover is above it, and a hazard is a Field of damage that belongs to nobody. A Field now springs when you push or pull a foe into it, and a Field’s Weaken now lasts into the next round. Try pushing a foe onto your Set Jaws or into a spore cloud. Does a Field read clearly on the board and in its tooltip?',
+        cards: ['fly_snap', 'fly_hairs'],
+      },
+      {
+        text: 'A card on the track now stays readable: its name, both faces and their costs are shown at full strength (hover a face for its full text), with a band across the art saying when it is back in hand. Can you still tell at a glance which cards are away?',
+      },
+      {
+        text: 'Some Ethereal faces now cost two or three etherions and hit much harder, mostly for no AP (Heavy Throw, Vacuum, Tesla Cascade, Step Out of Time, Apex Form and more). With one element die of your choice a turn, a big face is one you save up for. Did you bank etherions across turns for one? Was it worth the wait?',
+        cards: ['hum_throw', 'eel_discharge', 'tar_crypto'],
+      },
       {
         text: 'Many Ethereal faces now cost no AP, only their etherions: the ones that used to give AP back (they give that much less back now), and the ones players hardly ever chose. Do any of them get played now? Does spending only an element die feel like a good use of it?',
         cards: ['eel_gulp', 'hum_coop', 'oct_arms'],

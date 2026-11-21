@@ -58,8 +58,9 @@
           for (const r of resolutions(chk.tg, T.CARD[card][face]))
             out.push(Object.assign({ t: 'face', hero, card, face }, r));
         }
-      const steps = Math.min(3, Math.floor(ap / R().MOVE_AP) + (h.freeMove || 0));
-      if (steps > 0 && !h.states.Rooted && !h.states.SlowSelf)
+      // up to 3 paid steps, plus every free step a face has granted (a free move of 4 or 5 is walked in full)
+      const steps = Math.min(3, Math.floor(ap / R().MOVE_AP)) + (h.freeMove || 0);
+      if (steps > 0 && !T.isAnchored(h))
         for (const node of T.reachableWalk(m, h, steps, false)) out.push({ t: 'walk', hero, node });
       for (const node of [h.pos].concat(B.walkNeighbors(m.board, h.pos))) {
         const nd = m.board.nodes[node];
@@ -256,7 +257,7 @@
     crystal: 0.4,
     item: 2,
     // Something already bought that lands after this round — a regen engine, AP to come, a strike
-    // bonus not yet used, a foe Studied — counts at this share of what it will be worth, so a set-up
+    // bonus not yet used, a foe Marked for some rounds — counts at this share of what it will be worth, so a set-up
     // is not scored as nothing just because it pays off later than the round being looked at.
     ahead: 0.6,
     spare: 0.5, // per temporary die minted and not yet spent, while the search is still choosing (see loose)
@@ -295,9 +296,10 @@
     // a Mark is 2 damage already bought: the next hit on that foe, by anyone, deals it
     for (const e of m.enemies)
       if (e.alive) {
-        s -= W.foeAlive + W.foeHp * (Math.max(0, e.hp) + e.shield - (e.states.Marked ? 2 : 0));
-        // a Studied foe takes more from every hit to come: count two of them
-        if (e.states.Studied) s += W.ahead * W.foeHp * Math.min(Math.max(0, e.hp), 2 * e.states.Studied.n);
+        const mk = e.states.Marked;
+        s -= W.foeAlive + W.foeHp * (Math.max(0, e.hp) + e.shield - (mk && mk.next ? mk.next : 0));
+        // a foe Marked for some rounds takes more from every hit to come: count two of them
+        if (mk && mk.each) s += W.ahead * W.foeHp * Math.min(Math.max(0, e.hp), 2 * mk.each);
       }
     if (m.clock) s += W.clock * m.clock.value;
     s += W.crystal * T.totalCrystals(m);

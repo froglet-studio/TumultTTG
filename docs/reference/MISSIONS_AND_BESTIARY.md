@@ -29,7 +29,7 @@ At round start every enemy declares one intent (ability + target), drawn as an a
 
 ## Bestiary (stats t1 / t2 / t3)
 
-The HP column is the bestiary's own number. Since 2.29 (four dice a turn) every foe, the Heart included, has more than it: 130% in 2.29, 140% since 2.83 (the chosen element die), rounded (`T.RULES.FOE_HP`): a Biter with 6 has 8.
+The HP column is the bestiary's own number. Since 2.29 (four dice a turn) every foe, the Heart included, has more than it: 130% in 2.29, 140% in 2.83 (the chosen element die), 145% since 2.85 (the big Ethereal faces), rounded (`T.RULES.FOE_HP`): a Biter with 6 has 8.
 
 | Enemy | Role | HP | Speed | Abilities | Policy |
 |---|---|---|---|---|---|

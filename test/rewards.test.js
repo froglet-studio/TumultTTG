@@ -54,16 +54,12 @@ test('the reward is settled only when every hero has taken or skipped, and only 
   assert.ok(T.rewardSettled(rw));
 });
 
-test('after an elite every hero chooses a boon of their own', () => {
+test('an elite offers no boon since 2.89 (boons are gear passives): its reward is crystals and the trait', () => {
   const { run, rw } = wonReward('elite');
-  assert.equal(rw.boons.length, run.heroes.length);
-  const all = rw.boons.flat();
-  assert.equal(new Set(all).size, all.length, 'no boon is offered to two heroes');
+  const plain = wonReward().rw;
+  assert.equal(rw.boons, null);
+  assert.ok(rw.crystals > plain.crystals, 'an elite still pays more');
   run.heroes.forEach((h, i) => (rw.picked[i] = true));
-  assert.ok(!T.rewardSettled(rw));
-  assert.equal(T.takeBoon(run, rw.boons[1][0], 0).ok, false);
-  run.heroes.forEach((h, i) => assert.ok(T.takeBoon(run, rw.boons[i][0], i).ok));
-  run.heroes.forEach((h, i) => assert.ok(h.boons.includes(rw.boons[i][0])));
   assert.ok(T.rewardSettled(rw));
 });
 
@@ -99,16 +95,10 @@ test('a save from 2.22 on the reward screen loads with an offer for each hero', 
     rw.offers,
     run.heroes.map(() => old.lastReward.offer),
   );
-  assert.deepEqual(
-    rw.boons,
-    run.heroes.map(() => old.lastReward.boon),
-  );
+  assert.equal(rw.boons, null, 'the boon on offer is passed (2.89)');
   assert.equal(rw.offer, undefined);
   assert.ok(!T.rewardSettled(rw));
-  run.heroes.forEach((h, i) => {
-    T.skipOfferedCard(run, i);
-    T.takeBoon(run, rw.boons[i][i], i);
-  });
+  run.heroes.forEach((h, i) => T.skipOfferedCard(run, i));
   assert.ok(T.rewardSettled(rw));
   T.finishNode(run);
   assert.ok(H.playRun(run).run.over);

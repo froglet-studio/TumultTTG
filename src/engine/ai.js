@@ -108,7 +108,7 @@
           break;
         }
         case 'binder': {
-          const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero' && !st(c).Rooted);
+          const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero' && !T.isAnchored(c));
           const adj = adjacentTargets(m, e);
           if (lt.length) setI('bind', lt[0], `(${dmgOf(e, A.bind)}, roots 2)`);
           else if (adj.length) setI('drain', adj[0], `(${dmgOf(e, A.drain)}, heals 2)`);
@@ -177,10 +177,10 @@
 
   /* ───────────────────────────── EXECUTION ───────────────────────────── */
   function canMove(e) {
-    return !(st(e).Anchored || st(e).Held || st(e).Slow || e.anchoredPerm);
+    return !T.isAnchored(e);
   }
   function canBlink(e) {
-    return canMove(e) && !st(e).NoTele;
+    return canMove(e);
   }
   function approach(m, e, targetNode, steps) {
     if (!canMove(e) || steps <= 0) return 0;
@@ -248,32 +248,13 @@
       { kind: ab.kind === 'area' ? 'area' : ab.kind === 'los' ? 'los' : 'melee', label: `uses ${ab.n} on` },
       opts || {},
     );
-    // redirect: hit an adjacent enemy instead
-    if (st(e).Redirect) {
-      delete st(e).Redirect;
-      const ally = T.liveEnemies(m).find((x) => x !== e && B.adjacent(m.board, e.pos, x.pos));
-      if (ally) {
-        T.say(m, `${e.name}, overridden, turns on ${ally.name}!`, 'hero');
-        ally.hp -= d;
-        T.say(m, `${ally.name} takes ${d}.`, 'hero');
-        m.fx.push({ t: 'dmg', ent: ally.uid, amount: d, pos: ally.pos });
-        if (ally.hp <= 0) {
-          ally.alive = false;
-          m.stats.kills++;
-          T.say(m, `${ally.name} is destroyed.`, 'sys');
-          m.fx.push({ t: 'death', ent: ally.uid, pos: ally.pos });
-        }
-      } else T.say(m, `${e.name}, overridden, flails at nothing.`, 'hero');
-      return 0;
-    }
     const dealt = T.damage(m, e, t, d, o);
     if (t.kind === 'hero' && !t.downed) {
       if (ab.push) T.pushAway(m, e, t, ab.push);
       if (ab.anchor) {
         if (!st(t).StatusImmune) {
-          st(t).Rooted = { t: ab.anchor };
-          T.say(m, `${t.name} is rooted for ${ab.anchor}.`, 'enemy');
-          m.fx.push({ t: 'state', ent: t.uid, name: 'Rooted' });
+          T.anchorEnt(m, t, ab.anchor);
+          T.say(m, `${t.name} is Anchored for ${ab.anchor}.`, 'enemy');
         }
       }
       if (ab.weaken) {
@@ -285,6 +266,7 @@
     }
     if (ab.heal && dealt > 0) {
       e.hp = Math.min(e.maxHp, e.hp + ab.heal);
+      T.linkHeal(m, e, ab.heal);
     }
     return dealt;
   }
@@ -490,7 +472,7 @@
         m.board.ramp ||
         h.cards.some(
           (c) =>
-            T.CARD[c].E.fx.some((x) => (x.v === 'teleport' && x.height) || x.v === 'climb') ||
+            T.CARD[c].E.fx.some((x) => (x.v === 'blink' && x.height) || x.v === 'climb') ||
             T.CARD[c].P.fx.some((x) => x.v === 'climb'),
         ) ||
         h.gear.some((g) => ['phasebrace', 'climbrig'].includes(g.id));
@@ -514,7 +496,7 @@
       for (const fk of ['P', 'E']) {
         const card = T.CARD[cid],
           face = card[fk];
-        const mv = face.fx.find((x) => ['move', 'teleport', 'climb'].includes(x.v));
+        const mv = face.fx.find((x) => ['move', 'blink', 'climb'].includes(x.v));
         if (!mv || face.fx.some((x) => x.v === 'rest')) continue;
         const chk = T.canPlay(m, h, cid, fk);
         if (!chk.ok || chk.tg.need !== 'node' || !chk.tg.options.length) continue;
@@ -530,7 +512,7 @@
       const r = T.playFace(m, h, best.cid, best.fk, best.ctx);
       if (r.ok) return true;
     }
-    if (T.apValue(h) >= 1 && !st(h).Rooted && !st(h).SlowSelf) {
+    if (T.apValue(h) >= 1 && !T.isAnchored(h)) {
       const opts = T.reachableWalk(m, h, Math.min(3, T.apValue(h)), false);
       if (!opts.length) return false;
       const nxt = opts.sort((a, b) => B.dist(m.board, a, goal.node, true) - B.dist(m.board, b, goal.node, true))[0];
@@ -653,9 +635,7 @@
               } else continue;
               score -= face.ap;
               if (fk === 'E') score -= 1;
-            } else if (
-              face.fx.some((x) => x.v === 'shield' || x.v === 'preempt' || x.v === 'counter' || x.v === 'stasis')
-            ) {
+            } else if (face.fx.some((x) => x.v === 'shield' || (x.v === 'thorns' && x.next) || x.v === 'stasis')) {
               if (threat >= 4) score = threat;
               else continue;
             } else if (face.fx.some((x) => x.v === 'heal')) {
@@ -679,7 +659,7 @@
                 ctx.target = foe.uid;
                 score = 2;
               } else continue;
-            } else if (face.fx.some((x) => x.v === 'trap')) {
+            } else if (face.fx.some((x) => x.v === 'field' && !x.around)) {
               const foes = T.liveEnemies(m);
               if (!foes.length || chk.tg.need !== 'node') continue;
               const nearest = foes.sort(
@@ -690,7 +670,7 @@
               )[0];
               ctx.node = node;
               score = 1.5;
-            } else if (face.fx.some((x) => x.v === 'teleport' || x.v === 'climb' || x.v === 'move')) {
+            } else if (face.fx.some((x) => x.v === 'blink' || x.v === 'climb' || x.v === 'move')) {
               const goal =
                 objectiveNode(m) ||
                 (T.liveEnemies(m)[0]
@@ -737,7 +717,7 @@
         if (threatOnMe(m, h) >= 4 && !st(h).Shield && T.useBasic(m, h, 'brace').ok) continue;
         // 5. move toward the objective, else toward the nearest foe
         if (goal && tryMoveToward(m, h, goal)) continue;
-        if (T.apValue(h) >= 1 && !st(h).Rooted && !st(h).SlowSelf) {
+        if (T.apValue(h) >= 1 && !T.isAnchored(h)) {
           const foes = T.liveEnemies(m);
           if (foes.length) {
             const target = foes.sort(

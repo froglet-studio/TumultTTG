@@ -1,0 +1,183 @@
+# Keywords
+
+Tumult is moving from about 85 words of art to 22 keywords and a short grammar (Garrett approved the plan on
+2026-11-21). The migration lands one keyword family per release. This page describes the ones that have landed,
+each in the sentence a player resolves by hand. The rest still work as described in `CARDS.md` and
+`EXTENDING.md`.
+
+Three lines share the keywords, and each is set by what it touches, how far it reaches and how long it lasts:
+
+| | Biophysical (Physical faces, AP) | Bioethereal (Ethereal faces, AP + etherions) | Ethereal technology (gear, ◇) |
+|---|---|---|---|
+| Touches | you and units beside you | any unit | spaces, the dice, the clock, the downed |
+| Reaches | melee, along paths | zone, area, any | wherever the Field or gear is placed |
+| Lasts | now, or this round at most | for N rounds | until spent or tripped; passives always |
+
+## Field (2.86)
+
+> **Field.** Marked spaces that do their keywords to whatever enters them or ends the round there.
+
+- **Where.** On a chosen space and, with a radius, the spaces within that many steps of it; or *around you*,
+  the spaces within N of you, following you as you move (*beside you* leaves out your own space).
+- **When.** *Enters*: a unit that steps, is pushed or pulled, blinks or is blown onto one of its spaces.
+  *Ends the round*: every unit standing in it as the round ends. A state a Field leaves at round end lasts
+  into the next round.
+- **How long.** For N rounds, or until it has sprung on as many units as it says (*the first foe to enter*
+  is one).
+- **Who.** Its harm (Strike, Weaken, Anchor, Mark) falls on its side's foes, and its help (Hidden) on its own
+  side; a Reveal Field shows everything in it. Nothing off the ground (Hover, Weightless) is touched by a Field.
+- **A hazard is a Field of damage** that belongs to nobody: whoever ends the round on it takes the hazard's
+  damage, Pierce.
+- **Cleanse the ground** within N clears hazards and foes' Fields there, never your own.
+
+It replaced five verbs: the snare (`trap`) and the counted snare, the spore, musk and ice zones (`zone`), the
+trigger (`ambushTrap`), the auras (`aura`), and `clearHazard`. Fields combine with every way of moving a unit:
+push a foe onto your Field, pull one across a spore cloud, or Anchor yourself on a hazard you are immune to.
+
+In code: the verb `field` (`docs/reference/EXTENDING.md`), `m.fields` in a mission (saves version 20), and
+`T.fieldNodes`, `T.fieldText` for the board.
+
+## Link (2.87)
+
+> **Link.** Join two units for N rounds: when one takes damage, a push or a pull, or a Heal, the other takes
+> the same.
+
+- **The same.** The damage the first was dealt, after its Shield, reaches the other as true damage; the same
+  push or pull, from the same source and as far, moves the other; the same heal heals the other.
+- **One at a time.** A unit has one Link; a new one replaces it. It ends when its rounds run out or either unit
+  falls.
+- **Who.** A face Links its target to the nearest other unit of the target's side within N of it.
+- **Charge's keyword.** Link is Charge's signature (energy and links). It replaced Redirect (cut: making a foe's
+  attack hit its own side bordered on turn theft) and the chain strike (Tesla Cascade Links its target instead).
+
+Link combines with every other keyword: Mark one end and hit it, push one end into a Field and both go, or Link
+a foe to the one a Brute is about to drag.
+
+In code: the verb `link` (`within`, `dur`), the state `Linked` (`{ to, t }` on both units), `T.linkedTo`.
+
+## Wound (2.88)
+
+> **Wound N.** At round end it takes N, then the Wound drops by 1.
+
+- **One number.** Wound 3 bites 3, then 2, then 1, then is gone. A new Wound replaces a smaller one; a smaller
+  one does nothing. Its bite is true damage (Shield does not stop it).
+- **Who.** Any unit; Cleanse sheds it. Some Wounds heal the one who gave them at each bite (Deepen the
+  parasitism).
+- **Magic's keyword for waiting.** It pays across rounds, so it belongs on faces that set up.
+
+It replaced damage over time (`dot`) and its fifteen names (venom, crush, corrode, rot, drain, sting, quill, cut,
+rake, grip, salt, foul, toxin, slime, scald). The old faces kept their flavour word in the log. A dot of 1 for 2
+rounds became Wound 2; 1+E for 3 rounds became Wound 2+E.
+
+In code: the verb `wound` (`n`, `area`, `healOwner`, `kind` for the log), the state `Wound`
+(`{ n, owner, heal, kind }`), saves version 21.
+
+## Gear: ethereal technology (2.89)
+
+Gear is the third line. It touches spaces, the dice, the clock and the downed; it is bought, not trained, so it
+never scales with P or E; and it **never strikes a unit directly**: a gear strike goes through a Field (the
+Turret), and a gear pull is a Field that pulls (the Winch). Each piece has one passive and two actives. The
+passives carry what boons did, and the actives what consumables did (`docs/reference/RUN_AND_ECONOMY.md` has the
+table).
+
+Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Push N** (away from it).
+
+## Heal (2.90)
+
+> **Heal N.** Restore N vitality; on a downed pilot, it gets up with N.
+
+- **Who.** You, your ally, both pilots, or a downed ally beside you, as the face says. A heal for both pilots
+  reaches a downed one wherever it lies.
+- **A held Heal** (`ward`): if you go down within N rounds, it lands then and you get up with its number.
+- **Tech heals only through a Field or the downed:** the Medkit's mending Field, and its Revive.
+- **Rally** is the basic action, not a keyword: 2 AP, a downed ally beside you gets up with 8.
+
+It replaced `revive` and `phoenix`. In code: the verb `heal` (`n`, `party`, `target`: `ally` / `chosenAlly` /
+`downedAdj`, `ward`, `doubleIfLow`), `T.healUnit`, the Field keyword `heal`.
+
+## Anchor (2.91)
+
+> **Anchor.** It cannot be moved by anything, its own walking included. It still acts.
+
+- Nothing pushes, pulls, blows or drags it, and it cannot walk or blink. It can still strike, play cards and use
+  gear.
+- **Yours or theirs.** Anchor yourself and you hold against a drag, but you stay put this round; a foe's root
+  is an Anchor too. Status immunity turns away a foe's Anchor, never one you chose.
+- It replaced five states: Held, Rooted, Slow, SlowSelf and NoTele (and the `slow`, `slowSelf` verbs and the
+  `held` option).
+
+In code: the verb `anchor` (`who`: self / foe / ally / target, `dur`), the state `Anchored`, `T.anchorEnt`,
+`T.isAnchored`; saves version 23.
+
+## Mark (2.92)
+
+> **Mark N.** The next hit on it, by anyone, deals N more.
+
+- **N** is 2 unless the face says. The Mark is spent by that hit.
+- **For N rounds:** every hit on it deals N more until the Mark wears off (what Studied did, for a whole mission,
+  until 2.92).
+- **Pierce:** that next hit ignores Shield (what Exposed did).
+- The larger of each part stands; a next-hit Mark and a lasting one can sit on the same foe.
+
+In code: the verb `mark` (`n`, `dur`, `pierce`, `nearest`, `area` + `radius`), the state `Marked`
+(`{ next, pierce, each, t }`), `T.markUnit`; saves version 24.
+
+## Thorns (2.93)
+
+> **Thorns N.** Anything that strikes it in melee takes N.
+
+- **Lasting** Thorns turn back every melee strike for as long as they last.
+- **Next-hit** Thorns turn back only the next melee strike, and may push the striker back: what Counter did until
+  2.93. Both add up on that next hit.
+
+In code: the verb `thorns` (`val`, `dur`, `next`, `push`), the state `Thorns` (`{ v, next, push, t }`); saves
+version 25.
+
+## Shield (2.94)
+
+> **Shield N.** Each hit it takes is N lower; Shield all also stops area.
+
+- **While it lasts**, every hit is N lower (area hits pass unless it says all; Pierce and true damage ignore it).
+- **Against the next hit:** spent by that hit; it may send some of it back or step you a space away. What Pre-empt did until 2.94.
+- Guard and Absorb are Shields too.
+
+In code: the verb `shield` (`val`, `dur`, `all`, `party`, `allyRange`, `min`, `next`, `reflect`, `reposition`); the states `Shield` and, for the next hit, `Preempt`; saves version 26.
+
+## Blink (2.95)
+
+> **Blink N.** Leave the paths: appear on a free space within N; height only where it says.
+
+- An Anchored unit cannot blink. The Phase-brace's passive makes your blinks reach 1 further.
+- Swap, which trades places with an ally, stays its own verb for now.
+
+In code: the verb `blink` (`reach`, `height`, `dest: 'adjTarget'`, `carryAlly`), the target `node_tele`.
+
+## Haste (2.96)
+
+> **Haste N.** Your track slides N extra columns, or the mission clock gains N rounds.
+
+- **Track:** every card on your track comes home N columns sooner (an ally's, where it says).
+- **Clock:** the mission clock gains N rounds (and a spreading flood waits as long).
+- **Free:** the next N cards you play do not go to the track (this turn, where it says).
+
+In code: the verb `haste` (`n`, `who`, `clock`, `free`, `dur`), the state `Freecast` for the free cards.
+
+## Cleanse (2.97)
+
+> **Cleanse.** Remove every harmful state, or clear a Field; for N, also ignores new ones.
+
+- **Cleanse:** shed Weakened, Anchored and Wound (yours, or both pilots' where it says).
+- **Cleanse for N:** and for N rounds no foe can Weaken or Anchor you (your own Anchor still can).
+- **Cleanse the ground:** hazards and foes' Fields within N are cleared (2.86).
+
+In code: the verb `cleanse` (`party`, `ward`, `field`); the state `StatusImmune`.
+
+## Reveal (2.98)
+
+> **Reveal N.** Everything within N is shown and Revealed this round: it can't be Hidden.
+
+- **Around you:** within N, Hidden foes are found, and hidden objectives within reach are searched.
+- **One foe:** it is Revealed for N rounds: it cannot be Hidden, and a zone strike finds it (what Locate did until 2.98).
+- A Reveal Field keeps everything in it Revealed (2.86).
+
+In code: the verb `reveal` (`radius`, `dur`, `target`, `nearest`, `findObjective`, `hintObjective`); the state `Located`.

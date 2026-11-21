@@ -579,7 +579,7 @@
           h,
           i,
         ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b>${U.seatTag ? U.seatTag(i) : ''}<span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
-      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc)}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}${h.consumables.map((c) => `<span class="pill">${U.icCons(c)}</span>`).join('')}</div>
+      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc + (T.GEAR_BY[g.id].passive ? ' Passive: ' + T.GEAR_BY[g.id].passive.txt : ''))}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}</div>
       <div class="row" style="margin-top:6px">${own(i) ? `<button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button>` : ''}<button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button>${T.playerCount(run) > 1 && run.purses ? `<span class="right pill small" data-tip="${esc(T.ownerName(run, i))}'s omnicrystals">${U.ic('crystal', '◇', 'tiny')} ${T.crystalsFor(run, i)}</span>` : ''}</div></div>`,
       )
       .join('')}</div>`;
@@ -719,7 +719,7 @@
             '</div>' +
             (nd.done ? '' : briefTip(U.stopPreview(run, nd.id)))
           : type === 'haven'
-            ? '<b>Haven</b><div>A night under a windbreak: rest, trade, buy gear and consumables.</div>'
+            ? '<b>Haven</b><div>A night under a windbreak: rest, trade and buy gear.</div>'
             : '<b>Event</b><div>A fork in the route: something on the road, and a choice about it.</div>';
         const tier = type === 'haven' || type === 'event' ? '' : `<span class="tier">${'◆'.repeat(nd.tier)}</span>`;
         const name = type === 'boss' ? esc(T.threatTitle(run)) : pg ? esc(pg.name) : NODE_NAME[type];
@@ -821,7 +821,7 @@
     if (!T.MISSIONS[p.type]) {
       const what =
         p.type === 'haven'
-          ? 'A night under a windbreak. Rest to mend, train with upgrade points, trade, and buy gear and consumables.'
+          ? 'A night under a windbreak. Rest to mend, train with upgrade points, trade, and buy gear.'
           : 'A fork in the road: something on the route, and a choice about it. Not a mission; no board, no foes.';
       return `<div class="stopcard k-${p.type}" data-node="${id}">${art ? `<div class="sc-plate ${art}"></div>` : ''}${head}<div class="sc-body"><div class="sc-what">${what}</div></div>${go}</div>`;
     }
@@ -879,7 +879,7 @@
   U.openKit = function (i) {
     const h = U.run.heroes[i];
     U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => U.icClade(s) + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
-    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} ${own(i) ? `<button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half, to your own purse">sell</button>` : ''}</span>`).join('')}${h.boons.map((b) => `<span class="pill" data-tip="${esc(T.BOON_BY[b].desc)}">${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</span>`).join('')}</div>
+    <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} ${own(i) ? `<button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half, to your own purse">sell</button>` : ''}</span>`).join('')}</div>
     <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false, clades: h.species })).join('')}</div>`);
   };
 
@@ -924,12 +924,7 @@
                     .join(
                       '',
                     )}</div><div class="row" style="margin-top:8px"><button class="ghost" data-act="skipCard" data-arg="${i}">Skip (+2 ◇)</button></div>`;
-            const boon = !rw.boons
-              ? ''
-              : rw.boonPicked[i]
-                ? `<p class="dim small">✓ Boon chosen.</p>`
-                : `<h4>An elite falls: a boon for ${esc(h.name)}</h4><div class="row">${rw.boons[i].map((b) => `<div class="panel tight" style="min-width:220px"><b>${U.icBoon(b)} ${esc(T.BOON_BY[b].name)}</b><div class="small dim">${esc(T.BOON_BY[b].desc)}</div><div class="row" style="margin-top:6px"><button class="sm primary" data-act="takeBoon" data-arg="${b}|${i}">Take</button></div></div>`).join('')}</div>`;
-            return `<hr><h3>${esc(h.name)}'s upgrade</h3>${trait}${boon}`;
+            return `<hr><h3>${esc(h.name)}'s upgrade</h3>${trait}`;
           })
           .join('');
     const ready = T.rewardSettled(rw);
@@ -975,7 +970,7 @@
           hv.gear
             .map((gid) => {
               const g = T.GEAR_BY[gid];
-              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes
+              return `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}<div class="row" style="margin-top:6px">${run.heroes
                 .map((h, i) => {
                   if (!own(i)) return '';
                   const can = T.crystalsFor(run, i) >= g.price && h.gear.length < 2;
@@ -985,19 +980,6 @@
             })
             .join('') || '<span class="dim small">Sold out.</span>'
         }</div>
-        <h3 style="margin-top:12px">Consumables <span class="dim small" style="font-weight:400">— one use, 3 per hero</span></h3>
-        <div class="shop-grid">${hv.cons
-          .map((cid) => {
-            const c = T.CONSUMABLE_BY[cid];
-            return `<div class="panel tight"><b>${U.icCons(c.id)} ${esc(c.name)} <span class="dim">· ${c.price} ◇</span></b><div class="small dim">${esc(c.txt)}</div><div class="row" style="margin-top:6px">${run.heroes
-              .map((h, i) =>
-                own(i)
-                  ? `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${T.crystalsFor(run, i) >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>Buy for ${esc(h.name)}</button>`
-                  : '',
-              )
-              .join('')}</div></div>`;
-          })
-          .join('')}</div>
       </div>
       <div class="row" style="margin-top:12px"><button class="primary" data-act="leaveHaven">Back to the route</button></div></div>`;
   }
@@ -1069,7 +1051,7 @@
   /* ───────────── CODEX ───────────── */
   function renderCodex() {
     const c = U.codex;
-    const tabs = ['species', 'bestiary', 'gear', 'boons', 'rules'];
+    const tabs = ['species', 'bestiary', 'gear', 'rules'];
     let body = '';
     if (c.tab === 'species') {
       const sp = T.SPECIES[c.sp];
@@ -1095,9 +1077,7 @@
         )
         .join('')}</div>`;
     } else if (c.tab === 'gear') {
-      body = `<div class="shop-grid">${T.GEAR.map((g) => `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}</div>`).join('')}</div><h3 style="margin-top:12px">Consumables</h3><div class="row">${T.CONSUMABLES.map((x) => `<span class="pill">${U.icCons(x.id)} ${esc(x.name)} · ${x.price} ◇ — ${esc(x.txt)}</span>`).join('')}</div>`;
-    } else if (c.tab === 'boons') {
-      body = `<div class="shop-grid">${T.BOONS.map((b) => `<div class="panel tight"><b>${U.icBoon(b.id)} ${esc(b.name)}</b><div class="small dim">${esc(b.desc)}</div></div>`).join('')}</div>`;
+      body = `<div class="shop-grid">${T.GEAR.map((g) => `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}</div>`).join('')}</div>`;
     } else body = U.helpHTML();
     return `<div class="wrap">${header('Codex', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="codex-nav" style="margin-bottom:10px">${tabs.map((t) => `<button class="${c.tab === t ? 'primary' : ''}" data-act="codexTab" data-arg="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</div>${body}</div>`;
   }
@@ -1105,9 +1085,9 @@
   U.helpHTML = function () {
     return `<div class="help"><h3>How to play</h3>
       <p><b>The turn.</b> Each round your pilots act freely, in any order, interleaved (with several players, each takes a turn with their own). At the start of the round each hero's <b>track</b> slides one column (cards come back), engines fire, and each hero <b>rolls 4 dice</b> drawn from their 15-die pool into their bank. Dice you don't spend stay banked — but the pool shrinks, so hoarding starves next turn's roll. Most dice are plain d20s (mostly AP, each element once); every card you awaken, and every Affinity boon, swaps a plain die for a d8 of its element (no AP, mostly that element), so a pilot who wakes more cards rolls more etherions and fewer AP. A die's size shows in its corner.</p>
-      <p><b>Cards have two faces.</b> The <b>Physical</b> face costs AP, has a short cooldown, and scales with <b>P</b>. The <b>Ethereal</b> face costs AP + an etherion, has a longer cooldown, and does something physical cannot — teleport, area, chain, control, engines — scaling with <b>E</b>. Playing <i>either</i> face sends the whole card to the track for its cooldown.</p>
+      <p><b>Cards have two faces.</b> The <b>Physical</b> face costs AP, has a short cooldown, and scales with <b>P</b>. The <b>Ethereal</b> face costs AP + an etherion, has a longer cooldown, and does something physical cannot — blink, area, chain, control, engines — scaling with <b>E</b>. Playing <i>either</i> face sends the whole card to the track for its cooldown.</p>
       <p><b>Enemies telegraph.</b> Every enemy shows what it will do before you act. Step out of its zone and a zone shot has no line. Move two nodes and a slow brute spends its turn walking. Hide and ranged shots strike afterimages. Push it off the node and its plan collapses. <b>Defense is proactive</b> — there are no reactions; you prepare on your turn.</p>
-      <p><b>Zones.</b> Every node sits in one or two coloured zones. Ranged ("zone") strikes hit anything that shares a zone with you, at any distance. Melee needs a shared edge. Height nodes (dashed ring) can only be reached by Space verbs — teleport, climb, hover — or by dropping the ramp with the lever.</p>
+      <p><b>Zones.</b> Every node sits in one or two coloured zones. Ranged ("zone") strikes hit anything that shares a zone with you, at any distance. Melee needs a shared edge. Height nodes (dashed ring) can only be reached by Space verbs — blink, climb, hover — or by dropping the ramp with the lever.</p>
       <p><b>States, never keys.</b> Hidden is broken by melee, area, being moved, or being Located. Shield is bypassed by Pierce, area or true damage. Anchored can't be moved — and still acts. No ability ever takes a turn away.</p>
       <p><b>Resources.</b> <kbd>M</kbd> Mass · <kbd>C</kbd> Charge · <kbd>S</kbd> Space · <kbd>T</kbd> Time · <kbd>◇</kbd> Omni spends as any. One of each M C S T can be folded into an Omni (the anti-brick valve). <b>Omnicrystals (◇)</b> are the managed economy: buy gear and fuel it.</p>
       <p><b>Basic actions.</b> With or without cards, any hero can <b>Strike</b> an adjacent foe for 2 (2 AP), <b>Brace</b> for Shield 1 until their next turn (1 AP), or <b>Shove</b> an adjacent foe 1 node (2 AP). They are weak on purpose: the floor, not a plan. <b>Channel</b> a banked etherion (or Omni) on its own, with no AP: Mass — Strike an adjacent foe for 2 or Shove it 1 node; Charge — Arc 1 damage into a foe up to 3 away, or Reach an objective 2 nodes away (1 AP); Space — Scramble 1 node, up or down a ledge; Time — Brace and slide your track 1 extra. Elements are never dead weight: every crystal you roll is something to do.</p>
@@ -1361,12 +1341,6 @@
         U.exec({ op: 'skipCard', hero: parseInt(arg, 10) });
         U.render();
         return;
-      case 'takeBoon': {
-        const [b, i] = arg.split('|');
-        U.exec({ op: 'takeBoon', hero: parseInt(i, 10), boon: b });
-        U.render();
-        return;
-      }
       case 'rewardDone':
         T.finishNode(U.run);
         T.saveRun(U.run);
@@ -1384,14 +1358,6 @@
       case 'buyGear': {
         const [g, i] = arg.split('|');
         const r = U.exec({ op: 'buyGear', hero: parseInt(i, 10), gear: g });
-        if (!r.ok) U.toast(r.why);
-        else U.sfx.click();
-        U.render();
-        return;
-      }
-      case 'buyCons': {
-        const [c, i] = arg.split('|');
-        const r = U.exec({ op: 'buyCons', hero: parseInt(i, 10), cons: c });
         if (!r.ok) U.toast(r.why);
         else U.sfx.click();
         U.render();

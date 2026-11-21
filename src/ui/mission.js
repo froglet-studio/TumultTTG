@@ -1,6 +1,6 @@
 /* ============================================================================
    TUMULT v2.0 — UI MISSION SCREEN
-   Board (SVG) with zones, height, hazards, traps, objectives; tokens with hp;
+   Board (SVG) with zones, height, hazards, Fields, objectives; tokens with hp;
    enemy intents drawn as arrows; hero panels (dice, track, hand, gear);
    targeting flows; animations from the engine's fx queue.
    ========================================================================== */
@@ -282,7 +282,7 @@
       const d = T.ENEMIES[e.type];
       const states = Object.keys(e.states)
         .filter((k) => k !== 'Anchored' || !e.anchoredPerm)
-        .map((k) => `<span class="state">${k}</span>`)
+        .map((k) => `<span class="state">${U.stateName(k)}</span>`)
         .join(' ');
       return `<b>${U.icEnemy(e.type, e.glyph)} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}<div class="flavor">${esc(d.flavor)}</div>`;
     }
@@ -303,12 +303,14 @@
       const bits = [
         `<b>${n.label ? 'Space ' + n.label : 'Node ' + n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`,
       ];
-      if (n.height) bits.push('Height: reachable only by Space verbs (teleport/climb/hover) or the ramp.');
-      if (n.hazard) bits.push(`Hazard: ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`);
+      if (n.height) bits.push('Height: reachable only by Space verbs (Blink, climb, Hover) or the ramp.');
+      if (n.hazard)
+        bits.push(
+          `Hazard (a Field of damage): ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`,
+        );
       if (n.spawn) bits.push('Spawn-node: foes emerge here.');
       if (n.objective) bits.push(objText(m, n));
-      if (m.traps[n.id] && m.traps[n.id].length)
-        bits.push(`Snare: ${m.traps[n.id].map((t) => (t.counted ? 'counted, ' : '') + t.dmg + ' dmg').join('; ')}`);
+      for (const f of m.fields || []) if (T.fieldNodes(m, f).includes(n.id)) bits.push(T.fieldText(m, f));
       return bits.join('<div style="height:4px"></div>');
     }
     return '';
@@ -590,7 +592,7 @@
     const states = Object.keys(h.states)
       .map(
         (k) =>
-          `<span class="state ${['Weak', 'Rooted', 'Slow', 'SlowSelf', 'NoTele'].includes(k) ? 'bad' : ''}" data-tip="${esc(T.describeState(k, h.states[k]))}">${U.kwOfState(k) ? U.ic(U.kwOfState(k).icon, '', 'kw-ic') : ''}${k}${h.states[k] && h.states[k].v != null ? ' ' + h.states[k].v : ''}${h.states[k] && typeof h.states[k].t === 'number' && h.states[k].t < 90 ? ' · ' + h.states[k].t : ''}</span>`,
+          `<span class="state ${['Weak', 'Wound', 'Linked'].includes(k) ? 'bad' : ''}" data-tip="${esc(T.describeState(k, h.states[k]))}">${U.kwOfState(k) ? U.ic(U.kwOfState(k).icon, '', 'kw-ic') : ''}${U.stateName(k)}${h.states[k] && h.states[k].v != null ? ' ' + h.states[k].v : ''}${h.states[k] && typeof h.states[k].t === 'number' && h.states[k].t < 90 ? ' · ' + h.states[k].t : ''}</span>`,
       )
       .join('');
     const canPickDie = U.ms.mode === 'reroll' || U.ms.mode === 'dump';
@@ -653,15 +655,23 @@
         const asleep = E < T.RULES.ETHEREAL_MIN_E;
         const elC = EL[(c.E && c.E.elt) || c.el].color;
         const title = `<div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>`;
-        if (onTrack)
-          return `<div class="hcard cooling" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}<div class="small dim back">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
         const fb = (fk) => {
           const f = c[fk];
-          const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
           const elt = f.elt || c.el;
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
-          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
+          const body = `<span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>`;
+          const tip = U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;');
+          // a card on the track still reads in full: its faces stay at full strength, only not pressable
+          if (onTrack)
+            return `<div class="fbtn ${fk} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
+          const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
+          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
+        if (onTrack) {
+          const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
+          const what = onTrack.phase === 'dur' ? 'active, then cooling' : 'cooling';
+          return `<div class="hcard cooling" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is on the track (${what}): back in hand in ${back}. Its faces read as usual.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">${onTrack.phase === 'dur' ? '●' : '○'} back in ${back}</span></div>${title}${fb('P')}${fb('E')}</div>`;
+        }
         return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
       })
       .join('');
@@ -883,17 +893,21 @@
             mk,
           ).textContent = ic;
       }
-      if (m.traps[n.id] && m.traps[n.id].length)
+      if ((m.fields || []).some((f) => f.on === 'enter' && f.around == null && T.fieldNodes(m, f).includes(n.id)))
         svgEl('text', { x: x - 22, y: y - 18, class: 'trapmark' }, mk).textContent = '🪤';
     });
-    m.zones.forEach((z) => {
-      const n = N[z.node];
+    // Fields: a dashed ring on every space one covers
+    const fielded = new Set();
+    (m.fields || []).forEach((f) => T.fieldNodes(m, f).forEach((id) => fielded.add(id)));
+    fielded.forEach((id) => {
+      const n = N[id];
+      if (!n) return;
       svgEl(
         'circle',
         {
           cx: g.px(n),
           cy: g.py(n),
-          r: g.cell * z.radius * 0.75,
+          r: g.cell * 0.42,
           fill: '#7fd08a',
           opacity: 0.12,
           stroke: '#7fd08a',
@@ -937,13 +951,17 @@
     // tokens
     const tk = $('#tokens', svg);
     const seen = new Set();
-    const upsert = (id, cls, n, build, upd) => {
+    const upsert = (id, cls, n, build, upd, shift) => {
       let el = $('#' + id, svg);
       if (!el) {
         el = svgEl('g', { id, class: 'token ' + cls }, tk);
         build(el);
       }
-      el.setAttribute('transform', `translate(${g.px(n)},${g.py(n)})`);
+      // shift: a small token sharing a node with a hero (a decoy left on its owner's spot) sits at its edge
+      el.setAttribute(
+        'transform',
+        shift ? `translate(${g.px(n) + 18},${g.py(n) - 18}) scale(.6)` : `translate(${g.px(n)},${g.py(n)})`,
+      );
       el.setAttribute('class', 'token ' + cls);
       upd(el);
       seen.add(id);
@@ -1034,6 +1052,7 @@
           svgEl('text', { y: 5, class: 'initial', 'font-size': 11 }, el).textContent = 'decoy';
         },
         () => {},
+        m.heroes.some((h) => !h.downed && h.pos === d.pos),
       );
     });
     // ally targetable (foeOrAlly)

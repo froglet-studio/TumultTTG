@@ -39,6 +39,8 @@
     'kw.reveal': 'M2 12c3-5 6-7 10-7s7 2 10 7c-3 5-6 7-10 7S5 17 2 12zm10-4a4 4 0 1 0 0 8 4 4 0 0 0 0-8z',
     'kw.mint': 'M4 4h16v16H4zM11 7v4H7v2h4v4h2v-4h4v-2h-4V7z',
     'kw.decoy': 'M12 2a4 4 0 1 1 0 8 4 4 0 0 1 0-8zM5 22c0-6 3-10 7-10s7 4 7 10zM2 2l2 0 0 2-2 0z',
+    'kw.link':
+      'M9 7h4a5 5 0 0 1 0 10h-1v-2h1a3 3 0 0 0 0-6H9a3 3 0 0 0-2.8 2H4.1A5 5 0 0 1 9 7zm6 10h-4a5 5 0 0 1 0-10h1v2h-1a3 3 0 0 0 0 6h4a3 3 0 0 0 2.8-2h2.1A5 5 0 0 1 15 17z',
     'kw.trap': 'M2 14h20v3H2zM3 14l3-6 3 6zm6 0 3-6 3 6zm6 0 3-6 3 6z',
     'kw.hazard': 'M12 2 23 21H1zm-1 6v7h2V8zm0 9v2h2v-2z',
     'kw.height': 'M2 20h6v-5h5v-5h5V5h4v17H2z',
@@ -68,7 +70,7 @@
       icon: 'kw.anchor',
       tone: 'bad',
       state: 'Anchored',
-      tip: 'Anchored: cannot be pushed or pulled. An anchored foe cannot walk or blink; a hero who walks lets go. It still acts.',
+      tip: 'Anchored: nothing moves it. It cannot be pushed or pulled, and cannot walk or blink. It still acts.',
     },
     {
       id: 'root',
@@ -76,7 +78,45 @@
       icon: 'kw.root',
       tone: 'bad',
       state: 'Rooted',
-      tip: 'Rooted: cannot walk while it lasts. It still acts.',
+      tip: 'Rooted: Anchored (since 2.91 one keyword): nothing moves it, its own walking included. It still acts.',
+    },
+    {
+      id: 'wound',
+      re: 'Wound(?:ed|s)?',
+      icon: 'kw.weak',
+      tone: 'bad',
+      state: 'Wound',
+      tip: 'Wound N: at round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). A new Wound replaces a smaller one.',
+    },
+    {
+      id: 'blink',
+      re: 'Blink(?:s|ed|ing)?',
+      icon: 'kw.hover',
+      tone: 'neutral',
+      tip: 'Blink N: leave the paths and appear on a free space within N (high ground only if it says). An Anchored unit cannot blink.',
+    },
+    {
+      id: 'haste',
+      re: 'Haste',
+      icon: 'kw.stasis',
+      tone: 'good',
+      tip: 'Haste N: your track slides N extra columns (your cards come home sooner), or the mission clock gains N rounds, or the next cards you play skip the track, as the face says.',
+    },
+    {
+      id: 'cleanse',
+      re: 'Cleanse[ds]?',
+      icon: 'kw.shield',
+      tone: 'good',
+      state: 'StatusImmune',
+      tip: 'Cleanse: shed every harmful state (Weakened, Anchored, Wound). Cleanse for N: and for N rounds no foe can Weaken or Anchor you. Cleanse the ground: clear hazards and foes’ Fields nearby.',
+    },
+    {
+      id: 'link',
+      re: 'Link(?:ed|s)?',
+      icon: 'kw.link',
+      tone: 'bad',
+      state: 'Linked',
+      tip: 'Linked: two units joined for some rounds. When one takes damage, a push or a pull, or a heal, the other takes the same.',
     },
     {
       id: 'mark',
@@ -84,7 +124,7 @@
       icon: 'kw.mark',
       tone: 'bad',
       state: 'Marked',
-      tip: 'Marked: the next hit on it, by anyone, deals +2. The mark is then spent.',
+      tip: 'Mark N: the next hit on it, by anyone, deals N more (2 unless it says), then the Mark is spent. A Mark for some rounds adds to every hit until it wears off; a Pierce Mark makes that next hit ignore Shield.',
     },
     {
       id: 'hidden',
@@ -96,11 +136,11 @@
     },
     {
       id: 'locate',
-      re: 'Locat(?:e|ed|es)',
+      re: 'Locat(?:e|ed|es)|Revealed',
       icon: 'kw.locate',
       tone: 'bad',
       state: 'Located',
-      tip: 'Located: cannot Hide, and can be struck across a zone even while Hidden.',
+      tip: 'Revealed: it cannot be Hidden while it lasts, and a zone strike finds it (Located until 2.96).',
     },
     {
       id: 'expose',
@@ -108,7 +148,7 @@
       icon: 'kw.expose',
       tone: 'bad',
       state: 'Exposed',
-      tip: 'Exposed: the next hit on it ignores Shield and deals extra.',
+      tip: 'Exposed: since 2.92 a Pierce Mark: the next hit on it ignores Shield and deals extra.',
     },
     {
       id: 'shield',
@@ -116,7 +156,7 @@
       icon: 'kw.shield',
       tone: 'good',
       state: 'Shield',
-      tip: 'Shield N: each hit taken is N lower. Area hits bypass it unless it says otherwise; pierce and true damage ignore it.',
+      tip: 'Shield N: each hit taken is N lower while it lasts (a Shield against the next hit is spent by that hit). Area hits bypass it unless it says all; pierce and true damage ignore it.',
     },
     {
       id: 'thorns',
@@ -124,7 +164,7 @@
       icon: 'kw.thorns',
       tone: 'good',
       state: 'Thorns',
-      tip: 'Thorns N: anything that strikes it in melee takes N.',
+      tip: 'Thorns N: anything that strikes it in melee takes N. A next-hit Thorns turns back only the next melee strike (and may push the striker).',
     },
     {
       id: 'stasis',
@@ -140,7 +180,7 @@
       icon: 'kw.hover',
       tone: 'good',
       state: 'Hover',
-      tip: 'Hover: ignores hazards and traps, and cannot be pushed or pulled.',
+      tip: 'Hover: off the ground, so hazards and Fields do not touch it, and it cannot be pushed or pulled.',
     },
     {
       id: 'empower',
@@ -156,7 +196,7 @@
       icon: 'kw.preempt',
       tone: 'good',
       state: 'Preempt',
-      tip: 'Pre-empt: the next hit it takes is reduced.',
+      tip: 'Shield (next hit): since 2.94 Pre-empt is a Shield against the next hit only, then it is spent.',
     },
     {
       id: 'counter',
@@ -164,7 +204,7 @@
       icon: 'kw.counter',
       tone: 'good',
       state: 'Counter',
-      tip: 'Counter: the next melee strike against it is turned back on the striker.',
+      tip: 'Counter: since 2.93 a next-hit Thorns: the next melee strike against it is turned back on the striker.',
     },
     {
       id: 'pierce',
@@ -195,13 +235,6 @@
       tip: 'Melee: hits a foe on a node beside you. Breaks Hidden.',
     },
     {
-      id: 'lane',
-      re: 'Lane strike|lane',
-      icon: 'kw.lane',
-      tone: 'neutral',
-      tip: 'Lane strike: hits a foe you can see along the board, at any range.',
-    },
-    {
       id: 'zone',
       re: 'zone(?:s)?',
       icon: 'kw.zone',
@@ -217,10 +250,10 @@
     },
     {
       id: 'reveal',
-      re: 'Reveal(?:s|ed)?',
+      re: 'Reveal(?:s)?(?!ed)',
       icon: 'kw.reveal',
       tone: 'neutral',
-      tip: 'Reveal: shows everything within range, breaks Hidden there and finds traps and hidden objectives.',
+      tip: 'Reveal: shows everything within range, breaks Hidden there and finds hidden objectives.',
     },
     {
       id: 'mint',
@@ -237,18 +270,18 @@
       tip: 'Decoy: a stand-in on the board that draws attacks meant for the nearer hero.',
     },
     {
-      id: 'trap',
-      re: 'trap(?:s|ped)?',
+      id: 'field',
+      re: 'Field(?:s)?',
       icon: 'kw.trap',
       tone: 'neutral',
-      tip: 'Trap: set on a node; the first foe to enter it springs it.',
+      tip: 'Field: marked spaces that do their keywords to whatever enters them or ends the round there. Its harm falls on foes, its help on allies; Hover is above it. A hazard is a Field of damage.',
     },
     {
       id: 'hazard',
       re: 'hazard(?:s)?',
       icon: 'kw.hazard',
       tone: 'bad',
-      tip: 'Hazard: a node that hurts whoever ends a move there (and whoever is pushed into it).',
+      tip: 'Hazard: a Field of damage that belongs to nobody: whoever ends the round on it takes damage.',
     },
     {
       id: 'height',
@@ -270,7 +303,7 @@
       icon: 'kw.slow',
       tone: 'bad',
       state: 'Slow',
-      tip: 'Slow: cannot move while it lasts. It still acts.',
+      tip: 'Slow: Anchored (since 2.91 one keyword): nothing moves it, its own walking included. It still acts.',
     },
   ];
   U.KEYWORDS = K;
@@ -283,6 +316,17 @@
   BY_STATE.SlowSelf = BY.slow;
   BY_STATE.Held = BY.anchor;
   U.kwOfState = (state) => BY_STATE[state] || null;
+  // the keyword a player reads for a state whose name in the engine is older than the keyword (the sweep, 2.86–2.98)
+  const STATE_NAMES = {
+    Preempt: 'Shield (next hit)',
+    Located: 'Revealed',
+    StatusImmune: 'Cleansed',
+    Weak: 'Weakened',
+    Freecast: 'Haste (free card)',
+    HazardImmune: 'Hazard-proof',
+    Engines: 'Each turn',
+  };
+  U.stateName = (state) => STATE_NAMES[state] || state;
 
   const RE = new RegExp('\\b(' + K.map((k) => '(' + k.re + ')').join('|') + ')\\b', 'gi');
   const which = (groups) => {

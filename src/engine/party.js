@@ -262,9 +262,7 @@
     sellGear: (run, m, h, c) => (T.sellGear(run, c.hero, c.gi), { ok: true }),
     takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero, typeof c.drop === 'string' ? c.drop : undefined),
     skipCard: (run, m, h, c) => T.skipOfferedCard(run, c.hero),
-    takeBoon: (run, m, h, c) => T.takeBoon(run, c.boon, c.hero),
     buyGear: (run, m, h, c) => T.buyGear(run, c.gear, c.hero),
-    buyCons: (run, m, h, c) => T.buyConsumable(run, c.cons, c.hero),
     evTakeCard: (run, m, h, c) => {
       const r = T.addCard(h, c.card);
       if (r.ok && run.event && run.event.followup) run.event.followup.done = true;
