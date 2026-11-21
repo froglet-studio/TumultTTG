@@ -233,9 +233,7 @@ test('every movement face moves its pilot as far as its text says, and the move 
   for (const { card, k, face, id } of faces()) {
     const P = 2,
       E = 2;
-    const verb = face.fx.find(
-      (x) => ['move', 'blink', 'climb', 'rally'].includes(x.v) && !CONDITIONS.some((c) => x[c] != null),
-    );
+    const verb = face.fx.find((x) => ['move', 'blink', 'guide'].includes(x.v) && !CONDITIONS.some((c) => x[c] != null));
     if (!verb) continue;
     const s = H.arena(card.id, { up: [P, E] });
     emptyBoard(s);
@@ -247,8 +245,8 @@ test('every movement face moves its pilot as far as its text says, and the move 
       continue;
     }
     const tg = chk.tg;
-    const mover = verb.v === 'rally' ? s.ally : s.h;
-    const n = val(verb.v === 'blink' || verb.v === 'climb' ? verb.reach : verb.v === 'rally' ? verb.move : verb.n);
+    const mover = verb.v === 'guide' ? s.ally : s.h;
+    const n = val(verb.v === 'blink' ? verb.reach : verb.n);
     if (!(n > 0)) continue;
     const ctx = { choice: 'pull' };
     let want = null;
@@ -270,9 +268,10 @@ test('every movement face moves its pilot as far as its text says, and the move 
       continue;
     }
     if (tg.need !== 'node') continue;
-    const climb = verb.v === 'climb' || T.canClimb?.(mover) || false;
+    const climbs = verb.v === 'move' && (val(verb.climb) || face.fx.some((x) => x.v === 'hover'));
+    const climb = climbs || T.canClimb?.(mover) || false;
     const dist =
-      verb.v === 'blink' || verb.v === 'climb'
+      verb.v === 'blink'
         ? Object.fromEntries(nodeIds(m).map((x) => [x, B.dist(m.board, mover.pos, x, true)]))
         : walkDist(m, mover, n, climb);
     // the far end of the move: a free node exactly n away (by walking, or in a straight reach), if the board has one
@@ -280,7 +279,7 @@ test('every movement face moves its pilot as far as its text says, and the move 
     const farthest = nodeIds(m).filter((x) => ok(x) && dist[x] != null && dist[x] <= n);
     const best = Math.max(...farthest.map((x) => dist[x]));
     const offered = tg.options.filter((x) => dist[x] === best && x !== mover.pos);
-    if (best > 0 && verb.v !== 'climb' && !offered.length && !(verb.v === 'move' && verb.exact))
+    if (best > 0 && !offered.length && !(verb.v === 'move' && verb.exact))
       failed.push(`${id}: reaches ${Math.max(...tg.options.map((x) => dist[x] || 0))}, not ${best} (${verb.v} ${n})`);
     want = offered[0] != null ? offered[0] : tg.options.find((x) => x !== mover.pos);
     if (want == null) continue;

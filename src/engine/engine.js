@@ -1349,7 +1349,7 @@
    */
   const allyRef = (f, P, E) => {
     if (f.carryAlly != null) return bool(f.carryAlly, P, E) ? 'adj' : null;
-    if (f.v === 'rally' || f.v === 'swap') return 'any';
+    if (f.v === 'guide' || f.v === 'swap') return 'any';
     if (f.target !== 'ally' && f.who !== 'ally') return null;
     if (!f.pierce && ['val', 'n'].some((k) => f[k] != null && num(f[k], P, E) <= 0)) return null;
     if (f.v === 'anchor' && num(f.dur, P, E) <= 0) return null;
@@ -1414,8 +1414,8 @@
         if (!ally || ally.downed) return { need: 'none', invalid: 'no ally standing' };
         if (tgt === 'ally_adj_move' && !B.adjacent(bd, h.pos, ally.pos))
           return { need: 'none', invalid: 'your ally must be beside you' };
-        const rl = face && face.fx.find((x) => x.v === 'rally');
-        const n = rl ? num(rl.move, P, E) : 0;
+        const rl = face && face.fx.find((x) => x.v === 'guide');
+        const n = rl ? num(rl.n, P, E) : 0;
         const steps = isAnchored(ally) ? [] : T.reachableWalk(m, ally, n, false);
         return { need: 'node', options: [ally.pos].concat(steps), ally: ally.uid, allyMove: n };
       }
@@ -1483,7 +1483,9 @@
         // a face that lifts you off the ground before it moves you (Hover, then Move) may take the ledges
         const hi = face.fx.findIndex((x) => x.v === 'hover');
         const lift = hi >= 0 && hi < face.fx.indexOf(mv);
-        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact, lift) };
+        const climbing = bool(mv.climb, P, E) || lift;
+        const through = mv.ignoreFoes || num(mv.trample, P, E) > 0;
+        return { need: 'node', options: T.reachableWalk(m, h, n, through, mv.exact, climbing) };
       }
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'blink');
@@ -1495,11 +1497,6 @@
             options: foes.filter((e) => B.dist(bd, h.pos, e.pos, true) <= r && vis(e)).map((e) => e.uid),
           };
         return { need: 'node', options: opts };
-      }
-      case 'node_climb': {
-        const cl = face.fx.find((x) => x.v === 'climb');
-        const r = num(cl.reach, P, E);
-        return { need: 'node', options: B.within(bd, h.pos, r, true).filter((n) => !T.occupied(m, n)) };
       }
       default:
         return { need: 'none' };
@@ -1796,7 +1793,9 @@
           }
           break;
         }
-        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes, f.exact);
+        const climbing = bool(f.climb, P, E);
+        const tramp = num(f.trample, P, E);
+        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes || tramp > 0, f.exact, climbing);
         if (!opts.includes(dest)) {
           if (f.free) {
             ctx.pendingFreeMove = n;
@@ -1804,9 +1803,30 @@
           break;
         }
         const fromN = actor.pos;
-        moveEntity(m, actor, dest, 'walk');
-        say(m, `${actor.name} moves ${fromN} → ${dest}.`, 'hero');
-        onHeroEnter(m, actor, dest);
+        if (tramp > 0) {
+          // Trample N (2.103): step by step through the foes in the way, each pushed N away as you reach it
+          const p = B.path(bd, actor.pos, dest, null, canClimb(actor) || climbing) || [actor.pos, dest];
+          for (let i = 1; i < p.length; i++) {
+            const foe = T.entityAt(m, p[i]);
+            if (foe && foe.kind === 'enemy' && foe.alive) pushAway(m, actor, foe, tramp);
+            moveEntity(m, actor, p[i], 'walk');
+            onHeroEnter(m, actor, p[i]);
+          }
+          if (actor.pos !== dest) moveEntity(m, actor, dest, 'walk');
+        } else {
+          moveEntity(m, actor, dest, climbing ? 'climb' : 'walk');
+          onHeroEnter(m, actor, dest);
+        }
+        say(m, `${actor.name} ${climbing ? 'climbs' : 'moves'} ${fromN} → ${dest}.`, 'hero');
+        // carrying an ally: one beside where you set out comes along, onto a free space beside where you stop
+        if (bool(f.carryAlly, P, E) && ally && !ally.downed && !isAnchored(ally) && B.adjacent(bd, fromN, ally.pos)) {
+          const spot = B.allNeighbors(bd, dest).filter((x) => !T.occupied(m, x) && x !== fromN)[0];
+          if (spot) {
+            moveEntity(m, ally, spot, climbing ? 'climb' : 'walk');
+            onHeroEnter(m, ally, spot);
+            say(m, `${ally.name} is carried along.`, 'hero');
+          }
+        }
         break;
       }
       case 'blink': {
@@ -1845,28 +1865,6 @@
         onHeroEnter(m, actor, dest);
         break;
       }
-      case 'climb': {
-        if (actor.kind !== 'hero') break;
-        const r = num(f.reach, P, E);
-        const dest = ctx.node;
-        if (dest == null) break;
-        if (B.dist(bd, actor.pos, dest, true) > r || T.occupied(m, dest)) {
-          say(m, 'Out of reach.', 'sys');
-          break;
-        }
-        const from = actor.pos;
-        moveEntity(m, actor, dest, 'climb');
-        say(m, `${actor.name} climbs ${from} → ${dest}.`, 'hero');
-        onHeroEnter(m, actor, dest);
-        if (bool(f.carryAlly, P, E) && ally && !ally.downed && B.adjacent(bd, from, ally.pos)) {
-          const spot = B.allNeighbors(bd, dest).filter((n) => !T.occupied(m, n) && n !== from)[0];
-          if (spot) {
-            moveEntity(m, ally, spot, 'climb');
-            say(m, `${ally.name} is lifted along.`, 'hero');
-          }
-        }
-        break;
-      }
       case 'swap': {
         if (!ally || ally.downed) break;
         const a = actor.pos,
@@ -1878,11 +1876,12 @@
         say(m, `${actor.name} and ${ally.name} swap places.`, 'hero');
         break;
       }
-      case 'rally': {
-        // the player who plays it moves their partner, at once, to the node they chose (ctx.node): nothing is
-        // left for the partner to decide, so whoever plays it can plan the rest of their turn exactly
+      case 'guide': {
+        // Guide N (2.103, was the verb `rally`): the player who plays it moves an ally, at once, to the node they
+        // chose (ctx.node): nothing is left for the ally to decide, so whoever plays it can plan the rest of their
+        // turn exactly. Rally is the basic action that raises the downed, and nothing else.
         if (!ally || ally.downed) break;
-        const n = num(f.move, P, E);
+        const n = num(f.n, P, E);
         if (ctx.node == null || ctx.node === ally.pos) {
           if (ctx.node === ally.pos) say(m, `${ally.name} holds their ground.`, 'hero');
           break;
