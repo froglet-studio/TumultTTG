@@ -18,16 +18,15 @@ const squad = (seed, n) => {
 
 test('two new pilots: nothing scales', () => {
   const run = squad(4, 2);
-  assert.deepEqual(T.scaleFor(run), { size: 0, level: 0, hp: 100, foes: 0, need: 0, swarm: 0 });
+  assert.deepEqual(T.scaleFor(run), { size: 0, power: 20, over: 0, hp: 100, foes: 0, need: 0, swarm: 0 });
   // and the spec is the one the mission's own generator writes
   const saved = JSON.parse(JSON.stringify(T.SCALING));
   for (const arch of ARCHETYPES) {
     const a = JSON.stringify(T.missionSpec(run, arch, 3, null, null).spec);
-    for (const k of ['size', 'level']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 7;
-    T.SCALING.size.hp = 0;
+    for (const k of ['power', 'boss']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 7;
     const b = JSON.stringify(T.missionSpec(squad(4, 2), arch, 3, null, null).spec);
-    Object.assign(T.SCALING.size, saved.size);
-    Object.assign(T.SCALING.level, saved.level);
+    Object.assign(T.SCALING.power, saved.power);
+    Object.assign(T.SCALING.boss, saved.boss);
     assert.equal(a, b, arch);
   }
 });
@@ -43,7 +42,7 @@ test('a bigger squad: a start each, tougher foes, more of them, more to do, on t
         const { spec } = T.missionSpec(run, arch, 2, null, null);
         assert.deepEqual(spec.board.edges, two.board.edges, 'the same walks');
         assert.deepEqual(Object.keys(spec.board.nodes), Object.keys(two.board.nodes), 'the same spaces');
-        const hp = spec.isBoss ? sc.hp + Math.round(100 * sc.size * T.SCALING.boss.hp) : sc.hp;
+        const hp = spec.isBoss ? sc.hp + Math.round(100 * sc.over * T.SCALING.boss.hp) : sc.hp;
         assert.equal(spec.foeHp, hp, `${arch}: foes' vitality`);
         if (!spec.isBoss)
           assert.ok(spec.enemies.length > two.enemies.length || arch === 'survey', `${arch}: more foes`);
@@ -67,7 +66,7 @@ test('a bigger squad has more to do', () => {
     const a = T.missionSpec(two, arch, 1, null, null).spec.objective.need;
     const b = T.missionSpec(five, arch, 1, null, null).spec.objective.need;
     // the Vault's ledge is narrow: one more seal at most
-    assert.equal(b, a + (arch === 'vault' ? 1 : 3 * T.SCALING.size.need), arch);
+    assert.equal(b, a + (arch === 'vault' ? 1 : Math.floor(3 * T.SCALING.PILOT * T.SCALING.power.need)), arch);
   }
 });
 
@@ -78,4 +77,46 @@ test('a scaled mission saves and resumes like any other', () => {
   const back = T.deserializeRun(T.serializeRun(run));
   assert.equal(back.mission.foeHp, run.mission.foeHp);
   assert.equal(T.serializeRun(back), T.serializeRun(run));
+});
+
+test('power is the sum of the pilots’: a third new pilot is the same as the two growing ten levels between them', () => {
+  const S = T.SCALING;
+  const three = T.scaleFor(squad(5, 3));
+  assert.equal(three.power, 3 * S.PILOT);
+  const vets = squad(5, 2);
+  vets.heroes[0].level = 1 + S.PILOT / 2;
+  vets.heroes[1].level = 1 + S.PILOT / 2;
+  const v = T.scaleFor(vets);
+  assert.equal(v.power, three.power);
+  for (const k of ['hp', 'foes', 'need', 'swarm']) assert.equal(v[k], three[k], k);
+  // a third new pilot: +50% vitality, 2 more foes, 1 more to do, a swarm 1 larger
+  assert.deepEqual([three.hp, three.foes, three.need, three.swarm], [150, 2, 1, 1]);
+  // five pilots at level 3 bring 5 × 2 more than five new ones
+  const five = squad(5, 5);
+  five.heroes.forEach((h) => (h.level = 3));
+  assert.equal(T.scaleFor(five).power, 5 * S.PILOT + 10);
+});
+
+test('growth on the road counts past about a level a tier, and never lowers what the squad set out with', () => {
+  const S = T.SCALING;
+  const run = squad(6, 2);
+  const base = T.scaleFor(run, { tier: 1, row: 0 }).power;
+  // what the road expects by row 4 is no change
+  run.heroes.forEach((h) => (h.upUnspent += 4 * S.ROAD_UP));
+  assert.equal(T.scaleFor(run, { tier: 2, row: 4 }).power, base);
+  // two levels past that: two more power for each pilot
+  run.heroes.forEach((h) => (h.upUnspent += 2 * S.LEVEL_UP));
+  assert.equal(T.scaleFor(run, { tier: 2, row: 4 }).power, base + 4);
+  // where the row is not known, the road expects a level a tier
+  assert.equal(T.scaleFor(run, { tier: 3 }).power, base + 4);
+  // a seasoned pilot that has not grown on the road keeps the power it set out with
+  const vet = squad(6, 2);
+  H.addLevel(vet, 5);
+  assert.equal(T.scaleFor(vet, { tier: 3, row: 6 }).power, 2 * (S.PILOT + 4));
+  // and its growth past the road counts on top of that
+  vet.heroes.forEach((h) => (h.upUnspent += 6 * S.ROAD_UP + S.LEVEL_UP));
+  assert.equal(T.scaleFor(vet, { tier: 3, row: 6 }).power, 2 * (S.PILOT + 5));
+  // and the mission is played with it
+  const { spec } = T.missionSpec(run, 'swarm', 2, null, null);
+  assert.equal(spec.foeHp, T.scaleFor(run, { tier: 2 }).hp);
 });

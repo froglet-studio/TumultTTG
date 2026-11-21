@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.109.0',
+    version: '2.110.0',
     items: [
+      {
+        text: 'Missions are sized by squad power: each pilot brings 10, and 1 more for every level past 1; two new pilots are 20, and every point past that makes foes tougher, and more of them, with more to do. Pilots who grow faster than the route expects meet missions that grow with them, and if the whole squad goes down the expedition ends (the Lifeline only carries a mission lost with someone standing). Hover the ⚖ pill on the route to see your power. With seasoned pilots, did a mission feel too easy or too hard? Did a bigger, newer squad and a smaller, seasoned one with the same power feel alike?',
+      },
       {
         text: 'Pocket pets are here. A haven may have a stray: a hybrid of three clades (never human) with one card that holds a Physical face from each of them. Adopt it for 4 ◇ (two pets at most); its card is a card like any other, in your kit or your reserve, and the pet only sets out when its card flies. A pet on your node rides with you in any vehicle. Any one of its three faces sends the whole card to your track, and the face acts from the pet: its reach, its strike, its steps. Heel (1 AP) walks it up to 3. Did playing a card through the pet read clearly on the board?',
       },
