@@ -951,13 +951,17 @@
     // tokens
     const tk = $('#tokens', svg);
     const seen = new Set();
-    const upsert = (id, cls, n, build, upd) => {
+    const upsert = (id, cls, n, build, upd, shift) => {
       let el = $('#' + id, svg);
       if (!el) {
         el = svgEl('g', { id, class: 'token ' + cls }, tk);
         build(el);
       }
-      el.setAttribute('transform', `translate(${g.px(n)},${g.py(n)})`);
+      // shift: a small token sharing a node with a hero (a decoy left on its owner's spot) sits at its edge
+      el.setAttribute(
+        'transform',
+        shift ? `translate(${g.px(n) + 18},${g.py(n) - 18}) scale(.6)` : `translate(${g.px(n)},${g.py(n)})`,
+      );
       el.setAttribute('class', 'token ' + cls);
       upd(el);
       seen.add(id);
@@ -1048,6 +1052,7 @@
           svgEl('text', { y: 5, class: 'initial', 'font-size': 11 }, el).textContent = 'decoy';
         },
         () => {},
+        m.heroes.some((h) => !h.downed && h.pos === d.pos),
       );
     });
     // ally targetable (foeOrAlly)

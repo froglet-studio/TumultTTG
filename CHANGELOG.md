@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.88.1 — 2026-11-21 — every ability does what it says
+
+Garrett: "make sure that decoys actually leave decoys, and all movement abilities actually grant their movement etc."
+
+- **A new test plays every card face** (all 529 cards, both faces) in a dozen situations and checks that each effect on it changes the game somewhere, that every decoy face leaves its decoy where and for as long as its text says, that every move, blink, climb and rally reaches as far as its number and really moves the unit, and that the numbers a face prints are the numbers it plays (`test/abilities.test.js`).
+- **Fixed what it found.** Five decoys that stay where you are (Very Convincing, A Thousand Pink, Rainbow, Swarm, Door Stone) never appeared, because the hero was still on the node: the decoy now shares your node and keeps it when you go. Smoke Step dropped its Hidden as soon as you blinked; it now hides you after. No Retreat's own status immunity turned away its own anchor, so push and pull still moved you; a hero's own anchor is now a choice, not a status. A decoy cast at a node within 2 (Lure Light) could be aimed at an occupied node and vanish; it now offers empty nodes only. Strand's "drag it 1 toward you" on a foe already beside you never did anything, so the text now says what it does: melee and pin. Two texts now print a number they played without saying (Blink's decoy lasts 2; Lock Both Eyes sees within 2).
+- **The look-ahead player walks a free move in full** (it capped every walk at 3 steps, so free moves of 4 and 5 were cut short).
+- **Balance.** `node tools/sim.js 40`: every table identical before and after, on 2.88.0 (look-ahead 19/40 runs, heuristic 3/40). No save change.
+
 ## 2.88.0 — 2026-11-21 — Wound
 
 The third keyword of the sweep (`docs/reference/KEYWORDS.md`).

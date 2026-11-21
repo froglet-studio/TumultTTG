@@ -920,8 +920,8 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Move ${1+P}, passing foes, and your next hit this turn deals +1.` },
     { n:'Strand', ap:2, el:1, cd:4, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'pull', n:1},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`Melee ${3+E}, drag it 1 toward you, and pin it: Anchored ${1+h(E)}.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Melee ${3+E} and pin it on the shore: Anchored ${1+h(E)}.` },
     'It throws itself up the beach, and back.');
 
   // Narwhal: blubber, breath, echolocation, pod song, tusk, and these four
@@ -2864,7 +2864,7 @@
       txt:(P,E)=>`One eye forward, one back: see within ${2+P}, Mark the nearest foe, and the next hit on you is 1 less.` },
     { n:'Lock Both Eyes', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E},{v:'reveal', radius:2, dur:1}],
-      txt:(P,E)=>`Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +${1+E}.` },
+      txt:(P,E)=>`Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +${1+E}, and you see within 2.` },
     'Each eye on its own turret, each turret on its own errand.');
   K(['chameleon'],'cha_colour','Colour Shift','C',0,
     { n:'Fade', ap:1, el:0, cd:1, dur:0, tgt:'self',

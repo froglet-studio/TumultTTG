@@ -226,7 +226,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ink Screen** · Space · `oct_ink`
 
 - *Phys — Ink* · 1 AP · CD 1 — Haze your node and its neighbours: heroes there are Hidden 1, and foes adjacent to you are Weakened 1. *(P3: Haze your node and its neighbours: heroes there are Hidden 2, and foes adjacent to you are Weakened 1.)*
-- *Eth — Smoke Step* · 1 AP + 1 Space · CD 2 — Vanish into the cloud and re-emerge anywhere within 2. *(P3/E3: Vanish into the cloud and re-emerge anywhere within 4.)*
+- *Eth — Smoke Step* · 1 AP + 1 Space · CD 2 — Vanish into the cloud and re-emerge anywhere within 2, Hidden 1. *(P3/E3: Vanish into the cloud and re-emerge anywhere within 4, Hidden 1.)*
 
 **Boneless Squeeze** · Mass · `oct_squeeze`
 
@@ -270,7 +270,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Autotomy** · Space · `gec_autotomy`
 
 - *Phys — Drop Tail* · 1 AP · CD 2 — Drop a thrashing tail (decoy 1), escape every hold, step 1. *(P3: Drop a thrashing tail (decoy 2), escape every hold, step 1.)*
-- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy while you blink 2 and go Hidden. *(P3/E3: The discarded "you" stays put as a decoy while you blink 4 and go Hidden.)*
+- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy for 2 rounds while you blink 2 and go Hidden 1. *(P3/E3: The discarded "you" stays put as a decoy for 2 rounds while you blink 4 and go Hidden 1.)*
 
 **Forensic Vision** · Charge · `gec_forensic`
 
@@ -1427,7 +1427,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Beach Charge** · Mass · `orc_beach`
 
 - *Phys — Ride the Surf* · 1 AP · CD 2 — Move 1, passing foes, and your next hit this turn deals +1. *(P3: Move 4, passing foes, and your next hit this turn deals +1.)*
-- *Eth — Strand* · 2 AP + 1 Mass · CD 4 — Melee 4, drag it 1 toward you, and pin it: Anchored 1. *(P3/E3: Melee 6, drag it 1 toward you, and pin it: Anchored 2.)*
+- *Eth — Strand* · 2 AP + 1 Mass · CD 4 — Melee 4 and pin it on the shore: Anchored 1. *(P3/E3: Melee 6 and pin it on the shore: Anchored 2.)*
 
 ## 29 · Narwhal — leans S/T
 
@@ -3249,7 +3249,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Autotomy** · Space · `gec_autotomy`
 
 - *Phys — Drop Tail* · 1 AP · CD 2 — Drop a thrashing tail (decoy 1), escape every hold, step 1. *(P3: Drop a thrashing tail (decoy 2), escape every hold, step 1.)*
-- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy while you blink 2 and go Hidden. *(P3/E3: The discarded "you" stays put as a decoy while you blink 4 and go Hidden.)*
+- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy for 2 rounds while you blink 2 and go Hidden 1. *(P3/E3: The discarded "you" stays put as a decoy for 2 rounds while you blink 4 and go Hidden 1.)*
 
 **Solar Basking** · Charge · `gec_basking`
 
@@ -3264,7 +3264,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Turret Eyes** · Time · `cha_turret`
 
 - *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
-- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +2, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +4, and you see within 2.)*
 
 **Colour Shift** · Charge · `cha_colour`
 
@@ -3298,7 +3298,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Autotomy** · Space · `gec_autotomy`
 
 - *Phys — Drop Tail* · 1 AP · CD 2 — Drop a thrashing tail (decoy 1), escape every hold, step 1. *(P3: Drop a thrashing tail (decoy 2), escape every hold, step 1.)*
-- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy while you blink 2 and go Hidden. *(P3/E3: The discarded "you" stays put as a decoy while you blink 4 and go Hidden.)*
+- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy for 2 rounds while you blink 2 and go Hidden 1. *(P3/E3: The discarded "you" stays put as a decoy for 2 rounds while you blink 4 and go Hidden 1.)*
 
 **Solar Basking** · Charge · `gec_basking`
 
@@ -3347,7 +3347,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Autotomy** · Space · `gec_autotomy`
 
 - *Phys — Drop Tail* · 1 AP · CD 2 — Drop a thrashing tail (decoy 1), escape every hold, step 1. *(P3: Drop a thrashing tail (decoy 2), escape every hold, step 1.)*
-- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy while you blink 2 and go Hidden. *(P3/E3: The discarded "you" stays put as a decoy while you blink 4 and go Hidden.)*
+- *Eth — Blink* · 1 AP + 1 Space · CD 3 — The discarded "you" stays put as a decoy for 2 rounds while you blink 2 and go Hidden 1. *(P3/E3: The discarded "you" stays put as a decoy for 2 rounds while you blink 4 and go Hidden 1.)*
 
 **Solar Basking** · Charge · `gec_basking`
 
@@ -3754,7 +3754,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Turret Eyes** · Time · `cha_turret`
 
 - *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
-- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +2, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +4, and you see within 2.)*
 
 **Tail Anchor** ★ · Time · `sea_anchor`
 
@@ -3935,7 +3935,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Turret Eyes** · Time · `cha_turret`
 
 - *Phys — Two Ways* · 1 AP · CD 1 — One eye forward, one back: see within 2, Mark the nearest foe, and the next hit on you is 1 less. *(P3: One eye forward, one back: see within 5, Mark the nearest foe, and the next hit on you is 1 less.)*
-- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, and your hits on it deal +4.)*
+- *Eth — Lock Both Eyes* · 1 AP + 1 Time · CD 3 — Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +2, and you see within 2. *(P3/E3: Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +4, and you see within 2.)*
 
 **Molt** · Time · `crs_molt`
 

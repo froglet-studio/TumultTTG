@@ -712,8 +712,9 @@
     st(ent).Weak = { v: Math.max(v, cur ? cur.v : 0), t: Math.max(t, cur ? cur.t : 0) };
     fx(m, { t: 'state', ent: ent.uid, name: 'Weak' });
   }
-  function anchorEnt(m, ent, t, held) {
-    if (st(ent).StatusImmune && ent.kind === 'hero') return;
+  /** Anchor a unit. Status immunity turns away an anchor put on a hero by a foe, not one the squad chose (`chosen`). */
+  function anchorEnt(m, ent, t, held, chosen) {
+    if (st(ent).StatusImmune && ent.kind === 'hero' && !chosen) return;
     const cur = st(ent).Anchored;
     st(ent).Anchored = { t: Math.max(t, cur ? cur.t : 0) };
     if (held) st(ent).Held = { t: Math.max(t, (st(ent).Held || { t: 0 }).t) };
@@ -1336,7 +1337,13 @@
               2,
             )
           : 2;
-        return { need: 'node', options: [h.pos].concat(B.within(bd, h.pos, r, true)) };
+        const all = [h.pos].concat(B.within(bd, h.pos, r, true));
+        // a decoy is set down on an empty node; work and spores can reach any node in range
+        const decoyOnly =
+          face &&
+          face.fx.some((x) => x.v === 'decoy' && !x.here) &&
+          !face.fx.some((x) => /^(interact|dot|zone|strike|trap)$/.test(x.v));
+        return { need: 'node', options: decoyOnly ? all.filter((n) => !T.occupied(m, n)) : all };
       }
       case 'node_r3': {
         const r = face ? Math.max(...face.fx.map((x) => (x.remote != null ? num(x.remote, P, E) : 0)), 3) : 3;
@@ -1875,12 +1882,13 @@
       case 'anchor': {
         const d = num(f.dur, P, E);
         if (d <= 0) break;
+        const chosen = isHero; // a hero's own anchor on itself or an ally is a choice, not a status put on it
         if (f.who === 'self') {
-          anchorEnt(m, actor, d);
+          anchorEnt(m, actor, d, false, chosen);
           say(m, `${actor.name} anchors (${d}).`, 'hero');
         } else if (f.who === 'ally') {
           if (ally && !ally.downed && (!f.adjacent || B.adjacent(bd, actor.pos, ally.pos))) {
-            anchorEnt(m, ally, d);
+            anchorEnt(m, ally, d, false, chosen);
             say(m, `${ally.name} anchored (${d}).`, 'hero');
           }
         } else {
@@ -1890,7 +1898,7 @@
             anchorEnt(m, t, d, !!f.held);
             say(m, `${t.name} Anchored ${d}${f.held ? ' (held)' : ''}.`, 'hero');
           } else if (t.kind === 'hero') {
-            anchorEnt(m, t, d);
+            anchorEnt(m, t, d, false, chosen);
           }
         }
         break;
@@ -2258,14 +2266,18 @@
       ctx.pendingDecoy = null;
     }
   };
-  // a 'here' decoy with no teleport afterwards (e.g. Drop Tail then move): place after move
+  // a 'here' decoy with no teleport afterwards (e.g. Drop Tail then move): place it once the face is done. If the
+  // hero never left (a face with no move, or a move that could not happen), the decoy stands on the hero's own
+  // node with them, as the card says ("a decoy holds your spot"), and stays there when they go.
   const origRun = T.runEffects;
   T.runEffects = function (m, actor, fxs, ctx) {
     origRun(m, actor, fxs, ctx);
     if (ctx.pendingDecoy) {
       const d = ctx.pendingDecoy;
-      if (!T.occupied(m, d.pos)) {
+      const occ = T.entityAt(m, d.pos);
+      if (!occ || occ === actor) {
         m.decoys.push(d);
+        say(m, occ ? `A decoy stands with ${actor.name}.` : `A decoy remains behind.`, 'hero');
         fx(m, { t: 'decoy', node: d.pos });
       }
       ctx.pendingDecoy = null;
