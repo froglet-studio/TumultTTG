@@ -7,9 +7,11 @@
     "data/story.js",
     "data/expeditions.js",
     "data/atlas.js",
+    "data/vehicles.js",
     "data/canon.js",
     "engine/generators.js",
     "engine/engine.js",
+    "engine/vehicles.js",
     "engine/ai.js",
     "engine/lookahead.js",
     "engine/party.js",
@@ -40,7 +42,8 @@
     "ui/crew.js",
     "ui/binder.js",
     "ui/guide.js",
-    "ui/home.js"
+    "ui/home.js",
+    "ui/vehicles.js"
   ],
   "css": [
     "ui/style.css",

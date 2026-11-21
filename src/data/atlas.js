@@ -251,6 +251,67 @@
       ],
     },
   ];
+  /* ───────────── BIG MAPS (2.101) ─────────────
+     Wide country, eight spaces across (A–H) and four deep (1–4), too far to walk comfortably: the pages a
+     Crossing is played on, where each player brings a pocket vehicle (src/data/vehicles.js). A space may add
+     its ground as a fourth field (T.TERRAIN_KEY): 'r' rough, 'w' water, 'g' a gap, 'z' a hazard vent on open
+     ground. Every path joins neighbouring spaces; on foot only the ground spaces are walked, so water and gaps
+     are crossed by vehicle or walked round. Not drawn for small missions: only a Crossing goes here. */
+  T.BIG_ATLAS = [
+    {
+      id: 'delta', name: 'Reed Delta', ground: 'sea', gravity: 0.9, plate: 'scene/SPARE06', from: 'SPARE06', big: true,
+      suggest: ['skiff', 'crawler', 'wing', 'diver', 'skiff'],
+      weather: 'Low gold light over the reeds, and a barge horn somewhere downriver.',
+      skies: ['calm', 'fog', 'wind'],
+      blurb: 'A river breaking into a hundred channels through reed beds taller than a pilot, on its way to the sea.',
+      spaces: {
+        A1: [0.0, 0.0, 'A'], B1: [1.3, 0.0, 'AE', 'w'], C1: [2.6, 0.0, 'BE', 'w'], D1: [3.9, 0.0, 'BE', 'w'], E1: [5.2, 0.0, 'CE', 'w'], F1: [6.5, 0.0, 'CE', 'w'], G1: [7.8, 0.0, 'DE', 'w'], H1: [9.1, 0.0, 'D'],
+        A2: [0.0, 1.2, 'A'], B2: [1.3, 1.2, 'A', 'r'], C2: [2.6, 1.2, 'B', 'w'], D2: [3.9, 1.2, 'B', 'w'], E2: [5.2, 1.2, 'C', 'r'], F2: [6.5, 1.2, 'C', 'r'], G2: [7.8, 1.2, 'D'], H2: [9.1, 1.2, 'D'],
+        A3: [0.0, 2.4, 'A'], B3: [1.3, 2.4, 'A'], C3: [2.6, 2.4, 'B', 'r'], D3: [3.9, 2.4, 'B', 'r'], E3: [5.2, 2.4, 'C'], F3: [6.5, 2.4, 'C'], G3: [7.8, 2.4, 'D', 'w'], H3: [9.1, 2.4, 'D', 'r'],
+        A4: [0.0, 3.6, 'A', 'r'], B4: [1.3, 3.6, 'A'], C4: [2.6, 3.6, 'B'], D4: [3.9, 3.6, 'B', 'r'], E4: [5.2, 3.6, 'C', 'r'], F4: [6.5, 3.6, 'C', 'r'], G4: [7.8, 3.6, 'D'], H4: [9.1, 3.6, 'D'],
+      },
+      edges: 'A1-B1 A1-A2 B1-C1 B1-B2 C1-D1 C1-C2 D1-E1 D1-D2 E1-F1 E1-E2 F1-G1 F1-F2 G1-H1 G1-G2 H1-H2 A2-B2 A2-A3 B2-C2 B2-B3 C2-D2 C2-C3 D2-E2 D2-D3 E2-F2 E2-E3 F2-G2 F2-F3 G2-H2 G2-G3 H2-H3 A3-B3 A3-A4 B3-C3 B3-B4 C3-D3 C3-C4 D3-E3 D3-D4 E3-F3 E3-E4 F3-G3 F3-F4 G3-H3 G3-G4 H3-H4 A4-B4 B4-C4 C4-D4 D4-E4 E4-F4 F4-G4 G4-H4',
+      extras: {},
+      rules: [
+        'The main channel runs the whole top row, B1 to G1: a Skiff or a Diver goes from one bank to the other along it, and anyone on it shares its zone (E), so a gun on the water covers the whole channel.',
+        'On foot the reed beds and the sandbars wind through the middle; two ways cross the delta, by B2–B3–C3–D3 and by A4–B4–C4–D4. Water is never walked.',
+        'Reeds (rough ground) stop a Skiff and a Runner, but not a Crawler or a pilot on foot.',
+      ],
+      notes: [
+        { h: 'What it is', t: 'Where a slow river reaches the sea it breaks into channels, and the channels braid through reed beds and sandbars that move a little every season. Barges work the deep water; everything else goes by the paths on the bars.' },
+        { h: 'Ecology', t: 'The reeds grow taller than a pilot and close over a channel in a year if nobody cuts it. Fish shoal in the warm shallows under them, and wading birds stand in the mud all day waiting for them.' },
+        { h: 'Life here', t: 'Delta people cut reed for thatch and mats, and know which channel is deep this year. A stranger keeps to the barge lanes, or hires a guide who reads the water.' },
+        { h: 'Who comes from such places', t: 'Tamsin Dusklight: hare and tiger, crouched in the reeds above a channel at sundown with a barge going by below.' },
+      ],
+    },
+    {
+      id: 'saltflat', name: 'Ashfall Salt Flat', ground: 'land', gravity: 2, plate: 'scene/TOMAHAWK', from: 'TOMAHAWK', big: true,
+      suggest: ['runner', 'crawler', 'wing', 'runner', 'crawler'],
+      weather: 'A low red sun, and a mountain smoking at the end of the flat.',
+      skies: ['calm', 'wind'],
+      blurb: 'A dry lake of white salt as flat as a table, split by black fissures where the ground is still warm.',
+      spaces: {
+        A1: [0.0, 0.0, 'A'], B1: [1.3, 0.0, 'A'], C1: [2.6, 0.0, 'B', 'r'], D1: [3.9, 0.0, 'B'], E1: [5.2, 0.0, 'C'], F1: [6.5, 0.0, 'C'], G1: [7.8, 0.0, 'D'], H1: [9.1, 0.0, 'D'],
+        A2: [0.0, 1.2, 'AE'], B2: [1.3, 1.2, 'AE'], C2: [2.6, 1.2, 'BE', 'z'], D2: [3.9, 1.2, 'BE', 'g'], E2: [5.2, 1.2, 'CE'], F2: [6.5, 1.2, 'CE', 'g'], G2: [7.8, 1.2, 'DE'], H2: [9.1, 1.2, 'DE'],
+        A3: [0.0, 2.4, 'A'], B3: [1.3, 2.4, 'A', 'r'], C3: [2.6, 2.4, 'B'], D3: [3.9, 2.4, 'B'], E3: [5.2, 2.4, 'C'], F3: [6.5, 2.4, 'C', 'g'], G3: [7.8, 2.4, 'D', 'z'], H3: [9.1, 2.4, 'D'],
+        A4: [0.0, 3.6, 'A'], B4: [1.3, 3.6, 'A'], C4: [2.6, 3.6, 'B', 'r'], D4: [3.9, 3.6, 'B', 'g'], E4: [5.2, 3.6, 'C', 'r'], F4: [6.5, 3.6, 'C'], G4: [7.8, 3.6, 'D', 'r'], H4: [9.1, 3.6, 'D'],
+      },
+      edges: 'A1-B1 A1-A2 B1-C1 B1-B2 C1-D1 C1-C2 D1-E1 D1-D2 E1-F1 E1-E2 F1-G1 F1-F2 G1-H1 G1-G2 H1-H2 A2-B2 A2-A3 B2-C2 B2-B3 C2-D2 C2-C3 D2-E2 D2-D3 E2-F2 E2-E3 F2-G2 F2-F3 G2-H2 G2-G3 H2-H3 A3-B3 A3-A4 B3-C3 B3-B4 C3-D3 C3-C4 D3-E3 D3-D4 E3-F3 E3-E4 F3-G3 F3-F4 G3-H3 G3-G4 H3-H4 A4-B4 B4-C4 C4-D4 D4-E4 E4-F4 F4-G4 G4-H4',
+      extras: {},
+      rules: [
+        'Two fissures cut the flat (gaps: D2 and D4, then F2 and F3). On foot or on wheels you cross the first at D1 or D3 and the second at F1 or F4; only a Wing flies straight over.',
+        'C2 and G3 are vents (hazards): whoever ends the round on one is burned. A sealed Crawler does not mind them.',
+        'The salt road, row 2, is one long zone (E): from anywhere on it you are in range of anyone else on it.',
+      ],
+      notes: [
+        { h: 'What it is', t: 'A dry lake bed of white salt, flat to the horizon, split by black fissures where the crust has cracked over warm rock. At the far end a mountain smokes.' },
+        { h: 'Ecology', t: 'Nothing grows on the salt. Brine flies live in the wet cracks, and the birds that eat them nest on the fissure walls, out of the sun.' },
+        { h: 'Life here', t: 'Salt is cut in slabs and stacked in rows to dry; the cutters work at dawn and dusk, when the crust is cool enough to kneel on. A flat like this is crossed fast, by anything with wheels or wings.' },
+        { h: 'Who comes from such places', t: 'Tomahawk: basilisk and hawk, sprinting across the wet salt at sundown, wings half open, with the mountain smoking behind.' },
+      ],
+    },
+  ];
   T.PAGE_BY = {};
   T.ATLAS.forEach((p) => (T.PAGE_BY[p.id] = p));
+  T.BIG_ATLAS.forEach((p) => (T.PAGE_BY[p.id] = p));
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

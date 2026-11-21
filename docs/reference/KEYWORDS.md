@@ -225,3 +225,32 @@ In code: the verbs `reroll` (`n`), `draw` (`face`, `n`; the engine kind `draw` e
 In code: the verb `hover` (`dur`), the state `Hover` (an older save's `Weightless` reads as Hover); a face whose
 `hover` comes before its `move` is offered the ledges (`T.reachableWalk`'s `climb`). Ignoring hazards is the verb
 `hazardImmune` (`dur`, `party`), the state `HazardImmune`.
+
+## Move and Guide (2.103)
+
+> **Move N.** Step N spaces along the paths; foes block the way.
+>
+> **Guide N.** Move an ally up to N spaces along the paths, now, to a space you choose.
+
+A move can differ in one of a few ways, each a different choice on the board (Garrett, 2026-11-21: "more
+interesting movement choices are great as long as they are distinct"):
+
+| The move is… | What changes | Where it pays |
+|---|---|---|
+| **climbing** (Climb N) | the steps may take the ledges | the Vault's ledge, high ground over a fight |
+| **past foes** | the steps may pass through foes' spaces | slipping through a line, reaching the back |
+| **trampling** | through foes' spaces, and each foe in the way is pushed aside as you reach it | shoving a foe into a Field or hazard on the way past |
+| **exactly N** | the run is N steps, no fewer, never the same space twice | the cheetah's and hawk's sprint |
+| **toward** | up to N steps toward a unit, stopping beside it | closing on a foe, joining an ally |
+| **carrying an ally** | an ally beside where you set out comes along, onto a space beside where you stop | taking an ally up a ledge, out of a hazard |
+
+- **Climb is a Move.** The verb `climb` jumped to any space within N along every edge, ignoring the foes in the
+  way; now Climb N is a Move that may take the ledges, and foes block it as they block any walk.
+- **Guide, not Rally.** Moving an ally was the verb `rally`, the same word as the Rally action that raises a
+  downed ally. The action keeps the name; moving an ally is Guide.
+- **Hover** (2.102) and a climbing form (Reshape) let every step take the ledges for as long as they last.
+- Blink (leaving the paths) and Swap (trading places with an ally) stay their own verbs.
+
+In code: the verb `move` (`n`, `climb`, `ignoreFoes`, `trample`, `exact`, `toward`, `free`, `carryAlly`), the verb
+`guide` (`n`; targets `ally_move`, `ally_adj_move`). The target `node_climb` is gone: every Move targets
+`node_move`.

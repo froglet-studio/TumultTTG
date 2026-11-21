@@ -28,6 +28,10 @@
        gear      { gear, ability, target?, node?, choice? }
        item      { item }
        valve     {}                 fold one of each etherion into an Omni
+       board     { vehicle }        get into a vehicle beside you (its uid)
+       leave     { node }           get out onto a space beside it
+       drive     { node }           drive it there (the driver)
+       vcard     { id, target? … }  one of the vehicle's cards
      A list of them, applied in order to the same mission, replays it. */
 
   /** Every way to resolve one face or gear ability: its targets, and push-or-pull where it asks. */
@@ -76,9 +80,10 @@
         }
       // up to 3 paid steps, plus every free step a face has granted (a free move of 4 or 5 is walked in full)
       const steps = Math.min(3, Math.floor(ap / R().MOVE_AP)) + (h.freeMove || 0);
-      if (steps > 0 && !T.isAnchored(h))
+      const onFoot = h.ride == null; // inside a vehicle: its moves and cards, and Mounted faces (below)
+      if (steps > 0 && onFoot && !T.isAnchored(h))
         for (const node of T.reachableWalk(m, h, steps, false)) out.push({ t: 'walk', hero, node });
-      for (const node of [h.pos].concat(B.walkNeighbors(m.board, h.pos))) {
+      for (const node of onFoot ? [h.pos].concat(B.walkNeighbors(m.board, h.pos)) : []) {
         const nd = m.board.nodes[node];
         if (!nd.objective || (node !== h.pos && nd.height)) continue;
         if (!worthInteracting(m, nd.objective, h)) continue;
@@ -97,11 +102,11 @@
             out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
       }
       const ally = T.downedAllyOf(m, h);
-      if (ally && ally.downed && ap >= R().RALLY_AP && B.adjacent(m.board, h.pos, ally.pos))
+      if (onFoot && ally && ally.downed && ap >= R().RALLY_AP && B.adjacent(m.board, h.pos, ally.pos))
         out.push({ t: 'rally', hero });
       h.gear.forEach((g, gear) =>
         T.GEAR_BY[g.id].abilities.forEach((ab, ability) => {
-          if (g.cds[ability] > 0 || T.crystalsFor(m, hero) < ab.cost) return;
+          if (!onFoot || g.cds[ability] > 0 || T.crystalsFor(m, hero) < ab.cost) return;
           const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
           if (tg.invalid || (tg.need !== 'none' && !(tg.options && tg.options.length))) return;
           for (const r of resolutionsByAlly(tg, ab, (a) => T.targetsFor(m, h, ab.tgt, ab, 0, 0, a)))
@@ -112,6 +117,18 @@
         if (h.consumables.indexOf(id) === item) out.push({ t: 'item', hero, item }); // two of a kind are one choice
       });
       if (ETHERIONS.every((f) => h.held.includes(f))) out.push({ t: 'valve', hero });
+      // a vehicle (src/engine/vehicles.js): get in, get out, drive, and its cards
+      if (m.vehicles) {
+        for (const vehicle of T.boardOptions(m, h)) out.push({ t: 'board', hero, vehicle });
+        for (const node of T.leaveOptions(m, h)) out.push({ t: 'leave', hero, node });
+        for (const node of T.driveOptions(m, h)) out.push({ t: 'drive', hero, node });
+        for (const c of T.vehicleCards(m, h)) {
+          const chk = T.canUseVehicleCard(m, h, c.id);
+          if (chk.ok)
+            for (const r of resolutionsByAlly(chk.tg, c, (a) => T.canUseVehicleCard(m, h, c.id, a).tg))
+              out.push(Object.assign({ t: 'vcard', hero, id: c.id }, r));
+        }
+      }
     });
     return out;
   };
@@ -163,6 +180,14 @@
         return T.useConsumable(m, h, a.item);
       case 'valve':
         return { ok: T.valve(m, h) };
+      case 'board':
+        return T.board(m, h, a.vehicle);
+      case 'leave':
+        return T.leave(m, h, a.node);
+      case 'drive':
+        return T.drive(m, h, a.node);
+      case 'vcard':
+        return T.useVehicleCard(m, h, a.id, ctx);
       case 'pick': // the dice of the pilot's next roll (T.setRollPick)
         return T.setRollPick(h, a.kinds);
       default:
@@ -187,6 +212,12 @@
       const def = T.GEAR_BY[h.gear[a.gear].id];
       return `${h.name}: ${def.name} — ${def.abilities[a.ability].n}${tail}`;
     }
+    if (a.t === 'vcard') {
+      const v = T.vehicleOf(m, h);
+      const c = v && T.vehicleDef(v).cards.find((x) => x.id === a.id);
+      return `${h.name}: ${c ? c.n : a.id}${tail}`;
+    }
+    if (a.t === 'board') return `${h.name}: gets in`;
     if (a.t === 'pick') return `${h.name}: next roll ${(a.kinds || []).join(', ') || 'at random'}`;
     if (a.t === 'item') return `${h.name}: ${T.CONSUMABLE_BY[h.consumables[a.item]].name}`;
     return `${h.name}: ${a.t}${at}`;

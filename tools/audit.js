@@ -92,16 +92,15 @@ function answersOf(x) {
       break;
     case 'move':
       add('tempo', 'burst'); // get there sooner; step out of a zone or out of reach
+      if (x.climb) add('height'); // climbing: the steps may take the ledges
+      if (x.trample) add('crowd'); // the foes in the way are pushed aside
       break;
     case 'blink':
       add('tempo', 'burst');
       if (x.height) add('height');
       break;
-    case 'climb':
-      add('height', 'tempo');
-      break;
     case 'swap':
-    case 'rally':
+    case 'guide':
       add('tempo', 'burst');
       if (x.foe) add('single'); // put a foe where you stood: on your Field, out of its reach
       break;
@@ -199,7 +198,7 @@ function answersOf(x) {
  */
 const STAPLE_VERBS = [
   ...['strike', 'execute', 'wound', 'empower', 'mark', 'morph'], // damage
-  ...['move', 'blink', 'climb'], // movement
+  ...['move', 'blink', 'guide'], // movement
   ...['shield', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
   ...['mint', 'draw', 'reroll', 'haste'], // dice and track economy
@@ -227,7 +226,8 @@ const ABLATIONS = [
     (x) =>
       (x.v === 'blink' && x.height) ||
       (x.v === 'throw' && x.height) ||
-      ['climb', 'hover'].includes(x.v) ||
+      (x.v === 'move' && x.climb) ||
+      x.v === 'hover' ||
       (x.v === 'morph' && x.climb) ||
       (x.v === 'interact' && x.height),
   ],
@@ -262,7 +262,7 @@ const ABLATIONS = [
     (x) => ['shield', 'stasis', 'hidden', 'thorns'].includes(x.v) || (x.v === 'heal' && x.ward != null),
   ],
   ['heal', 'no healing', (x) => x.v === 'heal' || x.v === 'rewind' || (x.v === 'engine' && x.kind === 'regen')],
-  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'climb', 'swap', 'throw', 'hover'].includes(x.v)],
+  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'guide', 'swap', 'throw', 'hover'].includes(x.v)],
   [
     'control',
     'no foe control',
@@ -296,7 +296,7 @@ function autoplayerKnows(face) {
   if (has('shield', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
   if (has('field')) return node;
-  if (has('blink', 'climb', 'move')) return node;
+  if (has('blink', 'move')) return node;
   return false;
 }
 

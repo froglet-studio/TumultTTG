@@ -91,9 +91,13 @@
         board.walkAdj[k] = [];
         board.allAdj[k] = [];
       });
+      // a big map's water and gaps are never walked (src/data/vehicles.js): their paths are for vehicles only
+      const foot = (k) => !board.nodes[k].terrain || T.TERRAIN[board.nodes[k].terrain].foot;
       board.edges.forEach(([a, b]) => {
-        board.walkAdj[a].push(b);
-        board.walkAdj[b].push(a);
+        if (foot(a) && foot(b)) {
+          board.walkAdj[a].push(b);
+          board.walkAdj[b].push(a);
+        }
         board.allAdj[a].push(b);
         board.allAdj[b].push(a);
       });
@@ -400,6 +404,7 @@
       h.pool = R().POOL;
       h.rested = false;
       h.carrying = 0;
+      delete h.ride;
       h.gear.forEach((g) => (g.cds = [0, 0]));
       h.roundFlags = { struck: false };
       for (const v of T.boonVals(h, 'missionStart'))
@@ -415,6 +420,7 @@
           e.hp += run.bossBonusHp;
           e.maxHp += run.bossBonusHp;
         });
+    if (spec.vehicles) T.setupVehicles(m, spec.vehicles);
     m.log.push({ r: 0, who: 'dm', text: spec.blurb });
     m.board.fog = m.place.weather === 'fog' ? T.FOG_RANGE : 0;
     for (const t of T.placeRules(m)) m.log.push({ r: 0, who: 'sys', text: t });
@@ -426,6 +432,7 @@
   const say = (m, text, who) => m.log.push({ r: m.round, who: who || 'dm', text });
   const fx = (m, o) => m.fx.push(o);
   T.say = say;
+  T.fx = fx;
   /**
    * A player's line of story for a turn (the box beside End turn): kept in the mission's log as
    * { r, who: 'note', hero, text }, one per hero a round (a new one replaces it; an empty one takes it
@@ -713,7 +720,8 @@
     return !!(st(ent).Anchored || ent.anchoredPerm);
   }
   function forceImmune(ent) {
-    return isAnchored(ent) || !!st(ent).Hover || !!st(ent).Weightless;
+    // a vehicle's riders go where it goes, and nowhere else (src/engine/vehicles.js)
+    return isAnchored(ent) || !!st(ent).Hover || !!st(ent).Weightless || ent.ride != null;
   }
   function hazardImmune(ent) {
     return !!(st(ent).HazardImmune || st(ent).Hover || st(ent).Weightless || st(ent).Stasis);
@@ -758,7 +766,8 @@
     for (const d of m.decoys) if (d.pos === node) return d;
     return null;
   };
-  T.occupied = (m, node) => !!T.entityAt(m, node);
+  // a parked vehicle stands on its space too: nobody stops there, though anyone may pass
+  T.occupied = (m, node) => !!T.entityAt(m, node) || !!(m.vehicles && m.vehicles.some((v) => v.pos === node));
   T.liveEnemies = (m) => m.enemies.filter((e) => e.alive);
   T.liveHeroes = (m) => m.heroes.filter((h) => !h.downed);
   T.foesFor = (m, actor) => (actor.kind === 'hero' ? T.liveEnemies(m) : T.liveHeroes(m).concat(m.decoys));
@@ -907,7 +916,7 @@
         say(m, `${target.name} pre-empted the blow and reflects ${p.reflect}.`);
         checkEnemyDeath(m, source, target);
       }
-      if (p.reposition && target.kind === 'hero') {
+      if (p.reposition && target.kind === 'hero' && target.ride == null) {
         const away = B.walkNeighbors(m.board, target.pos)
           .filter((n) => !T.occupied(m, n))
           .sort((a, b) => B.dist(m.board, b, source ? source.pos : a) - B.dist(m.board, a, source ? source.pos : b))[0];
@@ -918,8 +927,10 @@
       }
       delete ts.Preempt;
     }
+    // a blow on anyone inside a vehicle lands on its hull (src/engine/vehicles.js)
+    const hull = dmg > 0 && target.kind === 'hero' && target.ride != null ? T.vehicleOf(m, target) : null;
     if (dmg > 0) {
-      target.hp -= dmg;
+      if (!hull) target.hp -= dmg;
       // `by`: who struck, for the screen to show the blow coming from them (no rule reads it)
       const hit = { t: 'dmg', ent: target.uid, amount: dmg, pos: target.pos, kind };
       if (source && source.uid != null && kind !== 'area' && kind !== 'true') hit.by = source.uid;
@@ -932,9 +943,10 @@
       }
       say(
         m,
-        `${source ? source.name : 'The hazard'} ${opts.label || 'hits'} ${target.name} for ${dmg}${pierce ? ' (pierce)' : ''}${trueDmg ? ' (true)' : ''}.`,
+        `${source ? source.name : 'The hazard'} ${opts.label || 'hits'} ${target.name}${hull ? `'s ${T.VEHICLE_BY[hull.type].name}` : ''} for ${dmg}${pierce ? ' (pierce)' : ''}${trueDmg ? ' (true)' : ''}.`,
         source && source.kind === 'hero' ? 'hero' : 'enemy',
       );
+      if (hull) T.hitHull(m, hull, dmg);
     } else {
       say(m, `${source ? source.name : 'The blow'} is fully blunted by ${target.name}.`);
     }
@@ -1384,7 +1396,7 @@
    */
   const allyRef = (f, P, E) => {
     if (f.carryAlly != null) return bool(f.carryAlly, P, E) ? 'adj' : null;
-    if (f.v === 'rally' || (f.v === 'swap' && !f.foe)) return 'any';
+    if (f.v === 'guide' || (f.v === 'swap' && !f.foe)) return 'any';
     if (f.target !== 'ally' && f.who !== 'ally') return null;
     if (!f.pierce && ['val', 'n'].some((k) => f[k] != null && num(f[k], P, E) <= 0)) return null;
     if (f.v === 'anchor' && num(f.dur, P, E) <= 0) return null;
@@ -1449,8 +1461,8 @@
         if (!ally || ally.downed) return { need: 'none', invalid: 'no ally standing' };
         if (tgt === 'ally_adj_move' && !B.adjacent(bd, h.pos, ally.pos))
           return { need: 'none', invalid: 'your ally must be beside you' };
-        const rl = face && face.fx.find((x) => x.v === 'rally');
-        const n = rl ? num(rl.move, P, E) : 0;
+        const rl = face && face.fx.find((x) => x.v === 'guide');
+        const n = rl ? num(rl.n, P, E) : 0;
         const steps = isAnchored(ally) ? [] : T.reachableWalk(m, ally, n, false);
         return { need: 'node', options: [ally.pos].concat(steps), ally: ally.uid, allyMove: n };
       }
@@ -1522,7 +1534,9 @@
         // a face that lifts you off the ground before it moves you (Hover, then Move) may take the ledges
         const hi = face.fx.findIndex((x) => x.v === 'hover');
         const lift = hi >= 0 && hi < face.fx.indexOf(mv);
-        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact, lift) };
+        const climbing = bool(mv.climb, P, E) || lift;
+        const through = mv.ignoreFoes || num(mv.trample, P, E) > 0;
+        return { need: 'node', options: T.reachableWalk(m, h, n, through, mv.exact, climbing) };
       }
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'blink');
@@ -1547,11 +1561,6 @@
         );
         return { need: 'node', options: opts, ally: ally.uid };
       }
-      case 'node_climb': {
-        const cl = face.fx.find((x) => x.v === 'climb');
-        const r = num(cl.reach, P, E);
-        return { need: 'node', options: B.within(bd, h.pos, r, true).filter((n) => !T.occupied(m, n)) };
-      }
       default:
         return { need: 'none' };
     }
@@ -1570,7 +1579,7 @@
       if (bd.nodes[y].height && !climber && !bd.ramp) return null;
       const occ = T.entityAt(m, y);
       if (occ && !(ignoreFoes || occ.kind === 'hero')) return null; // can't pass through foes unless ignoring
-      return { empty: !occ };
+      return { empty: !occ && !(m.vehicles && T.vehicleAt(m, y)) }; // a parked vehicle is passed, not stood on
     };
     if (exact) {
       const out = new Set();
@@ -1622,6 +1631,7 @@
     const elt = face.elt || card.el;
     const eln = face.el || 0;
     if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
+    if (h.ride != null && !T.isMounted(card, faceKey)) return { ok: false, why: 'not Mounted: get out first' };
     if (!T.canPay(h, face.ap, elt, eln)) return { ok: false, why: 'cannot pay' };
     const tg = T.targetsFor(m, h, face.tgt, face, P, E, pick);
     if (tg.invalid) return { ok: false, why: tg.invalid };
@@ -1847,7 +1857,9 @@
           }
           break;
         }
-        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes, f.exact);
+        const climbing = bool(f.climb, P, E);
+        const tramp = num(f.trample, P, E);
+        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes || tramp > 0, f.exact, climbing);
         if (!opts.includes(dest)) {
           if (f.free) {
             ctx.pendingFreeMove = n;
@@ -1855,9 +1867,30 @@
           break;
         }
         const fromN = actor.pos;
-        moveEntity(m, actor, dest, 'walk');
-        say(m, `${actor.name} moves ${fromN} → ${dest}.`, 'hero');
-        onHeroEnter(m, actor, dest);
+        if (tramp > 0) {
+          // Trample N (2.103): step by step through the foes in the way, each pushed N away as you reach it
+          const p = B.path(bd, actor.pos, dest, null, canClimb(actor) || climbing) || [actor.pos, dest];
+          for (let i = 1; i < p.length; i++) {
+            const foe = T.entityAt(m, p[i]);
+            if (foe && foe.kind === 'enemy' && foe.alive) pushAway(m, actor, foe, tramp);
+            moveEntity(m, actor, p[i], 'walk');
+            onHeroEnter(m, actor, p[i]);
+          }
+          if (actor.pos !== dest) moveEntity(m, actor, dest, 'walk');
+        } else {
+          moveEntity(m, actor, dest, climbing ? 'climb' : 'walk');
+          onHeroEnter(m, actor, dest);
+        }
+        say(m, `${actor.name} ${climbing ? 'climbs' : 'moves'} ${fromN} → ${dest}.`, 'hero');
+        // carrying an ally: one beside where you set out comes along, onto a free space beside where you stop
+        if (bool(f.carryAlly, P, E) && ally && !ally.downed && !isAnchored(ally) && B.adjacent(bd, fromN, ally.pos)) {
+          const spot = B.allNeighbors(bd, dest).filter((x) => !T.occupied(m, x) && x !== fromN)[0];
+          if (spot) {
+            moveEntity(m, ally, spot, climbing ? 'climb' : 'walk');
+            onHeroEnter(m, ally, spot);
+            say(m, `${ally.name} is carried along.`, 'hero');
+          }
+        }
         break;
       }
       case 'blink': {
@@ -1894,28 +1927,6 @@
         moveEntity(m, actor, dest, 'teleport');
         say(m, `${actor.name} blinks ${from} → ${dest}.`, 'hero');
         onHeroEnter(m, actor, dest);
-        break;
-      }
-      case 'climb': {
-        if (actor.kind !== 'hero') break;
-        const r = num(f.reach, P, E);
-        const dest = ctx.node;
-        if (dest == null) break;
-        if (B.dist(bd, actor.pos, dest, true) > r || T.occupied(m, dest)) {
-          say(m, 'Out of reach.', 'sys');
-          break;
-        }
-        const from = actor.pos;
-        moveEntity(m, actor, dest, 'climb');
-        say(m, `${actor.name} climbs ${from} → ${dest}.`, 'hero');
-        onHeroEnter(m, actor, dest);
-        if (bool(f.carryAlly, P, E) && ally && !ally.downed && B.adjacent(bd, from, ally.pos)) {
-          const spot = B.allNeighbors(bd, dest).filter((n) => !T.occupied(m, n) && n !== from)[0];
-          if (spot) {
-            moveEntity(m, ally, spot, 'climb');
-            say(m, `${ally.name} is lifted along.`, 'hero');
-          }
-        }
         break;
       }
       case 'swap': {
@@ -1987,11 +1998,12 @@
         say(m, `${actor.name} braces to recover what this round takes.`, 'hero');
         break;
       }
-      case 'rally': {
-        // the player who plays it moves their partner, at once, to the node they chose (ctx.node): nothing is
-        // left for the partner to decide, so whoever plays it can plan the rest of their turn exactly
+      case 'guide': {
+        // Guide N (2.103, was the verb `rally`): the player who plays it moves an ally, at once, to the node they
+        // chose (ctx.node): nothing is left for the ally to decide, so whoever plays it can plan the rest of their
+        // turn exactly. Rally is the basic action that raises the downed, and nothing else.
         if (!ally || ally.downed) break;
-        const n = num(f.move, P, E);
+        const n = num(f.n, P, E);
         if (ctx.node == null || ctx.node === ally.pos) {
           if (ctx.node === ally.pos) say(m, `${ally.name} holds their ground.`, 'hero');
           break;
@@ -2546,6 +2558,7 @@
   /* ───────────────────────────── BASIC ACTIONS ───────────────────────────── */
   T.walk = function (m, h, dest) {
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
+    if (h.ride != null) return { ok: false, why: 'inside a vehicle: drive, or get out' };
     if (isAnchored(h)) return { ok: false, why: 'Anchored' };
     const bd = m.board;
     const free = h.freeMove || 0;
@@ -2595,6 +2608,7 @@
     const nd = bd.nodes[node];
     const ob = m.objective;
     if (!nd || !nd.objective) return { ok: false, why: 'nothing here' };
+    if (h.ride != null) return { ok: false, why: 'get out first: objectives are worked on foot' };
     const here = h.pos === node,
       adj = B.adjacent(bd, h.pos, node);
     if (nd.objective.kind === 'crate' && h.carrying) return { ok: false, why: 'already carrying a crate' };
@@ -2681,6 +2695,7 @@
   T.rally = function (m, h) {
     const ally = T.downedAllyOf(m, h);
     if (!ally || !ally.downed) return { ok: false, why: 'no downed ally' };
+    if (h.ride != null) return { ok: false, why: 'get out first' };
     if (!B.adjacent(m.board, h.pos, ally.pos)) return { ok: false, why: 'not adjacent' };
     if (T.apValue(h) < R().RALLY_AP) return { ok: false, why: 'need 2 AP' };
     T.pay(h, R().RALLY_AP);
@@ -2696,6 +2711,7 @@
     const b = T.BASIC_BY[id];
     if (!b) return { ok: false, why: 'unknown action' };
     if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
+    if (h.ride != null) return { ok: false, why: 'inside a vehicle: its cards, or a Mounted face' };
     if (T.apValue(h) < b.ap) return { ok: false, why: 'need ' + b.ap + ' AP' };
     if (b.el && !T.canPay(h, b.ap, b.el, 1)) return { ok: false, why: 'needs ' + b.el + ' (or Omni)' };
     const tg = T.targetsFor(m, h, b.tgt, b, 0, 0, pick);
@@ -2724,6 +2740,7 @@
     const def = T.GEAR_BY[g.id];
     const ab = def.abilities[ai];
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
+    if (h.ride != null) return { ok: false, why: 'inside a vehicle: its cards, or a Mounted face' };
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
     const seat = T.purseSeat(m, m.heroes.indexOf(h));
     if (m.purses[seat] < ab.cost) return { ok: false, why: 'need ◇' };
@@ -2760,6 +2777,7 @@
   /* ───────────────────────────── ROUND STRUCTURE ───────────────────────────── */
   T.beginRound = function (m) {
     m.round += 1;
+    if (m.vehicles) m.vehicles.forEach((v) => (v.used = [])); // a vehicle's cards are once a round
     m.phase = 'hero';
     say(m, `— Round ${m.round} —`, 'sys');
     // spawns
@@ -2918,12 +2936,17 @@
     // wind: every unit moves 1 space downwind if it can (before hazards, so the wind can blow you into one)
     if (m.place && m.place.weather === 'wind') T.blowWind(m);
     // hazards
-    for (const h of T.liveHeroes(m))
-      if (m.board.nodes[h.pos].hazard && !hazardImmune(h)) {
-        say(m, `${h.name} is caught in the hazard.`, 'enemy');
-        const d = T.damage(m, null, h, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
-        m.stats.hazardDmg += d;
+    const hulls = new Set(); // a vehicle on a hazard is caught once, however many ride in it
+    for (const h of T.liveHeroes(m)) {
+      if (!m.board.nodes[h.pos].hazard || hazardImmune(h)) continue;
+      if (h.ride != null) {
+        if (hulls.has(h.ride)) continue;
+        hulls.add(h.ride);
       }
+      say(m, `${h.name} is caught in the hazard.`, 'enemy');
+      const d = T.damage(m, null, h, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
+      m.stats.hazardDmg += d;
+    }
     for (const e of T.liveEnemies(m))
       if (m.board.nodes[e.pos].hazard && !hazardImmune(e) && !e.boss) {
         T.damage(m, null, e, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
@@ -3096,6 +3119,7 @@
         b.achieved = m.won && (m.stats.foundRound != null ? m.stats.foundRound : m.round) <= b.byRound;
       else if (b.id === 'noambush') b.achieved = m.stats.ambushDmg === 0;
       else if (b.id === 'dry') b.achieved = m.stats.hazardDmg === 0;
+      else if (b.id === 'intact') b.achieved = !m.stats.wrecks;
       else if (b.id === 'both') b.achieved = m.won && T.liveHeroes(m).length === 2;
       else if (b.id === 'spawners') b.achieved = !m.enemies.some((e) => e.type === 'spawner' && e.alive);
       if (!m.won) b.achieved = false;
