@@ -274,8 +274,20 @@
         zones,
       ).textContent = z.name + ' zone';
     });
+    // a path into water or over a gap is for vehicles only (src/data/vehicles.js): drawn faint and dashed
+    const foot = (k) => !N[k].terrain || T.TERRAIN[N[k].terrain].foot;
     m.board.edges.forEach(([a, b]) =>
-      svgEl('line', { x1: g.px(N[a]), y1: g.py(N[a]), x2: g.px(N[b]), y2: g.py(N[b]), class: 'edge' }, edges),
+      svgEl(
+        'line',
+        {
+          x1: g.px(N[a]),
+          y1: g.py(N[a]),
+          x2: g.px(N[b]),
+          y2: g.py(N[b]),
+          class: 'edge' + (foot(a) && foot(b) ? '' : ' vpath'),
+        },
+        edges,
+      ),
     );
     m.board.climb.forEach(([a, b]) =>
       svgEl(
@@ -291,6 +303,8 @@
         nodes,
       );
       svgEl('circle', { r: 27, class: 'ring' }, gr);
+      // a big map's ground: water, a gap, rough ground (src/data/vehicles.js), inside the ring
+      if (n.terrain) svgEl('circle', { r: 23, class: 'terrain t-' + n.terrain, fill: T.TERRAIN[n.terrain].color }, gr);
       // the outer ring shows the node's zones: one arc for each
       n.zones.forEach((zone, i) => {
         const k = n.zones.length;
@@ -342,17 +356,27 @@
       const bits = [
         `<b>${n.label ? 'Space ' + n.label : 'Node ' + n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`,
       ];
-      if (n.height) bits.push('Height: reachable only by Space verbs (Blink, climb, Hover) or the ramp.');
+      if (n.height) bits.push('Height: reachable only by climbing, a Blink that says height, Hover, or the ramp.');
       if (n.hazard)
         bits.push(
           `Hazard (a Field of damage): ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`,
         );
+      if (n.terrain) bits.push(`<b>${T.TERRAIN[n.terrain].name}</b>: ${T.TERRAIN[n.terrain].txt}`);
+      const vh = T.vehicleAt(m, n.id);
+      if (vh) bits.push(vehicleTip(m, vh));
       if (n.spawn) bits.push('Spawn-node: foes emerge here.');
       if (n.objective) bits.push(objText(m, n));
       for (const f of m.fields || []) if (T.fieldNodes(m, f).includes(n.id)) bits.push(T.fieldText(m, f));
       return bits.join('<div style="height:4px"></div>');
     }
     return '';
+  }
+  /** A vehicle in words: who brought it, its hull, seats, speed, ground and cards. */
+  function vehicleTip(m, v) {
+    const d = T.vehicleDef(v);
+    const riders = T.ridersOf(m, v);
+    const ground = d.ground.map((t) => T.TERRAIN[t].name.toLowerCase()).join(', ') + (d.height ? ', high ground' : '');
+    return `<b>${d.icon} ${esc(d.name)}</b> <span class="dim">${esc(m.heroes[v.owner] ? m.heroes[v.owner].name + "'s" : '')}</span><div class="mono small">hull ${v.hull}/${d.hull} · seats ${riders.length}/${d.seats} · speed ${d.speed} · ${esc(ground)}</div>${riders.length ? `<div class="small">Inside: ${riders.map((r) => esc(r.name)).join(', ')}${v.driver != null ? ' (driving: ' + esc((m.heroes.find((x) => x.uid === v.driver) || {}).name || '') + ')' : ''}</div>` : '<div class="small">Parked: get in from a space beside it (1 AP).</div>'}${d.cards.map((c) => `<div class="small">• <b>${esc(c.n)}</b> <span class="mono dim">${c.ap} AP${c.seat === 'driver' ? ' · driver' : ''}</span> ${esc(c.txt)}</div>`).join('')}`;
   }
   function objText(m, n) {
     const o = n.objective;
@@ -696,7 +720,21 @@
   /** Does this screen take touches rather than a pointer that hovers? (jsdom, with no matchMedia: no.) */
   U.touch = () => typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(hover: none)').matches;
   /** The moves a player can take back: those that only spend what is in hand, on the board in view. */
-  const TAKE_BACK = new Set(['face', 'basic', 'gear', 'item', 'interact', 'rally', 'valve', 'dump', 'walk']);
+  const TAKE_BACK = new Set([
+    'face',
+    'basic',
+    'gear',
+    'item',
+    'interact',
+    'rally',
+    'valve',
+    'dump',
+    'walk',
+    'board',
+    'leave',
+    'drive',
+    'vcard',
+  ]);
   /** Take-backs are for one screen playing alone or passing the screen; online, the host's mission is shared. */
   const takeBackOn = () => !(U.net && U.net.online && U.net.online());
   /** Called by U.exec before a command: the mission as it stands, if the command could be taken back. */
@@ -729,7 +767,19 @@
     if (cmd.op === 'gear') return who + T.GEAR_BY[h.gear[cmd.gi].id].abilities[cmd.ai].n;
     if (cmd.op === 'walk') return who + 'step';
     if (cmd.op === 'item') return who + T.CONSUMABLE_BY[h.consumables[cmd.ci]].name;
-    return who + { interact: 'Interact', rally: 'Rally', valve: 'fold to Omni', dump: 'returned die' }[cmd.op];
+    if (cmd.op === 'vcard') return who + cmd.id;
+    return (
+      who +
+      {
+        interact: 'Interact',
+        rally: 'Rally',
+        valve: 'fold to Omni',
+        dump: 'returned die',
+        board: 'getting in',
+        leave: 'getting out',
+        drive: 'drive',
+      }[cmd.op]
+    );
   }
   /** Put the mission back as it stood before the last move that can be taken back. */
   function takeBack() {
@@ -1156,7 +1206,9 @@
     };
     const interactB = `<button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact <span class="acost">2</span></button>`;
     const rallyB = `<button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally <span class="acost">2</span></button>`;
-    const main = T.BASIC.filter((b) => MAIN.includes(b.id)).map(basicBtn);
+    const main = h.ride != null ? [] : T.BASIC.filter((b) => MAIN.includes(b.id)).map(basicBtn);
+    // a vehicle: inside, its moves and cards take the basic actions' place; beside one, a way in
+    if (m.vehicles) main.unshift(...vehicleBtns(m, h, i));
     const more = T.BASIC.filter((b) => !MAIN.includes(b.id))
       .map(basicBtn)
       .filter(Boolean);
@@ -1211,6 +1263,41 @@
       ${gearRow}
     </div>`;
   }
+  function vehicleBtns(m, h, i) {
+    const out = [];
+    const v = T.vehicleOf(m, h);
+    if (v) {
+      const d = T.vehicleDef(v);
+      out.push(
+        `<span class="veh-chip" data-tip="${esc(vehicleTip(m, v))}">${d.icon} ${esc(d.name)} <span class="mono">hull ${v.hull}/${d.hull}</span></span>`,
+      );
+      if (v.driver === h.uid) {
+        const ok = !m.over && T.driveOptions(m, h).length;
+        out.push(
+          `<button class="sm" data-act="vdrive" data-arg="${i}" ${ok ? '' : 'disabled'} data-tip="${esc(`Drive (1 AP): move the ${d.name} up to ${d.speed} spaces over its ground, with everyone inside. Or click a highlighted space.`)}">➤ Drive <span class="acost">1</span></button>`,
+        );
+      }
+      const outOk = !m.over && T.leaveOptions(m, h).length;
+      out.push(
+        `<button class="sm" data-act="vleave" data-arg="${i}" ${outOk ? '' : 'disabled'} data-tip="Get out (1 AP) onto a free space beside it that you could walk on.">⇲ Get out <span class="acost">1</span></button>`,
+      );
+      for (const c of T.vehicleCards(m, h)) {
+        const ok = !m.over && T.canUseVehicleCard(m, h, c.id).ok;
+        out.push(
+          `<button class="sm" data-act="vcard" data-arg="${i}|${c.id}" ${ok ? '' : 'disabled'} data-tip="${esc(`${c.n} (${c.ap} AP, the ${d.name}'s, once a round${c.seat === 'driver' ? ', the driver' : ', any seat'}): ${c.txt}`)}">${c.icon} ${esc(c.n)} <span class="acost">${c.ap}</span></button>`,
+        );
+      }
+      return out;
+    }
+    for (const uid of h.downed || m.over ? [] : T.boardOptions(m, h)) {
+      const w = m.vehicles.find((x) => x.uid === uid);
+      const d = T.vehicleDef(w);
+      out.push(
+        `<button class="sm goal-act" data-act="vboard" data-arg="${i}|${uid}" data-tip="${esc(`Get in (1 AP). ${vehicleTip(m, w)}`)}">${d.icon} Get in <span class="acost">1</span></button>`,
+      );
+    }
+    return out;
+  }
   function interactNode(m, h) {
     const nodes = [h.pos].concat(B.walkNeighbors(m.board, h.pos));
     for (const n of nodes) {
@@ -1252,6 +1339,7 @@
     if (!h || h.downed) return new Set();
     if (ms.mode === 'target' && ms.pending.tg.need === 'node') return new Set(ms.pending.tg.options);
     if (ms.mode === 'freeMove') return new Set(T.reachableWalk(m, h, ms.freeN, false));
+    if (ms.mode === 'idle' && !m.over && h.ride != null) return new Set(T.driveOptions(m, h));
     if (ms.mode === 'idle' && !m.over) {
       const ap = T.apValue(h) + (h.freeMove || 0);
       if (ap <= 0 || h.states.Rooted || h.states.SlowSelf) return new Set();
@@ -1411,6 +1499,34 @@
       seen.add(id);
       return el;
     };
+    // vehicles: a parked one stands on its space; one with riders sits under them, a badge at its pilot's feet
+    (m.vehicles || []).forEach((v) => {
+      if (!N[v.pos]) return;
+      const d = T.vehicleDef(v);
+      const ridden = T.ridersOf(m, v).length > 0;
+      const el = upsert(
+        'tok-' + v.uid,
+        'vehicle' + (ridden ? ' ridden' : ''),
+        N[v.pos],
+        (el) => {
+          el.setAttribute('data-tipid', 'n' + v.pos);
+          svgEl('rect', { x: -20, y: -20, width: 40, height: 40, rx: 10, class: 'body' }, el);
+          svgEl('text', { y: 7, class: 'glyph', 'text-anchor': 'middle', 'font-size': 20 }, el);
+          svgEl('rect', { x: -18, y: 24, width: 36, height: 4, rx: 2, class: 'hpb' }, el);
+          svgEl('rect', { x: -18, y: 24, width: 36, height: 4, rx: 2, class: 'hpf hull' }, el);
+        },
+        (el) => {
+          el.querySelector('.glyph').textContent = d.icon;
+          el.querySelector('.hpf').setAttribute('width', (36 * Math.max(0, v.hull)) / d.hull);
+          el.setAttribute('data-tip', vehicleTip(m, v));
+          el.setAttribute('data-tipid', 'n' + v.pos);
+        },
+      );
+      el._home = ridden
+        ? `translate(${g.px(N[v.pos]) - 20},${g.py(N[v.pos]) + 14}) scale(.55)`
+        : `translate(${g.px(N[v.pos])},${g.py(N[v.pos])})`;
+      if (!el._walking) el.setAttribute('transform', el._home);
+    });
     m.heroes.forEach((h, i) => {
       if (!N[h.pos]) return;
       const cls = ['hero', U.ms.heroIdx === i ? 'active' : '', h.downed ? 'downed' : ''].join(' ');
@@ -2143,6 +2259,15 @@
     }
     if (ms.mode === 'idle') {
       if (h.downed) return;
+      if (h.ride != null) {
+        // inside a vehicle a click drives it there (the driver), as a click walks a pilot on foot
+        if (!T.driveOptions(m, h).includes(node)) return;
+        const r = U.exec({ op: 'drive', hero: ms.heroIdx, node });
+        if (!r.ok) return U.toast(r.why);
+        U.sfx.click();
+        afterAction();
+        return;
+      }
       const r = U.exec({ op: 'walk', hero: ms.heroIdx, node });
       if (!r.ok) {
         if (r.why && r.why !== 'no path') U.toast(r.why);
@@ -2203,6 +2328,30 @@
       U.updateMission();
     }
   }
+  /** The vehicle's moves: Drive and Get out pick a space; a vehicle card picks its target, as a basic action does. */
+  function beginVehicle(i, kind, id) {
+    const m = M();
+    U.ms.heroIdx = i;
+    const h = hero();
+    let tg, label;
+    if (kind === 'vcard') {
+      const chk = T.canUseVehicleCard(m, h, id);
+      if (!chk.ok) return U.toast(chk.why || 'Cannot do that now.');
+      tg = chk.tg;
+      label = chk.card.n;
+    } else {
+      const opts = kind === 'drive' ? T.driveOptions(m, h) : T.leaveOptions(m, h);
+      if (!opts.length) return U.toast(kind === 'drive' ? 'Nowhere to drive.' : 'Nowhere to get out.');
+      tg = { need: 'node', options: opts };
+      label = kind === 'drive' ? 'Drive' : 'Get out';
+    }
+    U.ms.pending = { kind, id, tg, label, needsChoice: false };
+    if (tg.need === 'none') commitPending({});
+    else {
+      U.ms.mode = 'target';
+      U.updateMission();
+    }
+  }
   function beginBasic(i, id) {
     const m = M();
     U.ms.heroIdx = i;
@@ -2238,6 +2387,8 @@
     let tg = null;
     if (p.kind === 'card') tg = T.canPlay(m, h, p.cardId, p.fk, uid).tg;
     else if (p.kind === 'basic') tg = T.canUseBasic(m, h, p.id, uid).tg;
+    else if (p.kind === 'vcard') tg = T.canUseVehicleCard(m, h, p.id, uid).tg;
+    else if (p.kind !== 'gear') return false;
     else {
       const ab = T.GEAR_BY[h.gear[p.gi].id].abilities[p.ai];
       tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0, uid);
@@ -2266,6 +2417,9 @@
     // every change goes through a command, so it can be carried out on the host's screen (U.exec)
     if (p.kind === 'card') r = U.exec({ op: 'face', hero: i, card: p.cardId, fk: p.fk, ctx: fullCtx });
     else if (p.kind === 'basic') r = U.exec({ op: 'basic', hero: i, id: p.id, ctx: fullCtx });
+    else if (p.kind === 'vcard') r = U.exec({ op: 'vcard', hero: i, id: p.id, ctx: fullCtx });
+    else if (p.kind === 'drive') r = U.exec({ op: 'drive', hero: i, node: fullCtx.node });
+    else if (p.kind === 'leave') r = U.exec({ op: 'leave', hero: i, node: fullCtx.node });
     else r = U.exec({ op: 'gear', hero: i, gi: p.gi, ai: p.ai, ctx: fullCtx });
     ms.pending = null;
     ms.mode = 'idle';
@@ -2465,6 +2619,24 @@
           ms.pending = null;
         }
         beginBasic(+i, id);
+        return true;
+      }
+      case 'vdrive':
+      case 'vleave':
+      case 'vcard': {
+        const [i, id] = String(arg).split('|');
+        ms.mode = 'idle';
+        ms.pending = null;
+        beginVehicle(+i, act === 'vdrive' ? 'drive' : act === 'vleave' ? 'leave' : 'vcard', id);
+        return true;
+      }
+      case 'vboard': {
+        const [i, uid] = String(arg).split('|').map(Number);
+        ms.heroIdx = i;
+        const r = U.exec({ op: 'board', hero: i, vehicle: uid });
+        if (!r.ok) U.toast(r.why);
+        else U.sfx.click();
+        afterAction();
         return true;
       }
       case 'interact': {

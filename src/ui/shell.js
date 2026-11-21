@@ -100,7 +100,11 @@
           U.toast('No expedition on its route yet. Start one from Play.');
           return true;
         }
-        U.screen = ['reward', 'haven', 'event'].includes(U.run.phase) ? U.run.phase : U.run.mission ? 'mission' : 'map';
+        U.screen = ['reward', 'haven', 'event', 'garage'].includes(U.run.phase)
+          ? U.run.phase
+          : U.run.mission
+            ? 'mission'
+            : 'map';
         break;
       case 'pilots':
         U.crew = Object.assign(U.crew || {}, { open: null });

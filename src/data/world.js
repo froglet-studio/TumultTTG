@@ -16,7 +16,7 @@
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 150,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 since 2.102: weapons)
+    FOE_HP: 150,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 since 2.105: weapons)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -95,7 +95,7 @@
       passive:{ hook:'spot', val:1, txt:'As your turn begins, a foe within 1 of you (beside you) is Marked.' },
       abilities:[
         { n:'Flare', cost:1, cd:2, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)},{v:'mark', area:true, radius:f(2)}], txt:()=>'Reveal within 2 and Mark every foe revealed.' },
-        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'rally', move:f(2)}], txt:()=>'Guide an ally up to 2 nodes, to a node you choose, now.' },
+        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'guide', n:f(2)}], txt:()=>'Guide an ally up to 2 nodes, to a node you choose, now.' },
       ]},
     { id:'harpoon', name:'Turret', price:6, icon:'🎯',
       desc:'Fields that strike. Set a turret down and it holds the ground around it.',
@@ -108,7 +108,7 @@
       desc:'The cheap answer to height.',
       passive:{ hook:'noPull', val:true, txt:'Mag boots: you cannot be pulled.' },
       abilities:[
-        { n:'Ascend', cost:1, cd:1, tgt:'node_climb', fx:[{v:'climb', reach:f(1)}], txt:()=>'Climb onto an adjacent node, height included.' },
+        { n:'Ascend', cost:1, cd:1, tgt:'node_move', fx:[{v:'move', climb:true, n:f(1)}], txt:()=>'Climb 1.' },
         { n:'Rappel', cost:1, cd:1, tgt:'node_move', fx:[{v:'move', n:f(2), ignoreFoes:true}], txt:()=>'Move 2, through foes.' },
       ]},
     { id:'medkit', name:'Medkit', price:5, icon:'🩹',
@@ -118,7 +118,7 @@
         { n:'Patch', cost:1, cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
         { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
       ]},
-    // Weapons (2.102: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
+    // Weapons (2.105: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
     // its own; its passive adds to every strike of its reach you make, and its Overcharge takes banked Omni dice
     // (the omnicrystals a player rolls) for an Empower on every such strike this round.
     { id:'baton', name:'Shock Baton', price:6, icon:'⚡',
@@ -194,11 +194,11 @@
     { id:'shove_M',    n:'Shove',    icon:'↦', ap:0, el:'M', tgt:'foe_melee', fx:[{v:'force', kind:'push', n:f(1)}],                       txt:'Channel Mass: push an adjacent foe 1 node.' },
     { id:'arc_C',      n:'Arc',      icon:'ϟ', ap:0, el:'C', tgt:'foe_r3',    fx:[{v:'strike', kind:'any', dmg:f(1)}],                     txt:'Channel Charge: 1 damage to a foe up to 3 nodes away.' },
     { id:'reach_C',    n:'Reach',    icon:'⚙', ap:1, el:'C', tgt:'node_r2',   fx:[{v:'interact', range:f(2)}],                             txt:'Channel Charge: Interact with an objective up to 2 nodes away (not up a ledge from below).' },
-    { id:'scramble_S', n:'Scramble', icon:'⤴', ap:0, el:'S', tgt:'node_climb', fx:[{v:'climb', reach:f(1)}],                               txt:'Channel Space: step to a free node 1 away, up or down a ledge included.' },
+    { id:'scramble_S', n:'Scramble', icon:'⤴', ap:0, el:'S', tgt:'node_move', fx:[{v:'move', climb:true, n:f(1)}],                               txt:'Channel Space: climb 1 (a step that may take a ledge).' },
     // Duet moves (2.28): one pilot sets up, the other cashes in, so a turn can be spent on your partner's.
     // General verbs that already exist (mark, rally, mint); each needs a partner to pay off in full.
     { id:'spot',  n:'Spot',   icon:'◎', ap:2, tgt:'foe_r3',   fx:[{v:'mark'}],                                   txt:'Mark a foe up to 3 nodes away: the next hit on it, by anyone, deals +2.' },
-    { id:'legup', n:'Leg up', icon:'⇡', ap:1, tgt:'ally_adj_move', fx:[{v:'rally', move:f(2)}],                  txt:'Boost an adjacent ally up to 2 nodes, to a node you choose, now.' },
+    { id:'legup', n:'Leg up', icon:'⇡', ap:1, tgt:'ally_adj_move', fx:[{v:'guide', n:f(2)}],                  txt:'Boost an adjacent ally: Guide them 2, now.' },
     { id:'lend',  n:'Lend',   icon:'⇄', ap:2, tgt:'ally_adj', fx:[{v:'mint', face:'AP', n:f(2), target:'ally'}], txt:'Give an adjacent ally 2 AP to spend this round. Lent after their turn, it is lost.' },
     { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'haste', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and Haste: your track slides 1 extra column.' },
   ];

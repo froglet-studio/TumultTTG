@@ -78,6 +78,12 @@
       row.forEach((id) => {
         const n = all[id];
         if (n.type === 'haven' || n.type === 'event') return;
+        if (T.MISSIONS[n.type] && T.MISSIONS[n.type].big) {
+          // a big-map mission goes on a big page, of the leg's ground if there is one, from a stream of its own
+          const big = T.BIG_ATLAS.filter((p) => p.ground === ground);
+          n.page = T.runStream(run, 'bigmap').pick((big.length ? big : T.BIG_ATLAS).map((p) => p.id));
+          return;
+        }
         const before = Object.values(all)
           .filter((m) => m.next.includes(id))
           .map((m) => m.page);

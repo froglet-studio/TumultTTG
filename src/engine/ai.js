@@ -472,8 +472,9 @@
         m.board.ramp ||
         h.cards.some(
           (c) =>
-            T.CARD[c].E.fx.some((x) => (x.v === 'blink' && x.height) || x.v === 'climb') ||
-            T.CARD[c].P.fx.some((x) => x.v === 'climb'),
+            T.CARD[c].E.fx.some(
+              (x) => (x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
+            ) || T.CARD[c].P.fx.some((x) => (x.v === 'move' && x.climb) || x.v === 'hover'),
         ) ||
         h.gear.some((g) => ['phasebrace', 'climbrig'].includes(g.id));
       return canReach ? { node: ob.node, needOn: true } : { node: ob.leverNode, needOn: false };
@@ -496,7 +497,7 @@
       for (const fk of ['P', 'E']) {
         const card = T.CARD[cid],
           face = card[fk];
-        const mv = face.fx.find((x) => ['move', 'blink', 'climb'].includes(x.v));
+        const mv = face.fx.find((x) => ['move', 'blink'].includes(x.v));
         if (!mv || face.fx.some((x) => x.v === 'rest')) continue;
         const chk = T.canPlay(m, h, cid, fk);
         if (!chk.ok || chk.tg.need !== 'node' || !chk.tg.options.length) continue;
@@ -520,6 +521,64 @@
         const r = T.walk(m, h, nxt);
         if (r.ok) return true;
       }
+    }
+    return false;
+  }
+
+  /**
+   * The heuristic player in a vehicle (src/engine/vehicles.js): ride toward the objective, step out beside it to
+   * work it on foot, get back in when the next one is far; a rider fires the vehicle's guns at what it can hit.
+   * Returns true when it did something.
+   */
+  function autoVehicle(m, h, goal) {
+    if (!m.vehicles) return false;
+    const bd = m.board;
+    const d = (a, b) => B.dist(bd, a, b, true);
+    if (h.ride != null) {
+      const v = T.vehicleOf(m, h);
+      // the vehicle's cards: a strike at the weakest foe it can hurt
+      for (const c of T.vehicleCards(m, h)) {
+        const strike = c.fx.find((x) => x.v === 'strike');
+        if (!strike) continue;
+        const chk = T.canUseVehicleCard(m, h, c.id);
+        if (!chk.ok || chk.tg.need !== 'foe') continue;
+        const foe = pickFoe(m, h, chk.tg.options);
+        if (!foe || foe.shield >= strike.dmg()) continue;
+        if (T.useVehicleCard(m, h, c.id, { target: foe.uid }).ok) return true;
+      }
+      if (!goal) return false;
+      const cur = d(h.pos, goal.node);
+      // beside the goal: out onto it (or beside it), to work it on foot
+      const outs = T.leaveOptions(m, h);
+      if (cur <= 1 && outs.length) {
+        const spot =
+          outs.includes(goal.node) && goal.needOn
+            ? goal.node
+            : outs.sort((a, b) => d(a, goal.node) - d(b, goal.node) || a - b)[0];
+        if (d(spot, goal.node) <= (goal.needOn ? 0 : 1) && T.leave(m, h, spot).ok) return true;
+      }
+      if (v.driver === h.uid) {
+        // drive to a space beside the goal (or as near as it gets): never onto it, a post is worked on foot
+        const opts = T.driveOptions(m, h).filter((n) => n !== goal.node);
+        const score = (n) => Math.max(1, d(n, goal.node));
+        const best = opts.sort((a, b) => score(a) - score(b) || a - b)[0];
+        if (best != null && score(best) < Math.max(1, cur) && T.drive(m, h, best).ok) return true;
+      }
+      // a passenger beside the goal, or a driver who can get no nearer: out, if the goal is a step or two away
+      if (outs.length && cur <= 2) {
+        const spot = outs.sort((a, b) => d(a, goal.node) - d(b, goal.node) || a - b)[0];
+        if (d(spot, goal.node) < cur && T.leave(m, h, spot).ok) return true;
+      }
+      return false;
+    }
+    // on foot: back into a vehicle beside you when the goal is far
+    if (goal && d(h.pos, goal.node) > 2) {
+      const mine = T.boardOptions(m, h).sort(
+        (a, b) =>
+          (m.vehicles.find((v) => v.uid === b).owner === m.heroes.indexOf(h)) -
+          (m.vehicles.find((v) => v.uid === a).owner === m.heroes.indexOf(h)),
+      )[0];
+      if (mine != null && T.apValue(h) >= 2 && T.board(m, h, mine).ok) return true;
     }
     return false;
   }
@@ -562,6 +621,8 @@
           T.rally(m, h);
           continue;
         }
+        // 1b. a vehicle: ride toward the objective, step out to work it
+        if (autoVehicle(m, h, objectiveGoal(m, h))) continue;
         // 2. interact
         const ob = m.objective;
         let didInteract = false;
@@ -670,7 +731,7 @@
               )[0];
               ctx.node = node;
               score = 1.5;
-            } else if (face.fx.some((x) => x.v === 'blink' || x.v === 'climb' || x.v === 'move')) {
+            } else if (face.fx.some((x) => x.v === 'blink' || x.v === 'move')) {
               const goal =
                 objectiveNode(m) ||
                 (T.liveEnemies(m)[0]

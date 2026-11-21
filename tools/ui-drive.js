@@ -161,6 +161,10 @@ async function driveRun(
         click('[data-act="evTrade"]');
         act('evSkipCard');
         if (!act('leaveEvent')) throw new Error('event screen would not continue');
+      } else if (U.screen === 'garage') {
+        // a Crossing: pick a vehicle for the first pilot, the rest take the page's suggestion, and set out
+        click('[data-act="pickVeh"]');
+        if (!act('setOut')) throw new Error('the garage would not set out');
       } else if (U.screen === 'summary') {
         break;
       } else {

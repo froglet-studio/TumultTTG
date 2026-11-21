@@ -25,7 +25,7 @@ Three lines share the keywords, and each is set by what it touches, how far it r
 - **How long.** For N rounds, or until it has sprung on as many units as it says (*the first foe to enter*
   is one).
 - **Who.** Its harm (Strike, Weaken, Anchor, Mark) falls on its side's foes, and its help (Hidden) on its own
-  side; a Reveal Field shows everything in it. Nothing off the ground (Hover, Weightless) is touched by a Field.
+  side; a Reveal Field shows everything in it. Nothing off the ground (Hover) is touched by a Field.
 - **A hazard is a Field of damage** that belongs to nobody: whoever ends the round on it takes the hazard's
   damage, Pierce.
 - **Cleanse the ground** within N clears hazards and foes' Fields there, never your own.
@@ -82,7 +82,7 @@ table).
 
 Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Push N** (away from it).
 
-**Weapons (2.102)** are the one way tech touches your strikes: a weapon's passive adds 1 to every strike of its
+**Weapons (2.105)** are the one way tech touches your strikes: a weapon's passive adds 1 to every strike of its
 reach (melee, or ranged) you make, and its Overcharge takes a banked Omni die for **Empowered** 2 on every such
 strike this round, stacking. It still never strikes on its own. Empower is the existing keyword (*Empowered N: the
 next strike, or strikes, deal N more*); a weapon adds no new one.
@@ -187,7 +187,7 @@ In code: the verb `cleanse` (`party`, `ward`, `field`); the state `StatusImmune`
 
 In code: the verb `reveal` (`radius`, `dur`, `target`, `nearest`, `findObjective`, `hintObjective`); the state `Located`.
 
-## Reroll, Draw and Mint: the dice (2.102)
+## Reroll, Draw and Mint: the dice (2.101)
 
 Three keywords for the dice, each a different thing a hand does at the table (Garrett, 2026-11-21: "reroll is
 great, and grabbing a specific die is great, but not a random one").
@@ -208,3 +208,54 @@ great, and grabbing a specific die is great, but not a random one").
 
 In code: the verbs `reroll` (`n`), `draw` (`face`, `n`; the engine kind `draw` each turn), `mint` (`face`, `n`,
 `target`); `T.drawKind`, `T.draw`, `T.mint`, `T.rerollHeld`.
+
+## Hover, and ignoring hazards (2.102)
+
+> **Hover N.** Off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you, and your
+> steps may take the ledges.
+>
+> **Ignore hazards N.** For N rounds a hazard does you no harm. You are still on the ground.
+
+- **Two keywords, two meanings** (Garrett, 2026-11-21: "we want thematic and each to hold their own distinct
+  meaning"). Ignoring hazards is the body shrugging the place off: gills, a coat, salt feet, shed heat. Hover is
+  being above it all, so Fields, pushes and pulls miss you too, and the ledges are open to your steps. The plan's
+  option of folding all 87 hazard faces into Hover was not taken: that would have handed every coat and gill the
+  ledges.
+- **Who hovers.** Fliers, not one element: the hummingbird, hawk, eagle, crane, egret, owl, pelican, seahorse and
+  the winged insects (Glide Wings, Migration). Their flying moves Hover for the round before they move, so a flight
+  can end on a ledge; a coat, a swim or a run still ignores hazards.
+- **Weightless is Hover.** It was Hover plus the ledges; now Hover has the ledges, so the word went. Hover no
+  longer mints 1 AP a turn: a keyword says one thing, and the ledges are what it gained.
+
+In code: the verb `hover` (`dur`), the state `Hover` (an older save's `Weightless` reads as Hover); a face whose
+`hover` comes before its `move` is offered the ledges (`T.reachableWalk`'s `climb`). Ignoring hazards is the verb
+`hazardImmune` (`dur`, `party`), the state `HazardImmune`.
+
+## Move and Guide (2.103)
+
+> **Move N.** Step N spaces along the paths; foes block the way.
+>
+> **Guide N.** Move an ally up to N spaces along the paths, now, to a space you choose.
+
+A move can differ in one of a few ways, each a different choice on the board (Garrett, 2026-11-21: "more
+interesting movement choices are great as long as they are distinct"):
+
+| The move is… | What changes | Where it pays |
+|---|---|---|
+| **climbing** (Climb N) | the steps may take the ledges | the Vault's ledge, high ground over a fight |
+| **past foes** | the steps may pass through foes' spaces | slipping through a line, reaching the back |
+| **trampling** | through foes' spaces, and each foe in the way is pushed aside as you reach it | shoving a foe into a Field or hazard on the way past |
+| **exactly N** | the run is N steps, no fewer, never the same space twice | the cheetah's and hawk's sprint |
+| **toward** | up to N steps toward a unit, stopping beside it | closing on a foe, joining an ally |
+| **carrying an ally** | an ally beside where you set out comes along, onto a space beside where you stop | taking an ally up a ledge, out of a hazard |
+
+- **Climb is a Move.** The verb `climb` jumped to any space within N along every edge, ignoring the foes in the
+  way; now Climb N is a Move that may take the ledges, and foes block it as they block any walk.
+- **Guide, not Rally.** Moving an ally was the verb `rally`, the same word as the Rally action that raises a
+  downed ally. The action keeps the name; moving an ally is Guide.
+- **Hover** (2.102) and a climbing form (Reshape) let every step take the ledges for as long as they last.
+- Blink (leaving the paths) and Swap (trading places with an ally) stay their own verbs.
+
+In code: the verb `move` (`n`, `climb`, `ignoreFoes`, `trample`, `exact`, `toward`, `free`, `carryAlly`), the verb
+`guide` (`n`; targets `ally_move`, `ally_adj_move`). The target `node_climb` is gone: every Move targets
+`node_move`.

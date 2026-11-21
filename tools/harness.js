@@ -5,7 +5,7 @@
  */
 const loadTumult = require('./load');
 
-const ARCHETYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey', 'elite', 'boss'];
+const ARCHETYPES = ['swarm', 'vault', 'hidden', 'cascade', 'salvage', 'survey', 'elite', 'boss', 'crossing'];
 
 function createHarness(T = loadTumult()) {
   /** Pre-made heroes (indices into T.PREBUILTS), UP auto-spent: two, or a list of two to five. */
@@ -101,6 +101,8 @@ function createHarness(T = loadTumult()) {
       const node = run.map.all[id];
       out.lastRow = node.row;
       T.chooseNode(run, id);
+      // a big-map mission: every pilot brings the vehicle its page suggests (T.vehiclePicks)
+      if (run.phase === 'garage') T.leaveGarage(run);
       if (run.phase === 'mission') {
         if (viaSaves) {
           // two rounds in, with the squad's half of the third played: save, and resume from the save

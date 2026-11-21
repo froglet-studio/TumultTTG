@@ -80,8 +80,8 @@
     'The one ranged attack no other species does naturally.');
   C('human','hum_lang','Language','C',1,
     { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
-      fx:[{v:'rally', move:(P,E)=>1+P}],
-      txt:(P,E)=>`Call an ally up to ${1+P} nodes: you choose where they go, now.` },
+      fx:[{v:'guide', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Call an ally: Guide them ${1+P}, to a space you choose, now.` },
     { n:'Rally', ap:0, el:1, cd:3, dur:2, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>E>=2?2:1, uses:99, party:true, dur:2},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Party strikes +${E>=2?2:1} for 2 turns; foes adjacent to you are Weakened 1.` },
@@ -252,8 +252,8 @@
     'Consumed mass becomes etherions.');
   C('hopper','hop_swarm','Swarm Pheromone','C',1,
     { n:'Cue', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
-      fx:[{v:'empower', val:(P,E)=>1+P, uses:1, target:'ally'},{v:'rally', move:1}],
-      txt:(P,E)=>`Gregarious cue: an ally's next strike +${1+P}, and you step them 1 node where you choose.` },
+      fx:[{v:'empower', val:(P,E)=>1+P, uses:1, target:'ally'},{v:'guide', n:1}],
+      txt:(P,E)=>`Gregarious cue: an ally's next strike +${1+P}, and Guide them 1.` },
     { n:'Swarm Phase', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true},{v:'weaken', val:1, dur:1, area:'adjParty'}],
       txt:(P,E)=>`The swarm phase: all heroes mint 1 AP at the start of their turns for ${1+E} rounds; foes adjacent to any hero are Weakened 1.` },
@@ -264,7 +264,7 @@
       txt:(P,E)=>`Glide ${1+P}, over foes.` },
     { n:'Hover', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'hover', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`Hover-drift for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn.` },
+      txt:(P,E)=>`Hover-drift: Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).` },
     'Buzz the tegmina and drift.');
 
   /* ───────────────────────── 3 · BARN OWL (S/C) ───────────────────────── */
@@ -312,17 +312,17 @@
     { n:'Thermal Ride', ap:2, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>3+P}],
       txt:(P,E)=>`Ride a thermal ${3+P} nodes.` },
-    { n:'Updraft', ap:2, el:1, cd:3, dur:0, tgt:'node_climb',
-      fx:[{v:'climb', reach:(P,E)=>1+E, carryAlly:(P,E)=>E>=2}],
-      txt:(P,E)=>`Lift yourself onto any node within ${1+E} — height nodes included${E>=2?' — and carry an adjacent ally up with you':''}.` },
+    { n:'Updraft', ap:2, el:1, cd:3, dur:0, tgt:'node_move',
+      fx:[{v:'move', climb:true, n:(P,E)=>1+E, carryAlly:(P,E)=>E>=2}],
+      txt:(P,E)=>`Lift yourself ${1+E}, climbing${E>=2?', carrying an ally beside you':''}.` },
     'An updraft you create.');
   C('owl','owl_bones','Hollow Bones','M',0,
     { n:'Lighten', ap:1, el:0, cd:1, dur:1, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Move ${1+P}; hazards can't touch you this round.` },
     { n:'Weightless', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'weightless', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`Shed apparent weight for ${1+E} rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.` },
+      fx:[{v:'hover', dur:(P,E)=>1+E}],
+      txt:(P,E)=>`Shed apparent weight: Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).` },
     'So light you drift.');
   C('owl','owl_foresight','Binocular Foresight','T',0,
     { n:'Spot Threat', ap:0, el:0, cd:1, dur:0, tgt:'self',
@@ -417,9 +417,9 @@
 
   /* ───────────────────────── 5 · TOKAY GECKO (C/M) ───────────────────────── */
   C('gecko','gec_setae','Adhesive Setae','C',2,
-    { n:'Climb', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
-      fx:[{v:'climb', reach:(P,E)=>1+P}],
-      txt:(P,E)=>`Walk walls and ceilings: move ${1+P}, height nodes included.` },
+    { n:'Climb', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', climb:true, n:(P,E)=>1+P}],
+      txt:(P,E)=>`Walk walls and ceilings: move ${1+P}, climbing.` },
     { n:'Van der Waals', ap:0, el:1, cd:3, dur:0, tgt:'foe_los',
       fx:[{v:'force', kind:'pull', n:(P,E)=>1+E},{v:'anchor', who:'foe', dur:(P,E)=>E>=2?1:0}],
       txt:(P,E)=>`Command the molecular bond: pull a foe in your zone ${1+E} toward you${E>=2?' and Anchor it 1':''}.` },
@@ -625,8 +625,8 @@
       fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Hold depth: Anchored (nothing moves you, your own steps included) and Shield ${1+P}.` },
     { n:'Hover-Anchor', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'hover', dur:(P,E)=>1+E, noAp:true},{v:'anchor', who:'ally', dur:(P,E)=>E>=2?1+E:0, adjacent:true}],
-      txt:(P,E)=>`Alter your weight for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you${E>=2?'; an adjacent ally is anchored too':''}.` },
+      fx:[{v:'hover', dur:(P,E)=>1+E},{v:'anchor', who:'ally', dur:(P,E)=>E>=2?1+E:0, adjacent:true}],
+      txt:(P,E)=>`Alter your weight: Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges)${E>=2?'; an adjacent ally is Anchored too':''}.` },
     'Rise, sink, or hold.');
   C('eel','eel_galvanic','Galvanic Counterstrike','C',0,
     { n:'Static', ap:1, el:0, cd:1, dur:0, tgt:'self',
