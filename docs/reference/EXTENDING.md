@@ -7,7 +7,7 @@ The game ships as one HTML file built from a handful of plain scripts; everythin
 | file | role |
 |---|---|
 | `src/data/cards.js` | the 99 trait cards — two faces each, P/E formulas as functions, verb recipes |
-| `src/data/world.js` | rules constants, zones, gear, consumables, boons, bestiary, events, pre-made heroes, flavor |
+| `src/data/world.js` | rules constants, zones, gear, bestiary, events, pre-made heroes, flavor |
 | `src/engine/generators.js` | board generators, mission archetypes (titles, blurbs, generators), the Tide Map |
 | `src/engine/engine.js` | dice economy, track, damage pipeline, the verbs (`T.applyEffect`), movement and force, reveal, Fields and decoys, objectives, hazards, round structure |
 | `src/engine/ai.js` | enemy intent selection and execution per policy; the heuristic hero autoplayer |
@@ -55,9 +55,9 @@ Add a bestiary entry in `T.ENEMIES` (hp/dmg arrays by tier, speed, shield, hidde
 
 Add a generator to `T.MISSIONS`: build a board with `boardFor(rng, page, cols, rows)` (the atlas page it is played on, or a grid when there is none; + `addHeight`), place things by their space names through `b.at['c,r']` (column A–E = 0–4, row 1–3 = 0–2), place `starts`, `enemies`, special nodes (`objective`, `spawn`, `hazard`), and return `{board, starts, enemies, objective, clock, spawns, hazardSpread, bonus}`. The entry itself also needs `title` (an array of names to pick from — `T.launchMission` throws without it) and `blurb`. Objective kinds the engine resolves: `hold`, `vault` (+lever/ramp), `find` (caches), `valve`, `kill`. New kinds need a branch in `doInteract`/`roundEnd`/`checkEnd`. Then add the archetype to `genTideMap`'s row tables, to the UI's `NODE_ICON/NODE_NAME`, and to `ARCHETYPES` in `tools/harness.js` so the simulators and tests cover it.
 
-## Adding gear, boons, events
+## Adding gear and events
 
-Gear: an entry in `T.GEAR` with two abilities using the same verb recipes (costs in ◇, own `cd`). Boons: an entry in `T.BOONS` with a `hook` from `T.BOON_HOOKS` (`src/engine/engine.js` lists them and what each `val` means). The engine acts on the hook and the value, never on the id, so a new boon on an existing hook is one line of data and changing a `val` changes the game; only a new kind of hook needs engine code. `test/boons.test.js` checks every boon, and that its text carries its number. Events: an entry in `T.EVENTS` with options whose `fx` keys the run layer already understands (`crystals`, `up`, `healAll`, `damageOne`, `nextElite`, `skipNext`, `bossBonusHp`, `boon`, `boonRandom`, `affinityRandom`, `audit`, `respec`, `cardPick`, `tradeCard`).
+Gear (ethereal technology, `docs/reference/KEYWORDS.md`): an entry in `T.GEAR` with two abilities using the same verb recipes (costs in ◇, own `cd`) and one `passive` with a `hook` from `T.BOON_HOOKS` (`src/engine/engine.js` lists them and what each `val` means) and the sentence a player reads. The engine acts on the hook and the value, never on the id, so a new passive on an existing hook is one line of data and changing a `val` changes the game; only a new kind of hook needs engine code. Gear never strikes a unit directly: a gear strike goes through a Field (`test/boons.test.js`). Boons and consumables were folded into gear in 2.89; `T.BOONS` and `T.CONSUMABLES` stay, empty, so older saves load. Events: an entry in `T.EVENTS` with options whose `fx` keys the run layer already understands (`crystals`, `up`, `healAll`, `damageOne`, `nextElite`, `skipNext`, `bossBonusHp`, `audit`, `respec`, `cardPick`, `tradeCard`).
 
 ## Where to take it next
 

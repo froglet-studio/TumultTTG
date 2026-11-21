@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.88.1',
+    version: '2.89.0',
     items: [
+      {
+        text: 'Boons and consumables are gone: their jobs are on gear now. Every piece of gear has a passive, always on while you wear it (the Aegis Plate gives +1 to every Shield, the Scope reaches further, the Medkit gets you up once a mission), and two actives you pay for in ◇ (the Medkit heals 6, the Chrono-shim buys 2 rounds of clock). The Grapnel is now a Winch and the Harpoon Gun a Turret: both lay Fields instead of hitting directly. Elites pay in crystals instead of a boon. Do you miss choosing a boon after an elite? Does a haven shop with passives make the choice of gear more interesting?',
+      },
       {
         text: 'Decoys that stay where you are now really appear: Very Convincing (Play Dead), A Thousand Pink, Rainbow, Swarm (Bloom) and Door Stone (Burrow) used to leave nothing, because you were still standing there. Now the decoy shares your space (a small token at its edge) and keeps it when you leave. Do foes go for it the way the card says?',
         cards: ['opo_dead', 'fla_pink', 'msh_burrow'],

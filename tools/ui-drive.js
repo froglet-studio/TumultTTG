@@ -143,7 +143,6 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40, tide = 'ri
       } else if (U.screen === 'reward') {
         // each pilot chooses their own upgrade: keep choosing until no choice is left
         for (let k = 0; k < 8; k++) {
-          if (click('[data-act="takeBoon"]')) continue;
           if (click('[data-act="takeCard"]:not([disabled])')) continue;
           if (!click('[data-act="skipCard"]')) break;
         }
@@ -151,7 +150,6 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40, tide = 'ri
       } else if (U.screen === 'haven') {
         act('rest', 'half');
         click('[data-act="buyGear"]:not([disabled])');
-        click('[data-act="buyCons"]:not([disabled])');
         act('leaveHaven');
       } else if (U.screen === 'event') {
         click('[data-act="eventOpt"]:not([disabled])');

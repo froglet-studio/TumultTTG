@@ -239,8 +239,6 @@
         if (card && T.DICE[card.el] && T.heroE(h, cid) >= R().ETHEREAL_MIN_E && set.length < R().POOL)
           set.push(card.el);
       }
-    // Boons that give a die (the Affinities, Omni Core) swap a plain die each, after the cards'.
-    for (const k of T.boonVals(h, 'die')) if (T.DICE[k] && set.length < R().POOL) set.push(k);
     while (set.length < R().POOL) set.push('plain');
     return set;
   };
@@ -267,37 +265,28 @@
     });
     return left;
   };
-  T.heroFaces = function (h) {
-    // Affinity boons re-face one AP side of the plain die each
-    const faces = R().FACES.slice();
-    (h.boons || []).forEach((b) => {
-      const bo = T.BOON_BY[b];
-      if (bo && bo.hook === 'face') {
-        const i = faces.lastIndexOf('AP');
-        if (i >= 0) faces[i] = bo.val;
-      }
-    });
-    return faces;
-  };
-  // Boons are wired by hook, never by id: the engine asks for the values a hero's boons
-  // hang on a hook and acts on those, so the table in src/data/world.js is the whole truth.
+  T.heroFaces = () => R().FACES.slice();
+  // Passives are wired by hook, never by id: the engine asks for the values a hero's gear hangs on a hook and acts
+  // on those, so the gear table in src/data/world.js is the whole truth. Gear passives carry what boons did (2.89);
+  // a boon on an older save still counts until its migration refunds it.
   T.BOON_HOOKS = [
-    'face', // val: the die face one AP side of the plain die becomes
-    'die', // val: a key of T.DICE — one plain die in the holder's pool becomes that die (2.29)
     'missionStart', // val: { bank: face } — one die already banked as that face
     'roundStart', // val: { round, hasten } — the track slides extra columns as that round starts
     'shieldBonus', // val: added to every Shield the holder gains
     'keen', // val: added to the reach of the holder's reveals; Hidden foes beside them are seen at round start
-    'reward', // val: { crystals, up } — added to every mission's rewards
-    'autoRevive', // val: hp the holder rises with, once per run, instead of going down
-    'firstStrike', // val: added to the holder's first strike each round
+    'autoRevive', // val: hp the holder rises with, once a mission, instead of going down
     'noPull', // the holder cannot be pulled
-    'vsElite', // val: added to the holder's damage against elites and the boss
+    'blinkReach', // val: added to the reach of the holder's blinks
+    'spot', // val: as the holder's turn begins, the nearest foe within that many steps is Marked
+    'fieldDur', // val: added to the rounds of every Field the holder lays that has rounds
+    'fieldForce', // val: added to every push and pull of the holder's Fields
   ];
   T.boonVals = function (h, hook) {
-    if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown boon hook ' + hook);
-    return (h.boons || [])
-      .map((id) => T.BOON_BY[id])
+    if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown passive hook ' + hook);
+    const gear = (h.gear || []).map((g) => T.GEAR_BY[g.id] && T.GEAR_BY[g.id].passive);
+    const boons = (h.boons || []).map((id) => T.BOON_BY[id]);
+    return gear
+      .concat(boons)
       .filter((b) => b && b.hook === hook)
       .map((b) => b.val);
   };
@@ -817,10 +806,8 @@
       if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
       if (opts.strike) {
         const flags = source.roundFlags || (source.roundFlags = {});
-        if (!flags.struck) dmg += boonSum(source, 'firstStrike');
         flags.struck = true;
       }
-      if (target.elite || target.boss) dmg += boonSum(source, 'vsElite');
       if (ts.Studied) dmg += ts.Studied.n;
       if (ts.Marked) {
         dmg += 2;
@@ -1151,6 +1138,8 @@
    * Weightless) is touched by one.
    */
   const FIELD_HELPS = { hidden: true };
+  // the Fields springing now (a Field that pulls a unit across its own spaces does not spring again on the way)
+  const SPRINGING = new Set();
   function fieldNodes(m, f) {
     if (f.around == null) return f.nodes || [];
     const u = heroBy(m, f.around);
@@ -1191,6 +1180,16 @@
         if (x.noTele) st(u).NoTele = { t };
       } else if (x.kw === 'mark') st(u).Marked = {};
       else if (x.kw === 'hidden') setHidden(m, u, t, false);
+      else if ((x.kw === 'pull' || x.kw === 'push') && owner && !SPRINGING.has(f)) {
+        const n = x.n + boonSum(owner, 'fieldForce');
+        SPRINGING.add(f);
+        try {
+          if (x.kw === 'pull') pullToward(m, owner, u, n);
+          else pushAway(m, owner, u, n);
+        } finally {
+          SPRINGING.delete(f);
+        }
+      }
       if (u.kind === 'enemy' ? !u.alive : u.downed) break;
     }
     if (hit && f.trips != null) f.trips--;
@@ -1356,7 +1355,7 @@
       }
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'teleport');
-        const r = num(tp.reach, P, E);
+        const r = num(tp.reach, P, E) + boonSum(h, 'blinkReach');
         let opts = B.within(bd, h.pos, r, true).filter((n) => !T.occupied(m, n) && (tp.height || !bd.nodes[n].height));
         if (tp.dest === 'adjTarget')
           return {
@@ -1679,7 +1678,7 @@
       }
       case 'teleport': {
         if (actor.kind !== 'hero') break;
-        const r = num(f.reach, P, E);
+        const r = num(f.reach, P, E) + boonSum(actor, 'blinkReach');
         let dest = ctx.node;
         if (f.dest === 'adjTarget') {
           const t = targetEnt(m, ctx);
@@ -2177,7 +2176,7 @@
           ring: !!f.ring,
           on: f.on || 'end',
           trips: f.trips != null ? num(f.trips, P, E) : null,
-          t: f.dur != null ? num(f.dur, P, E) : null,
+          t: f.dur != null ? num(f.dur, P, E) + (actor.kind === 'hero' ? boonSum(actor, 'fieldDur') : 0) : null,
           owner: actor.uid,
           side: actor.kind === 'enemy' ? 'enemy' : 'hero',
           label: f.label || null,
@@ -2189,7 +2188,7 @@
               if (x.noTele) o.noTele = true;
               return o;
             })
-            .filter((x) => (['strike', 'weaken'].includes(x.kw) ? x.n > 0 : x.t > 0)),
+            .filter((x) => (['strike', 'weaken', 'pull', 'push'].includes(x.kw) ? x.n > 0 : x.t > 0)),
         };
         m.fields.push(fl);
         if (fl.fx.some((x) => x.kw === 'reveal')) revealArea(m, actor, nodes ? nodes[0] : actor.pos, radius, 1);
@@ -2603,6 +2602,16 @@
     if (T.boonVals(h, 'keen').length)
       for (const e of T.liveEnemies(m))
         if (isHidden(e) && B.adjacent(m.board, h.pos, e.pos)) breakHidden(m, e, 'keen sense');
+    // a lantern spots the nearest foe
+    for (const r of T.boonVals(h, 'spot')) {
+      const near = T.liveEnemies(m)
+        .filter((e) => !isHidden(e) && B.dist(m.board, h.pos, e.pos, true) <= r)
+        .sort((a, b) => B.dist(m.board, h.pos, a.pos, true) - B.dist(m.board, h.pos, b.pos, true) || a.uid - b.uid)[0];
+      if (near && !st(near).Marked) {
+        st(near).Marked = {};
+        fx(m, { t: 'state', ent: near.uid, name: 'Marked' });
+      }
+    }
   };
 
   /**
@@ -2855,11 +2864,13 @@
           ? `Weakened ${x.n}`
           : x.kw === 'anchor'
             ? `Anchored ${x.t}${x.noTele ? ', no blinking out' : ''}`
-            : x.kw === 'mark'
-              ? 'Marked'
-              : x.kw === 'hidden'
-                ? 'Hidden (your side)'
-                : 'Revealed';
+            : x.kw === 'pull' || x.kw === 'push'
+              ? `${x.kw === 'pull' ? 'pulled' : 'pushed'} ${x.n} ${x.kw === 'pull' ? 'toward' : 'away from'} its owner`
+              : x.kw === 'mark'
+                ? 'Marked'
+                : x.kw === 'hidden'
+                  ? 'Hidden (your side)'
+                  : 'Revealed';
     const who =
       f.trips === 1 ? 'the first foe to ' : f.trips != null ? `the next ${f.trips} foes to ` : 'every foe that ';
     const when = f.on === 'enter' ? 'enters' : 'ends the round here';

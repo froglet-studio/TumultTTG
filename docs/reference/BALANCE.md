@@ -460,3 +460,19 @@ Seven Charge faces Link their target to the nearest foe; Redirect and the chain 
 ## v2.88.0 — Wound
 
 Damage over time became Wound N (N at round end, then one less). Same seeds, 2.87.0 → 2.88.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 19 of 40, mission wins unchanged (69%, 87%); `80 runs --player strong` 38 → 40; `120 runs --player weak` 10 → 10. With Wounds adding up it measured 41 of 80 and 12 of 120, so a new Wound replaces a smaller one instead. Within the noise, so nothing is retuned.
+
+## v2.89.0 — boons and consumables fold into gear
+
+Every gear has a passive (what boons did) and two actives (what consumables did); the Grapnel and the Harpoon Gun lay Fields (Winch, Turret). The hope was that vitality could come down from 145%; it cannot. Same seeds, 2.88.0 → 2.89.0:
+
+| foe vitality | `80 runs --player strong` | `120 runs --player weak` |
+|---|---|---|
+| 2.88.0 at 145% | 40 | 10 |
+| 2.89.0 at 145%, first passives | 40 | 13 |
+| 2.89.0 at 140% | 50 | 14 |
+| 2.89.0 at 135% | 47 | 16 |
+| 2.89.0 at 130% | 56 | 15 |
+| **2.89.0 at 145%, as shipped** | **38** | **11** |
+| 2.89.0 at 148% | 44 | 15 |
+
+The weak player's mission wins (`40 missions --player weak`, averaged over the cells): 74.9% on 2.85, 77.3% with the first passives, 75.0% with no passives at all. Removing one passive at a time, only the Capacitor's banked Omni (−1.0) and the Lantern's Mark within 2 (−1.2) moved it, so the Capacitor banks an AP and the Lantern Marks a foe beside you (76.1%). Why vitality cannot come down: boons came only at tier 3 in the simulated kits, while every simulated squad wears gear from tier 2, and now every piece of gear carries a passive. `node tools/sim.js 40` as shipped: runs 3 → 6 and 19 → 21 of 40, mission wins 69% → 70% and 87% → 88%. The 148% row shows the noise: two standard errors on 80 runs is about ±9.

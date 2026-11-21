@@ -41,7 +41,7 @@ Each purpose has a stream of its own, so what one draws never moves another:
 |---|---|---|
 | `squad` | `run.rngs` | draft packs, hero ids, the kit `T.addProgression` hands out |
 | `map` | `run.rngs` | the Tide Map |
-| `loot` | `run.rngs` | card and boon offers, haven stock |
+| `loot` | `run.rngs` | card offers, haven stock |
 | `event` | `run.rngs` | which event, and the random picks inside one |
 | `story` | `run.rngs` | the passages between stops: who speaks, which lines, which scene (`src/engine/story.js`) |
 | `expedition` | `run.rngs` | the run's expedition: patron, threat, the order, names and paintings of its legs (`T.newExpedition`) |
@@ -92,5 +92,8 @@ The browser saves to `localStorage` (`tumult_v2_run`) after every action in a mi
 | 17 | 2.76.0 | a hero may carry `level` (as it set out), `madeId` (the made recipe it is) and `runs` (expeditions flown); a mission may carry `foeHp` (its foes' vitality in percent, when the squad scales it). All optional: a version-16 save has two new pilots and needs nothing added (fixture `save-2.75.json`) |
 | 18 | 2.81.0 | the party has `active` (the seat taking its turn now, or null) and `rounds` (`'turns'` or `'live'`); a hero may carry `rolledAhead` (it rolled next round's dice as its player's turn ended). A version-17 save takes turns, is between them, and has rolled nothing ahead (fixture `save-2.80.json`) |
 | 19 | 2.82.0 | a hero may carry `rollPick`, the kinds of dice its player chose for its next roll (up to `ROLL`). Optional: a version-18 pilot has chosen none and draws at random (fixture `save-2.81.json`) |
+| 20 | 2.86.0 | a mission keeps `fields` (Field, `docs/reference/KEYWORDS.md`) in place of `traps` and `zones`, and a hero no longer carries `AmbushTrap` or `Auras`: each snare, zone, trigger and aura of a version-19 save becomes a Field (fixture `save-2.85.json`) |
+| 21 | 2.88.0 | a unit carries `Wound` (`{ n, owner, heal, kind }`) in place of `Dots`; a version-20 foe's damage over time becomes one Wound dealing about as much (fixture `save-2.87.json`) |
+| 22 | 2.89.0 | boons and consumables are folded into gear: a version-21 pilot's boons are refunded at 3 ◇ each and its consumables at their price, and an elite's boon offer is passed (fixture `save-2.88.json`) |
 
 A version-1 save still loads: it returns to the map (2.0 never kept a mission), its streams start from the seed, and the map is rebuilt from the copy of each node that 2.0 kept up to date. A save from a newer version than the game is refused rather than guessed at.

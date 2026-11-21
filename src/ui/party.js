@@ -30,7 +30,7 @@
   ]);
   // choices that change nothing on the board, open to a player whoever's turn it is
   const ANYTIME = new Set(['rollPick']);
-  const HERO_SECOND = new Set(['takeCard', 'swapPick', 'swapDrop', 'takeBoon', 'buyGear', 'buyCons', 'evTakeCard']);
+  const HERO_SECOND = new Set(['takeCard', 'swapPick', 'swapDrop', 'buyGear', 'evTakeCard']);
   // the squad's shared choices: the host makes them
   const LEAD = new Set([
     'goNode',
