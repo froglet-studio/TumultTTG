@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.98.0 — 2026-11-21 — Reveal; Lane cut
+
+The twelfth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Reveal.** Everything within N is shown, and a Revealed foe cannot be Hidden while it lasts and a zone strike finds it. One verb for both: an area Reveal around you, or one foe (`target`, `nearest`) Revealed for N rounds, which is what `locate` did on 28 faces; their texts say Revealed.
+- **Cut: Lane.** Lanes were retired by zones in 2.18 but kept a tooltip; the three faces that still said *Lane strike* say *Zone strike*, which is what they did.
+- **The board names states by their keyword.** A pilot's chips, a foe's tooltip and the floating words say *Shield (next hit)*, *Revealed*, *Cleansed* and *Weakened* where the engine's older names (Preempt, Located, StatusImmune, Weak) showed through (`T.UI.stateName`).
+- No rule or save change (the state is still `Located`, shown as Revealed). The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
 ## 2.97.0 — 2026-11-21 — Cleanse
 
 The eleventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
