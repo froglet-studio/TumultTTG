@@ -104,7 +104,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Counterbalance Tail** · Mass · `jer_tail`
 
 - *Phys — Redirect* · 1 AP · CD 1 · Dur 1 — Plant yourself: immune to push/pull and Shield 1 this round. *(P3: Plant yourself: immune to push/pull and Shield 4 this round.)*
-- *Eth — Deflect* · 2 AP + 1 Mass · CD 3 · Dur 2 — Shield 1 this round, and the next melee or force against you is turned back: attacker takes 3 and is pushed 1. Dur 2. *(P3/E3: Shield 3 this round, and the next melee or force against you is turned back: attacker takes 5 and is pushed 1. Dur 2.)*
+- *Eth — Deflect* · 2 AP + 1 Mass · CD 3 · Dur 2 — Shield 1 this round, and Thorns: the next foe to hit you in melee takes 3 and is pushed 1. Dur 2. *(P3/E3: Shield 3 this round, and Thorns: the next foe to hit you in melee takes 5 and is pushed 1. Dur 2.)*
 
 ## 2 · Red-Legged Grasshopper — leans M/C
 
@@ -1265,7 +1265,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Loose Hide** · Time · `bad_hide`
 
 - *Phys — Twist Free* · 1 AP · CD 1 — Shake off Anchored and Weakened; the next hit on you is 1 less, and you bite back for 1. *(P3: Shake off Anchored and Weakened; the next hit on you is 2 less, and you bite back for 1.)*
-- *Eth — Loose Skin* · 1 AP + 1 Time · CD 3 — Hold a turn-and-bite ready: the next foe to hit you in melee takes 3, and that hit is 2 less. *(P3/E3: Hold a turn-and-bite ready: the next foe to hit you in melee takes 5, and that hit is 2 less.)*
+- *Eth — Loose Skin* · 1 AP + 1 Time · CD 3 — Hold a turn-and-bite ready: Thorns: the next foe to hit you in melee takes 3, and that hit is 2 less. *(P3/E3: Hold a turn-and-bite ready: Thorns: the next foe to hit you in melee takes 5, and that hit is 2 less.)*
 
 **Bee Raid** · Charge · `bad_bee`
 
@@ -1490,7 +1490,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Ring** · Time · `hoof_ring`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
-- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -1539,7 +1539,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Ring** · Time · `hoof_ring`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
-- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -1588,7 +1588,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Ring** · Time · `hoof_ring`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
-- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -1637,7 +1637,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Ring** · Time · `hoof_ring`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
-- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -1672,7 +1672,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Curled Horns** · Time · `ram_curl`
 
 - *Phys — Brace* · 1 AP · CD 1 — The next hit on you is 2 less, and its attacker takes 1. *(P3: The next hit on you is 3 less, and its attacker takes 1.)*
-- *Eth — Hard Head* · 1 AP + 1 Time · CD 4 — Shield 2 this round; for 2 rounds, the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Shield 2 this round; for 2 rounds, the next foe to hit you in melee takes 5 and is pushed 1.)*
+- *Eth — Hard Head* · 1 AP + 1 Time · CD 4 — Shield 2 this round; for 2 rounds, Thorns: the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Shield 2 this round; for 2 rounds, Thorns: the next foe to hit you in melee takes 5 and is pushed 1.)*
 
 ## 34 · Moose — leans M/C
 
@@ -1686,7 +1686,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Ring** · Time · `hoof_ring`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
-- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -1716,7 +1716,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Bellow** · Charge · `moo_bellow`
 
 - *Phys — Grunt* · 1 AP · CD 1 — Every foe within 2 is Weakened 1 for 1 round. *(P3: Every foe within 2 is Weakened 1 for 2 rounds.)*
-- *Eth — Rut Call* · 1 AP + 1 Charge · CD 4 — Every foe within 3 is drawn 1 toward you; the next to hit you in melee takes 2 and is pushed 1. *(P3/E3: Every foe within 5 is drawn 1 toward you; the next to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Rut Call* · 1 AP + 1 Charge · CD 4 — Every foe within 3 is drawn 1 toward you; Thorns: the next to hit you in melee takes 2 and is pushed 1. *(P3/E3: Every foe within 5 is drawn 1 toward you; Thorns: the next to hit you in melee takes 4 and is pushed 1.)*
 
 **Stand Ground** · Mass · `moo_stand`
 
@@ -1735,7 +1735,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Ring** · Time · `hoof_ring`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
-- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -1784,7 +1784,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Ring** · Time · `hoof_ring`
 
 - *Phys — Close Ranks* · 1 AP · CD 1 — You and an ally beside you hold Shield 2 this round. *(P3: You and an ally beside you hold Shield 3 this round.)*
-- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Ring of Horns* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 this round; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 this round; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -1901,7 +1901,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Back Turn** · Time · `por_back`
 
-- *Phys — Turn Away* · 1 AP · CD 1 — Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes 1. *(P3: Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes 4.)*
+- *Phys — Turn Away* · 1 AP · CD 1 — Turn your quills to the threat: the next hit on you is 1 less, and Thorns: the next foe to hit you in melee takes 1. *(P3: Turn your quills to the threat: the next hit on you is 1 less, and Thorns: the next foe to hit you in melee takes 4.)*
 - *Eth — Back into It* · 1 AP + 1 Time · CD 3 — Back into a foe beside you: it takes 4, is Weakened 1 for 2 rounds, and is Wounded 2. *(P3/E3: Back into a foe beside you: it takes 6, is Weakened 1 for 2 rounds, and is Wounded 2.)*
 
 **Quill Shed** · Mass · `por_shed`
@@ -2162,7 +2162,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ant Armour** · Charge · `pan_ants`
 
 - *Phys — Ant Bath* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time; Shield 1 this round, and heal 1. *(P3: Shed Anchored, Weakened and damage over time; Shield 2 this round, and heal 1.)*
-- *Eth — Stinging Shield* · 1 AP + 1 Charge · CD 4 — For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes 3. *(P3/E3: For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes 5.)*
+- *Eth — Stinging Shield* · 1 AP + 1 Charge · CD 4 — For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 3. *(P3/E3: For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 5.)*
 
 ## 44 · Hedgehog — leans T/M
 
@@ -2240,7 +2240,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Prop** · Time · `kan_prop`
 
 - *Phys — Prop* · 1 AP · CD 1 — Brace on your tail: Shield 2 this round, and nothing can push or pull you. *(P3: Brace on your tail: Shield 3 this round, and nothing can push or pull you.)*
-- *Eth — Five Legs* · 1 AP + 1 Time · CD 4 — For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes 5 and is pushed 1.)*
+- *Eth — Five Legs* · 1 AP + 1 Time · CD 4 — For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 5 and is pushed 1.)*
 
 **Mob Lead** · Charge · `kan_mob`
 
@@ -2406,7 +2406,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Nest Guard** · Time · `eag_nest`
 
-- *Phys — Over the Nest* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round, and the first foe to hit you in melee takes 1. *(P3: You and an ally beside you hold Shield 4 this round, and the first foe to hit you in melee takes 1.)*
+- *Phys — Over the Nest* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round, and Thorns: the first foe to hit you in melee takes 1. *(P3: You and an ally beside you hold Shield 4 this round, and Thorns: the first foe to hit you in melee takes 1.)*
 - *Eth — Eyrie* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 for 2 rounds and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Both heroes hold Shield 4 for 2 rounds and heal 1 at the start of each turn for 2 rounds.)*
 
 ## 49 · Red-tailed Hawk — leans S/M
@@ -2892,7 +2892,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ground Nest** · Time · `boo_nest`
 
 - *Phys — Ring of Guano* · 1 AP · CD 1 — Sit tight on the nest: Shield 2 this round, and nothing can push or pull you. *(P3: Sit tight on the nest: Shield 3 this round, and nothing can push or pull you.)*
-- *Eth — Hold the Nest* · 1 AP + 1 Time · CD 4 — Shield 1 for 2 rounds, and the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Shield 2 for 2 rounds, and the next foe to hit you in melee takes 5 and is pushed 1.)*
+- *Eth — Hold the Nest* · 1 AP + 1 Time · CD 4 — Shield 1 for 2 rounds, and Thorns: the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Shield 2 for 2 rounds, and Thorns: the next foe to hit you in melee takes 5 and is pushed 1.)*
 
 **Clumsy Charm** · Charge · `boo_charm`
 
@@ -3190,8 +3190,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Nest Ring** · Time · `ost_nest`
 
-- *Phys — Guard the Ring* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round, and the first foe to hit you in melee takes 1. *(P3: You and an ally beside you hold Shield 4 this round, and the first foe to hit you in melee takes 2.)*
-- *Eth — Shared Nest* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 for 2 rounds and heal 1; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 for 2 rounds and heal 1; the next foe to hit you in melee takes 2 and is pushed 1.)*
+- *Phys — Guard the Ring* · 1 AP · CD 1 — You and an ally beside you hold Shield 1 this round, and Thorns: the first foe to hit you in melee takes 1. *(P3: You and an ally beside you hold Shield 4 this round, and Thorns: the first foe to hit you in melee takes 2.)*
+- *Eth — Shared Nest* · 1 AP + 1 Time · CD 4 — Both heroes hold Shield 2 for 2 rounds and heal 1; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Both heroes hold Shield 4 for 2 rounds and heal 1; Thorns: the next foe to hit you in melee takes 2 and is pushed 1.)*
 
 ## 65 · Wild Turkey — leans C/T
 
@@ -3289,7 +3289,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Casque** · Mass · `cha_casque`
 
 - *Phys — Head Butt* · 1 AP · CD 1 — Butt with your helmet: melee 2, and push it 1. *(P3: Butt with your helmet: melee 5, and push it 1.)*
-- *Eth — Helmet Up* · 1 AP + 1 Mass · CD 3 — Shield 3 this round, and the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 5 this round, and the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — Helmet Up* · 1 AP + 1 Mass · CD 3 — Shield 3 this round, and Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 5 this round, and Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 ## 67 · Basilisk — leans S/M
 
@@ -3431,7 +3431,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Gape** · Time · `cro_gape`
 
 - *Phys — Gape* · 1 AP · CD 1 — Lie with your jaws wide in the sun: heal 1, hold Shield 1, and foes beside you are Weakened 1 at the sight. *(P3: Lie with your jaws wide in the sun: heal 1, hold Shield 2, and foes beside you are Weakened 1 at the sight.)*
-- *Eth — Open Wide* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; the next foe to hit you in melee takes 3. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; the next foe to hit you in melee takes 5.)*
+- *Eth — Open Wide* · 1 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; Thorns: the next foe to hit you in melee takes 3. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; Thorns: the next foe to hit you in melee takes 5.)*
 
 **River King** · Charge · `cro_king`
 
@@ -3465,7 +3465,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Shell** ★ · Mass · `tor_shell`
 
 - *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and you can't be Weakened or Anchored by a foe. *(P3: Shield 5 this round, and you can't be Weakened or Anchored by a foe.)*
-- *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Slow and Sure** · Time · `tor_sure`
 
@@ -3774,7 +3774,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Bony Plates** · Mass · `sea_plates`
 
 - *Phys — Plates* · 1 AP · CD 1 — Shield 2 this round, and the next hit on you is 1 less. *(P3: Shield 3 this round, and the next hit on you is 1 less.)*
-- *Eth — Armoured Ring* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds; the next foe to hit you in melee takes 2. *(P3/E3: Shield 5 for 2 rounds; the next foe to hit you in melee takes 4.)*
+- *Eth — Armoured Ring* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds; Thorns: the next foe to hit you in melee takes 2. *(P3/E3: Shield 5 for 2 rounds; Thorns: the next foe to hit you in melee takes 4.)*
 
 **Slow Fin** · Space · `sea_fin`
 
@@ -3803,7 +3803,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Shell** ★ · Mass · `tor_shell`
 
 - *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and you can't be Weakened or Anchored by a foe. *(P3: Shield 5 this round, and you can't be Weakened or Anchored by a foe.)*
-- *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Slime Trail** ★ · Time · `snl_slime`
 
@@ -3857,7 +3857,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Trailing Tentacles** · Mass · `jel_trail`
 
 - *Phys — Trail* · 1 AP · CD 1 — Let your tentacles hang: anything that hits you in melee this round takes 1. *(P3: Let your tentacles hang: anything that hits you in melee this round takes 4.)*
-- *Eth — Curtain* · 1 AP + 1 Mass · CD 3 — Spread a curtain of stings: for 2 rounds anything that hits you in melee takes 2, and the first to do so takes 2 more and is pushed 1. *(P3/E3: Spread a curtain of stings: for 2 rounds anything that hits you in melee takes 4, and the first to do so takes 4 more and is pushed 1.)*
+- *Eth — Curtain* · 1 AP + 1 Mass · CD 3 — Spread a curtain of stings: for 2 rounds anything that hits you in melee takes 2, and Thorns: the first to do so takes 2 more and is pushed 1. *(P3/E3: Spread a curtain of stings: for 2 rounds anything that hits you in melee takes 4, and Thorns: the first to do so takes 4 more and is pushed 1.)*
 
 **Bell Pulse** · Space · `jel_pulse`
 
@@ -3926,7 +3926,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Rock Den** · Mass · `lob_den`
 
 - *Phys — Back In* · 1 AP · CD 1 — Back into a crack: nothing can push or pull you this round, and the next hit on you is 1 less. *(P3: Back into a crack: nothing can push or pull you this round, and the next hit on you is 4 less.)*
-- *Eth — Hold the Den* · 1 AP + 1 Mass · CD 4 — Claws out at the door: for 2 rounds hold Shield 2 and nothing can push or pull you; the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Claws out at the door: for 2 rounds hold Shield 4 and nothing can push or pull you; the next foe to hit you in melee takes 5 and is pushed 1.)*
+- *Eth — Hold the Den* · 1 AP + 1 Mass · CD 4 — Claws out at the door: for 2 rounds hold Shield 2 and nothing can push or pull you; Thorns: the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Claws out at the door: for 2 rounds hold Shield 4 and nothing can push or pull you; Thorns: the next foe to hit you in melee takes 5 and is pushed 1.)*
 
 ## 80 · Mantis Shrimp — leans M/C
 
@@ -3974,8 +3974,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ritual Fight** · Mass · `msh_ritual`
 
-- *Phys — Square Up* · 1 AP · CD 1 — Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes 1. *(P3: Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes 4.)*
-- *Eth — Tail Shield* · 1 AP + 1 Mass · CD 3 — Take it on the tail plate: the next hit on you is 3 less and 1 of it bounces back; the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Take it on the tail plate: the next hit on you is 5 less and 3 of it bounces back; the next foe to hit you in melee takes 4 and is pushed 1.)*
+- *Phys — Square Up* · 1 AP · CD 1 — Raise your tail plate like a shield: Shield 1 this round, and Thorns: the next foe to hit you in melee within 2 rounds takes 1. *(P3: Raise your tail plate like a shield: Shield 1 this round, and Thorns: the next foe to hit you in melee within 2 rounds takes 4.)*
+- *Eth — Tail Shield* · 1 AP + 1 Mass · CD 3 — Take it on the tail plate: the next hit on you is 3 less and 1 of it bounces back; Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Take it on the tail plate: the next hit on you is 5 less and 3 of it bounces back; Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 ## 81 · Beetle — leans M/T
 

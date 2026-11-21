@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.92.0',
+    version: '2.93.0',
     items: [
+      {
+        text: 'Counter is now part of Thorns: a Thorns that lasts turns back every melee strike, and a next-hit Thorns turns back only the next one, sometimes with a push. The faces read "Thorns: the next foe to hit you in melee takes N". Is it clear on your pilot which kind you hold?',
+        cards: ['pan_ants', 'heh_anoint'],
+      },
       {
         text: 'Mark is now one keyword with a number: the next hit on a Marked foe deals that much more (2 unless the card says). Faces that used to Study a foe ("your hits on it deal +1 permanently") now Mark it for 3 rounds: +1 to every hit until it wears off, not for the whole mission. Exposed is a Pierce Mark: the next hit ignores Shield. Does the number on a Mark read clearly on the foe?',
         cards: ['che_tear', 'msh_colours'],

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.93.0 — 2026-11-21 — Thorns
+
+The seventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Thorns N.** Anything that strikes it in melee takes N, for as long as it lasts. A **next-hit Thorns** turns back only the next melee strike (and may push the striker): what Counter did. Both add up on that next hit (`thorns` with `val`, `dur`, `next`, `push`; state `Thorns` = `{ v, next, push, t }`).
+- **20 Counter faces** are next-hit Thorns, and their texts say Thorns.
+- **Saves** are version 25: a held Counter becomes a next-hit Thorns (fixture `save-2.92.json`).
+- **Balance.** Same seeds, 2.92.0 → 2.93.0: `80 runs --player strong` 39 → 39; `120 runs --player weak` 11 → 10; `node tools/sim.js 40` runs 6 → 5 and 21 → 21 of 40, mission wins unchanged (71%, 88%). Nothing is retuned.
+
 ## 2.92.0 — 2026-11-21 — Mark
 
 The sixth keyword of the sweep (`docs/reference/KEYWORDS.md`).
