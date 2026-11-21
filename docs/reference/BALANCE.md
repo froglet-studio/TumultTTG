@@ -439,3 +439,12 @@ Garrett, 2026-11-21: "the underpowered elemental abilities and the ones that ref
 - **84 that the look-ahead player hardly plays**: every Ethereal face with a census index under 0.25 (`node tools/census.js 4000` on 2.83.0, faces held at least 15 times; 93 of the 279 measured faces were under 0.25). Many are heal-over-time and hiding faces, which a careful squad near full health passes over (see 2.73), so this is a nudge, not a verdict.
 
 Not easier: `node tools/sim.js 80 runs --player strong`, 2.83.0 → 2.84.0, 43 → 42 of 80; `120 runs --player weak`, 12 → 13 of 120. `node tools/sim.js 40`: heuristic runs 3 → 2, look-ahead 20 → 16; mission wins 66% → 65% and 87% → 85%. Nothing is retuned.
+
+## v2.85.0 — big Ethereal faces, two and three etherions
+
+Garrett, 2026-11-21: "make some more powerful abilities that cost more elemental dice. simply so we don't need boons or consumables." Following the keyword plan he accepted (the big 2- and 3-etherion abilities are Ethereal faces, magic's line: range, other units, things that last), twelve Ethereal faces of the core bloodlines cost two or three etherions and do much more, mostly for no AP, with existing verbs. With one chosen element die a turn, a 3-etherion face is saved for across turns.
+
+- 2 etherions: Heavy Throw, Vacuum (now every foe within 1+E drawn in and Weakened), Resonance, Phase-tunnel, Fold-hop, Second Wind, Pre-empt.
+- 3 etherions: Immovable Hold, Tesla Cascade (1 AP), Override, Apex Form, Step Out of Time.
+
+Boons and consumables stay until the keyword migration makes them gear. `node tools/sim.js 80 runs --player strong`, 2.84.0 → 2.85 at 140%: 42 → 49 of 80; `120 runs --player weak`: 13 → 11. So every foe has **145%** of its listed vitality (was 140%): 39 of 80 and 10 of 120 (150%: 45 of 80, which is within the noise). `node tools/sim.js 40`, 2.84.0 → 2.85.0: runs 2 → 3 and 16 → 18; mission wins 65% → 69% and 85% → 86%.
