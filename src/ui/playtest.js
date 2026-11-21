@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.100.0',
+    version: '2.101.0',
     items: [
+      {
+        text: 'No die is ever drawn at random now: Draw takes a plain die while your pool has one, then the element die that shows the face most, and a roll with few plain dice left takes the element dice you hold most of. Did any Draw bank a die you did not expect?',
+      },
       {
         text: 'The mission screen, the draft and the route now follow the designs picked on the Frogma board. On a mission the board sits in a frame with the sea around it; ⛶ Full screen lets it fill the screen, and the foes’ plans and your hand become trays you can slide away. A Squad panel lists every pilot and, with friends, whose turn it is, who is done and who still has one to take. Taking turns at one screen, a cover goes over the board between turns and names who is up, so nobody sees the last hand. On a phone the foot of the screen is one sheet with tabs: Hand, Plans, Squad and Log. The draft fills your kit along the bottom as you pick, and the route reads like a climb: the Heart at the top, your next stops as big cards, the stops you passed below. Is anything you used often harder to find? Did the cover between turns ever get in the way?',
       },
