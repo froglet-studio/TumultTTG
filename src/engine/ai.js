@@ -551,12 +551,16 @@
     }
     return null;
   }
+  // The heuristic has never used gear: since 2.113 a gear ability with a cooldown is a card in the kit, and the
+  // heuristic leaves those cards alone, so it plays as it did and the balance tables keep their meaning. The
+  // look-ahead player plays them like any other card (src/engine/lookahead.js).
+  const heuristicPlays = (cid) => !(T.CARD[cid] && T.CARD[cid].gear);
   function tryMoveToward(m, h, goal) {
     // 1) movement faces (cheap, long), 2) plain walk. Returns true if progressed.
     const cur = B.dist(m.board, h.pos, goal.node, true);
     if (cur === 0 || (!goal.needOn && cur <= 1)) return false;
     let best = null;
-    for (const cid of h.cards)
+    for (const cid of h.cards.filter(heuristicPlays))
       for (const fk of T.faceKeys(cid)) {
         if (T.isPetCard(h, cid)) continue; // a pet's step moves the pet, not the pilot
         const card = T.CARD[cid],
@@ -720,7 +724,7 @@
         }
         // 4. best face
         let best = null;
-        for (const cid of h.cards) {
+        for (const cid of h.cards.filter(heuristicPlays)) {
           for (const fk of T.faceKeys(cid)) {
             const chk = T.canPlay(m, h, cid, fk);
             if (!chk.ok) continue;
