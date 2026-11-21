@@ -543,29 +543,29 @@
   }
 
   /**
-   * How the simulated players choose the dice of their next roll (T.setRollPick), as a careful player would:
-   * for each awakened card back in hand by then whose Ethereal face wants an etherion the bank cannot pay, a die
-   * of that element (two at most); the rest plain dice, for AP. A pilot with no element dice in its pool picks
-   * nothing and draws at random.
+   * How the simulated players choose the element die of their next roll (T.setRollPick), as a careful player
+   * would: the element of the first awakened card back in hand by then whose Ethereal face the bank cannot pay
+   * for; failing that, the element the most awakened cards in hand by then use. Omni Core's die only when no
+   * element die is left. Plain dice are never chosen: the rest of a roll is always plain.
    */
   T.autoRollPick = function (m, h) {
     if (!h || h.downed) return;
     const pool = T.poolDice(h);
-    const want = [];
+    const short = [];
+    const used = {};
     for (const cid of h.cards) {
       const card = T.CARD[cid];
       const f = card && card.E;
-      if (!f || !f.el || T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) continue;
+      if (!f || T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) continue;
       const t = h.track.find((x) => x.card === cid);
       if (t && t.left + (t.phase === 'dur' ? t.cd : 0) > 1) continue; // still cooling next round
       const el = f.elt || card.el;
-      const have = T.elCount(h, el) + T.omniCount(h) - want.filter((k) => k === el).length;
-      if (have >= f.el || !T.DICE[el]) continue;
-      if (want.length < 2 && pool.filter((k) => k === el).length > want.filter((k) => k === el).length) want.push(el);
+      if (!T.DICE[el] || !pool.includes(el)) continue;
+      used[el] = (used[el] || 0) + 1;
+      if (f.el && T.elCount(h, el) + T.omniCount(h) < f.el) short.push(el);
     }
-    const plains = pool.filter((k) => k === 'plain').length;
-    while (want.length < T.RULES.ROLL && want.filter((k) => k === 'plain').length < plains) want.push('plain');
-    T.setRollPick(h, want);
+    const most = Object.keys(used).sort((a, b) => used[b] - used[a])[0];
+    T.setRollPick(h, short[0] || most || []);
   };
   const pickAll = (m) => m.heroes.forEach((h) => !m.over && T.autoRollPick(m, h));
 

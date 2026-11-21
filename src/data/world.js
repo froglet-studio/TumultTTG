@@ -12,10 +12,11 @@
     VITALITY: 26,            // hero vitality
     POOL: 15,                // dice per hero — invariant
     ROLL: 4,                 // dice rolled per turn (4 since 2.29: Garrett, 2026-11-14)
+    ROLL_EL: 1,              // of them, element dice of the player's choice; the rest plain (2.83: Garrett, 2026-11-21)
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 130,             // foes' vitality, percent of the bestiary's
+    FOE_HP: 140,             // foes' vitality, percent of the bestiary's (140 since 2.83: the chosen element die)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally

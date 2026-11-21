@@ -600,35 +600,29 @@
       const special = Object.keys(T.DICE)
         .filter((k) => k !== 'plain' && n(k))
         .map((k) => `${n(k)} ${T.DICE[k].n} (d${T.DICE[k].sides})`);
-      return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn: the ones you choose under Next roll, the rest drawn at random from the pool; pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
+      return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn: ${T.RULES.ROLL - T.RULES.ROLL_EL} plain and ${T.RULES.ROLL_EL} element die of your choice (Next roll); pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
     };
-    // the dice of the next roll, chosen from the pilot's own (T.setRollPick): they stay chosen until changed
+    // the next roll: ROLL_EL element dice of the player's choice (T.setRollPick), the rest plain. The choice stays.
     const nextRoll = (x) => {
       if (x.downed || m.over) return '';
       const set = T.diceSet(x);
       const pool = T.poolDice(x);
-      const pick = x.rollPick || [];
-      const name = (k) => (k === 'plain' ? 'Plain die' : T.DICE[k].n);
-      const kinds = ['plain'].concat(Object.keys(T.DICE).filter((k) => k !== 'plain' && set.includes(k)));
+      const kinds = Object.keys(T.DICE).filter((k) => k !== 'plain' && set.includes(k));
+      if (!kinds.length) return '';
+      const now = T.rollPickNow(x);
       const count = (arr, k) => arr.filter((d) => d === k).length;
-      const col = (k) => `style="--c:${k === 'plain' ? 'var(--AP)' : (EL[k] || EL.O).color}"`;
-      const full = pick.length >= T.RULES.ROLL;
-      const add = kinds
+      const col = (k) => `style="--c:${(EL[k] || EL.O).color}"`;
+      const plains = Math.max(0, T.RULES.ROLL - now.length);
+      const opts = kinds
         .map((k) => {
-          const off = full || count(pick, k) >= count(set, k);
-          const face = k === 'plain' ? 'mostly AP' : `${EL[k] ? '4 ' + EL[k].name + ', no AP' : 'two of each'}`;
-          return `<button class="sm ghost rp-add" data-act="rollPick" data-arg="${i}|add|${k}" ${col(k)} ${off ? 'disabled' : ''} data-tip="${esc(`Roll a ${name(k)} (d${U.dieSides(k)}: ${face}) next. ${count(pool, k)} in your pool now.`)}">${U.dieSVG(k)}<span>+${count(pool, k)}</span></button>`;
+          const on = now.includes(k);
+          const face = EL[k] ? `four ${EL[k].name}, one each of the rest and Omni, no AP` : 'two of each symbol';
+          const left = count(pool, k);
+          return `<button class="sm ${on ? 'rp-pick' : 'ghost rp-add'}" data-act="rollPick" data-arg="${i}|${k}" ${col(k)} ${left ? '' : 'disabled'} data-tip="${esc(`Roll a ${T.DICE[k].n} (d${T.DICE[k].sides}: ${face}) next${on ? ' (chosen)' : ''}. ${left} in your pool now.`)}">${U.dieSVG(k)}<span>${left}</span></button>`;
         })
         .join('');
-      const chosen = pick
-        .map(
-          (k, j) =>
-            `<button class="sm rp-pick${pool.includes(k) ? '' : ' banked'}" data-act="rollPick" data-arg="${i}|del|${j}" ${col(k)} data-tip="${esc(`${name(k)} chosen for the next roll${count(T.rollPickNow(x), k) > count(pick.slice(0, j), k) ? '' : ': all of them are banked now, so a die is drawn at random in its place'}. Click to unchoose.`)}">${U.dieSVG(k)}</button>`,
-        )
-        .join('');
-      const rest = Math.max(0, T.RULES.ROLL - pick.length);
-      const tip = `Choose which dice you roll next, from your pool: plain d20s are mostly AP, an element's d8 has no AP but four of its etherion. Your choice stays until you change it${x.rolledAhead ? '. You have rolled for next round already: this is for the roll after' : ''}. Dice not chosen are drawn at random.`;
-      return `<div class="nextroll small" data-tip="${esc(tip)}"><span class="dim">Next roll</span>${chosen}${rest ? `<span class="dim">${pick.length ? '+ ' : ''}${rest} at random</span>` : ''}<span class="rp-adds">${add}</span>${pick.length ? `<button class="sm ghost" data-act="rollPick" data-arg="${i}|clear">Clear</button>` : ''}</div>`;
+      const tip = `Each turn you roll ${T.RULES.ROLL - T.RULES.ROLL_EL} plain d20s, mostly AP, and ${T.RULES.ROLL_EL} element die of your choice: four of its etherion, no AP. Your choice stays until you change it${x.rolledAhead ? '. You have rolled for next round already: this is for the roll after' : ''}.`;
+      return `<div class="nextroll small" data-tip="${esc(tip)}"><span class="dim">Next roll ${plains} ${U.dieSVG('plain')} +</span><span class="rp-adds">${opts}</span></div>`;
     };
     // dice lie as they fell: each a little turned, the same way each time it is drawn
     const tilt = (j) => `style="--r:${(((j * 37 + 11) % 13) - 6) * 2}deg"`;
@@ -1813,15 +1807,10 @@
         return true;
       }
       case 'rollPick': {
-        // choosing the next roll's dice: any time, on anyone's turn, for one's own pilot
-        const [hi, how, what] = String(arg).split('|');
-        const x = m.heroes[+hi];
-        if (!x) return true;
-        const pick = (x.rollPick || []).slice();
-        if (how === 'add') pick.push(what);
-        else if (how === 'del') pick.splice(+what, 1);
-        else if (how === 'clear') pick.length = 0;
-        if (U.exec({ op: 'rollPick', hero: +hi, kinds: pick }).ok !== false) U.sfx.click();
+        // choosing the next roll's element die: any time, on anyone's turn, for one's own pilot
+        const [hi, k] = String(arg).split('|');
+        if (!m.heroes[+hi]) return true;
+        if (U.exec({ op: 'rollPick', hero: +hi, kinds: [k] }).ok !== false) U.sfx.click();
         afterAction();
         return true;
       }

@@ -97,7 +97,7 @@ These are the game's rules; a story told alongside play, or about it, keeps them
 
 - Every pilot is human plus two **clades**, and holds at most ${R.MAX_PER_SPECIES} traits from any one clade, ${R.START_CARDS} to start and ${R.MAX_CARDS} at most.
 - Each trait has two faces. **Physical** (adaptation: what a body can do) costs action points only. **Ethereal** (magic, from etherions) costs action points and at least one etherion, and must be awakened before it can be used. **Technology** is gear, fuelled by omnicrystals.
-- A pilot's dice: a pool of ${R.POOL}, ${R.ROLL} rolled each turn. Faces are Mass, Charge, Space, Time, Omni (stands in for any etherion), and action points. The dice only pay for actions: an action does exactly what it says, with no roll to hit.
+- A pilot's dice: a pool of ${R.POOL}, ${R.ROLL} rolled each turn (${R.ROLL - R.ROLL_EL} plain, ${R.ROLL_EL} of an element the player chooses). Faces are Mass, Charge, Space, Time, Omni (stands in for any etherion), and action points. The dice only pay for actions: an action does exactly what it says, with no roll to hit.
 - Foes show what they will do before the pilots act, and pilots defend by acting first: there are no reactions or interrupts.
 - **No one loses a turn.** Control (rooting, pushing, slowing) costs position or efficiency; a controlled person still acts.
 - **No hard counters.** Nothing is beaten by exactly one ability, and no problem needs one particular ability to solve. Not every problem is a fight.

@@ -424,3 +424,9 @@ Averaged over the cells, the heuristic wins 79.5% → 78.4% and the look-ahead p
 - **Elite variance by kind.** Harriers punish squishy pairs; Bulwarks punish clumping; Tidecallers punish parties without anchors. Intended, but the boon reward should perhaps scale with which elite you drew.
 - **Per-card balance is first-pass.** All 198 faces fire without error; magnitudes follow the v1.0 formulas (base + P; capability scales with E). Likely hot cards: Tesla Cascade at E3 (3 chains), Resonance (lane-all), Swarm Phase (party AP engine), Cryptobiosis Tun (Shield 7 at P3). Likely cold: Cheek Caching, Threat Display Hiss, Rhizome Sprout. `npm run audit` (→ `ABILITY_AUDIT.md`) measures usage per face; see its caveats about the autoplayer.
 - **The duel is gone as a mode** (a deliberate choice: campaign first). Bringing it back needs hero-versus-hero targeting, which v2.0 does not have. The v1.0 balance notes on the brawler/zoner matchup remain valid for a future arena.
+
+## v2.83.0 — three plain dice and an element die you choose
+
+Garrett, 2026-11-21: "instead of picking your dice it should be 3 ap dice and 1 element of your choice." A roll is three plain d20s and one element die from the pilot's own, chosen (`T.RULES.ROLL_EL`). The sure etherion of the colour a pilot needs helped the careful player and not the plain one: `node tools/sim.js 80 runs --player strong`, 2.82.0 → 2.83 at the old vitality, 40 → 52 of 80; `120 runs --player weak`, 20 → 19 of 120.
+
+So every foe has **140%** of its listed vitality (was 130%). At 140%: look-ahead 43 of 80, heuristic 12 of 120 (150%: 37 of 80 and 9 of 120). `node tools/sim.js 40`, 2.82.0 → 2.83.0: full runs heuristic 6 → 3, look-ahead 18 → 20; mission wins 73% → 66% and 85% → 87%; the finale 23/43% → 8/35%. Not easier for a careful squad, a little harder for a plain one.
