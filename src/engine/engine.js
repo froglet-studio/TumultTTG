@@ -748,6 +748,21 @@
       )[0] || byNearness(m, h, others)[0]
     );
   };
+  /** Every other pilot, nearest first (squad order on a tie). */
+  T.alliesOf = (m, h) =>
+    byNearness(
+      m,
+      h,
+      m.heroes.filter((x) => x !== h),
+    );
+  /**
+   * The ally a face reaches. With three or more pilots the player picks one (ctx.ally, a uid) among the
+   * allies the face can reach (T.targetsFor lists them); without a pick, T.allyOf.
+   */
+  T.chosenAlly = function (m, h, ctx) {
+    const pick = ctx && ctx.ally != null ? m.heroes.find((x) => x.uid === ctx.ally && x !== h) : null;
+    return pick || T.allyOf(m, h);
+  };
   /** The ally a Rally or a revive reaches: with two pilots the other one; with more, the nearest one down. */
   T.downedAllyOf = function (m, h) {
     const others = m.heroes.filter((x) => x !== h);
@@ -1289,11 +1304,59 @@
   }
 
   /* ───────────────────────────── TARGETING ───────────────────────────── */
-  // Returns {need:'none'|'foe'|'node'|'ally'|'foeOrAlly', options:[ids], reason}
-  T.targetsFor = function (m, h, tgt, face, P, E) {
+  // Returns {need:'none'|'foe'|'node'|'ally'|'foeOrAlly', options:[ids], reason, ally?, allies?}
+  /**
+   * How far a face reaches "your ally": null when it does not (at this level), 'adj' when only an ally beside
+   * you, 'any' when any ally standing. A face that names an ally lets its player choose which one.
+   */
+  const allyRef = (f, P, E) => {
+    if (f.carryAlly != null) return bool(f.carryAlly, P, E) ? 'adj' : null;
+    if (f.v === 'rally' || f.v === 'swap') return 'any';
+    if (f.target !== 'ally' && f.who !== 'ally') return null;
+    if (!f.pierce && ['val', 'n'].some((k) => f[k] != null && num(f[k], P, E) <= 0)) return null;
+    if (f.v === 'anchor' && num(f.dur, P, E) <= 0) return null;
+    return f.adjacent ? 'adj' : 'any';
+  };
+  const allyReach = (tgt, face, P, E) => {
+    if (tgt === 'ally_adj' || tgt === 'ally_adj_move') return 'adj';
+    if (tgt === 'ally' || tgt === 'ally_move') return 'any';
+    const refs = ((face && face.fx) || []).map((f) => allyRef(f, P, E)).filter(Boolean);
+    if (!refs.length) return null;
+    return refs.every((r) => r === 'adj') ? 'adj' : 'any';
+  };
+  /**
+   * Targets for a play. `pick` is the ally the player has chosen, for a face that reaches one: with three or
+   * more pilots, a face that names "an ally" says which allies it can reach (`allies`, nearest first) and
+   * which one it works on now (`ally`). A face that needs no other target asks for the ally itself
+   * (need 'ally'). With two pilots there is only one ally, and nothing changes.
+   */
+  T.targetsFor = function (m, h, tgt, face, P, E, pick) {
+    if (m.heroes.length <= 2 || h.kind !== 'hero') return baseTargets(m, h, tgt, face, P, E, T.allyOf(m, h));
+    const reach = allyReach(tgt, face, P, E);
+    if (!reach) return baseTargets(m, h, tgt, face, P, E, T.allyOf(m, h));
+    const cands = T.alliesOf(m, h).filter((x) => !x.downed && (reach === 'any' || B.adjacent(m.board, h.pos, x.pos)));
+    const chosen = cands.find((x) => x.uid === pick) || cands[0] || T.allyOf(m, h);
+    const r = baseTargets(m, h, tgt, face, P, E, chosen);
+    if (r.invalid || !cands.length) return r;
+    r.ally = chosen.uid;
+    if (cands.length < 2) return r;
+    if (r.need === 'none') return Object.assign(r, { need: 'ally', options: cands.map((x) => x.uid) });
+    r.allies = cands.map((x) => x.uid);
+    return r;
+  };
+  /**
+   * The ally a play goes to: the player's pick, checked against the allies the face can reach, or the one it
+   * reaches by default. Returns { ok, ally } (ally: a uid, or null with two pilots).
+   */
+  const allyFor = (m, tg, ctx) => {
+    if (m.heroes.length <= 2 || tg.ally == null) return { ok: true, ally: null };
+    const allowed = tg.need === 'ally' ? tg.options : tg.allies || [tg.ally];
+    const want = ctx && ctx.ally != null ? ctx.ally : tg.ally;
+    return allowed.includes(want) ? { ok: true, ally: want } : { ok: false, why: 'that ally is out of reach' };
+  };
+  const baseTargets = function (m, h, tgt, face, P, E, ally) {
     const bd = m.board;
     const foes = T.liveEnemies(m);
-    const ally = T.allyOf(m, h);
     const vis = (e) => !isHidden(e) || !!st(e).Located; // can't target unseen foes with single-target effects
     const reach = st(h).Morph && st(h).Morph.reach ? 2 : 1;
     switch (tgt) {
@@ -1349,7 +1412,7 @@
         return { need: 'none' };
       case 'foe_or_ally_adj': {
         const opts = foes.filter((e) => B.adjacent(bd, h.pos, e.pos)).map((e) => e.uid);
-        if (ally && !ally.downed && B.adjacent(bd, h.pos, ally.pos)) opts.push(ally.uid);
+        for (const x of T.alliesOf(m, h)) if (!x.downed && B.adjacent(bd, h.pos, x.pos)) opts.push(x.uid);
         if (ally && !ally.downed && face && face.fx.some((x) => x.target === 'chosenAlly')) opts.push(h.uid);
         return { need: 'foeOrAlly', options: opts };
       }
@@ -1457,7 +1520,7 @@
 
   /* ───────────────────────────── PLAY A FACE ───────────────────────────── */
   // ctx: {target: uid|null, node: id|null, choice:'push'|'pull'}
-  T.canPlay = function (m, h, cardId, faceKey) {
+  T.canPlay = function (m, h, cardId, faceKey, pick) {
     if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
     if (!T.inHand(h, cardId)) return { ok: false, why: 'on track' };
     const card = T.CARD[cardId];
@@ -1468,14 +1531,16 @@
     const eln = face.el || 0;
     if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
     if (!T.canPay(h, face.ap, elt, eln)) return { ok: false, why: 'cannot pay' };
-    const tg = T.targetsFor(m, h, face.tgt, face, P, E);
+    const tg = T.targetsFor(m, h, face.tgt, face, P, E, pick);
     if (tg.invalid) return { ok: false, why: tg.invalid };
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no valid target' };
     return { ok: true, tg };
   };
   T.playFace = function (m, h, cardId, faceKey, ctx) {
-    const chk = T.canPlay(m, h, cardId, faceKey);
+    const chk = T.canPlay(m, h, cardId, faceKey, ctx && ctx.ally);
     if (!chk.ok) return { ok: false, why: chk.why };
+    const al = allyFor(m, chk.tg, ctx);
+    if (!al.ok) return al;
     const card = T.CARD[cardId];
     const face = card[faceKey];
     const P = T.heroP(h, cardId),
@@ -1493,6 +1558,7 @@
     if (how === 'free') say(m, `(${card.name} does not go to the track.)`, 'sys');
     const rctx = ctx || {};
     Object.assign(rctx, { P, E, card, faceKey });
+    if (al.ally != null) rctx.ally = al.ally;
     T.runEffects(m, h, face.fx, rctx);
     T.afterAction(m);
     return { ok: true, ctx: rctx };
@@ -1544,7 +1610,7 @@
       E = ctx.E || 0;
     const bd = m.board;
     const isHero = actor.kind === 'hero';
-    const ally = isHero ? T.allyOf(m, actor) : null;
+    const ally = isHero ? T.chosenAlly(m, actor, ctx) : null;
     const party = () => (isHero ? T.liveHeroes(m) : [actor]);
     // Conditions gate the whole effect, whatever its verb. The ones about a target need it
     // still standing. An effect that carries `elseVal` runs anyway, at that magnitude instead
@@ -2478,25 +2544,28 @@
     return { ok: true };
   };
   /** Can this hero take this basic action now? Returns { ok, why?, tg? } like T.canPlay. */
-  T.canUseBasic = function (m, h, id) {
+  T.canUseBasic = function (m, h, id, pick) {
     const b = T.BASIC_BY[id];
     if (!b) return { ok: false, why: 'unknown action' };
     if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
     if (T.apValue(h) < b.ap) return { ok: false, why: 'need ' + b.ap + ' AP' };
     if (b.el && !T.canPay(h, b.ap, b.el, 1)) return { ok: false, why: 'needs ' + b.el + ' (or Omni)' };
-    const tg = T.targetsFor(m, h, b.tgt, b, 0, 0);
+    const tg = T.targetsFor(m, h, b.tgt, b, 0, 0, pick);
     if (tg.invalid) return { ok: false, why: tg.invalid };
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no valid target' };
     return { ok: true, tg };
   };
   /** A basic action (T.BASIC): pay its AP and run its verbs. It never goes on the track. */
   T.useBasic = function (m, h, id, ctx) {
-    const chk = T.canUseBasic(m, h, id);
+    const chk = T.canUseBasic(m, h, id, ctx && ctx.ally);
     if (!chk.ok) return chk;
+    const al = allyFor(m, chk.tg, ctx);
+    if (!al.ok) return al;
     const b = T.BASIC_BY[id];
     T.pay(h, b.ap, b.el, b.el ? 1 : 0);
     say(m, `${h.name}: ${b.n} (${b.ap} AP${b.el ? ' + ' + b.el + ', channelled' : ''}).`, 'hero');
     const rctx = Object.assign({}, ctx || {}, { P: 0, E: 0 });
+    if (al.ally != null) rctx.ally = al.ally;
     T.runEffects(m, h, b.fx, rctx);
     T.afterAction(m);
     return { ok: true, ctx: rctx };
@@ -2510,14 +2579,17 @@
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
     const seat = T.purseSeat(m, m.heroes.indexOf(h));
     if (m.purses[seat] < ab.cost) return { ok: false, why: 'need ◇' };
-    const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
+    const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0, ctx && ctx.ally);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no target' };
+    const al = allyFor(m, tg, ctx);
+    if (!al.ok) return al;
     m.purses[seat] -= ab.cost;
     g.cds[ai] = ab.cd;
     say(m, `${h.name} uses ${def.name} — ${ab.n} (${ab.cost} ◇).`, 'hero');
     fx(m, { t: 'gear', hero: h.uid });
     const rctx = ctx || {};
     Object.assign(rctx, { P: 0, E: 0 });
+    if (al.ally != null) rctx.ally = al.ally;
     T.runEffects(m, h, ab.fx, rctx);
     T.afterAction(m);
     return { ok: true, ctx: rctx };

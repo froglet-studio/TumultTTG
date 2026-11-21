@@ -97,10 +97,10 @@ The look-ahead player held these faces in at least 8 missions and never found th
 
 - **Rhizome Sprout — Sprout (Phys)** `fly_rhizome.P` — Grow a sensor offshoot: reveal within 2 and Mark the nearest foe. *(held in 8 missions)*
 - **Enzyme Spray — Spit (Phys)** `cor_enzyme.P` — Spit exoenzymes across your zone: 2 damage and −1 to its Shield. *(held in 8 missions)*
-- **Rosette Cloak — Leaf Light (Eth)** `oce_rosette.E` — You and an ally within 2 are Hidden for 2 rounds; both heroes' next strike deals +1. *(held in 9 missions)*
+- **Rosette Cloak — Leaf Light (Eth)** `oce_rosette.E` — You and every ally within 2 are Hidden for 2 rounds; all heroes' next strike deals +1. *(held in 9 missions)*
 - **Trickster — Lure (Phys)** `coy_trick.P` — Lure a foe within 3 1 toward you; it is Weakened 1 this round. *(held in 10 missions)*
 - **White Winter — Snow Coat (Phys)** `har_winter.P` — Hidden 1, Shield 1 this round, and ignore hazards for 2 rounds. *(held in 9 missions)*
-- **Gold Gleam — Lucky Fish (Eth)** `koi_gold.E` — For luck: your ally gains 1 AP next turn, you reroll up to 1 banked dice, and both heroes' next hit deals +1. *(held in 11 missions)*
+- **Gold Gleam — Lucky Fish (Eth)** `koi_gold.E` — For luck: an ally gains 1 AP next turn, you reroll up to 1 banked dice, and all heroes' next hit deals +1. *(held in 11 missions)*
 
 ### Played almost only in one mission type (7)
 
@@ -111,7 +111,7 @@ At least 70% of this face’s use (per mission held) came from a single mission 
 - **Beakful — Catch (Phys)** `puf_beakful.P` — Melee 2 and heal 1; there is room for more: your next hit this turn deals +1. *(78% in boss; 12 plays)*
 - **Turret Eyes — Two Ways (Phys)** `cha_turret.P` — One eye forward, one back: see within 3, Mark the nearest foe, and Shield: the next hit on you is 1 less. *(82% in swarm; 11 plays)*
 - **Casque — Head Butt (Phys)** `cha_casque.P` — Butt with your helmet: melee 3, and push it 1. *(71% in boss; 45 plays)*
-- **Gold Gleam — Gleam (Phys)** `koi_gold.P` — Catch the light: your ally's next hit deals +1, and both heroes hold Shield 1 this round. *(76% in swarm; 10 plays)*
+- **Gold Gleam — Gleam (Phys)** `koi_gold.P` — Catch the light: an ally's next hit deals +1, and all heroes hold Shield 1 this round. *(76% in swarm; 10 plays)*
 - **Trailing Tentacles — Trail (Phys)** `jel_trail.P` — Let your tentacles hang: anything that hits you in melee this round takes 2. *(75% in boss; 13 plays)*
 
 ### Faces the player cannot evaluate (0)

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.99.0 — 2026-11-21 — choose your ally
+
+- **"An ally" is the one you choose.** With three or more pilots, a face, gear ability or duet move that reaches an ally used to give it to the nearest one, so in a game of three a player could not pass Unity's AP to the pilot they meant. Now the play lists every ally it can reach (standing, and beside you where the face says so) and the player picks one: a face aimed only at the ally asks for it (click the pilot, or their name above the board), and one with a foe or a node of its own lets the player click another pilot first (Call, Cue, Herd the Prey, the carry on Updraft). The pick is part of the play (`ctx.ally`), so it stays the player's own to plan and is carried online as it was chosen. Taproot can now fix any ally beside you, not only the nearest.
+- **Card texts say "an ally" and "all heroes"** where they said "your ally", "your partner" and "both heroes"; shields and Hidden that reach every ally beside you say so.
+- The look-ahead player weighs every ally a face could reach. With two pilots nothing changes: `node tools/sim.js 40` is identical before and after.
+- No save change.
+
 ## 2.98.1 — 2026-11-21 — the old words leave the card texts
 
 - **Card texts speak the keywords.** Faces that said *immune to push/pull* say *Anchored (nothing moves you, your own steps included)*, which is what they have done since 2.91; *shed Anchored, Weakened and damage over time* and *every hold and dot* say *Cleanse*; *Locate everything* says *Reveal*. The texts that promised to set off no traps lose that clause, and `move`'s `noTrap` option goes: a pilot never set off a trap, and since 2.86 a pilot's own Fields never touch it.

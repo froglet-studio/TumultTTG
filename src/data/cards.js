@@ -81,7 +81,7 @@
   C('human','hum_lang','Language','C',1,
     { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
       fx:[{v:'rally', move:(P,E)=>1+P}],
-      txt:(P,E)=>`Call your ally up to ${1+P} nodes: you choose where they go, now.` },
+      txt:(P,E)=>`Call an ally up to ${1+P} nodes: you choose where they go, now.` },
     { n:'Rally', ap:0, el:1, cd:3, dur:2, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>E>=2?2:1, uses:99, party:true, dur:2},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Party strikes +${E>=2?2:1} for 2 turns; foes adjacent to you are Weakened 1.` },
@@ -105,10 +105,10 @@
   C('human','hum_coop','Cooperative Instinct','C',0,
     { n:'Assist', ap:1, el:0, cd:1, dur:0, tgt:'ally',
       fx:[{v:'empower', val:(P,E)=>2+P, uses:1, target:'ally'}],
-      txt:(P,E)=>`Your ally's next strike deals +${2+P}.` },
+      txt:(P,E)=>`An ally's next strike deals +${2+P}.` },
     { n:'Unity', ap:0, el:1, cd:4, dur:0, tgt:'ally',
       fx:[{v:'mint', face:'AP', n:(P,E)=>E, target:'ally'}],
-      txt:(P,E)=>`Pool your effort: your ally mints ${E} temporary AP this turn.` },
+      txt:(P,E)=>`Pool your effort: an ally mints ${E} temporary AP this turn.` },
     'Act as one coordinated unit.');
   C('human','hum_general','Adaptive Generalist','T',0,
     { n:'Improv', ap:1, el:0, cd:2, dur:0, tgt:'self',
@@ -205,7 +205,7 @@
   C('hopper','hop_strid','Stridulation','C',2,
     { n:'Rasp', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>P, uses:1, target:'ally'}],
-      txt:(P,E)=>`A sustained tone: adjacent foes Weakened 1${P>0?`; your ally's next strike +${P}`:''}.` },
+      txt:(P,E)=>`A sustained tone: adjacent foes Weakened 1${P>0?`; an ally's next strike +${P}`:''}.` },
     { n:'Resonance', ap:0, el:2, cd:4, dur:0, tgt:'self',
       fx:[{v:'strike', kind:'zone_all', dmg:(P,E)=>3+E},{v:'weaken', val:(P,E)=>E>=2?2:1, dur:1, area:'zone'}],
       txt:(P,E)=>`A harmful frequency: every foe in your zone takes ${3+E} and is Weakened ${E>=2?2:1} this round.` },
@@ -253,10 +253,10 @@
   C('hopper','hop_swarm','Swarm Pheromone','C',1,
     { n:'Cue', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
       fx:[{v:'empower', val:(P,E)=>1+P, uses:1, target:'ally'},{v:'rally', move:1}],
-      txt:(P,E)=>`Gregarious cue: your ally's next strike +${1+P}, and you step them 1 node where you choose.` },
+      txt:(P,E)=>`Gregarious cue: an ally's next strike +${1+P}, and you step them 1 node where you choose.` },
     { n:'Swarm Phase', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true},{v:'weaken', val:1, dur:1, area:'adjParty'}],
-      txt:(P,E)=>`The swarm phase: both heroes mint 1 AP at the start of their turns for ${1+E} rounds; foes adjacent to either are Weakened 1.` },
+      txt:(P,E)=>`The swarm phase: all heroes mint 1 AP at the start of their turns for ${1+E} rounds; foes adjacent to any hero are Weakened 1.` },
     'Solitary to gregarious on a chemical cue.');
   C('hopper','hop_glide','Glide Wings','S',0,
     { n:'Buzz', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -330,7 +330,7 @@
       txt:(P,E)=>`Reroll up to ${1+h(P)} of your banked dice.` },
     { n:'Foresee', ap:1, el:1, cd:3, dur:2, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>3+E, next:true, party:true}],
-      txt:(P,E)=>`A few seconds ahead: Shield: both heroes' next hit taken is −${3+E}. Dur 2.` },
+      txt:(P,E)=>`A few seconds ahead: Shield: all heroes' next hit taken is −${3+E}. Dur 2.` },
     'Reroll fate.');
   C('owl','owl_threat','Threat Display','C',0,
     { n:'Hiss', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -512,7 +512,7 @@
       txt:(P,E)=>`Breathe anything: immune to hazards for 2 rounds, and heal ${1+h(P)}.` },
     { n:'Respire Anywhere', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hazardImmune', dur:(P,E)=>2+E},{v:'hazardImmune', dur:1, party:true},{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E, party:true}],
-      txt:(P,E)=>`Both heroes regenerate 1 each turn for ${2+E} rounds; you ignore hazards for ${2+E}, your ally this round.` },
+      txt:(P,E)=>`All heroes regenerate 1 each turn for ${2+E} rounds; you ignore hazards for ${2+E}, every hero this round.` },
     'Energy from any medium.');
   C('axolotl','axo_toxic','Toxic Secretion','M',0,
     { n:'Exude', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -528,7 +528,7 @@
       txt:(P,E)=>`Feel pressure and flow: reveal within ${1+P}, and Shield: the next hit on you is −1.` },
     { n:'Pressure Map', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>1+E},{v:'shield', next:true, val:2, party:(P,E)=>E>=2}],
-      txt:(P,E)=>`Read the field within ${1+E} for ${1+E} rounds; ${E>=2?'both heroes feel':'you feel'} the next hit coming: Shield 2 against it.` },
+      txt:(P,E)=>`Read the field within ${1+E} for ${1+E} rounds; ${E>=2?'all heroes feel':'you feel'} the next hit coming: Shield 2 against it.` },
     'Every disturbance and its direction.');
   C('axolotl','axo_tail','Powerful Tail','M',0,
     { n:'Lunge', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
@@ -560,7 +560,7 @@
       txt:(P,E)=>`Cellular housekeeping: Cleanse (every hold and Wound), heal ${1+h(P)}.` },
     { n:'Rewind Cells', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'cleanse', party:true},{v:'heal', n:(P,E)=>2+E, party:true}],
-      txt:(P,E)=>`Rewind damage: both heroes cleansed and healed ${2+E}.` },
+      txt:(P,E)=>`Rewind damage: all heroes cleansed and healed ${2+E}.` },
     'Notably cancer-resistant.');
 
   /* ───────────────────────── 7 · ELECTRIC EEL (C/S) ───────────────────────── */
@@ -578,7 +578,7 @@
       txt:(P,E)=>`Sense bioelectric fields: reveal within ${2+P}, and jolt the nearest foe in your zone for 1 true damage.` },
     { n:'Field Map', ap:0, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>2+E},{v:'shield', val:1, dur:(P,E)=>2+E, party:true}],
-      txt:(P,E)=>`Cast your field out to ${1+E} for ${2+E} rounds: everything in it revealed and unable to Hide, and both heroes hold Shield 1 as long.` },
+      txt:(P,E)=>`Cast your field out to ${1+E} for ${2+E} rounds: everything in it revealed and unable to Hide, and all heroes hold Shield 1 as long.` },
     'The world through its own electric field.');
   C('eel','eel_chargeup','Electrocyte Charge-Up','T',0,
     { n:'Store', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -723,10 +723,10 @@
   C('cordyceps','cor_network','Mycelial Network','S',2,
     { n:'Link', ap:1, el:0, cd:1, dur:0, tgt:'ally',
       fx:[{v:'mint', face:'AP', n:(P,E)=>1+h(P), target:'ally'}],
-      txt:(P,E)=>`Link to your ally: pass them ${1+h(P)} temporary AP.` },
+      txt:(P,E)=>`Link to an ally: pass them ${1+h(P)} temporary AP.` },
     { n:'Wood-Wide Web', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>2+E, target:'ally'},{v:'shield', val:1, dur:(P,E)=>2+E, party:true}],
-      txt:(P,E)=>`Run the wood-wide web for ${2+E} rounds: your ally mints 1 AP each turn and both heroes hold Shield 1.` },
+      txt:(P,E)=>`Run the wood-wide web for ${2+E} rounds: an ally mints 1 AP each turn and all heroes hold Shield 1.` },
     'Share across any distance.');
   C('cordyceps','cor_spore','Spore Burst','S',0,
     { n:'Puff', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -771,10 +771,10 @@
   C('cordyceps','cor_bond','Mycorrhizal Bond','S',0,
     { n:'Bond', ap:1, el:0, cd:1, dur:0, tgt:'ally',
       fx:[{v:'mint', face:'AP', n:1, target:'ally'},{v:'heal', n:(P,E)=>P, target:'ally'}],
-      txt:(P,E)=>`Channel into your ally: they mint 1 AP${P>0?` and heal ${P}`:''}.` },
+      txt:(P,E)=>`Channel into an ally: they mint 1 AP${P>0?` and heal ${P}`:''}.` },
     { n:'Fuse', ap:1, el:1, cd:3, dur:0, tgt:'ally',
       fx:[{v:'swap'},{v:'shield', val:(P,E)=>1+h(E), dur:1, party:true}],
-      txt:(P,E)=>`Fuse positions: swap places with your ally across any distance; both gain Shield ${1+h(E)}.` },
+      txt:(P,E)=>`Fuse positions: swap places with an ally across any distance; all heroes gain Shield ${1+h(E)}.` },
     'Share fate.');
   C('cordyceps','cor_radio','Radiotrophic Resilience','C',0,
     { n:'Thrive', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -800,7 +800,7 @@
       txt:(P,E)=>`Brace molecular repair: Shield ${2+P}.` },
     { n:'Project Shield', ap:1, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>2+P, dur:(P,E)=>1+E, all:true, party:true, allyRange:(P,E)=>E>=2?99:1}],
-      txt:(P,E)=>`Project the shield for ${1+E} rounds: Shield ${2+P} against everything on you and ${E>=2?'your ally anywhere':'an adjacent ally'}.` },
+      txt:(P,E)=>`Project the shield for ${1+E} rounds: Shield ${2+P} against everything on you and ${E>=2?'every ally anywhere':'every ally beside you'}.` },
     'Shielded at the molecular level.');
   C('tardigrade','tar_vitrify','Vitrification','M',0,
     { n:'Glass', ap:1, el:0, cd:2, dur:1, tgt:'self',
@@ -856,7 +856,7 @@
       txt:(P,E)=>`Cling fast: Anchored (nothing moves you, your own steps included) for ${1+P} rounds.` },
     { n:'Anchor Space', ap:1, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'anchor', who:'self', dur:(P,E)=>1+E},{v:'anchor', who:'ally', dur:(P,E)=>1+E, adjacent:true},{v:'hazardImmune', dur:(P,E)=>E>=2?1:0, party:true}],
-      txt:(P,E)=>`Anchor to a point in space for ${1+E} rounds: you and an adjacent ally cannot be moved${E>=2?', and both ignore hazards this round':''}.` },
+      txt:(P,E)=>`Anchor to a point in space for ${1+E} rounds: you and an adjacent ally cannot be moved${E>=2?', and all heroes ignore hazards this round':''}.` },
     'Hold position in freefall.');
 
   T.CARDS = CARDS;

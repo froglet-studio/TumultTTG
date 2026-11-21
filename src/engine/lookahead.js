@@ -20,7 +20,7 @@
 
   /* ───────────────────────────── ACTIONS ─────────────────────────────
      An action is plain data: { t, hero, … }. `hero` is an index into m.heroes.
-       face      { card, face: 'P'|'E', target?, node?, choice? }
+       face      { card, face: 'P'|'E', target?, node?, choice?, ally? }   ally: the uid of the ally it reaches (3+ pilots)
        walk      { node }
        interact  { node, pay? }      pay: 'ap' | 'el' for a survey mark
        rally     {}
@@ -38,9 +38,25 @@
         ? tg.options.map((node) => ({ node }))
         : tg.need === 'none'
           ? [{}]
-          : tg.options.map((target) => ({ target }));
+          : tg.need === 'ally'
+            ? tg.options.map((ally) => ({ ally }))
+            : tg.options.map((target) => ({ target }));
     const out = [];
     for (const pick of picks) for (const choice of choices) out.push(choice ? Object.assign({ choice }, pick) : pick);
+    return out;
+  }
+  /**
+   * With three or more pilots a face that reaches an ally and has a target of its own is worked out once for
+   * each ally it could pick (where an ally goes depends on which ally). targets(pick) gives the targets.
+   */
+  function resolutionsByAlly(tg, recipe, targets) {
+    if (!tg.allies) return resolutions(tg, recipe);
+    const out = [];
+    for (const ally of tg.allies) {
+      const t = ally === tg.ally ? tg : targets(ally);
+      if (t.invalid || (t.need !== 'none' && !(t.options && t.options.length))) continue;
+      for (const r of resolutions(t, recipe)) out.push(Object.assign({ ally }, r));
+    }
     return out;
   }
 
@@ -55,7 +71,7 @@
         for (const face of ['P', 'E']) {
           const chk = T.canPlay(m, h, card, face);
           if (!chk.ok) continue;
-          for (const r of resolutions(chk.tg, T.CARD[card][face]))
+          for (const r of resolutionsByAlly(chk.tg, T.CARD[card][face], (a) => T.canPlay(m, h, card, face, a).tg))
             out.push(Object.assign({ t: 'face', hero, card, face }, r));
         }
       // up to 3 paid steps, plus every free step a face has granted (a free move of 4 or 5 is walked in full)
@@ -77,7 +93,8 @@
       for (const b of T.BASIC) {
         const chk = T.canUseBasic(m, h, b.id);
         if (chk.ok)
-          for (const r of resolutions(chk.tg, b)) out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
+          for (const r of resolutionsByAlly(chk.tg, b, (a) => T.canUseBasic(m, h, b.id, a).tg))
+            out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
       }
       const ally = T.downedAllyOf(m, h);
       if (ally && ally.downed && ap >= R().RALLY_AP && B.adjacent(m.board, h.pos, ally.pos))
@@ -87,7 +104,8 @@
           if (g.cds[ability] > 0 || T.crystalsFor(m, hero) < ab.cost) return;
           const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
           if (tg.invalid || (tg.need !== 'none' && !(tg.options && tg.options.length))) return;
-          for (const r of resolutions(tg, ab)) out.push(Object.assign({ t: 'gear', hero, gear, ability }, r));
+          for (const r of resolutionsByAlly(tg, ab, (a) => T.targetsFor(m, h, ab.tgt, ab, 0, 0, a)))
+            out.push(Object.assign({ t: 'gear', hero, gear, ability }, r));
         }),
       );
       h.consumables.forEach((id, item) => {
@@ -113,6 +131,7 @@
     const h = m.heroes[a.hero];
     if (!h) return { ok: false, why: 'no such hero' };
     const ctx = { target: a.target, node: a.node, choice: a.choice };
+    if (a.ally != null) ctx.ally = a.ally;
     switch (a.t) {
       case 'face': {
         const r = T.playFace(m, h, a.card, a.face, ctx);
@@ -158,7 +177,10 @@
       const e = m.enemies.concat(m.heroes, m.decoys).find((x) => x.uid === uid);
       return e ? ` → ${e.name}` : '';
     };
-    const tail = (a.target != null ? who(a.target) : at) + (a.choice ? ` (${a.choice})` : '');
+    const tail =
+      (a.ally != null ? ` (for${who(a.ally).slice(2)})` : '') +
+      (a.target != null ? who(a.target) : at) +
+      (a.choice ? ` (${a.choice})` : '');
     if (a.t === 'face') return `${h.name}: ${T.CARD[a.card].name} — ${T.CARD[a.card][a.face].n}${tail}`;
     if (a.t === 'basic') return `${h.name}: ${T.BASIC_BY[a.basic].n}${tail}`;
     if (a.t === 'gear') {
