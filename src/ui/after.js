@@ -335,7 +335,7 @@
     const gear = hv.gear
       .map((gid) => {
         const g = T.GEAR_BY[gid];
-        return `<div class="am-ware"><div class="row"><span class="am-wi">${U.icGear(g.id)}</span><b>${esc(g.name)}</b><span class="right chip gold">${g.price} ◇</span></div><div class="small dim">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> <span class="mono dim">${a.cost} ◇ · cd ${a.cd}</span> ${esc(a.txt())}</div>`).join('')}<div class="am-buy">${run.heroes
+        return `<div class="am-ware"><div class="row"><span class="am-wi">${U.icGear(g.id)}</span><b>${esc(g.name)}</b><span class="right chip gold">${g.price} ◇</span></div><div class="small dim">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> <span class="mono dim">${T.gearCostText(a)} · cd ${a.cd}</span> ${esc(a.txt())}</div>`).join('')}<div class="am-buy">${run.heroes
           .map((h, i) => {
             if (!own(i)) return '';
             const ok = T.crystalsFor(run, i) >= g.price && h.gear.length < 2;

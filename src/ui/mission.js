@@ -1157,8 +1157,8 @@
         const def = T.GEAR_BY[g.id];
         return def.abilities
           .map((a, ai) => {
-            const ok = !m.over && !h.downed && g.cds[ai] <= 0 && T.crystalsFor(m, i) >= a.cost;
-            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="${esc(`<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${a.cost} ◇ · cd ${a.cd}</div>${U.kwGloss(a.txt())}`)}" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${a.cost}◇${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
+            const ok = !m.over && T.canUseGear(m, h, gi, ai).ok;
+            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="${esc(`<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${T.gearCostText(a)} · cd ${a.cd}</div>${U.kwGloss(a.txt())}`)}" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${a.omni ? a.omni + ' Omni' : a.cost + '◇'}${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
           })
           .join('');
       })
@@ -2357,7 +2357,7 @@
     const g = h.gear[gi];
     const def = T.GEAR_BY[g.id];
     const ab = def.abilities[ai];
-    if (g.cds[ai] > 0 || T.crystalsFor(m, i) < ab.cost) return;
+    if (!T.canUseGear(m, h, gi, ai).ok) return;
     const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) {
       U.toast('No valid target.');

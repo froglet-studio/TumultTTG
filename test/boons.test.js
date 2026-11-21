@@ -53,8 +53,9 @@ test('every gear has a passive on a hook the engine acts on, and two actives; th
     for (const n of numbers) assert.ok(g.passive.txt.includes(String(n)), `${g.id}: text does not mention ${n}`);
     assert.equal(g.abilities.length, 2, `${g.id}: two actives`);
   }
-  const hooks = new Set(T.GEAR.map((g) => g.passive.hook));
-  assert.equal(hooks.size, T.GEAR.length, 'no two pieces share a passive');
+  // two weapons share the hook, never the passive: each adds to strikes of its own reach (2.108)
+  const passives = new Set(T.GEAR.map((g) => g.passive.hook + JSON.stringify(g.passive.val)));
+  assert.equal(passives.size, T.GEAR.length, 'no two pieces share a passive');
 });
 
 test('tech never strikes a unit directly: a gear strike goes through a Field', () => {
@@ -204,4 +205,64 @@ test('a 2.88 save refunds its boons (3 ◇ each) and consumables (their price), 
   assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run));
   run.heroes.forEach((h, i) => run.lastReward.picked[i] || T.skipOfferedCard(run, i));
   assert.ok(T.rewardSettled(run.lastReward), 'with the traits passed, the reward is settled');
+});
+
+/* ── Weapons (2.108) ── */
+const shoot = ({ m, h, e }, kind, dmg = 3) => {
+  const before = e.hp;
+  T.runEffects(m, h, [{ v: 'strike', kind, dmg }], { P: 0, E: 0, target: e.uid });
+  return before - e.hp;
+};
+const near = (s) => {
+  // the foe beside the pilot and in its zone, so a melee and a ranged strike both reach it
+  const n = B.walkNeighbors(s.m.board, s.h.pos).find((x) => !T.occupied(s.m, x) && B.los(s.m.board, s.h.pos, x));
+  s.e.pos = n;
+  return s;
+};
+
+test('weapons: each adds its number to every strike of its reach, and to no other', () => {
+  const plain = near(withBoons([]));
+  const baton = near(withBoons(['baton']));
+  const rifle = near(withBoons(['coilgun']));
+  const n = (id) => val(id).n;
+  assert.equal(shoot(baton, 'melee') - shoot(plain, 'melee'), n('baton'), 'the baton adds to melee');
+  assert.equal(shoot(near(withBoons(['baton'])), 'los'), shoot(near(withBoons([])), 'los'), 'not to ranged');
+  assert.equal(shoot(rifle, 'los') - shoot(near(withBoons([])), 'los'), n('coilgun'), 'the rifle adds to ranged');
+  assert.equal(shoot(near(withBoons(['coilgun'])), 'melee'), shoot(near(withBoons([])), 'melee'), 'not to melee');
+  assert.equal(shoot(near(withBoons(['baton'])), 'melee', 0), 0, 'a strike of nothing stays nothing');
+  // the basic Strike is a melee strike too
+  const s = near(withBoons(['baton']));
+  const before = s.e.hp;
+  T.runEffects(s.m, s.h, T.BASIC_BY.strike.fx, { P: 0, E: 0, target: s.e.uid });
+  assert.equal(before - s.e.hp, 2 + n('baton'));
+});
+
+test('weapons never strike on their own, and Overcharge takes banked Omni dice: +2 a strike this round, stacked', () => {
+  for (const id of ['baton', 'coilgun'])
+    for (const a of T.GEAR_BY[id].abilities)
+      assert.ok(
+        a.fx.every((x) => x.v !== 'strike'),
+        `${id} ${a.n}`,
+      );
+  const s = near(withBoons(['baton']));
+  const { m, h } = s;
+  const oc = T.GEAR_BY.baton.abilities.findIndex((a) => a.n === 'Overcharge');
+  h.held = h.held.map(() => 'AP');
+  h.heldDie = h.held.map(() => 'plain');
+  assert.equal(T.canUseGear(m, h, 0, oc).ok, false, 'no banked Omni, no Overcharge');
+  h.held.push('O', 'O');
+  h.heldDie.push('plain', 'plain');
+  h.pool -= 2;
+  const purse = m.purses[0];
+  assert.ok(T.useGear(m, h, 0, oc).ok);
+  assert.ok(T.useGear(m, h, 0, oc).ok, 'no cooldown: a second Omni stacks');
+  assert.equal(T.omniCount(h), 0, 'both Omni spent');
+  assert.equal(m.purses[0], purse, 'no omnicrystals spent');
+  assert.equal(h.pool + h.held.length, T.RULES.POOL, 'still fifteen dice');
+  const bonus = val('baton').n + 4;
+  assert.equal(shoot(s, 'melee'), 3 + bonus, 'the first strike');
+  assert.equal(shoot(s, 'melee'), 3 + bonus, 'and every strike this round');
+  assert.equal(shoot(s, 'los'), 3, 'only strikes of its reach');
+  T.endHeroPhase(m);
+  assert.ok(!(h.states.Empower || []).length, 'gone at round end');
 });

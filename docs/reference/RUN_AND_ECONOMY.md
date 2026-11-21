@@ -91,6 +91,16 @@ Gear is ethereal technology (2.89, the keyword plan): it works on spaces, the di
 | Turret | 6 | your Fields last 1 round longer | Sentry (a Field within 2 and its neighbours for 2 rounds: 2 to every foe ending the round there, 1◇) · Skewer (a Field within 2 for 3 rounds: the first foe in takes 5, Pierce, 2◇) |
 | Climbing Rig | 4 | mag boots: you cannot be pulled | Ascend (climb 1, height ok, 1◇) · Rappel (move 2 through foes, 1◇) |
 | Medkit | 5 | once a mission, rise at 10 instead of going down | Patch (a mending Field on and beside your space for 2 rounds: allies ending the round there Heal 3, 1◇) · Revive (Heal 10 a downed ally beside you, 2◇) |
+| Shock Baton | 6 | weapon: your melee strikes deal 1 more | Overcharge (Empowered 2 for every melee strike this round, 1 banked Omni, no cooldown, stacks) · Arc Guard (Thorns 2 this round, 1◇) |
+| Coil Rifle | 6 | weapon: your ranged strikes deal 1 more | Overcharge (Empowered 2 for every ranged strike this round, 1 banked Omni, no cooldown, stacks) · Rangefinder (a foe in your zone is Revealed 2 rounds and Marked, 1◇) |
+
+**Weapons (2.108; Garrett, 2026-11-21).** A weapon is gear that makes your own strikes hit harder; it never strikes
+on its own. Its passive adds its number to every strike of its reach you make: *melee* is a melee strike (the basic
+Strike and a Mass Channel included), *ranged* a strike along a line or at any range (`los`, `any`); area strikes get
+nothing. Its Overcharge is the one gear ability paid in **banked Omni dice** rather than ◇: at the table, put a
+rolled Omni on the weapon card, and every strike of its reach deals 2 more this round; put two and it is 4. The Omni
+is then not there to pay an Ethereal face, which is the choice. The bonus is read in one place,
+`T.weaponBonus(h, kind)`, so any other source of weapons (a vehicle's) adds there.
 
 Gear is the **orthogonality insurance** from the v1.0 mechanic basis: any build can buy the verb it lacks (Space for a vault, Reveal for the Sought, a Turret for a crowd) — general verbs, never keyed counters.
 

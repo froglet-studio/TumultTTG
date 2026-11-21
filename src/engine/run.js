@@ -1525,7 +1525,7 @@
       for (const h of r.heroes || []) if (h && !Array.isArray(h.reserve)) h.reserve = [];
       r.v = 29;
     },
-    // 2.108 added pets (src/data/pets.js): a hero's pets, and the pets on the board of a mission in progress.
+    // 2.109 added pets (src/data/pets.js): a hero's pets, and the pets on the board of a mission in progress.
     29(r) {
       (r.heroes || []).forEach((h) => (h.pets = h.pets || []));
       if (r.mission && !r.mission.pets) r.mission.pets = [];
