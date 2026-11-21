@@ -827,7 +827,11 @@
     }
     if (m.isBoss && m.won) run.won = true;
     if (!m.won) {
-      if (!m.isBoss && run.lifeline > 0) {
+      // the whole squad down ends the expedition outright (Garrett, 2026-11-21): the Lifeline carries a mission
+      // lost any other way. The pilots are whole again for the next expedition.
+      const wiped = m.heroes.every((h) => h.downed);
+      if (wiped) run.stats.wiped = true;
+      if (!m.isBoss && !wiped && run.lifeline > 0) {
         run.lifeline--;
         run.stats.lifelineUsed = true;
         rw.lifeline = true;
