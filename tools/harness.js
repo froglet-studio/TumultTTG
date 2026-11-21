@@ -156,7 +156,16 @@ function createHarness(T = loadTumult()) {
         T.havenRest(run, T.totalCrystals(run) >= 6);
         for (const g of run.haven.gear.slice()) {
           const hi = run.heroes.findIndex((h) => h.gear.length < 2);
-          if (hi >= 0 && T.crystalsFor(run, hi) >= T.GEAR_BY[g].price) T.buyGear(run, g, hi);
+          if (hi < 0 || T.crystalsFor(run, hi) < T.GEAR_BY[g].price) continue;
+          // a gear card bought with a full kit waits in reserve: fly it in place of the kit's least-trained trait
+          if (T.buyGear(run, g, hi).reserve) {
+            const h = run.heroes[hi];
+            const pts = (c) => (h.up[c] || [0, 0])[0] + (h.up[c] || [0, 0])[1];
+            const out = T.loadOuts(h, T.GEAR_BY[g].card)
+              .filter((c) => !T.isKinless(c))
+              .sort((a, b) => pts(a) - pts(b))[0];
+            if (out) T.loadCard(h, T.GEAR_BY[g].card, out);
+          }
         }
         T.finishNode(run);
       } else if (run.phase === 'event') {

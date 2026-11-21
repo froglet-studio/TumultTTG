@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.118.0',
+    version: '2.119.0',
     items: [
+      {
+        text: "Gear runs on Omni now, and some of it has a card. Omnicrystals only buy gear: every gear ability is free or costs banked Omni dice. An ability with a cooldown lives on the gear's card, which joins your kit and counts toward your nine (but not toward a clade's three); with a full kit it waits in your reserve. Playing either face sends the card to your track. A weapon's Overcharge has no cooldown, so it stays on the gear. Did a gear card earn its place in your nine? Was it clear which abilities sit on the card and which on the gear?",
+      },
       {
         text: "Resonance: every Ethereal face leaves its element in the air for this round and the next (the top bar shows it). Recoil Slam, Pop, Cavitation and Pick the Weak each draw on an element for a bonus: play a partner's face first and yours lands bigger. Omni in the air counts as any. The Stridulation face once called Resonance is now Thrum.",
         cards: ['oct_jet', 'heh_burst', 'msh_punch', 'rav_carrion', 'hop_strid'],

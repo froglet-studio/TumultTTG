@@ -138,9 +138,24 @@ test('world data: ids are unique and entries are complete', () => {
   uniq(T.EVENTS, 'event');
   for (const g of T.GEAR) {
     assert.equal(g.abilities.length, 2, `${g.id}: two abilities`);
-    // paid in omnicrystals, or (a weapon's Overcharge, 2.108) in banked Omni dice
-    for (const a of g.abilities)
-      assert.ok(a.n && (a.cost >= 1 || a.omni >= 1) && Array.isArray(a.fx) && a.txt(), `${g.id}/${a.n}`);
+    // free or paid in banked Omni dice, never in ◇ (2.119); an ability needs a card only if it goes on cooldown,
+    // so one with no cooldown must cost Omni or it could be used without limit
+    for (const a of g.abilities) {
+      assert.ok(a.n && Array.isArray(a.fx) && a.txt() && a.cost === undefined, `${g.id}/${a.n}`);
+      assert.ok(a.cd >= 1 || a.omni >= 1, `${g.id}/${a.n}: a cooldown or an Omni price`);
+    }
+    const onCard = g.abilities.filter(T.onGearCard);
+    if (!onCard.length) assert.equal(g.card, undefined, `${g.id}: no card without a cooldown ability`);
+    else {
+      const c = T.CARD[g.card];
+      assert.ok(c && c.gear === g.id && T.isKinless(g.card), `${g.id}: its card`);
+      assert.deepEqual(
+        T.faceKeys(g.card).map((k) => c[k].n),
+        onCard.map((a) => a.n),
+        `${g.id}: one face per ability`,
+      );
+      for (const k of T.faceKeys(g.card)) assert.ok(c[k].ap === 0 && c[k].cd >= 1, `${g.id}/${k}: free of AP`);
+    }
   }
   for (const ev of T.EVENTS) assert.ok(ev.options.length >= 2 && ev.text && ev.title, `${ev.id}: at least two options`);
   for (const [id, e] of Object.entries(T.ENEMIES)) {

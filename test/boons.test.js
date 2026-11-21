@@ -266,3 +266,84 @@ test('weapons never strike on their own, and Overcharge takes banked Omni dice: 
   T.endHeroPhase(m);
   assert.ok(!(h.states.Empower || []).length, 'gone at round end');
 });
+
+/* Equipment cards (2.119; Garrett, 2026-11-21): a gear ability with a cooldown sits on the gear's card, which counts
+   toward the nine; it is free or paid in banked Omni dice, never in ◇. */
+test('gear cards: a bought gear card joins the kit, or the reserve when the kit is full, and goes when sold', () => {
+  const run = T.newRun(5);
+  H.prebuiltSquad(run, 0, 1);
+  const h = run.heroes[0];
+  h.gear = [];
+  run.haven = { gear: ['aegis', 'scope'], cons: [], healed: false, bought: [], pet: null };
+  run.purses = run.heroes.map(() => 99);
+  const cid = T.GEAR_BY.aegis.card;
+  assert.ok(h.cards.length < T.RULES.MAX_CARDS);
+  assert.ok(T.buyGear(run, 'aegis', 0).ok);
+  assert.ok(h.cards.includes(cid), 'in the kit');
+  assert.deepEqual(h.up[cid], [0, 0]);
+  assert.ok(T.cladeSlots(h, h.cards), 'it counts toward no clade');
+  assert.deepEqual(T.cardSource(h, cid), { kind: 'gear', id: 'aegis' });
+  // never trained
+  h.upUnspent = 5;
+  assert.ok(!T.adjustUp(h, cid, 'P', 1).ok && !T.adjustUp(h, cid, 'E', 1).ok);
+  // a full kit: the next gear's card waits in reserve
+  while (h.cards.length < T.RULES.MAX_CARDS) h.cards.push('filler' + h.cards.length);
+  const r = T.buyGear(run, 'scope', 0);
+  assert.ok(r.ok && r.reserve);
+  assert.ok(h.reserve.includes(T.GEAR_BY.scope.card) && !h.cards.includes(T.GEAR_BY.scope.card));
+  T.sellGear(run, 0, 0);
+  assert.ok(!T.holds(h, cid), 'selling the gear takes its card');
+  assert.equal(h.gear.length, 1);
+});
+
+test('gear cards: faces cost no AP, Omni is paid from banked Omni dice, and Overcharge stays on the gear', () => {
+  const s = withBoons(['aegis', 'baton']);
+  const { m, h } = s;
+  const cid = T.GEAR_BY.aegis.card;
+  // withBoons puts the gear on by hand; give the hero the card as T.equipGear would
+  h.cards.push(cid);
+  h.up[cid] = [0, 0];
+  const bank = (dice) => {
+    h.held = dice;
+    delete h.heldDie;
+    h.pool = T.RULES.POOL - dice.length;
+  };
+  assert.equal(T.GEAR_BY.baton.card, T.gearCardId('baton'), 'Arc Guard has a cooldown, so the baton has a card');
+  const brace = T.CARD[cid].P;
+  const bulwark = T.CARD[cid].P2;
+  assert.equal(brace.ap + (brace.el || 0), 0, 'Brace is free');
+  assert.equal(bulwark.el, 1);
+  // the Omni price is a banked Omni die, nothing else
+  bank(['AP', 'AP', 'M']);
+  assert.ok(!T.canPlay(m, h, cid, 'P2').ok, 'no Omni banked');
+  assert.ok(T.canPlay(m, h, cid, 'P').ok, 'free');
+  bank(['O', 'AP']);
+  const purse = m.purses.slice();
+  assert.ok(T.playFace(m, h, cid, 'P2', {}).ok);
+  assert.deepEqual(h.held, ['AP'], 'the Omni die is spent');
+  assert.deepEqual(m.purses, purse, 'no ◇ is spent');
+  assert.ok(!T.inHand(h, cid), 'the whole card goes to the track');
+  // the gear's own button refuses an ability that lives on its card, and keeps Overcharge
+  const gi = h.gear.findIndex((g) => g.id === 'aegis');
+  assert.equal(T.canUseGear(m, h, gi, 0).why, 'on its card');
+  const bi = h.gear.findIndex((g) => g.id === 'baton');
+  const oi = T.GEAR_BY.baton.abilities.findIndex((a) => a.n === 'Overcharge');
+  bank(['O']);
+  assert.ok(T.canUseGear(m, h, bi, oi).ok);
+});
+
+test('a 2.109 save (version 30) gives worn gear its card: in the kit when there is room, in reserve when not', () => {
+  const old = require('./fixtures/save-2.109.json');
+  assert.equal(old.v, 30, 'the fixture is a version-30 save');
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  const [a, b] = run.heroes;
+  assert.ok(a.cards.includes(T.GEAR_BY.aegis.card) && a.cards.includes(T.GEAR_BY.coilgun.card));
+  assert.equal(a.cards.length, 8);
+  assert.equal(b.cards.length, T.RULES.MAX_CARDS);
+  assert.ok(b.reserve.includes(T.GEAR_BY.scope.card));
+  assert.ok(run.mission.heroes[0] === a, 'the mission in progress plays the same heroes');
+  const s = T.serializeRun(run);
+  assert.equal(T.serializeRun(T.deserializeRun(s)), s);
+  assert.ok(H.playMission(run.mission).over);
+});

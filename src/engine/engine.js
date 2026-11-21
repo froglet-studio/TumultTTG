@@ -587,7 +587,8 @@
   T.canPay = function (h, ap, elt, eln) {
     if (T.apValue(h) < (ap || 0)) return false;
     if (eln && elt) {
-      if (T.elCount(h, elt) + T.omniCount(h) < eln) return false;
+      // an Omni cost (a gear card's face, 2.119) is paid in Omni alone, counted once
+      if ((elt === 'O' ? 0 : T.elCount(h, elt)) + T.omniCount(h) < eln) return false;
     }
     return true;
   };
@@ -2996,7 +2997,7 @@
   T.ridingWith = (m, h, body) => h.ride != null && (body === h || body.pos === h.pos);
   /** Is this face Mounted? A pet card's face is Mounted when the trait face it was made from is. */
   T.isMountedFace = (card, faceKey) =>
-    card.pet ? T.isMounted(T.CARD[card[faceKey].from], 'P') : T.isMounted(card, faceKey);
+    card.gear ? false : card.pet ? T.isMounted(T.CARD[card[faceKey].from], 'P') : T.isMounted(card, faceKey);
   T.heelTargets = function (m, h, petUid) {
     const p = T.petsOf(m, h).find((x) => x.uid === petUid);
     if (!p || isAnchored(p) || T.ridingWith(m, h, p)) return [];
@@ -3055,8 +3056,12 @@
     return { ok: true, ctx: rctx };
   };
   /** What a gear ability costs, as a player reads it: omnicrystals from the purse, or banked Omni dice (2.108). */
-  T.gearCostText = (ab) =>
-    [ab.cost ? `${ab.cost} ◇` : '', ab.omni ? `${ab.omni} Omni` : ''].filter(Boolean).join(' + ') || 'free';
+  T.gearCostText = (ab) => (ab.omni ? `${ab.omni} Omni` : 'free');
+  /** How a gear ability is used, in a few words: its cost, and whether it is played from the gear's card. */
+  T.gearUseText = (ab) =>
+    `${T.gearCostText(ab)} · ${T.onGearCard(ab) ? `on its card, cooldown ${ab.cd}` : 'from the gear, no cooldown'}`;
+  /** The line a shop shows under a piece of gear whose abilities sit on a card. */
+  T.gearCardNote = (g) => (g.card ? 'Its card joins your kit and counts toward the nine.' : '');
   /** Whether this pilot can pay for and use this gear ability now, leaving aside its target. */
   T.canUseGear = function (m, h, gi, ai) {
     const g = h.gear[gi];
@@ -3064,8 +3069,9 @@
     const ab = T.GEAR_BY[g.id].abilities[ai];
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
     if (h.ride != null) return { ok: false, why: 'inside a vehicle: its cards, or a Mounted face' };
+    // an ability with a cooldown is played from the gear's card in the kit (2.119), not from the gear
+    if (T.onGearCard(ab)) return { ok: false, why: 'on its card' };
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
-    if (m.purses[T.purseSeat(m, m.heroes.indexOf(h))] < ab.cost) return { ok: false, why: 'need ◇' };
     if (ab.omni && T.omniCount(h) < ab.omni) return { ok: false, why: 'need a banked Omni' };
     return { ok: true };
   };
@@ -3076,12 +3082,10 @@
     const ab = def.abilities[ai];
     const can = T.canUseGear(m, h, gi, ai);
     if (!can.ok) return can;
-    const seat = T.purseSeat(m, m.heroes.indexOf(h));
     const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0, ctx && ctx.ally);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no target' };
     const al = allyFor(m, tg, ctx);
     if (!al.ok) return al;
-    m.purses[seat] -= ab.cost;
     if (ab.omni) T.pay(h, 0, 'O', ab.omni);
     g.cds[ai] = ab.cd;
     say(m, `${h.name} uses ${def.name} — ${ab.n} (${T.gearCostText(ab)}).`, 'hero');
