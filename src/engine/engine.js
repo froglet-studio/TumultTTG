@@ -826,15 +826,6 @@
       if (ss.Weak) dmg = Math.max(0, dmg - ss.Weak.v);
     } else if (source && source.kind === 'enemy') {
       if (st(source).Weak) dmg = Math.max(0, dmg - st(source).Weak.v);
-      if (opts.ambush && ts.Guard) dmg = Math.ceil(dmg / 2);
-    }
-    // absorb (ranged, heroes)
-    if (target.kind === 'hero' && ts.Absorb && kind === 'los' && ts.Absorb.n > 0) {
-      ts.Absorb.n--;
-      T.mint(target, ts.Absorb.face || 'C', 1);
-      if (ts.Absorb.n <= 0) delete ts.Absorb;
-      say(m, `${target.name} absorbs the energy and banks it.`);
-      return 0;
     }
     // shield
     if (!pierce && !trueDmg) {
@@ -1890,7 +1881,25 @@
         break;
       }
       case 'shield': {
+        // Shield N (2.94 absorbs pre-empt, guard and absorb): each hit it takes is N lower for `dur` rounds; `next`,
+        // only the next hit (which may `reflect` some back, or `reposition` you a step away).
         const v = num(f.val, P, E);
+        if (f.next) {
+          if (v <= 0) break;
+          const list = f.party === true || bool(f.party, P, E) ? T.liveHeroes(m) : [actor];
+          list.forEach((h) => {
+            const cur = h.states.Preempt;
+            h.states.Preempt = {
+              v: Math.max(v, cur ? cur.v : 0),
+              reflect: num(f.reflect, P, E) || 0,
+              t: f.dur || 2,
+              reposition: f.reposition || 0,
+            };
+            fx(m, { t: 'state', ent: h.uid, name: 'Preempt' });
+          });
+          say(m, `${list.map((h) => h.name).join(' & ')}: Shield ${v} against the next hit.`, 'hero');
+          break;
+        }
         if (v <= 0 && !f.min) break;
         const d = num(f.dur, P, E) || 1;
         let list = [actor];
@@ -1972,16 +1981,6 @@
           say(m, `${list.map((h) => h.name).join(' & ')}: next strike +${v}${f.pierce ? ' (pierce)' : ''}.`, 'hero');
         break;
       }
-      case 'preempt': {
-        const v = num(f.val, P, E);
-        const list = f.party === true || bool(f.party, P, E) ? T.liveHeroes(m) : [actor];
-        list.forEach((h) => {
-          h.states.Preempt = { v, reflect: num(f.reflect, P, E), t: f.dur || 2, reposition: f.reposition || 0 };
-          fx(m, { t: 'state', ent: h.uid, name: 'Preempt' });
-        });
-        say(m, `${list.map((h) => h.name).join(' & ')} pre-empt: next hit −${v}.`, 'hero');
-        break;
-      }
       case 'thorns': {
         // Thorns N: anything that strikes you in melee takes N, for `dur` rounds; `next`, only the next one (and
         // `push` pushes it back). It absorbs Counter.
@@ -2021,12 +2020,6 @@
       case 'statusImmune':
         addTimed(m, actor, 'StatusImmune', num(f.dur, P, E));
         break;
-      case 'guard': {
-        const d = num(f.dur, P, E);
-        const list = f.party ? T.liveHeroes(m) : [actor];
-        list.forEach((h) => addTimed(m, h, 'Guard', d));
-        break;
-      }
       case 'morph': {
         const d = num(f.dur, P, E);
         actor.states.Morph = {
@@ -2061,10 +2054,6 @@
         );
         break;
       }
-      case 'absorb':
-        actor.states.Absorb = { n: num(f.n, P, E), t: num(f.dur, P, E), face: f.face || 'C' };
-        say(m, `${actor.name} will absorb the next ${num(f.n, P, E)} ranged hit(s).`, 'hero');
-        break;
       /* ---------- RESOURCES ---------- */
       case 'heal': {
         // Heal N (2.90): restore N vitality; a downed pilot it reaches gets up with N. `ward: R` holds it
@@ -2912,17 +2901,15 @@
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
       Located: 'Located — cannot Hide; can be targeted and struck across a zone even if Hidden.',
       Thorns: `Thorns — ${[v.v ? `melee attackers take ${v.v}` : '', v.next ? `the next takes ${v.next}${v.push ? ' and is pushed ' + v.push : ''}` : ''].filter(Boolean).join('; ')}.`,
-      Preempt: `Pre-empt — next hit taken is −${v.v}${v.reflect ? ', reflects ' + v.reflect : ''}.`,
+      Preempt: `Shield ${v.v} against the next hit${v.reflect ? ', and ' + v.reflect + ' of it goes back' : ''}${v.reposition ? ', and you step away' : ''}.`,
       Stasis: 'Stasis — untargetable.',
       Hover: 'Hover — off the ground: hazards and Fields do not touch it; immune to push/pull.',
       Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',
       Morph: `Morph — strikes +${v.bonus}${v.reach ? ', reach 2' : ''}${v.climb ? ', can climb' : ''}.`,
       HazardImmune: 'Immune to hazards.',
       StatusImmune: 'Immune to Weaken/Anchor.',
-      Guard: 'Guarded — ambush damage halved.',
       Freecast: `Next ${Array.isArray(v) ? v.reduce((n, g) => n + g.n, 0) : 0} card(s) skip the track.`,
       Phoenix: `Heal held — if downed within ${v.t}, get up with ${v.hp}.`,
-      Absorb: `Absorb — next ${v.n} ranged hit(s) negated, minting Charge.`,
       Engines: 'Engine running.',
       Empower: 'Empowered — next strike(s) boosted.',
       Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,

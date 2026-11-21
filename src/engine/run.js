@@ -915,7 +915,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 25;
+  T.SAVE_VERSION = 26;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1253,6 +1253,33 @@
         delete s.Counter;
       }
       r.v = 25;
+    },
+    // 2.94 folds pre-empt, guard and absorb into Shield. A held Guard (ambushes halved) becomes Shield 1 for as long;
+    // a held Absorb (the next ranged hits negated) a Shield of 3 against the next hit. Pre-empt keeps its state.
+    25(r) {
+      for (const u of r.heroes || []) {
+        const s = u && u.states;
+        if (!s) continue;
+        if (s.Guard) {
+          const cur = s.Shield;
+          s.Shield = Object.assign({ all: false }, cur || {}, {
+            v: Math.max(1, cur ? cur.v : 0),
+            t: Math.max(s.Guard.t || 1, cur ? cur.t : 0),
+          });
+          delete s.Guard;
+        }
+        if (s.Absorb) {
+          const cur = s.Preempt;
+          s.Preempt = {
+            v: Math.max(3, cur ? cur.v : 0),
+            reflect: cur ? cur.reflect : 0,
+            t: Math.max(s.Absorb.t || 1, cur ? cur.t : 0),
+            reposition: cur ? cur.reposition : 0,
+          };
+          delete s.Absorb;
+        }
+      }
+      r.v = 26;
     },
   };
   T.deserializeRun = function (json) {

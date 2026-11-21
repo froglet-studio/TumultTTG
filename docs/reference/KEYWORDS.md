@@ -132,3 +132,13 @@ In code: the verb `mark` (`n`, `dur`, `pierce`, `nearest`, `area` + `radius`), t
 
 In code: the verb `thorns` (`val`, `dur`, `next`, `push`), the state `Thorns` (`{ v, next, push, t }`); saves
 version 25.
+
+## Shield (2.94)
+
+> **Shield N.** Each hit it takes is N lower; Shield all also stops area.
+
+- **While it lasts**, every hit is N lower (area hits pass unless it says all; Pierce and true damage ignore it).
+- **Against the next hit:** spent by that hit; it may send some of it back or step you a space away. What Pre-empt did until 2.94.
+- Guard and Absorb are Shields too.
+
+In code: the verb `shield` (`val`, `dur`, `all`, `party`, `allyRange`, `min`, `next`, `reflect`, `reposition`); the states `Shield` and, for the next hit, `Preempt`; saves version 26.

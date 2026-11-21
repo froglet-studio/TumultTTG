@@ -635,9 +635,7 @@
               } else continue;
               score -= face.ap;
               if (fk === 'E') score -= 1;
-            } else if (
-              face.fx.some((x) => x.v === 'shield' || x.v === 'preempt' || x.v === 'counter' || x.v === 'stasis')
-            ) {
+            } else if (face.fx.some((x) => x.v === 'shield' || (x.v === 'thorns' && x.next) || x.v === 'stasis')) {
               if (threat >= 4) score = threat;
               else continue;
             } else if (face.fx.some((x) => x.v === 'heal')) {

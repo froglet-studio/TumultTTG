@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.93.0',
+    version: '2.94.0',
     items: [
+      {
+        text: 'Pre-empt is now a Shield against the next hit: the faces say Shield: the next hit on you is N less. Guard (ambushes halved) and Absorb are Shields too. Does the one word make it easier to see how protected your pilot is?',
+        cards: ['koi_shimmer', 'oct_intellect'],
+      },
       {
         text: 'Counter is now part of Thorns: a Thorns that lasts turns back every melee strike, and a next-hit Thorns turns back only the next one, sometimes with a push. The faces read "Thorns: the next foe to hit you in melee takes N". Is it clear on your pilot which kind you hold?',
         cards: ['pan_ants', 'heh_anoint'],
