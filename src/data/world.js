@@ -16,7 +16,7 @@
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 150,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 since 2.106: weapons)
+    FOE_HP: 150,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 since 2.108: weapons)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -118,7 +118,7 @@
         { n:'Patch', cost:1, cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
         { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
       ]},
-    // Weapons (2.106: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
+    // Weapons (2.108: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
     // its own; its passive adds to every strike of its reach you make, and its Overcharge takes banked Omni dice
     // (the omnicrystals a player rolls) for an Empower on every such strike this round.
     { id:'baton', name:'Shock Baton', price:6, icon:'⚡',
@@ -276,7 +276,7 @@
       options:[
         { label:'Pay the toll (3 ◇)', cost:{crystals:3}, fx:{}, result:'They salute, almost sincerely, and let you through.' },
         { label:'Refuse', fx:{nextElite:true, crystals:4}, result:'You keep your crystals and take theirs (+4 ◇) — but word travels. The next stop will be guarded by an elite.' },
-        { label:'Offer a trade', fx:{tradeCard:true}, result:'One hero swaps a trait for something from the privateers\' hold.' },
+        { label:'Offer a trade', fx:{tradeCard:true}, result:'One hero sets a trait aside, kept in reserve, for something from the privateers\' hold.' },
       ]},
     { id:'storm', title:'Etherion Storm', icon:'⛈️',
       text:'The weather itself turns to etherion. Mass, Charge, Space, Time — a raw front of one of them rolls over the squad. To stand in it is to be changed by it.',
@@ -323,7 +323,7 @@
     { id:'molt', title:'Molt Season', icon:'🐚',
       text:'The whole reef is shedding. A hero could shed too — one trait for another from the same bloodline.',
       options:[
-        { label:'Molt a trait', fx:{tradeCard:true}, result:'One hero swaps a trait for a new one from their species.' },
+        { label:'Molt a trait', fx:{tradeCard:true}, result:'One hero sheds a trait into reserve and grows a new one from their species in its place.' },
         { label:'Keep your skin', fx:{}, result:'Not this season.' },
       ]},
     { id:'audit', title:'Terminal Audit', icon:'⚖️',

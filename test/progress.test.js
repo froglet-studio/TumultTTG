@@ -110,3 +110,26 @@ test('a 2.75 save loads, plays on and saves again unchanged in shape', () => {
   H.playRun(run);
   assert.ok(run.over);
 });
+
+test('a made pilot comes home with its reserve, the points on it, and sets out with it again', () => {
+  withStorage(() => {
+    const run = T.newRun(77);
+    const h = drafted(run, 'Reed', ['lynx', 'owl']);
+    for (const c of T.CARDS) if (h.cards.length < T.RULES.MAX_CARDS && T.canAddCard(h, c.id).ok) T.addCard(h, c.id);
+    const extra = T.CARDS.find((c) => T.canCollect(h, c.id).ok);
+    assert.ok(T.addCard(h, extra.id).reserve);
+    h.upUnspent = 2;
+    T.adjustUp(h, extra.id, 'E', 1);
+    h.runs = 1;
+    const rec = T.validMade(T.madeFrom(h, '2026-11-21'));
+    assert.ok(rec, 'the recipe is valid');
+    assert.deepEqual(rec.reserve, [extra.id]);
+    assert.deepEqual(rec.up[extra.id], [0, 1]);
+    const back = T.heroFromPrebuilt(T.newRun(78), rec);
+    assert.deepEqual(back.reserve, [extra.id]);
+    assert.deepEqual(back.up[extra.id], [0, 1]);
+    assert.deepEqual(back.cards, h.cards);
+    assert.equal(T.validMade(Object.assign({}, rec, { reserve: [h.cards[0]] })), null, 'no trait twice');
+    assert.equal(T.validMade(Object.assign({}, rec, { reserve: ['nope'] })), null, 'only real traits');
+  });
+});

@@ -207,6 +207,7 @@
       title: spec.title || '',
       species: spec.species.slice(),
       cards: spec.cards.slice(),
+      reserve: (spec.reserve || []).slice(), // traits it holds but leaves behind this mission (T.loadCard)
       up: {},
       hp: R().VITALITY,
       maxHp: R().VITALITY,
@@ -225,7 +226,7 @@
       boons: [],
       faces: null,
     };
-    spec.cards.forEach((c) => (h.up[c] = [0, 0]));
+    spec.cards.concat(h.reserve).forEach((c) => (h.up[c] = [0, 0]));
     if (spec.up)
       Object.keys(spec.up).forEach((c) => {
         if (h.up[c]) h.up[c] = spec.up[c].slice();
@@ -284,7 +285,7 @@
     'spot', // val: as the holder's turn begins, the nearest foe within that many steps is Marked
     'fieldDur', // val: added to the rounds of every Field the holder lays that has rounds
     'fieldForce', // val: added to every push and pull of the holder's Fields
-    'weapon', // val: { reach: 'melee' | 'ranged', n } — added to every strike of that reach the holder makes (2.106)
+    'weapon', // val: { reach: 'melee' | 'ranged', n } — added to every strike of that reach the holder makes (2.108)
   ];
   T.boonVals = function (h, hook) {
     if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown passive hook ' + hook);
@@ -297,10 +298,10 @@
   };
   const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
   /** A weapon's reach for a strike of this kind: melee is melee; a strike along a line or anywhere is ranged;
-   *  an area strike has none, so no weapon adds to it (2.106). */
+   *  an area strike has none, so no weapon adds to it (2.108). */
   T.weaponReach = (kind) => (kind === 'melee' ? 'melee' : kind === 'los' || kind === 'any' ? 'ranged' : null);
   /**
-   * How much more a pilot's strike of this kind deals for its weapons (2.106): each weapon of that reach adds its
+   * How much more a pilot's strike of this kind deals for its weapons (2.108): each weapon of that reach adds its
    * number. The one place a weapon's bonus is read, so any other source of weapons (a vehicle's, say) joins here.
    * A weapon's Overcharge is an Empower on the same strike kinds (src/data/world.js).
    */
@@ -885,7 +886,7 @@
         }
       }
       if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
-      // a weapon adds to every strike of its reach (2.106); a strike that deals nothing stays at nothing
+      // a weapon adds to every strike of its reach (2.108); a strike that deals nothing stays at nothing
       if (opts.strike && dmg > 0) dmg += T.weaponBonus(source, kind);
       if (opts.strike) {
         const flags = source.roundFlags || (source.roundFlags = {});
@@ -2216,7 +2217,7 @@
         const list = f.party ? T.liveHeroes(m) : f.target === 'ally' ? (ally && !ally.downed ? [ally] : []) : [actor];
         list.forEach((h) => {
           h.states.Empower = h.states.Empower || [];
-          // `stack` (a weapon's Overcharge, 2.106): a second one adds to the first instead of waiting behind it
+          // `stack` (a weapon's Overcharge, 2.108): a second one adds to the first instead of waiting behind it
           const same =
             f.stack &&
             h.states.Empower.find((e) => e.stack && JSON.stringify(e.kind) === JSON.stringify(f.kind || null));
@@ -2760,7 +2761,7 @@
     T.afterAction(m);
     return { ok: true, ctx: rctx };
   };
-  /** What a gear ability costs, as a player reads it: omnicrystals from the purse, or banked Omni dice (2.106). */
+  /** What a gear ability costs, as a player reads it: omnicrystals from the purse, or banked Omni dice (2.108). */
   T.gearCostText = (ab) =>
     [ab.cost ? `${ab.cost} ◇` : '', ab.omni ? `${ab.omni} Omni` : ''].filter(Boolean).join(' + ') || 'free';
   /** Whether this pilot can pay for and use this gear ability now, leaving aside its target. */

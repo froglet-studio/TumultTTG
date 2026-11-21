@@ -82,7 +82,7 @@ table).
 
 Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Push N** (away from it).
 
-**Weapons (2.106)** are the one way tech touches your strikes: a weapon's passive adds 1 to every strike of its
+**Weapons (2.108)** are the one way tech touches your strikes: a weapon's passive adds 1 to every strike of its
 reach (melee, or ranged) you make, and its Overcharge takes a banked Omni die for **Empowered** 2 on every such
 strike this round, stacking. It still never strikes on its own. Empower is the existing keyword (*Empowered N: the
 next strike, or strikes, deal N more*); a weapon adds no new one.
