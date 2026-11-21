@@ -66,7 +66,7 @@
     { n:'Pace', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'cleanse'},{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Shrug off Anchored/Weakened, then move ${1+P}.` },
-    { n:'Second Wind', ap:2, el:1, cd:4, dur:4, tgt:'self',
+    { n:'Second Wind', ap:0, el:1, cd:4, dur:4, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:(P,E)=>2+E}],
       txt:(P,E)=>`Engine: regenerate ${2+E} vitality at the start of each of your turns. Dur 4.` },
     'A body tuned for relentless endurance.');
@@ -82,7 +82,7 @@
     { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
       fx:[{v:'rally', move:(P,E)=>1+P}],
       txt:(P,E)=>`Call your ally up to ${1+P} nodes: you choose where they go, now.` },
-    { n:'Rally', ap:2, el:1, cd:3, dur:2, tgt:'party',
+    { n:'Rally', ap:0, el:1, cd:3, dur:2, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>E>=2?2:1, uses:99, party:true, dur:2},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Party strikes +${E>=2?2:1} for 2 turns; foes adjacent to you are Weakened 1.` },
     'Words that turn a crowd into a single organism.');
@@ -90,7 +90,7 @@
     { n:'Spot', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Reveal everything within ${1+P} nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.` },
-    { n:'Weak Point', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
+    { n:'Weak Point', ap:0, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'expose', bonus:(P,E)=>E}],
       txt:(P,E)=>`Expose a foe: the next hit on it ignores Shield and deals +${E}.` },
     'Find the seam in the system.');
@@ -98,7 +98,7 @@
     { n:'Manipulate', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Melee ${1+P} and Weaken 1 (its next hit deals −1).` },
-    { n:'Leverage', ap:2, el:1, cd:3, dur:0, tgt:'foe_melee',
+    { n:'Leverage', ap:0, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:(P,E)=>1+E}],
       txt:(P,E)=>`Melee ${2+P} and Anchor the foe for ${1+E} rounds (it cannot move).` },
     'Multiply your force far past your size.');
@@ -106,15 +106,15 @@
     { n:'Assist', ap:1, el:0, cd:1, dur:0, tgt:'ally',
       fx:[{v:'empower', val:(P,E)=>2+P, uses:1, target:'ally'}],
       txt:(P,E)=>`Your ally's next strike deals +${2+P}.` },
-    { n:'Unity', ap:2, el:1, cd:4, dur:0, tgt:'ally',
-      fx:[{v:'mint', face:'AP', n:(P,E)=>2+E, target:'ally'}],
-      txt:(P,E)=>`Pool your effort: your ally mints ${2+E} temporary AP this turn.` },
+    { n:'Unity', ap:0, el:1, cd:4, dur:0, tgt:'ally',
+      fx:[{v:'mint', face:'AP', n:(P,E)=>E, target:'ally'}],
+      txt:(P,E)=>`Pool your effort: your ally mints ${E} temporary AP this turn.` },
     'Act as one coordinated unit.');
   C('human','hum_general','Adaptive Generalist','T',0,
     { n:'Improv', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'mint', face:'O', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Mint ${1+h(P)} temporary Omni (spends as any etherion this turn).` },
-    { n:'Mimic Form', ap:2, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Mimic Form', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hasten', n:(P,E)=>1+E},{v:'mint', face:'O', n:1}],
       txt:(P,E)=>`Learn on the fly: every card on your track returns ${1+E} columns sooner, and mint 1 Omni.` },
     'Jack of all trades, briefly master of one.');
@@ -148,7 +148,7 @@
     { n:'Gnaw', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P}],
       txt:(P,E)=>`Melee ${2+P}.` },
-    { n:'Crumble', ap:2, el:1, cd:3, dur:0, tgt:'foe_melee',
+    { n:'Crumble', ap:0, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'stripShield', amount:(P,E)=>1+E},{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:(P,E)=>Math.max(0,E-1)}],
       txt:(P,E)=>`Chew ${1+E} off its Shield, then melee ${3+P}${E>=2?` and push ${E-1}`:''}.` },
     'Through wood, rope, soft stone, thin metal.');
@@ -156,9 +156,9 @@
     { n:'Stash', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'draw', face:'AP', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Draw ${1+h(P)} die from your pool straight into your bank as AP.` },
-    { n:'Pocket Fold', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'draw', face:'AP', n:(P,E)=>E},{v:'mint', face:'O', n:1}],
-      txt:(P,E)=>`Draw ${E} pool dice as AP and mint 1 Omni from a pocket of folded space.` },
+    { n:'Pocket Fold', ap:0, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'draw', face:'AP', n:(P,E)=>E-1},{v:'mint', face:'O', n:1}],
+      txt:(P,E)=>`${E>1?`Draw ${E-1} pool ${E>2?'dice':'die'} as AP and mint`:'Mint'} 1 Omni from a pocket of folded space.` },
     'Retrieve anything, instantly, from anywhere.');
   C('jerboa','jer_vibrissae','Vibrissae Sense','M',0,
     { n:'Feel', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -206,7 +206,7 @@
     { n:'Rasp', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>P, uses:1, target:'ally'}],
       txt:(P,E)=>`A sustained tone: adjacent foes Weakened 1${P>0?`; your ally's next strike +${P}`:''}.` },
-    { n:'Resonance', ap:3, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Resonance', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'strike', kind:'zone_all', dmg:(P,E)=>2+E},{v:'weaken', val:(P,E)=>E>=2?2:0, dur:1, area:'zone'}],
       txt:(P,E)=>`A harmful frequency: every foe in your zone takes ${2+E}${E>=2?' and is Weakened 2':''}.` },
     'Tune the resonance until it hurts.');
@@ -254,7 +254,7 @@
     { n:'Cue', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
       fx:[{v:'empower', val:(P,E)=>1+P, uses:1, target:'ally'},{v:'rally', move:1}],
       txt:(P,E)=>`Gregarious cue: your ally's next strike +${1+P}, and you step them 1 node where you choose.` },
-    { n:'Swarm Phase', ap:2, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Swarm Phase', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true},{v:'weaken', val:1, dur:1, area:'adjParty'}],
       txt:(P,E)=>`The swarm phase: both heroes mint 1 AP at the start of their turns for ${1+E} rounds; foes adjacent to either are Weakened 1.` },
     'Solitary to gregarious on a chemical cue.');
@@ -280,7 +280,7 @@
     { n:'Listen', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'move', n:1, free:true}],
       txt:(P,E)=>`Locate everything within ${2+P} by ear alone, then take one free step.` },
-    { n:'Acoustic Map', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Acoustic Map', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+E, dur:(P,E)=>2+E},{v:'preempt', val:(P,E)=>E, reflect:0}],
       txt:(P,E)=>`A 3-D map of everything within ${2+E} for ${2+E} rounds — hidden foes, traps and hidden objectives there all pinpointed, and you hear the next hit on you coming: it deals ${E} less.` },
     'Offset ears triangulate prey in total darkness.');
@@ -354,7 +354,7 @@
     { n:'Blend', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Match your surroundings: Hidden ${1+h(P)} (breaks if you move) and Shield 1.` },
-    { n:'Vanish', ap:1, el:2, cd:3, dur:0, tgt:'self',
+    { n:'Vanish', ap:0, el:2, cd:3, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+E, canMove:true},{v:'shield', val:(P,E)=>P, dur:1, min:1}],
       txt:(P,E)=>`Bend light: Hidden ${1+E} rounds and you may move while Hidden${P>0?`; Shield ${P}`:''}.` },
     'Paints its skin in an eyeblink.');
@@ -386,9 +386,9 @@
     { n:'Multitask', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'freecast', n:1, dur:1},{v:'mint', face:'AP', n:(P,E)=>h(P)}],
       txt:(P,E)=>`Eight arms: the next card you play this turn does not go to your track${P>=2?`, and mint ${h(P)} temporary AP`:''}.` },
-    { n:'Parallel', ap:2, el:2, cd:4, dur:0, tgt:'self',
-      fx:[{v:'freecast', n:2},{v:'mint', face:'AP', n:(P,E)=>E>=2?2:1}],
-      txt:(P,E)=>`Parallel-process: the next two cards you play don't go to your track, and mint ${E>=2?2:1} AP.` },
+    { n:'Parallel', ap:0, el:2, cd:4, dur:0, tgt:'self',
+      fx:[{v:'freecast', n:(P,E)=>E>=3?3:2}],
+      txt:(P,E)=>`Parallel-process: the next ${E>=3?'three':'two'} cards you play don't go to your track.` },
     'Thinks partly through eight semi-independent arms.');
   C('octopus','oct_chemo','Chemo-Suckers','C',0,
     { n:'Taste', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -402,7 +402,7 @@
     { n:'Bite', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Melee ${2+P} and Weaken 1.` },
-    { n:'Neurotoxin', ap:2, el:2, cd:4, dur:0, tgt:'foe_melee',
+    { n:'Neurotoxin', ap:0, el:2, cd:4, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:2, dur:(P,E)=>1+h(E)},{v:'slow', dur:(P,E)=>1+h(E)}],
       txt:(P,E)=>`Melee ${2+P}; the foe is enervated for ${1+h(E)} round${E>=2?'s':''}: its hits deal −2 and it cannot move. It still acts.` },
     'It still acts fully; it just does less per effort.');
@@ -420,7 +420,7 @@
     { n:'Climb', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
       fx:[{v:'climb', reach:(P,E)=>1+P}],
       txt:(P,E)=>`Walk walls and ceilings: move ${1+P}, height nodes included.` },
-    { n:'Van der Waals', ap:1, el:1, cd:3, dur:0, tgt:'foe_los',
+    { n:'Van der Waals', ap:0, el:1, cd:3, dur:0, tgt:'foe_los',
       fx:[{v:'force', kind:'pull', n:(P,E)=>1+E},{v:'anchor', who:'foe', dur:(P,E)=>E>=2?1:0}],
       txt:(P,E)=>`Command the molecular bond: pull a foe in your zone ${1+E} toward you${E>=2?' and Anchor it 1':''}.` },
     'Dry molecular adhesion.');
@@ -428,7 +428,7 @@
     { n:'Latch', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:1}],
       txt:(P,E)=>`Melee ${2+P} and latch on: Anchored 1.` },
-    { n:'Crush', ap:2, el:1, cd:3, dur:0, tgt:'foe_melee',
+    { n:'Crush', ap:0, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:(P,E)=>2+E},{v:'dot', val:2, dur:2, kind:'crush'}],
       txt:(P,E)=>`Melee ${2+P}; the grip can't be broken: Anchored ${2+E} and crushed for 2 at the end of each round (2 rounds).` },
     'Refuses to be shaken.');
@@ -452,7 +452,7 @@
     { n:'Bask', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'draw', face:'AP', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Soak warmth: draw ${1+h(P)} pool die into your bank as AP.` },
-    { n:'Photovoltaic', ap:1, el:1, cd:4, dur:3, tgt:'self',
+    { n:'Photovoltaic', ap:0, el:1, cd:4, dur:3, tgt:'self',
       fx:[{v:'engine', kind:'draw', face:(P,E)=>E>=2?'O':'C', val:1}],
       txt:(P,E)=>`Engine for 3 rounds: each turn draw 1 pool die as ${E>=2?'Omni':'Charge'}.` },
     'Ambient light into etherions.');
@@ -494,7 +494,7 @@
     { n:'Knit', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+P}],
       txt:(P,E)=>`Knit a wound: heal ${2+P}.` },
-    { n:'Regrow', ap:2, el:1, cd:4, dur:3, tgt:'self',
+    { n:'Regrow', ap:0, el:1, cd:4, dur:3, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:(P,E)=>2+E, cleanse:(P,E)=>E>=2}],
       txt:(P,E)=>`Engine for 3 rounds: regenerate ${2+E} each turn${E>=2?' and shed every hold and dot':''}.` },
     'Regrows limbs, organs, parts of its brain.');
@@ -502,7 +502,7 @@
     { n:'Plasticity', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>1+P, dur:2}],
       txt:(P,E)=>`Adapt soft tissue: Shield ${1+P} for 2 rounds.` },
-    { n:'Reshape', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Reshape', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'morph', bonus:(P,E)=>1+E, climb:true, dur:(P,E)=>1+E}],
       txt:(P,E)=>`Grow what the moment needs for ${1+E} rounds: strikes +${1+E} and you may climb onto height nodes.` },
     'Perpetual plasticity.');
@@ -510,7 +510,7 @@
     { n:'Gills', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'hazardImmune', dur:2},{v:'heal', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Breathe anything: immune to hazards for 2 rounds, and heal ${1+h(P)}.` },
-    { n:'Respire Anywhere', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Respire Anywhere', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hazardImmune', dur:(P,E)=>2+E},{v:'hazardImmune', dur:1, party:true},{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E, party:true}],
       txt:(P,E)=>`Both heroes regenerate 1 each turn for ${2+E} rounds; you ignore hazards for ${2+E}, your ally this round.` },
     'Energy from any medium.');
@@ -534,7 +534,7 @@
     { n:'Lunge', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
       fx:[{v:'move', n:1, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:1}],
       txt:(P,E)=>`Lunge 1 toward a foe, melee ${2+P}, and shove it 1.` },
-    { n:'Momentum Wave', ap:2, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Momentum Wave', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:(P,E)=>E, area:true}],
       txt:(P,E)=>`A wave of thrust: every adjacent foe takes ${2+P} and is knocked back ${E}.` },
     'Knock back everything in a line.');
@@ -542,7 +542,7 @@
     { n:'Surge', ap:2, el:0, cd:3, dur:2, tgt:'self',
       fx:[{v:'morph', bonus:(P,E)=>2+h(P), move:1, dur:2}],
       txt:(P,E)=>`Trigger the buried adult form for 2 rounds: strikes +${2+h(P)}, +1 move.` },
-    { n:'Apex Form', ap:2, el:2, cd:5, dur:0, tgt:'self',
+    { n:'Apex Form', ap:0, el:2, cd:5, dur:0, tgt:'self',
       fx:[{v:'morph', bonus:3, reach:1, move:1, shield:2, dur:(P,E)=>1+E}],
       txt:(P,E)=>`The war-form, for ${1+E} rounds: strikes +3, melee reaches 2 nodes, +1 move, Shield 2.` },
     'A metamorphosis kept in reserve.');
@@ -576,7 +576,7 @@
     { n:'Sense', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>1, trueDmg:true, nearest:true}],
       txt:(P,E)=>`Sense bioelectric fields: reveal within ${2+P}, and jolt the nearest foe in your zone for 1 true damage.` },
-    { n:'Field Map', ap:1, el:1, cd:3, dur:0, tgt:'party',
+    { n:'Field Map', ap:0, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>2+E},{v:'guard', dur:(P,E)=>2+E, party:true}],
       txt:(P,E)=>`Cast your field out to ${1+E} for ${2+E} rounds: everything in it revealed and unable to Hide, and ambushes on either hero deal half.` },
     'The world through its own electric field.');
@@ -600,9 +600,9 @@
     { n:'Gulp', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'cleanse'}],
       txt:(P,E)=>`Surface and breathe: heal ${1+P} and shed every hold.` },
-    { n:'Reserve', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'mint', face:'AP', n:(P,E)=>2+E}],
-      txt:(P,E)=>`Stretch your reserve: mint ${2+E} temporary AP.` },
+    { n:'Reserve', ap:0, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'mint', face:'AP', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Stretch your reserve: mint ${1+E} temporary AP.` },
     'Past any normal limit.');
   C('eel','eel_ribbon','Ribbon-Fin Glide','S',0,
     { n:'Undulate', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -650,7 +650,7 @@
     { n:'Bask', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'draw', face:'AP', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Bask: draw ${1+h(P)} pool die into your bank as AP.` },
-    { n:'Bloom Engine', ap:1, el:1, cd:4, dur:4, tgt:'self',
+    { n:'Bloom Engine', ap:0, el:1, cd:4, dur:4, tgt:'self',
       fx:[{v:'engine', kind:'draw', face:'C', val:1, mintAlt:(P,E)=>E>=2?E:0}],
       txt:(P,E)=>`Engine for 4 rounds: each turn draw 1 guaranteed Charge from your pool${E>=2?`, or mint ${E} temporary Charge instead`:''}.` },
     'Feeds itself on light.');
@@ -706,7 +706,7 @@
     { n:'Lure', ap:1, el:0, cd:1, dur:0, tgt:'foe_los',
       fx:[{v:'force', kind:'pull', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Scent and UV nectar guides: a foe in your zone is drawn ${1+h(P)} toward you.` },
-    { n:'Allure', ap:2, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Allure', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'force', kind:'pull', n:1, area:true, radius:(P,E)=>1+E},{v:'weaken', val:1, dur:1, area:'radius', radius:(P,E)=>1+E}],
       txt:(P,E)=>`Saturate the air: every foe within ${1+E} is drawn 1 toward you and Weakened 1.` },
     'They approach the trap.');
@@ -716,7 +716,7 @@
     { n:'Tendrils', ap:2, el:0, cd:2, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'choose', n:1}],
       txt:(P,E)=>`Sink tendrils in: melee ${2+P} and force one step (push or pull).` },
-    { n:'Override', ap:3, el:2, cd:4, dur:0, tgt:'foe_any',
+    { n:'Override', ap:0, el:2, cd:4, dur:0, tgt:'foe_any',
       fx:[{v:'redirect'},{v:'strike', kind:'any', dmg:(P,E)=>E>=2?2+E:0}],
       txt:(P,E)=>`Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none)${E>=2?`, and it takes ${2+E}`:''}.` },
     'A single simple move, never a whole turn.');
@@ -724,7 +724,7 @@
     { n:'Link', ap:1, el:0, cd:1, dur:0, tgt:'ally',
       fx:[{v:'mint', face:'AP', n:(P,E)=>1+h(P), target:'ally'}],
       txt:(P,E)=>`Link to your ally: pass them ${1+h(P)} temporary AP.` },
-    { n:'Wood-Wide Web', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Wood-Wide Web', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>2+E, target:'ally'},{v:'shield', val:1, dur:(P,E)=>2+E, party:true}],
       txt:(P,E)=>`Run the wood-wide web for ${2+E} rounds: your ally mints 1 AP each turn and both heroes hold Shield 1.` },
     'Share across any distance.');
@@ -756,7 +756,7 @@
     { n:'Fragment', ap:2, el:0, cd:3, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+P},{v:'revive', hp:4, adjacent:true}],
       txt:(P,E)=>`Regrow from a fragment: heal ${2+P}; if a downed ally is adjacent, they rise with 4 hp.` },
-    { n:'Reconstitute', ap:1, el:2, cd:5, dur:3, tgt:'self',
+    { n:'Reconstitute', ap:0, el:2, cd:5, dur:3, tgt:'self',
       fx:[{v:'phoenix', hp:(P,E)=>6+E, dur:3}],
       txt:(P,E)=>`Seed a node where you stand: if you are downed within 3 rounds, you re-form there with ${6+E} hp.` },
     'Any node remains, you remain.');

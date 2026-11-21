@@ -430,3 +430,12 @@ Averaged over the cells, the heuristic wins 79.5% → 78.4% and the look-ahead p
 Garrett, 2026-11-21: "instead of picking your dice it should be 3 ap dice and 1 element of your choice." A roll is three plain d20s and one element die from the pilot's own, chosen (`T.RULES.ROLL_EL`). The sure etherion of the colour a pilot needs helped the careful player and not the plain one: `node tools/sim.js 80 runs --player strong`, 2.82.0 → 2.83 at the old vitality, 40 → 52 of 80; `120 runs --player weak`, 20 → 19 of 120.
 
 So every foe has **140%** of its listed vitality (was 130%). At 140%: look-ahead 43 of 80, heuristic 12 of 120 (150%: 37 of 80 and 9 of 120). `node tools/sim.js 40`, 2.82.0 → 2.83.0: full runs heuristic 6 → 3, look-ahead 18 → 20; mission wins 73% → 66% and 85% → 87%; the finale 23/43% → 8/35%. Not easier for a careful squad, a little harder for a plain one.
+
+## v2.84.0 — Ethereal faces at 0 AP
+
+Garrett, 2026-11-21: "the underpowered elemental abilities and the ones that refund an ap die should have their ap cost reduced to zero instead." 93 of the 529 Ethereal faces now cost no AP:
+
+- **9 that gave AP back** (Unity, Pocket Fold, Parallel, Reserve, Mental Map, Hoard, Dig In, Catch!, Overdrive): the AP cost is gone and the AP they gave back is less by that cost, so each nets the same AP as before but can be played from an empty bank. Parallel's growth moved from minted AP to a third free card at E 3.
+- **84 that the look-ahead player hardly plays**: every Ethereal face with a census index under 0.25 (`node tools/census.js 4000` on 2.83.0, faces held at least 15 times; 93 of the 279 measured faces were under 0.25). Many are heal-over-time and hiding faces, which a careful squad near full health passes over (see 2.73), so this is a nudge, not a verdict.
+
+Not easier: `node tools/sim.js 80 runs --player strong`, 2.83.0 → 2.84.0, 43 → 42 of 80; `120 runs --player weak`, 12 → 13 of 120. `node tools/sim.js 40`: heuristic runs 3 → 2, look-ahead 20 → 16; mission wins 66% → 65% and 87% → 85%. Nothing is retuned.
