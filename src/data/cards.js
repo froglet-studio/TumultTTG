@@ -593,8 +593,8 @@
       fx:[{v:'shield', val:(P,E)=>2+P, dur:1}],
       txt:(P,E)=>`Ground yourself: Shield ${2+P}.` },
     { n:'Insulate', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'shield', val:(P,E)=>2+P, dur:(P,E)=>1+E, all:true},{v:'statusImmune', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`An insulating shell for ${1+E} rounds: Shield ${2+P} against everything and immune to Weaken and Anchor.` },
+      fx:[{v:'cleanse', ward:(P,E)=>1+E},{v:'shield', val:(P,E)=>2+P, dur:(P,E)=>1+E, all:true}],
+      txt:(P,E)=>`An insulating shell for ${1+E} rounds: Shield ${2+P} against everything; Cleanse, and you can't be Weakened or Anchored by a foe as long.` },
     'Nullify the current.');
   C('eel','eel_gulp','Air-Gulp Endurance','T',0,
     { n:'Gulp', ap:1, el:0, cd:1, dur:0, tgt:'self',

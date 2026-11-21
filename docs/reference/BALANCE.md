@@ -504,3 +504,7 @@ Pre-empt, Guard and Absorb became Shield. Same seeds, 2.93.0 → 2.94.0: `80 run
 ## v2.96.0 — Haste
 
 `hasten`, `clock` and `freecast` became one verb, `haste`; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after (the same seeds play the same missions).
+
+## v2.97.0 — Cleanse
+
+Status immunity became Cleanse for N (it now also sheds what is on you). Same seeds, 2.94.0 → 2.97.0, with the renames Blink and Haste between: `80 runs --player strong` 38 → 38; `120 runs --player weak` 10 → 9; `node tools/sim.js 40` runs 5 → 5 and 19 → 19 of 40, mission wins 71% and 87% both. Nothing is retuned. The sweep stands at 38 of 80 and 9 of 120 against 2.85.0's 39 and 10: not easier.

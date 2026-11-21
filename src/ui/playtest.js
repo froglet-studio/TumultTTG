@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.96.0',
+    version: '2.97.0',
     items: [
+      {
+        text: 'Faces that made you immune to Weaken and Anchor now Cleanse you too: they shed Weakened, Anchored and Wounds at once, then keep foes from Weakening or Anchoring you for a few rounds. Do you notice the difference when a foe has already Anchored you?',
+        cards: ['pan_ants', 'heh_anoint'],
+      },
       {
         text: 'Cards that slide your track, buy rounds from the mission clock or let your next card skip the track now all say Haste. Nothing else changed. Is Haste a word you can play by at the table?',
         cards: ['ora_memory', 'oct_arms'],
