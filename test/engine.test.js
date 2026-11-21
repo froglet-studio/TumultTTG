@@ -209,7 +209,7 @@ test('strike bonuses belong to strikes: wearing-down damage neither spends nor g
   };
   const dotTick = (s) => {
     const before = s.e.hp;
-    T.runEffects(s.m, s.h, [{ v: 'dot', val: 1, dur: 3, kind: 'corrode' }], { P: 0, E: 0, target: s.e.uid });
+    T.runEffects(s.m, s.h, [{ v: 'wound', n: 1, kind: 'corrode' }], { P: 0, E: 0, target: s.e.uid });
     T.roundEnd(s.m);
     return before - s.e.hp;
   };

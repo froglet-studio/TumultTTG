@@ -402,7 +402,7 @@
     anchor: 'boon.anchorsoul',
     weaken: 'verb.weaken',
     stripShield: 'verb.weaken',
-    dot: 'verb.weaken',
+    wound: 'verb.weaken',
     execute: 'node.elite',
     field: 'enemy.biter',
     rally: 'basic.legup',

@@ -81,6 +81,14 @@
       tip: 'Rooted: cannot walk while it lasts. It still acts.',
     },
     {
+      id: 'wound',
+      re: 'Wound(?:ed|s)?',
+      icon: 'kw.weak',
+      tone: 'bad',
+      state: 'Wound',
+      tip: 'Wound N: at round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). A new Wound replaces a smaller one.',
+    },
+    {
       id: 'link',
       re: 'Link(?:ed|s)?',
       icon: 'kw.link',

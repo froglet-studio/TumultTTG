@@ -456,3 +456,7 @@ Fourteen faces became Fields (`KEYWORDS.md`), a Field springs on a foe moved ont
 ## v2.87.0 — Link
 
 Seven Charge faces Link their target to the nearest foe; Redirect and the chain strike are cut. Same seeds, 2.86.0 → 2.87.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 18 of 40, mission cells unchanged but for cascade t2's kills (1.8 → 1.7, look-ahead); `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10. Not easier, so nothing is retuned.
+
+## v2.88.0 — Wound
+
+Damage over time became Wound N (N at round end, then one less). Same seeds, 2.87.0 → 2.88.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 19 of 40, mission wins unchanged (69%, 87%); `80 runs --player strong` 38 → 40; `120 runs --player weak` 10 → 10. With Wounds adding up it measured 41 of 80 and 12 of 120, so a new Wound replaces a smaller one instead. Within the noise, so nothing is retuned.

@@ -54,3 +54,20 @@ Link combines with every other keyword: Mark one end and hit it, push one end in
 a foe to the one a Brute is about to drag.
 
 In code: the verb `link` (`within`, `dur`), the state `Linked` (`{ to, t }` on both units), `T.linkedTo`.
+
+## Wound (2.88)
+
+> **Wound N.** At round end it takes N, then the Wound drops by 1.
+
+- **One number.** Wound 3 bites 3, then 2, then 1, then is gone. A new Wound replaces a smaller one; a smaller
+  one does nothing. Its bite is true damage (Shield does not stop it).
+- **Who.** Any unit; Cleanse sheds it. Some Wounds heal the one who gave them at each bite (Deepen the
+  parasitism).
+- **Magic's keyword for waiting.** It pays across rounds, so it belongs on faces that set up.
+
+It replaced damage over time (`dot`) and its fifteen names (venom, crush, corrode, rot, drain, sting, quill, cut,
+rake, grip, salt, foul, toxin, slime, scald). The old faces kept their flavour word in the log. A dot of 1 for 2
+rounds became Wound 2; 1+E for 3 rounds became Wound 2+E.
+
+In code: the verb `wound` (`n`, `area`, `healOwner`, `kind` for the log), the state `Wound`
+(`{ n, owner, heal, kind }`), saves version 21.
