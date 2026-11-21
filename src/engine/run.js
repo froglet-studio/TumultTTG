@@ -798,13 +798,7 @@
     const rw = run.lastReward;
     run.mission = null;
     run.purses = m.purses.slice();
-    // a pet that died is gone, and its card with it, every point on it refunded (src/data/pets.js)
-    for (const p of m.pets || [])
-      if (p.dead) {
-        const h = run.heroes.find((x) => x.uid === p.owner);
-        const rec = h && (h.pets || []).find((x) => x.id === p.pid);
-        if (rec) T.removeCard(h, rec.card);
-      }
+    // a pet that died is gone for that mission only: it sets out again, whole, with the next (Garrett, 2026-11-21)
     run.secondWindUsed = m.secondWindUsed;
     run.stats.missions++;
     run.stats.kills += m.stats.kills;

@@ -1175,7 +1175,7 @@
         .concat((m.pets || []).filter((p) => p.dead && p.owner === h.uid))
         .map(
           (p) =>
-            `<span class="state pet${p.dead ? ' dead' : ''}" data-tip="${esc(p.dead ? `${esc(p.name)} died: its card leaves the kit when the mission ends.` : `${esc(p.name)}, your pet: ${p.hp}/${p.maxHp}. Its card's faces act from it.`)}">🐾 ${esc(p.name)} ${p.dead ? '✝' : p.hp}</span>`,
+            `<span class="state pet${p.dead ? ' dead' : ''}" data-tip="${esc(p.dead ? `${esc(p.name)} died: its card is out for this mission; it comes back for the next.` : `${esc(p.name)}, your pet: ${p.hp}/${p.maxHp}. Its card's faces act from it.`)}">🐾 ${esc(p.name)} ${p.dead ? '✝' : p.hp}</span>`,
         )
         .join(
           '',

@@ -13,7 +13,7 @@
 
 - **Pets, sidekicks on the board.** A haven may have a stray: a hybrid of three clades, none of them human, with its own vitality (8). When it is found, one trait is drawn from each of its clades, and their three Physical faces make one pet card. Adopt it for 4 ◇ and the card joins the kit, where it counts toward the nine (a full kit takes it in exchange). A pilot keeps two pets at most. Pet cards grow with P; they have no Ethereal face (Garrett, 2026-11-21).
 - **The card plays from the pet.** The pilot pays with their own dice, and any one face sends the whole card to the track. Range, strikes, steps and states on "you" are the pet's; what a face does to dice, the track or the purse is the pilot's. Heel (1 AP) walks the pet up to 3.
-- **Safe on its pilot's node.** A pet may share its own pilot's node, and nothing can hurt it there; foes cannot target it. Off that node they can, and at 0 it dies: it leaves the board, and when the mission ends its card leaves the kit, every point on it refunded.
+- **Safe on its pilot's node.** A pet may share its own pilot's node, and nothing can hurt it there; foes cannot target it. Off that node they can, and at 0 it dies: it leaves the board, and its card is out for the rest of the mission. It comes back, whole, for the next one (Garrett, 2026-11-21).
 - The look-ahead player plays pet faces and Heel, weighing a pet's vitality at 0.5 a point and its death at 12 (`T.EVAL`). `node tools/sim.js 40 missions --pets` gives every pilot a pet in place of a trait. Without pets nothing changes: the default tables are identical before and after.
 - **Saves** are version 29: every hero gains `pets`, a mission `pets`. `docs/reference/PETS.md`.
 

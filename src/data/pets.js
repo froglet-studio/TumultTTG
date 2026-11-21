@@ -19,8 +19,9 @@
      but it acts from the pet: its reach, its strikes, its steps, its own states ("you" on the face is the
      pet). What a face does to dice, the track or the purse still goes to the pilot (T.PET_PILOT_VERBS).
    • Heel (1 AP): the pet moves up to T.PET.SPEED.
-   • A pet at 0 vitality dies. It leaves the board, and after the mission it and its card leave the kit,
-     every point on the card refunded (T.removeCard).
+   • A pet at 0 vitality dies. It leaves the board and its card is out for the rest of the mission; it comes
+     back, whole, for the next one (Garrett, 2026-11-21: "if a player or pet dies it is gone for the mission.
+     and comes back next mission").
    • A pet may share its own pilot's node, and its pilot may share its node; nobody else can. While it is on
      its standing pilot's node nothing can hurt it.
 

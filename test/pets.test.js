@@ -77,7 +77,7 @@ test('a pet sets out on its pilot’s node, and there nothing can hurt it', () =
   assert.ok(!T.foesFor(m, foe).includes(pet), 'foes do not count it as a target');
 });
 
-test('Heel walks the pet; off its pilot’s node it can be hit and can die, and its card goes with it', () => {
+test('Heel walks the pet; off its pilot’s node it can be hit and can die, out for the mission but back for the next', () => {
   const { run, m, h, pet, rec } = withPet(12);
   h.held = ['AP', 'AP', 'AP'];
   h.heldDie = [];
@@ -99,8 +99,12 @@ test('Heel walks the pet; off its pilot’s node it can be hit and can die, and 
   m.over = m.won = true;
   T.missionRewards(run, m);
   T.applyMissionResult(run);
-  assert.ok(!h.cards.includes(rec.card), 'the card leaves the kit');
-  assert.equal(h.pets.length, 0);
+  assert.ok(h.cards.includes(rec.card), 'the card stays in the kit');
+  assert.equal(h.pets.length, 1);
+  T.launchMission(run, 'vault', 2);
+  const again = run.mission.pets[0];
+  assert.ok(again && !again.dead, 'it comes back for the next mission');
+  assert.equal(again.hp, T.PET.HP);
 });
 
 test('a pet card acts from the pet and sends the whole card to the track', () => {

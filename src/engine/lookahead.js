@@ -322,7 +322,7 @@
     // is not scored as nothing just because it pays off later than the round being looked at.
     ahead: 0.6,
     petHp: 0.5, // per point of a pet's vitality: it soaks blows and acts, but it is not a pilot
-    petDead: 12, // a pet lost is a card lost for good
+    petDead: 12, // a pet lost is its card lost for the rest of the mission
     spare: 0.5, // per temporary die minted and not yet spent, while the search is still choosing (see loose)
   };
   /** What a hero has bought for later rounds, in points before the `ahead` share. */

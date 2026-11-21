@@ -37,7 +37,7 @@
         text: 'No die is ever drawn at random now: Draw takes a plain die while your pool has one, then the element die that shows the face most, and a roll with few plain dice left takes the element dice you hold most of. Did any Draw bank a die you did not expect?',
       },
       {
-        text: 'A pet can share your node, and there nothing can hurt it; off your node foes can target it, and at 0 it dies and its card leaves your kit (the points on it come back). Did you find yourself parking it on your node, or sending it out? Was a pet ever worth losing?',
+        text: 'A pet can share your node, and there nothing can hurt it; off your node foes can target it, and at 0 it dies and is gone for the rest of the mission (it comes back for the next). Did you find yourself parking it on your node, or sending it out? Was it worth risking?',
       },
     ],
   };
