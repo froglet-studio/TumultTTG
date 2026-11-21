@@ -29,3 +29,6 @@ CLAUDE.local.md
 server/src/engine.gen.js
 server/.wrangler/
 server/.dev.vars
+
+# Loop Atlas: the Code Atlas build (node tools/code-atlas.js build)
+docs/loopatlas/code-out/

@@ -1,0 +1,86 @@
+- id: arc.pilot
+  parent: era
+  at: 3
+  core: true
+  name: A pilot grows
+  tier: 6
+  kind: loop
+  t: [86400, 2592000]
+  is: A made pilot comes home with its traits, points and level, and sets out again as it came home.
+  phases:
+  - n: Make or choose the pilot
+  - n: Fly an expedition
+  - n: Come home with traits and points
+  - n: Swap traits past nine
+  - n: Choose it again
+  drivers: [own, mastery, make]
+  now:
+    s: built
+    note: 'Since 2.76; missions scale to the pilot''s level (docs/reference/SCALING.md).'
+  plan:
+    note: 'Design/06: the dossier records who the pilot is and what it did; three-pilot squads.'
+  holes:
+  - 'on': np
+    q: The pilot keeps cards and points but nothing of what it did, so the workshop job stops at the build.
+    fill: 'The dossier (P7): each expedition writes one line about the pilot from the faces it played and the canon its
+      player wrote.'
+  src:
+  - docs/reference/RUN_AND_ECONOMY.md Pilots keep their growth
+  - docs/design/06-pilots-and-backstory.md
+- id: arc.canon
+  parent: era
+  at: 3
+  name: Canon from play
+  tier: 6
+  kind: loop
+  t: [3600, 2592000]
+  is: Players add or correct details of places, pilots, foes and events; each answer becomes a canon record for approval.
+  phases:
+  - n: A question at a pause, or a mark on a text
+  - n: The player answers or corrects
+  - n: A record is proposed
+  - n: The lore lead approves
+  - n: It reaches the storyteller pack
+  drivers: [make, story]
+  now:
+    s: built
+    note: Marks on atlas, codex and events; questions after the draft and after a mission (docs/reference/CANON.md).
+  prop:
+    s: change
+    note: 'A question names a keyword moment: "Your Pull dragged the Brute into the flood. What did the crowd shout?"'
+  src:
+  - docs/reference/CANON.md
+- id: arc.friends
+  parent: era
+  at: 2
+  name: Playing with friends
+  tier: 6
+  kind: loop
+  t: [3600, 1209600]
+  is: The lobby, a code, or one screen at the table; one to five players, each flying their own pilot.
+  phases:
+  - n: See who is playing
+  - n: Join or host
+  - n: Bring your pilot
+  - n: Fly together
+  - n: Join again mid-route
+  drivers: [crew]
+  now:
+    s: built
+    note: 'Lobby since 2.80, Take turns since 2.81, joining mid-route since 2.79.'
+  src:
+  - docs/reference/OVERVIEW.md Players
+- id: arc.fleet
+  parent: era
+  at: 3
+  name: The pilots' kits
+  tier: 6
+  kind: fleet
+  t: [86400, 2592000]
+  is: The six pre-made pilots, each with its own loops. Pick one to make it the pilot shown everywhere in the atlas.
+  phases: []
+  drivers: [find, own, mastery]
+  now:
+    s: part
+  src:
+  - src/data/world.js PREBUILTS
