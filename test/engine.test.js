@@ -73,7 +73,7 @@ test('damage: Shield reduces; Pierce, true damage and area bypass it; Mark adds 
   e.states.Shield = { v: 2, t: 2, all: true };
   assert.equal(T.damage(m, h, e, 3, { kind: 'area' }), 1, 'an all-Shield does');
   delete e.states.Shield;
-  e.states.Marked = {};
+  e.states.Marked = { next: 2 };
   assert.equal(T.damage(m, h, e, 3, { kind: 'melee' }), 5);
   assert.equal(e.states.Marked, undefined, 'Mark is consumed');
 });
@@ -162,7 +162,7 @@ test('height: Weightless and a climbing form walk up to a ledge; nobody else doe
   );
 });
 
-test('a Harrier that is Anchored, Slowed or held cannot blink — and still lances a hero beside it', () => {
+test('a Harrier that is Anchored cannot blink — and still lances a hero beside it', () => {
   const B = T.Board;
   // one Harrier, ready to lance, either across the board from the squad or beside a hero
   const harrierTurn = (state, beside) => {
@@ -184,11 +184,7 @@ test('a Harrier that is Anchored, Slowed or held cannot blink — and still lanc
     return { moved: e.pos !== from, hurt: m.heroes.reduce((s, x) => s + x.hp, 0) < hpBefore };
   };
   assert.deepEqual(harrierTurn({}, false), { moved: true, hurt: true }, 'free, it blinks in and strikes');
-  for (const [name, state] of [
-    ['Anchored', { Anchored: { t: 2 } }],
-    ['Slowed', { Slow: { t: 2 } }],
-    ['held by a Counted Trap', { Anchored: { t: 2 }, NoTele: { t: 2 } }],
-  ]) {
+  for (const [name, state] of [['Anchored', { Anchored: { t: 2 } }]]) {
     assert.deepEqual(harrierTurn(state, false), { moved: false, hurt: false }, `${name}: no blink`);
     assert.deepEqual(harrierTurn(state, true), { moved: false, hurt: true }, `${name}: it still acts`);
   }
@@ -209,7 +205,7 @@ test('strike bonuses belong to strikes: wearing-down damage neither spends nor g
   };
   const dotTick = (s) => {
     const before = s.e.hp;
-    T.runEffects(s.m, s.h, [{ v: 'dot', val: 1, dur: 3, kind: 'corrode' }], { P: 0, E: 0, target: s.e.uid });
+    T.runEffects(s.m, s.h, [{ v: 'wound', n: 1, kind: 'corrode' }], { P: 0, E: 0, target: s.e.uid });
     T.roundEnd(s.m);
     return before - s.e.hp;
   };

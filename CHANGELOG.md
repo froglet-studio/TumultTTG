@@ -9,7 +9,191 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.87.0 — 2026-11-21 — the mission HUD, the draft and the route, as designed
+## 2.100.0 — 2026-11-21 — the rework and the keywords, together
+
+The rework was built on `bleeding-edge` while the dice and keyword plan went straight to `main`, and both numbered their releases from 2.82.0; the rework's are marked (rework) below the keyword plan's. This release brings them together; both sets of notes below still describe the game.
+
+- **Saves** are version 27. The two lines had both used version 19, so the keyword steps (19 to 26) run first and a last step adds the rework's expedition length (`run.length`, Full when missing) and AI seats. A rework save numbered 19 runs the same steps and keeps its length.
+- **Where the keywords meet the new screens.** Boons and consumables are gone (2.89): the new after-mission, haven and codex screens offer gear, its passive and its actives instead. A card on the track still reads in full on the mission dock, and the dice choice for the next roll ("Next roll") sits under the dice.
+
+## 2.99.0 — 2026-11-21 — choose your ally
+
+- **"An ally" is the one you choose.** With three or more pilots, a face, gear ability or duet move that reaches an ally used to give it to the nearest one, so in a game of three a player could not pass Unity's AP to the pilot they meant. Now the play lists every ally it can reach (standing, and beside you where the face says so) and the player picks one: a face aimed only at the ally asks for it (click the pilot, or their name above the board), and one with a foe or a node of its own lets the player click another pilot first (Call, Cue, Herd the Prey, the carry on Updraft). The pick is part of the play (`ctx.ally`), so it stays the player's own to plan and is carried online as it was chosen. Taproot can now fix any ally beside you, not only the nearest.
+- **Card texts say "an ally" and "all heroes"** where they said "your ally", "your partner" and "both heroes"; shields and Hidden that reach every ally beside you say so.
+- The look-ahead player weighs every ally a face could reach. With two pilots nothing changes: `node tools/sim.js 40` is identical before and after.
+- No save change.
+
+## 2.98.1 — 2026-11-21 — the old words leave the card texts
+
+- **Card texts speak the keywords.** Faces that said *immune to push/pull* say *Anchored (nothing moves you, your own steps included)*, which is what they have done since 2.91; *shed Anchored, Weakened and damage over time* and *every hold and dot* say *Cleanse*; *Locate everything* says *Reveal*. The texts that promised to set off no traps lose that clause, and `move`'s `noTrap` option goes: a pilot never set off a trap, and since 2.86 a pilot's own Fields never touch it.
+- No rule, number or save changed.
+
+## 2.98.0 — 2026-11-21 — Reveal; Lane cut
+
+The twelfth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Reveal.** Everything within N is shown, and a Revealed foe cannot be Hidden while it lasts and a zone strike finds it. One verb for both: an area Reveal around you, or one foe (`target`, `nearest`) Revealed for N rounds, which is what `locate` did on 28 faces; their texts say Revealed.
+- **Cut: Lane.** Lanes were retired by zones in 2.18 but kept a tooltip; the three faces that still said *Lane strike* say *Zone strike*, which is what they did.
+- **The board names states by their keyword.** A pilot's chips, a foe's tooltip and the floating words say *Shield (next hit)*, *Revealed*, *Cleansed* and *Weakened* where the engine's older names (Preempt, Located, StatusImmune, Weak) showed through (`T.UI.stateName`).
+- No rule or save change (the state is still `Located`, shown as Revealed). The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
+## 2.97.0 — 2026-11-21 — Cleanse
+
+The eleventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Cleanse.** Remove every harmful state (Weakened, Anchored, Wound), or clear the ground of hazards and foes' Fields; **Cleanse for N** also turns away new ones: for N rounds no foe can Weaken or Anchor you. It absorbs status immunity (`statusImmune` on 33 faces is `cleanse` with `ward`).
+- **What changes.** Those 33 faces now also shed what is on you when you play them (they only kept new states off before). Where a face also Anchors you, the Cleanse comes first, so your own Anchor stands. Four faces that had both a Cleanse and an immunity have one Cleanse for N.
+- No save change (the state is still `StatusImmune`).
+- **Balance.** Same seeds, 2.94.0 → 2.97.0 (Blink and Haste were renames): `80 runs --player strong` 38 → 38; `120 runs --player weak` 10 → 9; `node tools/sim.js 40` runs 5 → 5 and 19 → 19 of 40, mission wins 71% and 87% both. Nothing is retuned.
+
+## 2.96.0 — 2026-11-21 — Haste
+
+The tenth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Haste N.** Your track slides N extra columns (your cards come home sooner), or the mission clock gains N rounds (`clock`), or the next N cards you play skip the track (`free`). One verb, `haste`, for `hasten` (23 faces and the Chrono-shim), `clock` (the Chrono-shim's Rewind) and `freecast` (5 faces); their texts say Haste.
+- No rule changed and no save changed. The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
+## 2.95.0 — 2026-11-21 — Blink
+
+The ninth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Blink N.** Leave the paths: appear on a free space within N (height only where the face says). The verb `teleport` is `blink` on 54 faces, the Phase-brace and the engine, and every text says Blink. An Anchored unit cannot blink (2.91).
+- No rule changed and no save changed: a rename. The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
+## 2.94.0 — 2026-11-21 — Shield absorbs Pre-empt, Guard and Absorb
+
+The eighth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Shield N.** Each hit it takes is N lower while it lasts; a **Shield against the next hit** is spent by that hit, and may send some back (`reflect`) or step you away (`reposition`): what Pre-empt did (`shield` with `next`).
+- **85 Pre-empt faces** are next-hit Shields, and their texts say Shield. **Guard** (ambushes halved) is a Shield 1 or 2 for as long; **Absorb** (the next ranged hits negated, minting Charge) is a Shield of 3+2E against the next hit and a Charge minted now.
+- **Saves** are version 26: a held Guard becomes Shield 1, a held Absorb a Shield of 3 against the next hit (fixture `save-2.93.json`).
+- **Balance.** Same seeds, 2.93.0 → 2.94.0: `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10; `node tools/sim.js 40` runs 5 → 5 and 21 → 19 of 40, mission wins 71% → 71% and 88% → 87%. Nothing is retuned.
+
+## 2.93.0 — 2026-11-21 — Thorns
+
+The seventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Thorns N.** Anything that strikes it in melee takes N, for as long as it lasts. A **next-hit Thorns** turns back only the next melee strike (and may push the striker): what Counter did. Both add up on that next hit (`thorns` with `val`, `dur`, `next`, `push`; state `Thorns` = `{ v, next, push, t }`).
+- **20 Counter faces** are next-hit Thorns, and their texts say Thorns.
+- **Saves** are version 25: a held Counter becomes a next-hit Thorns (fixture `save-2.92.json`).
+- **Balance.** Same seeds, 2.92.0 → 2.93.0: `80 runs --player strong` 39 → 39; `120 runs --player weak` 11 → 10; `node tools/sim.js 40` runs 6 → 5 and 21 → 21 of 40, mission wins unchanged (71%, 88%). Nothing is retuned.
+
+## 2.92.0 — 2026-11-21 — Mark
+
+The sixth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Mark N.** The next hit on it, by anyone, deals N more (2 unless the face says), then the Mark is spent. *For N rounds*: every hit deals N more until it wears off. *Pierce*: that next hit ignores Shield. The larger of each part stands (`mark` with `n`, `dur`, `pierce`; state `Marked` = `{ next, pierce, each, t }`).
+- **Studied is a Mark for 3 rounds.** Its +N to every hero hit used to last the whole mission and stack, a lock-on the 2.73 rule forbids; 29 faces now Mark +N for 3 rounds. **Exposed is a Pierce Mark** (5 faces).
+- **Saves** are version 24: a bare Mark is +2 to the next hit, Studied +n to every hit for 3 rounds, Exposed a Pierce Mark (fixture `save-2.91.json`).
+- **Balance.** Same seeds, 2.91.0 → 2.92.0: `80 runs --player strong` 41 → 39; `120 runs --player weak` 13 → 11; `node tools/sim.js 40` runs 7 → 6 and 23 → 21 of 40, mission wins 71% → 71% and 89% → 88%. Studied's end makes it a little harder, which takes back Anchor's drift; nothing is retuned.
+
+## 2.91.0 — 2026-11-21 — Anchor
+
+The fifth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Anchor.** Nothing moves an Anchored unit: no push or pull, and it cannot walk or blink. It still acts. One state, `Anchored`, in place of five: Anchored, Held, Rooted, Slow, SlowSelf and NoTele (`T.anchorEnt`).
+- **What changes.** A hero who Anchors itself no longer lets go by walking: it stays put for the round, so the order of a turn matters. A foe's root (the Binder's) is an Anchor, so a rooted pilot cannot be pushed either. An Anchored hero cannot blink. `slow` and `slowSelf` faces Anchor; `held` and the counted Field's no-blink went away, since every Anchor is both.
+- **Saves** are version 23: each old state becomes Anchored for as long as the longest of them (fixture `save-2.90.json`).
+- **Balance.** Same seeds, 2.90.0 → 2.91.0: `80 runs --player strong` 40 → 41; `120 runs --player weak` 11 → 13; `node tools/sim.js 40` runs 6 → 7 and 22 → 23 of 40, mission wins 70% → 71% and 89% → 89%. Each within the noise; the sweep's drift is retuned at its end with larger samples.
+
+## 2.90.0 — 2026-11-21 — Heal raises the downed
+
+The fourth keyword of the sweep (`docs/reference/KEYWORDS.md`; Garrett, 2026-11-21: Heal raises the downed, Rally stays the basic action).
+
+- **Heal N.** Restore N vitality; a downed pilot a Heal reaches gets up with N. Every heal for both pilots, or for your ally, now raises a downed one (`T.healUnit`).
+- **Revive and Phoenix are Heals.** Regrow's revive is *Heal 4 a downed ally beside you*; the five faces that brought you back are a **held Heal** (`ward`): if you go down within 3 rounds, it lands and you get up with that much.
+- **Medkit (tech heals only through a Field or the downed).** Patch lays a mending Field on and beside your space for 2 rounds (allies ending the round there Heal 3, a downed one gets up); Revive is Heal 10 a downed ally beside you. Field gained the Heal keyword.
+- **Rally** stays the basic action: 2 AP, a downed ally beside you gets up with 8.
+- **Balance.** Same seeds, 2.89.0 → 2.90.0: `80 runs --player strong` 38 → 40; `120 runs --player weak` 11 → 11; `node tools/sim.js 40` runs 6 → 6 and 21 → 22 of 40, mission wins 70% → 70% and 88% → 89%. Within the noise, so nothing is retuned. No save change (a held Heal is the old `Phoenix` state).
+
+## 2.89.0 — 2026-11-21 — boons and consumables fold into gear
+
+The keyword plan's third line, ethereal technology (`docs/reference/KEYWORDS.md`): gear works on spaces, the dice, the clock and the downed, is bought rather than trained, and strikes only through a Field.
+
+- **Every gear has a passive** (on while worn) and two actives (paid in ◇). The passives carry what boons did: Aegis Plate, every Shield +1 (Thick Hide); Scope, reveals +1 and Hidden foes beside you seen (Keen Sense); Chrono-shim, the track slides 1 extra as round 2 begins (Quick Hands); Medkit, once a mission rise at 10 (Second Wind); Climbing Rig, mag boots, you cannot be pulled (Anchor Soul); Capacitor, start each mission with 1 AP banked (Etherion-touched, gentler); Phase-brace, blinks reach 1 further; Storm Lantern, a foe beside you is Marked as your turn begins; Turret, your Fields last 1 round longer; Winch, your Fields push and pull 1 further.
+- **The actives carry what consumables did.** Medkit's Patch heals 6 (Rally Vial; was 4), Scope's Glance reveals within 2 (Flashpowder), Chrono-shim's Rewind gives the clock 2 (Windbreak Charm; was 1); Grit and the Omni Shard were already the Aegis Plate's Brace and the Capacitor's Store.
+- **The Grapnel is a Winch and the Harpoon Gun a Turret.** Tech never strikes a unit directly: Reel Line and Winch lay Fields that pull whoever enters (Field gains Pull and Push), Sentry and Skewer lay Fields that strike.
+- **Cut:** the Affinities and Omni Core (the element die is chosen every turn), Momentum, Defiant, Deep Pockets, Studious, and every consumable. Elites no longer offer a boon; they already pay 4 ◇ more. Three events that gave a boon give crystals or UP instead.
+- **Saves** are version 22: an older pilot's boons are refunded at 3 ◇ each and its consumables at their price, to its own purse (fixture `save-2.88.json`).
+- **Balance.** Foes keep 145% vitality: the fold does not let it come down. With every simulated squad wearing gear from tier 2, the passives make tiers 2 and 3 easier, so the Capacitor's banked die is an AP (an Omni measured easier) and the Lantern Marks only a foe beside you. Same seeds, 2.88.0 → 2.89.0 at 145%: `80 runs --player strong` 40 → 38; `120 runs --player weak` 10 → 11; `node tools/sim.js 40` runs 3 → 6 and 19 → 21 of 40, mission wins 69% → 70% and 87% → 88% (its mission table hands every tier 2 and 3 squad gear, so the passives show there most). At 140% it was 50 of 80, at 135% 47, at 130% 56: lowering vitality makes the game easier at once (`docs/reference/BALANCE.md`).
+
+## 2.88.1 — 2026-11-21 — every ability does what it says
+
+Garrett: "make sure that decoys actually leave decoys, and all movement abilities actually grant their movement etc."
+
+- **A new test plays every card face** (all 529 cards, both faces) in a dozen situations and checks that each effect on it changes the game somewhere, that every decoy face leaves its decoy where and for as long as its text says, that every move, blink, climb and rally reaches as far as its number and really moves the unit, and that the numbers a face prints are the numbers it plays (`test/abilities.test.js`).
+- **Fixed what it found.** Five decoys that stay where you are (Very Convincing, A Thousand Pink, Rainbow, Swarm, Door Stone) never appeared, because the hero was still on the node: the decoy now shares your node and keeps it when you go. Smoke Step dropped its Hidden as soon as you blinked; it now hides you after. No Retreat's own status immunity turned away its own anchor, so push and pull still moved you; a hero's own anchor is now a choice, not a status. A decoy cast at a node within 2 (Lure Light) could be aimed at an occupied node and vanish; it now offers empty nodes only. Strand's "drag it 1 toward you" on a foe already beside you never did anything, so the text now says what it does: melee and pin. Two texts now print a number they played without saying (Blink's decoy lasts 2; Lock Both Eyes sees within 2).
+- **The look-ahead player walks a free move in full** (it capped every walk at 3 steps, so free moves of 4 and 5 were cut short).
+- **Balance.** `node tools/sim.js 40`: every table identical before and after, on 2.88.0 (look-ahead 19/40 runs, heuristic 3/40). No save change.
+
+## 2.88.0 — 2026-11-21 — Wound
+
+The third keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Wound N.** At round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). It replaces damage over time and its fifteen names (venom, crush, corrode, rot, drain, sting…), which stay as the flavour word in the log. Its bite is true damage; a new Wound replaces a smaller one; Cleanse sheds it (`wound`, state `Wound`).
+- **28 faces.** A dot of 1 for 2 rounds is Wound 2; 1+h(E) for 2 is Wound 2+h(E); 1+E for 2 is Wound 1+E; 1+E for 3 is Wound 2+E; 2 for 2 is Wound 2. Deepen the parasitism keeps its heal at each bite and loses its +1 a round at E 2.
+- **Saves** are version 21: a foe's damage over time loads as one Wound dealing about as much in all (fixture `save-2.87.json`).
+- **Balance.** Same seeds, 2.87.0 → 2.88.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 19 of 40, mission wins 69% → 69% and 87% → 87%; `80 runs --player strong` 38 → 40; `120 runs --player weak` 10 → 10. Within the noise (two standard errors on 80 runs is about ±9). When Wounds added up, it was easier (41 of 80, 12 of 120), so the larger Wound stands instead. Nothing is retuned.
+
+## 2.87.0 — 2026-11-21 — Link
+
+The second keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Link (Charge).** Two units joined for N rounds: when one takes damage, a push or a pull, or a heal, the other takes the same (the damage it was dealt, after Shield, as true damage; the same push or pull from the same source; the same heal). A unit has one Link at a time, and it ends with its rounds or when either falls (`link`, state `Linked`).
+- **Seven Charge faces Link their target to the nearest foe.** Tesla Cascade (in place of its chain: Linked for E rounds, then struck for 6+P), Override, Its Own Voice and Every Step (in place of Redirect), Spasm and Drive the Shoal (in place of their Weaken: the push or pull moves both), and Disarming (in place of its +1 Studied).
+- **Cut: Redirect** (a foe's next attack turned on its own side bordered on turn theft) and the chain strike.
+- **Balance.** Same seeds, 2.86.0 → 2.87.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 18 of 40 (one cell's kills moved by 0.1); `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10. Not easier, so nothing is retuned. No save change: `Linked` is a state like any other.
+
+## 2.86.0 — 2026-11-21 — Field, the first keyword of the sweep
+
+Garrett approved the 22-keyword plan on 2026-11-21 (Field and Link in, tech as drawn, Heal raises the downed); it lands one keyword family per release (`docs/reference/KEYWORDS.md`).
+
+- **Field.** Snares, counted snares, spore, musk and ice zones, triggers and sensing auras are one keyword now: marked spaces that do their keywords (Strike, Weaken, Anchor, Mark, Hidden, Reveal) to whatever enters them or ends the round there, on a chosen space or around you. Its harm falls on its side's foes and its help on its own side; Hover and Weightless are above it; a hazard reads as a Field of damage. Fourteen faces changed words, not numbers, with these exceptions: a trigger's strike is now an area hit like a snare's; Enzymes' Field reaches Anchored foes within 2 of you (it reached every Anchored foe on the board and healed 1 a foe); Cilia Field Marks every foe that steps beside you, not only the first each round.
+- **Fields combine with movement.** A Field now springs on a foe pushed, pulled, blown or blinked onto it, not only one that walks in.
+- **Fixed: a zone's Weaken did nothing.** It was given for one round at round end and the round-end tick took it at once; a state a Field leaves at round end now lasts into the next round.
+- **Cleanse the ground** (`cleanse` with `field`) replaces `clearHazard`: hazards and foes' Fields within N are cleared, never yours.
+- **Saves** are version 20: a mission keeps `fields`, and a 2.85 save mid-round keeps its snares, zones, triggers and auras as Fields (fixture `save-2.85.json`).
+- **Balance.** No numbers moved: `node tools/sim.js 40`, 120 heuristic runs and 80 look-ahead runs are the same as 2.85.0 (the simulated squads rarely carry these cards), so nothing is retuned.
+
+## 2.85.1 — 2026-11-21 — cards on the track stay readable
+
+Garrett: "the whole cards should still be readable when it is on cooldown"
+
+- **Cooling cards read in full.** A card on the track used to fade to 45% and drop its faces. Now it shows its name, P/E levels, both faces and their costs at full strength, and each face keeps its hover text. The art greys out behind a band that says "back in N", the frame turns dashed, and nothing on the card can be pressed. No rules or save change.
+
+## 2.85.0 — 2026-11-21 — big Ethereal faces
+
+Garrett: "make some more powerful abilities that cost more elemental dice. simply so we don't need boons or consumables"
+
+- **Two and three etherions.** Twelve Ethereal faces now cost two or three etherions of their element and do much more, most of them for no AP. 2: Heavy Throw, Vacuum (every foe near you drawn in and Weakened), Resonance, Phase-tunnel, Fold-hop, Second Wind, Pre-empt. 3: Immovable Hold, Tesla Cascade, Override, Apex Form, Step Out of Time. Since you choose one element die a turn, a three-etherion face is one you save up for. This follows the keyword plan Garrett accepted: big etherion abilities are Ethereal faces; boons and consumables will become gear in the keyword migration, so they stay for now.
+- **Balance.** Runs got easier (80 runs, look-ahead 42 → 49), so every foe has **145%** of its listed vitality (was 140%): 80 runs look-ahead 42 → 39, 120 runs heuristic 13 → 10 (`docs/reference/BALANCE.md`). No save change.
+
+## 2.84.0 — 2026-11-21 — Ethereal faces at 0 AP
+
+Garrett: "the underpowered elemental abilities and the ones that refund an ap die should have their ap cost reduced to zero instead"
+
+- **No AP back, no AP cost.** The nine Ethereal faces that gave AP back (Unity, Pocket Fold, Parallel, Reserve, Mental Map, Hoard, Dig In, Catch!, Overdrive) cost 0 AP and give back that much less: the same AP in the end, but playable with an empty bank. Parallel frees a third card at E 3 instead of minting AP.
+- **Underplayed faces cost 0 AP.** 84 more Ethereal faces, the ones the census shows the look-ahead player almost never picks (index under 0.25), now cost only their etherions. 93 of 529 Ethereal faces cost no AP.
+- **Balance.** 80 runs, look-ahead 43 → 42; 120 runs, heuristic 12 → 13; `node tools/sim.js 40`, runs 3 → 2 and 20 → 16. Not easier, so nothing is retuned (`docs/reference/BALANCE.md`). No save change.
+
+## 2.83.0 — 2026-11-21 — three plain dice and an element die you choose
+
+Garrett: "instead of picking your dice it should be 3 ap dice and 1 element of your choice"
+
+- **A fixed roll.** Every turn a pilot rolls three plain d20s (the AP dice) and one element die of its player's choice, picked from the pilot's own element dice: a d8 of an element it has awakened, or Omni Core's d12 (Garrett chose this over any element, or a sure etherion). It replaces 2.82's free choice of all four. Choose under *Next roll*, any time in a mission, on anyone's turn; the choice stays until changed. With nothing chosen, or every die of that kind banked, the roll takes the element die the pool holds most of; with none left in the pool, all four are plain. Pool and bank still make fifteen (`T.RULES.ROLL_EL`, `T.setRollPick`, `h.rollPick`).
+- **Simulated players** choose the element of an Ethereal face back in hand next round that the bank can't pay for, or else the element their awakened cards use most (`T.autoRollPick`).
+- **Balance.** The sure etherion helped the careful player: 80 runs, look-ahead 40 → 52 at the old vitality. So every foe has **140%** of its listed vitality (was 130%). `node tools/sim.js 40`, 2.82.0 → 2.83.0: heuristic runs 6 → 3 of 40, mission wins 73% → 66%; look-ahead runs 18 → 20 of 40, mission wins 85% → 87%. Details in `docs/reference/BALANCE.md`.
+- **Saves** keep version 19: `h.rollPick` is still a list of kinds, and a 2.82 choice loads as its first element die (plain dice in it are ignored).
+
+## 2.82.0 — 2026-11-20 — choose which dice you roll
+
+Garrett: "when players roll dice, they should be able to select which ones they roll from their pool"
+
+- **Next roll.** Beside your pilot's dice, choose up to four from your pool for the next roll: plain d20s (mostly AP) or your element d8s (no AP, four of their etherion), and the ethereal d12 if you have one. The choice stays from roll to roll until you change it; dice you leave unchosen are drawn at random as before, and so is a chosen die that is banked when the roll comes. You choose the dice, never their faces. Pool and bank still make fifteen (`T.setRollPick`, `h.rollPick`).
+- **Both ways to play.** Choose any time in a mission, on anyone's turn, for your own pilot. Taking turns, your roll comes as your turn ends, so choose before you end it (a choice after is for the roll after); all at once, everyone rolls as the round begins.
+- **Simulated players choose too** (`T.autoRollPick`): an element die for each Ethereal face back in hand next round that the bank can't pay for (two at most), plain dice for the rest. Balance, `node tools/sim.js 40`, 2.81.1 → 2.82: heuristic runs 6 → 6 of 40, mission wins 73% → 73%; look-ahead runs 25 → 18 of 40, mission wins 90% → 85%. Choosing is not easier for either player, so nothing is retuned. (Choosing only element dice and leaving the rest at random was worse still: heuristic vault t3 43% → 18%.) The UI driver allows a mission 60 rounds, since a long boss fight can pass 30.
+- **Saves** are version 19: a pilot may carry its chosen dice. A 2.81 save loads with nothing chosen and draws at random (fixture `save-2.81.json`).
+## 2.87.0 (rework) — 2026-11-21 — the mission HUD, the draft and the route, as designed
 
 From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
 
@@ -23,7 +207,7 @@ From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
 - **The draft** keeps today's cards and flow in a frosted panel; the kit fills up along its foot as you pick, the next slot lit. The build screen says "Pilot n of N" for any squad.
 - **The route as a journey column (Route 3).** The Heart at the top with how many stops away it is, the legs to come as bands of their art, the next stops as big art cards, the stops passed below with how each went. The pilots stand in a column beside it. The chart of the whole route stays underneath, folded. A newcomer joining on the route gets a card saying who is bringing a pilot.
 
-## 2.86.0 — 2026-11-21 — the pages around the game
+## 2.86.0 (rework) — 2026-11-21 — the pages around the game
 
 From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
 
@@ -37,7 +221,7 @@ From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
 - **Loading.** The web version opens on the loading ring instead of a bare word, and lays the loading screen (the place, the squad, a tip) over a mission until its place painting and the squad's scenes have arrived, five seconds at most. The offline file carries its paintings inside and never waits.
 - **Tests.** The new pilot fields in `test/heroes.test.js`; Make a pilot through the draft, and the loading screen, in `test/pages.test.js`.
 
-## 2.85.0 — 2026-11-21 — AI seats, dropped players, Short expeditions
+## 2.85.0 (rework) — 2026-11-21 — AI seats, dropped players, Short expeditions
 
 Shombith: host a table "offers Co-op/Versus, Short/Full length, and filling empty seats with AI", the waiting room says "AI fills it", and when someone drops an AI flies their pilot (the table only waited before). Versus is left out for now.
 
@@ -48,7 +232,7 @@ Shombith: host a table "offers Co-op/Versus, Short/Full length, and filling empt
 - **Saves** are version 19: the run keeps its length and each seat whether the AI plays it. A 2.83 save is a Full expedition with people in every seat (fixture `save-2.83.json`).
 - **Tools.** `node tools/sim.js 80 runs --length short` plays Short expeditions.
 
-## 2.84.0 — 2026-11-20 — after a mission and the end of an expedition
+## 2.84.0 (rework) — 2026-11-20 — after a mission and the end of an expedition
 
 The finalised Frogma boards for rows 8 and 9 (after a mission, the end of an expedition), desktop and phone. No rule changes: every button sends the command the old screens sent.
 
@@ -61,7 +245,7 @@ The finalised Frogma boards for rows 8 and 9 (after a mission, the end of an exp
 - **Phones.** Everything stacks; offers and kits scroll sideways a card at a time; the call to act sits in a bar at the foot of the screen. These screens keep a dark wash over the painting whatever the sea, so the words read on the light Shore sea too, and their motion follows Look (Reduced stills the sparks, the shimmer and the slow pan).
 - **Code.** The screens moved out of `src/ui/core.js` into `src/ui/after.js` and `src/ui/after.css`. `test/after.test.js` drives them through the real interface.
 
-## 2.83.0 — 2026-11-21 — a living sea, a calmer mission screen, and motion
+## 2.83.0 (rework) — 2026-11-21 — a living sea, a calmer mission screen, and motion
 
 Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, motion kit). No rule changes.
 
@@ -71,7 +255,7 @@ Wave 4 of the launch plan, from the Frogma boards (noise, calm mission, themes, 
 - **The motion kit.** A pilot or foe walks its path node by node (0.25 s a step) instead of jumping; a shove or swap slides. A striker leans into the blow (the engine's damage effect now says who struck, `by`; no rule reads it), the target flashes and shakes, the number floats up. The forecast chip whose figure changed pulses. At a new round the cards on the track step one column toward Ready. A new screen slides in. The dice still tumble and land one after another.
 - **Tests.** `test/sea.test.js`: the sea by route depth, the Look panel and its storage, the calm screen's folds through the real interface, and a walk that ends where the engine put the pilot, or no walk at all with motion Off.
 
-## 2.82.0 — 2026-11-20 — the mission screen: undo, a forecast strip, phones and tablets
+## 2.82.0 (rework) — 2026-11-20 — the mission screen: undo, a forecast strip, phones and tablets
 
 Wave 1 of the launch plan: the mission screen redesign, without changing a rule.
 

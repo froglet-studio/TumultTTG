@@ -102,7 +102,7 @@ async function driveRun(
       } else if (U.screen === 'mission') {
         const m = U.run.mission;
         let rounds = 0;
-        while (!m.over && rounds++ < 30) {
+        while (!m.over && rounds++ < 60) {
           act('tutClose');
           if (auto) {
             T.autoHeroPhase(m);
@@ -147,7 +147,6 @@ async function driveRun(
       } else if (U.screen === 'reward') {
         // each pilot chooses their own upgrade: keep choosing until no choice is left
         for (let k = 0; k < 8; k++) {
-          if (click('[data-act="takeBoon"]')) continue;
           if (click('[data-act="takeCard"]:not([disabled])')) continue;
           if (!click('[data-act="skipCard"]')) break;
         }
@@ -155,7 +154,6 @@ async function driveRun(
       } else if (U.screen === 'haven') {
         act('rest', 'half');
         click('[data-act="buyGear"]:not([disabled])');
-        click('[data-act="buyCons"]:not([disabled])');
         act('leaveHaven');
       } else if (U.screen === 'event') {
         click('[data-act="eventOpt"]:not([disabled])');

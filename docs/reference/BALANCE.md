@@ -424,3 +424,101 @@ Averaged over the cells, the heuristic wins 79.5% → 78.4% and the look-ahead p
 - **Elite variance by kind.** Harriers punish squishy pairs; Bulwarks punish clumping; Tidecallers punish parties without anchors. Intended, but the boon reward should perhaps scale with which elite you drew.
 - **Per-card balance is first-pass.** All 198 faces fire without error; magnitudes follow the v1.0 formulas (base + P; capability scales with E). Likely hot cards: Tesla Cascade at E3 (3 chains), Resonance (lane-all), Swarm Phase (party AP engine), Cryptobiosis Tun (Shield 7 at P3). Likely cold: Cheek Caching, Threat Display Hiss, Rhizome Sprout. `npm run audit` (→ `ABILITY_AUDIT.md`) measures usage per face; see its caveats about the autoplayer.
 - **The duel is gone as a mode** (a deliberate choice: campaign first). Bringing it back needs hero-versus-hero targeting, which v2.0 does not have. The v1.0 balance notes on the brawler/zoner matchup remain valid for a future arena.
+
+## v2.83.0 — three plain dice and an element die you choose
+
+Garrett, 2026-11-21: "instead of picking your dice it should be 3 ap dice and 1 element of your choice." A roll is three plain d20s and one element die from the pilot's own, chosen (`T.RULES.ROLL_EL`). The sure etherion of the colour a pilot needs helped the careful player and not the plain one: `node tools/sim.js 80 runs --player strong`, 2.82.0 → 2.83 at the old vitality, 40 → 52 of 80; `120 runs --player weak`, 20 → 19 of 120.
+
+So every foe has **140%** of its listed vitality (was 130%). At 140%: look-ahead 43 of 80, heuristic 12 of 120 (150%: 37 of 80 and 9 of 120). `node tools/sim.js 40`, 2.82.0 → 2.83.0: full runs heuristic 6 → 3, look-ahead 18 → 20; mission wins 73% → 66% and 85% → 87%; the finale 23/43% → 8/35%. Not easier for a careful squad, a little harder for a plain one.
+
+## v2.84.0 — Ethereal faces at 0 AP
+
+Garrett, 2026-11-21: "the underpowered elemental abilities and the ones that refund an ap die should have their ap cost reduced to zero instead." 93 of the 529 Ethereal faces now cost no AP:
+
+- **9 that gave AP back** (Unity, Pocket Fold, Parallel, Reserve, Mental Map, Hoard, Dig In, Catch!, Overdrive): the AP cost is gone and the AP they gave back is less by that cost, so each nets the same AP as before but can be played from an empty bank. Parallel's growth moved from minted AP to a third free card at E 3.
+- **84 that the look-ahead player hardly plays**: every Ethereal face with a census index under 0.25 (`node tools/census.js 4000` on 2.83.0, faces held at least 15 times; 93 of the 279 measured faces were under 0.25). Many are heal-over-time and hiding faces, which a careful squad near full health passes over (see 2.73), so this is a nudge, not a verdict.
+
+Not easier: `node tools/sim.js 80 runs --player strong`, 2.83.0 → 2.84.0, 43 → 42 of 80; `120 runs --player weak`, 12 → 13 of 120. `node tools/sim.js 40`: heuristic runs 3 → 2, look-ahead 20 → 16; mission wins 66% → 65% and 87% → 85%. Nothing is retuned.
+
+## v2.85.0 — big Ethereal faces, two and three etherions
+
+Garrett, 2026-11-21: "make some more powerful abilities that cost more elemental dice. simply so we don't need boons or consumables." Following the keyword plan he accepted (the big 2- and 3-etherion abilities are Ethereal faces, magic's line: range, other units, things that last), twelve Ethereal faces of the core bloodlines cost two or three etherions and do much more, mostly for no AP, with existing verbs. With one chosen element die a turn, a 3-etherion face is saved for across turns.
+
+- 2 etherions: Heavy Throw, Vacuum (now every foe within 1+E drawn in and Weakened), Resonance, Phase-tunnel, Fold-hop, Second Wind, Pre-empt.
+- 3 etherions: Immovable Hold, Tesla Cascade (1 AP), Override, Apex Form, Step Out of Time.
+
+Boons and consumables stay until the keyword migration makes them gear. `node tools/sim.js 80 runs --player strong`, 2.84.0 → 2.85 at 140%: 42 → 49 of 80; `120 runs --player weak`: 13 → 11. So every foe has **145%** of its listed vitality (was 140%): 39 of 80 and 10 of 120 (150%: 45 of 80, which is within the noise). `node tools/sim.js 40`, 2.84.0 → 2.85.0: runs 2 → 3 and 16 → 18; mission wins 65% → 69% and 85% → 86%.
+
+## v2.86.0 — Field
+
+Fourteen faces became Fields (`KEYWORDS.md`), a Field springs on a foe moved onto it, and a Field's Weaken now lasts into the next round. Same seeds, 2.85.0 → 2.86.0: `node tools/sim.js 40` identical in every cell (runs 3 → 3 and 18 → 18 of 40); `80 runs --player strong` 39 → 39; `120 runs --player weak` 10 → 10. The simulated squads rarely carry these cards, so nothing is retuned.
+
+## v2.87.0 — Link
+
+Seven Charge faces Link their target to the nearest foe; Redirect and the chain strike are cut. Same seeds, 2.86.0 → 2.87.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 18 of 40, mission cells unchanged but for cascade t2's kills (1.8 → 1.7, look-ahead); `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10. Not easier, so nothing is retuned.
+
+## v2.88.0 — Wound
+
+Damage over time became Wound N (N at round end, then one less). Same seeds, 2.87.0 → 2.88.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 19 of 40, mission wins unchanged (69%, 87%); `80 runs --player strong` 38 → 40; `120 runs --player weak` 10 → 10. With Wounds adding up it measured 41 of 80 and 12 of 120, so a new Wound replaces a smaller one instead. Within the noise, so nothing is retuned.
+
+## v2.89.0 — boons and consumables fold into gear
+
+Every gear has a passive (what boons did) and two actives (what consumables did); the Grapnel and the Harpoon Gun lay Fields (Winch, Turret). The hope was that vitality could come down from 145%; it cannot. Same seeds, 2.88.0 → 2.89.0:
+
+| foe vitality | `80 runs --player strong` | `120 runs --player weak` |
+|---|---|---|
+| 2.88.0 at 145% | 40 | 10 |
+| 2.89.0 at 145%, first passives | 40 | 13 |
+| 2.89.0 at 140% | 50 | 14 |
+| 2.89.0 at 135% | 47 | 16 |
+| 2.89.0 at 130% | 56 | 15 |
+| **2.89.0 at 145%, as shipped** | **38** | **11** |
+| 2.89.0 at 148% | 44 | 15 |
+
+The weak player's mission wins (`40 missions --player weak`, averaged over the cells): 74.9% on 2.85, 77.3% with the first passives, 75.0% with no passives at all. Removing one passive at a time, only the Capacitor's banked Omni (−1.0) and the Lantern's Mark within 2 (−1.2) moved it, so the Capacitor banks an AP and the Lantern Marks a foe beside you (76.1%). Why vitality cannot come down: boons came only at tier 3 in the simulated kits, while every simulated squad wears gear from tier 2, and now every piece of gear carries a passive. `node tools/sim.js 40` as shipped: runs 3 → 6 and 19 → 21 of 40, mission wins 69% → 70% and 87% → 88%. The 148% row shows the noise: two standard errors on 80 runs is about ±9.
+
+## v2.90.0 — Heal raises the downed
+
+Every heal for both pilots or an ally now gets a downed pilot up; revive and phoenix became Heals; the Medkit lays a mending Field. Same seeds, 2.89.0 → 2.90.0: `80 runs --player strong` 38 → 40; `120 runs --player weak` 11 → 11; `node tools/sim.js 40` runs 6 → 6 and 21 → 22 of 40, mission wins 70% → 70% and 88% → 89%. The weak player's average mission win (`40 missions --player weak`) is unchanged at 76.1%. Within the noise, so nothing is retuned.
+
+## v2.91.0 — Anchor
+
+Anchored, Held, Rooted, Slow, SlowSelf and NoTele became one Anchor (nothing moves it, its own steps included). Same seeds, 2.90.0 → 2.91.0: `80 runs --player strong` 40 → 41; `120 runs --player weak` 11 → 13; `node tools/sim.js 40` runs 6 → 7 and 22 → 23 of 40, mission wins 70% → 71% and 89% → 89%; `40 missions --player weak` average 76.1% → 75.9%. Each within the noise, but the sweep drifts the same way, so it gets one retune at its end with larger samples.
+
+## v2.92.0 — Mark
+
+Studied (+N to every hit for the whole mission) became a Mark for 3 rounds, and Exposed a Pierce Mark. Same seeds, 2.91.0 → 2.92.0: `80 runs --player strong` 41 → 39; `120 runs --player weak` 13 → 11; `node tools/sim.js 40` runs 7 → 6 and 23 → 21 of 40, mission wins 71% → 71% and 89% → 88%. A little harder, which takes back Anchor's drift: the sweep is at 39 of 80 and 11 of 120 against 2.85's 39 and 10.
+
+## v2.93.0 — Thorns
+
+Counter became a next-hit Thorns. Same seeds, 2.92.0 → 2.93.0: `80 runs --player strong` 39 → 39; `120 runs --player weak` 11 → 10; `node tools/sim.js 40` runs 6 → 5 and 21 → 21 of 40, mission wins unchanged. Nothing is retuned.
+
+## v2.94.0 — Shield absorbs Pre-empt, Guard and Absorb
+
+Pre-empt, Guard and Absorb became Shield. Same seeds, 2.93.0 → 2.94.0: `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10; `node tools/sim.js 40` runs 5 → 5 and 21 → 19 of 40, mission wins 71% → 71% and 88% → 87%. Nothing is retuned.
+
+## v2.95.0 — Blink
+
+`teleport` renamed `blink`; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after (the same seeds play the same missions).
+
+## v2.96.0 — Haste
+
+`hasten`, `clock` and `freecast` became one verb, `haste`; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after (the same seeds play the same missions).
+
+## v2.97.0 — Cleanse
+
+Status immunity became Cleanse for N (it now also sheds what is on you). Same seeds, 2.94.0 → 2.97.0, with the renames Blink and Haste between: `80 runs --player strong` 38 → 38; `120 runs --player weak` 10 → 9; `node tools/sim.js 40` runs 5 → 5 and 19 → 19 of 40, mission wins 71% and 87% both. Nothing is retuned. The sweep stands at 38 of 80 and 9 of 120 against 2.85.0's 39 and 10: not easier.
+
+## v2.98.0 — Reveal; Lane cut
+
+`locate` became a targeted `reveal`, and the Lane tooltip was cut; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after.
+
+**Dull turns** (`node tools/turns.js 10`, look-ahead player), 2.85.0 → 2.98.0, the whole sweep: idle 6% → 7%, forced 23% → 23%, open 71% → 70%, 2.7 → 2.8 close choices a turn. Swarm tier 1 is still the dullest cell (41% and 46% dull for the two pilots), then hidden, salvage and survey at tier 1 (about 40%).
+
+## v2.98.1 — the old words leave the card texts
+
+Text only (and the dead `noTrap` option); no rule or number changed.
+
+## v2.99.0 — choose your ally
+
+With three or more pilots a face that reaches an ally lets its player choose which. Two pilots are untouched: `node tools/sim.js 40` is identical before and after. Three pilots (`node tools/sim.js 20 --pilots 3`): the heuristic player is identical (it takes the default ally); the look-ahead player, which now weighs every ally, averages 93.9% → 94.1% across the mission cells, and 9/20 → 7/20 full runs (within the noise of 20 runs).

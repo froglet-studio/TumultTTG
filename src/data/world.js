@@ -12,10 +12,11 @@
     VITALITY: 26,            // hero vitality
     POOL: 15,                // dice per hero — invariant
     ROLL: 4,                 // dice rolled per turn (4 since 2.29: Garrett, 2026-11-14)
+    ROLL_EL: 1,              // of them, element dice of the player's choice; the rest plain (2.83: Garrett, 2026-11-21)
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 130,             // foes' vitality, percent of the bestiary's
+    FOE_HP: 145,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 since 2.85)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -41,68 +42,81 @@
   };
 
   /* ───────────────────────────── GEAR (◇) ───────────────────────────── */
-  // Gear abilities cost omnicrystals per use and have their own small cooldown (not the track).
-  // They grant GENERAL VERBS to patch a build's gaps — never a keyed counter.
+  // Gear is ethereal technology (the keyword plan, Garrett 2026-11-21): it works on spaces, the dice, the clock
+  // and the downed, it is bought rather than trained, and it never strikes except through a Field. Each piece has
+  // two actives, paid in omnicrystals with their own small cooldown (not the track), and one passive, always on
+  // while it is worn. Since 2.89 the passives carry what boons did and the actives what consumables did.
+  // `passive.hook` is one of T.BOON_HOOKS (src/engine/engine.js); `passive.txt` is the sentence on the gear.
   T.GEAR = [
-    { id:'grapnel', name:'Grapnel', price:6, icon:'🪝',
-      desc:'Force (pull) for any build. Reel a foe in, or winch it across the board and hold it.',
+    { id:'grapnel', name:'Winch', price:6, icon:'🪝',
+      desc:'Fields that drag. Lay a line on the ground and whatever crosses it is reeled toward you.',
+      passive:{ hook:'fieldForce', val:1, txt:'Your Fields push and pull 1 further.' },
       abilities:[
-        { n:'Reel', cost:1, cd:1, tgt:'foe_r2', fx:[{v:'force', kind:'pull', n:f(1)}], txt:()=>'Pull a foe within 2 one node toward you.' },
-        { n:'Winch', cost:2, cd:3, tgt:'foe_any', fx:[{v:'force', kind:'pull', n:f(9)},{v:'anchor', who:'foe', dur:f(2)}], txt:()=>'Drag a foe from anywhere into melee and Anchor it 2.' },
+        { n:'Reel Line', cost:1, cd:1, tgt:'node_r2', fx:[{v:'field', on:'enter', trips:1, dur:f(3), remote:f(2), fx:[{kw:'pull', n:f(2)}]}], txt:()=>'A Field on a space within 2 for 3 rounds: the first foe to enter is pulled 2 toward you.' },
+        { n:'Winch', cost:2, cd:3, tgt:'node_r3', fx:[{v:'field', radius:f(1), on:'enter', trips:f(2), dur:f(2), remote:f(3), fx:[{kw:'pull', n:f(2)},{kw:'anchor', t:f(1)}]}], txt:()=>'A Field on a space within 3 and its neighbours for 2 rounds: the first 2 foes to enter are pulled 2 toward you and Anchored 1.' },
       ]},
     { id:'scope', name:'Scope', price:5, icon:'🔭',
-      desc:'Reveal for any build. Finds Hidden foes, traps, and the hidden objective.',
+      desc:'Reveal for any build. Finds Hidden foes and the hidden objective.',
+      passive:{ hook:'keen', val:1, txt:'Your reveals reach 1 further, and Hidden foes beside you are revealed as your turn begins.' },
       abilities:[
-        { n:'Glance', cost:1, cd:1, tgt:'self', fx:[{v:'reveal', radius:f(1), dur:f(1)}], txt:()=>'Reveal everything adjacent.' },
+        { n:'Glance', cost:1, cd:1, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)}], txt:()=>'Reveal everything within 2.' },
         { n:'Survey', cost:2, cd:3, tgt:'self', fx:[{v:'reveal', radius:f(99), dur:f(2), findObjective:true}], txt:()=>'Reveal the whole board for 2 rounds and pinpoint the hidden objective.' },
       ]},
     { id:'capacitor', name:'Capacitor', price:6, icon:'🔋',
       desc:'Economy. Convert omnicrystals into dice when the weather is bad.',
+      passive:{ hook:'missionStart', val:{bank:'AP'}, txt:'Start each mission with 1 AP already banked.' },
       abilities:[
         { n:'Store', cost:1, cd:1, tgt:'self', fx:[{v:'draw', face:'O', n:f(1)}], txt:()=>'Draw 1 pool die into your bank as Omni.' },
         { n:'Discharge', cost:2, cd:3, tgt:'self', fx:[{v:'mint', face:'AP', n:f(2)},{v:'mint', face:'C', n:f(1)}], txt:()=>'Mint 2 AP and 1 Charge this turn.' },
       ]},
     { id:'phasebrace', name:'Phase-brace', price:7, icon:'🌀',
       desc:'Space for any build. Reaches height nodes.',
+      passive:{ hook:'blinkReach', val:1, txt:'Your blinks reach 1 further.' },
       abilities:[
-        { n:'Blink', cost:2, cd:2, tgt:'node_tele', fx:[{v:'teleport', reach:f(2), height:true}], txt:()=>'Teleport to any node within 2 — height included.' },
+        { n:'Blink', cost:2, cd:2, tgt:'node_tele', fx:[{v:'blink', reach:f(2), height:true}], txt:()=>'Blink to any node within 2 — height included.' },
         { n:'Fade', cost:1, cd:2, tgt:'self', fx:[{v:'hidden', dur:f(1)}], txt:()=>'Hidden 1.' },
       ]},
     { id:'chronoshim', name:'Chrono-shim', price:7, icon:'⏳',
       desc:'Time for any build. Returns cards sooner, buys rounds from the clock.',
+      passive:{ hook:'roundStart', val:{round:2, hasten:1}, txt:'As round 2 begins, your track slides 1 extra column: what you played in round 1 comes home sooner.' },
       abilities:[
-        { n:'Shim', cost:1, cd:1, tgt:'self', fx:[{v:'hasten', n:f(1)}], txt:()=>'Every card on your track returns 1 column sooner.' },
-        { n:'Rewind', cost:3, cd:4, tgt:'self', fx:[{v:'hasten', n:f(3)},{v:'clock', delta:f(1)}], txt:()=>'Track slides 3 extra columns; the mission clock gains 1.' },
+        { n:'Shim', cost:1, cd:1, tgt:'self', fx:[{v:'haste', n:f(1)}], txt:()=>'Haste: every card on your track returns 1 column sooner.' },
+        { n:'Rewind', cost:3, cd:4, tgt:'self', fx:[{v:'haste', n:f(3)},{v:'haste', clock:true, n:f(2)}], txt:()=>'Haste: your track slides 3 extra columns, and the mission clock gains 2.' },
       ]},
     { id:'aegis', name:'Aegis Plate', price:6, icon:'🛡️',
       desc:'Mitigation for any build. Even against area.',
+      passive:{ hook:'shieldBonus', val:1, txt:'Every Shield you gain is +1.' },
       abilities:[
         { n:'Brace', cost:1, cd:1, tgt:'self', fx:[{v:'shield', val:f(3), dur:f(1), all:true}], txt:()=>'Shield 3 against everything this round.' },
-        { n:'Bulwark', cost:2, cd:3, tgt:'party', fx:[{v:'shield', val:f(3), dur:f(2), all:true, party:true, allyRange:f(1)}], txt:()=>'Shield 3 against everything for 2 rounds, on you and an adjacent ally.' },
+        { n:'Bulwark', cost:2, cd:3, tgt:'party', fx:[{v:'shield', val:f(3), dur:f(2), all:true, party:true, allyRange:f(1)}], txt:()=>'Shield 3 against everything for 2 rounds, on you and every ally beside you.' },
       ]},
     { id:'lantern', name:'Storm Lantern', price:5, icon:'🏮',
-      desc:'Reveal + Mark, and a beacon for your ally.',
+      desc:'Reveal + Mark, and a beacon for an ally.',
+      passive:{ hook:'spot', val:1, txt:'As your turn begins, a foe within 1 of you (beside you) is Marked.' },
       abilities:[
         { n:'Flare', cost:1, cd:2, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)},{v:'mark', area:true, radius:f(2)}], txt:()=>'Reveal within 2 and Mark every foe revealed.' },
-        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'rally', move:f(2)}], txt:()=>'Guide your ally up to 2 nodes, to a node you choose, now.' },
+        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'rally', move:f(2)}], txt:()=>'Guide an ally up to 2 nodes, to a node you choose, now.' },
       ]},
-    { id:'harpoon', name:'Harpoon Gun', price:6, icon:'🎯',
-      desc:'Reach for melee builds: a zone shot that pulls, and a piercing skewer.',
+    { id:'harpoon', name:'Turret', price:6, icon:'🎯',
+      desc:'Fields that strike. Set a turret down and it holds the ground around it.',
+      passive:{ hook:'fieldDur', val:1, txt:'Your Fields last 1 round longer.' },
       abilities:[
-        { n:'Shot', cost:1, cd:1, tgt:'foe_los', fx:[{v:'strike', kind:'los', dmg:f(3)},{v:'force', kind:'pull', n:f(1)}], txt:()=>'Lane strike 3 and pull the foe 1.' },
-        { n:'Skewer', cost:2, cd:3, tgt:'foe_los', fx:[{v:'strike', kind:'los', dmg:f(5), pierce:true}], txt:()=>'Lane strike 5 that ignores Shield.' },
+        { n:'Sentry', cost:1, cd:1, tgt:'node_r2', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), remote:f(2), fx:[{kw:'strike', n:f(2)}]}], txt:()=>'A turret on a space within 2 for 2 rounds: every foe that ends the round on it or beside it takes 2.' },
+        { n:'Skewer', cost:2, cd:3, tgt:'node_r2', fx:[{v:'field', on:'enter', trips:1, dur:f(3), remote:f(2), fx:[{kw:'strike', n:f(5), pierce:true}]}], txt:()=>'A spike on a space within 2 for 3 rounds: the first foe to enter takes 5, Pierce.' },
       ]},
     { id:'climbrig', name:'Climbing Rig', price:4, icon:'🧗',
       desc:'The cheap answer to height.',
+      passive:{ hook:'noPull', val:true, txt:'Mag boots: you cannot be pulled.' },
       abilities:[
         { n:'Ascend', cost:1, cd:1, tgt:'node_climb', fx:[{v:'climb', reach:f(1)}], txt:()=>'Climb onto an adjacent node, height included.' },
         { n:'Rappel', cost:1, cd:1, tgt:'node_move', fx:[{v:'move', n:f(2), ignoreFoes:true}], txt:()=>'Move 2, through foes.' },
       ]},
     { id:'medkit', name:'Medkit', price:5, icon:'🩹',
       desc:'Heal and revive, fueled by omnicrystals.',
+      passive:{ hook:'autoRevive', val:10, txt:'Once a mission, when you would go down, you rise with 10 hp instead.' },
       abilities:[
-        { n:'Patch', cost:1, cd:1, tgt:'foe_or_ally_adj', fx:[{v:'heal', n:f(4), target:'chosenAlly'}], txt:()=>'Heal yourself or an adjacent ally 4.' },
-        { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'revive', hp:f(10), adjacent:true}], txt:()=>'A downed adjacent ally rises with 10 hp.' },
+        { n:'Patch', cost:1, cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
+        { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
       ]},
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);
@@ -169,39 +183,23 @@
     { id:'spot',  n:'Spot',   icon:'◎', ap:2, tgt:'foe_r3',   fx:[{v:'mark'}],                                   txt:'Mark a foe up to 3 nodes away: the next hit on it, by anyone, deals +2.' },
     { id:'legup', n:'Leg up', icon:'⇡', ap:1, tgt:'ally_adj_move', fx:[{v:'rally', move:f(2)}],                  txt:'Boost an adjacent ally up to 2 nodes, to a node you choose, now.' },
     { id:'lend',  n:'Lend',   icon:'⇄', ap:2, tgt:'ally_adj', fx:[{v:'mint', face:'AP', n:f(2), target:'ally'}], txt:'Give an adjacent ally 2 AP to spend this round. Lent after their turn, it is lost.' },
-    { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'hasten', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and your track slides 1 extra column.' },
+    { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'haste', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and Haste: your track slides 1 extra column.' },
   ];
   T.BASIC_BY = {}; T.BASIC.forEach(b => T.BASIC_BY[b.id] = b);
 
   /* ───────────────────────────── CONSUMABLES ───────────────────────────── */
-  T.CONSUMABLES = [
-    { id:'vial',   name:'Rally Vial',  price:2, icon:'🧪', tgt:'self', fx:[{v:'heal', n:f(6)}], txt:'Heal 6.' },
-    { id:'shard',  name:'Omni Shard',  price:3, icon:'💠', tgt:'self', fx:[{v:'mint', face:'O', n:f(1)}], txt:'Mint 1 Omni this turn.' },
-    { id:'charm',  name:'Windbreak Charm',  price:3, icon:'🪬', tgt:'self', fx:[{v:'clock', delta:f(2)}], txt:'The mission clock gains 2.' },
-    { id:'flash',  name:'Flashpowder', price:2, icon:'✨', tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)}], txt:'Reveal within 2.' },
-    { id:'grit',   name:'Grit',        price:2, icon:'🪨', tgt:'self', fx:[{v:'shield', val:f(3), dur:f(1), all:true}], txt:'Shield 3 against everything this round.' },
-  ];
+  // Retired in 2.89 (the keyword plan): each one's job is now a gear active (Rally Vial: the Medkit's Patch; Grit:
+  // the Aegis Plate's Brace; Flashpowder: the Scope's Glance; Omni Shard: the Capacitor's Store; Windbreak Charm:
+  // the Chrono-shim's Rewind). The list stays, empty, so older saves load (their items are refunded).
+  T.CONSUMABLES = [];
   T.CONSUMABLE_BY = {}; T.CONSUMABLES.forEach(c => T.CONSUMABLE_BY[c.id] = c);
 
   /* ───────────────────────────── BOONS ───────────────────────────── */
-  // Passive run modifiers. None breaks the 15-die invariant; affinities re-face a die.
-  T.BOONS = [
-    { id:'tidetouched', name:'Etherion-touched', icon:'🌊', desc:'Start each mission with 1 Omni already banked.', hook:'missionStart', val:{bank:'O'} },
-    { id:'thickhide',   name:'Thick Hide',   icon:'🐢', desc:'Every Shield you gain is +1.', hook:'shieldBonus', val:1 },
-    { id:'keensense',   name:'Keen Sense',   icon:'👁️', desc:'Your reveals reach 1 further; Hidden foes adjacent to you are revealed at round start.', hook:'keen', val:1 },
-    { id:'deeppockets', name:'Deep Pockets', icon:'💰', desc:'+2 ◇ after every mission.', hook:'reward', val:{crystals:2} },
-    { id:'studious',    name:'Studious',     icon:'📖', desc:'+1 UP after every mission.', hook:'reward', val:{up:1} },
-    { id:'secondwind',  name:'Second Wind',  icon:'💫', desc:'Once per run, when you would go down, you rise with 10 hp instead.', hook:'autoRevive', val:10 },
-    { id:'momentum',    name:'Momentum',     icon:'💥', desc:'Your first strike each round deals +2.', hook:'firstStrike', val:2 },
-    { id:'anchorsoul',  name:'Anchor Soul',  icon:'⚓', desc:'You cannot be pulled.', hook:'noPull', val:true },
-    { id:'quickhands',  name:'Quick Hands',  icon:'🫳', desc:'As round 2 begins, your track slides 1 extra column: what you played in round 1 comes home sooner.', hook:'roundStart', val:{round:2, hasten:1} },
-    { id:'aff_M', name:'Mass Affinity',   icon:'◆', desc:'One of your plain dice becomes a Mass die (d8).',   hook:'die', val:'M' },
-    { id:'aff_C', name:'Charge Affinity', icon:'◆', desc:'One of your plain dice becomes a Charge die (d8).', hook:'die', val:'C' },
-    { id:'aff_S', name:'Space Affinity',  icon:'◆', desc:'One of your plain dice becomes a Space die (d8).',  hook:'die', val:'S' },
-    { id:'aff_T', name:'Time Affinity',   icon:'◆', desc:'One of your plain dice becomes a Time die (d8).',   hook:'die', val:'T' },
-    { id:'omnicore', name:'Omni Core',    icon:'◇', desc:'One of your plain dice becomes an ethereal die (d12: two of each symbol).', hook:'die', val:'eth' },
-    { id:'defiant',  name:'Defiant',      icon:'🔥', desc:'+2 damage against Elites and the Heart.', hook:'vsElite', val:2 },
-  ];
+  // Retired in 2.89 (the keyword plan): every boon that did a pilot's job is a gear passive now (Thick Hide: Aegis
+  // Plate; Keen Sense: Scope; Quick Hands: Chrono-shim; Second Wind: Medkit; Anchor Soul: Climbing Rig;
+  // Etherion-touched, gentler: the Capacitor banks 1 AP). The Affinities and Omni Core are cut, since the element die is chosen each turn;
+  // Momentum and Defiant are cut; Deep Pockets and Studious were route rewards. Empty, so older saves load.
+  T.BOONS = [];
   T.BOON_BY = {}; T.BOONS.forEach(b => T.BOON_BY[b.id] = b);
 
   /* ───────────────────────────── BESTIARY ───────────────────────────── */
@@ -266,7 +264,7 @@
     { id:'storm', title:'Etherion Storm', icon:'⛈️',
       text:'The weather itself turns to etherion. Mass, Charge, Space, Time — a raw front of one of them rolls over the squad. To stand in it is to be changed by it.',
       options:[
-        { label:'Stand in it', fx:{affinityRandom:true, damageOne:4}, result:'One hero takes 4 and comes out with an Affinity: a die face that was AP now rolls an etherion.' },
+        { label:'Stand in it', fx:{crystals:5, damageOne:4}, result:'One hero takes 4, and comes out with 5 ◇ of ether crystallised on their coat.' },
         { label:'Shelter', fx:{}, result:'You wait it out. The front passes, taking nothing.' },
       ]},
     { id:'bloom', title:'Bloom of the Superorganism', icon:'🌸',
@@ -291,7 +289,7 @@
       text:'A shrine to the old name, maintained by no one. Offerings left in crystal; answers left in nothing you could prove.',
       options:[
         { label:'Offer 2 ◇', cost:{crystals:2}, fx:{up:1}, result:'Every pilot gains 1 UP. Whatever listens, it listened.' },
-        { label:'Pray', fx:{boonRandom:true}, result:'A boon. You will not be able to say from where.' },
+        { label:'Pray', fx:{crystals:4}, result:'+4 ◇ in the offering bowl that were not there before. You will not be able to say from where.' },
       ]},
     { id:'mirror', title:'Mirror Pool', icon:'🪞',
       text:'Still water that shows you as you might have been. Here, briefly, a choice can be unmade.',
@@ -303,7 +301,7 @@
       text:'A courteous functionary in a clean coat. The Heart offers eight crystals if you turn the expedition around. "Everyone has a number," the envoy says, meaning it kindly.',
       options:[
         { label:'Take the crystals', fx:{crystals:8, bossBonusHp:10}, result:'+8 ◇. The Heart, reassured, grows (+10 hp). You did not turn around.' },
-        { label:'Refuse', fx:{boon:'defiant'}, result:'The envoy makes a note. You gain Defiant: +2 damage against elites and the Heart.' },
+        { label:'Refuse', fx:{up:1}, result:'The envoy makes a note. Saying no to the Heart steadies you: every pilot gains 1 UP.' },
       ]},
     { id:'molt', title:'Molt Season', icon:'🐚',
       text:'The whole reef is shedding. A hero could shed too — one trait for another from the same bloodline.',

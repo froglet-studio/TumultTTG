@@ -239,8 +239,6 @@
         if (card && T.DICE[card.el] && T.heroE(h, cid) >= R().ETHEREAL_MIN_E && set.length < R().POOL)
           set.push(card.el);
       }
-    // Boons that give a die (the Affinities, Omni Core) swap a plain die each, after the cards'.
-    for (const k of T.boonVals(h, 'die')) if (T.DICE[k] && set.length < R().POOL) set.push(k);
     while (set.length < R().POOL) set.push('plain');
     return set;
   };
@@ -267,37 +265,28 @@
     });
     return left;
   };
-  T.heroFaces = function (h) {
-    // Affinity boons re-face one AP side of the plain die each
-    const faces = R().FACES.slice();
-    (h.boons || []).forEach((b) => {
-      const bo = T.BOON_BY[b];
-      if (bo && bo.hook === 'face') {
-        const i = faces.lastIndexOf('AP');
-        if (i >= 0) faces[i] = bo.val;
-      }
-    });
-    return faces;
-  };
-  // Boons are wired by hook, never by id: the engine asks for the values a hero's boons
-  // hang on a hook and acts on those, so the table in src/data/world.js is the whole truth.
+  T.heroFaces = () => R().FACES.slice();
+  // Passives are wired by hook, never by id: the engine asks for the values a hero's gear hangs on a hook and acts
+  // on those, so the gear table in src/data/world.js is the whole truth. Gear passives carry what boons did (2.89);
+  // a boon on an older save still counts until its migration refunds it.
   T.BOON_HOOKS = [
-    'face', // val: the die face one AP side of the plain die becomes
-    'die', // val: a key of T.DICE — one plain die in the holder's pool becomes that die (2.29)
     'missionStart', // val: { bank: face } — one die already banked as that face
     'roundStart', // val: { round, hasten } — the track slides extra columns as that round starts
     'shieldBonus', // val: added to every Shield the holder gains
     'keen', // val: added to the reach of the holder's reveals; Hidden foes beside them are seen at round start
-    'reward', // val: { crystals, up } — added to every mission's rewards
-    'autoRevive', // val: hp the holder rises with, once per run, instead of going down
-    'firstStrike', // val: added to the holder's first strike each round
+    'autoRevive', // val: hp the holder rises with, once a mission, instead of going down
     'noPull', // the holder cannot be pulled
-    'vsElite', // val: added to the holder's damage against elites and the boss
+    'blinkReach', // val: added to the reach of the holder's blinks
+    'spot', // val: as the holder's turn begins, the nearest foe within that many steps is Marked
+    'fieldDur', // val: added to the rounds of every Field the holder lays that has rounds
+    'fieldForce', // val: added to every push and pull of the holder's Fields
   ];
   T.boonVals = function (h, hook) {
-    if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown boon hook ' + hook);
-    return (h.boons || [])
-      .map((id) => T.BOON_BY[id])
+    if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown passive hook ' + hook);
+    const gear = (h.gear || []).map((g) => T.GEAR_BY[g.id] && T.GEAR_BY[g.id].passive);
+    const boons = (h.boons || []).map((id) => T.BOON_BY[id]);
+    return gear
+      .concat(boons)
       .filter((b) => b && b.hook === hook)
       .map((b) => b.val);
   };
@@ -371,8 +360,7 @@
       heroes: run.heroes,
       enemies: [],
       decoys: [],
-      traps: {},
-      zones: [],
+      fields: [],
       objective: spec.objective,
       clock: spec.clock ? Object.assign({}, spec.clock) : null,
       spawns: spec.spawns || [],
@@ -460,16 +448,62 @@
   T.notesOf = (m) => m.log.filter((l) => l.who === 'note').map((l) => ({ r: l.r, hero: l.hero, text: l.text }));
 
   /* ───────────────────────────── DICE ───────────────────────────── */
+  /**
+   * What a pilot rolls (2.83; Garrett, 2026-11-21: "instead of picking your dice it should be 3 ap dice and 1
+   * element of your choice"). Each turn ROLL dice come out of the pool: ROLL_EL of them element dice, the kind
+   * the player chose (`h.rollPick`, one kind from the pilot's own element dice: a d8 of an awakened card's
+   * element, or Omni Core's ethereal d12), and the rest plain d20s, the AP dice. The choice stays from roll to
+   * roll until changed. With nothing chosen, or none of that kind left in the pool, the element die is the kind
+   * the pool holds most of (the first such in the pilot's set); with no element die in the pool it is plain, and
+   * with too few plain dice the rest are drawn at random. Choosing a die never chooses its face.
+   */
+  T.setRollPick = function (h, kinds) {
+    const set = T.diceSet(h);
+    const pick = [];
+    for (const k of Array.isArray(kinds) ? kinds : [kinds]) {
+      if (pick.length >= R().ROLL_EL) break;
+      if (k === 'plain' || !set.includes(k) || pick.includes(k)) continue; // not one of this pilot's element dice
+      pick.push(k);
+    }
+    if (pick.length) h.rollPick = pick;
+    else delete h.rollPick;
+    return { ok: true, pick };
+  };
+  /** The element dice the pilot's next roll takes, as kinds: its choice where the pool still holds it. */
+  T.rollPickNow = function (h) {
+    const left = T.poolDice(h);
+    const out = [];
+    const want = (h.rollPick || []).filter((k) => k !== 'plain');
+    for (let n = 0; n < R().ROLL_EL; n++) {
+      let k = want.find((x) => left.includes(x));
+      if (!k) {
+        // the kind the pool holds most of, the first such in the pilot's set
+        let best = 0;
+        for (const x of T.diceSet(h)) {
+          const c = left.filter((y) => y === x).length;
+          if (x !== 'plain' && c > best) ((best = c), (k = x));
+        }
+      }
+      if (!k) break;
+      out.push(left.splice(left.indexOf(k), 1)[0]);
+      want.splice(want.indexOf(k), 1);
+    }
+    return out;
+  };
   T.rollDice = function (m, h) {
-    // Draw ROLL dice at random from those in the pool, and roll each.
+    // ROLL dice from the pool: ROLL_EL element dice as the player chose (T.rollPickNow), the rest plain, each rolled.
     const k = Math.min(R().ROLL, h.pool);
     const dice = T.stream(m.rngs, 'dice');
     const left = T.poolDice(h);
+    const take = T.rollPickNow(h).slice(0, k);
+    while (take.length < k && left.filter((x) => x === 'plain').length > take.filter((x) => x === 'plain').length)
+      take.push('plain');
     const out = [];
     const kinds = [];
     const at = [];
     for (let i = 0; i < k; i++) {
-      const kind = left.splice(dice.int(left.length), 1)[0];
+      const j = i < take.length ? left.indexOf(take[i]) : dice.int(left.length);
+      const kind = left.splice(j, 1)[0];
       const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
       kinds.push(kind);
@@ -641,7 +675,7 @@
     return !!st(ent).Hidden;
   }
   function isAnchored(ent) {
-    return !!(st(ent).Anchored || st(ent).Held || st(ent).Rooted || ent.anchoredPerm);
+    return !!(st(ent).Anchored || ent.anchoredPerm);
   }
   function forceImmune(ent) {
     return isAnchored(ent) || !!st(ent).Hover || !!st(ent).Weightless;
@@ -667,13 +701,18 @@
     st(ent).Weak = { v: Math.max(v, cur ? cur.v : 0), t: Math.max(t, cur ? cur.t : 0) };
     fx(m, { t: 'state', ent: ent.uid, name: 'Weak' });
   }
-  function anchorEnt(m, ent, t, held) {
-    if (st(ent).StatusImmune && ent.kind === 'hero') return;
+  /**
+   * Anchor a unit (2.91: one keyword for anchor, held, rooted, slow and no-teleport): nothing moves it, its own
+   * walking and blinking included, and it still acts. Status immunity turns away an anchor put on a hero by a foe,
+   * not one the squad chose (`chosen`).
+   */
+  function anchorEnt(m, ent, t, chosen) {
+    if (st(ent).StatusImmune && ent.kind === 'hero' && !chosen) return;
     const cur = st(ent).Anchored;
     st(ent).Anchored = { t: Math.max(t, cur ? cur.t : 0) };
-    if (held) st(ent).Held = { t: Math.max(t, (st(ent).Held || { t: 0 }).t) };
     fx(m, { t: 'state', ent: ent.uid, name: 'Anchored' });
   }
+  T.anchorEnt = anchorEnt;
   T.isHidden = isHidden;
   T.isAnchored = isAnchored;
 
@@ -708,6 +747,21 @@
         others.filter((x) => !x.downed),
       )[0] || byNearness(m, h, others)[0]
     );
+  };
+  /** Every other pilot, nearest first (squad order on a tie). */
+  T.alliesOf = (m, h) =>
+    byNearness(
+      m,
+      h,
+      m.heroes.filter((x) => x !== h),
+    );
+  /**
+   * The ally a face reaches. With three or more pilots the player picks one (ctx.ally, a uid) among the
+   * allies the face can reach (T.targetsFor lists them); without a pick, T.allyOf.
+   */
+  T.chosenAlly = function (m, h, ctx) {
+    const pick = ctx && ctx.ally != null ? m.heroes.find((x) => x.uid === ctx.ally && x !== h) : null;
+    return pick || T.allyOf(m, h);
   };
   /** The ally a Rally or a revive reaches: with two pilots the other one; with more, the nearest one down. */
   T.downedAllyOf = function (m, h) {
@@ -771,32 +825,22 @@
       if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
       if (opts.strike) {
         const flags = source.roundFlags || (source.roundFlags = {});
-        if (!flags.struck) dmg += boonSum(source, 'firstStrike');
         flags.struck = true;
       }
-      if (target.elite || target.boss) dmg += boonSum(source, 'vsElite');
-      if (ts.Studied) dmg += ts.Studied.n;
+      // Mark (2.92): the next hit on it deals `next` more (Pierce if `pierce`), and every hit `each` more while it lasts
       if (ts.Marked) {
-        dmg += 2;
-        delete ts.Marked;
-      }
-      if (ts.Exposed) {
-        dmg += ts.Exposed.bonus;
-        pierce = true;
-        delete ts.Exposed;
+        const mk = ts.Marked;
+        dmg += (mk.next || 0) + (mk.each || 0);
+        if (mk.next) {
+          if (mk.pierce) pierce = true;
+          delete mk.next;
+          delete mk.pierce;
+        }
+        if (!mk.each) delete ts.Marked;
       }
       if (ss.Weak) dmg = Math.max(0, dmg - ss.Weak.v);
     } else if (source && source.kind === 'enemy') {
       if (st(source).Weak) dmg = Math.max(0, dmg - st(source).Weak.v);
-      if (opts.ambush && ts.Guard) dmg = Math.ceil(dmg / 2);
-    }
-    // absorb (ranged, heroes)
-    if (target.kind === 'hero' && ts.Absorb && kind === 'los' && ts.Absorb.n > 0) {
-      ts.Absorb.n--;
-      T.mint(target, ts.Absorb.face || 'C', 1);
-      if (ts.Absorb.n <= 0) delete ts.Absorb;
-      say(m, `${target.name} absorbs the energy and banks it.`);
-      return 0;
     }
     // shield
     if (!pierce && !trueDmg) {
@@ -839,16 +883,6 @@
       }
       delete ts.Preempt;
     }
-    // counter (melee/force)
-    if (ts.Counter && kind === 'melee' && source && source.kind === 'enemy') {
-      const c = ts.Counter;
-      source.hp -= c.dmg;
-      fx(m, { t: 'dmg', ent: source.uid, amount: c.dmg, pos: source.pos });
-      say(m, `${target.name} turns the blow back: ${source.name} takes ${c.dmg}.`);
-      if (c.push) pushAway(m, target, source, c.push);
-      delete ts.Counter;
-      checkEnemyDeath(m, source, target);
-    }
     if (dmg > 0) {
       target.hp -= dmg;
       // `by`: who struck, for the screen to show the blow coming from them (no rule reads it)
@@ -869,11 +903,32 @@
     } else {
       say(m, `${source ? source.name : 'The blow'} is fully blunted by ${target.name}.`);
     }
-    // thorns
+    // link: the other unit takes the same
+    if (dmg > 0 && !opts.linked) {
+      const o = linkedTo(m, target);
+      if (o)
+        T.damage(m, source, o, dmg, {
+          kind: 'true',
+          trueDmg: true,
+          linked: true,
+          label: 'reaches through the Link to',
+        });
+    }
+    // Thorns (2.93: Counter folded in): a melee striker takes `v`, and the next one `next` more (and a push)
     if (kind === 'melee' && ts.Thorns && source && source.kind === 'enemy') {
-      source.hp -= ts.Thorns.v;
-      fx(m, { t: 'dmg', ent: source.uid, amount: ts.Thorns.v, pos: source.pos });
-      say(m, `${source.name} is seared by ${target.name}'s skin for ${ts.Thorns.v}.`);
+      const th = ts.Thorns;
+      const n = (th.v || 0) + (th.next || 0);
+      if (n > 0) {
+        source.hp -= n;
+        fx(m, { t: 'dmg', ent: source.uid, amount: n, pos: source.pos });
+        say(m, `${source.name} is turned back by ${target.name}'s Thorns for ${n}.`);
+      }
+      if (th.next) {
+        if (th.push && source.alive && source.hp > 0) pushAway(m, target, source, th.push);
+        delete th.next;
+        delete th.push;
+        if (!th.v) delete ts.Thorns;
+      }
       checkEnemyDeath(m, source, target);
     }
     // contact / area reveals
@@ -902,7 +957,7 @@
     if (ph) {
       h.hp = ph.hp;
       delete h.states.Phoenix;
-      say(m, `${h.name} re-forms from the seeded node with ${h.hp} vitality!`, 'sys');
+      say(m, `${h.name}'s held Heal lands: up again with ${h.hp}!`, 'sys');
       fx(m, { t: 'revive', ent: h.uid });
       return;
     }
@@ -950,7 +1005,15 @@
     }
     return moved;
   }
-  function pushAway(m, source, target, n) {
+  function pushAway(m, source, target, n, viaLink) {
+    if (!viaLink) {
+      const o = linkedTo(m, target);
+      if (o) {
+        const r = pushAway(m, source, target, n, true);
+        if (standing(o)) pushAway(m, source, o, n, true);
+        return r;
+      }
+    }
     if (forceImmune(target)) {
       say(m, `${target.name} holds fast.`);
       return 0;
@@ -967,7 +1030,15 @@
     }
     return landed(m, source, target, moved);
   }
-  function pullToward(m, source, target, n) {
+  function pullToward(m, source, target, n, viaLink) {
+    if (!viaLink) {
+      const o = linkedTo(m, target);
+      if (o) {
+        const r = pullToward(m, source, target, n, true);
+        if (standing(o)) pullToward(m, source, o, n, true);
+        return r;
+      }
+    }
     if (forceImmune(target) || (target.kind === 'hero' && T.boonVals(target, 'noPull').length)) {
       say(m, `${target.name} holds fast.`);
       return 0;
@@ -990,9 +1061,7 @@
     ent.pos = node;
     fx(m, { t: 'move', ent: ent.uid, from, to: node, how });
     if (how === 'forced' && isHidden(ent)) breakHidden(m, ent, 'moved');
-    if (ent.kind === 'enemy') {
-      onEnemyEnter(m, ent, node);
-    }
+    onEnter(m, ent, node);
     if (ent.kind === 'hero' && how !== 'forced' && isHidden(ent) && !st(ent).Hidden.canMove)
       breakHidden(m, ent, 'moved');
   }
@@ -1001,65 +1070,209 @@
   T.pullToward = pullToward;
 
   const heroBy = (m, uid) => m.heroes.find((h) => h.uid === uid) || null;
-  function onEnemyEnter(m, e, node) {
-    if (!e.alive) return;
-    // traps
-    const traps = m.traps[node];
-    if (traps && traps.length && !trapImmune(e)) {
-      const tr = traps[0];
-      if (!tr.counted) {
-        traps.shift();
-        say(m, `A snare springs under ${e.name}!`, 'hero');
-        T.damage(m, heroBy(m, tr.owner), e, tr.dmg, { kind: 'area', label: 'snares', trueDmg: false, noReveal: false });
-        if (e.alive && tr.anchor) anchorEnt(m, e, tr.anchor);
-        fx(m, { t: 'trap', node });
-      } else {
-        e.inCounted = node;
-      }
-    }
-    // ambush traps on heroes adjacent
-    for (const h of T.liveHeroes(m)) {
-      const at = h.states.AmbushTrap;
-      if (at && B.adjacent(m.board, h.pos, node)) {
-        say(m, `${h.name}'s trigger snaps: ${e.name} is struck as it closes.`, 'hero');
-        T.damage(m, h, e, at.dmg, { kind: 'melee', label: 'ambushes' });
-        if (e.alive && at.weaken) weaken(m, e, at.weaken, 1);
-        if (e.alive && at.anchor) anchorEnt(m, e, at.anchor);
-        delete h.states.AmbushTrap;
-      }
-      const aura = (h.states.Auras || []).find((a) => a.kind === 'reveal' && a.markEntrants && !a.markedThisRound);
-      if (aura && B.adjacent(m.board, h.pos, node)) {
-        st(e).Marked = {};
-        aura.markedThisRound = true;
-        say(m, `${e.name} brushes the cilia — Marked.`, 'hero');
-      }
+
+  /* ───────────────────────────── LINK ─────────────────────────────
+   * Link (2.87): two units joined for N rounds. When one takes damage, a push or a pull, or a Heal, the other
+   * takes the same: the damage it was dealt (as true damage), the same push or pull from the same source,
+   * the same heal. A unit has one Link at a time; a new one replaces it, and it ends when either falls.
+   */
+  const unitBy = (m, uid) => m.heroes.find((h) => h.uid === uid) || m.enemies.find((e) => e.uid === uid) || null;
+  const standing = (u) => !!u && (u.kind === 'enemy' ? u.alive : !u.downed);
+  function linkedTo(m, u) {
+    const l = u && st(u).Linked;
+    if (!l) return null;
+    const o = unitBy(m, l.to);
+    return standing(o) && st(o).Linked && st(o).Linked.to === u.uid ? o : null;
+  }
+  T.linkedTo = linkedTo;
+  function unlink(m, u) {
+    const o = linkedTo(m, u);
+    delete st(u).Linked;
+    if (o) delete st(o).Linked;
+  }
+  function linkUnits(m, a, b, t) {
+    if (!standing(a) || !standing(b) || a === b || t <= 0) return false;
+    unlink(m, a);
+    unlink(m, b);
+    st(a).Linked = { to: b.uid, t };
+    st(b).Linked = { to: a.uid, t };
+    fx(m, { t: 'state', ent: a.uid, name: 'Linked' });
+    fx(m, { t: 'state', ent: b.uid, name: 'Linked' });
+    say(m, `${a.name} and ${b.name} are Linked for ${t} round${t === 1 ? '' : 's'}.`, 'hero');
+    return true;
+  }
+  T.linkUnits = linkUnits;
+  /** The nearest other standing unit of `u`'s side within `r` of it (ties: the earliest), or null. */
+  function nearestKin(m, u, r) {
+    const kin = u.kind === 'enemy' ? T.liveEnemies(m) : T.liveHeroes(m);
+    return (
+      kin
+        .filter((o) => o !== u)
+        .map((o) => [o, B.dist(m.board, u.pos, o.pos, true)])
+        .filter(([, d]) => d <= r)
+        .sort((x, y) => x[1] - y[1] || x[0].uid - y[0].uid)
+        .map(([o]) => o)[0] || null
+    );
+  }
+  function linkHeal(m, u, amt) {
+    const o = linkedTo(m, u);
+    if (!o || amt <= 0) return;
+    const before = o.hp;
+    o.hp = Math.min(o.maxHp, o.hp + amt);
+    if (o.hp > before) {
+      fx(m, { t: 'heal', ent: o.uid, amount: o.hp - before });
+      say(m, `The Link carries the heal to ${o.name} (${o.hp - before}).`, 'hero');
     }
   }
-  T.springCounted = function (m, e) {
-    if (!e.inCounted || e.pos !== e.inCounted) {
-      e.inCounted = null;
-      return;
+  T.linkHeal = linkHeal;
+
+  /** Mark a unit: the larger of each part stands (`next`, `pierce`, `each` for `t` rounds). */
+  function markUnit(m, u, o) {
+    const mk = st(u).Marked || {};
+    if (o.next) {
+      mk.next = Math.max(mk.next || 0, o.next);
+      if (o.pierce) mk.pierce = true;
     }
-    const traps = m.traps[e.pos];
-    if (!traps || !traps.length) {
-      e.inCounted = null;
-      return;
+    if (o.each) {
+      mk.each = Math.max(mk.each || 0, o.each);
+      mk.t = Math.max(mk.t || 0, o.t || 1);
     }
-    const i = traps.findIndex((t) => t.counted);
-    if (i < 0) {
-      e.inCounted = null;
-      return;
+    st(u).Marked = mk;
+    fx(m, { t: 'state', ent: u.uid, name: 'Marked' });
+  }
+  T.markUnit = markUnit;
+  /** Heal a unit: restore vitality, or get a downed pilot up with that much (2.90: Heal raises the downed). */
+  function healUnit(m, u, amt) {
+    if (amt <= 0) return 0;
+    if (u.kind === 'hero' && u.downed) {
+      u.downed = false;
+      u.hp = Math.min(u.maxHp, amt);
+      say(m, `${u.name} gets up with ${u.hp}!`, 'sys');
+      fx(m, { t: 'revive', ent: u.uid });
+      return u.hp;
     }
-    const tr = traps.splice(i, 1)[0];
-    e.inCounted = null;
-    say(m, `The counted snare springs shut on ${e.name}!`, 'hero');
-    T.damage(m, heroBy(m, tr.owner), e, tr.dmg, { kind: 'area', label: 'snares' });
-    if (e.alive) {
-      anchorEnt(m, e, tr.anchor);
-      if (tr.noTele) st(e).NoTele = { t: tr.anchor };
+    const before = u.hp;
+    u.hp = Math.min(u.maxHp, u.hp + amt);
+    fx(m, { t: 'heal', ent: u.uid, amount: u.hp - before });
+    return u.hp - before;
+  }
+  T.healUnit = healUnit;
+  /** Wound a unit: it takes the Wound at round end, one less each round. A new Wound replaces a smaller one. */
+  function woundUnit(m, u, n, source, heal, kind) {
+    const w = st(u).Wound;
+    if (w && w.n >= n) return;
+    st(u).Wound = {
+      n,
+      owner: source ? source.uid : w ? w.owner : null,
+      heal: Math.max(heal || 0, w ? w.heal : 0),
+      kind: kind || (w && w.kind) || 'wound',
+    };
+    fx(m, { t: 'state', ent: u.uid, name: 'Wound' });
+  }
+  T.woundUnit = woundUnit;
+
+  /* ───────────────────────────── FIELDS ─────────────────────────────
+   * A Field (2.86) is a marked space, or a set of them, that does its keywords to whatever enters it or ends
+   * the round there. It is the one shape behind what were snares, counted snares, spore and musk zones,
+   * triggers and auras; a hazard reads as a Field of damage that belongs to nobody.
+   *   { nodes: [..] | null, around: uid | null, radius, ring, on: 'enter' | 'end', trips, t, owner, side, label,
+   *     fx: [{ kw: 'strike' | 'weaken' | 'anchor' | 'mark' | 'hidden' | 'reveal', n, t, pierce, if, noTele }] }
+   * `around` makes the Field follow a unit (the spaces within `radius` of it; `ring` leaves out its own).
+   * `trips` counts the units it may still spring on (null: every one); `t` counts rounds (null: until spent).
+   * A Field's harm falls on its side's foes and its help on its own side; nothing off the ground (Hover,
+   * Weightless) is touched by one.
+   */
+  const FIELD_HELPS = { hidden: true, heal: true };
+  // the Fields springing now (a Field that pulls a unit across its own spaces does not spring again on the way)
+  const SPRINGING = new Set();
+  function fieldNodes(m, f) {
+    if (f.around == null) return f.nodes || [];
+    const u = heroBy(m, f.around);
+    if (!u || u.downed) return [];
+    const ring = B.within(m.board, u.pos, f.radius || 1, true);
+    return f.ring ? ring : [u.pos].concat(ring);
+  }
+  T.fieldNodes = fieldNodes;
+  function fieldHits(f, u, x) {
+    const foe = (u.kind === 'enemy') === (f.side !== 'enemy');
+    return FIELD_HELPS[x.kw] ? !foe : foe;
+  }
+  /** Spring one Field on one unit. `late` (a round-end trip) makes a state it leaves last into the next round. */
+  function springField(m, f, u, late) {
+    if (trapImmune(u) || (u.kind === 'enemy' && !u.alive)) return false;
+    const down = u.kind === 'hero' && u.downed; // a downed pilot is reached only by a Heal
+    const owner = f.owner != null ? heroBy(m, f.owner) : null;
+    let hit = false;
+    for (const x of f.fx) {
+      if (x.kw === 'reveal' || !fieldHits(f, u, x) || (down && x.kw !== 'heal')) continue;
+      if (x.if === 'anchored' && (!isAnchored(u) || u.anchoredPerm)) continue;
+      const t = (x.t || 1) + (late ? 1 : 0);
+      if (!hit && !FIELD_HELPS[x.kw])
+        say(
+          m,
+          `${u.name} is caught in ${owner ? owner.name + "'s" : 'a'} Field.`,
+          u.kind === 'enemy' ? 'hero' : 'enemy',
+        );
+      hit = true;
+      if (x.kw === 'strike')
+        T.damage(m, owner, u, x.n, {
+          kind: x.pierce ? 'true' : 'area',
+          trueDmg: !!x.pierce,
+          label: f.label || 'is struck by the Field for',
+        });
+      else if (x.kw === 'weaken') weaken(m, u, x.n, t);
+      else if (x.kw === 'anchor') {
+        anchorEnt(m, u, t);
+      } else if (x.kw === 'mark') markUnit(m, u, { next: x.n || 2 });
+      else if (x.kw === 'hidden') setHidden(m, u, t, false);
+      else if (x.kw === 'heal') healUnit(m, u, x.n);
+      else if ((x.kw === 'pull' || x.kw === 'push') && owner && !SPRINGING.has(f)) {
+        const n = x.n + boonSum(owner, 'fieldForce');
+        SPRINGING.add(f);
+        try {
+          if (x.kw === 'pull') pullToward(m, owner, u, n);
+          else pushAway(m, owner, u, n);
+        } finally {
+          SPRINGING.delete(f);
+        }
+      }
+      if (u.kind === 'enemy' ? !u.alive : u.downed) break;
     }
-    fx(m, { t: 'trap', node: e.pos });
-  };
+    if (hit && f.trips != null) f.trips--;
+    return hit;
+  }
+  /** A unit has stepped (or been moved) onto `node`: every 'enter' Field there springs on it. */
+  function onEnter(m, u, node) {
+    let spent = false;
+    for (const f of m.fields) {
+      if (f.on !== 'enter' || (f.trips != null && f.trips <= 0)) continue;
+      if (!fieldNodes(m, f).includes(node)) continue;
+      if (springField(m, f, u, false)) {
+        fx(m, { t: 'trap', node });
+        if (f.trips != null && f.trips <= 0) spent = true;
+      }
+    }
+    if (spent) m.fields = m.fields.filter((f) => f.trips == null || f.trips > 0);
+  }
+  /** Round end: every 'end' Field springs on the units standing in it, and reveal Fields look again. */
+  function fieldsAtRoundEnd(m) {
+    for (const f of m.fields) {
+      const owner = f.owner != null ? heroBy(m, f.owner) : null;
+      const nodes = fieldNodes(m, f);
+      if (!nodes.length) continue;
+      if (owner && f.fx.some((x) => x.kw === 'reveal')) {
+        const c = f.around != null ? owner.pos : nodes[0];
+        revealArea(m, owner, c, f.radius || 0, 2);
+      }
+      if (f.on !== 'end') continue;
+      const set = new Set(nodes);
+      for (const u of m.heroes.concat(T.liveEnemies(m))) {
+        if (f.trips != null && f.trips <= 0) break;
+        if (set.has(u.pos)) springField(m, f, u, true);
+      }
+    }
+    m.fields = m.fields.filter((f) => f.trips == null || f.trips > 0);
+  }
 
   /* ───────────────────────────── REVEAL ───────────────────────────── */
   function revealArea(m, actor, center, radius, dur, opts) {
@@ -1094,11 +1307,59 @@
   }
 
   /* ───────────────────────────── TARGETING ───────────────────────────── */
-  // Returns {need:'none'|'foe'|'node'|'ally'|'foeOrAlly', options:[ids], reason}
-  T.targetsFor = function (m, h, tgt, face, P, E) {
+  // Returns {need:'none'|'foe'|'node'|'ally'|'foeOrAlly', options:[ids], reason, ally?, allies?}
+  /**
+   * How far a face reaches "your ally": null when it does not (at this level), 'adj' when only an ally beside
+   * you, 'any' when any ally standing. A face that names an ally lets its player choose which one.
+   */
+  const allyRef = (f, P, E) => {
+    if (f.carryAlly != null) return bool(f.carryAlly, P, E) ? 'adj' : null;
+    if (f.v === 'rally' || f.v === 'swap') return 'any';
+    if (f.target !== 'ally' && f.who !== 'ally') return null;
+    if (!f.pierce && ['val', 'n'].some((k) => f[k] != null && num(f[k], P, E) <= 0)) return null;
+    if (f.v === 'anchor' && num(f.dur, P, E) <= 0) return null;
+    return f.adjacent ? 'adj' : 'any';
+  };
+  const allyReach = (tgt, face, P, E) => {
+    if (tgt === 'ally_adj' || tgt === 'ally_adj_move') return 'adj';
+    if (tgt === 'ally' || tgt === 'ally_move') return 'any';
+    const refs = ((face && face.fx) || []).map((f) => allyRef(f, P, E)).filter(Boolean);
+    if (!refs.length) return null;
+    return refs.every((r) => r === 'adj') ? 'adj' : 'any';
+  };
+  /**
+   * Targets for a play. `pick` is the ally the player has chosen, for a face that reaches one: with three or
+   * more pilots, a face that names "an ally" says which allies it can reach (`allies`, nearest first) and
+   * which one it works on now (`ally`). A face that needs no other target asks for the ally itself
+   * (need 'ally'). With two pilots there is only one ally, and nothing changes.
+   */
+  T.targetsFor = function (m, h, tgt, face, P, E, pick) {
+    if (m.heroes.length <= 2 || h.kind !== 'hero') return baseTargets(m, h, tgt, face, P, E, T.allyOf(m, h));
+    const reach = allyReach(tgt, face, P, E);
+    if (!reach) return baseTargets(m, h, tgt, face, P, E, T.allyOf(m, h));
+    const cands = T.alliesOf(m, h).filter((x) => !x.downed && (reach === 'any' || B.adjacent(m.board, h.pos, x.pos)));
+    const chosen = cands.find((x) => x.uid === pick) || cands[0] || T.allyOf(m, h);
+    const r = baseTargets(m, h, tgt, face, P, E, chosen);
+    if (r.invalid || !cands.length) return r;
+    r.ally = chosen.uid;
+    if (cands.length < 2) return r;
+    if (r.need === 'none') return Object.assign(r, { need: 'ally', options: cands.map((x) => x.uid) });
+    r.allies = cands.map((x) => x.uid);
+    return r;
+  };
+  /**
+   * The ally a play goes to: the player's pick, checked against the allies the face can reach, or the one it
+   * reaches by default. Returns { ok, ally } (ally: a uid, or null with two pilots).
+   */
+  const allyFor = (m, tg, ctx) => {
+    if (m.heroes.length <= 2 || tg.ally == null) return { ok: true, ally: null };
+    const allowed = tg.need === 'ally' ? tg.options : tg.allies || [tg.ally];
+    const want = ctx && ctx.ally != null ? ctx.ally : tg.ally;
+    return allowed.includes(want) ? { ok: true, ally: want } : { ok: false, why: 'that ally is out of reach' };
+  };
+  const baseTargets = function (m, h, tgt, face, P, E, ally) {
     const bd = m.board;
     const foes = T.liveEnemies(m);
-    const ally = T.allyOf(m, h);
     const vis = (e) => !isHidden(e) || !!st(e).Located; // can't target unseen foes with single-target effects
     const reach = st(h).Morph && st(h).Morph.reach ? 2 : 1;
     switch (tgt) {
@@ -1120,7 +1381,7 @@
           return { need: 'none', invalid: 'your ally must be beside you' };
         const rl = face && face.fx.find((x) => x.v === 'rally');
         const n = rl ? num(rl.move, P, E) : 0;
-        const steps = st(ally).Rooted || st(ally).SlowSelf ? [] : T.reachableWalk(m, ally, n, false);
+        const steps = isAnchored(ally) ? [] : T.reachableWalk(m, ally, n, false);
         return { need: 'node', options: [ally.pos].concat(steps), ally: ally.uid, allyMove: n };
       }
       case 'foe_melee':
@@ -1154,7 +1415,7 @@
         return { need: 'none' };
       case 'foe_or_ally_adj': {
         const opts = foes.filter((e) => B.adjacent(bd, h.pos, e.pos)).map((e) => e.uid);
-        if (ally && !ally.downed && B.adjacent(bd, h.pos, ally.pos)) opts.push(ally.uid);
+        for (const x of T.alliesOf(m, h)) if (!x.downed && B.adjacent(bd, h.pos, x.pos)) opts.push(x.uid);
         if (ally && !ally.downed && face && face.fx.some((x) => x.target === 'chosenAlly')) opts.push(h.uid);
         return { need: 'foeOrAlly', options: opts };
       }
@@ -1169,7 +1430,13 @@
               2,
             )
           : 2;
-        return { need: 'node', options: [h.pos].concat(B.within(bd, h.pos, r, true)) };
+        const all = [h.pos].concat(B.within(bd, h.pos, r, true));
+        // a decoy is set down on an empty node; work and spores can reach any node in range
+        const decoyOnly =
+          face &&
+          face.fx.some((x) => x.v === 'decoy' && !x.here) &&
+          !face.fx.some((x) => /^(interact|dot|zone|strike|trap)$/.test(x.v));
+        return { need: 'node', options: decoyOnly ? all.filter((n) => !T.occupied(m, n)) : all };
       }
       case 'node_r3': {
         const r = face ? Math.max(...face.fx.map((x) => (x.remote != null ? num(x.remote, P, E) : 0)), 3) : 3;
@@ -1181,8 +1448,8 @@
         return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact) };
       }
       case 'node_tele': {
-        const tp = face.fx.find((x) => x.v === 'teleport');
-        const r = num(tp.reach, P, E);
+        const tp = face.fx.find((x) => x.v === 'blink');
+        const r = num(tp.reach, P, E) + boonSum(h, 'blinkReach');
         let opts = B.within(bd, h.pos, r, true).filter((n) => !T.occupied(m, n) && (tp.height || !bd.nodes[n].height));
         if (tp.dest === 'adjTarget')
           return {
@@ -1256,7 +1523,7 @@
 
   /* ───────────────────────────── PLAY A FACE ───────────────────────────── */
   // ctx: {target: uid|null, node: id|null, choice:'push'|'pull'}
-  T.canPlay = function (m, h, cardId, faceKey) {
+  T.canPlay = function (m, h, cardId, faceKey, pick) {
     if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
     if (!T.inHand(h, cardId)) return { ok: false, why: 'on track' };
     const card = T.CARD[cardId];
@@ -1267,14 +1534,16 @@
     const eln = face.el || 0;
     if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
     if (!T.canPay(h, face.ap, elt, eln)) return { ok: false, why: 'cannot pay' };
-    const tg = T.targetsFor(m, h, face.tgt, face, P, E);
+    const tg = T.targetsFor(m, h, face.tgt, face, P, E, pick);
     if (tg.invalid) return { ok: false, why: tg.invalid };
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no valid target' };
     return { ok: true, tg };
   };
   T.playFace = function (m, h, cardId, faceKey, ctx) {
-    const chk = T.canPlay(m, h, cardId, faceKey);
+    const chk = T.canPlay(m, h, cardId, faceKey, ctx && ctx.ally);
     if (!chk.ok) return { ok: false, why: chk.why };
+    const al = allyFor(m, chk.tg, ctx);
+    if (!al.ok) return al;
     const card = T.CARD[cardId];
     const face = card[faceKey];
     const P = T.heroP(h, cardId),
@@ -1292,6 +1561,7 @@
     if (how === 'free') say(m, `(${card.name} does not go to the track.)`, 'sys');
     const rctx = ctx || {};
     Object.assign(rctx, { P, E, card, faceKey });
+    if (al.ally != null) rctx.ally = al.ally;
     T.runEffects(m, h, face.fx, rctx);
     T.afterAction(m);
     return { ok: true, ctx: rctx };
@@ -1343,7 +1613,7 @@
       E = ctx.E || 0;
     const bd = m.board;
     const isHero = actor.kind === 'hero';
-    const ally = isHero ? T.allyOf(m, actor) : null;
+    const ally = isHero ? T.chosenAlly(m, actor, ctx) : null;
     const party = () => (isHero ? T.liveHeroes(m) : [actor]);
     // Conditions gate the whole effect, whatever its verb. The ones about a target need it
     // still standing. An effect that carries `elseVal` runs anyway, at that magnitude instead
@@ -1401,18 +1671,6 @@
           if (f.onKill && t.kind === 'enemy' && !t.alive) T.applyEffect(m, actor, f.onKill, ctx);
           ctx.lastTarget = t;
         }
-        if (f.chain && targets.length && targets[0].kind === 'enemy') {
-          const primary = targets[0];
-          const n = num(f.chain, P, E);
-          const cd = num(f.chainDmg, P, E);
-          const others = T.liveEnemies(m)
-            .filter((e) => e !== primary && B.dist(bd, primary.pos, e.pos, true) <= 1)
-            .slice(0, n);
-          for (const o of others) {
-            say(m, `The arc chains to ${o.name}.`, 'hero');
-            T.damage(m, actor, o, cd, { kind: 'area', label: 'arcs into' });
-          }
-        }
         break;
       }
       case 'execute': {
@@ -1445,7 +1703,8 @@
         say(m, `${t.name}'s Shield is ${amount ? 'weakened' : 'stripped'}.`, 'hero');
         break;
       }
-      case 'dot': {
+      case 'wound': {
+        // Wound N (2.88): at round end it takes N, then the Wound drops by 1. The larger Wound stands.
         let targets = [];
         if (f.area === 'nodeArea') {
           const center = ctx.node != null ? ctx.node : actor.pos;
@@ -1454,18 +1713,11 @@
           const t = targetEnt(m, ctx) || ctx.lastTarget;
           if (t) targets = [t];
         }
+        const n = num(f.n, P, E);
+        const heal = num(f.healOwner, P, E) || 0;
         for (const t of targets) {
-          if (t.kind !== 'enemy') continue;
-          st(t).Dots = st(t).Dots || [];
-          st(t).Dots.push({
-            v: num(f.val, P, E),
-            t: num(f.dur, P, E),
-            kind: f.kind,
-            escalate: num(f.escalate, P, E),
-            healOwner: num(f.healOwner, P, E),
-            owner: actor.uid,
-          });
-          fx(m, { t: 'state', ent: t.uid, name: f.kind });
+          if (n <= 0 || (t.kind === 'enemy' ? !t.alive : t.downed)) continue;
+          woundUnit(m, t, n, actor, heal, f.kind);
         }
         break;
       }
@@ -1474,8 +1726,8 @@
         if (actor.kind !== 'hero') break;
         const n = num(f.n, P, E);
         if (n <= 0) break;
-        if (st(actor).SlowSelf) {
-          say(m, `${actor.name} cannot move this round.`, 'sys');
+        if (isAnchored(actor)) {
+          say(m, `${actor.name} is Anchored and cannot move.`, 'sys');
           break;
         }
         let dest = null;
@@ -1513,17 +1765,15 @@
           }
           break;
         }
-        if (f.noTrap) actor.states.NoTrapStep = { t: 1 };
         const fromN = actor.pos;
         moveEntity(m, actor, dest, 'walk');
-        if (f.noTrap) delete actor.states.NoTrapStep;
         say(m, `${actor.name} moves ${fromN} → ${dest}.`, 'hero');
         onHeroEnter(m, actor, dest);
         break;
       }
-      case 'teleport': {
+      case 'blink': {
         if (actor.kind !== 'hero') break;
-        const r = num(f.reach, P, E);
+        const r = num(f.reach, P, E) + boonSum(actor, 'blinkReach');
         let dest = ctx.node;
         if (f.dest === 'adjTarget') {
           const t = targetEnt(m, ctx);
@@ -1540,8 +1790,8 @@
           say(m, 'Out of reach.', 'sys');
           break;
         }
-        if (st(actor).NoTele) {
-          say(m, `${actor.name} is held — no teleporting out.`, 'sys');
+        if (isAnchored(actor)) {
+          say(m, `${actor.name} is Anchored — no blinking out.`, 'sys');
           break;
         }
         const from = actor.pos;
@@ -1643,6 +1893,16 @@
       }
       /* ---------- INFORMATION ---------- */
       case 'reveal': {
+        // Reveal (2.96 absorbs locate): within N of you everything is shown; on one foe (`target`, `nearest`), it is
+        // Revealed for `dur`: it cannot be Hidden, and a zone strike finds it.
+        if (f.target || f.nearest) {
+          const t = f.nearest ? nearestFoe(m, actor) : targetEnt(m, ctx);
+          if (!t || t.kind !== 'enemy') break;
+          breakHidden(m, t, 'revealed');
+          addTimed(m, t, 'Located', num(f.dur, P, E) || 1);
+          ctx.lastTarget = t;
+          break;
+        }
         const r = num(f.radius, P, E);
         revealArea(m, actor, actor.pos, r, num(f.dur, P, E) || 1, { findObjective: !!f.findObjective });
         if (f.hintObjective && m.objective && m.objective.kind === 'find' && !m.objective.found) {
@@ -1652,15 +1912,9 @@
         }
         break;
       }
-      case 'locate': {
-        let t = f.nearest ? nearestFoe(m, actor) : targetEnt(m, ctx);
-        if (!t || t.kind !== 'enemy') break;
-        breakHidden(m, t, 'located');
-        addTimed(m, t, 'Located', num(f.dur, P, E) || 1);
-        ctx.lastTarget = t;
-        break;
-      }
       case 'mark': {
+        // Mark N (2.92): the next hit on it deals N more (2 unless it says); `pierce`, that hit ignores Shield;
+        // `dur`, every hit on it deals N more for that many rounds. It absorbs Studied and Exposed.
         let targets = [];
         if (f.area) {
           const r = num(f.radius, P, E);
@@ -1669,29 +1923,20 @@
           const e = nearestFoe(m, actor);
           if (e) targets = [e];
         } else {
-          const t = targetEnt(m, ctx);
+          const t = targetEnt(m, ctx) || ctx.lastTarget;
           if (t) targets = [t];
         }
+        const n = f.n != null ? num(f.n, P, E) : 2;
+        const dur = f.dur != null ? num(f.dur, P, E) : 0;
         for (const t of targets)
-          if (t.kind === 'enemy') {
-            st(t).Marked = {};
-            fx(m, { t: 'state', ent: t.uid, name: 'Marked' });
-          }
-        if (targets.length) say(m, `${targets.map((t) => t.name).join(', ')} Marked.`, 'hero');
-        break;
-      }
-      case 'expose': {
-        const t = targetEnt(m, ctx);
-        if (!t || t.kind !== 'enemy') break;
-        st(t).Exposed = { bonus: num(f.bonus, P, E) };
-        say(m, `${t.name}'s weak point is exposed.`, 'hero');
-        break;
-      }
-      case 'studied': {
-        const t = targetEnt(m, ctx) || ctx.lastTarget;
-        if (!t || t.kind !== 'enemy') break;
-        st(t).Studied = { n: (st(t).Studied ? st(t).Studied.n : 0) + num(f.n, P, E) };
-        say(m, `${actor.name} studies ${t.name} (+${st(t).Studied.n} to hits).`, 'hero');
+          if (t.kind === 'enemy' && n > 0)
+            markUnit(m, t, dur > 0 ? { each: n, t: dur } : { next: n, pierce: !!f.pierce });
+        if (targets.length)
+          say(
+            m,
+            `${targets.map((t) => t.name).join(', ')} Marked +${n}${dur > 0 ? ` for ${dur} rounds` : ''}.`,
+            'hero',
+          );
         break;
       }
       /* ---------- SELF STATES ---------- */
@@ -1705,7 +1950,25 @@
         break;
       }
       case 'shield': {
+        // Shield N (2.94 absorbs pre-empt, guard and absorb): each hit it takes is N lower for `dur` rounds; `next`,
+        // only the next hit (which may `reflect` some back, or `reposition` you a step away).
         const v = num(f.val, P, E);
+        if (f.next) {
+          if (v <= 0) break;
+          const list = f.party === true || bool(f.party, P, E) ? T.liveHeroes(m) : [actor];
+          list.forEach((h) => {
+            const cur = h.states.Preempt;
+            h.states.Preempt = {
+              v: Math.max(v, cur ? cur.v : 0),
+              reflect: num(f.reflect, P, E) || 0,
+              t: f.dur || 2,
+              reposition: f.reposition || 0,
+            };
+            fx(m, { t: 'state', ent: h.uid, name: 'Preempt' });
+          });
+          say(m, `${list.map((h) => h.name).join(' & ')}: Shield ${v} against the next hit.`, 'hero');
+          break;
+        }
         if (v <= 0 && !f.min) break;
         const d = num(f.dur, P, E) || 1;
         let list = [actor];
@@ -1726,22 +1989,23 @@
       case 'anchor': {
         const d = num(f.dur, P, E);
         if (d <= 0) break;
+        const chosen = isHero; // a hero's own anchor on itself or an ally is a choice, not a status put on it
         if (f.who === 'self') {
-          anchorEnt(m, actor, d);
+          anchorEnt(m, actor, d, chosen);
           say(m, `${actor.name} anchors (${d}).`, 'hero');
         } else if (f.who === 'ally') {
           if (ally && !ally.downed && (!f.adjacent || B.adjacent(bd, actor.pos, ally.pos))) {
-            anchorEnt(m, ally, d);
+            anchorEnt(m, ally, d, chosen);
             say(m, `${ally.name} anchored (${d}).`, 'hero');
           }
         } else {
           const t = targetEnt(m, ctx) || ctx.lastTarget;
           if (!t) break;
           if (t.kind === 'enemy') {
-            anchorEnt(m, t, d, !!f.held);
-            say(m, `${t.name} Anchored ${d}${f.held ? ' (held)' : ''}.`, 'hero');
-          } else if (t.kind === 'hero') {
             anchorEnt(m, t, d);
+            say(m, `${t.name} Anchored ${d}.`, 'hero');
+          } else if (t.kind === 'hero') {
+            anchorEnt(m, t, d, chosen);
           }
         }
         break;
@@ -1767,16 +2031,6 @@
         if (targets.length) say(m, `Weakened ${v}: ${targets.map((t) => t.name).join(', ')}.`, 'hero');
         break;
       }
-      case 'slow': {
-        const t = targetEnt(m, ctx) || ctx.lastTarget;
-        if (!t || t.kind !== 'enemy') break;
-        addTimed(m, t, 'Slow', num(f.dur, P, E));
-        say(m, `${t.name} cannot move for ${num(f.dur, P, E)}.`, 'hero');
-        break;
-      }
-      case 'slowSelf':
-        addTimed(m, actor, 'SlowSelf', num(f.dur, P, E) || 1);
-        break;
       case 'empower': {
         const v = num(f.val, P, E);
         if (v <= 0 && !f.pierce) break;
@@ -1796,25 +2050,23 @@
           say(m, `${list.map((h) => h.name).join(' & ')}: next strike +${v}${f.pierce ? ' (pierce)' : ''}.`, 'hero');
         break;
       }
-      case 'preempt': {
-        const v = num(f.val, P, E);
-        const list = f.party === true || bool(f.party, P, E) ? T.liveHeroes(m) : [actor];
-        list.forEach((h) => {
-          h.states.Preempt = { v, reflect: num(f.reflect, P, E), t: f.dur || 2, reposition: f.reposition || 0 };
-          fx(m, { t: 'state', ent: h.uid, name: 'Preempt' });
-        });
-        say(m, `${list.map((h) => h.name).join(' & ')} pre-empt: next hit −${v}.`, 'hero');
+      case 'thorns': {
+        // Thorns N: anything that strikes you in melee takes N, for `dur` rounds; `next`, only the next one (and
+        // `push` pushes it back). It absorbs Counter.
+        const n = num(f.val, P, E);
+        const d = num(f.dur, P, E) || 1;
+        if (n <= 0) break;
+        const th = st(actor).Thorns || {};
+        if (f.next) {
+          th.next = Math.max(th.next || 0, n);
+          if (f.push) th.push = Math.max(th.push || 0, num(f.push, P, E));
+        } else th.v = Math.max(th.v || 0, n);
+        th.t = Math.max(th.t || 0, d);
+        st(actor).Thorns = th;
+        fx(m, { t: 'state', ent: actor.uid, name: 'Thorns' });
+        say(m, `${actor.name} grows Thorns (${n}${f.next ? ', the next melee hit' : ''}).`, 'hero');
         break;
       }
-      case 'counter': {
-        actor.states.Counter = { dmg: num(f.dmg, P, E), push: f.push || 0, t: f.dur || 2 };
-        say(m, `${actor.name} readies a deflection.`, 'hero');
-        break;
-      }
-      case 'thorns':
-        addTimed(m, actor, 'Thorns', num(f.dur, P, E) || 1, { v: num(f.val, P, E) });
-        say(m, `${actor.name}'s skin turns hostile (${num(f.val, P, E)}).`, 'hero');
-        break;
       case 'stasis':
         addTimed(m, actor, 'Stasis', num(f.dur, P, E) || 1);
         say(m, `${actor.name} steps outside time.`, 'hero');
@@ -1832,15 +2084,6 @@
         if (d <= 0) break;
         const list = f.party ? T.liveHeroes(m) : [actor];
         list.forEach((h) => addTimed(m, h, 'HazardImmune', d));
-        break;
-      }
-      case 'statusImmune':
-        addTimed(m, actor, 'StatusImmune', num(f.dur, P, E));
-        break;
-      case 'guard': {
-        const d = num(f.dur, P, E);
-        const list = f.party ? T.liveHeroes(m) : [actor];
-        list.forEach((h) => addTimed(m, h, 'Guard', d));
         break;
       }
       case 'morph': {
@@ -1864,88 +2107,64 @@
         actor.rested = true;
         say(m, `${actor.name} goes still.`, 'hero');
         break;
-      case 'freecast': {
-        const n = num(f.n, P, E);
-        if (n <= 0) break;
-        // dur: the offer lapses after that many round ends (1 = "this turn"); without it, it waits
-        const t = num(f.dur, P, E) || null;
-        (actor.states.Freecast = actor.states.Freecast || []).push({ n, t });
-        say(
-          m,
-          `${actor.name}: the next ${n} card${n > 1 ? 's' : ''}${t === 1 ? ' this turn' : ''} won't go to the track.`,
-          'hero',
-        );
-        break;
-      }
-      case 'phoenix':
-        actor.states.Phoenix = { hp: num(f.hp, P, E), t: num(f.dur, P, E) };
-        say(m, `${actor.name} seeds a return (${num(f.hp, P, E)} hp if downed within ${num(f.dur, P, E)}).`, 'hero');
-        break;
-      case 'absorb':
-        actor.states.Absorb = { n: num(f.n, P, E), t: num(f.dur, P, E), face: f.face || 'C' };
-        say(m, `${actor.name} will absorb the next ${num(f.n, P, E)} ranged hit(s).`, 'hero');
-        break;
-      case 'ambushTrap':
-        actor.states.AmbushTrap = {
-          dmg: num(f.dmg, P, E),
-          t: num(f.dur, P, E) || 2,
-          weaken: f.weaken || 0,
-          anchor: num(f.anchor, P, E),
-        };
-        say(m, `${actor.name} sets a trigger (${num(f.dmg, P, E)} to the first foe that closes).`, 'hero');
-        break;
-      case 'aura': {
-        actor.states.Auras = actor.states.Auras || [];
-        actor.states.Auras.push({
-          kind: f.kind,
-          val: num(f.val, P, E),
-          radius: num(f.radius, P, E),
-          t: num(f.dur, P, E),
-          markEntrants: !!f.markEntrants,
-        });
-        if (f.kind === 'reveal') revealArea(m, actor, actor.pos, num(f.radius, P, E), 1);
-        say(m, `${actor.name} extends an aura (${f.kind}).`, 'hero');
-        break;
-      }
-      /* ---------- RESOURCES ---------- */
+
       case 'heal': {
+        // Heal N (2.90): restore N vitality; a downed pilot it reaches gets up with N. `ward: R` holds it
+        // instead: if you go down within R rounds, it lands then and you get up with N.
         const n = num(met ? f.n : f.elseVal, P, E);
         if (n <= 0) break;
+        if (f.ward != null) {
+          actor.states.Phoenix = { hp: n, t: num(f.ward, P, E) };
+          say(m, `${actor.name} holds a Heal in reserve (${n} if downed within ${num(f.ward, P, E)}).`, 'hero');
+          break;
+        }
         let list = [actor];
-        if (f.party) list = T.liveHeroes(m);
-        else if (f.target === 'ally') list = ally && !ally.downed ? [ally] : [];
+        if (f.party) list = isHero ? m.heroes.slice() : [actor];
+        else if (f.target === 'ally') list = ally ? [ally] : [];
         else if (f.target === 'chosenAlly') {
           const t = targetEnt(m, ctx);
           list = t && t.kind === 'hero' ? [t] : [actor];
+        } else if (f.target === 'downedAdj') {
+          const t = isHero ? T.downedAllyOf(m, actor) : null;
+          list = t && t.downed && B.adjacent(bd, actor.pos, t.pos) ? [t] : [];
+          if (!list.length) say(m, 'No downed ally beside you.', 'sys');
         }
         list.forEach((h) => {
           let amt = n;
           if (f.doubleIfLow && h.hp < h.maxHp / 4) amt *= 2;
-          const before = h.hp;
-          h.hp = Math.min(h.maxHp, h.hp + amt);
-          fx(m, { t: 'heal', ent: h.uid, amount: h.hp - before });
+          healUnit(m, h, amt);
+          linkHeal(m, h, amt);
         });
         if (list.length)
           say(m, `${list.map((h) => h.name).join(' & ')} heal${list.length > 1 ? '' : 's'} ${n}.`, 'hero');
         break;
       }
-      case 'revive': {
-        const t = isHero ? T.downedAllyOf(m, actor) : ally;
-        if (!t || !t.downed) break;
-        if (f.adjacent && !B.adjacent(bd, actor.pos, t.pos)) {
-          say(m, 'No downed ally adjacent.', 'sys');
+      case 'cleanse': {
+        if (f.field != null) {
+          // Cleanse the ground: hazards and foes' Fields within `field` of you are cleared.
+          const r = num(f.field, P, E);
+          const near = new Set([actor.pos].concat(B.within(bd, actor.pos, r, true)));
+          near.forEach((n) => (bd.nodes[n].hazard = false));
+          m.fields = m.fields.filter(
+            (z) => z.side === (actor.kind === 'enemy' ? 'enemy' : 'hero') || !fieldNodes(m, z).some((n) => near.has(n)),
+          );
+          say(m, `${actor.name} cleanses the ground nearby.`, 'hero');
+          if (!f.states) break;
+        }
+        // Cleanse for N (2.95 absorbs status immunity): shed every harmful state, and for N rounds no foe can
+        // Weaken or Anchor you
+        if (f.ward != null) {
+          const w = num(f.ward, P, E);
+          (f.party ? T.liveHeroes(m) : [actor]).forEach((h) =>
+            ['Weak', 'Wound', 'Anchored'].forEach((k) => delete h.states[k]),
+          );
+          if (w > 0) addTimed(m, actor, 'StatusImmune', w);
+          say(m, `${actor.name} is Cleansed${w > 0 ? ` and stays clean for ${w}` : ''}.`, 'hero');
           break;
         }
-        t.downed = false;
-        t.hp = num(f.hp, P, E);
-        say(m, `${t.name} rises with ${t.hp}!`, 'sys');
-        fx(m, { t: 'revive', ent: t.uid });
-        break;
-      }
-      case 'cleanse': {
         const list = f.party ? T.liveHeroes(m) : [actor];
         list.forEach((h) => {
-          ['Anchored', 'Rooted', 'Weak', 'Slow', 'SlowSelf', 'NoTele'].forEach((k) => delete h.states[k]);
+          ['Anchored', 'Weak', 'Wound'].forEach((k) => delete h.states[k]);
         });
         say(m, `${list.map((h) => h.name).join(' & ')} shake free.`, 'hero');
         break;
@@ -1974,21 +2193,33 @@
         say(m, `${actor.name} may reroll ${ctx.pendingReroll} banked dice.`, 'sys');
         break;
       }
-      case 'hasten': {
+      case 'haste': {
+        // Haste N (2.95, one keyword for hasten, clock and freecast): your track slides N extra columns; `clock`,
+        // the mission clock gains N rounds; `free`, the next N cards you play do not go to the track.
         const n = num(f.n, P, E);
+        if (f.clock) {
+          if (m.clock) {
+            m.clock.value += n;
+            say(m, `The clock gains ${n}.`, 'sys');
+          }
+          if (m.hazardSpread) m.hazardSpread.delayed += Math.max(0, n);
+          break;
+        }
         if (n <= 0) break;
+        if (f.free) {
+          // dur: the offer lapses after that many round ends (1 = "this turn"); without it, it waits
+          const t = num(f.dur, P, E) || null;
+          (actor.states.Freecast = actor.states.Freecast || []).push({ n, t });
+          say(
+            m,
+            `${actor.name}: the next ${n} card${n > 1 ? 's' : ''}${t === 1 ? ' this turn' : ''} won't go to the track.`,
+            'hero',
+          );
+          break;
+        }
         const list = f.who === 'ally' ? (ally ? [ally] : []) : [actor];
         list.forEach((h) => T.hasten(h, n));
         say(m, `${list.map((h) => h.name).join(' & ')}: track slides ${n} extra.`, 'hero');
-        break;
-      }
-      case 'clock': {
-        const d = num(f.delta, P, E);
-        if (m.clock) {
-          m.clock.value += d;
-          say(m, `The clock gains ${d}.`, 'sys');
-        }
-        if (m.hazardSpread) m.hazardSpread.delayed += Math.max(0, d);
         break;
       }
       case 'engine': {
@@ -2010,40 +2241,44 @@
         break;
       }
       /* ---------- BOARD ---------- */
-      case 'trap': {
-        let node = ctx.node;
-        const r = f.remote != null ? num(f.remote, P, E) : 1;
-        if (node == null) break;
-        if (B.dist(bd, actor.pos, node, true) > r || bd.nodes[node].height) {
-          say(m, 'Too far to set.', 'sys');
-          break;
+      case 'field': {
+        // Lay a Field: on a chosen space (and the spaces within `radius` of it), or around you (`around`).
+        const around = f.around ? actor.uid : null;
+        const radius = num(f.radius, P, E) || 0;
+        let nodes = null;
+        if (around == null) {
+          const c = ctx.node != null ? ctx.node : actor.pos;
+          if (f.remote != null && (B.dist(bd, actor.pos, c, true) > num(f.remote, P, E) || bd.nodes[c].height)) {
+            say(m, 'Too far to set.', 'sys');
+            break;
+          }
+          nodes = [c].concat(radius ? B.within(bd, c, radius, true) : []);
         }
-        m.traps[node] = m.traps[node] || [];
-        m.traps[node].push({
+        const fl = {
+          nodes,
+          around,
+          radius,
+          ring: !!f.ring,
+          on: f.on || 'end',
+          trips: f.trips != null ? num(f.trips, P, E) : null,
+          t: f.dur != null ? num(f.dur, P, E) + (actor.kind === 'hero' ? boonSum(actor, 'fieldDur') : 0) : null,
           owner: actor.uid,
-          dmg: num(f.dmg, P, E),
-          anchor: num(f.anchor, P, E),
-          counted: !!f.counted,
-          noTele: !!f.noTele,
-        });
-        say(m, `${actor.name} arms a ${f.counted ? 'counted ' : ''}snare on node ${node}.`, 'hero');
-        fx(m, { t: 'trapSet', node });
-        break;
-      }
-      case 'zone': {
-        const node = ctx.node != null ? ctx.node : actor.pos;
-        m.zones.push({
-          node,
-          radius: f.radius || 1,
-          kind: f.kind,
-          dmg: f.dmg || 0,
-          weaken: f.weaken || 0,
-          hideHeroes: !!f.hideHeroes,
-          t: f.dur || 2,
-          owner: actor.uid,
-        });
-        say(m, `${actor.name} seeds spores around node ${node}.`, 'hero');
-        fx(m, { t: 'zone', node });
+          side: actor.kind === 'enemy' ? 'enemy' : 'hero',
+          label: f.label || null,
+          fx: f.fx
+            .map((x) => {
+              const o = { kw: x.kw, n: num(x.n, P, E) || 0, t: x.t != null ? num(x.t, P, E) : 1 };
+              if (x.pierce) o.pierce = true;
+              if (x.if) o.if = x.if;
+              if (x.noTele) o.noTele = true;
+              return o;
+            })
+            .filter((x) => (['strike', 'weaken', 'pull', 'push', 'heal'].includes(x.kw) ? x.n > 0 : x.t > 0)),
+        };
+        m.fields.push(fl);
+        if (fl.fx.some((x) => x.kw === 'reveal')) revealArea(m, actor, nodes ? nodes[0] : actor.pos, radius, 1);
+        say(m, `${actor.name} lays a Field ${around != null ? 'around themself' : 'on node ' + nodes[0]}.`, 'hero');
+        fx(m, { t: 'trapSet', node: nodes ? nodes[0] : actor.pos });
         break;
       }
       case 'decoy': {
@@ -2072,16 +2307,6 @@
         }
         break;
       }
-      case 'clearHazard': {
-        const r = f.radius || 1;
-        [actor.pos].concat(B.within(bd, actor.pos, r, true)).forEach((n) => {
-          if (bd.nodes[n].hazard) {
-            bd.nodes[n].hazard = false;
-          }
-        });
-        say(m, `${actor.name} clears the nearby hazard.`, 'hero');
-        break;
-      }
       case 'interact': {
         const range = num(f.range, P, E);
         const node = ctx.node;
@@ -2097,18 +2322,25 @@
         T.doInteract(m, actor, node, true);
         break;
       }
-      case 'redirect': {
+      case 'link': {
+        // Link the target to the nearest other unit of its side within `within` of it.
         const t = targetEnt(m, ctx);
-        if (!t || t.kind !== 'enemy') break;
-        st(t).Redirect = { t: 1 };
-        say(m, `${t.name}'s nervous field is overridden — its next attack turns on its own.`, 'hero');
+        const dur = num(f.dur, P, E) || 1;
+        const within = num(f.within, P, E) || 1;
+        if (!standing(t)) break;
+        const o = nearestKin(m, t, within);
+        if (!o) {
+          say(m, `Nothing near ${t.name} to Link it to.`, 'sys');
+          break;
+        }
+        linkUnits(m, t, o, dur);
         break;
       }
       default:
         say(m, `(unimplemented verb ${f.v})`, 'sys');
     }
     // deferred decoy placement (husk/blink): place at origin after teleport
-    if (ctx.pendingDecoy && f.v === 'teleport') {
+    if (ctx.pendingDecoy && f.v === 'blink') {
       const d = ctx.pendingDecoy;
       if (!T.occupied(m, d.pos)) {
         m.decoys.push(d);
@@ -2118,14 +2350,18 @@
       ctx.pendingDecoy = null;
     }
   };
-  // a 'here' decoy with no teleport afterwards (e.g. Drop Tail then move): place after move
+  // a 'here' decoy with no teleport afterwards (e.g. Drop Tail then move): place it once the face is done. If the
+  // hero never left (a face with no move, or a move that could not happen), the decoy stands on the hero's own
+  // node with them, as the card says ("a decoy holds your spot"), and stays there when they go.
   const origRun = T.runEffects;
   T.runEffects = function (m, actor, fxs, ctx) {
     origRun(m, actor, fxs, ctx);
     if (ctx.pendingDecoy) {
       const d = ctx.pendingDecoy;
-      if (!T.occupied(m, d.pos)) {
+      const occ = T.entityAt(m, d.pos);
+      if (!occ || occ === actor) {
         m.decoys.push(d);
+        say(m, occ ? `A decoy stands with ${actor.name}.` : `A decoy remains behind.`, 'hero');
         fx(m, { t: 'decoy', node: d.pos });
       }
       ctx.pendingDecoy = null;
@@ -2165,7 +2401,7 @@
   /* ───────────────────────────── BASIC ACTIONS ───────────────────────────── */
   T.walk = function (m, h, dest) {
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
-    if (st(h).Rooted || st(h).SlowSelf) return { ok: false, why: 'rooted' };
+    if (isAnchored(h)) return { ok: false, why: 'Anchored' };
     const bd = m.board;
     const free = h.freeMove || 0;
     const climber = canClimb(h);
@@ -2189,7 +2425,6 @@
     if (T.apValue(h) < payable) return { ok: false, why: 'need ' + payable + ' AP' };
     T.pay(h, payable);
     h.freeMove = Math.max(0, free - steps);
-    if (isAnchored(h) && st(h).Anchored && !st(h).Rooted) delete st(h).Anchored; // choosing to walk ends a self-anchor
     for (let i = 1; i < p.length; i++) {
       moveEntity(m, h, p[i], 'walk');
       onHeroEnter(m, h, p[i]);
@@ -2312,25 +2547,28 @@
     return { ok: true };
   };
   /** Can this hero take this basic action now? Returns { ok, why?, tg? } like T.canPlay. */
-  T.canUseBasic = function (m, h, id) {
+  T.canUseBasic = function (m, h, id, pick) {
     const b = T.BASIC_BY[id];
     if (!b) return { ok: false, why: 'unknown action' };
     if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
     if (T.apValue(h) < b.ap) return { ok: false, why: 'need ' + b.ap + ' AP' };
     if (b.el && !T.canPay(h, b.ap, b.el, 1)) return { ok: false, why: 'needs ' + b.el + ' (or Omni)' };
-    const tg = T.targetsFor(m, h, b.tgt, b, 0, 0);
+    const tg = T.targetsFor(m, h, b.tgt, b, 0, 0, pick);
     if (tg.invalid) return { ok: false, why: tg.invalid };
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no valid target' };
     return { ok: true, tg };
   };
   /** A basic action (T.BASIC): pay its AP and run its verbs. It never goes on the track. */
   T.useBasic = function (m, h, id, ctx) {
-    const chk = T.canUseBasic(m, h, id);
+    const chk = T.canUseBasic(m, h, id, ctx && ctx.ally);
     if (!chk.ok) return chk;
+    const al = allyFor(m, chk.tg, ctx);
+    if (!al.ok) return al;
     const b = T.BASIC_BY[id];
     T.pay(h, b.ap, b.el, b.el ? 1 : 0);
     say(m, `${h.name}: ${b.n} (${b.ap} AP${b.el ? ' + ' + b.el + ', channelled' : ''}).`, 'hero');
     const rctx = Object.assign({}, ctx || {}, { P: 0, E: 0 });
+    if (al.ally != null) rctx.ally = al.ally;
     T.runEffects(m, h, b.fx, rctx);
     T.afterAction(m);
     return { ok: true, ctx: rctx };
@@ -2344,14 +2582,17 @@
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
     const seat = T.purseSeat(m, m.heroes.indexOf(h));
     if (m.purses[seat] < ab.cost) return { ok: false, why: 'need ◇' };
-    const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
+    const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0, ctx && ctx.ally);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no target' };
+    const al = allyFor(m, tg, ctx);
+    if (!al.ok) return al;
     m.purses[seat] -= ab.cost;
     g.cds[ai] = ab.cd;
     say(m, `${h.name} uses ${def.name} — ${ab.n} (${ab.cost} ◇).`, 'hero');
     fx(m, { t: 'gear', hero: h.uid });
     const rctx = ctx || {};
     Object.assign(rctx, { P: 0, E: 0 });
+    if (al.ally != null) rctx.ally = al.ally;
     T.runEffects(m, h, ab.fx, rctx);
     T.afterAction(m);
     return { ok: true, ctx: rctx };
@@ -2436,7 +2677,7 @@
           say(m, `${h.name} regenerates ${h.hp - b}.`, 'hero');
           fx(m, { t: 'heal', ent: h.uid, amount: h.hp - b });
         }
-        if (en.cleanse) ['Anchored', 'Rooted', 'Weak', 'Slow'].forEach((k) => delete h.states[k]);
+        if (en.cleanse) ['Anchored', 'Weak'].forEach((k) => delete h.states[k]);
       } else if (en.kind === 'draw') {
         if (en.mintAlt) T.mint(h, en.face || 'C', en.mintAlt);
         else T.draw(h, en.face || 'C', en.val || 1);
@@ -2447,17 +2688,17 @@
     }
     if (h.states.Hover && !h.states.Hover.noAp) T.mint(h, 'AP', 1);
     if (!h.rolledAhead) T.rollDice(m, h);
-    // zones hide heroes
-    for (const z of m.zones)
-      if (z.hideHeroes && B.dist(m.board, z.node, h.pos, true) <= z.radius) setHidden(m, h, 1, false);
     // keen sense
     if (T.boonVals(h, 'keen').length)
       for (const e of T.liveEnemies(m))
         if (isHidden(e) && B.adjacent(m.board, h.pos, e.pos)) breakHidden(m, e, 'keen sense');
-    (h.states.Auras || []).forEach((a) => {
-      a.markedThisRound = false;
-      if (a.kind === 'reveal') revealArea(m, h, h.pos, a.radius, 1);
-    });
+    // a lantern spots the nearest foe
+    for (const r of T.boonVals(h, 'spot')) {
+      const near = T.liveEnemies(m)
+        .filter((e) => !isHidden(e) && B.dist(m.board, h.pos, e.pos, true) <= r)
+        .sort((a, b) => B.dist(m.board, h.pos, a.pos, true) - B.dist(m.board, h.pos, b.pos, true) || a.uid - b.uid)[0];
+      if (near && !(st(near).Marked && st(near).Marked.next)) markUnit(m, near, { next: 2 });
+    }
   };
 
   /**
@@ -2518,8 +2759,6 @@
   };
   T.roundEnd = function (m) {
     m.phase = 'end';
-    // counted snares spring on enemies still standing in them
-    for (const e of T.liveEnemies(m)) T.springCounted(m, e);
     // decoy strikes
     for (const d of m.decoys.slice()) {
       if (d.strike) {
@@ -2545,42 +2784,19 @@
       if (m.board.nodes[e.pos].hazard && !hazardImmune(e) && !e.boss) {
         T.damage(m, null, e, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
       }
-    // zones
-    for (const z of m.zones)
-      for (const e of T.liveEnemies(m))
-        if (B.dist(m.board, z.node, e.pos, true) <= z.radius) {
-          if (z.dmg)
-            T.damage(m, m.heroes.find((h) => h.uid === z.owner) || null, e, z.dmg, {
-              kind: 'area',
-              label: 'is choked by spores for',
-            });
-          if (z.weaken && e.alive) weaken(m, e, z.weaken, 1);
-        }
-    // dots & auras
-    for (const e of T.liveEnemies(m)) {
-      const dots = st(e).Dots || [];
-      for (const d of dots) {
-        const owner = m.heroes.find((h) => h.uid === d.owner);
-        T.damage(m, owner || null, e, d.v, { kind: 'true', trueDmg: true, label: `(${d.kind}) wears down` });
-        if (d.healOwner && owner && !owner.downed) {
-          owner.hp = Math.min(owner.maxHp, owner.hp + d.healOwner);
-        }
-        d.t--;
-        if (d.escalate) d.v += d.escalate;
-        if (!e.alive) break;
-      }
-      if (e.alive) st(e).Dots = dots.filter((d) => d.t > 0);
-      if (e.alive && !st(e).Dots.length) delete st(e).Dots;
+    // Fields spring on whoever ends the round in them
+    fieldsAtRoundEnd(m);
+    // Wounds bite, then drop by 1
+    for (const u of T.liveEnemies(m).concat(T.liveHeroes(m))) {
+      const w = st(u).Wound;
+      if (!w) continue;
+      const owner = unitBy(m, w.owner);
+      T.damage(m, owner || null, u, w.n, { kind: 'true', trueDmg: true, label: `(${w.kind || 'wound'}) wounds` });
+      if (w.heal && owner && owner.kind === 'hero' && !owner.downed)
+        owner.hp = Math.min(owner.maxHp, owner.hp + w.heal);
+      w.n--;
+      if (w.n <= 0) delete st(u).Wound;
     }
-    for (const h of T.liveHeroes(m))
-      for (const a of h.states.Auras || [])
-        if (a.kind === 'digest') {
-          for (const e of T.liveEnemies(m))
-            if (isAnchored(e) && !e.anchoredPerm) {
-              T.damage(m, h, e, a.val, { kind: 'true', trueDmg: true, label: 'digests' });
-              h.hp = Math.min(h.maxHp, h.hp + 1);
-            }
-        }
     // objective: hold
     const ob = m.objective;
     if (ob && ob.kind === 'hold') {
@@ -2634,9 +2850,13 @@
         if (k === 'Engines') {
           s[k] = v.filter((x) => --x.t > 0);
           if (!s[k].length) delete s[k];
-        } else if (k === 'Auras') {
-          s[k] = v.filter((x) => --x.t > 0);
-          if (!s[k].length) delete s[k];
+        } else if (k === 'Marked' && typeof v.t === 'number') {
+          // a lasting Mark wears off; a next-hit Mark on top of it stays until it is spent
+          if (--v.t <= 0) {
+            delete v.each;
+            delete v.t;
+            if (!v.next) delete s[k];
+          }
         } else if (k === 'Empower' || k === 'Freecast') {
           s[k] = v.filter((x) => x.t == null || --x.t > 0);
           if (!s[k].length) delete s[k];
@@ -2653,7 +2873,7 @@
         tick(e);
         if (e.baseShield && e.shield < e.baseShield && e.type === 'warden') e.shield = e.baseShield;
       });
-    m.zones = m.zones.filter((z) => --z.t > 0);
+    m.fields = m.fields.filter((f) => f.t == null || --f.t > 0);
     m.decoys = m.decoys.filter((d) => --d.t > 0);
     // boss shield is fed by its spawners
     for (const e of T.liveEnemies(m))
@@ -2728,41 +2948,54 @@
   }
 
   /* ───────────────────────────── BOSS HP PROGRESS for UI ───────────────────────────── */
+  /** A Field in one sentence a player could resolve by hand. */
+  T.fieldText = function (m, f) {
+    const owner = f.owner != null ? heroBy(m, f.owner) : null;
+    const word = (x) =>
+      x.kw === 'strike'
+        ? `${x.n}${x.pierce ? ' pierce' : ''} damage${x.if === 'anchored' ? ' if Anchored' : ''}`
+        : x.kw === 'weaken'
+          ? `Weakened ${x.n}`
+          : x.kw === 'anchor'
+            ? `Anchored ${x.t}`
+            : x.kw === 'pull' || x.kw === 'push'
+              ? `${x.kw === 'pull' ? 'pulled' : 'pushed'} ${x.n} ${x.kw === 'pull' ? 'toward' : 'away from'} its owner`
+              : x.kw === 'mark'
+                ? 'Marked'
+                : x.kw === 'hidden'
+                  ? 'Hidden (your side)'
+                  : x.kw === 'heal'
+                    ? `Heal ${x.n} (your side; the downed get up)`
+                    : 'Revealed';
+    const who =
+      f.trips === 1 ? 'the first foe to ' : f.trips != null ? `the next ${f.trips} foes to ` : 'every foe that ';
+    const when = f.on === 'enter' ? 'enters' : 'ends the round here';
+    const where = f.around != null ? `around ${owner ? owner.name : 'its owner'}` : 'here';
+    const left = f.t != null ? `, ${f.t} round${f.t === 1 ? '' : 's'} left` : '';
+    return `${owner ? owner.name + "'s " : ''}Field ${where}: ${who}${when} — ${f.fx.map(word).join(', ')}${left}.`;
+  };
   T.describeState = function (k, v) {
     const map = {
       Hidden: 'Hidden — immune to zone (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
       Shield: `Shield ${v.v} — each hit is reduced by ${v.v}${v.all ? ', even area' : ' (area bypasses)'}. Pierce and true damage ignore it.`,
-      Anchored:
-        'Anchored — cannot be pushed or pulled. An anchored foe cannot walk or blink; a hero who walks lets go. Still acts fully.',
-      Held: 'Held — immovable by anyone.',
-      Rooted: 'Rooted — cannot walk while it lasts. Still acts.',
-      Marked: 'Marked — the next hit on this foe deals +2.',
+      Anchored: 'Anchored — nothing moves it: no push, no pull, and it cannot walk or blink. It still acts.',
+      Marked: `Marked — ${[v.next ? `the next hit on it deals +${v.next}${v.pierce ? ' and ignores Shield' : ''}` : '', v.each ? `every hit deals +${v.each} for ${v.t}` : ''].filter(Boolean).join('; ')}.`,
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
-      Located: 'Located — cannot Hide; can be targeted and struck across a zone even if Hidden.',
-      Studied: `Studied — hero hits deal +${v.n}.`,
-      Exposed: `Exposed — next hit ignores Shield and deals +${v.bonus}.`,
-      Thorns: `Thorns ${v.v} — melee attackers take ${v.v}.`,
-      Preempt: `Pre-empt — next hit taken is −${v.v}${v.reflect ? ', reflects ' + v.reflect : ''}.`,
-      Counter: `Counter — next melee against you is turned back for ${v.dmg}.`,
+      Located: `Revealed for ${v.t} — cannot be Hidden; a zone strike finds it.`,
+      Thorns: `Thorns — ${[v.v ? `melee attackers take ${v.v}` : '', v.next ? `the next takes ${v.next}${v.push ? ' and is pushed ' + v.push : ''}` : ''].filter(Boolean).join('; ')}.`,
+      Preempt: `Shield ${v.v} against the next hit${v.reflect ? ', and ' + v.reflect + ' of it goes back' : ''}${v.reposition ? ', and you step away' : ''}.`,
       Stasis: 'Stasis — untargetable.',
-      Hover: 'Hover — immune to hazards, traps, push/pull.',
-      Weightless: 'Weightless — immune to force/traps/hazards; may walk onto height.',
+      Hover: 'Hover — off the ground: hazards and Fields do not touch it; immune to push/pull.',
+      Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',
       Morph: `Morph — strikes +${v.bonus}${v.reach ? ', reach 2' : ''}${v.climb ? ', can climb' : ''}.`,
       HazardImmune: 'Immune to hazards.',
-      StatusImmune: 'Immune to Weaken/Anchor.',
-      Guard: 'Guarded — ambush damage halved.',
+      StatusImmune: 'Cleansed — no foe can Weaken or Anchor it while this lasts.',
       Freecast: `Next ${Array.isArray(v) ? v.reduce((n, g) => n + g.n, 0) : 0} card(s) skip the track.`,
-      Phoenix: `Phoenix — revive with ${v.hp} if downed.`,
-      Absorb: `Absorb — next ${v.n} ranged hit(s) negated, minting Charge.`,
-      AmbushTrap: `Trigger — first foe to close takes ${v.dmg}.`,
+      Phoenix: `Heal held — if downed within ${v.t}, get up with ${v.hp}.`,
       Engines: 'Engine running.',
-      Auras: 'Aura active.',
       Empower: 'Empowered — next strike(s) boosted.',
-      Slow: 'Cannot move.',
-      SlowSelf: 'Cannot move this round.',
-      NoTele: 'Cannot teleport.',
-      Redirect: 'Overridden — next attack hits an ally.',
-      Dots: 'Taking damage over time.',
+      Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,
+      Wound: `Wound ${v.n} — takes ${v.n} at round end, then the Wound drops by 1.`,
     };
     return map[k] || k;
   };

@@ -370,7 +370,14 @@ test(
     const start = mB().heroes[1].pos;
     // the first walk's write is refused; the second goes through at once and must wait for it
     failNext = 1;
-    const [a] = steps(B, 1);
+    // a first step from which a second leads somewhere new (tried on a copy, so the dice do not decide the test)
+    const onward = (m, a) => {
+      const c = B.T.clone(m);
+      B.T.walk(c, c.heroes[1], a);
+      return B.T.reachableWalk(c, c.heroes[1], B.T.apValue(c.heroes[1]), false).find((n) => n !== a && n !== start);
+    };
+    const a = steps(B, 99).find((n) => onward(mB(), n) != null);
+    assert.ok(a != null, 'somewhere to walk to, and on from');
     B.U.exec({ op: 'walk', hero: 1, node: a });
     const back = B.T.reachableWalk(mB(), mB().heroes[1], B.T.apValue(mB().heroes[1]), false).find(
       (n) => n !== a && n !== start,

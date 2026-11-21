@@ -446,7 +446,7 @@
         if (h.upUnspent <= 0) break;
         const c = T.CARD[cid];
         const which =
-          (c.sig >= 2 || c.E.fx.some((x) => ['teleport', 'engine', 'strike'].includes(x.v))) &&
+          (c.sig >= 2 || c.E.fx.some((x) => ['blink', 'engine', 'strike'].includes(x.v))) &&
           h.up[cid][1] < h.up[cid][0] + 1
             ? 'E'
             : 'P';
@@ -463,7 +463,7 @@
   };
   /**
    * Give a squad the kit it would plausibly have by this tier of a real run: six UP a tier,
-   * a piece of gear from tier 2, and at tier 3 a second piece, a seventh card and a boon.
+   * a piece of gear from tier 2, and at tier 3 a second piece and a seventh card.
    * The balance tables and the playtest build both start their missions from this.
    */
   T.addProgression = function (run, tier) {
@@ -479,7 +479,6 @@
           h.gear.push({ id: T.GEAR[rng.int(T.GEAR.length)].id, cds: [0, 0] });
           const extra = T.cardOffer(run, 1)[0];
           if (extra) T.addCard(h, extra);
-          h.boons.push(T.boonOffer(run, 1)[0]);
           T.autoAllocate(h);
         }
       });
@@ -677,18 +676,12 @@
     const boss = m.isBoss;
     let up = 2 + bonusHit + (elite ? 1 : 0);
     let crystals = 4 + m.tier + bonusHit * 2 + (elite ? 4 : 0) + (boss ? 10 : 0);
-    // the mission's crystals are shared out among the purses; a pilot's own boon pays its own player
+    // the mission's crystals are shared out among the purses
     const purse = T.splitCrystals(crystals, run.purses.length);
-    run.heroes.forEach((h, i) => {
-      for (const v of T.boonVals(h, 'reward')) {
-        up += v.up || 0;
-        crystals += v.crystals || 0;
-        purse[T.purseSeat(run, i)] += v.crystals || 0;
-      }
-    });
-    // every pilot gets an upgrade of their own: a trait offer each, and on an elite a boon offer each
+    // every pilot gets an upgrade of their own: a trait offer each (boons, offered after elites until 2.89, are
+    // gear passives now: an elite pays in crystals for gear)
     const offers = T.cardOffers(run, 3);
-    const boons = elite ? T.boonOffers(run, 2) : null;
+    const boons = null;
     run.lastReward = {
       up,
       crystals,
@@ -711,14 +704,6 @@
       .shuffle(cands)
       .slice(0, n)
       .map((c) => c.id);
-  };
-  T.boonOffer = function (run, n) {
-    const have = new Set(run.boons.concat(...run.heroes.map((h) => h.boons)));
-    const cands = T.BOONS.filter((b) => !have.has(b.id) && b.id !== 'defiant');
-    return T.runStream(run, 'loot')
-      .shuffle(cands)
-      .slice(0, n)
-      .map((b) => b.id);
   };
   /**
    * One trait offer for each hero: up to n cards that hero could take, drawn from the loot stream,
@@ -754,20 +739,6 @@
   T.isSwapOffer = (run, heroIdx, cardId) => {
     const h = run.heroes[heroIdx];
     return h.cards.length >= R().MAX_CARDS && !h.cards.includes(cardId);
-  };
-  /** One boon offer for each hero: n boons nobody in the squad has, no boon offered to two heroes. */
-  T.boonOffers = function (run, n) {
-    const rng = T.runStream(run, 'loot');
-    const have = new Set(run.boons.concat(...run.heroes.map((h) => h.boons)));
-    return run.heroes.map(() => {
-      const cands = T.BOONS.filter((b) => !have.has(b.id) && b.id !== 'defiant');
-      const pick = rng
-        .shuffle(cands)
-        .slice(0, n)
-        .map((b) => b.id);
-      pick.forEach((id) => have.add(id));
-      return pick;
-    });
   };
   /** Has every hero made (or passed) the choices this reward offers them? */
   T.rewardSettled = (rw) => rw.picked.every(Boolean) && rw.boonPicked.every(Boolean);
@@ -869,16 +840,6 @@
     run.purses[T.purseSeat(run, heroIdx)] += 2;
     return { ok: true };
   };
-  /** A hero takes a boon from their own offer. */
-  T.takeBoon = function (run, boonId, heroIdx) {
-    const rw = run.lastReward;
-    if (!rw.boons || rw.boonPicked[heroIdx] || !rw.boons[heroIdx].includes(boonId))
-      return { ok: false, why: 'that boon is not on offer to this hero' };
-    run.heroes[heroIdx].boons.push(boonId);
-    rw.boonPicked[heroIdx] = true;
-    return { ok: true };
-  };
-
   /* ───────────────────────────── HAVEN ───────────────────────────── */
   T.havenStock = function (run) {
     const owned = new Set(run.heroes.flatMap((h) => h.gear.map((g) => g.id)));
@@ -887,11 +848,7 @@
       .shuffle(T.GEAR.filter((g) => !owned.has(g.id)))
       .slice(0, 3)
       .map((g) => g.id);
-    const cons = rng
-      .shuffle(T.CONSUMABLES)
-      .slice(0, 3)
-      .map((c) => c.id);
-    return { gear, cons, healed: false, bought: [] };
+    return { gear, cons: [], healed: false, bought: [] };
   };
   T.buyGear = function (run, gearId, heroIdx) {
     const g = T.GEAR_BY[gearId];
@@ -909,16 +866,6 @@
     const h = run.heroes[heroIdx];
     const g = h.gear.splice(gi, 1)[0];
     if (g) run.purses[T.purseSeat(run, heroIdx)] += Math.floor(T.GEAR_BY[g.id].price / 2);
-  };
-  T.buyConsumable = function (run, cid, heroIdx) {
-    const c = T.CONSUMABLE_BY[cid];
-    const h = run.heroes[heroIdx];
-    const s = T.purseSeat(run, heroIdx);
-    if (run.purses[s] < c.price) return { ok: false, why: 'not enough ◇' };
-    if (h.consumables.length >= 3) return { ok: false, why: 'pack full (3)' };
-    run.purses[s] -= c.price;
-    h.consumables.push(cid);
-    return { ok: true };
   };
   T.havenRest = function (run, full) {
     if (full) {
@@ -960,17 +907,6 @@
     if (fx.nextElite) run.nextElite = true;
     if (fx.skipNext) run.skipNext = true;
     if (fx.bossBonusHp) run.bossBonusHp += fx.bossBonusHp;
-    if (fx.boon) hero.boons.push(fx.boon);
-    if (fx.boonRandom) {
-      const offer = T.boonOffer(run, 1);
-      if (offer.length) hero.boons.push(offer[0]);
-      followup = { kind: 'boonGiven', boon: offer[0], hero: hero.name };
-    }
-    if (fx.affinityRandom) {
-      const aff = T.runStream(run, 'event').pick(['aff_M', 'aff_C', 'aff_S', 'aff_T', 'omnicore']);
-      hero.boons.push(aff);
-      followup = { kind: 'boonGiven', boon: aff, hero: hero.name };
-    }
     if (fx.audit) {
       // the audit reads the squad's crystals together, and halves every purse alike
       if (T.totalCrystals(run) >= 10) run.purses = run.purses.map((n) => Math.ceil(n / 2));
@@ -1004,7 +940,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 19;
+  T.SAVE_VERSION = 27;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1153,11 +1089,230 @@
       if (r.party) Object.assign(r.party, { active: null, rounds: 'turns' });
       r.v = 18;
     },
-    // 2.84 lets an expedition be Short or Full (`length`) and an AI play a seat (`party.players[s].ai`). Every
-    // older run was Full, and a person played every seat.
+    // 2.82 lets a player choose the dice of a pilot's next roll (`rollPick` on a hero: up to ROLL kinds). Optional:
+    // a version-18 pilot has chosen none, and draws at random as before.
     18(r) {
-      r.length = 'full';
       r.v = 19;
+    },
+    // 2.86 makes snares, spore zones, triggers and auras one keyword, Field (`mission.fields`). A mission saved
+    // mid-round keeps what was laid: each snare, zone, trigger (`AmbushTrap`) and aura (`Auras`) becomes a Field.
+    19(r) {
+      const m = r.mission;
+      if (m) {
+        const fields = [];
+        const base = (o) =>
+          Object.assign({ nodes: null, around: null, radius: 0, ring: false, trips: null, t: null }, o);
+        for (const [node, list] of Object.entries(m.traps || {}))
+          for (const tr of list || []) {
+            const fx = [{ kw: 'strike', n: tr.dmg || 0, t: 1 }];
+            if (tr.anchor)
+              fx.push(Object.assign({ kw: 'anchor', n: 0, t: tr.anchor }, tr.noTele ? { noTele: true } : {}));
+            fields.push(
+              base({
+                nodes: [+node],
+                on: tr.counted ? 'end' : 'enter',
+                trips: 1,
+                owner: tr.owner,
+                side: 'hero',
+                label: null,
+                fx,
+              }),
+            );
+          }
+        for (const z of m.zones || []) {
+          const fx = [];
+          if (z.dmg) fx.push({ kw: 'strike', n: z.dmg, t: 1 });
+          if (z.weaken) fx.push({ kw: 'weaken', n: z.weaken, t: 1 });
+          if (z.hideHeroes) fx.push({ kw: 'hidden', n: 0, t: 1 });
+          let nodes = [z.node];
+          if (m.board && m.board.nodes) {
+            T.Board.build(m.board);
+            nodes = nodes.concat(T.Board.within(m.board, z.node, z.radius || 1, true));
+          }
+          fields.push(
+            base({ nodes, radius: z.radius || 1, on: 'end', t: z.t, owner: z.owner, side: 'hero', label: null, fx }),
+          );
+        }
+        for (const h of r.heroes || []) {
+          const s = (h && h.states) || {};
+          if (s.AmbushTrap) {
+            const at = s.AmbushTrap;
+            const fx = [{ kw: 'strike', n: at.dmg || 0, t: 1 }];
+            if (at.weaken) fx.push({ kw: 'weaken', n: at.weaken, t: 1 });
+            if (at.anchor) fx.push({ kw: 'anchor', n: 0, t: at.anchor });
+            fields.push(
+              base({
+                around: h.uid,
+                radius: 1,
+                ring: true,
+                on: 'enter',
+                trips: 1,
+                t: at.t,
+                owner: h.uid,
+                side: 'hero',
+                label: null,
+                fx,
+              }),
+            );
+            delete s.AmbushTrap;
+          }
+          for (const a of s.Auras || []) {
+            const fx =
+              a.kind === 'reveal'
+                ? [{ kw: 'reveal', n: 0, t: 1 }]
+                : [{ kw: 'strike', n: a.val || 0, t: 1, pierce: true, if: 'anchored' }];
+            fields.push(
+              base({
+                around: h.uid,
+                radius: a.radius || 2,
+                on: 'end',
+                t: a.t,
+                owner: h.uid,
+                side: 'hero',
+                label: null,
+                fx,
+              }),
+            );
+          }
+          delete s.Auras;
+        }
+        m.fields = fields;
+        delete m.traps;
+        delete m.zones;
+      }
+      r.v = 20;
+    },
+    // 2.88 makes damage over time one keyword, Wound: N at round end, then one less each round (`states.Wound`,
+    // `{ n, owner, heal, kind }`). A foe's old `Dots` become one Wound dealing about as much in all.
+    20(r) {
+      const W = (d) => Math.max(1, Math.round((Math.sqrt(8 * d + 1) - 1) / 2));
+      for (const e of (r.mission && r.mission.enemies) || []) {
+        const dots = e && e.states && e.states.Dots;
+        if (!dots) continue;
+        delete e.states.Dots;
+        const total = dots.reduce((n, d) => n + (d.v || 0) * (d.t || 0), 0);
+        if (total > 0)
+          e.states.Wound = {
+            n: W(total),
+            owner: dots[0].owner != null ? dots[0].owner : null,
+            heal: Math.max(0, ...dots.map((d) => d.healOwner || 0)),
+            kind: dots[0].kind || 'wound',
+          };
+      }
+      r.v = 21;
+    },
+    // 2.89 folds boons into gear passives and consumables into gear actives. A pilot's boons are refunded at 3 ◇
+    // each and its consumables at their price, to its own purse; an elite's boon offer still waiting is passed.
+    21(r) {
+      const PRICE = { vial: 2, shard: 3, charm: 3, flash: 2, grit: 2 };
+      (r.heroes || []).forEach((h, i) => {
+        if (!h) return;
+        const back = (h.boons || []).length * 3 + (h.consumables || []).reduce((n, c) => n + (PRICE[c] || 2), 0);
+        h.boons = [];
+        h.consumables = [];
+        if (!back) return;
+        if (Array.isArray(r.purses) && r.purses.length) r.purses[T.purseSeat(r, i)] += back;
+        else r.crystals = (r.crystals || 0) + back;
+      });
+      if (r.boons) r.boons = [];
+      const rw = r.lastReward;
+      if (rw && rw.boons) {
+        rw.boons = null;
+        rw.boonPicked = (r.heroes || []).map(() => true);
+      }
+      r.v = 22;
+    },
+    // 2.91 makes anchor, held, rooted, slow and no-teleport one keyword, Anchor: a unit carries `Anchored` alone.
+    // Each of the old states becomes Anchored for as long as the longest of them.
+    22(r) {
+      const OLD = ['Held', 'Rooted', 'Slow', 'SlowSelf', 'NoTele'];
+      const units = (r.heroes || []).concat((r.mission && r.mission.enemies) || []);
+      for (const u of units) {
+        const s = u && u.states;
+        if (!s) continue;
+        let t = s.Anchored ? s.Anchored.t : 0;
+        for (const k of OLD)
+          if (s[k]) {
+            t = Math.max(t, s[k].t || 1);
+            delete s[k];
+          }
+        if (t > 0) s.Anchored = { t };
+      }
+      r.v = 23;
+    },
+    // 2.92 makes Mark one keyword for Marked, Studied and Exposed: `Marked` is `{ next, pierce, each, t }`. A bare
+    // Mark is +2 to the next hit; Studied (+n to every hero hit, for good) is +n to every hit for 3 rounds; Exposed
+    // (+bonus and ignore Shield, next hit) is a Pierce Mark of that much.
+    23(r) {
+      for (const e of (r.mission && r.mission.enemies) || []) {
+        const s = e && e.states;
+        if (!s || !(s.Marked || s.Studied || s.Exposed)) continue;
+        const mk = {};
+        if (s.Marked) mk.next = 2;
+        if (s.Exposed) {
+          mk.next = Math.max(mk.next || 0, s.Exposed.bonus || 0);
+          mk.pierce = true;
+        }
+        if (s.Studied) {
+          mk.each = s.Studied.n || 1;
+          mk.t = 3;
+        }
+        delete s.Studied;
+        delete s.Exposed;
+        s.Marked = mk;
+      }
+      r.v = 24;
+    },
+    // 2.93 folds Counter into Thorns: `Thorns` is `{ v, next, push, t }`, and a held Counter becomes its `next`.
+    24(r) {
+      const units = (r.heroes || []).concat((r.mission && r.mission.enemies) || []);
+      for (const u of units) {
+        const s = u && u.states;
+        if (!s || !s.Counter) continue;
+        const c = s.Counter;
+        const th = s.Thorns || {};
+        th.next = Math.max(th.next || 0, c.dmg || 0);
+        if (c.push) th.push = c.push;
+        th.t = Math.max(th.t || 0, c.t || 1);
+        s.Thorns = th;
+        delete s.Counter;
+      }
+      r.v = 25;
+    },
+    // 2.94 folds pre-empt, guard and absorb into Shield. A held Guard (ambushes halved) becomes Shield 1 for as long;
+    // a held Absorb (the next ranged hits negated) a Shield of 3 against the next hit. Pre-empt keeps its state.
+    25(r) {
+      for (const u of r.heroes || []) {
+        const s = u && u.states;
+        if (!s) continue;
+        if (s.Guard) {
+          const cur = s.Shield;
+          s.Shield = Object.assign({ all: false }, cur || {}, {
+            v: Math.max(1, cur ? cur.v : 0),
+            t: Math.max(s.Guard.t || 1, cur ? cur.t : 0),
+          });
+          delete s.Guard;
+        }
+        if (s.Absorb) {
+          const cur = s.Preempt;
+          s.Preempt = {
+            v: Math.max(3, cur ? cur.v : 0),
+            reflect: cur ? cur.reflect : 0,
+            t: Math.max(s.Absorb.t || 1, cur ? cur.t : 0),
+            reposition: cur ? cur.reposition : 0,
+          };
+          delete s.Absorb;
+        }
+      }
+      r.v = 26;
+    },
+    // 2.100 brings the rework (2.82-2.87) and the keywords (2.88-2.99) together. The rework's save version 19 added
+    // `run.length` (`'short'` or `'full'`) and a player's `ai`; every save without a length is a Full expedition, and
+    // a player with no `ai` is a person. A rework save numbered 19 has come through the steps above unchanged in
+    // shape (it holds none of the states they rename, or renames them as the keywords did).
+    26(r) {
+      if (r.length !== 'short' && r.length !== 'full') r.length = 'full';
+      r.v = 27;
     },
   };
   T.deserializeRun = function (json) {

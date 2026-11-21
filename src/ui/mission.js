@@ -1,6 +1,6 @@
 /* ============================================================================
    TUMULT v2.0 — UI MISSION SCREEN
-   Board (SVG) with zones, height, hazards, traps, objectives; tokens with hp;
+   Board (SVG) with zones, height, hazards, Fields, objectives; tokens with hp;
    enemy intents drawn as arrows; hero panels (dice, track, hand, gear);
    targeting flows; animations from the engine's fx queue.
    ========================================================================== */
@@ -321,7 +321,7 @@
       const d = T.ENEMIES[e.type];
       const states = Object.keys(e.states)
         .filter((k) => k !== 'Anchored' || !e.anchoredPerm)
-        .map((k) => `<span class="state">${k}</span>`)
+        .map((k) => `<span class="state">${U.stateName(k)}</span>`)
         .join(' ');
       return `<b>${U.icEnemy(e.type, e.glyph)} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}<div class="flavor">${esc(d.flavor)}</div>`;
     }
@@ -342,12 +342,14 @@
       const bits = [
         `<b>${n.label ? 'Space ' + n.label : 'Node ' + n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`,
       ];
-      if (n.height) bits.push('Height: reachable only by Space verbs (teleport/climb/hover) or the ramp.');
-      if (n.hazard) bits.push(`Hazard: ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`);
+      if (n.height) bits.push('Height: reachable only by Space verbs (Blink, climb, Hover) or the ramp.');
+      if (n.hazard)
+        bits.push(
+          `Hazard (a Field of damage): ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`,
+        );
       if (n.spawn) bits.push('Spawn-node: foes emerge here.');
       if (n.objective) bits.push(objText(m, n));
-      if (m.traps[n.id] && m.traps[n.id].length)
-        bits.push(`Snare: ${m.traps[n.id].map((t) => (t.counted ? 'counted, ' : '') + t.dmg + ' dmg').join('; ')}`);
+      for (const f of m.fields || []) if (T.fieldNodes(m, f).includes(n.id)) bits.push(T.fieldText(m, f));
       return bits.join('<div style="height:4px"></div>');
     }
     return '';
@@ -647,16 +649,35 @@
       return;
     }
     let txt = '';
-    if (ms.mode === 'target' && ms.pending.tg.allyMove != null) {
+    let allyBtns = '';
+    const tg = ms.mode === 'target' && ms.pending ? ms.pending.tg : null;
+    // three or more pilots: a face that reaches an ally lets its player choose which (buttons, or click the pilot)
+    const allyList = tg ? (tg.need === 'ally' ? tg.options : tg.allies) : null;
+    if (allyList)
+      allyBtns = allyList
+        .map((uid) => {
+          const a = m.heroes.find((x) => x.uid === uid);
+          const on = tg.need !== 'ally' && uid === tg.ally;
+          return a
+            ? `<button class="sm ${on ? 'primary' : ''}" data-act="pickAlly" data-arg="${uid}">${esc(a.name)}</button>`
+            : '';
+        })
+        .join('');
+    if (tg && tg.need === 'ally') {
+      txt = `<b>${esc(ms.pending.label)}</b> — choose an ally (highlighted).`;
+    } else if (ms.mode === 'target' && ms.pending.tg.allyMove != null) {
       const ally = m.heroes.find((x) => x.uid === ms.pending.tg.ally);
       txt = `<b>${esc(ms.pending.label)}</b> — choose where ${esc(ally ? ally.name : 'your ally')} goes (up to ${ms.pending.tg.allyMove}; click them to stay). They move now.`;
     } else if (ms.mode === 'target')
       txt = `<b>${esc(ms.pending.label)}</b> — choose a ${ms.pending.tg.need === 'node' ? 'node' : 'target'} (highlighted).`;
-    else if (ms.mode === 'choice') txt = `<b>${esc(ms.pending.label)}</b> — push or pull?`;
+    if (tg && tg.allies) {
+      const a = m.heroes.find((x) => x.uid === tg.ally);
+      txt += ` For ${esc(a ? a.name : 'your ally')}: click another pilot to choose them instead.`;
+    } else if (ms.mode === 'choice') txt = `<b>${esc(ms.pending.label)}</b> — push or pull?`;
     else if (ms.mode === 'reroll') txt = `<b>Reroll</b> — click up to ${ms.rerollLeft} banked dice, then confirm.`;
     else if (ms.mode === 'freeMove') txt = `<b>Free step</b> — click a highlighted node (up to ${ms.freeN}).`;
     else if (ms.mode === 'dump') txt = `<b>Return a die</b> — click a banked die to send it back to the pool.`;
-    el.innerHTML = `<div class="targeting">${txt}<span class="right row">${ms.mode === 'choice' ? '<button class="sm primary" data-act="choice" data-arg="push">Push</button><button class="sm primary" data-act="choice" data-arg="pull">Pull</button>' : ''}${ms.mode === 'reroll' ? '<button class="sm primary" data-act="rerollConfirm">Confirm</button>' : ''}<button class="sm ghost" data-act="cancelMode">${ms.mode === 'freeMove' || ms.mode === 'reroll' ? 'Skip' : 'Cancel'}</button></span></div>`;
+    el.innerHTML = `<div class="targeting">${txt}<span class="right row">${allyBtns}${ms.mode === 'choice' ? '<button class="sm primary" data-act="choice" data-arg="push">Push</button><button class="sm primary" data-act="choice" data-arg="pull">Pull</button>' : ''}${ms.mode === 'reroll' ? '<button class="sm primary" data-act="rerollConfirm">Confirm</button>' : ''}<button class="sm ghost" data-act="cancelMode">${ms.mode === 'freeMove' || ms.mode === 'reroll' ? 'Skip' : 'Cancel'}</button></span></div>`;
   }
   function hintText(m) {
     const h = hero();
@@ -995,7 +1016,7 @@
     const states = Object.keys(h.states)
       .map(
         (k) =>
-          `<span class="state ${['Weak', 'Rooted', 'Slow', 'SlowSelf', 'NoTele'].includes(k) ? 'bad' : ''}" data-tip="${esc(T.describeState(k, h.states[k]))}">${U.kwOfState(k) ? U.ic(U.kwOfState(k).icon, '', 'kw-ic') : ''}${k}${h.states[k] && h.states[k].v != null ? ' ' + h.states[k].v : ''}${h.states[k] && typeof h.states[k].t === 'number' && h.states[k].t < 90 ? ' · ' + h.states[k].t : ''}</span>`,
+          `<span class="state ${['Weak', 'Wound', 'Linked'].includes(k) ? 'bad' : ''}" data-tip="${esc(T.describeState(k, h.states[k]))}">${U.kwOfState(k) ? U.ic(U.kwOfState(k).icon, '', 'kw-ic') : ''}${U.stateName(k)}${h.states[k] && h.states[k].v != null ? ' ' + h.states[k].v : ''}${h.states[k] && typeof h.states[k].t === 'number' && h.states[k].t < 90 ? ' · ' + h.states[k].t : ''}</span>`,
       )
       .join('');
     const canPickDie = U.ms.mode === 'reroll' || U.ms.mode === 'dump';
@@ -1005,7 +1026,29 @@
       const special = Object.keys(T.DICE)
         .filter((k) => k !== 'plain' && n(k))
         .map((k) => `${n(k)} ${T.DICE[k].n} (d${T.DICE[k].sides})`);
-      return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn, drawn at random from the pool; pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
+      return `Dice still in your pool: ${n('plain')} plain (d20)${special.length ? ', ' + special.join(', ') : ''}. You roll ${T.RULES.ROLL} a turn: ${T.RULES.ROLL - T.RULES.ROLL_EL} plain and ${T.RULES.ROLL_EL} element die of your choice (Next roll); pool + banked = ${T.RULES.POOL} always. Each awakened card puts a die of its element in your pool in place of a plain one.`;
+    };
+    // the next roll: ROLL_EL element dice of the player's choice (T.setRollPick), the rest plain. The choice stays.
+    const nextRoll = (x) => {
+      if (x.downed || m.over) return '';
+      const set = T.diceSet(x);
+      const pool = T.poolDice(x);
+      const kinds = Object.keys(T.DICE).filter((k) => k !== 'plain' && set.includes(k));
+      if (!kinds.length) return '';
+      const now = T.rollPickNow(x);
+      const count = (arr, k) => arr.filter((d) => d === k).length;
+      const col = (k) => `style="--c:${(EL[k] || EL.O).color}"`;
+      const plains = Math.max(0, T.RULES.ROLL - now.length);
+      const opts = kinds
+        .map((k) => {
+          const on = now.includes(k);
+          const face = EL[k] ? `four ${EL[k].name}, one each of the rest and Omni, no AP` : 'two of each symbol';
+          const left = count(pool, k);
+          return `<button class="sm ${on ? 'rp-pick' : 'ghost rp-add'}" data-act="rollPick" data-arg="${i}|${k}" ${col(k)} ${left ? '' : 'disabled'} data-tip="${esc(`Roll a ${T.DICE[k].n} (d${T.DICE[k].sides}: ${face}) next${on ? ' (chosen)' : ''}. ${left} in your pool now.`)}">${U.dieSVG(k)}<span>${left}</span></button>`;
+        })
+        .join('');
+      const tip = `Each turn you roll ${T.RULES.ROLL - T.RULES.ROLL_EL} plain d20s, mostly AP, and ${T.RULES.ROLL_EL} element die of your choice: four of its etherion, no AP. Your choice stays until you change it${x.rolledAhead ? '. You have rolled for next round already: this is for the roll after' : ''}.`;
+      return `<div class="nextroll small" data-tip="${esc(tip)}"><span class="dim">Next roll ${plains} ${U.dieSVG('plain')} +</span><span class="rp-adds">${opts}</span></div>`;
     };
     // dice lie as they fell: each a little turned, the same way each time it is drawn
     const tilt = (j) => `style="--r:${(((j * 37 + 11) % 13) - 6) * 2}deg"`;
@@ -1036,15 +1079,23 @@
         const asleep = E < T.RULES.ETHEREAL_MIN_E;
         const elC = EL[(c.E && c.E.elt) || c.el].color;
         const title = `<div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>`;
-        if (onTrack)
-          return `<div class="hcard cooling" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}<div class="small dim back">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
         const fb = (fk) => {
           const f = c[fk];
-          const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
           const elt = f.elt || c.el;
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
-          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
+          const body = `<span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>`;
+          const tip = U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;');
+          // a card on the track still reads in full: its faces stay at full strength, only not pressable
+          if (onTrack)
+            return `<div class="fbtn ${fk} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
+          const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
+          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
+        if (onTrack) {
+          const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
+          const what = onTrack.phase === 'dur' ? 'active, then cooling' : 'cooling';
+          return `<div class="hcard cooling" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is on the track (${what}): back in hand in ${back}. Its faces read as usual.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">${onTrack.phase === 'dur' ? '●' : '○'} back in ${back}</span></div>${title}${fb('P')}${fb('E')}</div>`;
+        }
         // a card with nothing it can do now folds small; hovering it brings it back
         const idle =
           m.over || h.downed || (!T.canPlay(m, h, cid, 'P').ok && !T.canPlay(m, h, cid, 'E').ok) ? ' idle' : '';
@@ -1145,6 +1196,7 @@
           <span class="pool" data-tip="${esc(poolTip(h))}">pool ${h.pool}</span>
         </div>
         <div class="dice"><span class="dhand">${dice || '<span class="dim small">no dice banked</span>'}</span></div>
+        ${T.mayActFor(U.run, U.seats, i) ? nextRoll(h) : ''}
         ${U.diceKey()}
       </div>
       <div class="dk-hand"><div class="track dk-track${h.track.length ? '' : ' empty'}"><span class="tlab tready" data-tip="Cards in hand, ready to play">Track · ready ${h.cards.length - h.track.length}</span>${trackCols.join('')}</div><div class="hand">${hand}</div></div>
@@ -1209,7 +1261,10 @@
   }
   function validTargets(m) {
     const ms = U.ms;
-    if (ms.mode === 'target' && (ms.pending.tg.need === 'foe' || ms.pending.tg.need === 'foeOrAlly'))
+    if (
+      ms.mode === 'target' &&
+      (ms.pending.tg.need === 'foe' || ms.pending.tg.need === 'foeOrAlly' || ms.pending.tg.need === 'ally')
+    )
       return new Set(ms.pending.tg.options);
     return new Set();
   }
@@ -1283,17 +1338,21 @@
             mk,
           ).textContent = ic;
       }
-      if (m.traps[n.id] && m.traps[n.id].length)
+      if ((m.fields || []).some((f) => f.on === 'enter' && f.around == null && T.fieldNodes(m, f).includes(n.id)))
         svgEl('text', { x: x - 22, y: y - 18, class: 'trapmark' }, mk).textContent = '🪤';
     });
-    m.zones.forEach((z) => {
-      const n = N[z.node];
+    // Fields: a dashed ring on every space one covers
+    const fielded = new Set();
+    (m.fields || []).forEach((f) => T.fieldNodes(m, f).forEach((id) => fielded.add(id)));
+    fielded.forEach((id) => {
+      const n = N[id];
+      if (!n) return;
       svgEl(
         'circle',
         {
           cx: g.px(n),
           cy: g.py(n),
-          r: g.cell * z.radius * 0.75,
+          r: g.cell * 0.42,
           fill: '#7fd08a',
           opacity: 0.12,
           stroke: '#7fd08a',
@@ -1337,14 +1396,15 @@
     // tokens
     const tk = $('#tokens', svg);
     const seen = new Set();
-    const upsert = (id, cls, n, build, upd) => {
+    const upsert = (id, cls, n, build, upd, shift) => {
       let el = $('#' + id, svg);
       if (!el) {
         el = svgEl('g', { id, class: 'token ' + cls }, tk);
         build(el);
       }
-      // where it stands; a token mid-walk keeps walking and goes home when it arrives (walkToken)
-      el._home = `translate(${g.px(n)},${g.py(n)})`;
+      // where it stands; a token mid-walk keeps walking and goes home when it arrives (walkToken). A small token
+      // sharing a node with a hero (a decoy left on its owner's spot) sits at its edge.
+      el._home = shift ? `translate(${g.px(n) + 18},${g.py(n) - 18}) scale(.6)` : `translate(${g.px(n)},${g.py(n)})`;
       if (!el._walking) el.setAttribute('transform', el._home);
       el.setAttribute('class', 'token ' + cls + (el._walking ? ' walking' : ''));
       upd(el);
@@ -1436,6 +1496,7 @@
           svgEl('text', { y: 5, class: 'initial', 'font-size': 11 }, el).textContent = 'decoy';
         },
         () => {},
+        m.heroes.some((h) => !h.downed && h.pos === d.pos),
       );
     });
     // ally targetable (foeOrAlly)
@@ -1446,9 +1507,10 @@
         setTimeout(() => el.remove(), 420);
       }
     });
-    if (U.ms.mode === 'target' && U.ms.pending.tg.need === 'foeOrAlly')
+    const ptg = U.ms.mode === 'target' && U.ms.pending ? U.ms.pending.tg : null;
+    if (ptg && (ptg.need === 'foeOrAlly' || ptg.need === 'ally' || ptg.allies))
       m.heroes.forEach((h) => {
-        if (vt.has(h.uid)) {
+        if (vt.has(h.uid) || (ptg.allies && ptg.allies.includes(h.uid) && h.uid !== ptg.ally)) {
           const el = $('#tok-' + h.uid, svg);
           if (el) el.setAttribute('class', el.getAttribute('class') + ' targetable');
         }
@@ -1720,6 +1782,7 @@
   function ctxsFor(tg) {
     if (tg.need === 'none') return [{}];
     if (tg.need === 'foe' || tg.need === 'foeOrAlly') return (tg.options || []).map((target) => ({ target }));
+    if (tg.need === 'ally') return (tg.options || []).map((ally) => ({ ally }));
     return [];
   }
   /**
@@ -1797,7 +1860,10 @@
         ctx = { target: +tgArg };
       else if (tok.classList.contains('hero') && ms.pending.tg.need === 'foeOrAlly')
         ctx = { target: M().heroes[+tgArg].uid };
-      else if (ms.pending.tg.need === 'node') {
+      else if (tok.classList.contains('hero') && ms.pending.tg.need === 'ally') {
+        const uid = M().heroes[+tgArg].uid;
+        if (ms.pending.tg.options.includes(uid)) ctx = { ally: uid };
+      } else if (ms.pending.tg.need === 'node') {
         const node = tok.classList.contains('node')
           ? +tok.getAttribute('data-node')
           : tok.classList.contains('hero')
@@ -1806,6 +1872,7 @@
         if (node != null && ms.pending.tg.options.includes(node)) ctx = { node };
       }
       if (!ctx) return;
+      if (ms.pending.tg.allies) ctx.ally = ms.pending.tg.ally;
       const p =
         ms.pending.kind === 'card' ? { kind: 'card', cardId: ms.pending.cardId, fk: ms.pending.fk } : ms.pending;
       drawPreview(previewFor(p, [ctx], U.ms.heroIdx, true));
@@ -2153,6 +2220,33 @@
       U.updateMission();
     }
   }
+  /**
+   * Choose the ally a pending play reaches (3+ pilots). A play that needs only the ally goes ahead; one with
+   * a target of its own works its targets out again for that ally. Returns whether the click was used.
+   */
+  function pickAlly(m, uid) {
+    const ms = U.ms;
+    const p = ms.pending;
+    if (!p || !p.tg) return false;
+    if (p.tg.need === 'ally') {
+      if (!p.tg.options.includes(uid)) return false;
+      commitPending({ ally: uid });
+      return true;
+    }
+    if (!p.tg.allies || !p.tg.allies.includes(uid) || uid === p.tg.ally) return false;
+    const h = hero();
+    let tg = null;
+    if (p.kind === 'card') tg = T.canPlay(m, h, p.cardId, p.fk, uid).tg;
+    else if (p.kind === 'basic') tg = T.canUseBasic(m, h, p.id, uid).tg;
+    else {
+      const ab = T.GEAR_BY[h.gear[p.gi].id].abilities[p.ai];
+      tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0, uid);
+    }
+    if (!tg || tg.invalid || tg.ally !== uid) return false;
+    p.tg = tg;
+    U.updateMission();
+    return true;
+  }
   function commitPending(ctx) {
     const m = M();
     const ms = U.ms;
@@ -2166,6 +2260,8 @@
     }
     let r;
     const fullCtx = Object.assign({}, ctx);
+    // the ally this play reaches, as the player chose it (3+ pilots): the host works it out from this, not afresh
+    if (fullCtx.ally == null && p.tg.ally != null && m.heroes.length > 2) fullCtx.ally = p.tg.ally;
     const i = ms.heroIdx;
     // every change goes through a command, so it can be carried out on the host's screen (U.exec)
     if (p.kind === 'card') r = U.exec({ op: 'face', hero: i, card: p.cardId, fk: p.fk, ctx: fullCtx });
@@ -2306,6 +2402,7 @@
         return true;
       case 'selHeroTok': {
         const i = +arg;
+        if (ms.mode === 'target' && pickAlly(m, m.heroes[i].uid)) return true;
         if (
           ms.mode === 'target' &&
           ms.pending.tg.need === 'foeOrAlly' &&
@@ -2325,6 +2422,9 @@
         }
         return true;
       }
+      case 'pickAlly':
+        if (ms.mode === 'target') pickAlly(m, +arg);
+        return true;
       case 'tgtEnemy': {
         const uid = +arg;
         if (ms.mode === 'target' && ms.pending.tg.options.includes(uid)) {
@@ -2393,6 +2493,14 @@
       case 'valve': {
         ms.heroIdx = +arg;
         if (U.exec({ op: 'valve', hero: +arg }).ok) U.sfx.click();
+        afterAction();
+        return true;
+      }
+      case 'rollPick': {
+        // choosing the next roll's element die: any time, on anyone's turn, for one's own pilot
+        const [hi, k] = String(arg).split('|');
+        if (!m.heroes[+hi]) return true;
+        if (U.exec({ op: 'rollPick', hero: +hi, kinds: [k] }).ok !== false) U.sfx.click();
         afterAction();
         return true;
       }
