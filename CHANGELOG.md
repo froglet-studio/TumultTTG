@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.86.0 — 2026-11-21 — Field, the first keyword of the sweep
+
+Garrett approved the 22-keyword plan on 2026-11-21 (Field and Link in, tech as drawn, Heal raises the downed); it lands one keyword family per release (`docs/reference/KEYWORDS.md`).
+
+- **Field.** Snares, counted snares, spore, musk and ice zones, triggers and sensing auras are one keyword now: marked spaces that do their keywords (Strike, Weaken, Anchor, Mark, Hidden, Reveal) to whatever enters them or ends the round there, on a chosen space or around you. Its harm falls on its side's foes and its help on its own side; Hover and Weightless are above it; a hazard reads as a Field of damage. Fourteen faces changed words, not numbers, with these exceptions: a trigger's strike is now an area hit like a snare's; Enzymes' Field reaches Anchored foes within 2 of you (it reached every Anchored foe on the board and healed 1 a foe); Cilia Field Marks every foe that steps beside you, not only the first each round.
+- **Fields combine with movement.** A Field now springs on a foe pushed, pulled, blown or blinked onto it, not only one that walks in.
+- **Fixed: a zone's Weaken did nothing.** It was given for one round at round end and the round-end tick took it at once; a state a Field leaves at round end now lasts into the next round.
+- **Cleanse the ground** (`cleanse` with `field`) replaces `clearHazard`: hazards and foes' Fields within N are cleared, never yours.
+- **Saves** are version 20: a mission keeps `fields`, and a 2.85 save mid-round keeps its snares, zones, triggers and auras as Fields (fixture `save-2.85.json`).
+- **Balance.** No numbers moved: `node tools/sim.js 40`, 120 heuristic runs and 80 look-ahead runs are the same as 2.85.0 (the simulated squads rarely carry these cards), so nothing is retuned.
+
 ## 2.85.1 — 2026-11-21 — cards on the track stay readable
 
 Garrett: "the whole cards should still be readable when it is on cooldown"

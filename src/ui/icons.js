@@ -404,10 +404,7 @@
     stripShield: 'verb.weaken',
     dot: 'verb.weaken',
     execute: 'node.elite',
-    trap: 'enemy.biter',
-    ambushTrap: 'enemy.biter',
-    zone: 'event.bloom',
-    aura: 'event.bloom',
+    field: 'enemy.biter',
     rally: 'basic.legup',
     interact: 'basic.reach',
   };

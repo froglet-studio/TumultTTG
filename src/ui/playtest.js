@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.85.1',
+    version: '2.86.0',
     items: [
+      {
+        text: 'Snares, spore clouds, triggers and sensing auras are now one keyword, Field: marked spaces that do their keywords to whatever enters them or ends the round there. Its harm falls on foes and its help on allies, Hover is above it, and a hazard is a Field of damage that belongs to nobody. A Field now springs when you push or pull a foe into it, and a Field’s Weaken now lasts into the next round. Try pushing a foe onto your Set Jaws or into a spore cloud. Does a Field read clearly on the board and in its tooltip?',
+        cards: ['fly_snap', 'fly_hairs'],
+      },
       {
         text: 'A card on the track now stays readable: its name, both faces and their costs are shown at full strength (hover a face for its full text), with a band across the art saying when it is back in hand. Can you still tell at a glance which cards are away?',
       },

@@ -1,6 +1,6 @@
 /* ============================================================================
    TUMULT v2.0 — UI MISSION SCREEN
-   Board (SVG) with zones, height, hazards, traps, objectives; tokens with hp;
+   Board (SVG) with zones, height, hazards, Fields, objectives; tokens with hp;
    enemy intents drawn as arrows; hero panels (dice, track, hand, gear);
    targeting flows; animations from the engine's fx queue.
    ========================================================================== */
@@ -304,11 +304,13 @@
         `<b>${n.label ? 'Space ' + n.label : 'Node ' + n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`,
       ];
       if (n.height) bits.push('Height: reachable only by Space verbs (teleport/climb/hover) or the ramp.');
-      if (n.hazard) bits.push(`Hazard: ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`);
+      if (n.hazard)
+        bits.push(
+          `Hazard (a Field of damage): ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`,
+        );
       if (n.spawn) bits.push('Spawn-node: foes emerge here.');
       if (n.objective) bits.push(objText(m, n));
-      if (m.traps[n.id] && m.traps[n.id].length)
-        bits.push(`Snare: ${m.traps[n.id].map((t) => (t.counted ? 'counted, ' : '') + t.dmg + ' dmg').join('; ')}`);
+      for (const f of m.fields || []) if (T.fieldNodes(m, f).includes(n.id)) bits.push(T.fieldText(m, f));
       return bits.join('<div style="height:4px"></div>');
     }
     return '';
@@ -891,17 +893,21 @@
             mk,
           ).textContent = ic;
       }
-      if (m.traps[n.id] && m.traps[n.id].length)
+      if ((m.fields || []).some((f) => f.on === 'enter' && f.around == null && T.fieldNodes(m, f).includes(n.id)))
         svgEl('text', { x: x - 22, y: y - 18, class: 'trapmark' }, mk).textContent = '🪤';
     });
-    m.zones.forEach((z) => {
-      const n = N[z.node];
+    // Fields: a dashed ring on every space one covers
+    const fielded = new Set();
+    (m.fields || []).forEach((f) => T.fieldNodes(m, f).forEach((id) => fielded.add(id)));
+    fielded.forEach((id) => {
+      const n = N[id];
+      if (!n) return;
       svgEl(
         'circle',
         {
           cx: g.px(n),
           cy: g.py(n),
-          r: g.cell * z.radius * 0.75,
+          r: g.cell * 0.42,
           fill: '#7fd08a',
           opacity: 0.12,
           stroke: '#7fd08a',
