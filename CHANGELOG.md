@@ -13,7 +13,7 @@
 
 - **Dice as AP** (Garrett, 2026-11-21: "make any two or any omni work as an AP"). A banked Omni, or any two banked etherions (the same or different), become 1 AP: no cost, as often as the bank allows. At the table, put the dice back in the pool and mint 1 AP; like any minted die it evaporates at the end of the hero phase. So a rolled element is never dead weight: with no face to pay, it still walks, strikes or works an objective. The anti-brick fold (one each of M, C, S and T into an Omni) stays.
 - **Self-explaining.** The ◇→AP button stands beside the four basic actions whenever spare dice would pay for a face in hand (under More otherwise); click it, then an Omni or two element dice. A face they would pay for says ◇→AP to pay.
-- **Foes have 160% of their listed vitality** (was 150%), so the game is not easier: `node tools/sim.js 200 runs --player strong` on top of 2.115.0 gives 85 of 200 before and 82 with dice as AP at 160% (163%: 62); measured first on 2.109, 61 → 80 of 120 at 150% (`docs/reference/BALANCE.md`).
+- **Foes have 160% of their listed vitality** (was 150%), so the game is not easier: `node tools/sim.js 200 runs --player strong` on top of 2.115.0 gives 85 of 200 before and 82 with dice as AP at 160% (163%: 62), and on top of 2.118.0, 82 before and 83 at 160%; measured first on 2.109, 61 → 80 of 120 at 150% (`docs/reference/BALANCE.md`).
 - Both simulated players use it: the look-ahead player tries each different spend, the heuristic spends spare dice when that pays for a face with something to do. Engine: `T.spendAsAP`, `T.apSpends`, `T.canSpendAsAP`, `T.payableAsAP`; the command `asAP { dice }`. No save change.
 ## 2.118.0 — 2026-11-21 — Resonance
 
