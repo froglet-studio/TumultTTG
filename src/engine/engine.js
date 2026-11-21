@@ -1189,13 +1189,29 @@
     let moved = 0;
     for (let i = 0; i < n; i++) {
       const cands = B.walkNeighbors(m.board, target.pos).filter((x) => canEnter(m, target, x, false));
-      if (!cands.length) break;
       const best = cands.sort((a, b) => B.dist(m.board, b, source.pos, true) - B.dist(m.board, a, source.pos, true))[0];
-      if (B.dist(m.board, best, source.pos, true) <= B.dist(m.board, target.pos, source.pos, true)) break;
+      if (best == null || B.dist(m.board, best, source.pos, true) <= B.dist(m.board, target.pos, source.pos, true)) {
+        crash(m, source, target);
+        break;
+      }
       moveEntity(m, target, best, 'forced');
       moved++;
     }
     return landed(m, source, target, moved);
+  }
+  /**
+   * Crash (2.104): a unit pushed by one in a crashing form (Apex Form's `crash`) that is stopped short takes
+   * the crash, and so does the unit in the way: the one beside it farthest from the pusher.
+   */
+  function crash(m, source, target) {
+    const c = source && st(source).Morph && st(source).Morph.crash;
+    if (!c || !standing(target)) return;
+    const far = (x) => B.dist(m.board, x, source.pos, true);
+    const away = B.allNeighbors(m.board, target.pos).filter((x) => far(x) > far(target.pos));
+    const by = away.map((x) => T.entityAt(m, x)).find((u) => u && standing(u) && u.kind !== 'decoy');
+    say(m, `${target.name} crashes${by ? ' into ' + by.name : ''}.`, 'hero');
+    T.damage(m, source, target, c, { kind: 'true', trueDmg: true, label: 'crashes for' });
+    if (by) T.damage(m, source, by, c, { kind: 'true', trueDmg: true, label: 'is crashed into for' });
   }
   function pullToward(m, source, target, n, viaLink) {
     if (!viaLink) {
@@ -1231,6 +1247,31 @@
     onEnter(m, ent, node);
     if (ent.kind === 'hero' && how !== 'forced' && isHidden(ent) && !st(ent).Hidden.canMove)
       breakHidden(m, ent, 'moved');
+    if (how === 'walk' && st(ent).Holding) dragHeld(m, ent, from);
+  }
+  /**
+   * Hold (2.104): a unit that holds a foe drags it along when it walks: the foe goes into the space the
+   * holder left, or the free space beside the holder nearest it. A foe that walked off, fell, or is
+   * Anchored by anything else is let go.
+   */
+  function dragHeld(m, holder, from) {
+    const hd = st(holder).Holding;
+    const foe = unitBy(m, hd.uid);
+    const held = foe && st(foe).Held;
+    const near = foe && B.dist(m.board, from, foe.pos, true) <= 1;
+    if (!standing(foe) || !held || held.by !== holder.uid || !near || forceImmune(foe)) {
+      delete st(holder).Holding;
+      if (held && held.by === holder.uid) delete st(foe).Held;
+      return;
+    }
+    const spots = B.walkNeighbors(m.board, holder.pos)
+      .filter((n) => n === foe.pos || !T.occupied(m, n))
+      .sort((a, b) => B.dist(m.board, a, from, true) - B.dist(m.board, b, from, true) || (a < b ? -1 : 1));
+    if (!spots.length) return;
+    if (spots[0] !== foe.pos) {
+      moveEntity(m, foe, spots[0], 'forced');
+      say(m, `${holder.name} drags ${foe.name} along.`, 'hero');
+    }
   }
   T.moveEntity = moveEntity;
   T.pushAway = pushAway;
@@ -1902,6 +1943,8 @@
           }
           if (f.revealTarget) breakHidden(m, t, 'twitch');
           T.damage(m, actor, t, dmg, opts);
+          const mp = st(actor).Morph && st(actor).Morph.push;
+          if (mp && opts.kind === 'melee' && standing(t)) pushAway(m, actor, t, mp);
           if (f.onKill && t.kind === 'enemy' && !t.alive) T.applyEffect(m, actor, f.onKill, ctx);
           ctx.lastTarget = t;
         }
@@ -2123,6 +2166,26 @@
         moveEntity(m, ally, dest, 'thrown');
         say(m, `${actor.name} throws ${ally.name} ${from} → ${dest}.`, 'hero');
         if (ally.kind === 'hero') onHeroEnter(m, ally, dest);
+        break;
+      }
+      case 'hold': {
+        // Lock on to a foe beside you for N rounds: when you walk, it is dragged along.
+        const t = targetEnt(m, ctx);
+        if (!standing(t) || !B.adjacent(bd, actor.pos, t.pos)) break;
+        const d = num(f.dur, P, E);
+        st(actor).Holding = { uid: t.uid, t: d };
+        st(t).Held = { by: actor.uid, t: d };
+        say(m, `${actor.name} locks on to ${t.name}.`, 'hero');
+        ctx.lastTarget = t;
+        break;
+      }
+      case 'fix': {
+        // Fix its mind: for N rounds after this one, the foe repeats this round's intent (same move, same
+        // target). It still acts.
+        const t = targetEnt(m, ctx) || ctx.lastTarget;
+        if (!standing(t) || t.kind !== 'enemy' || !t.intent) break;
+        st(t).Fixed = { intent: JSON.parse(JSON.stringify(t.intent)), t: num(f.dur, P, E) + 1 };
+        say(m, `${t.name} is fixed on what it means to do.`, 'hero');
         break;
       }
       case 'spring': {
@@ -2397,6 +2460,8 @@
           move: f.move || 0,
           t: d,
         };
+        if (f.crash != null) actor.states.Morph.crash = num(f.crash, P, E);
+        if (f.push != null) actor.states.Morph.push = num(f.push, P, E);
         if (f.shield) addShield(m, actor, f.shield, d, false);
         say(
           m,
@@ -3383,6 +3448,9 @@
       Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,
       Wound: `Wound ${v.n} — takes ${v.n} at round end, then the Wound drops by 1.`,
       Rewind: `At round end, regains what it lost since, up to ${v.cap}.`,
+      Holding: `Holding a foe for ${v.t}: when it walks, the foe is dragged along.`,
+      Held: `Held for ${v.t}: dragged along when its holder walks. It still acts.`,
+      Fixed: `Fixed for ${v.t}: repeats the same intent each round. It still acts.`,
     };
     return map[k] || k;
   };
