@@ -163,7 +163,7 @@
     const who = ready.length === 1 ? ready[0].h.name.split(' ')[0] : 'the squad';
     return `<div class="am-grow"><button class="ghost am-ghost sm" data-act="train" data-arg="${ready[0].i}" data-tip="${esc(ready.map(({ h }) => `${h.name}: ${h.upUnspent}`).join(' · '))}">✦ Grow a card · ${pts} point${pts === 1 ? '' : 's'} for ${esc(who)}</button></div>`;
   }
-  /** A pilot with traits in reserve can choose the nine that fly next, here as on the route (2.105). */
+  /** A pilot with traits in reserve can choose the nine that fly next, here as on the route (2.107). */
   function kitOffer(run) {
     const i = run.heroes.findIndex((h, k) => U.own(k) && h.reserve && h.reserve.length);
     if (i < 0) return '';

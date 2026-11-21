@@ -160,7 +160,7 @@
   };
   /**
    * A trait leaves the pilot for good: every upgrade point on it comes back to spend again, bound ones too
-   * (Garrett, 2026-11-20). Since 2.105 the game itself never takes a trait away (a trait left behind waits in
+   * (Garrett, 2026-11-20). Since 2.107 the game itself never takes a trait away (a trait left behind waits in
    * reserve, its points on it), so this is for what truly ends, such as a companion lost.
    */
   T.removeCard = function (h, cardId) {
@@ -172,7 +172,7 @@
     if (h.bound) delete h.bound[cardId];
   };
   /**
-   * A new trait comes into the kit in place of one that stays behind (2.105; before, the one that went was
+   * A new trait comes into the kit in place of one that stays behind (2.107; before, the one that went was
    * lost and its points refunded). The new card must be of the pilot's bloodline, not held, and fit the
    * 3-of-9 cap once the other has gone to the reserve.
    */
@@ -370,7 +370,7 @@
       if (!T.canAddCard(probe, c).ok) return null;
       probe.cards.push(c);
     }
-    // the traits it keeps in reserve (2.105): of its bloodline, none twice, each one some kit of nine could fly
+    // the traits it keeps in reserve (2.107): of its bloodline, none twice, each one some kit of nine could fly
     const reserve = rec.reserve == null ? [] : rec.reserve;
     if (!Array.isArray(reserve) || reserve.length > T.CARDS.length) return null;
     for (const c of reserve) {
@@ -1033,7 +1033,7 @@
   };
   /**
    * A trade or a molt: a new trait of the same bloodline takes this one's place in the kit, and the old one goes
-   * to the reserve with its points (2.105: a pilot keeps every trait it has earned).
+   * to the reserve with its points (2.107: a pilot keeps every trait it has earned).
    */
   T.tradeCard = function (run, heroIdx, dropId) {
     const h = run.heroes[heroIdx];
@@ -1430,7 +1430,7 @@
     27(r) {
       r.v = 28;
     },
-    // 2.105: a pilot keeps every trait it earns, and flies nine (h.reserve holds the rest). Nothing in a save from
+    // 2.107: a pilot keeps every trait it earns, and flies nine (h.reserve holds the rest). Nothing in a save from
     // before was in reserve: what an exchange gave up then was gone, its points refunded.
     28(r) {
       for (const h of r.heroes || []) if (h && !Array.isArray(h.reserve)) h.reserve = [];

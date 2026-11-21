@@ -366,7 +366,7 @@ hr {
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 10px;
 }
-/* the Kit view's loadout (2.105): a reserve trait to bring in, and the traits it could replace */
+/* the Kit view's loadout (2.107): a reserve trait to bring in, and the traits it could replace */
 .kit-pick {
   cursor: pointer;
   border-radius: 10px;

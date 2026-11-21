@@ -990,7 +990,7 @@
     ${kitLoadout(i, h)}`);
   };
   /**
-   * The kit that flies and the traits kept in reserve (2.105). Between missions a reserve trait comes in for one
+   * The kit that flies and the traits kept in reserve (2.107). Between missions a reserve trait comes in for one
    * of the nine: pick it, then the one that stays behind. In a mission the kit is set, and the reserve only shown.
    */
   U.kitIn = null;
