@@ -143,6 +143,8 @@
         return T.useConsumable(m, h, a.item);
       case 'valve':
         return { ok: T.valve(m, h) };
+      case 'pick': // the dice of the pilot's next roll (T.setRollPick)
+        return T.setRollPick(h, a.kinds);
       default:
         return { ok: false, why: 'unknown action ' + a.t };
     }
@@ -162,6 +164,7 @@
       const def = T.GEAR_BY[h.gear[a.gear].id];
       return `${h.name}: ${def.name} — ${def.abilities[a.ability].n}${tail}`;
     }
+    if (a.t === 'pick') return `${h.name}: next roll ${(a.kinds || []).join(', ') || 'at random'}`;
     if (a.t === 'item') return `${h.name}: ${T.CONSUMABLE_BY[h.consumables[a.item]].name}`;
     return `${h.name}: ${a.t}${at}`;
   };
@@ -496,6 +499,12 @@
       }
       if (!cut) break;
     }
+    // then the dice of the next roll, as actions of their own, so a replay of the list rolls the same
+    m.heroes.forEach((h, i) => {
+      if (m.over || h.downed) return;
+      T.autoRollPick(m, h);
+      taken.push({ t: 'pick', hero: i, kinds: (h.rollPick || []).slice() });
+    });
     return taken;
   };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

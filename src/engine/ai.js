@@ -542,6 +542,33 @@
     return false;
   }
 
+  /**
+   * How the simulated players choose the dice of their next roll (T.setRollPick), as a careful player would:
+   * for each awakened card back in hand by then whose Ethereal face wants an etherion the bank cannot pay, a die
+   * of that element (two at most); the rest plain dice, for AP. A pilot with no element dice in its pool picks
+   * nothing and draws at random.
+   */
+  T.autoRollPick = function (m, h) {
+    if (!h || h.downed) return;
+    const pool = T.poolDice(h);
+    const want = [];
+    for (const cid of h.cards) {
+      const card = T.CARD[cid];
+      const f = card && card.E;
+      if (!f || !f.el || T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) continue;
+      const t = h.track.find((x) => x.card === cid);
+      if (t && t.left + (t.phase === 'dur' ? t.cd : 0) > 1) continue; // still cooling next round
+      const el = f.elt || card.el;
+      const have = T.elCount(h, el) + T.omniCount(h) - want.filter((k) => k === el).length;
+      if (have >= f.el || !T.DICE[el]) continue;
+      if (want.length < 2 && pool.filter((k) => k === el).length > want.filter((k) => k === el).length) want.push(el);
+    }
+    const plains = pool.filter((k) => k === 'plain').length;
+    while (want.length < T.RULES.ROLL && want.filter((k) => k === 'plain').length < plains) want.push('plain');
+    T.setRollPick(h, want);
+  };
+  const pickAll = (m) => m.heroes.forEach((h) => !m.over && T.autoRollPick(m, h));
+
   T.autoHeroPhase = function (m) {
     for (const h of m.heroes) {
       if (h.downed || m.over) continue;
@@ -731,5 +758,6 @@
         break; // bank the rest
       }
     }
+    pickAll(m);
   };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

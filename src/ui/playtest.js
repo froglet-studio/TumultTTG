@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.81.1',
+    version: '2.82.0',
     items: [
+      {
+        text: 'You choose which dice you roll. Under "Next roll", beside your dice, pick up to four from your pool: plain d20s are mostly AP, an element’s d8 has no AP but four of its etherion. Your choice stays until you change it, and the dice you leave unchosen are drawn at random. Did you change your roll often, or set it once? Did it make your turns feel more planned?',
+      },
       {
         text: 'Hyperspeed and Sky Hyperspeed now count a run of exactly 4 the way you would on the board: four steps, past foes, never the same space twice, ending on an empty space. Before, they only offered spaces whose shortest way was 4, so on a tight board like Mast-Crop Hills they often said there was nowhere to go. Does the run go where you expect now?',
         cards: ['che_hyper', 'haw_hyper'],

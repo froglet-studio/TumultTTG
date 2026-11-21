@@ -66,7 +66,7 @@ docs/archive/v1.0/        the original design bundle — frozen, never edit
 
 Kept from v1.0 on purpose. Most are enforced in `test/engine.test.js` and `test/data.test.js`.
 
-- 15-die pool per hero: pool + banked = 15, always. Roll 4 per turn (3 before 2.29), drawn from the pool. Minted dice are temporary and never count.
+- 15-die pool per hero: pool + banked = 15, always. Roll 4 per turn (3 before 2.29), drawn from the pool: the ones the player chose (`h.rollPick`, 2.82), the rest at random. Minted dice are temporary and never count.
 - Dice (Garrett, 2026-11-14): the plain die is a d20 (Mass, Charge, Space, Time, Omni once each, fifteen AP); each awakened card and each Affinity boon swaps a plain die for its element's d8 (four of its element, one each of the others and Omni); Omni Core swaps one for an ethereal d12 (two of each symbol) (`T.DICE`, `docs/design/10-dice.md`). The element symbols are Cosmic Shore's, shared across Froglet's Hypersea games. Omni pays for any etherion.
 - Six-column track: playing either face sends the whole card away for that face's cooldown (after its duration). Every face has a cooldown of at least 1, so a card plays at most once a turn (2.73).
 - Every face grows with its card: its text at P 3 / E 3 differs from its first level (2.73).
