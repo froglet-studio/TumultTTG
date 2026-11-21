@@ -9,6 +9,17 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.116.0 — 2026-11-21 — Resonance
+
+- **Resonance** (new keyword, the shortlist's second pick). Every Ethereal face you play leaves its element in the air: strong this round, fading the next, then gone. A face that **draws on** an element takes it for a bonus, and the element is spent. Omni in the air stands in for any element. The squad shares the air, so playing a Charge face first can make a partner's Charge-drawing face land bigger. Every face still works with nothing in the air.
+- Four faces draw on the air. The element can come from your own earlier play or from a partner's:
+  - **Recoil Slam** (Octopus, Jet Propulsion) draws on Charge: the foe is also Anchored 1.
+  - **Pop** (Hedgehog, Spine Burst) draws on Space: everything is pushed 1 more.
+  - **Cavitation** (Mantis Shrimp, Smasher Punch) draws on Time: the punch lands twice.
+  - **Pick the Weak** (Raven, Carrion Wing) draws on Mass: the foe falls at 3 + 2E or less.
+- The board's top bar shows what is in the air. The Stridulation face once called Resonance is now **Thrum**, so the word means one thing.
+- In code: `m.air`, `T.leaveInAir`, `T.inAir`, and the condition `ifAir: 'M'`, which draws on the element once per play. **Saves** are version 32: a mission keeps the air.
+
 ## 2.115.0 — 2026-11-21 — At dusk, and Flanked
 
 - **At dusk** (a timing word, from the shortlist). A face marked At dusk is placed now: you pay for it, it goes to the track, and you choose its space. It lands at round end, once the foes have acted, on whoever is there then. A ring on the board shows where. The puzzle is to read the telegraph for where the foes will finish.
