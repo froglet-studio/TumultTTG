@@ -39,7 +39,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pattern Recognition** · Space · `hum_pattern`
 
-- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1.)*
 - *Eth — Weak Point* · 0 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
 
 **Opposable Grip** · Mass · `hum_grip`
@@ -68,7 +68,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Radiator Ears** ★ · Charge · `jer_ears`
 
-- *Phys — Vent* · 1 AP · CD 1 — Shed Anchored/Weakened/dots and step 1. *(P3: Shed Anchored/Weakened/dots and step 2.)*
+- *Phys — Vent* · 1 AP · CD 1 — Cleanse (Anchored, Weakened, Wounds) and step 1. *(P3: Cleanse (Anchored, Weakened, Wounds) and step 2.)*
 - *Eth — Infrared* · 1 AP + 1 Charge · CD 3 — Read the heat of everything within 2 for 2 rounds, and lash the nearest foe in your zone for 3 true damage. *(P3/E3: Read the heat of everything within 4 for 4 rounds, and lash the nearest foe in your zone for 5 true damage.)*
 
 **Erratic Bounding** · Time · `jer_erratic`
@@ -103,7 +103,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Counterbalance Tail** · Mass · `jer_tail`
 
-- *Phys — Redirect* · 1 AP · CD 1 · Dur 1 — Plant yourself: immune to push/pull and Shield 1 this round. *(P3: Plant yourself: immune to push/pull and Shield 4 this round.)*
+- *Phys — Redirect* · 1 AP · CD 1 · Dur 1 — Plant yourself: Anchored (nothing moves you, your own steps included) and Shield 1 this round. *(P3: Plant yourself: Anchored (nothing moves you, your own steps included) and Shield 4 this round.)*
 - *Eth — Deflect* · 2 AP + 1 Mass · CD 3 · Dur 2 — Shield 1 this round, and Thorns: the next foe to hit you in melee takes 3 and is pushed 1. Dur 2. *(P3/E3: Shield 3 this round, and Thorns: the next foe to hit you in melee takes 5 and is pushed 1. Dur 2.)*
 
 ## 2 · Red-Legged Grasshopper — leans M/C
@@ -128,11 +128,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Chitinous Exoskeleton** · Mass · `hop_exo`
 
 - *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
-- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and Anchored (nothing moves you, your own steps included). *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and Anchored (nothing moves you, your own steps included).)*
 
 **Molt** · Space · `hop_molt`
 
-- *Phys — Shed* · 2 AP · CD 2 — Slip every hold and dot; Shield 1. *(P3: Slip every hold and dot; Shield 4.)*
+- *Phys — Shed* · 2 AP · CD 2 — Cleanse (every hold and Wound); Shield 1. *(P3: Cleanse (every hold and Wound); Shield 4.)*
 - *Eth — Husk* · 1 AP + 1 Space · CD 3 — Leave a hollow husk (decoy, 2 rounds) and blink up to 2 away. *(P3/E3: Leave a hollow husk (decoy, 4 rounds) and blink up to 4 away.)*
 
 **Compound Eyes** · Space · `hop_eyes`
@@ -153,7 +153,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Glide Wings** · Space · `hop_glide`
 
 - *Phys — Buzz* · 1 AP · CD 1 — Glide 1, over foes. *(P3: Glide 4, over foes.)*
-- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn.)*
+- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn.)*
 
 ## 3 · Barn Owl — leans S/C
 
@@ -161,13 +161,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Silent Flight** ★ · Space · `owl_silent`
 
-- *Phys — Glide* · 1 AP · CD 1 — Move 1 without triggering traps; your next strike this turn deals +2 (surprise). *(P3: Move 4 without triggering traps; your next strike this turn deals +2 (surprise).)*
+- *Phys — Glide* · 1 AP · CD 1 — Move 1; your next strike this turn deals +2 (surprise). *(P3: Move 4; your next strike this turn deals +2 (surprise).)*
 - *Eth — Dampen* · 1 AP + 1 Space · CD 3 — Erase your presence: blink 2 and stay Hidden for 2 rounds even while moving. *(P3/E3: Erase your presence: blink 4 and stay Hidden for 4 rounds even while moving.)*
 
 **Sound Mapping** ★ · Space · `owl_sound`
 
-- *Phys — Listen* · 1 AP · CD 1 — Locate everything within 2 by ear alone, then take one free step. *(P3: Locate everything within 5 by ear alone, then take one free step.)*
-- *Eth — Acoustic Map* · 0 AP + 1 Space · CD 3 — A 3-D map of everything within 3 for 3 rounds — hidden foes, traps and hidden objectives there all pinpointed, and you hear Shield: the next hit on you coming: it deals 1 less. *(P3/E3: A 3-D map of everything within 5 for 5 rounds — hidden foes, traps and hidden objectives there all pinpointed, and you hear Shield: the next hit on you coming: it deals 3 less.)*
+- *Phys — Listen* · 1 AP · CD 1 — Reveal everything within 2 by ear alone, then take one free step. *(P3: Reveal everything within 5 by ear alone, then take one free step.)*
+- *Eth — Acoustic Map* · 0 AP + 1 Space · CD 3 — A 3-D map of everything within 3 for 3 rounds — hidden foes and hidden objectives there all pinpointed, and you hear Shield: the next hit on you coming: it deals 1 less. *(P3/E3: A 3-D map of everything within 5 for 5 rounds — hidden foes and hidden objectives there all pinpointed, and you hear Shield: the next hit on you coming: it deals 3 less.)*
 
 **Talon Strike** · Mass · `owl_talon`
 
@@ -192,7 +192,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Binocular Foresight** · Time · `owl_foresight`
 
@@ -231,7 +231,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Boneless Squeeze** · Mass · `oct_squeeze`
 
 - *Phys — Squeeze* · 1 AP · CD 1 — Pour through any gap: escape every hold and step 1. *(P3: Pour through any gap: escape every hold and step 2.)*
-- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
+- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and Anchored (nothing moves you, your own steps included) for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and Anchored (nothing moves you, your own steps included) for 2 rounds.)*
 
 **Distributed Arms** ☆ · Time · `oct_arms`
 
@@ -309,7 +309,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Regeneration** ★ · Time · `axo_regen`
 
 - *Phys — Knit* · 1 AP · CD 1 — Knit a wound: heal 2. *(P3: Knit a wound: heal 5.)*
-- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.)*
+- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and Cleanse (every hold and Wound).)*
 
 **Neoteny** ★ · Space · `axo_neoteny`
 
@@ -348,7 +348,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Degeneration Resistance** · Time · `axo_degen`
 
-- *Phys — Housekeep* · 1 AP · CD 1 — Cellular housekeeping: shed every hold and dot, heal 1. *(P3: Cellular housekeeping: shed every hold and dot, heal 2.)*
+- *Phys — Housekeep* · 1 AP · CD 1 — Cellular housekeeping: Cleanse (every hold and Wound), heal 1. *(P3: Cellular housekeeping: Cleanse (every hold and Wound), heal 2.)*
 - *Eth — Rewind Cells* · 1 AP + 1 Time · CD 4 — Rewind damage: both heroes cleansed and healed 3. *(P3/E3: Rewind damage: both heroes cleansed and healed 5.)*
 
 ## 7 · Electric Eel — leans C/S
@@ -383,7 +383,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ribbon-Fin Glide** · Space · `eel_ribbon`
 
 - *Phys — Undulate* · 1 AP · CD 1 — Undulate 1 in any direction, through foes. *(P3: Undulate 4 in any direction, through foes.)*
-- *Eth — Decouple* · 1 AP + 1 Space · CD 3 — Decouple from momentum: reposition anywhere within 3, immune to push/pull this round. *(P3/E3: Decouple from momentum: reposition anywhere within 5, immune to push/pull this round.)*
+- *Eth — Decouple* · 1 AP + 1 Space · CD 3 — Decouple from momentum: reposition anywhere within 3, Anchored (nothing moves you, your own steps included) this round. *(P3/E3: Decouple from momentum: reposition anywhere within 5, Anchored (nothing moves you, your own steps included) this round.)*
 
 **Doublet Jolt** · Charge · `eel_doublet`
 
@@ -392,8 +392,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
-- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
 
 **Galvanic Counterstrike** · Charge · `eel_galvanic`
 
@@ -426,7 +426,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Rooting Anchor** · Mass · `fly_root`
 
-- *Phys — Root* · 1 AP · CD 1 — Root in place: immune to push/pull for 1 rounds and draw sustenance (heal 1). *(P3: Root in place: immune to push/pull for 4 rounds and draw sustenance (heal 1).)*
+- *Phys — Root* · 1 AP · CD 1 — Root in place: Anchored (nothing moves you, your own steps included) for 1 rounds and draw sustenance (heal 1). *(P3: Root in place: Anchored (nothing moves you, your own steps included) for 4 rounds and draw sustenance (heal 1).)*
 - *Eth — Taproot* · 1 AP + 1 Mass · CD 3 — Drive taproots: you and an adjacent foe or ally are fixed in place for 2 rounds; you gain Shield 1. *(P3/E3: Drive taproots: you and an adjacent foe or ally are fixed in place for 4 rounds; you gain Shield 1.)*
 
 **Rhizome Sprout** · Space · `fly_rhizome`
@@ -504,7 +504,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Cryptobiosis** ★ · Time · `tar_crypto`
 
-- *Phys — Tun* · 2 AP · CD 2 · Dur 1 — Curl into the tun: Shield 4 against everything and immune to push/pull this round. *(P3: Curl into the tun: Shield 7 against everything and immune to push/pull this round.)*
+- *Phys — Tun* · 2 AP · CD 2 · Dur 1 — Curl into the tun: Shield 4 against everything and Anchored (nothing moves you, your own steps included) this round. *(P3: Curl into the tun: Shield 7 against everything and Anchored (nothing moves you, your own steps included) this round.)*
 - *Eth — Step Out of Time* · 0 AP + 3 Time · CD 4 · Dur 1 — Leave time: untargetable through the next enemy phase, heal 3, and Haste: your track slides 2 extra columns. *(P3/E3: Leave time: untargetable through the next enemy phase, heal 5, and Haste: your track slides 4 extra columns.)*
 
 **Dsup Shielding** ★ · Charge · `tar_dsup`
@@ -544,7 +544,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Current-Cling Anchor** · Space · `tar_cling`
 
-- *Phys — Cling* · 1 AP · CD 1 — Cling fast: immune to push/pull for 1 rounds. *(P3: Cling fast: immune to push/pull for 4 rounds.)*
+- *Phys — Cling* · 1 AP · CD 1 — Cling fast: Anchored (nothing moves you, your own steps included) for 1 rounds. *(P3: Cling fast: Anchored (nothing moves you, your own steps included) for 4 rounds.)*
 - *Eth — Anchor Space* · 1 AP + 1 Space · CD 3 — Anchor to a point in space for 2 rounds: you and an adjacent ally cannot be moved. *(P3/E3: Anchor to a point in space for 4 rounds: you and an adjacent ally cannot be moved, and both ignore hazards this round.)*
 
 ## 11 · Orangutan — leans T/C
@@ -651,7 +651,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pattern Recognition** · Space · `hum_pattern`
 
-- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1.)*
 - *Eth — Weak Point* · 0 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
 
 **Opposable Grip** · Mass · `hum_grip`
@@ -838,7 +838,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Night Prowl** · Time · `oce_prowl`
 
-- *Phys — Prowl* · 1 AP · CD 1 — Move 1 without setting off traps, and end Hidden 1. *(P3: Move 4 without setting off traps, and end Hidden 1.)*
+- *Phys — Prowl* · 1 AP · CD 1 — Move 1, and end Hidden 1. *(P3: Move 4, and end Hidden 1.)*
 - *Eth — Night Shift* · 1 AP + 1 Time · CD 4 — Haste: every card on your track returns 2 columns sooner; see within 2 this round. *(P3/E3: Haste: every card on your track returns 4 columns sooner; see within 2 this round.)*
 
 ## 17 · Tiger — leans M/C
@@ -985,7 +985,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Night Trot** · Space · `fen_night`
 
-- *Phys — Night Trot* · 1 AP · CD 1 — Move 1 without setting off traps, seeing what is beside you as you go. *(P3: Move 4 without setting off traps, seeing what is beside you as you go.)*
+- *Phys — Night Trot* · 1 AP · CD 1 — Move 1, seeing what is beside you as you go. *(P3: Move 4, seeing what is beside you as you go.)*
 - *Eth — Moon Run* · 1 AP + 1 Space · CD 3 — Hide for 2 rounds, moving freely, and run 2 now. *(P3/E3: Hide for 4 rounds, moving freely, and run 2 now.)*
 
 ## 20 · Red Fox — leans S/C
@@ -1343,7 +1343,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Breath Hold** · Time · `sea_breath`
 
 - *Phys — Hold* · 1 AP · CD 2 — Ignore hazards for 2 rounds, and heal 1. *(P3: Ignore hazards for 2 rounds, and heal 2.)*
-- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and shed Anchored, Weakened and damage over time. *(P3/E3: Ignore hazards for 5 rounds, heal 5, and shed Anchored, Weakened and damage over time.)*
+- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and cleanse (Anchored, Weakened, Wounds). *(P3/E3: Ignore hazards for 5 rounds, heal 5, and cleanse (Anchored, Weakened, Wounds).)*
 
 **Tusk** · Mass · `sea_tusk`
 
@@ -1363,7 +1363,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Herd Bellow** · Charge · `wal_bellow`
 
 - *Phys — Bellow* · 1 AP · CD 1 — Both heroes hold Shield 1 this round, and every foe beside you is Weakened 1. *(P3: Both heroes hold Shield 2 this round, and every foe beside you is Weakened 1.)*
-- *Eth — Herd Up* · 1 AP + 1 Charge · CD 4 — Both heroes shed Anchored, Weakened and damage over time, and Shield: the next hit on each is 2 less. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time, and Shield: the next hit on each is 4 less.)*
+- *Eth — Herd Up* · 1 AP + 1 Charge · CD 4 — Both heroes cleanse (Anchored, Weakened, Wounds), and Shield: the next hit on each is 2 less. *(P3/E3: Both heroes cleanse (Anchored, Weakened, Wounds), and Shield: the next hit on each is 4 less.)*
 
 **Suction Feed** · Mass · `wal_suction`
 
@@ -1392,7 +1392,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Breath Hold** · Time · `sea_breath`
 
 - *Phys — Hold* · 1 AP · CD 2 — Ignore hazards for 2 rounds, and heal 1. *(P3: Ignore hazards for 2 rounds, and heal 2.)*
-- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and shed Anchored, Weakened and damage over time. *(P3/E3: Ignore hazards for 5 rounds, heal 5, and shed Anchored, Weakened and damage over time.)*
+- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and cleanse (Anchored, Weakened, Wounds). *(P3/E3: Ignore hazards for 5 rounds, heal 5, and cleanse (Anchored, Weakened, Wounds).)*
 
 **Echolocation** · Space · `sea_echo`
 
@@ -1441,7 +1441,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Breath Hold** · Time · `sea_breath`
 
 - *Phys — Hold* · 1 AP · CD 2 — Ignore hazards for 2 rounds, and heal 1. *(P3: Ignore hazards for 2 rounds, and heal 2.)*
-- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and shed Anchored, Weakened and damage over time. *(P3/E3: Ignore hazards for 5 rounds, heal 5, and shed Anchored, Weakened and damage over time.)*
+- *Eth — Long Dive* · 1 AP + 1 Time · CD 4 — Ignore hazards for 3 rounds, heal 3, and cleanse (Anchored, Weakened, Wounds). *(P3/E3: Ignore hazards for 5 rounds, heal 5, and cleanse (Anchored, Weakened, Wounds).)*
 
 **Echolocation** · Space · `sea_echo`
 
@@ -1510,7 +1510,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ruminate** · Time · `hoof_chew`
 
 - *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
-- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds.)*
 
 **Thick Coat** · Time · `yak_coat`
 
@@ -1559,7 +1559,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ruminate** · Time · `hoof_chew`
 
 - *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
-- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds.)*
 
 **Stampede** · Mass · `bis_stampede`
 
@@ -1568,7 +1568,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wallow** · Time · `bis_wallow`
 
-- *Phys — Dust Bath* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time; Shield 1 this round, and heal 1. *(P3: Shed Anchored, Weakened and damage over time; Shield 2 this round, and heal 1.)*
+- *Phys — Dust Bath* · 1 AP · CD 2 — Cleanse (Anchored, Weakened, Wounds); Shield 1 this round, and heal 1. *(P3: Cleanse (Anchored, Weakened, Wounds); Shield 2 this round, and heal 1.)*
 - *Eth — Mud Coat* · 1 AP + 1 Time · CD 4 — Shield 2 for 2 rounds, and any foe that hits you in melee takes 2. *(P3/E3: Shield 2 for 2 rounds, and any foe that hits you in melee takes 4.)*
 
 **Shoulder Hump** · Mass · `bis_hump`
@@ -1608,7 +1608,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ruminate** · Time · `hoof_chew`
 
 - *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
-- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds.)*
 
 **Rapier Horns** · Mass · `ory_rapier`
 
@@ -1657,7 +1657,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ruminate** · Time · `hoof_chew`
 
 - *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
-- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
+- *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds.)*
 
 **Headbutt** · Mass · `ram_butt`
 
@@ -1813,7 +1813,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Waterhole** · Time · `zeb_water`
 
-- *Phys — Drink* · 1 AP · CD 2 — Heal 1, and shed Anchored, Weakened and damage over time. *(P3: Heal 4, and shed Anchored, Weakened and damage over time.)*
+- *Phys — Drink* · 1 AP · CD 2 — Heal 1, and cleanse (Anchored, Weakened, Wounds). *(P3: Heal 4, and cleanse (Anchored, Weakened, Wounds).)*
 - *Eth — Drink in Turns* · 1 AP + 1 Time · CD 4 — Both heroes heal 2 and hold Shield 1 this round. *(P3/E3: Both heroes heal 4 and hold Shield 1 this round.)*
 
 **Stripe Wall** · Time · `zeb_wall`
@@ -1847,8 +1847,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Scurry** · Space · `mou_scurry`
 
-- *Phys — Scurry* · 1 AP · CD 1 — Move 1, setting off no traps. *(P3: Move 4, setting off no traps.)*
-- *Eth — Every Which Way* · 1 AP + 1 Space · CD 3 — Move 4, through foes and past traps; Shield: the next hit on you is 2 less. *(P3/E3: Move 6, through foes and past traps; Shield: the next hit on you is 4 less.)*
+- *Phys — Scurry* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
+- *Eth — Every Which Way* · 1 AP + 1 Space · CD 3 — Move 4, through foes; Shield: the next hit on you is 2 less. *(P3/E3: Move 6, through foes; Shield: the next hit on you is 4 less.)*
 
 **Through the Gap** · Space · `mou_gap`
 
@@ -1912,7 +1912,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Bark Eater** · Time · `por_bark`
 
 - *Phys — Gnaw Bark* · 1 AP · CD 2 — Heal 1, and hold Shield 1 this round. *(P3: Heal 4, and hold Shield 1 this round.)*
-- *Eth — Salt Lick* · 0 AP + 1 Time · CD 4 — Shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 3 rounds. *(P3/E3: Shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 5 rounds.)*
+- *Eth — Salt Lick* · 0 AP + 1 Time · CD 4 — Cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 3 rounds. *(P3/E3: Cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 5 rounds.)*
 
 **Waddle** · Space · `por_waddle`
 
@@ -2024,7 +2024,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Slow Metabolism** · Time · `arm_slow`
 
 - *Phys — Conserve* · 1 AP · CD 2 — Shield 1 this round, and heal 1 at the start of each turn for 2 rounds. *(P3: Shield 1 this round, and heal 1 at the start of each turn for 3 rounds.)*
-- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and gain 1 AP next turn. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and gain 1 AP next turn.)*
+- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, cleanse (Anchored, Weakened, Wounds), and gain 1 AP next turn. *(P3/E3: Heal 5, cleanse (Anchored, Weakened, Wounds), and gain 1 AP next turn.)*
 
 **Algae Fur** · Time · `slo_algae`
 
@@ -2073,7 +2073,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Slow Metabolism** · Time · `arm_slow`
 
 - *Phys — Conserve* · 1 AP · CD 2 — Shield 1 this round, and heal 1 at the start of each turn for 2 rounds. *(P3: Shield 1 this round, and heal 1 at the start of each turn for 3 rounds.)*
-- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and gain 1 AP next turn. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and gain 1 AP next turn.)*
+- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, cleanse (Anchored, Weakened, Wounds), and gain 1 AP next turn. *(P3/E3: Heal 5, cleanse (Anchored, Weakened, Wounds), and gain 1 AP next turn.)*
 
 **Curl Up** · Time · `arm_curl`
 
@@ -2122,7 +2122,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Slow Metabolism** · Time · `arm_slow`
 
 - *Phys — Conserve* · 1 AP · CD 2 — Shield 1 this round, and heal 1 at the start of each turn for 2 rounds. *(P3: Shield 1 this round, and heal 1 at the start of each turn for 3 rounds.)*
-- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and gain 1 AP next turn. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and gain 1 AP next turn.)*
+- *Eth — Wait It Out* · 1 AP + 1 Time · CD 4 — Heal 3, cleanse (Anchored, Weakened, Wounds), and gain 1 AP next turn. *(P3/E3: Heal 5, cleanse (Anchored, Weakened, Wounds), and gain 1 AP next turn.)*
 
 **Curl Up** · Time · `arm_curl`
 
@@ -2161,7 +2161,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ant Armour** · Charge · `pan_ants`
 
-- *Phys — Ant Bath* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time; Shield 1 this round, and heal 1. *(P3: Shed Anchored, Weakened and damage over time; Shield 2 this round, and heal 1.)*
+- *Phys — Ant Bath* · 1 AP · CD 2 — Cleanse (Anchored, Weakened, Wounds); Shield 1 this round, and heal 1. *(P3: Cleanse (Anchored, Weakened, Wounds); Shield 2 this round, and heal 1.)*
 - *Eth — Stinging Shield* · 1 AP + 1 Charge · CD 4 — Cleanse, and for 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 3. *(P3/E3: Cleanse, and for 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 5.)*
 
 ## 44 · Hedgehog — leans T/M
@@ -2175,8 +2175,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Venom Shrug** · Time · `hed_venom`
 
-- *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
-- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
+- *Phys — Shrug It Off* · 1 AP · CD 2 — Cleanse (Anchored, Weakened, Wounds), and heal 1. *(P3: Cleanse (Anchored, Weakened, Wounds), and heal 4.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes cleanse (Anchored, Weakened, Wounds) and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes cleanse (Anchored, Weakened, Wounds) and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
 
 **Spines** · Mass · `heh_spines`
 
@@ -2186,7 +2186,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Snuffle** · Space · `heh_snuffle`
 
 - *Phys — Sniff About* · 1 AP · CD 1 — Snuffle 1, and reveal within 1 of where you stop. *(P3: Snuffle 4, and reveal within 1 of where you stop.)*
-- *Eth — Under the Hedge* · 1 AP + 1 Space · CD 3 — Move 3 under cover, setting off no traps; Hidden 1. *(P3/E3: Move 5 under cover, setting off no traps; Hidden 2.)*
+- *Eth — Under the Hedge* · 1 AP + 1 Space · CD 3 — Move 3 under cover; Hidden 1. *(P3/E3: Move 5 under cover; Hidden 2.)*
 
 **Hibernate** · Time · `heh_hibernate`
 
@@ -2260,7 +2260,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Desert Lick** · Time · `kan_lick`
 
 - *Phys — Lick Forearms* · 1 AP · CD 2 — Cool down: heal 1, and ignore hazards for 2 rounds. *(P3: Cool down: heal 4, and ignore hazards for 2 rounds.)*
-- *Eth — Rest in the Shade* · 0 AP + 1 Time · CD 4 — Shed Anchored, Weakened and damage over time; both heroes heal 1 at the start of each turn for 3 rounds. *(P3/E3: Shed Anchored, Weakened and damage over time; both heroes heal 1 at the start of each turn for 5 rounds.)*
+- *Eth — Rest in the Shade* · 0 AP + 1 Time · CD 4 — Cleanse (Anchored, Weakened, Wounds); both heroes heal 1 at the start of each turn for 3 rounds. *(P3/E3: Cleanse (Anchored, Weakened, Wounds); both heroes heal 1 at the start of each turn for 5 rounds.)*
 
 ## 46 · Opossum — leans T/C
 
@@ -2268,8 +2268,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Venom Shrug** · Time · `hed_venom`
 
-- *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
-- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
+- *Phys — Shrug It Off* · 1 AP · CD 2 — Cleanse (Anchored, Weakened, Wounds), and heal 1. *(P3: Cleanse (Anchored, Weakened, Wounds), and heal 4.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes cleanse (Anchored, Weakened, Wounds) and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes cleanse (Anchored, Weakened, Wounds) and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
 
 **Pouch** · Charge · `pou_pouch`
 
@@ -2293,8 +2293,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Clean Groom** · Time · `opo_groom`
 
-- *Phys — Groom* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
-- *Eth — Groom Each Other* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time, and heal 2. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time, and heal 4.)*
+- *Phys — Groom* · 1 AP · CD 2 — Cleanse (Anchored, Weakened, Wounds), and heal 1. *(P3: Cleanse (Anchored, Weakened, Wounds), and heal 4.)*
+- *Eth — Groom Each Other* · 1 AP + 1 Time · CD 4 — Both heroes cleanse (Anchored, Weakened, Wounds), and heal 2. *(P3/E3: Both heroes cleanse (Anchored, Weakened, Wounds), and heal 4.)*
 
 **Thumb Feet** · Space · `opo_thumb`
 
@@ -2303,7 +2303,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Night Wander** · Space · `opo_wander`
 
-- *Phys — Wander* · 1 AP · CD 1 — Wander 1, setting off no traps, and reveal within 1 of where you stop. *(P3: Wander 4, setting off no traps, and reveal within 1 of where you stop.)*
+- *Phys — Wander* · 1 AP · CD 1 — Wander 1, and reveal within 1 of where you stop. *(P3: Wander 4, and reveal within 1 of where you stop.)*
 - *Eth — Under Cover of Night* · 1 AP + 1 Space · CD 3 — Move 3, passing foes; Hidden 1 even if you move. *(P3/E3: Move 5, passing foes; Hidden 2 even if you move.)*
 
 **Scavenger’s Nose** · Charge · `opo_nose`
@@ -2372,7 +2372,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Keen Sight** · Charge · `rap_sight`
 
@@ -2421,7 +2421,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Keen Sight** · Charge · `rap_sight`
 
@@ -2441,7 +2441,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Kite** · Space · `haw_kite`
 
 - *Phys — Hang* · 1 AP · CD 1 — Slip 1 and hang on the wind: see within 2, and your next hit this turn deals +1. *(P3: Slip 4 and hang on the wind: see within 2, and your next hit this turn deals +1.)*
-- *Eth — Hold the Wind* · 0 AP + 1 Space · CD 4 — Hover for 2 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; see within 3. *(P3/E3: Hover for 4 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; see within 5.)*
+- *Eth — Hold the Wind* · 0 AP + 1 Space · CD 4 — Hover for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; see within 3. *(P3/E3: Hover for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; see within 5.)*
 
 **Talon Bind** · Mass · `haw_bind`
 
@@ -2455,7 +2455,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hedge Chase** · Space · `haw_hedge`
 
-- *Phys — Weave* · 1 AP · CD 1 — Weave 1 through cover, past foes and setting off no traps; your next hit this turn deals +1. *(P3: Weave 4 through cover, past foes and setting off no traps; your next hit this turn deals +1.)*
+- *Phys — Weave* · 1 AP · CD 1 — Weave 1 through cover, past foes and; your next hit this turn deals +1. *(P3: Weave 4 through cover, past foes and; your next hit this turn deals +1.)*
 - *Eth — Through the Hedge* · 1 AP + 1 Space · CD 3 — Burst out beside a foe within 3, hidden or not: melee 3, and you are Hidden 1. *(P3/E3: Burst out beside a foe within 5, hidden or not: melee 5, and you are Hidden 1.)*
 
 ## 50 · Crane — leans S/C
@@ -2465,7 +2465,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2519,7 +2519,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2563,7 +2563,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2603,7 +2603,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Graceful Lift** · Space · `egr_lift`
 
 - *Phys — Lift* · 1 AP · CD 1 — Lift onto any node within 1, height included, and hold Shield 1 this round. *(P3: Lift onto any node within 4, height included, and hold Shield 1 this round.)*
-- *Eth — Float* · 1 AP + 1 Space · CD 3 — Float for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes; heal 1, and your next hit deals +1. *(P3/E3: Float for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes; heal 1, and your next hit deals +1.)*
+- *Eth — Float* · 1 AP + 1 Space · CD 3 — Float for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes; heal 1, and your next hit deals +1. *(P3/E3: Float for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes; heal 1, and your next hit deals +1.)*
 
 ## 53 · Ibis — leans T/C
 
@@ -2612,7 +2612,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2661,7 +2661,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2710,7 +2710,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2764,7 +2764,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Plunge Dive** · Mass · `sea_plunge`
 
@@ -2808,7 +2808,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Big Bill** · Mass · `bil_big`
 
@@ -2857,7 +2857,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Plunge Dive** · Mass · `sea_plunge`
 
@@ -2905,13 +2905,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pattern Recognition** · Space · `hum_pattern`
 
-- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1.)*
 - *Eth — Weak Point* · 0 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
 
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Mimicry** · Charge · `bir_mimic`
 
@@ -2954,7 +2954,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pattern Recognition** · Space · `hum_pattern`
 
-- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.)*
+- *Phys — Spot* · 1 AP · CD 1 — Reveal everything within 1 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1. *(P3: Reveal everything within 4 (breaks Hidden, finds hidden objectives); your next strike this turn deals +1.)*
 - *Eth — Weak Point* · 0 AP + 1 Space · CD 3 — Expose a foe: the next hit on it ignores Shield and deals +1. *(P3/E3: Expose a foe: the next hit on it ignores Shield and deals +3.)*
 
 **Opposable Grip** · Mass · `hum_grip`
@@ -2965,7 +2965,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Mimicry** · Charge · `bir_mimic`
 
@@ -3004,7 +3004,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Big Bill** · Mass · `bil_big`
 
@@ -3053,12 +3053,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Hover** · Space · `hmb_hover`
 
 - *Phys — Hold Still* · 1 AP · CD 1 — Dart 1 and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1. *(P3: Dart 4 and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1.)*
-- *Eth — Hang in the Air* · 1 AP + 1 Space · CD 4 — Hover for 2 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; Shield 1 this round. *(P3/E3: Hover for 4 rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; Shield 1 this round.)*
+- *Eth — Hang in the Air* · 1 AP + 1 Space · CD 4 — Hover for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; Shield 1 this round. *(P3/E3: Hover for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; Shield 1 this round.)*
 
 **Thousand Beats** · Time · `hmb_beats`
 
@@ -3102,7 +3102,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Display Fan** · Charge · `bir_fan`
 
@@ -3151,7 +3151,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -3200,7 +3200,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: immune to push/pull, traps and hazards, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
 
 **Display Fan** · Charge · `bir_fan`
 
@@ -3283,7 +3283,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Slow Sway** · Time · `cha_sway`
 
-- *Phys — Sway* · 1 AP · CD 1 — Rock like a leaf in the wind: move 1, setting off no traps, Hidden 1. *(P3: Rock like a leaf in the wind: move 4, setting off no traps, Hidden 1.)*
+- *Phys — Sway* · 1 AP · CD 1 — Rock like a leaf in the wind: move 1, Hidden 1. *(P3: Rock like a leaf in the wind: move 4, Hidden 1.)*
 - *Eth — Leaf in the Wind* · 1 AP + 1 Time · CD 4 — Hidden 2 even if you move, and reroll 1 banked die. *(P3/E3: Hidden 4 even if you move, and reroll 1 banked die.)*
 
 **Casque** · Mass · `cha_casque`
@@ -3485,7 +3485,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Steady Plod** · Space · `tor_plod`
 
 - *Phys — Plod* · 1 AP · CD 1 — Plod 1, and hold Shield 1 this round. *(P3: Plod 4, and hold Shield 1 this round.)*
-- *Eth — Through Anything* · 1 AP + 1 Space · CD 3 — Plod 3 through anything, setting off no traps; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe. *(P3/E3: Plod 5 through anything, setting off no traps; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe.)*
+- *Eth — Through Anything* · 1 AP + 1 Space · CD 3 — Plod 3 through anything; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe. *(P3/E3: Plod 5 through anything; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe.)*
 
 ## 71 · Newt — leans T/C
 
@@ -3494,7 +3494,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Regeneration** ★ · Time · `axo_regen`
 
 - *Phys — Knit* · 1 AP · CD 1 — Knit a wound: heal 2. *(P3: Knit a wound: heal 5.)*
-- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.)*
+- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and Cleanse (every hold and Wound).)*
 
 **External Gills** · Charge · `axo_gills`
 
@@ -3513,7 +3513,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Eft Wander** ★ · Space · `new_eft`
 
-- *Phys — Wander* · 1 AP · CD 1 — Wander 1 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1. *(P3: Wander 4 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.)*
+- *Phys — Wander* · 1 AP · CD 1 — Wander 1 through the leaf litter; heal 1, and your next hit this turn deals +1. *(P3: Wander 4 through the leaf litter; heal 1, and your next hit this turn deals +1.)*
 - *Eth — Years on Land* · 1 AP + 1 Space · CD 3 — Walk 3, past foes, bright and unbothered: Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1. *(P3/E3: Walk 5, past foes, bright and unbothered: Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1.)*
 
 **Warning Belly** · Charge · `new_belly`
@@ -3596,8 +3596,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
-- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
 
 **Long Life** · Time · `bir_life`
 
@@ -3645,8 +3645,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
-- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
 
 **Schooling** · Space · `fis_school`
 
@@ -3694,8 +3694,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
-- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
 
 **Venom Spines** ★ · Mass · `lio_spines`
 
@@ -3709,7 +3709,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hover Stalk** · Time · `lio_hover`
 
-- *Phys — Drift Closer* · 1 AP · CD 1 — Drift 1, setting off no traps. *(P3: Drift 4, setting off no traps.)*
+- *Phys — Drift Closer* · 1 AP · CD 1 — Drift 1. *(P3: Drift 4.)*
 - *Eth — Hang Still* · 1 AP + 1 Time · CD 3 — Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +3. *(P3/E3: Hang motionless: Hidden 1, ignore hazards this round, and your next hit within 2 rounds deals +5.)*
 
 **Gulp** · Mass · `lio_gulp`
@@ -3743,8 +3743,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
-- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
 
 **Pouch** · Charge · `pou_pouch`
 
@@ -3788,7 +3788,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Boneless Squeeze** · Mass · `oct_squeeze`
 
 - *Phys — Squeeze* · 1 AP · CD 1 — Pour through any gap: escape every hold and step 1. *(P3: Pour through any gap: escape every hold and step 2.)*
-- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
+- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and Anchored (nothing moves you, your own steps included) for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and Anchored (nothing moves you, your own steps included) for 2 rounds.)*
 
 **Chemo-Suckers** · Charge · `oct_chemo`
 
@@ -3798,7 +3798,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Regeneration** ★ · Time · `axo_regen`
 
 - *Phys — Knit* · 1 AP · CD 1 — Knit a wound: heal 2. *(P3: Knit a wound: heal 5.)*
-- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.)*
+- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and Cleanse (every hold and Wound).)*
 
 **Shell** ★ · Mass · `tor_shell`
 
@@ -3837,17 +3837,17 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Boneless Squeeze** · Mass · `oct_squeeze`
 
 - *Phys — Squeeze* · 1 AP · CD 1 — Pour through any gap: escape every hold and step 1. *(P3: Pour through any gap: escape every hold and step 2.)*
-- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and immune to push/pull for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and immune to push/pull for 2 rounds.)*
+- *Eth — Compress* · 1 AP + 1 Mass · CD 3 — Compress your mass: Shield 3 against everything and Anchored (nothing moves you, your own steps included) for 1 round. *(P3/E3: Compress your mass: Shield 6 against everything and Anchored (nothing moves you, your own steps included) for 2 rounds.)*
 
 **Regeneration** ★ · Time · `axo_regen`
 
 - *Phys — Knit* · 1 AP · CD 1 — Knit a wound: heal 2. *(P3: Knit a wound: heal 5.)*
-- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.)*
+- *Eth — Regrow* · 0 AP + 1 Time · CD 4 · Dur 3 — Engine for 3 rounds: regenerate 3 each turn. *(P3/E3: Engine for 3 rounds: regenerate 5 each turn and Cleanse (every hold and Wound).)*
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
-- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: immune to push/pull and Shield 1. *(P3: Hold depth: immune to push/pull and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: immune to hazards, traps and push/pull. *(P3/E3: Alter your weight for 4 rounds: immune to hazards, traps and push/pull; an adjacent ally is anchored too.)*
+- *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
 
 **Nematocysts** ★ · Charge · `jel_sting`
 
@@ -3866,7 +3866,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bioluminescence** · Charge · `jel_glow`
 
-- *Phys — Glow* · 1 AP · CD 1 — Light up the water: see within 2 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1. *(P3: Light up the water: see within 5 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.)*
+- *Phys — Glow* · 1 AP · CD 1 — Light up the water: see within 2 (breaks Hidden, finds hidden objectives), and your next hit this turn deals +1. *(P3: Light up the water: see within 5 (breaks Hidden, finds hidden objectives), and your next hit this turn deals +1.)*
 - *Eth — Lure Light* · 1 AP + 1 Charge · CD 3 — Flash a ring of light at a node within 2: foes treat it as a hero for 2 rounds, and you go dark (Hidden 1). *(P3/E3: Flash a ring of light at a node within 2: foes treat it as a hero for 4 rounds, and you go dark (Hidden 1).)*
 
 **Bloom** · Time · `jel_bloom`
@@ -3920,7 +3920,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Long Feelers** · Charge · `lob_feelers`
 
-- *Phys — Feel Out* · 1 AP · CD 1 — Sweep your feelers: see within 2 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1. *(P3: Sweep your feelers: see within 5 (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.)*
+- *Phys — Feel Out* · 1 AP · CD 1 — Sweep your feelers: see within 2 (breaks Hidden, finds hidden objectives), and your next hit this turn deals +1. *(P3: Sweep your feelers: see within 5 (breaks Hidden, finds hidden objectives), and your next hit this turn deals +1.)*
 - *Eth — Taste the Water* · 1 AP + 1 Charge · CD 3 — Taste one foe on the water: Revealed for 2 rounds, and it is Marked +2 for 3 rounds. *(P3/E3: Taste one foe on the water: Revealed for 2 rounds, and it is Marked +4 for 3 rounds.)*
 
 **Rock Den** · Mass · `lob_den`
@@ -3984,7 +3984,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Chitinous Exoskeleton** · Mass · `hop_exo`
 
 - *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
-- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and Anchored (nothing moves you, your own steps included). *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and Anchored (nothing moves you, your own steps included).)*
 
 **Compound Eyes** · Space · `hop_eyes`
 
@@ -3993,7 +3993,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Antennae** · Charge · `ins_antennae`
 
-- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less.)*
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less.)*
 - *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: Revealed for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: Revealed for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Horn Lift** ★ · Mass · `btl_horn`
@@ -4038,7 +4038,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Glide Wings** · Space · `hop_glide`
 
 - *Phys — Buzz* · 1 AP · CD 1 — Glide 1, over foes. *(P3: Glide 4, over foes.)*
-- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: immune to hazards, traps and push/pull; mint 1 AP each turn.)*
+- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn.)*
 
 **Migration** · Space · `cra_migrate`
 
@@ -4047,7 +4047,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Antennae** · Charge · `ins_antennae`
 
-- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less.)*
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less.)*
 - *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: Revealed for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: Revealed for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Eyespots** ★ · Charge · `but_eyespots`
@@ -4067,7 +4067,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Erratic Flight** · Space · `but_flutter`
 
-- *Phys — Flutter* · 1 AP · CD 1 — Flit 1 this way and that, past foes and over traps. *(P3: Flit 4 this way and that, past foes and over traps.)*
+- *Phys — Flutter* · 1 AP · CD 1 — Flit 1 this way and that, past foes. *(P3: Flit 4 this way and that, past foes.)*
 - *Eth — Zigzag* · 1 AP + 1 Space · CD 3 — Zigzag where no one can follow: go to any node within 3, and Shield: the next hit on you is 3 less. *(P3/E3: Zigzag where no one can follow: go to any node within 5, and Shield: the next hit on you is 5 less.)*
 
 **Metamorphosis** · Time · `but_morph`
@@ -4082,7 +4082,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Chitinous Exoskeleton** · Mass · `hop_exo`
 
 - *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
-- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and Anchored (nothing moves you, your own steps included). *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and Anchored (nothing moves you, your own steps included).)*
 
 **Compound Eyes** · Space · `hop_eyes`
 
@@ -4091,7 +4091,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Antennae** · Charge · `ins_antennae`
 
-- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less.)*
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less.)*
 - *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: Revealed for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: Revealed for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Flash** ★ · Charge · `ffl_flash`
@@ -4131,7 +4131,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Chitinous Exoskeleton** · Mass · `hop_exo`
 
 - *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
-- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and Anchored (nothing moves you, your own steps included). *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and Anchored (nothing moves you, your own steps included).)*
 
 **Compound Eyes** · Space · `hop_eyes`
 
@@ -4140,7 +4140,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Antennae** · Charge · `ins_antennae`
 
-- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds traps and hidden objectives), and Shield: the next hit on you is 1 less.)*
+- *Phys — Feel the Air* · 1 AP · CD 1 — Feel the air: see within 1 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less. *(P3: Feel the air: see within 4 (breaks Hidden, finds hidden objectives), and Shield: the next hit on you is 1 less.)*
 - *Eth — Scent Trail* · 1 AP + 1 Charge · CD 3 — Smell out one foe: Revealed for 2 rounds, it is Marked +1 for 3 rounds, and your ally's next hit deals +1. *(P3/E3: Smell out one foe: Revealed for 2 rounds, it is Marked +2 for 3 rounds, and your ally's next hit deals +1.)*
 
 **Raptorial Strike** ★ · Mass · `man_strike`
@@ -4180,17 +4180,17 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Chitinous Exoskeleton** · Mass · `hop_exo`
 
 - *Phys — Brace Plates* · 1 AP · CD 1 · Dur 1 — Shield 2 this round. *(P3: Shield 5 this round.)*
-- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and immune to push/pull. *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and immune to push/pull.)*
+- *Eth — Densify* · 1 AP + 1 Mass · CD 3 — Armor for 2 rounds: Shield 2 against everything (even area) and Anchored (nothing moves you, your own steps included). *(P3/E3: Armor for 4 rounds: Shield 5 against everything (even area) and Anchored (nothing moves you, your own steps included).)*
 
 **Molt** · Space · `hop_molt`
 
-- *Phys — Shed* · 2 AP · CD 2 — Slip every hold and dot; Shield 1. *(P3: Slip every hold and dot; Shield 4.)*
+- *Phys — Shed* · 2 AP · CD 2 — Cleanse (every hold and Wound); Shield 1. *(P3: Cleanse (every hold and Wound); Shield 4.)*
 - *Eth — Husk* · 1 AP + 1 Space · CD 3 — Leave a hollow husk (decoy, 2 rounds) and blink up to 2 away. *(P3/E3: Leave a hollow husk (decoy, 4 rounds) and blink up to 4 away.)*
 
 **Venom Shrug** · Time · `hed_venom`
 
-- *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
-- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
+- *Phys — Shrug It Off* · 1 AP · CD 2 — Cleanse (Anchored, Weakened, Wounds), and heal 1. *(P3: Cleanse (Anchored, Weakened, Wounds), and heal 4.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes cleanse (Anchored, Weakened, Wounds) and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes cleanse (Anchored, Weakened, Wounds) and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
 
 **Tail Sting** ★ · Mass · `sco_sting`
 

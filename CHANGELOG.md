@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.98.1 — 2026-11-21 — the old words leave the card texts
+
+- **Card texts speak the keywords.** Faces that said *immune to push/pull* say *Anchored (nothing moves you, your own steps included)*, which is what they have done since 2.91; *shed Anchored, Weakened and damage over time* and *every hold and dot* say *Cleanse*; *Locate everything* says *Reveal*. The texts that promised to set off no traps lose that clause, and `move`'s `noTrap` option goes: a pilot never set off a trap, and since 2.86 a pilot's own Fields never touch it.
+- No rule, number or save changed.
+
 ## 2.98.0 — 2026-11-21 — Reveal; Lane cut
 
 The twelfth keyword of the sweep (`docs/reference/KEYWORDS.md`).

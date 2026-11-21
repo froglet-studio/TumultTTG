@@ -1696,10 +1696,8 @@
           }
           break;
         }
-        if (f.noTrap) actor.states.NoTrapStep = { t: 1 };
         const fromN = actor.pos;
         moveEntity(m, actor, dest, 'walk');
-        if (f.noTrap) delete actor.states.NoTrapStep;
         say(m, `${actor.name} moves ${fromN} → ${dest}.`, 'hero');
         onHeroEnter(m, actor, dest);
         break;

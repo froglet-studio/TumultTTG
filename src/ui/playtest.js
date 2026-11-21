@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.98.0',
+    version: '2.98.1',
     items: [
+      {
+        text: 'Card texts no longer use the retired words: immune to push/pull is now Anchored (which since 2.91 also keeps you from walking), shedding damage over time is Cleanse, and traps are gone from the texts (there are only Fields now). Spot any old word still on a card? Send it in the report.',
+        cards: ['tar_cling', 'jer_ears'],
+      },
       {
         text: 'Locate is now part of Reveal: a face that picks out one foe Reveals it for some rounds (it cannot be Hidden, and a zone strike finds it), and the faces say Revealed. The old Lane strike tooltip is gone: those faces say Zone strike, which is what they always did. Is Revealed clear on a foe token?',
         cards: ['che_tear', 'adi_snuffle'],
