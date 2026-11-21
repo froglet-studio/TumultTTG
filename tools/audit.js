@@ -103,6 +103,17 @@ function answersOf(x) {
     case 'swap':
     case 'rally':
       add('tempo', 'burst');
+      if (x.foe) add('single'); // put a foe where you stood: on your Field, out of its reach
+      break;
+    case 'throw':
+      add('tempo', 'burst');
+      if (x.height) add('height'); // the ally lands on the ledge
+      break;
+    case 'spring':
+      add('crowd', 'single'); // every Field, hazard and Wound around you goes off now
+      break;
+    case 'rewind':
+      add('attrition', 'burst'); // the round's hits, given back
       break;
     case 'hover':
       add('hazard', 'control');
@@ -218,6 +229,7 @@ const ABLATIONS = [
     'no way up',
     (x) =>
       (x.v === 'blink' && x.height) ||
+      (x.v === 'throw' && x.height) ||
       ['climb', 'weightless'].includes(x.v) ||
       (x.v === 'morph' && x.climb) ||
       (x.v === 'interact' && x.height),
@@ -252,8 +264,12 @@ const ABLATIONS = [
     'no shields or wards',
     (x) => ['shield', 'stasis', 'hidden', 'thorns'].includes(x.v) || (x.v === 'heal' && x.ward != null),
   ],
-  ['heal', 'no healing', (x) => x.v === 'heal' || (x.v === 'engine' && x.kind === 'regen')],
-  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'climb', 'swap', 'hover', 'weightless'].includes(x.v)],
+  ['heal', 'no healing', (x) => x.v === 'heal' || x.v === 'rewind' || (x.v === 'engine' && x.kind === 'regen')],
+  [
+    'mobility',
+    'no movement abilities',
+    (x) => ['move', 'blink', 'climb', 'swap', 'throw', 'hover', 'weightless'].includes(x.v),
+  ],
   [
     'control',
     'no foe control',
