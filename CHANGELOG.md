@@ -14,7 +14,7 @@
 - **Weapons are gear that makes your own strikes hit harder** (Garrett, 2026-11-21). The **Shock Baton** (6 ◇) adds 1 to every melee strike you make, the basic Strike and a Mass Channel included; the **Coil Rifle** (6 ◇) adds 1 to every ranged strike (along a line or at any range). Area strikes get nothing. A weapon never strikes on its own.
 - **Overcharge** takes a banked Omni die, not ◇: every Omni put on the weapon Empowers every strike of its reach by 2 this round, and they stack. No cooldown. An Omni spent there cannot pay an Ethereal face. Empower is the existing keyword; it can now cover a list of strike kinds and `stack`.
 - Each weapon has a second active paid in ◇: the Baton's Arc Guard (Thorns 2 this round) and the Rifle's Rangefinder (Revealed 2 rounds and Marked).
-- **Foes have 150% of their listed vitality** (was 145%), so the game is not easier: full look-ahead runs 101 → 112 of 200 with weapons at 145%, 102 at 150% (`docs/reference/BALANCE.md`).
+- **Foes have 150% of their listed vitality** (was 145%), so the game is not easier: full look-ahead runs 101 of 200 before, 112 with weapons at 145%, 102 at 150% (`docs/reference/BALANCE.md`).
 - In code: the passive hook `weapon` (`{ reach, n }`), `T.weaponBonus(h, kind)`, `T.canUseGear`, `T.gearCostText`, and a gear ability's `omni` cost. No save change.
 
 ## 2.101.0 — 2026-11-21 — no die drawn at random
