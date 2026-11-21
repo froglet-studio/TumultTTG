@@ -605,7 +605,9 @@
         const rest = spaces(2, 7).filter((i) => !posts.includes(i));
         while (posts.length < need + 1 && rest.length) posts.push(rest.shift());
         need = Math.min(need, posts.length - 1); // one post to spare: which to leave dark is a choice
-        posts.forEach((i) => (b.nodes[i].objective = { kind: 'mark', el: pick(rng, ['M', 'C', 'S', 'T']), veiled: false }));
+        posts.forEach(
+          (i) => (b.nodes[i].objective = { kind: 'mark', el: pick(rng, ['M', 'C', 'S', 'T']), veiled: false }),
+        );
         // patrols on the far half, on the ground, never on a post
         const crew = ['kiter', 'biter', 'stinger']
           .concat(tier >= 2 ? ['brute', 'binder'] : ['biter'])

@@ -51,7 +51,8 @@ test('big pages: every ground space reached on foot, water and gaps never walked
     const by = Object.fromEntries(Object.values(b.nodes).map((n) => [n.label, n.id]));
     const foot = (id) => !b.nodes[id].terrain || T.TERRAIN[b.nodes[id].terrain].foot;
     // water and gaps have no walking paths
-    for (const n of Object.values(b.nodes)) if (!foot(n.id)) assert.equal(b.walkAdj[n.id].length, 0, `${p.id} ${n.label}`);
+    for (const n of Object.values(b.nodes))
+      if (!foot(n.id)) assert.equal(b.walkAdj[n.id].length, 0, `${p.id} ${n.label}`);
     // every ground space can be walked to: no mission needs a vehicle
     const seen = new Set([by.A2]);
     const q = [by.A2];
@@ -146,7 +147,13 @@ test('a Drive moves the vehicle and everyone inside up to its speed, over its ow
   }
   // a passenger rides along: the crawler's pilot gets out and into the skiff (2 seats)
   give(b, 3);
-  T.leave(m, b, T.leaveOptions(m, b).sort((x, y) => T.Board.dist(m.board, x, skiff.pos, true) - T.Board.dist(m.board, y, skiff.pos, true))[0]);
+  T.leave(
+    m,
+    b,
+    T.leaveOptions(m, b).sort(
+      (x, y) => T.Board.dist(m.board, x, skiff.pos, true) - T.Board.dist(m.board, y, skiff.pos, true),
+    )[0],
+  );
   if (T.Board.adjacent(m.board, b.pos, skiff.pos)) {
     assert.ok(T.board(m, b, skiff.uid).ok);
     assert.equal(T.driveOptions(m, b).length, 0, 'only the driver drives');
@@ -222,4 +229,17 @@ test('both simulated players can play a Crossing to the end', () => {
       const m = H.playMission(run.mission, { player });
       assert.ok(m.over, `${player} on ${page}`);
     }
+});
+
+test('a save from 2.103 (mid-Crossing, a pilot in each vehicle) loads and plays on', () => {
+  const old = require('./fixtures/save-2.103.json');
+  assert.equal(old.v, 28);
+  const run = T.deserializeRun(JSON.stringify(old));
+  const m = run.mission;
+  assert.ok(m.vehicles.length, 'its vehicles came back');
+  for (const h of m.heroes) if (h.ride != null) assert.equal(T.vehicleOf(m, h).pos, h.pos);
+  const s = T.serializeRun(run);
+  assert.equal(T.serializeRun(T.deserializeRun(s)), s);
+  H.playMission(m, { maxRounds: 30 });
+  assert.ok(m.over);
 });

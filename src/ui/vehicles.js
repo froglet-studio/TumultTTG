@@ -7,9 +7,13 @@
 (function (T) {
   const U = (T.UI = T.UI || {});
   const esc = (s) =>
-    String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    String(s == null ? '' : s).replace(
+      /[&<>"']/g,
+      (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+    );
 
-  const groundWords = (d) => d.ground.map((t) => T.TERRAIN[t].name.toLowerCase()).join(', ') + (d.height ? ', high ground' : '');
+  const groundWords = (d) =>
+    d.ground.map((t) => T.TERRAIN[t].name.toLowerCase()).join(', ') + (d.height ? ', high ground' : '');
   /** One vehicle, as a card to pick. */
   function vehicleCard(d, i, on, mine) {
     const cards = d.cards
@@ -41,9 +45,7 @@
           <div class="veh-grid">${T.VEHICLES.map((d) => vehicleCard(d, i, shown === d.id, mine)).join('')}</div></div>`;
       })
       .join('');
-    const ground = page
-      ? `<p class="small">${page.rules.map((r) => '• ' + esc(r)).join('<br>')}</p>`
-      : '';
+    const ground = page ? `<p class="small">${page.rules.map((r) => '• ' + esc(r)).join('<br>')}</p>` : '';
     return `<div class="wrap garage">${U.header ? U.header('Vehicles') : ''}
       <div class="panel"><h2 style="margin:0">${esc(page ? page.name : 'Wide country')}</h2><p class="dim">${esc(page ? page.blurb : '')}</p>${ground}
       <p class="small">Each pilot brings one vehicle. Getting in or out costs 1 AP, and so does each Drive. Inside, you play only the vehicle's cards and your faces marked <b>Mounted</b>; blows land on the hull, and a wrecked vehicle throws its riders clear.</p>

@@ -93,7 +93,9 @@
         m,
         'Vehicles: ' +
           m.vehicles
-            .map((v) => `${m.heroes[v.owner].name} brings a ${T.vehicleDef(v).name}${v.driver ? '' : ' (parked nearby)'}`)
+            .map(
+              (v) => `${m.heroes[v.owner].name} brings a ${T.vehicleDef(v).name}${v.driver ? '' : ' (parked nearby)'}`,
+            )
             .join('; ') +
           '.',
         'sys',
@@ -123,7 +125,11 @@
     h.ride = v.uid;
     if (v.driver == null) v.driver = h.uid;
     rideOn(h, v);
-    say(m, `${h.name} gets into the ${T.vehicleDef(v).name}${v.driver === h.uid ? ' and takes the controls' : ''}.`, 'hero');
+    say(
+      m,
+      `${h.name} gets into the ${T.vehicleDef(v).name}${v.driver === h.uid ? ' and takes the controls' : ''}.`,
+      'hero',
+    );
     T.afterAction(m);
     return { ok: true };
   };
@@ -136,7 +142,8 @@
   T.leave = function (m, h, node) {
     const v = T.vehicleOf(m, h);
     if (!v) return { ok: false, why: 'not inside a vehicle' };
-    if (!T.leaveOptions(m, h).includes(node)) return { ok: false, why: T.apValue(h) < ENTER_AP ? 'need 1 AP' : 'nowhere to step' };
+    if (!T.leaveOptions(m, h).includes(node))
+      return { ok: false, why: T.apValue(h) < ENTER_AP ? 'need 1 AP' : 'nowhere to step' };
     T.pay(h, ENTER_AP);
     rideOff(h);
     if (v.driver === h.uid) passControls(m, v);
@@ -216,7 +223,8 @@
     const v = T.vehicleOf(m, h);
     if (!v) return { ok: false, why: 'not inside a vehicle' };
     if (v.driver !== h.uid) return { ok: false, why: 'someone else is driving' };
-    if (!T.driveOptions(m, h).includes(dest)) return { ok: false, why: held(m, v) ? 'Anchored' : T.apValue(h) < ENTER_AP ? 'need 1 AP' : 'out of reach' };
+    if (!T.driveOptions(m, h).includes(dest))
+      return { ok: false, why: held(m, v) ? 'Anchored' : T.apValue(h) < ENTER_AP ? 'need 1 AP' : 'out of reach' };
     const path = drivePath(m, v, dest);
     T.pay(h, ENTER_AP);
     const riders = T.ridersOf(m, v);
@@ -226,7 +234,11 @@
       if (!m.vehicles.includes(v)) break; // a Field on the way wrecked it
     }
     for (const r of riders) if (!r.downed) T.sightAround(m, r);
-    say(m, `${h.name} drives the ${T.vehicleDef(v).name} ${path.length - 1} space${path.length === 2 ? '' : 's'}.`, 'hero');
+    say(
+      m,
+      `${h.name} drives the ${T.vehicleDef(v).name} ${path.length - 1} space${path.length === 2 ? '' : 's'}.`,
+      'hero',
+    );
     T.afterAction(m);
     return { ok: true };
   };
@@ -257,7 +269,8 @@
     if (!chk.ok) return chk;
     const v = T.vehicleOf(m, h);
     const c = chk.card;
-    if (chk.tg.need === 'foe' && !(ctx && chk.tg.options.includes(ctx.target))) return { ok: false, why: 'choose a target' };
+    if (chk.tg.need === 'foe' && !(ctx && chk.tg.options.includes(ctx.target)))
+      return { ok: false, why: 'choose a target' };
     T.pay(h, c.ap, c.el, c.el ? 1 : 0);
     v.used.push(id);
     say(m, `${h.name}: ${T.vehicleDef(v).name} — ${c.n} (${c.ap} AP).`, 'hero');
@@ -284,7 +297,11 @@
     for (const r of riders) {
       rideOff(r);
       let spot = null;
-      if (footGround(bd, v.pos) && !T.liveEnemies(m).some((e) => e.pos === v.pos) && !m.heroes.some((x) => x !== r && x.pos === v.pos && !x.downed && x.ride == null))
+      if (
+        footGround(bd, v.pos) &&
+        !T.liveEnemies(m).some((e) => e.pos === v.pos) &&
+        !m.heroes.some((x) => x !== r && x.pos === v.pos && !x.downed && x.ride == null)
+      )
         spot = v.pos;
       if (spot == null) {
         const seen = new Set([v.pos]);

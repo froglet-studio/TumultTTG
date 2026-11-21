@@ -87,5 +87,8 @@ route's tier-2 rows where an event stood (Short row 2, Full row 4).
 
 | Crossing, 2 pilots (`node tools/sim.js 40`) | tier 1 | tier 2 | tier 3 |
 |---|---|---|---|
-| heuristic | see the PR | | |
-| look-ahead | | | |
+| heuristic | 65% | 18% | 3% |
+| look-ahead | 83% | 80% | 45% |
+
+Harder than a Survey at the same tier (look-ahead 100/98/93), on purpose: it replaces an event on the route, so
+full runs got no easier (heuristic 8/40 runs won before and after, look-ahead 19/40).

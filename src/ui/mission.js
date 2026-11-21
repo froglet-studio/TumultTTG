@@ -302,9 +302,9 @@
         { id: 'node-' + n.id, class: 'node', transform: `translate(${g.px(n)},${g.py(n)})`, 'data-node': n.id },
         nodes,
       );
-      // a big map's ground: water, a gap, rough ground (src/data/vehicles.js)
-      if (n.terrain) svgEl('circle', { r: 27, class: 'terrain t-' + n.terrain, fill: T.TERRAIN[n.terrain].color }, gr);
       svgEl('circle', { r: 27, class: 'ring' }, gr);
+      // a big map's ground: water, a gap, rough ground (src/data/vehicles.js), inside the ring
+      if (n.terrain) svgEl('circle', { r: 23, class: 'terrain t-' + n.terrain, fill: T.TERRAIN[n.terrain].color }, gr);
       // the outer ring shows the node's zones: one arc for each
       n.zones.forEach((zone, i) => {
         const k = n.zones.length;
@@ -720,7 +720,21 @@
   /** Does this screen take touches rather than a pointer that hovers? (jsdom, with no matchMedia: no.) */
   U.touch = () => typeof window !== 'undefined' && !!window.matchMedia && window.matchMedia('(hover: none)').matches;
   /** The moves a player can take back: those that only spend what is in hand, on the board in view. */
-  const TAKE_BACK = new Set(['face', 'basic', 'gear', 'item', 'interact', 'rally', 'valve', 'dump', 'walk', 'board', 'leave', 'drive', 'vcard']);
+  const TAKE_BACK = new Set([
+    'face',
+    'basic',
+    'gear',
+    'item',
+    'interact',
+    'rally',
+    'valve',
+    'dump',
+    'walk',
+    'board',
+    'leave',
+    'drive',
+    'vcard',
+  ]);
   /** Take-backs are for one screen playing alone or passing the screen; online, the host's mission is shared. */
   const takeBackOn = () => !(U.net && U.net.online && U.net.online());
   /** Called by U.exec before a command: the mission as it stands, if the command could be taken back. */

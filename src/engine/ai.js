@@ -550,7 +550,10 @@
       // beside the goal: out onto it (or beside it), to work it on foot
       const outs = T.leaveOptions(m, h);
       if (cur <= 1 && outs.length) {
-        const spot = outs.includes(goal.node) && goal.needOn ? goal.node : outs.sort((a, b) => d(a, goal.node) - d(b, goal.node) || a - b)[0];
+        const spot =
+          outs.includes(goal.node) && goal.needOn
+            ? goal.node
+            : outs.sort((a, b) => d(a, goal.node) - d(b, goal.node) || a - b)[0];
         if (d(spot, goal.node) <= (goal.needOn ? 0 : 1) && T.leave(m, h, spot).ok) return true;
       }
       if (v.driver === h.uid) {
@@ -570,7 +573,9 @@
     // on foot: back into a vehicle beside you when the goal is far
     if (goal && d(h.pos, goal.node) > 2) {
       const mine = T.boardOptions(m, h).sort(
-        (a, b) => (m.vehicles.find((v) => v.uid === b).owner === m.heroes.indexOf(h)) - (m.vehicles.find((v) => v.uid === a).owner === m.heroes.indexOf(h)),
+        (a, b) =>
+          (m.vehicles.find((v) => v.uid === b).owner === m.heroes.indexOf(h)) -
+          (m.vehicles.find((v) => v.uid === a).owner === m.heroes.indexOf(h)),
       )[0];
       if (mine != null && T.apValue(h) >= 2 && T.board(m, h, mine).ok) return true;
     }

@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.102.0',
+    version: '2.103.0',
     items: [
+      {
+        text: "Pocket vehicles and big maps. A new stop on the route, the Crossing, is played on a big map (Reed Delta or Ashfall Salt Flat: eight spaces across, with water, reeds, fissures and vents). Before it, each player picks a vehicle for their pilot: Skiff, Wing, Crawler, Diver or Runner, each with its own seats, speed, hull, ground it can cross and two cards (some carry long guns). Getting in or out is 1 AP, and so is each Drive. Inside you play only the vehicle's cards and your faces marked Mounted; blows land on the hull. Which vehicle did you pick, and did it pay for itself? Did you ever want to get out and walk?",
+      },
       {
         text: 'Fliers now Hover: off the ground, no hazard or Field touches them, nothing pushes or pulls them, and their flights can end on a ledge (hawk, eagle, crane, egret, owl, pelican, hummingbird, seahorse, winged insects). Coats, gills and swims still just ignore hazards. Did a flier reach somewhere you did not expect? Did the two ever read as the same thing?',
       },

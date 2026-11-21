@@ -981,7 +981,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 27;
+  T.SAVE_VERSION = 28;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1354,6 +1354,11 @@
     26(r) {
       if (r.length !== 'short' && r.length !== 'full') r.length = 'full';
       r.v = 27;
+    },
+    // 2.103 adds vehicles: a mission may hold `vehicles`, a pilot inside one `ride`, and a run waiting to set out on
+    // a Crossing `garage`. A save from before has none of them, and nothing in it changes.
+    27(r) {
+      r.v = 28;
     },
   };
   T.deserializeRun = function (json) {
