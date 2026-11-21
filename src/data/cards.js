@@ -50,9 +50,9 @@
     { n:'Read', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
       fx:[{v:'mark'},{v:'weaken', val:(P,E)=>h(P), dur:1}],
       txt:(P,E)=>`Mark a foe: the next hit on it deals +2${P>=2?`, and its own next hit deals −${h(P)}`:''}.` },
-    { n:'Pre-empt', ap:0, el:2, cd:3, dur:2, tgt:'self',
-      fx:[{v:'shield', next:true, val:(P,E)=>4+2*E, reflect:(P,E)=>1+E}],
-      txt:(P,E)=>`Pre-arm: Shield: Shield: the next hit on you is reduced by ${4+2*E} and reflects ${1+E} back. Dur 2.` },
+    { n:'Pre-empt', ap:0, el:2, cd:3, dur:0, tgt:'foe_any',
+      fx:[{v:'aim', radius:(P,E)=>E-1}],
+      txt:(P,E)=>`Read ${E>1?`a foe and every foe within ${E-1} of it`:'a foe'}: this round its attack is Aimed, at the space its target stands on now. Step away and it strikes whoever stands there then, foe or pilot.` },
     'A brain that models other minds.');
   C('human','hum_tool','Tool Use','S',2,
     { n:'Improvise', ap:1, el:0, cd:1, dur:0, tgt:'self',

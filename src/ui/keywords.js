@@ -90,6 +90,13 @@
       tip: 'Wound N: at round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). A new Wound replaces a smaller one.',
     },
     {
+      id: 'aimed',
+      re: 'Aimed',
+      icon: 'kw.mark',
+      tone: 'neutral',
+      tip: 'Aimed: the attack lands on the space its target stood on when it was telegraphed. It strikes whoever stands there then, foe or pilot; an empty space and it misses.',
+    },
+    {
       id: 'blink',
       re: 'Blink(?:s|ed|ing)?',
       icon: 'kw.hover',

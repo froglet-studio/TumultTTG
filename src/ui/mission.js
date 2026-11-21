@@ -1474,8 +1474,10 @@
           ? m.heroes.find((h) => h.uid === e.intent.target) || m.decoys.find((d) => d.uid === e.intent.target)
           : null;
       const a = N[e.pos];
-      if (tgt && N[tgt.pos]) {
-        const b = N[tgt.pos];
+      // an Aimed attack points at the space it will strike, not at the unit
+      const toward = e.intent.aim != null ? e.intent.aim : tgt ? tgt.pos : null;
+      if (toward != null && N[toward]) {
+        const b = N[toward];
         const dx = g.px(b) - g.px(a),
           dy = g.py(b) - g.py(a);
         const L = Math.hypot(dx, dy) || 1;

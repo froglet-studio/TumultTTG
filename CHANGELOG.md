@@ -9,6 +9,13 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.112.0 — 2026-11-21 — Aimed blows
+
+- **Aimed** (new keyword, from the shortlist's first pick). An Aimed attack is telegraphed at a space, not a pilot: when the foe acts, it strikes whoever stands on that space, foe or pilot, and a melee foe walks to it first. Step away and the blow lands on empty ground; leave a foe there and it takes the hit. The foe still acts, so no turn is taken.
+- **The Brute's Slam is Aimed.** You can dodge its big blow by stepping off the marked space, or turn it on another foe.
+- **Pre-empt** (Theory of Mind) changes from a Shield into a read. For 0 AP and 2 etherions it makes a foe's attack this round Aimed, and from E 2 the attack of every foe within E − 1 of it too (`aim`).
+- The intent line on the board points at the aimed space. No save change.
+
 ## 2.111.0 — 2026-11-21 — the rest of the costly faces
 
 The other five of the nine bundled costly faces (2.105.0 has the rule).
