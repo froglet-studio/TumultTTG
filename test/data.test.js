@@ -90,11 +90,12 @@ test('no face is the key to a lock: nothing settles a recurring problem outright
     for (const fk of ['P', 'E'])
       for (const x of c[fk].fx) {
         const id = `${c.id}.${fk}`;
-        if (x.v === 'reveal') {
+        if (x.v === 'reveal' && !x.target && !x.nearest) {
           assert.ok(at(x.radius, 1, 1) < 99, `${id}: reveals the whole board`);
           assert.ok(!x.findObjective, `${id}: finds the hidden objective from anywhere`);
         }
-        if (x.v === 'locate') assert.ok(at(x.dur, 3, 3) < 99, `${id}: locates a foe for the whole mission`);
+        if (x.v === 'reveal' && (x.target || x.nearest))
+          assert.ok(at(x.dur, 3, 3) < 99, `${id}: locates a foe for the whole mission`);
         if (x.v === 'interact') assert.ok(!x.height, `${id}: works a ledge from the floor`);
         if (x.v === 'stripShield') assert.ok(x.amount != null, `${id}: deletes any Shield outright`);
         if (x.v === 'strike') assert.notEqual(x.stripShield, true, `${id}: deletes any Shield outright`);

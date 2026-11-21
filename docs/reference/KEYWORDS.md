@@ -171,3 +171,13 @@ In code: the verb `haste` (`n`, `who`, `clock`, `free`, `dur`), the state `Freec
 - **Cleanse the ground:** hazards and foes' Fields within N are cleared (2.86).
 
 In code: the verb `cleanse` (`party`, `ward`, `field`); the state `StatusImmune`.
+
+## Reveal (2.98)
+
+> **Reveal N.** Everything within N is shown and Revealed this round: it can't be Hidden.
+
+- **Around you:** within N, Hidden foes are found, and hidden objectives within reach are searched.
+- **One foe:** it is Revealed for N rounds: it cannot be Hidden, and a zone strike finds it (what Locate did until 2.98).
+- A Reveal Field keeps everything in it Revealed (2.86).
+
+In code: the verb `reveal` (`radius`, `dur`, `target`, `nearest`, `findObjective`, `hintObjective`); the state `Located`.

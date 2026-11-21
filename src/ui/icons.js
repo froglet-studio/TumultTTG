@@ -378,7 +378,6 @@
     blink: 'gear.phasebrace',
     swap: 'gear.phasebrace',
     reveal: 'boon.keensense',
-    locate: 'boon.keensense',
     mark: 'basic.spot',
     hidden: 'enemy.lurker',
     decoy: 'event.mirror',

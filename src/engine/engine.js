@@ -1826,6 +1826,16 @@
       }
       /* ---------- INFORMATION ---------- */
       case 'reveal': {
+        // Reveal (2.96 absorbs locate): within N of you everything is shown; on one foe (`target`, `nearest`), it is
+        // Revealed for `dur`: it cannot be Hidden, and a zone strike finds it.
+        if (f.target || f.nearest) {
+          const t = f.nearest ? nearestFoe(m, actor) : targetEnt(m, ctx);
+          if (!t || t.kind !== 'enemy') break;
+          breakHidden(m, t, 'revealed');
+          addTimed(m, t, 'Located', num(f.dur, P, E) || 1);
+          ctx.lastTarget = t;
+          break;
+        }
         const r = num(f.radius, P, E);
         revealArea(m, actor, actor.pos, r, num(f.dur, P, E) || 1, { findObjective: !!f.findObjective });
         if (f.hintObjective && m.objective && m.objective.kind === 'find' && !m.objective.found) {
@@ -1833,14 +1843,6 @@
           const d = B.dist(bd, actor.pos, real, true);
           say(m, `The UV trail says the real cache is ${d} node${d === 1 ? '' : 's'} away.`, 'sys');
         }
-        break;
-      }
-      case 'locate': {
-        let t = f.nearest ? nearestFoe(m, actor) : targetEnt(m, ctx);
-        if (!t || t.kind !== 'enemy') break;
-        breakHidden(m, t, 'located');
-        addTimed(m, t, 'Located', num(f.dur, P, E) || 1);
-        ctx.lastTarget = t;
         break;
       }
       case 'mark': {
@@ -2906,7 +2908,7 @@
       Anchored: 'Anchored — nothing moves it: no push, no pull, and it cannot walk or blink. It still acts.',
       Marked: `Marked — ${[v.next ? `the next hit on it deals +${v.next}${v.pierce ? ' and ignores Shield' : ''}` : '', v.each ? `every hit deals +${v.each} for ${v.t}` : ''].filter(Boolean).join('; ')}.`,
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
-      Located: 'Located — cannot Hide; can be targeted and struck across a zone even if Hidden.',
+      Located: `Revealed for ${v.t} — cannot be Hidden; a zone strike finds it.`,
       Thorns: `Thorns — ${[v.v ? `melee attackers take ${v.v}` : '', v.next ? `the next takes ${v.next}${v.push ? ' and is pushed ' + v.push : ''}` : ''].filter(Boolean).join('; ')}.`,
       Preempt: `Shield ${v.v} against the next hit${v.reflect ? ', and ' + v.reflect + ' of it goes back' : ''}${v.reposition ? ', and you step away' : ''}.`,
       Stasis: 'Stasis — untargetable.',

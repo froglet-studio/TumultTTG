@@ -118,7 +118,6 @@ function answersOf(x) {
       add('unknown');
       if (x.findObjective || x.hintObjective) add('tempo');
       break;
-    case 'locate':
       add('unknown');
       break;
     case 'field': {
@@ -204,7 +203,7 @@ function soloRisks(x) {
   const out = [];
   if (x.v === 'reveal' && num(x.radius) >= 99) out.push('reveals the whole board');
   if (x.v === 'reveal' && x.findObjective) out.push('finds the hidden objective outright');
-  if (x.v === 'locate' && num(x.dur) >= 99) out.push('locates a foe for the whole mission');
+  if (x.v === 'reveal' && (x.target || x.nearest) && num(x.dur) >= 99) out.push('locates a foe for the whole mission');
   if (x.v === 'interact' && x.height) out.push('works the Vault from the floor');
   if ((x.v === 'stripShield' && x.amount == null) || (x.v === 'strike' && x.stripShield === true))
     out.push('deletes a Shield outright');
@@ -236,7 +235,7 @@ const ABLATIONS = [
     'reveal',
     'no reveals',
     (x) =>
-      ['reveal', 'locate'].includes(x.v) ||
+      x.v === 'reveal' ||
       (x.v === 'field' && x.fx.some((y) => y.kw === 'reveal')) ||
       (x.v === 'strike' && x.revealTarget),
   ],

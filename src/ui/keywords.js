@@ -136,11 +136,11 @@
     },
     {
       id: 'locate',
-      re: 'Locat(?:e|ed|es)',
+      re: 'Locat(?:e|ed|es)|Revealed',
       icon: 'kw.locate',
       tone: 'bad',
       state: 'Located',
-      tip: 'Located: cannot Hide, and can be struck across a zone even while Hidden.',
+      tip: 'Revealed: it cannot be Hidden while it lasts, and a zone strike finds it (Located until 2.96).',
     },
     {
       id: 'expose',
@@ -235,13 +235,6 @@
       tip: 'Melee: hits a foe on a node beside you. Breaks Hidden.',
     },
     {
-      id: 'lane',
-      re: 'Lane strike|lane',
-      icon: 'kw.lane',
-      tone: 'neutral',
-      tip: 'Lane strike: hits a foe you can see along the board, at any range.',
-    },
-    {
       id: 'zone',
       re: 'zone(?:s)?',
       icon: 'kw.zone',
@@ -257,7 +250,7 @@
     },
     {
       id: 'reveal',
-      re: 'Reveal(?:s|ed)?',
+      re: 'Reveal(?:s)?(?!ed)',
       icon: 'kw.reveal',
       tone: 'neutral',
       tip: 'Reveal: shows everything within range, breaks Hidden there and finds hidden objectives.',
@@ -323,6 +316,17 @@
   BY_STATE.SlowSelf = BY.slow;
   BY_STATE.Held = BY.anchor;
   U.kwOfState = (state) => BY_STATE[state] || null;
+  // the keyword a player reads for a state whose name in the engine is older than the keyword (the sweep, 2.86–2.98)
+  const STATE_NAMES = {
+    Preempt: 'Shield (next hit)',
+    Located: 'Revealed',
+    StatusImmune: 'Cleansed',
+    Weak: 'Weakened',
+    Freecast: 'Haste (free card)',
+    HazardImmune: 'Hazard-proof',
+    Engines: 'Each turn',
+  };
+  U.stateName = (state) => STATE_NAMES[state] || state;
 
   const RE = new RegExp('\\b(' + K.map((k) => '(' + k.re + ')').join('|') + ')\\b', 'gi');
   const which = (groups) => {
