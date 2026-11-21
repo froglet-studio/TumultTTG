@@ -50,7 +50,15 @@
 
   /** The face keys of a card: P and E for a trait, P, P2 and P3 for a pet's card. */
   T.PET_FACES = ['P', 'P2', 'P3'];
-  T.faceKeys = (cardId) => (T.CARD[cardId] && T.CARD[cardId].pet ? T.PET_FACES : ['P', 'E']);
+  T.faceKeys = (cardId) => {
+    const c = T.CARD[cardId];
+    return c && c.pet ? T.PET_FACES : c && c.faces ? c.faces : ['P', 'E']; // a gear card names its own (world.js)
+  };
+  /** A card that belongs to no clade: a pet's or a gear's. It counts toward the nine, never toward a 3-of-9. */
+  T.isKinless = (cardId) => {
+    const c = T.CARD[cardId];
+    return !!(c && (c.pet || c.gear));
+  };
   T.isPetCardId = (cardId) => typeof cardId === 'string' && cardId.startsWith('pet~');
   /** Build a pet's card from its record and put it in T.CARD. The same record always builds the same card. */
   T.registerPet = function (rec) {
