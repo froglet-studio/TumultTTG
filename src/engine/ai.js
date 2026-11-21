@@ -472,8 +472,8 @@
         m.board.ramp ||
         h.cards.some(
           (c) =>
-            T.CARD[c].E.fx.some((x) => (x.v === 'blink' && x.height) || x.v === 'climb') ||
-            T.CARD[c].P.fx.some((x) => x.v === 'climb'),
+            T.CARD[c].E.fx.some((x) => (x.v === 'blink' && x.height) || x.v === 'climb' || x.v === 'hover') ||
+            T.CARD[c].P.fx.some((x) => x.v === 'climb' || x.v === 'hover'),
         ) ||
         h.gear.some((g) => ['phasebrace', 'climbrig'].includes(g.id));
       return canReach ? { node: ob.node, needOn: true } : { node: ob.leverNode, needOn: false };

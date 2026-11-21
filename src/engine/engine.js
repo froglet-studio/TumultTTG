@@ -462,7 +462,8 @@
    * element, or Omni Core's ethereal d12), and the rest plain d20s, the AP dice. The choice stays from roll to
    * roll until changed. With nothing chosen, or none of that kind left in the pool, the element die is the kind
    * the pool holds most of (the first such in the pilot's set); with no element die in the pool it is plain, and
-   * with too few plain dice the rest are drawn at random. Choosing a die never chooses its face.
+   * with too few plain dice the rest are the element dice the pool holds most of. No die is ever drawn at random
+   * (2.101): a hand in the bag feels a d20 from a d8. Choosing a die never chooses its face.
    */
   T.setRollPick = function (h, kinds) {
     const set = T.diceSet(h);
@@ -505,11 +506,25 @@
     const take = T.rollPickNow(h).slice(0, k);
     while (take.length < k && left.filter((x) => x === 'plain').length > take.filter((x) => x === 'plain').length)
       take.push('plain');
+    // too few plain dice: the rest are element dice taken by hand, never at random (2.101): the kind the pool
+    // still holds most of, the first such in the pilot's set
+    while (take.length < k) {
+      const rest = left.slice();
+      take.forEach((x) => rest.splice(rest.indexOf(x), 1));
+      let best = null;
+      let most = 0;
+      for (const x of T.diceSet(h)) {
+        const c = rest.filter((y) => y === x).length;
+        if (c > most) ((most = c), (best = x));
+      }
+      if (!best) break;
+      take.push(best);
+    }
     const out = [];
     const kinds = [];
     const at = [];
     for (let i = 0; i < k; i++) {
-      const j = i < take.length ? left.indexOf(take[i]) : dice.int(left.length);
+      const j = left.indexOf(take[i]);
       const kind = left.splice(j, 1)[0];
       const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
@@ -579,11 +594,31 @@
   T.mint = (h, face, n) => {
     for (let i = 0; i < n; i++) h.temp.push(face);
   };
+  /**
+   * The die a pilot takes from the pool to Draw a face (2.101; Garrett, 2026-11-21: "grabbing a specific die is
+   * great, but not a random one"): a die is picked by hand, never at random. The plain d20 first (it has every
+   * face), then the element die that shows that face most, then any die that shows it; null if none can.
+   */
+  T.drawKind = function (h, face) {
+    const left = T.poolDice(h);
+    let best = null;
+    let most = 0;
+    for (const k of ['plain'].concat(left.filter((x, i) => x !== 'plain' && left.indexOf(x) === i))) {
+      if (!left.includes(k)) continue;
+      const c = T.dieFaces(h, k).filter((x) => x === face).length;
+      if (k === 'plain' && c > 0) return k;
+      if (c > most) ((most = c), (best = k));
+    }
+    return best;
+  };
+  /** Draw N: take N dice of your choice from the pool and bank them showing that face (T.drawKind). */
   T.draw = (h, face, n) => {
     let got = 0;
     for (let i = 0; i < n && h.pool > 0; i++) {
+      const kind = T.drawKind(h, face);
+      if (!kind) break;
       h.pool--;
-      bank(h, face, 'plain');
+      bank(h, face, kind);
       got++;
     }
     return got;
@@ -597,7 +632,7 @@
       h.pool++;
     });
     h.pool--;
-    bank(h, 'O', 'plain');
+    bank(h, 'O', T.drawKind(h, 'O') || 'plain');
     say(m, `${h.name} folds one of each etherion into an Omni.`, 'sys');
     return true;
   };
@@ -694,9 +729,9 @@
   function trapImmune(ent) {
     return !!(st(ent).Hover || st(ent).Weightless);
   }
-  /** Weightless heroes and climbing forms walk the climb edges up to height nodes. */
+  /** Hovering heroes and climbing forms walk the climb edges up to height nodes (Weightless: an older save's Hover). */
   function canClimb(ent) {
-    return !!(st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
+    return !!(st(ent).Hover || st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
   }
   function addTimed(m, ent, name, t, extra) {
     const cur = st(ent)[name];
@@ -1457,7 +1492,10 @@
       case 'node_move': {
         const mv = face.fx.find((x) => x.v === 'move');
         const n = num(mv.n, P, E);
-        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact) };
+        // a face that lifts you off the ground before it moves you (Hover, then Move) may take the ledges
+        const hi = face.fx.findIndex((x) => x.v === 'hover');
+        const lift = hi >= 0 && hi < face.fx.indexOf(mv);
+        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact, lift) };
       }
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'blink');
@@ -1485,9 +1523,9 @@
    * 2.81.1 it was the nodes whose *shortest* walk is n, which on a small or well-joined board left a run of 4
    * nowhere to go from most of it: the whole threshing floor of Mast-Crop Hills.)
    */
-  T.reachableWalk = function (m, h, n, ignoreFoes, exact) {
+  T.reachableWalk = function (m, h, n, ignoreFoes, exact, climb) {
     const bd = m.board;
-    const climber = canClimb(h);
+    const climber = canClimb(h) || !!climb;
     // a step onto y: is it allowed, and is y somewhere a walk may pass (but not stop, if occupied)?
     const step = (y) => {
       if (bd.nodes[y].height && !climber && !bd.ramp) return null;
@@ -2085,12 +2123,10 @@
         say(m, `${actor.name} steps outside time.`, 'hero');
         break;
       case 'hover':
-        addTimed(m, actor, 'Hover', num(f.dur, P, E), { noAp: !!f.noAp });
-        say(m, `${actor.name} hovers.`, 'hero');
-        break;
-      case 'weightless':
-        addTimed(m, actor, 'Weightless', num(f.dur, P, E));
-        say(m, `${actor.name} is weightless.`, 'hero');
+        // Hover N (2.102): off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you,
+        // and your steps may take the ledges. It folds in Weightless, and no longer mints AP.
+        addTimed(m, actor, 'Hover', num(f.dur, P, E));
+        say(m, `${actor.name} lifts off the ground.`, 'hero');
         break;
       case 'hazardImmune': {
         const d = num(f.dur, P, E);
@@ -2705,7 +2741,6 @@
         T.mint(h, 'AP', en.val || 1);
       }
     }
-    if (h.states.Hover && !h.states.Hover.noAp) T.mint(h, 'AP', 1);
     if (!h.rolledAhead) T.rollDice(m, h);
     // keen sense
     if (T.boonVals(h, 'keen').length)
@@ -3010,8 +3045,10 @@
       Thorns: `Thorns — ${[v.v ? `melee attackers take ${v.v}` : '', v.next ? `the next takes ${v.next}${v.push ? ' and is pushed ' + v.push : ''}` : ''].filter(Boolean).join('; ')}.`,
       Preempt: `Shield ${v.v} against the next hit${v.reflect ? ', and ' + v.reflect + ' of it goes back' : ''}${v.reposition ? ', and you step away' : ''}.`,
       Stasis: 'Stasis — untargetable.',
-      Hover: 'Hover — off the ground: hazards and Fields do not touch it; immune to push/pull.',
-      Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',
+      Hover:
+        'Hover — off the ground: hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges.',
+      Weightless:
+        'Hover — off the ground: hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges.',
       Morph: `Morph — strikes +${v.bonus}${v.reach ? ', reach 2' : ''}${v.climb ? ', can climb' : ''}.`,
       HazardImmune: 'Immune to hazards.',
       StatusImmune: 'Cleansed — no foe can Weaken or Anchor it while this lasts.',

@@ -9,6 +9,20 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.102.0 — 2026-11-21 — Hover lifts you off the ground
+
+- **Hover N: off the ground for N rounds.** No hazard or Field touches you, nothing pushes or pulls you, and your steps may take the ledges. Garrett settled the family: Hover is the fliers' keyword (hummingbirds, dragonflies and the rest hover, whatever their element), and ignoring hazards stays its own keyword for the coats, gills and salt feet that keep a pilot on the ground (`docs/reference/KEYWORDS.md`).
+- **Fliers fly onto ledges.** Eleven flying faces (Long Haul, Ride the Wind, Skim and Lift, Sky Dash, Sky Burst, Hold Still, Flutter, Run-Up, Wave Ride, and the Hover faces) Hover for the round in place of ignoring hazards, and the moving ones Hover first, so the flight may end on height.
+- **Weightless folds into Hover** (Hollow Bones, Lift's Float). Hover no longer mints 1 AP each turn.
+- Ignoring hazards has a tooltip of its own.
+- No save change: an older save's Weightless reads as Hover.
+
+## 2.101.0 — 2026-11-21 — no die drawn at random
+
+- **Every die that leaves the pool is one a hand could pick.** Garrett settled the dice keywords: Reroll and Draw stay, beside Mint, and nothing draws a die at random, because at the table a hand in the bag feels a d20 from a d8. Draw now takes a plain d20 while the pool holds one, then the element die that shows the face most (a d8 never shows AP); before, a Draw always banked a plain die, even from a pool with none left. A roll with too few plain dice takes the element dice the pool holds most of, where it used to draw the rest at random (`T.drawKind`, `docs/reference/KEYWORDS.md`).
+- Reroll and Draw have keyword tooltips.
+- No save change.
+
 ## 2.100.0 — 2026-11-21 — the rework and the keywords, together
 
 The rework was built on `bleeding-edge` while the dice and keyword plan went straight to `main`, and both numbered their releases from 2.82.0; the rework's are marked (rework) below the keyword plan's. This release brings them together; both sets of notes below still describe the game.

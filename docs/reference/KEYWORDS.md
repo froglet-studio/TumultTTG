@@ -25,7 +25,7 @@ Three lines share the keywords, and each is set by what it touches, how far it r
 - **How long.** For N rounds, or until it has sprung on as many units as it says (*the first foe to enter*
   is one).
 - **Who.** Its harm (Strike, Weaken, Anchor, Mark) falls on its side's foes, and its help (Hidden) on its own
-  side; a Reveal Field shows everything in it. Nothing off the ground (Hover, Weightless) is touched by a Field.
+  side; a Reveal Field shows everything in it. Nothing off the ground (Hover) is touched by a Field.
 - **A hazard is a Field of damage** that belongs to nobody: whoever ends the round on it takes the hazard's
   damage, Pierce.
 - **Cleanse the ground** within N clears hazards and foes' Fields there, never your own.
@@ -181,3 +181,47 @@ In code: the verb `cleanse` (`party`, `ward`, `field`); the state `StatusImmune`
 - A Reveal Field keeps everything in it Revealed (2.86).
 
 In code: the verb `reveal` (`radius`, `dur`, `target`, `nearest`, `findObjective`, `hintObjective`); the state `Located`.
+
+## Reroll, Draw and Mint: the dice (2.101)
+
+Three keywords for the dice, each a different thing a hand does at the table (Garrett, 2026-11-21: "reroll is
+great, and grabbing a specific die is great, but not a random one").
+
+> **Reroll N.** Pick up to N of your banked dice and roll them again.
+>
+> **Draw N.** Take N dice of your choice from your pool and bank them showing that face.
+>
+> **Mint N.** Bank N temporary dice showing that face; they are not among your 15 and are gone as the round ends.
+
+- **Never at random.** A hand in the bag feels a d20 from a d8, so no die ever leaves the pool at random. Draw
+  takes a plain d20 while the pool has one (it has every face), then the element die that shows the face most;
+  a d8 never shows AP. The roll's own dice are chosen the same way: three plain, one element die of your choice,
+  and with too few plain dice left, the element dice the pool holds most of (before 2.101 those were drawn at
+  random).
+- **What each spends.** Reroll changes what you hold, Draw spends your pool early (the 15 stay 15), and Mint adds
+  dice from outside it. The keyword plan's single Mint (Reroll and Draw folded into it) was not taken.
+
+In code: the verbs `reroll` (`n`), `draw` (`face`, `n`; the engine kind `draw` each turn), `mint` (`face`, `n`,
+`target`); `T.drawKind`, `T.draw`, `T.mint`, `T.rerollHeld`.
+
+## Hover, and ignoring hazards (2.102)
+
+> **Hover N.** Off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you, and your
+> steps may take the ledges.
+>
+> **Ignore hazards N.** For N rounds a hazard does you no harm. You are still on the ground.
+
+- **Two keywords, two meanings** (Garrett, 2026-11-21: "we want thematic and each to hold their own distinct
+  meaning"). Ignoring hazards is the body shrugging the place off: gills, a coat, salt feet, shed heat. Hover is
+  being above it all, so Fields, pushes and pulls miss you too, and the ledges are open to your steps. The plan's
+  option of folding all 87 hazard faces into Hover was not taken: that would have handed every coat and gill the
+  ledges.
+- **Who hovers.** Fliers, not one element: the hummingbird, hawk, eagle, crane, egret, owl, pelican, seahorse and
+  the winged insects (Glide Wings, Migration). Their flying moves Hover for the round before they move, so a flight
+  can end on a ledge; a coat, a swim or a run still ignores hazards.
+- **Weightless is Hover.** It was Hover plus the ledges; now Hover has the ledges, so the word went. Hover no
+  longer mints 1 AP a turn: a keyword says one thing, and the ledges are what it gained.
+
+In code: the verb `hover` (`dur`), the state `Hover` (an older save's `Weightless` reads as Hover); a face whose
+`hover` comes before its `move` is offered the ledges (`T.reachableWalk`'s `climb`). Ignoring hazards is the verb
+`hazardImmune` (`dur`, `party`), the state `HazardImmune`.
