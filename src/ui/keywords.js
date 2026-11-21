@@ -180,7 +180,15 @@
       icon: 'kw.hover',
       tone: 'good',
       state: 'Hover',
-      tip: 'Hover: off the ground, so hazards and Fields do not touch it, and it cannot be pushed or pulled.',
+      tip: 'Hover N: off the ground for N rounds. Hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges (height).',
+    },
+    {
+      id: 'ignorehazards',
+      re: "ignores? hazards|hazards (?:can’t|can't|don’t|don't) (?:touch|bother) you",
+      icon: 'kw.shield',
+      tone: 'good',
+      state: 'HazardImmune',
+      tip: 'Ignore hazards N: for N rounds a hazard does you no harm. You are still on the ground: Fields, pushes and pulls still reach you (Hover lifts you above all three).',
     },
     {
       id: 'empower',

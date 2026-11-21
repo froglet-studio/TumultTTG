@@ -1939,8 +1939,8 @@
   // Bald eagle: Hollow Bones, Talon Strike, Keen Sight, Stoop, and these five
   K(['eagle'],'eag_soar','Soar','S',0,
     { n:'Ride the Wind', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'hazardImmune', dur:1}],
-      txt:(P,E)=>`Glide ${1+P}, over foes; hazards can't touch you this round.` },
+      fx:[{v:'hover', dur:1},{v:'move', n:(P,E)=>1+P, ignoreFoes:true}],
+      txt:(P,E)=>`Hover this round and glide ${1+P}, over foes and ledges.` },
     { n:'High Circle', ap:1, el:1, cd:3, dur:0, tgt:'node_climb',
       fx:[{v:'climb', reach:(P,E)=>2+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Rise onto any node within ${2+E}, height included; see within ${2+E}, and your next hit this turn deals +1.` },
@@ -1966,8 +1966,8 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'force', kind:'pull', n:1}],
       txt:(P,E)=>`Swoop on a foe within 3: it takes ${1+P} and is dragged 1 toward you.` },
     { n:'Skim and Lift', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'heal', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Skim ${2+E}, over foes and through hazards, snatching a meal on the way: heal ${1+E}.` },
+      fx:[{v:'hover', dur:1},{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'heal', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Hover this round and skim ${2+E}, over foes and ledges, snatching a meal on the way: heal ${1+E}.` },
     'Down to the water and up again, and never wet past the ankles.');
   K(['eagle'],'eag_nest','Nest Guard','T',0,
     { n:'Over the Nest', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -1981,11 +1981,11 @@
   // Red-tailed hawk: Hollow Bones, Talon Strike, Keen Sight, Stoop, and these five
   K(['hawk'],'haw_hyper','Sky Hyperspeed','S',0,
     { n:'Sky Dash', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:4, exact:true, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'empower', val:(P,E)=>P, uses:1, dur:1}],
-      txt:(P,E)=>`Fly exactly 4, over foes and hazards${P ? `; your next strike this turn deals +${P}` : ''}.` },
+      fx:[{v:'hover', dur:1},{v:'move', n:4, exact:true, ignoreFoes:true},{v:'empower', val:(P,E)=>P, uses:1, dur:1}],
+      txt:(P,E)=>`Hover this round and fly exactly 4, over foes and ledges${P ? `; your next strike this turn deals +${P}` : ''}.` },
     { n:'Sky Burst', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:4, exact:true, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'empower', val:(P,E)=>2+E, uses:1, dur:1},{v:'mark', nearest:true}],
-      txt:(P,E)=>`Fly exactly 4, over foes and hazards; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +${2+E}.` },
+      fx:[{v:'hover', dur:1},{v:'move', n:4, exact:true, ignoreFoes:true},{v:'empower', val:(P,E)=>2+E, uses:1, dur:1},{v:'mark', nearest:true}],
+      txt:(P,E)=>`Hover this round and fly exactly 4, over foes and ledges; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +${2+E}.` },
     'The cheetah’s run, with nothing underfoot to slow it.');
   K(['hawk'],'haw_kite','Kite','S',0,
     { n:'Hang', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -1993,7 +1993,7 @@
       txt:(P,E)=>`Slip ${1+P} and hang on the wind: see within 2, and your next hit this turn deals +1.` },
     { n:'Hold the Wind', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hover', dur:(P,E)=>1+E},{v:'reveal', radius:(P,E)=>2+E, dur:1}],
-      txt:(P,E)=>`Hover for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; see within ${2+E}.` },
+      txt:(P,E)=>`Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); see within ${2+E}.` },
     'Perfectly still in a gale.');
   K(['hawk'],'haw_bind','Talon Bind','M',0,
     { n:'Bind', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -2077,8 +2077,8 @@
   // Crane: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, and these four
   K(['crane'],'cra_migrate','Migration','S',0,
     { n:'Long Haul', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>2+h(P)},{v:'hazardImmune', dur:1}],
-      txt:(P,E)=>`Fly ${2+h(P)}; hazards can't touch you this round.` },
+      fx:[{v:'hover', dur:1},{v:'move', n:(P,E)=>2+h(P)}],
+      txt:(P,E)=>`Hover this round and fly ${2+h(P)}, ledges included.` },
     { n:'Flyway', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>2+E},{v:'haste', n:(P,E)=>1+h(E)},{v:'heal', n:1}],
       txt:(P,E)=>`Fly ${2+E} and heal 1; Haste: your track slides ${1+h(E)} extra (your cards come back sooner).` },
@@ -2096,8 +2096,8 @@
       fx:[{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Stride ${1+P}.` },
     { n:'Run-Up', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'hazardImmune', dur:1}],
-      txt:(P,E)=>`Run, flap and lift: land on any node within ${3+E}, height included; hazards can't touch you this round.` },
+      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'hover', dur:1}],
+      txt:(P,E)=>`Run, flap and lift: land on any node within ${3+E}, height included, and Hover this round.` },
     'Three long steps and it is in the air.');
   K(['crane'],'cra_trumpet','Trumpet','C',0,
     { n:'Call', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -2164,8 +2164,8 @@
       fx:[{v:'climb', reach:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Lift onto any node within ${1+P}, height included, and hold Shield 1 this round.` },
     { n:'Float', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'weightless', dur:(P,E)=>1+E},{v:'empower', val:1, uses:1, dur:2},{v:'heal', n:1}],
-      txt:(P,E)=>`Float for ${1+E} rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes; heal 1, and your next hit deals +1.` },
+      fx:[{v:'hover', dur:(P,E)=>1+E},{v:'empower', val:1, uses:1, dur:2},{v:'heal', n:1}],
+      txt:(P,E)=>`Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); heal 1, and your next hit deals +1.` },
     'Up off the water without a splash.');
 
   // Ibis: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, and these four
@@ -2380,8 +2380,8 @@
       fx:[{v:'move', n:(P,E)=>2+h(P), ignoreFoes:true}],
       txt:(P,E)=>`Glide ${2+h(P)}, over foes.` },
     { n:'Wave Ride', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'blink', reach:(P,E)=>3+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'hazardImmune', dur:1}],
-      txt:(P,E)=>`Ride the air over a wave to any node within ${3+E}; see within ${2+E}, and ignore hazards this round.` },
+      fx:[{v:'blink', reach:(P,E)=>3+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'hover', dur:1}],
+      txt:(P,E)=>`Ride the air over a wave to any node within ${3+E}; see within ${2+E}, and Hover this round.` },
     'An inch above the swell, and never a wingbeat.');
   K(['pelican'],'pel_crash','Pelican Crash','M',0,
     { n:'Crash Down', ap:1, el:0, cd:2, dur:0, tgt:'foe_r3',
@@ -2640,11 +2640,11 @@
   // Hummingbird: Hollow Bones, and these eight
   K(['hummingbird'],'hmb_hover','Hover','S',0,
     { n:'Hold Still', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P},{v:'hazardImmune', dur:1},{v:'empower', val:1, uses:1, dur:1}],
-      txt:(P,E)=>`Dart ${1+P} and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1.` },
+      fx:[{v:'hover', dur:1},{v:'move', n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Hover this round and dart ${1+P}, ledges included; your next hit this turn deals +1.` },
     { n:'Hang in the Air', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hover', dur:(P,E)=>1+E},{v:'shield', val:1, dur:1}],
-      txt:(P,E)=>`Hover for ${1+E} rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; Shield 1 this round.` },
+      txt:(P,E)=>`Hover ${1+E} (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); Shield 1 this round.` },
     'Wings in a figure eight, and it does not move an inch.');
   K(['hummingbird'],'hmb_beats','Thousand Beats','T',0,
     { n:'Blur', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3445,8 +3445,8 @@
     'No scales: rings of bone, all the way down.');
   K(['seahorse'],'sea_fin','Slow Fin','S',0,
     { n:'Flutter', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>1+P},{v:'hazardImmune', dur:1}],
-      txt:(P,E)=>`Flutter ${1+P}; hazards can't touch you this round.` },
+      fx:[{v:'hover', dur:1},{v:'move', n:(P,E)=>1+P}],
+      txt:(P,E)=>`Hover this round and flutter ${1+P}, ledges included.` },
     { n:'Ride the Current', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Let the current carry you to any node within ${2+E}; Hidden 1, and hazards can't touch you this round.` },
