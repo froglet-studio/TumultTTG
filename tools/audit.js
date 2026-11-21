@@ -170,11 +170,8 @@ function answersOf(x) {
       if (x.field == null || x.states) add('control');
       break;
     case 'heal':
-    case 'revive':
       add('attrition');
-      break;
-    case 'phoenix':
-      add('attrition', 'burst');
+      if (x.ward != null) add('burst'); // a held Heal answers the hit that would down you
       break;
     case 'absorb':
       add('burst', 'tempo');
@@ -265,9 +262,11 @@ const ABLATIONS = [
   [
     'mitigation',
     'no shields or wards',
-    (x) => ['shield', 'preempt', 'guard', 'stasis', 'counter', 'hidden', 'absorb', 'phoenix', 'thorns'].includes(x.v),
+    (x) =>
+      ['shield', 'preempt', 'guard', 'stasis', 'counter', 'hidden', 'absorb', 'thorns'].includes(x.v) ||
+      (x.v === 'heal' && x.ward != null),
   ],
-  ['heal', 'no healing', (x) => ['heal', 'revive'].includes(x.v) || (x.v === 'engine' && x.kind === 'regen')],
+  ['heal', 'no healing', (x) => x.v === 'heal' || (x.v === 'engine' && x.kind === 'regen')],
   [
     'mobility',
     'no movement abilities',

@@ -81,3 +81,16 @@ passives carry what boons did, and the actives what consumables did (`docs/refer
 table).
 
 Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Push N** (away from it).
+
+## Heal (2.90)
+
+> **Heal N.** Restore N vitality; on a downed pilot, it gets up with N.
+
+- **Who.** You, your ally, both pilots, or a downed ally beside you, as the face says. A heal for both pilots
+  reaches a downed one wherever it lies.
+- **A held Heal** (`ward`): if you go down within N rounds, it lands then and you get up with its number.
+- **Tech heals only through a Field or the downed:** the Medkit's mending Field, and its Revive.
+- **Rally** is the basic action, not a keyword: 2 AP, a downed ally beside you gets up with 8.
+
+It replaced `revive` and `phoenix`. In code: the verb `heal` (`n`, `party`, `target`: `ally` / `chosenAlly` /
+`downedAdj`, `ward`, `doubleIfLow`), `T.healUnit`, the Field keyword `heal`.

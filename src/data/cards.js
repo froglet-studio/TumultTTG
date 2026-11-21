@@ -754,11 +754,11 @@
     'Compounds each round.');
   C('cordyceps','cor_regrowth','Network Regrowth','T',1,
     { n:'Fragment', ap:2, el:0, cd:3, dur:0, tgt:'self',
-      fx:[{v:'heal', n:(P,E)=>2+P},{v:'revive', hp:4, adjacent:true}],
-      txt:(P,E)=>`Regrow from a fragment: heal ${2+P}; if a downed ally is adjacent, they rise with 4 hp.` },
+      fx:[{v:'heal', n:(P,E)=>2+P},{v:'heal', n:4, target:'downedAdj'}],
+      txt:(P,E)=>`Regrow from a fragment: heal ${2+P}, and Heal 4 a downed ally beside you (it gets up).` },
     { n:'Reconstitute', ap:0, el:2, cd:5, dur:3, tgt:'self',
-      fx:[{v:'phoenix', hp:(P,E)=>6+E, dur:3}],
-      txt:(P,E)=>`Seed a node where you stand: if you are downed within 3 rounds, you re-form there with ${6+E} hp.` },
+      fx:[{v:'heal', n:(P,E)=>6+E, ward:3}],
+      txt:(P,E)=>`Seed a node where you stand and hold a Heal: if you are downed within 3 rounds, Heal ${6+E} (you get up).` },
     'Any node remains, you remain.');
   C('cordyceps','cor_enzyme','Enzyme Spray','M',0,
     { n:'Spit', ap:1, el:0, cd:1, dur:0, tgt:'foe_los',
@@ -823,8 +823,8 @@
       fx:[{v:'heal', n:(P,E)=>2+P, doubleIfLow:true}],
       txt:(P,E)=>`Rehydrate: heal ${2+P} (doubled below 25% vitality).` },
     { n:'Guaranteed Return', ap:1, el:1, cd:5, dur:3, tgt:'self',
-      fx:[{v:'phoenix', hp:(P,E)=>4+2*E, dur:3}],
-      txt:(P,E)=>`If you are downed within 3 rounds, revive at once with ${4+2*E} hp.` },
+      fx:[{v:'heal', n:(P,E)=>4+2*E, ward:3}],
+      txt:(P,E)=>`Hold a Heal: if you are downed within 3 rounds, Heal ${4+2*E} at once (you get up).` },
     'A death-like state, then function.');
   C('tardigrade','tar_extremo','Extremophile Traversal','S',1,
     { n:'Endure', ap:1, el:0, cd:1, dur:0, tgt:'self',

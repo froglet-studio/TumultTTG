@@ -389,7 +389,6 @@
     morph: 'event.mirror',
     heal: 'gear.medkit',
     cleanse: 'gear.medkit',
-    phoenix: 'boon.defiant',
     mint: 'cons.shard',
     empower: 'gear.capacitor',
     engine: 'gear.capacitor',

@@ -21,7 +21,7 @@ The rules this checks:
 | 1 · useful somewhere | OK — every face answers at least one problem |
 | 2 · no gates | OK — no mission type collapses when one family of answers is removed; but with no cards at all, missions whose objective is a kill are all but unwinnable |
 | 3 · no hard counters | OK — no narrow face settles a mission on its own |
-| 4 · staple or flexible tool | 999 staples, 59 tools, **0 narrow** |
+| 4 · staple or flexible tool | 1003 staples, 55 tools, **0 narrow** |
 | what was played | the look-ahead player can play all 1058 faces; 6 it held and never played, and 7 it played almost only in one mission type |
 
 ## The ten problems, and how many faces answer each
@@ -35,8 +35,8 @@ The rules this checks:
 | The unseen | hidden caches, Lurkers, a faded Harrier | 152 | 145 |
 | The clock | every objective mission, the flood | 346 | 340 |
 | Hazards and being dragged | flood tiles, undertow, the Heart’s pull | 126 | 115 |
-| One big telegraphed hit | Slam, Ambush, Phase Lance, Crush | 736 | 687 |
-| Attrition | vitality carried from mission to mission | 195 | 189 |
+| One big telegraphed hit | Slam, Ambush, Phase Lance, Crush | 736 | 691 |
+| Attrition | vitality carried from mission to mission | 195 | 193 |
 | Control on you | Rooted, Weakened, pushed and pulled | 121 | 111 |
 
 A problem with few answers is a gate waiting to happen; a problem with very many is not really a problem. Both are design smells.
@@ -53,7 +53,7 @@ Win rate of two random legal heroes (no gear, no boons) played by the look-ahead
 | no reveals | 442 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 31% |
 | no area damage | 496 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 94% | 100% | 100% | 19% |
 | no shields or wards | 260 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 50% |
-| no healing | 394 | 100% | 100% | 94% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 25% |
+| no healing | 393 | 100% | 100% | 100% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 25% |
 | no movement abilities | 368 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 38% |
 | no foe control | 359 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 31% |
 | no hazard answers | 434 | 100% | 100% | 100% | 75% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 38% |
@@ -346,7 +346,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Hyphal Drain — Bore (Phys) | staple | One tough foe, Attrition | 3/1 (3.00) |  |
 | Hyphal Drain — Parasitize (Eth) | staple | One tough foe | 0/0 |  |
 | Network Regrowth — Fragment (Phys) | staple | Attrition | 1/5 (0.20) |  |
-| Network Regrowth — Reconstitute (Eth) | tool | One big telegraphed hit, Attrition | 0/2 (0.00) |  |
+| Network Regrowth — Reconstitute (Eth) | staple | One big telegraphed hit, Attrition | 0/2 (0.00) |  |
 | Enzyme Spray — Spit (Phys) | staple | One tough foe, Shields | 0/8 (0.00) |  |
 | Enzyme Spray — Saturate (Eth) | staple | One tough foe, A crowd, Shields, The unseen | 4/8 (0.50) |  |
 | Mycorrhizal Bond — Bond (Phys) | staple | The clock, Attrition | 1/7 (0.14) |  |
@@ -367,7 +367,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Clawed Grip — Clamp (Phys) | staple | One tough foe, Hazards and being dragged, One big telegraphed hit, Control on you | 3/4 (0.75) |  |
 | Clawed Grip — Immovable Hold (Eth) | staple | One tough foe, Hazards and being dragged, One big telegraphed hit, Control on you | 0/4 (0.00) |  |
 | Anhydrobiosis Revival — Rehydrate (Phys) | staple | Attrition | 3/8 (0.38) |  |
-| Anhydrobiosis Revival — Guaranteed Return (Eth) | tool | One big telegraphed hit, Attrition | 0/0 |  |
+| Anhydrobiosis Revival — Guaranteed Return (Eth) | staple | One big telegraphed hit, Attrition | 0/0 |  |
 | Extremophile Traversal — Endure (Phys) | staple | Hazards and being dragged, One big telegraphed hit | 0/4 (0.00) |  |
 | Extremophile Traversal — Cross the Void (Eth) | staple | Height, The clock, One big telegraphed hit | 1/4 (0.25) |  |
 | Stylet Drain — Pierce (Phys) | staple | One tough foe, Shields | 0/5 (0.00) |  |
@@ -1487,7 +1487,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Bloom — Drift Together (Phys) | staple | One tough foe, A crowd, One big telegraphed hit | 5/5 (1.00) |  |
 | Bloom — Swarm (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/0 |  |
 | Turn Back — Shed (Phys) | staple | Attrition, Control on you | 3/10 (0.30) |  |
-| Turn Back — Young Again (Eth) | tool | One big telegraphed hit, Attrition | 0/1 (0.00) |  |
+| Turn Back — Young Again (Eth) | staple | One big telegraphed hit, Attrition | 0/1 (0.00) |  |
 
 ### Lobster
 
@@ -1544,7 +1544,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Strong Back — Dig In (Phys) | staple | One tough foe, Hazards and being dragged, Control on you | 0/6 (0.00) |  |
 | Strong Back — Carry (Eth) | staple | A crowd, The clock, One big telegraphed hit | 2/2 (1.00) |  |
 | Play Dead — Drop (Phys) | staple | One big telegraphed hit | 1/7 (0.14) |  |
-| Play Dead — Not Dead Yet (Eth) | tool | One big telegraphed hit, Attrition | 0/1 (0.00) |  |
+| Play Dead — Not Dead Yet (Eth) | staple | One big telegraphed hit, Attrition | 0/1 (0.00) |  |
 
 ### Butterfly
 

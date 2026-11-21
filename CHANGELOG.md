@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.90.0 — 2026-11-21 — Heal raises the downed
+
+The fourth keyword of the sweep (`docs/reference/KEYWORDS.md`; Garrett, 2026-11-21: Heal raises the downed, Rally stays the basic action).
+
+- **Heal N.** Restore N vitality; a downed pilot a Heal reaches gets up with N. Every heal for both pilots, or for your ally, now raises a downed one (`T.healUnit`).
+- **Revive and Phoenix are Heals.** Regrow's revive is *Heal 4 a downed ally beside you*; the five faces that brought you back are a **held Heal** (`ward`): if you go down within 3 rounds, it lands and you get up with that much.
+- **Medkit (tech heals only through a Field or the downed).** Patch lays a mending Field on and beside your space for 2 rounds (allies ending the round there Heal 3, a downed one gets up); Revive is Heal 10 a downed ally beside you. Field gained the Heal keyword.
+- **Rally** stays the basic action: 2 AP, a downed ally beside you gets up with 8.
+- **Balance.** Same seeds, 2.89.0 → 2.90.0: `80 runs --player strong` 38 → 40; `120 runs --player weak` 11 → 11; `node tools/sim.js 40` runs 6 → 6 and 21 → 22 of 40, mission wins 70% → 70% and 88% → 89%. Within the noise, so nothing is retuned. No save change (a held Heal is the old `Phoenix` state).
+
 ## 2.89.0 — 2026-11-21 — boons and consumables fold into gear
 
 The keyword plan's third line, ethereal technology (`docs/reference/KEYWORDS.md`): gear works on spaces, the dice, the clock and the downed, is bought rather than trained, and strikes only through a Field.
