@@ -25,6 +25,17 @@
         text: 'Dice as AP: a banked Omni, or any two banked etherions (the same or different), now make 1 AP, at no cost and as often as you like. Press ◇→AP (it stands beside the four basic actions when spare dice would pay for a card you hold), then click an Omni or two element dice: they go back to the pool and you gain 1 AP for this turn. A face you could pay for this way says ◇→AP to pay. Folding one each of M, C, S and T into an Omni still works. Did you ever end a turn with an element you could not use? Was spending it as AP a real choice against saving it for an Ethereal face or an Overcharge?',
       },
       {
+        text: "Some blows are Aimed now: the foe strikes a space, not a pilot. The Brute's Slam is Aimed, so step off the marked space and it lands on empty ground, or leave another foe there to take it. Pre-empt (Theory of Mind) makes any foe's attack Aimed for the round.",
+        cards: ['hum_mind'],
+      },
+      {
+        text: 'Five more costly faces now each do one thing nothing else does. Apex Form makes your melee strikes knock foes back, and a foe stopped short crashes into whatever is in the way: both take the hit. Immovable Hold locks on to a foe, which is dragged along beside you when you walk. Neurotoxin fixes a foe on its plan: it repeats this round’s intent for the next rounds, so you know what it will do. Step Out of Time no longer heals, and Tesla Cascade no longer strips Shield; their Link and untargetable parts stay. Did a crash, a drag or a fixed foe ever set up a turn you planned around?',
+        cards: ['axo_meta', 'tar_claw', 'oct_bite', 'tar_crypto', 'eel_discharge'],
+      },
+      {
+        text: 'Missions are sized by squad power: each pilot brings 10, and 1 more for every level past 1; two new pilots are 20, and every point past that makes foes tougher, and more of them, with more to do. Pilots who grow faster than the route expects meet missions that grow with them, and if the whole squad goes down the expedition ends (the Lifeline only carries a mission lost with someone standing). Hover the ⚖ pill on the route to see your power. With seasoned pilots, did a mission feel too easy or too hard? Did a bigger, newer squad and a smaller, seasoned one with the same power feel alike?',
+      },
+      {
         text: 'Pocket pets are here. A haven may have a stray: a hybrid of three clades (never human) with one card that holds a Physical face from each of them. Adopt it for 4 ◇ (two pets at most); its card is a card like any other, in your kit or your reserve, and the pet only sets out when its card flies. A pet on your node rides with you in any vehicle. Any one of its three faces sends the whole card to your track, and the face acts from the pet: its reach, its strike, its steps. Heel (1 AP) walks it up to 3. Did playing a card through the pet read clearly on the board?',
       },
       {

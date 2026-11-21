@@ -125,10 +125,11 @@ test('the same seed is the same board, whoever plays it', () => {
         const plain = T.newRun(seed);
         H.prebuiltSquad(plain, 0, 1);
         T.launchMission(plain, arch, tier);
-        // another squad entirely, built with a great many more draws
+        // another squad entirely, built with a great many more draws, grown as the road expects by this tier
+        // (a squad grown past that meets a mission that grows with it: src/engine/scaling.js)
         const other = T.newRun(seed);
         H.draftedSquad(other);
-        H.addProgression(other, 2);
+        H.addProgression(other, tier);
         T.runStream(other, 'squad').shuffle([1, 2, 3, 4, 5, 6, 7]);
         T.launchMission(other, arch, tier);
         assert.equal(board(other.mission), board(plain.mission), `${arch} t${tier} seed ${seed}`);

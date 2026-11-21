@@ -84,6 +84,20 @@ test('a lost mission held by the Lifeline offers nothing and is settled at once'
   assert.ok(T.rewardSettled(run.lastReward));
 });
 
+test('the whole squad down ends the expedition: the Lifeline carries only a mission lost with someone standing', () => {
+  const run = T.newRun(5);
+  H.prebuiltSquad(run, 0, 1);
+  T.launchMission(run, 'swarm', 1);
+  run.mission.heroes.forEach((h) => ((h.hp = 0), (h.downed = true)));
+  run.mission.won = false;
+  run.mission.over = true;
+  T.missionRewards(run, run.mission);
+  T.applyMissionResult(run);
+  assert.ok(run.over, 'the expedition is over');
+  assert.equal(run.lifeline, 1, 'the Lifeline is not spent on it');
+  assert.ok(run.stats.wiped);
+});
+
 test('a save from 2.22 on the reward screen loads with an offer for each hero', () => {
   const old = require('./fixtures/save-2.22.json');
   assert.equal(old.v, 8, 'the fixture is a version-8 save');

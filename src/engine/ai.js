@@ -53,6 +53,11 @@
   /* ───────────────────────────── INTENTS ───────────────────────────── */
   T.chooseIntents = function (m) {
     for (const e of T.liveEnemies(m)) {
+      // a Fixed foe repeats the intent it was fixed on (same move, same target)
+      if (e.states.Fixed && e.states.Fixed.intent) {
+        e.intent = JSON.parse(JSON.stringify(e.states.Fixed.intent));
+        continue;
+      }
       const A = T.ENEMIES[e.type].abilities;
       let intent = null;
       const setI = (key, target, extra, opts) => {
@@ -175,8 +180,50 @@
         }
       }
       e.intent = intent;
+      // an aimed ability strikes the space its target stands on now, whoever stands there when it lands
+      if (intent && A[intent.key].aimed) T.aimIntent(m, e);
     }
   };
+  /**
+   * Aimed (2.103): the intent locks on the space its target stands on now. When it lands it strikes whoever
+   * stands there then, pilot or foe; on an empty space it misses. Only a melee or zone attack can be aimed.
+   */
+  T.aimIntent = function (m, e) {
+    const I = e.intent;
+    if (!I || I.aim != null || I.target == null) return false;
+    const ab = T.ENEMIES[e.type].abilities[I.key];
+    if (!ab || (ab.kind !== 'melee' && ab.kind !== 'los')) return false;
+    const t = findTarget(m, I.target);
+    if (!t) return false;
+    I.aim = t.pos;
+    I.label = `${ab.n} → node ${t.pos} (aimed)${I.label.replace(/^[^(]*/, ' ').trimEnd()}`;
+    return true;
+  };
+  function aimedStrike(m, e, ab, I) {
+    const at = I.aim;
+    if (ab.kind === 'melee') {
+      if (!B.adjacent(m.board, e.pos, at) && e.pos !== at) approach(m, e, at, e.speed);
+      if (!B.adjacent(m.board, e.pos, at)) {
+        if (e.alive) T.say(m, `${e.name} cannot reach node ${at}.`, 'enemy');
+        return;
+      }
+    } else {
+      if (!B.los(m.board, e.pos, at)) moveToZone(m, e, { pos: at }, e.speed);
+      if (!B.los(m.board, e.pos, at)) {
+        if (e.alive) T.say(m, `${e.name} has no line to node ${at}.`, 'enemy');
+        return;
+      }
+    }
+    if (!e.alive) return;
+    const v = T.entityAt(m, at);
+    if (!v || v === e || v.kind === 'decoy' || (v.kind === 'hero' && st(v).Stasis)) {
+      T.say(m, `${e.name}'s ${ab.n} lands on empty ground at node ${at}.`, 'enemy');
+      return;
+    }
+    if (v.kind === 'enemy') T.say(m, `${e.name}'s ${ab.n} lands on ${v.name}!`, 'enemy');
+    hit(m, e, ab, v);
+    if (T.isHidden(e)) delete st(e).Hidden;
+  }
 
   /* ───────────────────────────── EXECUTION ───────────────────────────── */
   function canMove(e) {
@@ -289,6 +336,12 @@
       const ab = A[I.key];
       e.lastKey = I.key;
       e.bracedRecently = false;
+      if (I.aim != null && (ab.kind === 'melee' || ab.kind === 'los')) {
+        aimedStrike(m, e, ab, I);
+        e.intent = null;
+        T.checkEnd(m);
+        continue;
+      }
       let t = I.target != null ? findTarget(m, I.target) : null;
       if (t && t.kind === 'hero' && (t.downed || st(t).Stasis)) t = null;
       switch (ab.kind) {

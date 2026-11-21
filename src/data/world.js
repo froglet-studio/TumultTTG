@@ -230,7 +230,7 @@
       abilities:{ sting:{ n:'Sting', kind:'los', dmg:[2,3,3] } },
       flavor:'Keeps its zone and never closes.' },
     brute:    { name:'Brute', glyph:'🦍', role:'bruiser', hp:[10,13,16], speed:1, policy:'brute',
-      abilities:{ slam:{ n:'Slam', kind:'melee', dmg:[5,6,7], push:1 } },
+      abilities:{ slam:{ n:'Slam', kind:'melee', dmg:[5,6,7], push:1, aimed:true } },
       flavor:'Slow. Then not.' },
     kiter:    { name:'Kiter', glyph:'🏹', role:'zoner', hp:[7,9,11], speed:2, policy:'kiter',
       abilities:{ shot:{ n:'Shot', kind:'los', dmg:[3,4,5] } },

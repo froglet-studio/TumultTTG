@@ -15,6 +15,29 @@
 - **Self-explaining.** The ◇→AP button stands beside the four basic actions whenever spare dice would pay for a face in hand (under More otherwise); click it, then an Omni or two element dice. A face they would pay for says ◇→AP to pay.
 - **Foes have 157% of their listed vitality** (was 150%), so the game is not easier: full look-ahead runs 61 of 120 before, 80 with dice as AP at 150%, 57 at 157% (`docs/reference/BALANCE.md`).
 - Both simulated players use it: the look-ahead player tries each different spend, the heuristic spends spare dice when that pays for a face with something to do. Engine: `T.spendAsAP`, `T.apSpends`, `T.canSpendAsAP`, `T.payableAsAP`; the command `asAP { dice }`. No save change.
+## 2.112.0 — 2026-11-21 — Aimed blows
+
+- **Aimed** (new keyword, from the shortlist's first pick). An Aimed attack is telegraphed at a space, not a pilot: when the foe acts, it strikes whoever stands on that space, foe or pilot, and a melee foe walks to it first. Step away and the blow lands on empty ground; leave a foe there and it takes the hit. The foe still acts, so no turn is taken.
+- **The Brute's Slam is Aimed.** You can dodge its big blow by stepping off the marked space, or turn it on another foe.
+- **Pre-empt** (Theory of Mind) changes from a Shield into a read. For 0 AP and 2 etherions it makes a foe's attack this round Aimed, and from E 2 the attack of every foe within E − 1 of it too (`aim`).
+- The intent line on the board points at the aimed space. No save change.
+
+## 2.111.0 — 2026-11-21 — the rest of the costly faces
+
+The other five of the nine bundled costly faces (2.105.0 has the rule).
+
+- **Apex Form** (Metamorphosis): for 1 + E rounds your melee strikes knock the foe back 1, and a foe you push that is stopped short **crashes**: it takes 3 + E, and so does the unit in the way (`morph` with `push` and `crash`). It was strikes +4, reach, move and Shield.
+- **Immovable Hold** (Clawed Grip) locks on to a foe beside you for 1 + E rounds: when you walk, it is dragged into the space you leave, or the free space beside you nearest it (`hold`, the states `Holding` and `Held`). It still acts; if it walks off or is Anchored, it is let go. It was two Anchors, a Weaken and a strike.
+- **Neurotoxin** (Paralytic Bite): melee 2 + P, and for E rounds after this one the foe repeats this round's intent, the same move at the same target (`fix`, the state `Fixed`). It still acts. It was a strike, a Weaken and an Anchor.
+- **Step Out of Time** drops its heal (untargetable and Haste stay). **Tesla Cascade** drops its Shield strip; its Link reaches 1 + E.
+- No save change.
+
+## 2.110.0 — 2026-11-21 — missions sized by squad power
+
+- **Squad power.** An expedition is sized from its squad's power and the chosen wind (Garrett, 2026-11-21). A pilot's power is 10, and 1 more for every level past 1 it set out with; the squad's power is its pilots' added up. Every point past 20 (two new pilots) gives foes +5% vitality, and every 5 points one more foe, every 10 one more to do and a swarm 1 larger, so a third new pilot asks what it did before. A level now counts for every pilot who has it, not as the squad's average (`T.squadPower`, `T.pilotPowerFor`, `docs/reference/SCALING.md`).
+- **Growth on the road.** The route expects about 3 points a pilot a row; a pilot that grows faster brings 1 more power for every 6 points ahead to each later mission, and none brings less than it set out with.
+- **A full wipe ends the expedition.** With the whole squad down the expedition is over, and the Lifeline is kept only for a mission lost with someone standing. Pilots are whole again for the next expedition.
+- The route's ⚖ pill shows the squad's power. `tools/sim.js --scaling` takes `power.F=N`, `boss.F=N` or `PILOT=N`.
 
 ## 2.109.0 — 2026-11-21 — pocket pets
 

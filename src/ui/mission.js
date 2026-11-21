@@ -1501,8 +1501,10 @@
           ? m.heroes.find((h) => h.uid === e.intent.target) || m.decoys.find((d) => d.uid === e.intent.target)
           : null;
       const a = N[e.pos];
-      if (tgt && N[tgt.pos]) {
-        const b = N[tgt.pos];
+      // an Aimed attack points at the space it will strike, not at the unit
+      const toward = e.intent.aim != null ? e.intent.aim : tgt ? tgt.pos : null;
+      if (toward != null && N[toward]) {
+        const b = N[toward];
         const dx = g.px(b) - g.px(a),
           dy = g.py(b) - g.py(a);
         const L = Math.hypot(dx, dy) || 1;
@@ -2296,7 +2298,7 @@
       .map((b) => `<div class="bonus ${b.achieved ? 'ok' : 'no'}">${b.achieved ? '✓' : '○'} ${esc(b.text)}</div>`)
       .join('');
     U.openModal(
-      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}${U.momentQuestion ? U.momentQuestion(m) : ''}${U.placeQuestion ? U.placeQuestion(m) : ''}${U.missionOverExtra ? U.missionOverExtra(m) : ''}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
+      `<h2>${m.won ? 'Mission complete' : 'Mission failed'}</h2><p class="dim">${esc(m.title)} · ${m.round} rounds · ${m.stats.kills} foes destroyed</p>${m.won ? bonus : `<p>${m.heroes.every((h) => h.downed) ? 'The whole squad is down: the expedition ends here. Your pilots will be whole again for the next one.' : U.run.lifeline > 0 && !m.isBoss ? 'Your Lifeline will carry you on — no rewards from this stop.' : 'Tumult keeps the expedition.'}</p>`}${U.momentQuestion ? U.momentQuestion(m) : ''}${U.placeQuestion ? U.placeQuestion(m) : ''}${U.missionOverExtra ? U.missionOverExtra(m) : ''}<div class="row" style="margin-top:12px"><button class="primary" data-act="missionDone">Continue</button></div>`,
     );
   }
 
