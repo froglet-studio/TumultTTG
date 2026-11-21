@@ -173,9 +173,7 @@ function answersOf(x) {
     case 'mint':
     case 'draw':
     case 'reroll':
-    case 'hasten':
-    case 'freecast':
-    case 'clock':
+    case 'haste':
       add('tempo');
       break;
     case 'interact':
@@ -198,7 +196,7 @@ const STAPLE_VERBS = [
   ...['move', 'blink', 'climb'], // movement
   ...['shield', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
-  ...['mint', 'draw', 'reroll', 'hasten', 'freecast'], // dice and track economy
+  ...['mint', 'draw', 'reroll', 'haste'], // dice and track economy
 ];
 const isConditional = (x) => Object.keys(x).some((k) => /^if[A-Z]/.test(k));
 
@@ -277,7 +275,7 @@ const ABLATIONS = [
   [
     'economy',
     'no dice economy',
-    (x) => ['mint', 'draw', 'reroll', 'hasten', 'freecast'].includes(x.v) || (x.v === 'engine' && x.kind !== 'regen'),
+    (x) => ['mint', 'draw', 'reroll', 'haste'].includes(x.v) || (x.v === 'engine' && x.kind !== 'regen'),
   ],
 ];
 

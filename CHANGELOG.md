@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.96.0 — 2026-11-21 — Haste
+
+The tenth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Haste N.** Your track slides N extra columns (your cards come home sooner), or the mission clock gains N rounds (`clock`), or the next N cards you play skip the track (`free`). One verb, `haste`, for `hasten` (23 faces and the Chrono-shim), `clock` (the Chrono-shim's Rewind) and `freecast` (5 faces); their texts say Haste.
+- No rule changed and no save changed. The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
 ## 2.95.0 — 2026-11-21 — Blink
 
 The ninth keyword of the sweep (`docs/reference/KEYWORDS.md`).

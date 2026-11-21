@@ -2041,20 +2041,7 @@
         actor.rested = true;
         say(m, `${actor.name} goes still.`, 'hero');
         break;
-      case 'freecast': {
-        const n = num(f.n, P, E);
-        if (n <= 0) break;
-        // dur: the offer lapses after that many round ends (1 = "this turn"); without it, it waits
-        const t = num(f.dur, P, E) || null;
-        (actor.states.Freecast = actor.states.Freecast || []).push({ n, t });
-        say(
-          m,
-          `${actor.name}: the next ${n} card${n > 1 ? 's' : ''}${t === 1 ? ' this turn' : ''} won't go to the track.`,
-          'hero',
-        );
-        break;
-      }
-      /* ---------- RESOURCES ---------- */
+
       case 'heal': {
         // Heal N (2.90): restore N vitality; a downed pilot it reaches gets up with N. `ward: R` holds it
         // instead: if you go down within R rounds, it lands then and you get up with N.
@@ -2129,21 +2116,33 @@
         say(m, `${actor.name} may reroll ${ctx.pendingReroll} banked dice.`, 'sys');
         break;
       }
-      case 'hasten': {
+      case 'haste': {
+        // Haste N (2.95, one keyword for hasten, clock and freecast): your track slides N extra columns; `clock`,
+        // the mission clock gains N rounds; `free`, the next N cards you play do not go to the track.
         const n = num(f.n, P, E);
+        if (f.clock) {
+          if (m.clock) {
+            m.clock.value += n;
+            say(m, `The clock gains ${n}.`, 'sys');
+          }
+          if (m.hazardSpread) m.hazardSpread.delayed += Math.max(0, n);
+          break;
+        }
         if (n <= 0) break;
+        if (f.free) {
+          // dur: the offer lapses after that many round ends (1 = "this turn"); without it, it waits
+          const t = num(f.dur, P, E) || null;
+          (actor.states.Freecast = actor.states.Freecast || []).push({ n, t });
+          say(
+            m,
+            `${actor.name}: the next ${n} card${n > 1 ? 's' : ''}${t === 1 ? ' this turn' : ''} won't go to the track.`,
+            'hero',
+          );
+          break;
+        }
         const list = f.who === 'ally' ? (ally ? [ally] : []) : [actor];
         list.forEach((h) => T.hasten(h, n));
         say(m, `${list.map((h) => h.name).join(' & ')}: track slides ${n} extra.`, 'hero');
-        break;
-      }
-      case 'clock': {
-        const d = num(f.delta, P, E);
-        if (m.clock) {
-          m.clock.value += d;
-          say(m, `The clock gains ${d}.`, 'sys');
-        }
-        if (m.hazardSpread) m.hazardSpread.delayed += Math.max(0, d);
         break;
       }
       case 'engine': {

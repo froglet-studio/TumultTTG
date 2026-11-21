@@ -151,3 +151,13 @@ In code: the verb `shield` (`val`, `dur`, `all`, `party`, `allyRange`, `min`, `n
 - Swap, which trades places with an ally, stays its own verb for now.
 
 In code: the verb `blink` (`reach`, `height`, `dest: 'adjTarget'`, `carryAlly`), the target `node_tele`.
+
+## Haste (2.96)
+
+> **Haste N.** Your track slides N extra columns, or the mission clock gains N rounds.
+
+- **Track:** every card on your track comes home N columns sooner (an ally's, where it says).
+- **Clock:** the mission clock gains N rounds (and a spreading flood waits as long).
+- **Free:** the next N cards you play do not go to the track (this turn, where it says).
+
+In code: the verb `haste` (`n`, `who`, `clock`, `free`, `dur`), the state `Freecast` for the free cards.

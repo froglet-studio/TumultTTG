@@ -80,8 +80,8 @@
       desc:'Time for any build. Returns cards sooner, buys rounds from the clock.',
       passive:{ hook:'roundStart', val:{round:2, hasten:1}, txt:'As round 2 begins, your track slides 1 extra column: what you played in round 1 comes home sooner.' },
       abilities:[
-        { n:'Shim', cost:1, cd:1, tgt:'self', fx:[{v:'hasten', n:f(1)}], txt:()=>'Every card on your track returns 1 column sooner.' },
-        { n:'Rewind', cost:3, cd:4, tgt:'self', fx:[{v:'hasten', n:f(3)},{v:'clock', delta:f(2)}], txt:()=>'Track slides 3 extra columns; the mission clock gains 2.' },
+        { n:'Shim', cost:1, cd:1, tgt:'self', fx:[{v:'haste', n:f(1)}], txt:()=>'Haste: every card on your track returns 1 column sooner.' },
+        { n:'Rewind', cost:3, cd:4, tgt:'self', fx:[{v:'haste', n:f(3)},{v:'haste', clock:true, n:f(2)}], txt:()=>'Haste: your track slides 3 extra columns, and the mission clock gains 2.' },
       ]},
     { id:'aegis', name:'Aegis Plate', price:6, icon:'🛡️',
       desc:'Mitigation for any build. Even against area.',
@@ -183,7 +183,7 @@
     { id:'spot',  n:'Spot',   icon:'◎', ap:2, tgt:'foe_r3',   fx:[{v:'mark'}],                                   txt:'Mark a foe up to 3 nodes away: the next hit on it, by anyone, deals +2.' },
     { id:'legup', n:'Leg up', icon:'⇡', ap:1, tgt:'ally_adj_move', fx:[{v:'rally', move:f(2)}],                  txt:'Boost an adjacent ally up to 2 nodes, to a node you choose, now.' },
     { id:'lend',  n:'Lend',   icon:'⇄', ap:2, tgt:'ally_adj', fx:[{v:'mint', face:'AP', n:f(2), target:'ally'}], txt:'Give an adjacent ally 2 AP to spend this round. Lent after their turn, it is lost.' },
-    { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'hasten', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and your track slides 1 extra column.' },
+    { id:'brace_T',    n:'Brace',    icon:'🛡', ap:0, el:'T', tgt:'self',      fx:[{v:'shield', val:f(1), dur:f(1)},{v:'haste', n:f(1)}], txt:'Channel Time: Shield 1 until your next turn, and Haste: your track slides 1 extra column.' },
   ];
   T.BASIC_BY = {}; T.BASIC.forEach(b => T.BASIC_BY[b.id] = b);
 

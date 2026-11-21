@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.95.0',
+    version: '2.96.0',
     items: [
+      {
+        text: 'Cards that slide your track, buy rounds from the mission clock or let your next card skip the track now all say Haste. Nothing else changed. Is Haste a word you can play by at the table?',
+        cards: ['ora_memory', 'oct_arms'],
+      },
       {
         text: 'Teleport is now called Blink on every card and in every tooltip: leave the paths and appear on a free space within N (high ground only where the card says). Nothing else changed. Does Blink read better than teleport at the table?',
         cards: ['oct_ink'],
