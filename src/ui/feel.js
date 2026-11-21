@@ -190,7 +190,12 @@
       case 'state':
         if (node != null && U.floater) {
           const k = U.kwOfState && U.kwOfState(f.name);
-          U.floater(node, '+' + f.name, 'state ' + (k ? 'kw-' + k.tone : ''), delay);
+          U.floater(
+            node,
+            '+' + (U.stateName ? U.stateName(f.name) : f.name),
+            'state ' + (k ? 'kw-' + k.tone : ''),
+            delay,
+          );
         }
         break;
       case 'roll':

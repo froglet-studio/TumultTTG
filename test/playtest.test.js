@@ -211,7 +211,7 @@ test(
     if (p.U.screen === 'reward') {
       // the reward screen wants every pilot's card and boon offers answered before it lets go
       for (let k = 0; k < 8; k++) {
-        const a = ['takeBoon', 'skipCard'].find((x) => p.d.querySelector(`[data-act="${x}"]`));
+        const a = ['skipCard'].find((x) => p.d.querySelector(`[data-act="${x}"]`));
         if (!a) break;
         p.act(a);
       }

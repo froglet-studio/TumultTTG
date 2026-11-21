@@ -130,7 +130,6 @@ function createHarness(T = loadTumult()) {
             T.takeOfferedCard(run, rw.offers[hi][0], hi);
           else T.skipOfferedCard(run, hi);
         });
-        if (rw.boons) run.heroes.forEach((h, hi) => T.takeBoon(run, rw.boons[hi][0], hi));
         run.heroes.forEach((h) => T.autoAllocate(h));
         T.finishNode(run);
       } else if (run.phase === 'haven') {

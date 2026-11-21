@@ -312,24 +312,12 @@
     const gear = hv.gear
       .map((gid) => {
         const g = T.GEAR_BY[gid];
-        return `<div class="am-ware"><div class="row"><span class="am-wi">${U.icGear(g.id)}</span><b>${esc(g.name)}</b><span class="right chip gold">${g.price} ◇</span></div><div class="small dim">${esc(g.desc)}</div>${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> <span class="mono dim">${a.cost} ◇ · cd ${a.cd}</span> ${esc(a.txt())}</div>`).join('')}<div class="am-buy">${run.heroes
+        return `<div class="am-ware"><div class="row"><span class="am-wi">${U.icGear(g.id)}</span><b>${esc(g.name)}</b><span class="right chip gold">${g.price} ◇</span></div><div class="small dim">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> <span class="mono dim">${a.cost} ◇ · cd ${a.cd}</span> ${esc(a.txt())}</div>`).join('')}<div class="am-buy">${run.heroes
           .map((h, i) => {
             if (!own(i)) return '';
             const ok = T.crystalsFor(run, i) >= g.price && h.gear.length < 2;
             return `<button class="sm ${ok ? 'primary' : ''}" data-act="buyGear" data-arg="${gid}|${i}" ${ok ? '' : 'disabled'} ${h.gear.length >= 2 ? 'data-tip="Two pieces of gear at most"' : ''}>For ${esc(h.name.split(' ')[0])}</button>`;
           })
-          .join('')}</div></div>`;
-      })
-      .join('');
-    const cons = hv.cons
-      .map((cid) => {
-        const c = T.CONSUMABLE_BY[cid];
-        return `<div class="am-ware small-w"><div class="row"><span class="am-wi">${U.icCons(c.id)}</span><b>${esc(c.name)}</b><span class="right chip gold">${c.price} ◇</span></div><div class="small dim">${esc(c.txt)}</div><div class="am-buy">${run.heroes
-          .map((h, i) =>
-            own(i)
-              ? `<button class="sm" data-act="buyCons" data-arg="${cid}|${i}" ${T.crystalsFor(run, i) >= c.price && h.consumables.length < 3 ? '' : 'disabled'}>For ${esc(h.name.split(' ')[0])}</button>`
-              : '',
-          )
           .join('')}</div></div>`;
       })
       .join('');
@@ -340,12 +328,12 @@
         <span class="am-eye">Stop ${stopNo(run)} · the haven</span><h1 class="am-h">${esc(placeName(nd) || 'A haven')}</h1><p class="am-sub">Rest, trade, train, or listen. Nothing hunts here; leave when the squad is ready.</p>
         <div class="am-opts">
           <div class="am-opt${hv.healed ? ' done' : ''}"><div class="row"><span class="am-oi heal">♥</span><b>Rest</b>${hv.healed ? '<span class="right check">✓</span>' : ''}</div><span class="small dim">${hv.healed ? 'The squad has rested.' : 'Recover half of what each pilot is missing, or pay for a full repair.'}</span><div class="am-ob"><button class="sm ${hv.healed ? '' : 'primary'}" data-act="rest" data-arg="half" ${hv.healed ? 'disabled' : ''}>Rest · free</button><button class="sm" data-act="rest" data-arg="full" ${hv.healed || T.totalCrystals(run) < 3 ? 'disabled' : ''} data-tip="The squad's repair: every pilot back to full.${T.playerCount(run) > 1 ? ' Paid from the fuller purse first.' : ''}">Full repair · 3 ◇</button></div></div>
-          <div class="am-opt"><div class="row"><span class="am-oi gold">◇</span><b>Trade</b></div><span class="small dim">Gear and supplies from the stalls, paid in omnicrystals.</span><div class="am-ob"><button class="sm" data-act="amScroll" data-arg="am-stalls">To the stalls ↓</button><span class="chip gold">${T.totalCrystals(run)} ◇ to spend</span></div></div>
+          <div class="am-opt"><div class="row"><span class="am-oi gold">◇</span><b>Trade</b></div><span class="small dim">Gear from the stalls, paid in omnicrystals.</span><div class="am-ob"><button class="sm" data-act="amScroll" data-arg="am-stalls">To the stalls ↓</button><span class="chip gold">${T.totalCrystals(run)} ◇ to spend</span></div></div>
           <div class="am-opt${anyUp ? '' : ' quiet'}"><div class="row"><span class="am-oi up">✦</span><b>Train</b></div><span class="small dim">Grow a card with the points the missions gave.</span><div class="am-ob">${run.heroes.map((h, i) => (own(i) ? `<button class="sm" data-act="train" data-arg="${i}">${esc(h.name.split(' ')[0])} · ${h.upUnspent}</button>` : '')).join('')}</div></div>
           <div class="am-opt"><div class="row"><span class="am-oi canon">✎</span><b>Listen</b></div><span class="small dim am-story">${esc(story)} ${U.canonMark ? U.canonMark('event:haven', story, 'event:text') : ''}</span><div class="am-ob"><button class="sm ghost" data-act="kit" data-arg="0">Look over the kits</button></div></div>
         </div>
         <div class="am-row2">${squad(run)}</div>
-        <div id="am-stalls" class="am-stalls"><div class="am-lab gold">The stalls · gear</div><div class="am-wares">${gear || '<span class="dim small">Sold out.</span>'}</div><div class="am-lab">Supplies · one use, three a pilot</div><div class="am-wares">${cons}</div></div>
+        <div id="am-stalls" class="am-stalls"><div class="am-lab gold">The stalls · gear</div><div class="am-wares">${gear || '<span class="dim small">Sold out.</span>'}</div></div>
       </div></div>
       <div class="am-foot"><button class="primary am-cta" data-act="leaveHaven">Leave ▶</button></div></div>`;
   };

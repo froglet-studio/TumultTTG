@@ -29,7 +29,7 @@ Every round both heroes act freely and interleaved. Each hero's track slides, en
 3. **The Tide Map.** Seven rows, three acts (*The Shallows, The Undertow, The Deep*), branching paths with missions, elites, havens, events and the boss.
 4. **Generated missions from the four challenge archetypes** — Swarm (hold the beacon), Vault (height + the winch lever), The Sought (hidden caches, lurkers), Cascade (spreading flood, the valve) — plus Elite and a two-phase Boss. *v1.0 roadmap item #1 (scenario generator): done in first form.*
 5. **Telegraphed enemy intents** with minimal adaptation (they close distance if you leave range). Into-the-Breach legibility on top of the v1.0 "no reactive defense" rule.
-6. **Progression & economy.** UP earning, 3-of-9 trait growth with card rewards, omnicrystals as both currency and gear fuel, 10 gear items, 15 boons (including etherion **Affinities** that re-face a die), consumables, havens, a Lifeline.
+6. **Progression & economy.** UP earning, 3-of-9 trait growth with card rewards, omnicrystals as both currency and gear fuel, 10 gear items, each with a passive and two actives (since 2.89 they carry what boons and consumables did), havens, a Lifeline.
 7. **All 99 cards rewritten in the v1.0 two-face formula format and implemented** as data-driven verb recipes. *v1.0 roadmap item #2: done.*
 8. **A bestiary of 12 enemy types** built from the same verbs, with per-role AI policies.
 9. **Balance pass** in the v1.0 spirit: lethality budget, approach taxed (teleports are Ethereal faces: an etherion and a cooldown of 2–4), missions tuned toward the 8–14 round band, hundreds of simulated missions and full runs.

@@ -20,7 +20,7 @@
 
   /* ───────────────────────────── ACTIONS ─────────────────────────────
      An action is plain data: { t, hero, … }. `hero` is an index into m.heroes.
-       face      { card, face: 'P'|'E', target?, node?, choice? }
+       face      { card, face: 'P'|'E', target?, node?, choice?, ally? }   ally: the uid of the ally it reaches (3+ pilots)
        walk      { node }
        interact  { node, pay? }      pay: 'ap' | 'el' for a survey mark
        rally     {}
@@ -38,9 +38,25 @@
         ? tg.options.map((node) => ({ node }))
         : tg.need === 'none'
           ? [{}]
-          : tg.options.map((target) => ({ target }));
+          : tg.need === 'ally'
+            ? tg.options.map((ally) => ({ ally }))
+            : tg.options.map((target) => ({ target }));
     const out = [];
     for (const pick of picks) for (const choice of choices) out.push(choice ? Object.assign({ choice }, pick) : pick);
+    return out;
+  }
+  /**
+   * With three or more pilots a face that reaches an ally and has a target of its own is worked out once for
+   * each ally it could pick (where an ally goes depends on which ally). targets(pick) gives the targets.
+   */
+  function resolutionsByAlly(tg, recipe, targets) {
+    if (!tg.allies) return resolutions(tg, recipe);
+    const out = [];
+    for (const ally of tg.allies) {
+      const t = ally === tg.ally ? tg : targets(ally);
+      if (t.invalid || (t.need !== 'none' && !(t.options && t.options.length))) continue;
+      for (const r of resolutions(t, recipe)) out.push(Object.assign({ ally }, r));
+    }
     return out;
   }
 
@@ -55,11 +71,12 @@
         for (const face of ['P', 'E']) {
           const chk = T.canPlay(m, h, card, face);
           if (!chk.ok) continue;
-          for (const r of resolutions(chk.tg, T.CARD[card][face]))
+          for (const r of resolutionsByAlly(chk.tg, T.CARD[card][face], (a) => T.canPlay(m, h, card, face, a).tg))
             out.push(Object.assign({ t: 'face', hero, card, face }, r));
         }
-      const steps = Math.min(3, Math.floor(ap / R().MOVE_AP) + (h.freeMove || 0));
-      if (steps > 0 && !h.states.Rooted && !h.states.SlowSelf)
+      // up to 3 paid steps, plus every free step a face has granted (a free move of 4 or 5 is walked in full)
+      const steps = Math.min(3, Math.floor(ap / R().MOVE_AP)) + (h.freeMove || 0);
+      if (steps > 0 && !T.isAnchored(h))
         for (const node of T.reachableWalk(m, h, steps, false)) out.push({ t: 'walk', hero, node });
       for (const node of [h.pos].concat(B.walkNeighbors(m.board, h.pos))) {
         const nd = m.board.nodes[node];
@@ -76,7 +93,8 @@
       for (const b of T.BASIC) {
         const chk = T.canUseBasic(m, h, b.id);
         if (chk.ok)
-          for (const r of resolutions(chk.tg, b)) out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
+          for (const r of resolutionsByAlly(chk.tg, b, (a) => T.canUseBasic(m, h, b.id, a).tg))
+            out.push(Object.assign({ t: 'basic', hero, basic: b.id }, r));
       }
       const ally = T.downedAllyOf(m, h);
       if (ally && ally.downed && ap >= R().RALLY_AP && B.adjacent(m.board, h.pos, ally.pos))
@@ -86,7 +104,8 @@
           if (g.cds[ability] > 0 || T.crystalsFor(m, hero) < ab.cost) return;
           const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
           if (tg.invalid || (tg.need !== 'none' && !(tg.options && tg.options.length))) return;
-          for (const r of resolutions(tg, ab)) out.push(Object.assign({ t: 'gear', hero, gear, ability }, r));
+          for (const r of resolutionsByAlly(tg, ab, (a) => T.targetsFor(m, h, ab.tgt, ab, 0, 0, a)))
+            out.push(Object.assign({ t: 'gear', hero, gear, ability }, r));
         }),
       );
       h.consumables.forEach((id, item) => {
@@ -112,6 +131,7 @@
     const h = m.heroes[a.hero];
     if (!h) return { ok: false, why: 'no such hero' };
     const ctx = { target: a.target, node: a.node, choice: a.choice };
+    if (a.ally != null) ctx.ally = a.ally;
     switch (a.t) {
       case 'face': {
         const r = T.playFace(m, h, a.card, a.face, ctx);
@@ -143,6 +163,8 @@
         return T.useConsumable(m, h, a.item);
       case 'valve':
         return { ok: T.valve(m, h) };
+      case 'pick': // the dice of the pilot's next roll (T.setRollPick)
+        return T.setRollPick(h, a.kinds);
       default:
         return { ok: false, why: 'unknown action ' + a.t };
     }
@@ -155,13 +177,17 @@
       const e = m.enemies.concat(m.heroes, m.decoys).find((x) => x.uid === uid);
       return e ? ` → ${e.name}` : '';
     };
-    const tail = (a.target != null ? who(a.target) : at) + (a.choice ? ` (${a.choice})` : '');
+    const tail =
+      (a.ally != null ? ` (for${who(a.ally).slice(2)})` : '') +
+      (a.target != null ? who(a.target) : at) +
+      (a.choice ? ` (${a.choice})` : '');
     if (a.t === 'face') return `${h.name}: ${T.CARD[a.card].name} — ${T.CARD[a.card][a.face].n}${tail}`;
     if (a.t === 'basic') return `${h.name}: ${T.BASIC_BY[a.basic].n}${tail}`;
     if (a.t === 'gear') {
       const def = T.GEAR_BY[h.gear[a.gear].id];
       return `${h.name}: ${def.name} — ${def.abilities[a.ability].n}${tail}`;
     }
+    if (a.t === 'pick') return `${h.name}: next roll ${(a.kinds || []).join(', ') || 'at random'}`;
     if (a.t === 'item') return `${h.name}: ${T.CONSUMABLE_BY[h.consumables[a.item]].name}`;
     return `${h.name}: ${a.t}${at}`;
   };
@@ -253,7 +279,7 @@
     crystal: 0.4,
     item: 2,
     // Something already bought that lands after this round — a regen engine, AP to come, a strike
-    // bonus not yet used, a foe Studied — counts at this share of what it will be worth, so a set-up
+    // bonus not yet used, a foe Marked for some rounds — counts at this share of what it will be worth, so a set-up
     // is not scored as nothing just because it pays off later than the round being looked at.
     ahead: 0.6,
     spare: 0.5, // per temporary die minted and not yet spent, while the search is still choosing (see loose)
@@ -292,9 +318,10 @@
     // a Mark is 2 damage already bought: the next hit on that foe, by anyone, deals it
     for (const e of m.enemies)
       if (e.alive) {
-        s -= W.foeAlive + W.foeHp * (Math.max(0, e.hp) + e.shield - (e.states.Marked ? 2 : 0));
-        // a Studied foe takes more from every hit to come: count two of them
-        if (e.states.Studied) s += W.ahead * W.foeHp * Math.min(Math.max(0, e.hp), 2 * e.states.Studied.n);
+        const mk = e.states.Marked;
+        s -= W.foeAlive + W.foeHp * (Math.max(0, e.hp) + e.shield - (mk && mk.next ? mk.next : 0));
+        // a foe Marked for some rounds takes more from every hit to come: count two of them
+        if (mk && mk.each) s += W.ahead * W.foeHp * Math.min(Math.max(0, e.hp), 2 * mk.each);
       }
     if (m.clock) s += W.clock * m.clock.value;
     s += W.crystal * T.totalCrystals(m);
@@ -498,6 +525,12 @@
       }
       if (!cut) break;
     }
+    // then the dice of the next roll, as actions of their own, so a replay of the list rolls the same
+    m.heroes.forEach((h, i) => {
+      if (m.over || h.downed) return;
+      T.autoRollPick(m, h);
+      taken.push({ t: 'pick', hero: i, kinds: (h.rollPick || []).slice() });
+    });
     return taken;
   };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

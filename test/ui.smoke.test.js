@@ -511,3 +511,45 @@ test('UI: the story line under End Round is written in the light text colour', (
   assert.ok(rule, 'the rule exists');
   assert.match(rule[0], /color:\s*var\(--txt\)/);
 });
+
+test('UI: a card on the track still reads in full and says when it is back', { skip, timeout: 60_000 }, async () => {
+  const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const { JSDOM } = require('jsdom');
+  const { until } = require('../tools/ui-drive');
+  const dom = new JSDOM(build().html, { runScripts: 'dangerously', pretendToBeVisual: true, url: 'http://localhost/' });
+  const w = dom.window;
+  const d = w.document;
+  try {
+    await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
+    const U = w.T.UI;
+    const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+    click('[data-act="newRun"]');
+    click('[data-act="prebuilt"][data-arg="cavitt"]');
+    click('[data-act="confirmHero"]');
+    click('[data-act="prebuilt"][data-arg="kess"]');
+    click('[data-act="confirmHero"]');
+    click('.mnode.avail');
+    const m = U.run.mission;
+    const h = m.heroes[0];
+    const cid = h.cards[0];
+    // built in the page's own realm, so the mission stays plain data
+    h.track.push(w.JSON.parse(JSON.stringify({ card: cid, phase: 'cd', left: 2, cd: 0, note: 'cooling' })));
+    U.updateMission();
+    const card = [...d.querySelectorAll('#mdock .hcard.cooling')].find((el) =>
+      el.querySelector('.hn').textContent.includes(w.T.CARD[cid].name),
+    );
+    assert.ok(card, 'the card on the track is still drawn in the hand');
+    const faces = card.querySelectorAll('.fbtn.cool');
+    assert.equal(faces.length, 2, 'both faces are shown');
+    assert.ok(faces[0].textContent.includes(w.T.CARD[cid].P.n));
+    assert.ok(faces[1].textContent.includes(w.T.CARD[cid].E.n));
+    for (const f of faces) assert.ok(f.getAttribute('data-tip'), 'each face keeps its full text on hover');
+    assert.equal(card.querySelectorAll('button').length, 0, 'nothing on it can be pressed');
+    assert.match(card.querySelector('.cdband').textContent, /back in 2/);
+    const css = require('node:fs').readFileSync(path.join(__dirname, '..', 'src', 'ui', 'style.css'), 'utf8');
+    const rule = css.match(/\.hcard\.cooling\s*\{[^}]*\}/);
+    assert.ok(rule && !/opacity/.test(rule[0]), 'the card itself is not faded');
+  } finally {
+    w.close();
+  }
+});

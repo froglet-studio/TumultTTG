@@ -245,6 +245,7 @@
     interact: (run, m, h, c) => T.doInteract(m, h, c.node, false, c.pay),
     rally: (run, m, h) => T.rally(m, h),
     note: (run, m, h, c) => T.addNote(m, c.hero, c.text),
+    rollPick: (run, m, h, c) => T.setRollPick(h, c.kinds),
     valve: (run, m, h) => ({ ok: !!T.valve(m, h) }),
     dump: (run, m, h, c) => (T.dump(m, h, c.di), { ok: true }),
     reroll: (run, m, h, c) => (c.picked.length && T.rerollHeld(m, h, c.picked), { ok: true }),
@@ -261,9 +262,7 @@
     sellGear: (run, m, h, c) => (T.sellGear(run, c.hero, c.gi), { ok: true }),
     takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero, typeof c.drop === 'string' ? c.drop : undefined),
     skipCard: (run, m, h, c) => T.skipOfferedCard(run, c.hero),
-    takeBoon: (run, m, h, c) => T.takeBoon(run, c.boon, c.hero),
     buyGear: (run, m, h, c) => T.buyGear(run, c.gear, c.hero),
-    buyCons: (run, m, h, c) => T.buyConsumable(run, c.cons, c.hero),
     evTakeCard: (run, m, h, c) => {
       const r = T.addCard(h, c.card);
       if (r.ok && run.event && run.event.followup) run.event.followup.done = true;
@@ -349,6 +348,11 @@
     if (op === 'note') {
       if (!m || m.over) return { ok: false, why: 'not now' };
       return Object.assign({}, T.addNote(m, cmd.hero, cmd.text), { ctx: cmd.ctx || {} });
+    }
+    // choosing the dice of a pilot's next roll changes nothing on the board: any time in a mission, whoever's turn
+    if (op === 'rollPick') {
+      if (!m || m.over || !m.heroes[cmd.hero]) return { ok: false, why: 'not now' };
+      return Object.assign({}, T.setRollPick(m.heroes[cmd.hero], cmd.kinds), { ctx: cmd.ctx || {} });
     }
     if (MISSION_OPS.has(op) && (!m || m.over || m.phase !== 'hero')) return { ok: false, why: 'not now' };
     const turn = MISSION_OPS.has(op) ? T.turnSeat(run) : null;

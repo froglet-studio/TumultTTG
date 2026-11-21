@@ -69,13 +69,13 @@ function answersOf(x) {
       if (x.revealTarget || x.kind === 'area' || x.kind === 'nodeArea') add('unknown');
       break;
     case 'execute':
-    case 'studied':
       add('single');
       break;
-    case 'dot':
+    case 'wound':
     case 'mark':
       add('single');
       if (x.area) add('crowd');
+      if (x.v === 'mark' && x.pierce) add('armor');
       break;
     case 'empower':
       add('single');
@@ -90,13 +90,10 @@ function answersOf(x) {
     case 'stripShield':
       add('armor');
       break;
-    case 'expose':
-      add('armor', 'single');
-      break;
     case 'move':
       add('tempo', 'burst'); // get there sooner; step out of a zone or out of reach
       break;
-    case 'teleport':
+    case 'blink':
       add('tempo', 'burst');
       if (x.height) add('height');
       break;
@@ -121,34 +118,32 @@ function answersOf(x) {
       add('unknown');
       if (x.findObjective || x.hintObjective) add('tempo');
       break;
-    case 'locate':
       add('unknown');
       break;
-    case 'aura':
-      add(x.kind === 'reveal' ? 'unknown' : 'crowd');
+    case 'field': {
+      // a Field answers what its keywords answer, and a crowd that has to cross it
+      const kws = x.fx.map((y) => y.kw);
+      if (kws.includes('reveal')) add('unknown');
+      if (kws.includes('strike')) add('crowd');
+      if (kws.some((k) => ['weaken', 'anchor', 'hidden'].includes(k))) add('burst');
+      if (x.on === 'enter' && x.trips != null) add('burst');
       break;
+    }
     case 'hidden':
-    case 'preempt':
-    case 'counter':
     case 'stasis':
     case 'slow':
-    case 'guard':
       add('burst');
       break;
     case 'shield':
       add('burst');
       if (x.all || x.party) add('crowd'); // many small hits
       break;
-    case 'thorns':
-    case 'ambushTrap':
-    case 'decoy':
-    case 'redirect':
-    case 'trap':
-      add('crowd', 'burst');
+    case 'link':
+      add('crowd'); // one hit, push or pull lands on two
       break;
-    case 'zone':
-      add('crowd');
-      if (x.weaken || x.hideHeroes) add('burst');
+    case 'thorns':
+    case 'decoy':
+      add('crowd', 'burst');
       break;
     case 'weaken':
       add('burst');
@@ -162,22 +157,13 @@ function answersOf(x) {
     case 'hazardImmune':
       add('hazard');
       break;
-    case 'clearHazard':
-      add('hazard');
-      break;
-    case 'statusImmune':
     case 'cleanse':
-      add('control');
+      if (x.field != null) add('hazard');
+      if (x.field == null || x.states) add('control');
       break;
     case 'heal':
-    case 'revive':
       add('attrition');
-      break;
-    case 'phoenix':
-      add('attrition', 'burst');
-      break;
-    case 'absorb':
-      add('burst', 'tempo');
+      if (x.ward != null) add('burst'); // a held Heal answers the hit that would down you
       break;
     case 'engine':
       add(x.kind === 'regen' ? 'attrition' : 'tempo');
@@ -185,9 +171,7 @@ function answersOf(x) {
     case 'mint':
     case 'draw':
     case 'reroll':
-    case 'hasten':
-    case 'freecast':
-    case 'clock':
+    case 'haste':
       add('tempo');
       break;
     case 'interact':
@@ -206,11 +190,11 @@ function answersOf(x) {
  * (Whether their numbers are good enough is a balance question, not an audit question.)
  */
 const STAPLE_VERBS = [
-  ...['strike', 'execute', 'dot', 'empower', 'mark', 'studied', 'expose', 'morph'], // damage
-  ...['move', 'teleport', 'climb'], // movement
-  ...['shield', 'preempt', 'weaken'], // mitigation that works against any hit
+  ...['strike', 'execute', 'wound', 'empower', 'mark', 'morph'], // damage
+  ...['move', 'blink', 'climb'], // movement
+  ...['shield', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
-  ...['mint', 'draw', 'reroll', 'hasten', 'freecast'], // dice and track economy
+  ...['mint', 'draw', 'reroll', 'haste'], // dice and track economy
 ];
 const isConditional = (x) => Object.keys(x).some((k) => /^if[A-Z]/.test(k));
 
@@ -219,7 +203,7 @@ function soloRisks(x) {
   const out = [];
   if (x.v === 'reveal' && num(x.radius) >= 99) out.push('reveals the whole board');
   if (x.v === 'reveal' && x.findObjective) out.push('finds the hidden objective outright');
-  if (x.v === 'locate' && num(x.dur) >= 99) out.push('locates a foe for the whole mission');
+  if (x.v === 'reveal' && (x.target || x.nearest) && num(x.dur) >= 99) out.push('locates a foe for the whole mission');
   if (x.v === 'interact' && x.height) out.push('works the Vault from the floor');
   if ((x.v === 'stripShield' && x.amount == null) || (x.v === 'strike' && x.stripShield === true))
     out.push('deletes a Shield outright');
@@ -233,7 +217,7 @@ const ABLATIONS = [
     'vertical',
     'no way up',
     (x) =>
-      (x.v === 'teleport' && x.height) ||
+      (x.v === 'blink' && x.height) ||
       ['climb', 'weightless'].includes(x.v) ||
       (x.v === 'morph' && x.climb) ||
       (x.v === 'interact' && x.height),
@@ -243,15 +227,16 @@ const ABLATIONS = [
     'no shield-breakers',
     (x) =>
       (x.v === 'strike' && (x.pierce || x.trueDmg || x.stripShield)) ||
-      ['stripShield', 'expose'].includes(x.v) ||
+      x.v === 'stripShield' ||
+      (x.v === 'mark' && x.pierce) ||
       (x.v === 'empower' && x.pierce),
   ],
   [
     'reveal',
     'no reveals',
     (x) =>
-      ['reveal', 'locate'].includes(x.v) ||
-      (x.v === 'aura' && x.kind === 'reveal') ||
+      x.v === 'reveal' ||
+      (x.v === 'field' && x.fx.some((y) => y.kw === 'reveal')) ||
       (x.v === 'strike' && x.revealTarget),
   ],
   [
@@ -259,39 +244,36 @@ const ABLATIONS = [
     'no area damage',
     (x) =>
       (x.v === 'strike' && (WIDE.includes(x.kind) || x.chain)) ||
-      x.v === 'zone' ||
-      (x.v === 'dot' && x.area) ||
-      (x.v === 'aura' && x.kind === 'digest'),
+      (x.v === 'field' && x.fx.some((y) => y.kw === 'strike')) ||
+      (x.v === 'wound' && x.area),
   ],
   [
     'mitigation',
     'no shields or wards',
-    (x) => ['shield', 'preempt', 'guard', 'stasis', 'counter', 'hidden', 'absorb', 'phoenix', 'thorns'].includes(x.v),
+    (x) => ['shield', 'stasis', 'hidden', 'thorns'].includes(x.v) || (x.v === 'heal' && x.ward != null),
   ],
-  ['heal', 'no healing', (x) => ['heal', 'revive'].includes(x.v) || (x.v === 'engine' && x.kind === 'regen')],
-  [
-    'mobility',
-    'no movement abilities',
-    (x) => ['move', 'teleport', 'climb', 'swap', 'hover', 'weightless'].includes(x.v),
-  ],
+  ['heal', 'no healing', (x) => x.v === 'heal' || (x.v === 'engine' && x.kind === 'regen')],
+  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'climb', 'swap', 'hover', 'weightless'].includes(x.v)],
   [
     'control',
     'no foe control',
     (x) =>
       (x.v === 'anchor' && (x.who === 'foe' || x.who === 'target')) ||
-      ['weaken', 'slow', 'force', 'trap', 'redirect'].includes(x.v),
+      ['weaken', 'slow', 'force', 'link'].includes(x.v) ||
+      (x.v === 'field' && x.fx.some((y) => ['anchor', 'weaken'].includes(y.kw))),
   ],
   [
     'hazard',
     'no hazard answers',
     (x) =>
-      ['hazardImmune', 'clearHazard', 'hover', 'weightless'].includes(x.v) ||
+      ['hazardImmune', 'hover', 'weightless'].includes(x.v) ||
+      (x.v === 'cleanse' && x.field != null) ||
       (x.v === 'anchor' && (x.who === 'self' || x.who === 'ally')),
   ],
   [
     'economy',
     'no dice economy',
-    (x) => ['mint', 'draw', 'reroll', 'hasten', 'freecast'].includes(x.v) || (x.v === 'engine' && x.kind !== 'regen'),
+    (x) => ['mint', 'draw', 'reroll', 'haste'].includes(x.v) || (x.v === 'engine' && x.kind !== 'regen'),
   ],
 ];
 
@@ -302,10 +284,10 @@ function autoplayerKnows(face) {
   const node = /^node_/.test(face.tgt);
   const strike = face.fx.find((x) => x.v === 'strike');
   if (strike) return foe || ['area', 'zone_all'].includes(strike.kind) || !!strike.nearest;
-  if (has('shield', 'preempt', 'counter', 'stasis', 'heal', 'reveal', 'engine')) return true;
+  if (has('shield', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
-  if (has('trap')) return node;
-  if (has('teleport', 'climb', 'move')) return node;
+  if (has('field')) return node;
+  if (has('blink', 'climb', 'move')) return node;
   return false;
 }
 
@@ -680,7 +662,7 @@ function writeReport(usageMissions, gate) {
     PLAYER === 'strong'
       ? 'The look-ahead player needs no rule for a face: every legal action is tried on a copy of the mission and judged by ' +
           'what it leaves behind (`test/lookahead.test.js` checks that every playable face is offered to it).'
-      : 'The heuristic autoplayer only understands strikes, shields, heals, reveals, engines, single-target control, traps and ' +
+      : 'The heuristic autoplayer only understands strikes, shields, heals, reveals, engines, single-target control, Fields and ' +
           'movement. It has no rule for the faces below, so passes B and C say nothing about them. Run the audit without ' +
           '`--player weak` to measure them with the look-ahead player.',
   );

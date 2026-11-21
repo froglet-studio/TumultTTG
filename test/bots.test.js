@@ -86,7 +86,8 @@ test('the AI moves only its own seat’s pilots', () => {
 });
 
 test('a dropped player: the AI holds the seat, finishes a turn under way, and gives it back', () => {
-  const run = T.newRun(3);
+  // a seed whose opening roll gives Bo an AP to walk with (since 2.83 a roll is three plain dice and an element die)
+  const run = T.newRun(4);
   run.party = T.newParty(2, ['Ana', 'Bo']);
   run.heroes = [0, 1].map((k) => T.heroFromPrebuilt(run, T.PREBUILTS[k]));
   run.heroes.forEach((h) => T.autoAllocate(h));
@@ -185,4 +186,28 @@ test('a 2.83 save (version 18) loads as a Full expedition with people in every s
   T.execCommand(run, { op: 'ready' }, [1]);
   T.execCommand(run, { op: 'ready' }, [2]);
   assert.ok(m.round > 1 || m.over, 'the round goes on');
+});
+
+test('a 2.99 save (version 26) loads as a Full expedition with people in every seat, and plays on', () => {
+  const old = require('./fixtures/save-2.99.json');
+  assert.equal(old.v, 26, 'the fixture is a version-26 save, from the keyword line');
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  assert.equal(run.length, 'full');
+  assert.deepEqual(T.botSeats(run), []);
+  const s = T.serializeRun(run);
+  assert.equal(T.serializeRun(T.deserializeRun(s)), s);
+});
+
+test('a rework save numbered 19 (2.87, Short) runs the keyword steps and keeps its length', () => {
+  const old = require('./fixtures/save-2.87-rework.json');
+  assert.equal(old.v, 19);
+  assert.equal(old.length, 'short');
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  assert.equal(run.length, 'short');
+  assert.ok(Array.isArray(run.mission.fields), 'its mission keeps Fields, as the keyword line saves do');
+  T.execCommand(run, { op: 'ready' }, [0]);
+  T.execCommand(run, { op: 'ready' }, [1]);
+  assert.ok(run.mission.round > 1 || run.mission.over, 'the round goes on');
 });
