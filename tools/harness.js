@@ -161,7 +161,9 @@ function createHarness(T = loadTumult()) {
           if (T.buyGear(run, g, hi).reserve) {
             const h = run.heroes[hi];
             const pts = (c) => (h.up[c] || [0, 0])[0] + (h.up[c] || [0, 0])[1];
-            const out = T.loadOuts(h, T.GEAR_BY[g].card).filter((c) => !T.isKinless(c)).sort((a, b) => pts(a) - pts(b))[0];
+            const out = T.loadOuts(h, T.GEAR_BY[g].card)
+              .filter((c) => !T.isKinless(c))
+              .sort((a, b) => pts(a) - pts(b))[0];
             if (out) T.loadCard(h, T.GEAR_BY[g].card, out);
           }
         }

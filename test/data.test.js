@@ -149,7 +149,11 @@ test('world data: ids are unique and entries are complete', () => {
     else {
       const c = T.CARD[g.card];
       assert.ok(c && c.gear === g.id && T.isKinless(g.card), `${g.id}: its card`);
-      assert.deepEqual(T.faceKeys(g.card).map((k) => c[k].n), onCard.map((a) => a.n), `${g.id}: one face per ability`);
+      assert.deepEqual(
+        T.faceKeys(g.card).map((k) => c[k].n),
+        onCard.map((a) => a.n),
+        `${g.id}: one face per ability`,
+      );
       for (const k of T.faceKeys(g.card)) assert.ok(c[k].ap === 0 && c[k].cd >= 1, `${g.id}/${k}: free of AP`);
     }
   }

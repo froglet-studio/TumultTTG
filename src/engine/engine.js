@@ -2985,7 +2985,8 @@
   /** What a gear ability costs, as a player reads it: omnicrystals from the purse, or banked Omni dice (2.108). */
   T.gearCostText = (ab) => (ab.omni ? `${ab.omni} Omni` : 'free');
   /** How a gear ability is used, in a few words: its cost, and whether it is played from the gear's card. */
-  T.gearUseText = (ab) => `${T.gearCostText(ab)} · ${T.onGearCard(ab) ? `on its card, cooldown ${ab.cd}` : 'from the gear, no cooldown'}`;
+  T.gearUseText = (ab) =>
+    `${T.gearCostText(ab)} · ${T.onGearCard(ab) ? `on its card, cooldown ${ab.cd}` : 'from the gear, no cooldown'}`;
   /** The line a shop shows under a piece of gear whose abilities sit on a card. */
   T.gearCardNote = (g) => (g.card ? 'Its card joins your kit and counts toward the nine.' : '');
   /** Whether this pilot can pay for and use this gear ability now, leaving aside its target. */

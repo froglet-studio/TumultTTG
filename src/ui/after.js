@@ -55,16 +55,20 @@
       o.P != null && c.gear
         ? `gear · ${esc(T.gearCostText({ omni: Math.max(...T.faceKeys(cid).map((k) => c[k].el || 0)) }))}`
         : o.P != null
-        ? c.pet
-          ? `P${o.P} · pet`
-          : `P${o.P} · E${o.E}`
-        : `${c.sig >= 2 ? '★ ' : ''}${esc(EL[elOf(c)].name)}`;
+          ? c.pet
+            ? `P${o.P} · pet`
+            : `P${o.P} · E${o.E}`
+          : `${c.sig >= 2 ? '★ ' : ''}${esc(EL[elOf(c)].name)}`;
     const inner = `<span class="am-gem" style="--el:${EL[elOf(c)].color}"></span>${U.cardArt(c, false, sp)}<span class="am-tn">${esc(c.name)}</span><span class="am-tc">${c.gear ? U.icGear(c.gear) : U.icClade(sp)} ${esc(c.kin || T.SPECIES[sp].name)}</span><span class="am-tl">${lv}</span>${o.out ? '<span class="am-x" aria-hidden="true">✕</span>' : ''}`;
     const cls = `am-tile${o.sel ? ' sel' : ''}${o.out ? ' out' : ''}${o.dim ? ' dim' : ''}${o.cls ? ' ' + o.cls : ''}`;
     const tip = o.tip
       ? ` data-tip="${esc(o.tip)}"`
       : c.pet || c.gear
-        ? ` data-tip="${esc(T.faceKeys(cid).map((k) => U.faceTipHTML(c, k, o.P || 0, 0)).join('<hr>'))}"`
+        ? ` data-tip="${esc(
+            T.faceKeys(cid)
+              .map((k) => U.faceTipHTML(c, k, o.P || 0, 0))
+              .join('<hr>'),
+          )}"`
         : ` data-tip="${esc(U.faceTipHTML(c, 'P', o.P || 0, o.E || 0) + '<hr>' + U.faceTipHTML(c, 'E', o.P || 0, Math.max(o.E || 0, T.RULES.ETHEREAL_MIN_E)))}"`;
     if (!o.act) return `<div class="${cls}"${tip}>${inner}</div>`;
     return `<button class="${cls}" data-act="${o.act}" data-arg="${esc(o.arg)}"${o.disabled ? ' disabled' : ''}${tip} aria-pressed="${!!o.sel}">${inner}</button>`;

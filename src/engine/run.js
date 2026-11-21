@@ -83,7 +83,9 @@
     const load = {};
     const slot = {};
     // a pet's or a piece of gear's card counts toward the nine, not toward a clade (src/data/pets.js)
-    const ids = cards.filter((id) => !T.isKinless(id)).sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
+    const ids = cards
+      .filter((id) => !T.isKinless(id))
+      .sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
     const place = (i) => {
       if (i === ids.length) return true;
       for (const sp of T.CARD[ids[i]].clades) {
