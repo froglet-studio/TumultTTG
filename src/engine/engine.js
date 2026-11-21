@@ -734,9 +734,9 @@
   function trapImmune(ent) {
     return !!(st(ent).Hover || st(ent).Weightless);
   }
-  /** Weightless heroes and climbing forms walk the climb edges up to height nodes. */
+  /** Hovering heroes and climbing forms walk the climb edges up to height nodes (Weightless: an older save's Hover). */
   function canClimb(ent) {
-    return !!(st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
+    return !!(st(ent).Hover || st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
   }
   function addTimed(m, ent, name, t, extra) {
     const cur = st(ent)[name];
@@ -1449,7 +1449,7 @@
    */
   const allyRef = (f, P, E) => {
     if (f.carryAlly != null) return bool(f.carryAlly, P, E) ? 'adj' : null;
-    if (f.v === 'rally' || f.v === 'swap') return 'any';
+    if (f.v === 'guide' || f.v === 'swap') return 'any';
     if (f.target !== 'ally' && f.who !== 'ally') return null;
     if (!f.pierce && ['val', 'n'].some((k) => f[k] != null && num(f[k], P, E) <= 0)) return null;
     if (f.v === 'anchor' && num(f.dur, P, E) <= 0) return null;
@@ -1514,8 +1514,8 @@
         if (!ally || ally.downed) return { need: 'none', invalid: 'no ally standing' };
         if (tgt === 'ally_adj_move' && !B.adjacent(bd, h.pos, ally.pos))
           return { need: 'none', invalid: 'your ally must be beside you' };
-        const rl = face && face.fx.find((x) => x.v === 'rally');
-        const n = rl ? num(rl.move, P, E) : 0;
+        const rl = face && face.fx.find((x) => x.v === 'guide');
+        const n = rl ? num(rl.n, P, E) : 0;
         const steps = isAnchored(ally) ? [] : T.reachableWalk(m, ally, n, false);
         return { need: 'node', options: [ally.pos].concat(steps), ally: ally.uid, allyMove: n };
       }
@@ -1580,7 +1580,12 @@
       case 'node_move': {
         const mv = face.fx.find((x) => x.v === 'move');
         const n = num(mv.n, P, E);
-        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact) };
+        // a face that lifts you off the ground before it moves you (Hover, then Move) may take the ledges
+        const hi = face.fx.findIndex((x) => x.v === 'hover');
+        const lift = hi >= 0 && hi < face.fx.indexOf(mv);
+        const climbing = bool(mv.climb, P, E) || lift;
+        const through = mv.ignoreFoes || num(mv.trample, P, E) > 0;
+        return { need: 'node', options: T.reachableWalk(m, h, n, through, mv.exact, climbing) };
       }
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'blink');
@@ -1593,11 +1598,6 @@
           };
         return { need: 'node', options: opts };
       }
-      case 'node_climb': {
-        const cl = face.fx.find((x) => x.v === 'climb');
-        const r = num(cl.reach, P, E);
-        return { need: 'node', options: B.within(bd, h.pos, r, true).filter((n) => T.freeFor(m, h, n)) };
-      }
       default:
         return { need: 'none' };
     }
@@ -1608,9 +1608,9 @@
    * 2.81.1 it was the nodes whose *shortest* walk is n, which on a small or well-joined board left a run of 4
    * nowhere to go from most of it: the whole threshing floor of Mast-Crop Hills.)
    */
-  T.reachableWalk = function (m, h, n, ignoreFoes, exact) {
+  T.reachableWalk = function (m, h, n, ignoreFoes, exact, climb) {
     const bd = m.board;
-    const climber = canClimb(h);
+    const climber = canClimb(h) || !!climb;
     // a step onto y: is it allowed, and is y somewhere a walk may pass (but not stop, if occupied)?
     const step = (y) => {
       if (bd.nodes[y].height && !climber && !bd.ramp) return null;
@@ -1902,7 +1902,9 @@
           }
           break;
         }
-        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes, f.exact);
+        const climbing = bool(f.climb, P, E);
+        const tramp = num(f.trample, P, E);
+        const opts = T.reachableWalk(m, actor, n, f.ignoreFoes || tramp > 0, f.exact, climbing);
         if (!opts.includes(dest)) {
           if (f.free) {
             ctx.pendingFreeMove = n;
@@ -1910,9 +1912,30 @@
           break;
         }
         const fromN = actor.pos;
-        moveEntity(m, actor, dest, 'walk');
-        say(m, `${actor.name} moves ${fromN} → ${dest}.`, 'hero');
-        onHeroEnter(m, actor, dest);
+        if (tramp > 0) {
+          // Trample N (2.103): step by step through the foes in the way, each pushed N away as you reach it
+          const p = B.path(bd, actor.pos, dest, null, canClimb(actor) || climbing) || [actor.pos, dest];
+          for (let i = 1; i < p.length; i++) {
+            const foe = T.entityAt(m, p[i]);
+            if (foe && foe.kind === 'enemy' && foe.alive) pushAway(m, actor, foe, tramp);
+            moveEntity(m, actor, p[i], 'walk');
+            onHeroEnter(m, actor, p[i]);
+          }
+          if (actor.pos !== dest) moveEntity(m, actor, dest, 'walk');
+        } else {
+          moveEntity(m, actor, dest, climbing ? 'climb' : 'walk');
+          onHeroEnter(m, actor, dest);
+        }
+        say(m, `${actor.name} ${climbing ? 'climbs' : 'moves'} ${fromN} → ${dest}.`, 'hero');
+        // carrying an ally: one beside where you set out comes along, onto a free space beside where you stop
+        if (bool(f.carryAlly, P, E) && ally && !ally.downed && !isAnchored(ally) && B.adjacent(bd, fromN, ally.pos)) {
+          const spot = B.allNeighbors(bd, dest).filter((x) => !T.occupied(m, x) && x !== fromN)[0];
+          if (spot) {
+            moveEntity(m, ally, spot, climbing ? 'climb' : 'walk');
+            onHeroEnter(m, ally, spot);
+            say(m, `${ally.name} is carried along.`, 'hero');
+          }
+        }
         break;
       }
       case 'blink': {
@@ -1955,28 +1978,6 @@
         onHeroEnter(m, actor, dest);
         break;
       }
-      case 'climb': {
-        if (!isHero) break;
-        const r = num(f.reach, P, E);
-        const dest = ctx.node;
-        if (dest == null) break;
-        if (B.dist(bd, actor.pos, dest, true) > r || !T.freeFor(m, actor, dest)) {
-          say(m, 'Out of reach.', 'sys');
-          break;
-        }
-        const from = actor.pos;
-        moveEntity(m, actor, dest, 'climb');
-        say(m, `${actor.name} climbs ${from} → ${dest}.`, 'hero');
-        onHeroEnter(m, actor, dest);
-        if (bool(f.carryAlly, P, E) && ally && !ally.downed && B.adjacent(bd, from, ally.pos)) {
-          const spot = B.allNeighbors(bd, dest).filter((n) => !T.occupied(m, n) && n !== from)[0];
-          if (spot) {
-            moveEntity(m, ally, spot, 'climb');
-            say(m, `${ally.name} is lifted along.`, 'hero');
-          }
-        }
-        break;
-      }
       case 'swap': {
         if (!ally || ally.downed) break;
         const a = actor.pos,
@@ -1988,11 +1989,12 @@
         say(m, `${actor.name} and ${ally.name} swap places.`, 'hero');
         break;
       }
-      case 'rally': {
-        // the player who plays it moves their partner, at once, to the node they chose (ctx.node): nothing is
-        // left for the partner to decide, so whoever plays it can plan the rest of their turn exactly
+      case 'guide': {
+        // Guide N (2.103, was the verb `rally`): the player who plays it moves an ally, at once, to the node they
+        // chose (ctx.node): nothing is left for the ally to decide, so whoever plays it can plan the rest of their
+        // turn exactly. Rally is the basic action that raises the downed, and nothing else.
         if (!ally || ally.downed) break;
-        const n = num(f.move, P, E);
+        const n = num(f.n, P, E);
         if (ctx.node == null || ctx.node === ally.pos) {
           if (ctx.node === ally.pos) say(m, `${ally.name} holds their ground.`, 'hero');
           break;
@@ -2220,12 +2222,10 @@
         say(m, `${actor.name} steps outside time.`, 'hero');
         break;
       case 'hover':
-        addTimed(m, actor, 'Hover', num(f.dur, P, E), { noAp: !!f.noAp });
-        say(m, `${actor.name} hovers.`, 'hero');
-        break;
-      case 'weightless':
-        addTimed(m, actor, 'Weightless', num(f.dur, P, E));
-        say(m, `${actor.name} is weightless.`, 'hero');
+        // Hover N (2.102): off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you,
+        // and your steps may take the ledges. It folds in Weightless, and no longer mints AP.
+        addTimed(m, actor, 'Hover', num(f.dur, P, E));
+        say(m, `${actor.name} lifts off the ground.`, 'hero');
         break;
       case 'hazardImmune': {
         const d = num(f.dur, P, E);
@@ -2866,7 +2866,6 @@
         T.mint(h, 'AP', en.val || 1);
       }
     }
-    if (h.states.Hover && !h.states.Hover.noAp) T.mint(h, 'AP', 1);
     if (!h.rolledAhead) T.rollDice(m, h);
     // keen sense
     if (T.boonVals(h, 'keen').length)
@@ -3171,8 +3170,10 @@
       Thorns: `Thorns — ${[v.v ? `melee attackers take ${v.v}` : '', v.next ? `the next takes ${v.next}${v.push ? ' and is pushed ' + v.push : ''}` : ''].filter(Boolean).join('; ')}.`,
       Preempt: `Shield ${v.v} against the next hit${v.reflect ? ', and ' + v.reflect + ' of it goes back' : ''}${v.reposition ? ', and you step away' : ''}.`,
       Stasis: 'Stasis — untargetable.',
-      Hover: 'Hover — off the ground: hazards and Fields do not touch it; immune to push/pull.',
-      Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',
+      Hover:
+        'Hover — off the ground: hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges.',
+      Weightless:
+        'Hover — off the ground: hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges.',
       Morph: `Morph — strikes +${v.bonus}${v.reach ? ', reach 2' : ''}${v.climb ? ', can climb' : ''}.`,
       HazardImmune: 'Immune to hazards.',
       StatusImmune: 'Cleansed — no foe can Weaken or Anchor it while this lasts.',

@@ -34,7 +34,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Language** ☆ · Charge · `hum_lang`
 
-- *Phys — Call* · 1 AP · CD 1 — Call an ally up to 1 nodes: you choose where they go, now. *(P3: Call an ally up to 4 nodes: you choose where they go, now.)*
+- *Phys — Call* · 1 AP · CD 1 — Call an ally: Guide them 1, to a space you choose, now. *(P3: Call an ally: Guide them 4, to a space you choose, now.)*
 - *Eth — Rally* · 0 AP + 1 Charge · CD 3 · Dur 2 — Party strikes +1 for 2 turns; foes adjacent to you are Weakened 1. *(P3/E3: Party strikes +2 for 2 turns; foes adjacent to you are Weakened 1.)*
 
 **Pattern Recognition** · Space · `hum_pattern`
@@ -147,13 +147,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Swarm Pheromone** ☆ · Charge · `hop_swarm`
 
-- *Phys — Cue* · 1 AP · CD 1 — Gregarious cue: an ally's next strike +1, and you step them 1 node where you choose. *(P3: Gregarious cue: an ally's next strike +4, and you step them 1 node where you choose.)*
+- *Phys — Cue* · 1 AP · CD 1 — Gregarious cue: an ally's next strike +1, and Guide them 1. *(P3: Gregarious cue: an ally's next strike +4, and Guide them 1.)*
 - *Eth — Swarm Phase* · 0 AP + 1 Charge · CD 4 — The swarm phase: all heroes mint 1 AP at the start of their turns for 2 rounds; foes adjacent to any hero are Weakened 1. *(P3/E3: The swarm phase: all heroes mint 1 AP at the start of their turns for 4 rounds; foes adjacent to any hero are Weakened 1.)*
 
 **Glide Wings** · Space · `hop_glide`
 
 - *Phys — Buzz* · 1 AP · CD 1 — Glide 1, over foes. *(P3: Glide 4, over foes.)*
-- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn.)*
+- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Hover-drift: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 ## 3 · Barn Owl — leans S/C
 
@@ -187,12 +187,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Soaring Lift** · Mass · `owl_soar`
 
 - *Phys — Thermal Ride* · 2 AP · CD 1 — Ride a thermal 3 nodes. *(P3: Ride a thermal 6 nodes.)*
-- *Eth — Updraft* · 2 AP + 1 Mass · CD 3 — Lift yourself onto any node within 2 — height nodes included. *(P3/E3: Lift yourself onto any node within 4 — height nodes included — and carry an adjacent ally up with you.)*
+- *Eth — Updraft* · 2 AP + 1 Mass · CD 3 — Lift yourself 2, climbing. *(P3/E3: Lift yourself 4, climbing, carrying an ally beside you.)*
 
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Binocular Foresight** · Time · `owl_foresight`
 
@@ -259,7 +259,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Adhesive Setae** ★ · Charge · `gec_setae`
 
-- *Phys — Climb* · 1 AP · CD 1 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
+- *Phys — Climb* · 1 AP · CD 1 — Walk walls and ceilings: move 1, climbing. *(P3: Walk walls and ceilings: move 4, climbing.)*
 - *Eth — Van der Waals* · 0 AP + 1 Charge · CD 3 — Command the molecular bond: pull a foe in your zone 2 toward you. *(P3/E3: Command the molecular bond: pull a foe in your zone 4 toward you and Anchor it 1.)*
 
 **Lockjaw Bite** · Mass · `gec_lockjaw`
@@ -393,7 +393,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
 - *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges). *(P3/E3: Alter your weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges); an adjacent ally is Anchored too.)*
 
 **Galvanic Counterstrike** · Charge · `eel_galvanic`
 
@@ -573,8 +573,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Canopy Leap** · Space · `pri_canopy`
 
-- *Phys — Swing* · 1 AP · CD 1 — Move 1, height nodes included; your next strike this turn deals +1. *(P3: Move 4, height nodes included; your next strike this turn deals +1.)*
-- *Eth — Treetops* · 1 AP + 1 Space · CD 3 — Leap to any node within 3, height included; you and an adjacent ally hold Shield 1 this round. *(P3/E3: Leap to any node within 5, height included; you and an adjacent ally hold Shield 1 this round.)*
+- *Phys — Swing* · 1 AP · CD 1 — Move 1, climbing; your next strike this turn deals +1. *(P3: Move 4, climbing; your next strike this turn deals +1.)*
+- *Eth — Treetops* · 1 AP + 1 Space · CD 3 — Leap 3, climbing; you and an adjacent ally hold Shield 1 this round. *(P3/E3: Leap 5, climbing; you and an adjacent ally hold Shield 1 this round.)*
 
 **Long Reach** ★ · Space · `ora_reach`
 
@@ -617,12 +617,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Canopy Leap** · Space · `pri_canopy`
 
-- *Phys — Swing* · 1 AP · CD 1 — Move 1, height nodes included; your next strike this turn deals +1. *(P3: Move 4, height nodes included; your next strike this turn deals +1.)*
-- *Eth — Treetops* · 1 AP + 1 Space · CD 3 — Leap to any node within 3, height included; you and an adjacent ally hold Shield 1 this round. *(P3/E3: Leap to any node within 5, height included; you and an adjacent ally hold Shield 1 this round.)*
+- *Phys — Swing* · 1 AP · CD 1 — Move 1, climbing; your next strike this turn deals +1. *(P3: Move 4, climbing; your next strike this turn deals +1.)*
+- *Eth — Treetops* · 1 AP + 1 Space · CD 3 — Leap 3, climbing; you and an adjacent ally hold Shield 1 this round. *(P3/E3: Leap 5, climbing; you and an adjacent ally hold Shield 1 this round.)*
 
 **Troop Call** · Charge · `pri_troop`
 
-- *Phys — Hoot* · 1 AP · CD 1 — Step an ally 1 node, where you choose; their next strike deals +1. *(P3: Step an ally 1 node, where you choose; their next strike deals +4.)*
+- *Phys — Hoot* · 1 AP · CD 1 — Guide an ally 1; their next strike deals +1. *(P3: Guide an ally 1; their next strike deals +4.)*
 - *Eth — Troop* · 2 AP + 1 Charge · CD 3 · Dur 2 — Party strikes +1 for 2 rounds, and all heroes hold Shield 1. *(P3/E3: Party strikes +2 for 2 rounds, and all heroes hold Shield 1.)*
 
 **Sun Salute** ★ · Charge · `lem_sun`
@@ -671,7 +671,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Troop Call** · Charge · `pri_troop`
 
-- *Phys — Hoot* · 1 AP · CD 1 — Step an ally 1 node, where you choose; their next strike deals +1. *(P3: Step an ally 1 node, where you choose; their next strike deals +4.)*
+- *Phys — Hoot* · 1 AP · CD 1 — Guide an ally 1; their next strike deals +1. *(P3: Guide an ally 1; their next strike deals +4.)*
 - *Eth — Troop* · 2 AP + 1 Charge · CD 3 · Dur 2 — Party strikes +1 for 2 rounds, and all heroes hold Shield 1. *(P3/E3: Party strikes +2 for 2 rounds, and all heroes hold Shield 1.)*
 
 **War Paint** ★ · Charge · `man_paint`
@@ -706,7 +706,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Retractable Claws** · Mass · `cat_claws`
 
 - *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
-- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb 2, and rake every foe beside where you land for 2. *(P3/E3: Climb 4, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
 
@@ -755,7 +755,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Retractable Claws** · Mass · `cat_claws`
 
 - *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
-- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb 2, and rake every foe beside where you land for 2. *(P3/E3: Climb 4, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
 
@@ -789,8 +789,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Vertical Leap** · Space · `car_leap`
 
-- *Phys — Spring* · 1 AP · CD 1 — Jump to any node within 2, height included; Shield: the next hit on you is 1 less. *(P3: Jump to any node within 5, height included; Shield: the next hit on you is 1 less.)*
-- *Eth — Sky Leap* · 1 AP + 1 Space · CD 3 — Leap to any node within 3, height included, landing on every foe beside it for 2. *(P3/E3: Leap to any node within 5, height included, landing on every foe beside it for 4.)*
+- *Phys — Spring* · 1 AP · CD 1 — Jump 2, climbing; Shield: the next hit on you is 1 less. *(P3: Jump 5, climbing; Shield: the next hit on you is 1 less.)*
+- *Eth — Sky Leap* · 1 AP + 1 Space · CD 3 — Leap 3, climbing, landing on every foe beside it for 2. *(P3/E3: Leap 5, climbing, landing on every foe beside it for 4.)*
 
 ## 16 · Ocelot — leans T/S
 
@@ -804,7 +804,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Retractable Claws** · Mass · `cat_claws`
 
 - *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
-- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb 2, and rake every foe beside where you land for 2. *(P3/E3: Climb 4, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
 
@@ -833,7 +833,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Headfirst Descent** · Space · `oce_descent`
 
-- *Phys — Descend* · 1 AP · CD 1 — Climb up to 1, height included, and drop on every foe beside where you land for 1. *(P3: Climb up to 4, height included, and drop on every foe beside where you land for 2.)*
+- *Phys — Descend* · 1 AP · CD 1 — Climb 1, and drop on every foe beside where you land for 1. *(P3: Climb 4, and drop on every foe beside where you land for 2.)*
 - *Eth — Branch Drop* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3, melee 4, and it is Weakened 1. *(P3/E3: Drop beside a foe within 5, melee 6, and it is Weakened 1.)*
 
 **Night Prowl** · Time · `oce_prowl`
@@ -853,7 +853,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Retractable Claws** · Mass · `cat_claws`
 
 - *Phys — Unsheathe* · 1 AP · CD 1 — Peel 1 Shield off a foe beside you, then melee 2. *(P3: Peel 1 Shield off a foe beside you, then melee 5.)*
-- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb up to 2, height included, and rake every foe beside where you land for 2. *(P3/E3: Climb up to 4, height included, and rake every foe beside where you land for 4.)*
+- *Eth — Rake* · 1 AP + 1 Mass · CD 2 — Climb 2, and rake every foe beside where you land for 2. *(P3/E3: Climb 4, and rake every foe beside where you land for 4.)*
 
 **Night Eyes** · Space · `cat_eyes`
 
@@ -1074,7 +1074,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Pair Hunt** ★ · Charge · `jac_pair`
 
 - *Phys — Flank* · 1 AP · CD 1 — Melee 1, opening it up: it is Marked +1 for 3 rounds. *(P3: Melee 4, opening it up: it is Marked +1 for 3 rounds.)*
-- *Eth — Pair Hunt* · 1 AP + 1 Charge · CD 3 — Send an ally up to 2; all heroes' next strike deals +2. *(P3/E3: Send an ally up to 2; all heroes' next strike deals +4.)*
+- *Eth — Pair Hunt* · 1 AP + 1 Charge · CD 3 — Send an ally on: Guide them 2; all heroes' next strike deals +2. *(P3/E3: Send an ally on: Guide them 2; all heroes' next strike deals +4.)*
 
 **Golden Coat** · Time · `jac_coat`
 
@@ -1166,7 +1166,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Clan Whoop** · Charge · `hye_whoop`
 
-- *Phys — Whoop* · 1 AP · CD 1 — Call an ally up to 2 nodes; their next strike deals +1. *(P3: Call an ally up to 2 nodes; their next strike deals +2.)*
+- *Phys — Whoop* · 1 AP · CD 1 — Call an ally: Guide them 2; their next strike deals +1. *(P3: Call an ally: Guide them 2; their next strike deals +2.)*
 - *Eth — Mob* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds; all heroes' next strike deals +1. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds; all heroes' next strike deals +1.)*
 
 **Scavenge** · Time · `hye_scav`
@@ -1293,7 +1293,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Headfirst Descent** · Space · `oce_descent`
 
-- *Phys — Descend* · 1 AP · CD 1 — Climb up to 1, height included, and drop on every foe beside where you land for 1. *(P3: Climb up to 4, height included, and drop on every foe beside where you land for 2.)*
+- *Phys — Descend* · 1 AP · CD 1 — Climb 1, and drop on every foe beside where you land for 1. *(P3: Climb 4, and drop on every foe beside where you land for 2.)*
 - *Eth — Branch Drop* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3, melee 4, and it is Weakened 1. *(P3/E3: Drop beside a foe within 5, melee 6, and it is Weakened 1.)*
 
 **Musk** · Charge · `wea_musk`
@@ -1318,7 +1318,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tail Wrap** · Space · `rpa_tail`
 
-- *Phys — Balance* · 1 AP · CD 1 — Climb up to 1, height included, balanced on your tail: Shield 1 this round. *(P3: Climb up to 4, height included, balanced on your tail: Shield 1 this round.)*
+- *Phys — Balance* · 1 AP · CD 1 — Climb 1, balanced on your tail: Shield 1 this round. *(P3: Climb 4, balanced on your tail: Shield 1 this round.)*
 - *Eth — Wrap Up* · 1 AP + 1 Space · CD 3 — Wrap up tight: Shield 2 for 2 rounds, and nothing can push or pull you. *(P3/E3: Wrap up tight: Shield 4 for 2 rounds, and nothing can push or pull you.)*
 
 **Bamboo Jaw** · Mass · `rpa_bamboo`
@@ -1465,7 +1465,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ice Lead** · Time · `nar_lead`
 
-- *Phys — Show the Way* · 1 AP · CD 1 — An ally moves 1. *(P3: An ally moves 4.)*
+- *Phys — Show the Way* · 1 AP · CD 1 — Guide an ally 1. *(P3: Guide an ally 4.)*
 - *Eth — Open Water* · 0 AP + 1 Time · CD 4 — All heroes gain 1 AP next turn and ignore hazards this round; you for 2 rounds. *(P3/E3: All heroes gain 1 AP next turn and ignore hazards this round; you for 4 rounds.)*
 
 **Deep Dive** · Time · `nar_dive`
@@ -1485,7 +1485,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hooves** · Space · `hoof_hooves`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
-- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1. *(P3/E3: Move 6, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
 
@@ -1519,7 +1519,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Pack Bearer** · Charge · `yak_bearer`
 
-- *Phys — Carry* · 1 AP · CD 1 — An ally moves 1; then you and every ally beside you hold Shield 1 this round. *(P3: An ally moves 4; then you and every ally beside you hold Shield 1 this round.)*
+- *Phys — Carry* · 1 AP · CD 1 — Guide an ally 1; then you and every ally beside you hold Shield 1 this round. *(P3: Guide an ally 4; then you and every ally beside you hold Shield 1 this round.)*
 - *Eth — Supplies* · 1 AP + 1 Charge · CD 4 — All heroes heal 1, and an ally gains 1 AP at the start of each turn for 2 rounds. *(P3/E3: All heroes heal 1, and an ally gains 1 AP at the start of each turn for 4 rounds.)*
 
 **Thin Air** · Space · `yak_air`
@@ -1534,7 +1534,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hooves** · Space · `hoof_hooves`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
-- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1. *(P3/E3: Move 6, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
 
@@ -1583,7 +1583,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hooves** · Space · `hoof_hooves`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
-- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1. *(P3/E3: Move 6, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
 
@@ -1632,7 +1632,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hooves** · Space · `hoof_hooves`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
-- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1. *(P3/E3: Move 6, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
 
@@ -1681,7 +1681,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hooves** · Space · `hoof_hooves`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
-- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1. *(P3/E3: Move 6, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
 
@@ -1730,7 +1730,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hooves** · Space · `hoof_hooves`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
-- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1. *(P3/E3: Move 6, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
 
@@ -1779,7 +1779,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hooves** · Space · `hoof_hooves`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 2. *(P3: Move 5.)*
-- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, passing foes and ignoring hazards this round; your next hit this turn deals +1. *(P3/E3: Move 6, passing foes and ignoring hazards this round; your next hit this turn deals +1.)*
+- *Eth — Gallop* · 1 AP + 1 Space · CD 3 — Move 4, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1. *(P3/E3: Move 6, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.)*
 
 **Herd Ring** · Time · `hoof_ring`
 
@@ -1803,7 +1803,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Herd Bolt** · Space · `zeb_bolt`
 
-- *Phys — Bolt* · 1 AP · CD 1 — An ally moves 1, and you step 1. *(P3: An ally moves 4, and you step 1.)*
+- *Phys — Bolt* · 1 AP · CD 1 — Guide an ally 1, and you step 1. *(P3: Guide an ally 4, and you step 1.)*
 - *Eth — All Together* · 1 AP + 1 Space · CD 4 — All heroes gain 1 AP next turn, and Shield: the next hit on each is 2 less. *(P3/E3: All heroes gain 1 AP next turn, and Shield: the next hit on each is 4 less.)*
 
 **Bite Fight** · Mass · `zeb_bite`
@@ -2244,7 +2244,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Mob Lead** · Charge · `kan_mob`
 
-- *Phys — Thump the Mob* · 1 AP · CD 1 — An ally moves 1, and their next hit deals +1. *(P3: An ally moves 4, and their next hit deals +1.)*
+- *Phys — Thump the Mob* · 1 AP · CD 1 — Guide an ally 1, and their next hit deals +1. *(P3: Guide an ally 4, and their next hit deals +1.)*
 - *Eth — Whole Mob* · 1 AP + 1 Charge · CD 4 — Each hero's next hit deals +2, and an ally gains 1 AP next turn. *(P3/E3: Each hero's next hit deals +4, and an ally gains 1 AP next turn.)*
 
 **Long Hop** · Space · `kan_long`
@@ -2372,7 +2372,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Keen Sight** · Charge · `rap_sight`
 
@@ -2386,8 +2386,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Soar** · Space · `eag_soar`
 
-- *Phys — Ride the Wind* · 1 AP · CD 1 — Glide 1, over foes; hazards can't touch you this round. *(P3: Glide 4, over foes; hazards can't touch you this round.)*
-- *Eth — High Circle* · 1 AP + 1 Space · CD 3 — Rise onto any node within 3, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Rise onto any node within 5, height included; see within 5, and your next hit this turn deals +1.)*
+- *Phys — Ride the Wind* · 1 AP · CD 1 — Hover this round and glide 1, over foes and ledges. *(P3: Hover this round and glide 4, over foes and ledges.)*
+- *Eth — High Circle* · 1 AP + 1 Space · CD 3 — Rise 3, climbing; see within 3, and your next hit this turn deals +1. *(P3/E3: Rise 5, climbing; see within 5, and your next hit this turn deals +1.)*
 
 **Talon Lock** · Mass · `eag_lock`
 
@@ -2402,7 +2402,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Fish Snatch** · Space · `eag_fish`
 
 - *Phys — Snatch* · 1 AP · CD 1 — Swoop on a foe within 3: it takes 1 and is dragged 1 toward you. *(P3: Swoop on a foe within 3: it takes 4 and is dragged 1 toward you.)*
-- *Eth — Skim and Lift* · 1 AP + 1 Space · CD 3 — Skim 3, over foes and through hazards, snatching a meal on the way: heal 2. *(P3/E3: Skim 5, over foes and through hazards, snatching a meal on the way: heal 4.)*
+- *Eth — Skim and Lift* · 1 AP + 1 Space · CD 3 — Hover this round and skim 3, over foes and ledges, snatching a meal on the way: heal 2. *(P3/E3: Hover this round and skim 5, over foes and ledges, snatching a meal on the way: heal 4.)*
 
 **Nest Guard** · Time · `eag_nest`
 
@@ -2421,7 +2421,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Keen Sight** · Charge · `rap_sight`
 
@@ -2435,13 +2435,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Sky Hyperspeed** · Space · `haw_hyper`
 
-- *Phys — Sky Dash* · 1 AP · CD 1 — Fly exactly 4, over foes and hazards. *(P3: Fly exactly 4, over foes and hazards; your next strike this turn deals +3.)*
-- *Eth — Sky Burst* · 1 AP + 1 Space · CD 3 — Fly exactly 4, over foes and hazards; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +3. *(P3/E3: Fly exactly 4, over foes and hazards; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +5.)*
+- *Phys — Sky Dash* · 1 AP · CD 1 — Hover this round and fly exactly 4, over foes and ledges. *(P3: Hover this round and fly exactly 4, over foes and ledges; your next strike this turn deals +3.)*
+- *Eth — Sky Burst* · 1 AP + 1 Space · CD 3 — Hover this round and fly exactly 4, over foes and ledges; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +3. *(P3/E3: Hover this round and fly exactly 4, over foes and ledges; Mark the nearest foe (the next hit on it deals +2), and your next strike this turn deals +5.)*
 
 **Kite** · Space · `haw_kite`
 
 - *Phys — Hang* · 1 AP · CD 1 — Slip 1 and hang on the wind: see within 2, and your next hit this turn deals +1. *(P3: Slip 4 and hang on the wind: see within 2, and your next hit this turn deals +1.)*
-- *Eth — Hold the Wind* · 0 AP + 1 Space · CD 4 — Hover for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; see within 3. *(P3/E3: Hover for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; see within 5.)*
+- *Eth — Hold the Wind* · 0 AP + 1 Space · CD 4 — Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); see within 3. *(P3/E3: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); see within 5.)*
 
 **Talon Bind** · Mass · `haw_bind`
 
@@ -2465,7 +2465,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2475,7 +2475,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Legs** · Space · `wad_legs`
 
 - *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
-- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up 2, climbing; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up 4, climbing; see within 5, and your next hit this turn deals +1.)*
 
 **Spear Bill** · Mass · `wad_spear`
 
@@ -2489,7 +2489,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Migration** · Space · `cra_migrate`
 
-- *Phys — Long Haul* · 1 AP · CD 1 — Fly 2; hazards can't touch you this round. *(P3: Fly 3; hazards can't touch you this round.)*
+- *Phys — Long Haul* · 1 AP · CD 1 — Hover this round and fly 2, ledges included. *(P3: Hover this round and fly 3, ledges included.)*
 - *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; Haste: your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; Haste: your track slides 2 extra (your cards come back sooner).)*
 
 **Courtship Dance** · Charge · `cra_dance`
@@ -2500,7 +2500,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Stride** · Space · `cra_stride`
 
 - *Phys — Stride* · 1 AP · CD 1 — Stride 1. *(P3: Stride 4.)*
-- *Eth — Run-Up* · 1 AP + 1 Space · CD 3 — Run, flap and lift: land on any node within 4, height included; hazards can't touch you this round. *(P3/E3: Run, flap and lift: land on any node within 6, height included; hazards can't touch you this round.)*
+- *Eth — Run-Up* · 1 AP + 1 Space · CD 3 — Run, flap and lift: land on any node within 4, height included, and Hover this round. *(P3/E3: Run, flap and lift: land on any node within 6, height included, and Hover this round.)*
 
 **Trumpet** · Charge · `cra_trumpet`
 
@@ -2519,7 +2519,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2529,7 +2529,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Legs** · Space · `wad_legs`
 
 - *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
-- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up 2, climbing; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up 4, climbing; see within 5, and your next hit this turn deals +1.)*
 
 **Spear Bill** · Mass · `wad_spear`
 
@@ -2563,7 +2563,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2573,7 +2573,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Legs** · Space · `wad_legs`
 
 - *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
-- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up 2, climbing; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up 4, climbing; see within 5, and your next hit this turn deals +1.)*
 
 **Spear Bill** · Mass · `wad_spear`
 
@@ -2602,8 +2602,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Graceful Lift** · Space · `egr_lift`
 
-- *Phys — Lift* · 1 AP · CD 1 — Lift onto any node within 1, height included, and hold Shield 1 this round. *(P3: Lift onto any node within 4, height included, and hold Shield 1 this round.)*
-- *Eth — Float* · 1 AP + 1 Space · CD 3 — Float for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes; heal 1, and your next hit deals +1. *(P3/E3: Float for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes; heal 1, and your next hit deals +1.)*
+- *Phys — Lift* · 1 AP · CD 1 — Lift 1, climbing, and hold Shield 1 this round. *(P3: Lift 4, climbing, and hold Shield 1 this round.)*
+- *Eth — Float* · 1 AP + 1 Space · CD 3 — Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); heal 1, and your next hit deals +1. *(P3/E3: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); heal 1, and your next hit deals +1.)*
 
 ## 53 · Ibis — leans T/C
 
@@ -2612,7 +2612,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2622,7 +2622,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Legs** · Space · `wad_legs`
 
 - *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
-- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up 2, climbing; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up 4, climbing; see within 5, and your next hit this turn deals +1.)*
 
 **Spear Bill** · Mass · `wad_spear`
 
@@ -2651,8 +2651,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Flock V** · Space · `ibi_flock`
 
-- *Phys — Formation* · 1 AP · CD 1 — An ally moves 1, where you choose; all heroes hold Shield 1 this round. *(P3: An ally moves 4, where you choose; all heroes hold Shield 1 this round.)*
-- *Eth — V-Flight* · 1 AP + 1 Space · CD 4 — An ally moves 3 in your slipstream; all heroes hold Shield 1 this round, and Haste: their track slides 1 extra. *(P3/E3: An ally moves 5 in your slipstream; all heroes hold Shield 2 this round, and Haste: their track slides 1 extra.)*
+- *Phys — Formation* · 1 AP · CD 1 — Guide an ally 1; all heroes hold Shield 1 this round. *(P3: Guide an ally 4; all heroes hold Shield 1 this round.)*
+- *Eth — V-Flight* · 1 AP + 1 Space · CD 4 — Guide an ally 3 in your slipstream; all heroes hold Shield 1 this round, and Haste: their track slides 1 extra. *(P3/E3: Guide an ally 5 in your slipstream; all heroes hold Shield 2 this round, and Haste: their track slides 1 extra.)*
 
 ## 54 · Shoebill — leans M/T
 
@@ -2661,7 +2661,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2671,7 +2671,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Legs** · Space · `wad_legs`
 
 - *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
-- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up 2, climbing; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up 4, climbing; see within 5, and your next hit this turn deals +1.)*
 
 **Spear Bill** · Mass · `wad_spear`
 
@@ -2710,7 +2710,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Wade** · Space · `wad_wade`
 
@@ -2720,7 +2720,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Legs** · Space · `wad_legs`
 
 - *Phys — High Step* · 1 AP · CD 1 — Step 1 over foes, and hold Shield 1 this round. *(P3: Step 4 over foes, and hold Shield 1 this round.)*
-- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up onto any node within 2, height included; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up onto any node within 4, height included; see within 5, and your next hit this turn deals +1.)*
+- *Eth — Stand Tall* · 1 AP + 1 Space · CD 3 — Step up 2, climbing; see within 3, and your next hit this turn deals +1. *(P3/E3: Step up 4, climbing; see within 5, and your next hit this turn deals +1.)*
 
 **One-Leg Rest** · Time · `fla_oneleg`
 
@@ -2764,7 +2764,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Plunge Dive** · Mass · `sea_plunge`
 
@@ -2808,7 +2808,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Big Bill** · Mass · `bil_big`
 
@@ -2837,13 +2837,13 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Fishing Line** · Charge · `pel_line`
 
-- *Phys — Line Up* · 1 AP · CD 1 — An ally moves 1, where you choose, and their next hit deals +1. *(P3: An ally moves 4, where you choose, and their next hit deals +1.)*
+- *Phys — Line Up* · 1 AP · CD 1 — Guide an ally 1, and their next hit deals +1. *(P3: Guide an ally 4, and their next hit deals +1.)*
 - *Eth — Drive the Shoal* · 1 AP + 1 Charge · CD 3 — Link a foe within 3 to the nearest foe within 2 of it for 2 rounds, then drive it two nodes toward you (the other comes too); all heroes' next hit deals +1. *(P3/E3: Link a foe within 3 to the nearest foe within 2 of it for 2 rounds, then drive it two nodes toward you (the other comes too); all heroes' next hit deals +2.)*
 
 **Long Glide** · Space · `pel_glide`
 
 - *Phys — Glide* · 1 AP · CD 1 — Glide 2, over foes. *(P3: Glide 3, over foes.)*
-- *Eth — Wave Ride* · 1 AP + 1 Space · CD 3 — Ride the air over a wave to any node within 4; see within 3, and ignore hazards this round. *(P3/E3: Ride the air over a wave to any node within 6; see within 5, and ignore hazards this round.)*
+- *Eth — Wave Ride* · 1 AP + 1 Space · CD 3 — Ride the air over a wave to any node within 4; see within 3, and Hover this round. *(P3/E3: Ride the air over a wave to any node within 6; see within 5, and Hover this round.)*
 
 **Pelican Crash** · Mass · `pel_crash`
 
@@ -2857,7 +2857,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Plunge Dive** · Mass · `sea_plunge`
 
@@ -2911,7 +2911,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Mimicry** · Charge · `bir_mimic`
 
@@ -2940,7 +2940,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wolf Guide** · Charge · `rav_wolf`
 
-- *Phys — This Way* · 1 AP · CD 1 — Call an ally on: they move 1 where you choose, and you see within 2. *(P3: Call an ally on: they move 4 where you choose, and you see within 2.)*
+- *Phys — This Way* · 1 AP · CD 1 — Call an ally on: Guide them 1, and you see within 2. *(P3: Call an ally on: Guide them 4, and you see within 2.)*
 - *Eth — Lead the Hunt* · 1 AP + 1 Charge · CD 4 — Lead an ally to any foe: Revealed for 2 rounds and is Marked, and their next hit deals +3. *(P3/E3: Lead an ally to any foe: Revealed for 2 rounds and is Marked, and their next hit deals +5.)*
 
 **Snow Slide** · Space · `rav_snow`
@@ -2965,7 +2965,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Mimicry** · Charge · `bir_mimic`
 
@@ -3004,7 +3004,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Big Bill** · Mass · `bil_big`
 
@@ -3023,8 +3023,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Canopy Hop** · Space · `tou_hop`
 
-- *Phys — Hop* · 1 AP · CD 1 — Hop onto any node within 1, height included. *(P3: Hop onto any node within 4, height included.)*
-- *Eth — Branch to Branch* · 1 AP + 1 Space · CD 3 — Hop to any node within 3, height included; see within 2, and your next hit this turn deals +1. *(P3/E3: Hop to any node within 5, height included; see within 2, and your next hit this turn deals +1.)*
+- *Phys — Hop* · 1 AP · CD 1 — Hop 1, climbing. *(P3: Hop 4, climbing.)*
+- *Eth — Branch to Branch* · 1 AP + 1 Space · CD 3 — Hop 3, climbing; see within 2, and your next hit this turn deals +1. *(P3/E3: Hop 5, climbing; see within 2, and your next hit this turn deals +1.)*
 
 **Bill Cool** · Time · `tou_cool`
 
@@ -3053,12 +3053,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Hover** · Space · `hmb_hover`
 
-- *Phys — Hold Still* · 1 AP · CD 1 — Dart 1 and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1. *(P3: Dart 4 and hang in the air: hazards can't touch you this round, and your next hit this turn deals +1.)*
-- *Eth — Hang in the Air* · 1 AP + 1 Space · CD 4 — Hover for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; Shield 1 this round. *(P3/E3: Hover for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you, and mint 1 AP each turn; Shield 1 this round.)*
+- *Phys — Hold Still* · 1 AP · CD 1 — Hover this round and dart 1, ledges included; your next hit this turn deals +1. *(P3: Hover this round and dart 4, ledges included; your next hit this turn deals +1.)*
+- *Eth — Hang in the Air* · 1 AP + 1 Space · CD 4 — Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); Shield 1 this round. *(P3/E3: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges); Shield 1 this round.)*
 
 **Thousand Beats** · Time · `hmb_beats`
 
@@ -3102,7 +3102,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Display Fan** · Charge · `bir_fan`
 
@@ -3136,8 +3136,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Jungle Roost** · Space · `pea_roost`
 
-- *Phys — Flap Up* · 1 AP · CD 1 — Flap up onto any node within 1, height included, and hold Shield 1 this round. *(P3: Flap up onto any node within 4, height included, and hold Shield 1 this round.)*
-- *Eth — High Roost* · 1 AP + 1 Space · CD 4 — Roost on any node within 2, height included: heal 2 now, and 1 at the start of each turn for 2 rounds. *(P3/E3: Roost on any node within 4, height included: heal 4 now, and 1 at the start of each turn for 2 rounds.)*
+- *Phys — Flap Up* · 1 AP · CD 1 — Flap up 1, climbing, and hold Shield 1 this round. *(P3: Flap up 4, climbing, and hold Shield 1 this round.)*
+- *Eth — High Roost* · 1 AP + 1 Space · CD 4 — Climb 2 to a roost: heal 2 now, and 1 at the start of each turn for 2 rounds. *(P3/E3: Climb 4 to a roost: heal 4 now, and 1 at the start of each turn for 2 rounds.)*
 
 **Iridescence** · Charge · `pea_iris`
 
@@ -3151,7 +3151,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Wide Eyes** · Space · `hoof_eyes`
 
@@ -3200,7 +3200,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Hollow Bones** · Mass · `owl_bones`
 
 - *Phys — Lighten* · 1 AP · CD 1 · Dur 1 — Move 1; hazards can't touch you this round. *(P3: Move 4; hazards can't touch you this round.)*
-- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight for 2 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes. *(P3/E3: Shed apparent weight for 4 rounds: nothing pushes or pulls you, and hazards and Fields don't touch you, and you may walk onto height nodes.)*
+- *Eth — Weightless* · 1 AP + 1 Mass · CD 3 — Shed apparent weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Shed apparent weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Display Fan** · Charge · `bir_fan`
 
@@ -3234,7 +3234,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Roost Flight** · Space · `tur_roost`
 
-- *Phys — Flush* · 1 AP · CD 1 — Burst up onto any node within 1, height included; Shield: the next hit on you is 1 less. *(P3: Burst up onto any node within 4, height included; Shield: the next hit on you is 1 less.)*
+- *Phys — Flush* · 1 AP · CD 1 — Burst up 1, climbing; Shield: the next hit on you is 1 less. *(P3: Burst up 4, climbing; Shield: the next hit on you is 1 less.)*
 - *Eth — Up for the Night* · 1 AP + 1 Space · CD 4 — Fly up to any node within 3, height included; heal 2, and Hidden 1. *(P3/E3: Fly up to any node within 5, height included; heal 4, and Hidden 1.)*
 
 **Wattle Flush** · Charge · `tur_wattle`
@@ -3278,7 +3278,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Grip Feet** · Space · `cha_grip`
 
-- *Phys — Grip* · 1 AP · CD 1 — Climb onto any node within 1, height included, and grip: nothing can push or pull you this round. *(P3: Climb onto any node within 4, height included, and grip: nothing can push or pull you this round.)*
+- *Phys — Grip* · 1 AP · CD 1 — Climb 1, and grip: nothing can push or pull you this round. *(P3: Climb 4, and grip: nothing can push or pull you this round.)*
 - *Eth — Branch Hold* · 1 AP + 1 Space · CD 3 — Hold on with all four feet and the tail: Shield 2 for 2 rounds; Cleanse, and nothing can push or pull you, Weaken you or Anchor you for 2 rounds. *(P3/E3: Hold on with all four feet and the tail: Shield 4 for 2 rounds; Cleanse, and nothing can push or pull you, Weaken you or Anchor you for 2 rounds.)*
 
 **Slow Sway** · Time · `cha_sway`
@@ -3542,7 +3542,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Adhesive Setae** ★ · Charge · `gec_setae`
 
-- *Phys — Climb* · 1 AP · CD 1 — Walk walls and ceilings: move 1, height nodes included. *(P3: Walk walls and ceilings: move 4, height nodes included.)*
+- *Phys — Climb* · 1 AP · CD 1 — Walk walls and ceilings: move 1, climbing. *(P3: Walk walls and ceilings: move 4, climbing.)*
 - *Eth — Van der Waals* · 0 AP + 1 Charge · CD 3 — Command the molecular bond: pull a foe in your zone 2 toward you. *(P3/E3: Command the molecular bond: pull a foe in your zone 4 toward you and Anchor it 1.)*
 
 **External Gills** · Charge · `axo_gills`
@@ -3557,8 +3557,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Leaf Leap** ★ · Space · `tfr_leap`
 
-- *Phys — Leap* · 1 AP · CD 1 — Leap onto any node within 1, height included; your next hit this turn deals +1. *(P3: Leap onto any node within 4, height included; your next hit this turn deals +1.)*
-- *Eth — Leaf to Leaf* · 1 AP + 1 Space · CD 3 — Leap to any node within 4, height included, and land Hidden 1. *(P3/E3: Leap to any node within 6, height included, and land Hidden 1.)*
+- *Phys — Leap* · 1 AP · CD 1 — Leap 1, climbing; your next hit this turn deals +1. *(P3: Leap 4, climbing; your next hit this turn deals +1.)*
+- *Eth — Leaf to Leaf* · 1 AP + 1 Space · CD 3 — Leap 4, climbing, and land Hidden 1. *(P3/E3: Leap 6, climbing, and land Hidden 1.)*
 
 **Rain Call** · Charge · `tfr_rain`
 
@@ -3597,7 +3597,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
 - *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges). *(P3/E3: Alter your weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges); an adjacent ally is Anchored too.)*
 
 **Long Life** · Time · `bir_life`
 
@@ -3606,12 +3606,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Schooling** · Space · `fis_school`
 
-- *Phys — Swim Together* · 1 AP · CD 1 — Turn as one: an ally moves 1 where you choose, and you take a free step. *(P3: Turn as one: an ally moves 4 where you choose, and you take a free step.)*
+- *Phys — Swim Together* · 1 AP · CD 1 — Turn as one: Guide an ally 1, and you take a free step. *(P3: Turn as one: Guide an ally 4, and you take a free step.)*
 - *Eth — Bait Ball* · 1 AP + 1 Space · CD 3 — Close up tight: all heroes hold Shield 2 this round, and Shield: each one's next hit taken is 1 less. *(P3/E3: Close up tight: all heroes hold Shield 4 this round, and Shield: each one's next hit taken is 1 less.)*
 
 **Dragon Gate** ★ · Space · `koi_gate`
 
-- *Phys — Leap the Falls* · 1 AP · CD 1 — Leap up the falls onto any node within 1, height included; your next hit this turn deals +1. *(P3: Leap up the falls onto any node within 4, height included; your next hit this turn deals +1.)*
+- *Phys — Leap the Falls* · 1 AP · CD 1 — Leap up the falls 1, climbing; your next hit this turn deals +1. *(P3: Leap up the falls 4, climbing; your next hit this turn deals +1.)*
 - *Eth — Become the Dragon* · 0 AP + 1 Space · CD 4 — For 2 rounds your strikes deal +1; heal 2. *(P3/E3: For 4 rounds your strikes deal +2; heal 4.)*
 
 **Upstream** · Space · `koi_up`
@@ -3646,11 +3646,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
 - *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges). *(P3/E3: Alter your weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges); an adjacent ally is Anchored too.)*
 
 **Schooling** · Space · `fis_school`
 
-- *Phys — Swim Together* · 1 AP · CD 1 — Turn as one: an ally moves 1 where you choose, and you take a free step. *(P3: Turn as one: an ally moves 4 where you choose, and you take a free step.)*
+- *Phys — Swim Together* · 1 AP · CD 1 — Turn as one: Guide an ally 1, and you take a free step. *(P3: Turn as one: Guide an ally 4, and you take a free step.)*
 - *Eth — Bait Ball* · 1 AP + 1 Space · CD 3 — Close up tight: all heroes hold Shield 2 this round, and Shield: each one's next hit taken is 1 less. *(P3/E3: Close up tight: all heroes hold Shield 4 this round, and Shield: each one's next hit taken is 1 less.)*
 
 **Anemone Home** ★ · Time · `clo_anemone`
@@ -3695,7 +3695,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
 - *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges). *(P3/E3: Alter your weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges); an adjacent ally is Anchored too.)*
 
 **Venom Spines** ★ · Mass · `lio_spines`
 
@@ -3744,7 +3744,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
 - *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges). *(P3/E3: Alter your weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges); an adjacent ally is Anchored too.)*
 
 **Pouch** · Charge · `pou_pouch`
 
@@ -3778,7 +3778,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Slow Fin** · Space · `sea_fin`
 
-- *Phys — Flutter* · 1 AP · CD 1 — Flutter 1; hazards can't touch you this round. *(P3: Flutter 4; hazards can't touch you this round.)*
+- *Phys — Flutter* · 1 AP · CD 1 — Hover this round and flutter 1, ledges included. *(P3: Hover this round and flutter 4, ledges included.)*
 - *Eth — Ride the Current* · 1 AP + 1 Space · CD 3 — Let the current carry you to any node within 3; Hidden 1, and hazards can't touch you this round. *(P3/E3: Let the current carry you to any node within 5; Hidden 1, and hazards can't touch you this round.)*
 
 ## 77 · Snail — leans T/M
@@ -3807,7 +3807,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Slime Trail** ★ · Time · `snl_slime`
 
-- *Phys — Glide* · 1 AP · CD 1 — Glide 1 on your own slime, up walls and over anything sharp: height nodes included, hazards can't touch you this round, and your next hit this turn deals +1. *(P3: Glide 4 on your own slime, up walls and over anything sharp: height nodes included, hazards can't touch you this round, and your next hit this turn deals +1.)*
+- *Phys — Glide* · 1 AP · CD 1 — Glide 1 on your own slime, up walls and over anything sharp, climbing: hazards can't touch you this round, and your next hit this turn deals +1. *(P3: Glide 4 on your own slime, up walls and over anything sharp, climbing: hazards can't touch you this round, and your next hit this turn deals +1.)*
 - *Eth — Slick* · 1 AP + 1 Time · CD 3 — Lay a slick on a node within 2: foes on or beside it are Wounded 2, and foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Lay a slick on a node within 2: foes on or beside it are Wounded 2, and foes beside you are Weakened 1 for 4 rounds.)*
 
 **Seal In** · Mass · `snl_seal`
@@ -3847,7 +3847,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
 - *Phys — Trim* · 1 AP · CD 1 · Dur 1 — Hold depth: Anchored (nothing moves you, your own steps included) and Shield 1. *(P3: Hold depth: Anchored (nothing moves you, your own steps included) and Shield 4.)*
-- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you. *(P3/E3: Alter your weight for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; an adjacent ally is anchored too.)*
+- *Eth — Hover-Anchor* · 1 AP + 1 Mass · CD 3 — Alter your weight: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges). *(P3/E3: Alter your weight: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may rise onto ledges); an adjacent ally is Anchored too.)*
 
 **Nematocysts** ★ · Charge · `jel_sting`
 
@@ -3916,7 +3916,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long March** · Time · `lob_march`
 
 - *Phys — Single File* · 1 AP · CD 1 — Walk 1 in line: you and every ally within 2 hold Shield 1 this round. *(P3: Walk 4 in line: you and every ally within 2 hold Shield 1 this round.)*
-- *Eth — March On* · 1 AP + 1 Time · CD 4 — Lead the march: move an ally 2, and all heroes heal 1 at the start of their next 2 turns. *(P3/E3: Lead the march: move an ally 4, and all heroes heal 1 at the start of their next 2 turns.)*
+- *Eth — March On* · 1 AP + 1 Time · CD 4 — Lead the march: Guide an ally 2, and all heroes heal 1 at the start of their next 2 turns. *(P3/E3: Lead the march: Guide an ally 4, and all heroes heal 1 at the start of their next 2 turns.)*
 
 **Long Feelers** · Charge · `lob_feelers`
 
@@ -4019,7 +4019,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Strong Back** · Mass · `btl_strong`
 
 - *Phys — Dig In* · 1 AP · CD 1 — Set your six legs: nothing can push or pull you this round, and your next hit this turn deals +1. *(P3: Set your six legs: nothing can push or pull you this round, and your next hit this turn deals +2.)*
-- *Eth — Carry* · 1 AP + 1 Mass · CD 3 — Shoulder an ally: move them 2, and all heroes hold Shield 2 this round. *(P3/E3: Shoulder an ally: move them 4, and all heroes hold Shield 4 this round.)*
+- *Eth — Carry* · 1 AP + 1 Mass · CD 3 — Shoulder an ally: Guide them 2, and all heroes hold Shield 2 this round. *(P3/E3: Shoulder an ally: Guide them 4, and all heroes hold Shield 4 this round.)*
 
 **Play Dead** · Time · `btl_dead`
 
@@ -4038,11 +4038,11 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Glide Wings** · Space · `hop_glide`
 
 - *Phys — Buzz* · 1 AP · CD 1 — Glide 1, over foes. *(P3: Glide 4, over foes.)*
-- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift for 2 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn. *(P3/E3: Hover-drift for 4 rounds: hazards and Fields don't touch you, and nothing pushes or pulls you; mint 1 AP each turn.)*
+- *Eth — Hover* · 1 AP + 1 Space · CD 3 — Hover-drift: Hover 2 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges). *(P3/E3: Hover-drift: Hover 4 (off the ground: hazards and Fields don't touch you, nothing pushes or pulls you, and you may fly onto ledges).)*
 
 **Migration** · Space · `cra_migrate`
 
-- *Phys — Long Haul* · 1 AP · CD 1 — Fly 2; hazards can't touch you this round. *(P3: Fly 3; hazards can't touch you this round.)*
+- *Phys — Long Haul* · 1 AP · CD 1 — Hover this round and fly 2, ledges included. *(P3: Hover this round and fly 3, ledges included.)*
 - *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; Haste: your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; Haste: your track slides 2 extra (your cards come back sooner).)*
 
 **Antennae** · Charge · `ins_antennae`

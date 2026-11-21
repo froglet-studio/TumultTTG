@@ -19,10 +19,19 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.102.0',
+    version: '2.104.0',
     items: [
       {
         text: 'Pets are here. A haven may have a stray: a hybrid of three clades (never human) with one card that holds a Physical face from each of them. Adopt it for 4 ◇ (two pets at most); its card counts toward your nine. Any one of its three faces sends the whole card to your track, and the face acts from the pet: its reach, its strike, its steps. Heel (1 AP) walks it up to 3. Did playing a card through the pet read clearly on the board?',
+      },
+      {
+        text: 'Movement has clearer words: Climb is a Move that may take ledges (foes now block it, as they block any walk), Guide moves an ally (Rally only raises the downed), and Gallop now tramples: it goes through foes and pushes each one aside, into a hazard or Field if that is where aside is. Did a climb that used to reach a ledge get stuck behind a foe? Did trampling give you a shove you could plan?',
+      },
+      {
+        text: 'Fliers now Hover: off the ground, no hazard or Field touches them, nothing pushes or pulls them, and their flights can end on a ledge (hawk, eagle, crane, egret, owl, pelican, hummingbird, seahorse, winged insects). Coats, gills and swims still just ignore hazards. Did a flier reach somewhere you did not expect? Did the two ever read as the same thing?',
+      },
+      {
+        text: 'No die is ever drawn at random now: Draw takes a plain die while your pool has one, then the element die that shows the face most, and a roll with few plain dice left takes the element dice you hold most of. Did any Draw bank a die you did not expect?',
       },
       {
         text: 'A pet can share your node, and there nothing can hurt it; off your node foes can target it, and at 0 it dies and its card leaves your kit (the points on it come back). Did you find yourself parking it on your node, or sending it out? Was a pet ever worth losing?',

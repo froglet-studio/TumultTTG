@@ -481,8 +481,11 @@
         m.board.ramp ||
         h.cards.some(
           (c) =>
-            (!T.isPetCard(h, c) && T.CARD[c].E.fx.some((x) => (x.v === 'blink' && x.height) || x.v === 'climb')) ||
-            T.CARD[c].P.fx.some((x) => x.v === 'climb'),
+            (!T.isPetCard(h, c) &&
+              T.CARD[c].E.fx.some(
+                (x) => (x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
+              )) ||
+            T.CARD[c].P.fx.some((x) => (x.v === 'move' && x.climb) || x.v === 'hover'),
         ) ||
         h.gear.some((g) => ['phasebrace', 'climbrig'].includes(g.id));
       return canReach ? { node: ob.node, needOn: true } : { node: ob.leverNode, needOn: false };
@@ -506,7 +509,7 @@
         if (T.isPetCard(h, cid)) continue; // a pet's step moves the pet, not the pilot
         const card = T.CARD[cid],
           face = card[fk];
-        const mv = face.fx.find((x) => ['move', 'blink', 'climb'].includes(x.v));
+        const mv = face.fx.find((x) => ['move', 'blink'].includes(x.v));
         if (!mv || face.fx.some((x) => x.v === 'rest')) continue;
         const chk = T.canPlay(m, h, cid, fk);
         if (!chk.ok || chk.tg.need !== 'node' || !chk.tg.options.length) continue;
@@ -680,7 +683,7 @@
               )[0];
               ctx.node = node;
               score = 1.5;
-            } else if (face.fx.some((x) => x.v === 'blink' || x.v === 'climb' || x.v === 'move')) {
+            } else if (face.fx.some((x) => x.v === 'blink' || x.v === 'move')) {
               const goal =
                 objectiveNode(m) ||
                 (T.liveEnemies(m)[0]

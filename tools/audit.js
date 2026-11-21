@@ -92,23 +92,19 @@ function answersOf(x) {
       break;
     case 'move':
       add('tempo', 'burst'); // get there sooner; step out of a zone or out of reach
+      if (x.climb) add('height'); // climbing: the steps may take the ledges
+      if (x.trample) add('crowd'); // the foes in the way are pushed aside
       break;
     case 'blink':
       add('tempo', 'burst');
       if (x.height) add('height');
       break;
-    case 'climb':
-      add('height', 'tempo');
-      break;
     case 'swap':
-    case 'rally':
+    case 'guide':
       add('tempo', 'burst');
       break;
     case 'hover':
-      add('hazard', 'control');
-      break;
-    case 'weightless':
-      add('height', 'hazard', 'control'); // height is the card's promise; v2.0's pathing does not honour it yet
+      add('height', 'hazard', 'control'); // off the ground: over hazards and Fields, unmoved, onto ledges (2.102)
       break;
     case 'force':
       add('burst', 'single'); // shove an attacker out of reach; drag a kiter into reach, or anything into a hazard or trap
@@ -191,7 +187,7 @@ function answersOf(x) {
  */
 const STAPLE_VERBS = [
   ...['strike', 'execute', 'wound', 'empower', 'mark', 'morph'], // damage
-  ...['move', 'blink', 'climb'], // movement
+  ...['move', 'blink', 'guide'], // movement
   ...['shield', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
   ...['mint', 'draw', 'reroll', 'haste'], // dice and track economy
@@ -218,7 +214,8 @@ const ABLATIONS = [
     'no way up',
     (x) =>
       (x.v === 'blink' && x.height) ||
-      ['climb', 'weightless'].includes(x.v) ||
+      (x.v === 'move' && x.climb) ||
+      x.v === 'hover' ||
       (x.v === 'morph' && x.climb) ||
       (x.v === 'interact' && x.height),
   ],
@@ -253,7 +250,7 @@ const ABLATIONS = [
     (x) => ['shield', 'stasis', 'hidden', 'thorns'].includes(x.v) || (x.v === 'heal' && x.ward != null),
   ],
   ['heal', 'no healing', (x) => x.v === 'heal' || (x.v === 'engine' && x.kind === 'regen')],
-  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'climb', 'swap', 'hover', 'weightless'].includes(x.v)],
+  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'guide', 'swap', 'hover'].includes(x.v)],
   [
     'control',
     'no foe control',
@@ -266,7 +263,7 @@ const ABLATIONS = [
     'hazard',
     'no hazard answers',
     (x) =>
-      ['hazardImmune', 'hover', 'weightless'].includes(x.v) ||
+      ['hazardImmune', 'hover'].includes(x.v) ||
       (x.v === 'cleanse' && x.field != null) ||
       (x.v === 'anchor' && (x.who === 'self' || x.who === 'ally')),
   ],
@@ -287,7 +284,7 @@ function autoplayerKnows(face) {
   if (has('shield', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
   if (has('field')) return node;
-  if (has('blink', 'climb', 'move')) return node;
+  if (has('blink', 'move')) return node;
   return false;
 }
 
