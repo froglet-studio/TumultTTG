@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.94.0',
+    version: '2.95.0',
     items: [
+      {
+        text: 'Teleport is now called Blink on every card and in every tooltip: leave the paths and appear on a free space within N (high ground only where the card says). Nothing else changed. Does Blink read better than teleport at the table?',
+        cards: ['oct_ink'],
+      },
       {
         text: 'Pre-empt is now a Shield against the next hit: the faces say Shield: the next hit on you is N less. Guard (ambushes halved) and Absorb are Shields too. Does the one word make it easier to see how protected your pilot is?',
         cards: ['koi_shimmer', 'oct_intellect'],

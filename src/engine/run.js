@@ -435,7 +435,7 @@
         if (h.upUnspent <= 0) break;
         const c = T.CARD[cid];
         const which =
-          (c.sig >= 2 || c.E.fx.some((x) => ['teleport', 'engine', 'strike'].includes(x.v))) &&
+          (c.sig >= 2 || c.E.fx.some((x) => ['blink', 'engine', 'strike'].includes(x.v))) &&
           h.up[cid][1] < h.up[cid][0] + 1
             ? 'E'
             : 'P';

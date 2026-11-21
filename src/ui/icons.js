@@ -375,7 +375,7 @@
     climb: 'basic.scramble',
     hover: 'event.guide',
     weightless: 'event.guide',
-    teleport: 'gear.phasebrace',
+    blink: 'gear.phasebrace',
     swap: 'gear.phasebrace',
     reveal: 'boon.keensense',
     locate: 'boon.keensense',

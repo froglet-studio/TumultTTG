@@ -17,7 +17,7 @@
   T.ETHERIONS = {
     M: { name: 'Mass',   color: '#e0533d', glyph: '◆', surface: 'bodies & force — push, pull, weight, anchor, pierce-by-force' },
     C: { name: 'Charge', color: '#f2c14e', glyph: '◆', surface: 'energy & links — shock, fields, chains, reveal-by-sensing, engines' },
-    S: { name: 'Space',  color: '#5ec8d8', glyph: '◆', surface: 'position & topology — teleport, reach, area, swap, height' },
+    S: { name: 'Space',  color: '#5ec8d8', glyph: '◆', surface: 'position & topology — blink, reach, area, swap, height' },
     T: { name: 'Time',   color: '#b07cf0', glyph: '◆', surface: 'the track itself — hasten, delay, stasis, foresight, regen' },
     O: { name: 'Omni',   color: '#e7edf2', glyph: '◇', surface: 'spends as any etherion' },
   };
@@ -125,7 +125,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true}],
       txt:(P,E)=>`Move ${1+P}, leaping over foes.` },
     { n:'Fold-hop', ap:0, el:2, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'move', n:2, free:true}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'move', n:2, free:true}],
       txt:(P,E)=>`Blink to any node within ${3+E} (height included), then take two free steps.` },
     'Three meters from a standstill.');
   C('jerboa','jer_ears','Radiator Ears','C',2,
@@ -173,7 +173,7 @@
       fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Dig in: Hidden ${1+h(P)} and Shield 1.` },
     { n:'Phase-tunnel', ap:0, el:2, cd:4, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'hidden', dur:(P,E)=>1+h(E)}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'hidden', dur:(P,E)=>1+h(E)}],
       txt:(P,E)=>`Tunnel through anything to a node within ${3+E} and surface Hidden ${1+h(E)}.` },
     'Through any terrain to an unseen zone.');
   C('jerboa','jer_torpor','Metabolic Torpor','T',1,
@@ -199,7 +199,7 @@
       fx:[{v:'empower', val:(P,E)=>2+P, uses:1}],
       txt:(P,E)=>`Store elastic energy: your next strike deals +${2+P}.` },
     { n:'Launch', ap:2, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'strike', kind:'area', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:(P,E)=>E>=2?1:0, area:true}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'strike', kind:'area', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:(P,E)=>E>=2?1:0, area:true}],
       txt:(P,E)=>`Bound to a node within ${2+E} and slam: all adjacent foes take ${3+P}${E>=2?' and are pushed 1':''}.` },
     'An orthopteran catapult.');
   C('hopper','hop_strid','Stridulation','C',2,
@@ -231,7 +231,7 @@
       fx:[{v:'cleanse'},{v:'shield', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Slip every hold and dot; Shield ${1+P}.` },
     { n:'Husk', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'teleport', reach:(P,E)=>1+E}],
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'blink', reach:(P,E)=>1+E}],
       txt:(P,E)=>`Leave a hollow husk (decoy, ${1+E} rounds) and blink up to ${1+E} away.` },
     'Foes waste an action on the shell.');
   C('hopper','hop_eyes','Compound Eyes','S',0,
@@ -273,7 +273,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'empower', val:2, uses:1, dur:1}],
       txt:(P,E)=>`Move ${1+P} without triggering traps; your next strike this turn deals +2 (surprise).` },
     { n:'Dampen', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+E, canMove:true}],
+      fx:[{v:'blink', reach:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+E, canMove:true}],
       txt:(P,E)=>`Erase your presence: blink ${1+E} and stay Hidden for ${1+E} rounds even while moving.` },
     'Comb-edged feathers erase the sound of flight.');
   C('owl','owl_sound','Sound Mapping','S',2,
@@ -371,7 +371,7 @@
       fx:[{v:'hidden', dur:(P,E)=>1+h(P), party:true, radius:1},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Haze your node and its neighbours: heroes there are Hidden ${1+h(P)}, and foes adjacent to you are Weakened 1.` },
     { n:'Smoke Step', ap:1, el:1, cd:2, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>1+E},{v:'hidden', dur:1}],
       txt:(P,E)=>`Vanish into the cloud and re-emerge anywhere within ${1+E}, Hidden 1.` },
     'Blocks line of sight.');
   C('octopus','oct_squeeze','Boneless Squeeze','M',0,
@@ -437,7 +437,7 @@
       fx:[{v:'cleanse'},{v:'decoy', dur:(P,E)=>1+h(P), here:true},{v:'move', n:1}],
       txt:(P,E)=>`Drop a thrashing tail (decoy ${1+h(P)}), escape every hold, step 1.` },
     { n:'Blink', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'decoy', dur:2, here:true},{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:1}],
+      fx:[{v:'decoy', dur:2, here:true},{v:'blink', reach:(P,E)=>1+E},{v:'hidden', dur:1}],
       txt:(P,E)=>`The discarded "you" stays put as a decoy for 2 rounds while you blink ${1+E} and go Hidden 1.` },
     'Leave a wriggling distraction.');
   C('gecko','gec_forensic','Forensic Vision','C',0,
@@ -461,7 +461,7 @@
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'locate', nearest:true, dur:2},{v:'mark', nearest:true}],
       txt:(P,E)=>`Taste the air: reveal within ${1+P}; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).` },
     { n:'Lock Scent', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'}],
+      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'}],
       txt:(P,E)=>`Lock onto a foe: it can't Hide for ${2+E} rounds, and you may blink adjacent to it if it's within ${2+E}.` },
     'Track its path through the air.');
   C('gecko','gec_hide','Scaled Hide','M',0,
@@ -609,7 +609,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true}],
       txt:(P,E)=>`Undulate ${1+P} in any direction, through foes.` },
     { n:'Decouple', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'anchor', who:'self', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'anchor', who:'self', dur:1}],
       txt:(P,E)=>`Decouple from momentum: reposition anywhere within ${2+E}, immune to push/pull this round.` },
     'No turn cost.');
   C('eel','eel_doublet','Doublet Jolt','C',0,
@@ -831,7 +831,7 @@
       fx:[{v:'hazardImmune', dur:2},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
       txt:(P,E)=>`Operate in anything: immune to hazards for 2 rounds, and Shield ${1+h(P)} this round.` },
     { n:'Cross the Void', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>1+E, height:true, carryAlly:(P,E)=>E>=2}],
+      fx:[{v:'blink', reach:(P,E)=>1+E, height:true, carryAlly:(P,E)=>E>=2}],
       txt:(P,E)=>`Cross the impossible: move to any node within ${1+E} through vacuum, hazard or height${E>=2?', carrying an adjacent ally':''}.` },
     'Through the void unharmed.');
   C('tardigrade','tar_stylet','Stylet Drain','C',0,

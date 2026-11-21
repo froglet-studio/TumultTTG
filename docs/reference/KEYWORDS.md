@@ -142,3 +142,12 @@ version 25.
 - Guard and Absorb are Shields too.
 
 In code: the verb `shield` (`val`, `dur`, `all`, `party`, `allyRange`, `min`, `next`, `reflect`, `reposition`); the states `Shield` and, for the next hit, `Preempt`; saves version 26.
+
+## Blink (2.95)
+
+> **Blink N.** Leave the paths: appear on a free space within N; height only where it says.
+
+- An Anchored unit cannot blink. The Phase-brace's passive makes your blinks reach 1 further.
+- Swap, which trades places with an ally, stays its own verb for now.
+
+In code: the verb `blink` (`reach`, `height`, `dest: 'adjTarget'`, `carryAlly`), the target `node_tele`.

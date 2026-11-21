@@ -54,7 +54,7 @@
       fx:[{v:'climb', reach:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Move ${1+P}, height nodes included; your next strike this turn deals +1.` },
     { n:'Treetops', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'shield', val:1, dur:1, party:true, allyRange:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'shield', val:1, dur:1, party:true, allyRange:1}],
       txt:(P,E)=>`Leap to any node within ${2+E}, height included; you and an adjacent ally hold Shield 1 this round.` },
     'The ground is for other animals.', 'Primates');
   K(['lemur','mandrill'],'pri_troop','Troop Call','C',0,
@@ -190,7 +190,7 @@
       fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
       txt:(P,E)=>`Run up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
     { n:'Leap', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:1}],
       txt:(P,E)=>`Leap beside a foe within ${2+E}, height included, melee ${3+E}, and pin it: Anchored 1.` },
     'All four feet leave the ground at once.', 'Cats');
   K(CATS_CLAWED,'cat_claws','Retractable Claws','M',0,
@@ -258,7 +258,7 @@
       fx:[{v:'hidden', dur:(P,E)=>1+h(P), canMove:true},{v:'empower', val:1, uses:1, dur:2}],
       txt:(P,E)=>`Hide for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}, moving freely; your next strike deals +1.` },
     { n:'Ghost Strike', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Appear beside a foe within ${2+E}, melee ${3+E} through its Shield, and vanish again: Hidden 1.` },
     'Seen once, if at all.');
 
@@ -276,7 +276,7 @@
       fx:[{v:'climb', reach:(P,E)=>2+P},{v:'shield', val:1, next:true}],
       txt:(P,E)=>`Jump to any node within ${2+P}, height included; Shield: the next hit on you is 1 less.` },
     { n:'Sky Leap', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'strike', kind:'area', dmg:(P,E)=>1+E}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'strike', kind:'area', dmg:(P,E)=>1+E}],
       txt:(P,E)=>`Leap to any node within ${2+E}, height included, landing on every foe beside it for ${1+E}.` },
     'Straight up, from standing.');
 
@@ -294,7 +294,7 @@
       fx:[{v:'climb', reach:(P,E)=>1+P},{v:'strike', kind:'area', dmg:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Climb up to ${1+P}, height included, and drop on every foe beside where you land for ${1+h(P)}.` },
     { n:'Branch Drop', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Drop beside a foe within ${2+E}, melee ${3+E}, and it is Weakened 1.` },
     'Down the trunk face first, ankles turned backwards.');
   K(['ocelot'],'oce_prowl','Night Prowl','T',0,
@@ -431,7 +431,7 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P, revealTarget:true},{v:'mark', n:1, dur:3}],
       txt:(P,E)=>`Dive on a foe within 2 for ${2+P}, hidden or not, and it is Marked +1 for 3 rounds.` },
     { n:'High Arc', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, revealTarget:true}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, revealTarget:true}],
       txt:(P,E)=>`Arc through the air to beside a foe within ${2+E}, height included, and land on it for ${3+E}.` },
     'Up, over, and straight down through the snow.');
   K(['fennec','fox'],'fox_den','Den','T',0,
@@ -493,7 +493,7 @@
       fx:[{v:'locate', dur:(P,E)=>2+P},{v:'mark', n:1, dur:3}],
       txt:(P,E)=>`Line up on any foe: it can't Hide for ${2+P} rounds, and it is Marked +1 for 3 rounds.` },
     { n:'North Leap', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E}],
       txt:(P,E)=>`Leap the long way to beside a foe within ${3+E}, and land on it for ${2+E}.` },
     'It pounces facing north, and it hits more often that way.');
   K(['fox'],'fox_cunning','Cunning','T',2,
@@ -545,7 +545,7 @@
       fx:[{v:'force', kind:'pull', n:(P,E)=>1+h(P)},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Lure a foe within 3 ${1+h(P)} toward you; it is Weakened 1 this round.` },
     { n:'Switcheroo', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'decoy', dur:2, here:true},{v:'teleport', reach:(P,E)=>2+E},{v:'empower', val:2, uses:1, dur:2}],
+      fx:[{v:'decoy', dur:2, here:true},{v:'blink', reach:(P,E)=>2+E},{v:'empower', val:2, uses:1, dur:2}],
       txt:(P,E)=>`Leave a decoy where you stand and slip to a node within ${2+E}; your next strike deals +2.` },
     'It was right there. It was never there.');
   K(['coyote'],'coy_adapt','Adapt Anywhere','T',0,
@@ -669,7 +669,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'cleanse'}],
       txt:(P,E)=>`Roll ${1+P}, past foes, shaking off Anchored and Weakened.` },
     { n:'Spin Free', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'cleanse', party:true}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'cleanse', party:true}],
       txt:(P,E)=>`Spin away to a node within ${2+E}; both heroes shake off Anchored and Weakened.` },
     'Twist, twist, and gone.');
   K(['otter'],'ott_kelp','Kelp Anchor','T',0,
@@ -703,7 +703,7 @@
       fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
       txt:(P,E)=>`Dig in: Hidden 1 and Shield ${1+h(P)} this round.` },
     { n:'Tunnel', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:1}],
       txt:(P,E)=>`Tunnel to a node within ${2+E} and come up Hidden 1.` },
     'Faster down than you are.');
   K(['badger'],'bad_hide','Loose Hide','T',0,
@@ -888,7 +888,7 @@
       fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
       txt:(P,E)=>`Surge up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
     { n:'Spyhop', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:1}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:1}],
       txt:(P,E)=>`Burst out beside a foe within ${3+E}, melee ${3+E}, and push it 1.` },
     'Up out of the water, all eight tons of it.');
   K(['orca'],'orc_tactics','Pod Tactics','C',0,
@@ -946,7 +946,7 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Move ${1+P}, Hidden 1, and your next hit this turn deals +1.` },
     { n:'Surface Far Off', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:1}],
       txt:(P,E)=>`Dive and come up anywhere within ${2+E}, Hidden 1.` },
     'A mile down, in the dark, all winter.');
   K(['narwhal'],'nar_ghost','Pale Ghost','C',0,
@@ -1039,7 +1039,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'shield', val:1, next:true}],
       txt:(P,E)=>`Bound ${1+P}, passing foes; Shield: the next hit on you is 1 less.` },
     { n:'Over the Fence', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Leap to anywhere within ${2+E}, height included, and you are Hidden 1.` },
     'One spring and it is over the hedge.', 'Hoofed animals');
 
@@ -1135,7 +1135,7 @@
       fx:[{v:'climb', reach:(P,E)=>2+P},{v:'anchor', who:'self', dur:1}],
       txt:(P,E)=>`Climb ${2+P}; nothing can push or pull you this round.` },
     { n:'Cliff Run', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:1}],
       txt:(P,E)=>`Spring to anywhere within ${2+E}, height included; your next hit this turn deals +${1+E}.` },
     'A ledge the width of a hoof is plenty.');
   K(['ram'],'ram_curl','Curled Horns','T',0,
@@ -1296,10 +1296,10 @@
     'Along the wall, never across the floor.');
   K(['mouse'],'mou_gap','Through the Gap','S',0,
     { n:'Squeeze', ap:1, el:0, cd:1, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Squeeze through to any node within ${1+h(P)}, and hold Shield 1 this round.` },
     { n:'Under the Door', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, carryAlly:(P,E)=>E>=2},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, carryAlly:(P,E)=>E>=2},{v:'hidden', dur:1}],
       txt:(P,E)=>`Slip to any node within ${2+E}${E>=2?', bringing an ally beside you,':''} and you are Hidden 1.` },
     'If its head fits, the rest follows.');
   K(['mouse'],'mou_stash','Seed Stash','C',0,
@@ -1417,7 +1417,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'hidden', dur:1, canMove:true}],
       txt:(P,E)=>`Move ${1+P}, passing foes, and you are Hidden 1 even if you move.` },
     { n:'Into the Dark', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true}],
+      fx:[{v:'blink', reach:(P,E)=>3+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true}],
       txt:(P,E)=>`Vanish to any node within ${3+E}, Hidden ${1+h(E)} even if you move.` },
     'A dark shape, and then no shape.');
   K(['black_hare'],'bha_kick','Night Kick','M',0,
@@ -1471,7 +1471,7 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'stripShield', amount:1}],
       txt:(P,E)=>`Tear 1 Shield off a foe beside you, then melee ${3+P}.` },
     { n:'Dig Down', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'shield', val:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Dig down and come up anywhere within ${2+E}: Hidden 1, and Shield 1 this round.` },
     'Claws for breaking open termite towers.', 'Armoured and slow');
   K(ANTEATERS,'arm_tongue','Long Tongue','C',0,
@@ -1568,7 +1568,7 @@
     'Nine bands of bone, hinged with skin.');
   K(['armadillo'],'adi_jump','Startle Jump','S',0,
     { n:'Jump', ap:1, el:0, cd:1, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>1+h(P), height:true},{v:'shield', val:1, next:true}],
+      fx:[{v:'blink', reach:(P,E)=>1+h(P), height:true},{v:'shield', val:1, next:true}],
       txt:(P,E)=>`Leap straight up and away to any node within ${1+h(P)}, height included; Shield: the next hit on you is 1 less.` },
     { n:'Up and Away', ap:1, el:1, cd:3, dur:0, tgt:'foe_adj_all',
       fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1, area:true},{v:'move', n:1, free:true}],
@@ -1725,7 +1725,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true}],
       txt:(P,E)=>`Hop ${1+P}, over foes.` },
     { n:'Bound Across', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'empower', val:1, uses:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Bound to any node within ${3+E}, height included; your next hit this turn deals +1.` },
     'It cannot walk backwards, and never needs to.');
   K(['kangaroo'],'kan_tailkick','Tail Kick','M',0,
@@ -1799,7 +1799,7 @@
       fx:[{v:'climb', reach:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Climb ${1+P}, and hold Shield 1 this round.` },
     { n:'Swing Down', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:1}],
       txt:(P,E)=>`Swing to any node within ${2+E}, height included; your next hit this turn deals +${1+E}.` },
     'A tail that holds on by itself.');
   K(['opossum'],'opo_hiss','Fifty-Tooth Hiss','M',0,
@@ -1865,7 +1865,7 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Move ${1+P}, Hidden 1, and ignore hazards this round.` },
     { n:'Bottom Run', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'hazardImmune', dur:2}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'hazardImmune', dur:2}],
       txt:(P,E)=>`Come up anywhere within ${2+E}, Hidden 1, and ignore hazards for 2 rounds.` },
     'Down, and gone, in a ring of ripples.');
   K(['platypus'],'pla_cheek','Cheek Store','T',0,
@@ -1905,7 +1905,7 @@
       fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'strike', kind:'los', dmg:1}],
       txt:(P,E)=>`A foe within 3 takes 1 and is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}.` },
     { n:'Nothing Like It', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'teleport', reach:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
+      fx:[{v:'decoy', dur:(P,E)=>1+E, here:true},{v:'blink', reach:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
       txt:(P,E)=>`Leave a puzzle where you stood (a decoy for ${1+E} rounds), slip to a node within 2, and your next hit deals +${1+E}.` },
     'The first scientists to see one thought it was a hoax.');
   /* ───────────────────────── BIRDS OF PREY AND OWLS ─────────────────────────
@@ -1932,7 +1932,7 @@
       fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
       txt:(P,E)=>`Drop up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
     { n:'Plummet', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Fold the wings and fall beside a foe within ${3+E}, height included: melee ${3+E}, and it is Weakened 1 this round.` },
     'Wings folded, and the whole sky behind it.', 'Birds of prey and owls');
 
@@ -2016,7 +2016,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true, noTrap:true},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Weave ${1+P} through cover, past foes and setting off no traps; your next hit this turn deals +1.` },
     { n:'Through the Hedge', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, revealTarget:true},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E, revealTarget:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Burst out beside a foe within ${2+E}, hidden or not: melee ${2+E}, and you are Hidden 1.` },
     'Through the gap in the hedge before the sparrow saw the gap.');
   /* ───────────────────────── WADERS ─────────────────────────
@@ -2096,7 +2096,7 @@
       fx:[{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Stride ${1+P}.` },
     { n:'Run-Up', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'hazardImmune', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Run, flap and lift: land on any node within ${3+E}, height included; hazards can't touch you this round.` },
     'Three long steps and it is in the air.');
   K(['crane'],'cra_trumpet','Trumpet','C',0,
@@ -2304,7 +2304,7 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P},{v:'hidden', dur:1}],
       txt:(P,E)=>`Dive on a foe within 2 for ${2+P}, and stay under: Hidden 1.` },
     { n:'Sky Dart', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'hazardImmune', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Dart down beside a foe within ${3+E}, height included: melee ${3+E}, and hazards can't touch you this round.` },
     'Wings back, into the water like a thrown spear.', 'Seabirds');
   K(SEABIRDS,'sea_proof','Waterproof','T',0,
@@ -2330,7 +2330,7 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1}],
       txt:(P,E)=>`Fly under the surface ${1+P}, and stay Hidden 1.` },
     { n:'Deep Wingbeat', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'empower', val:1, uses:1, dur:2}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:(P,E)=>1+h(E), canMove:true},{v:'empower', val:1, uses:1, dur:2}],
       txt:(P,E)=>`Come up anywhere within ${2+E}; Hidden ${1+h(E)} even if you move, and your next hit deals +1.` },
     'The same wings, in a thicker sky.');
   K(['puffin'],'puf_beakful','Beakful','C',0,
@@ -2346,7 +2346,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Drop off the edge and fly ${1+P}, over foes; your next hit this turn deals +1.` },
     { n:'Cliff Top', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'shield', val:1, dur:1, party:true}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'shield', val:1, dur:1, party:true}],
       txt:(P,E)=>`Land on any node within ${3+E}, height included; both heroes hold Shield 1 this round.` },
     'Too heavy to take off from flat ground, so it lives on cliffs.');
   K(['puffin'],'puf_bill','Bright Bill','C',0,
@@ -2380,7 +2380,7 @@
       fx:[{v:'move', n:(P,E)=>2+h(P), ignoreFoes:true}],
       txt:(P,E)=>`Glide ${2+h(P)}, over foes.` },
     { n:'Wave Ride', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'hazardImmune', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>3+E},{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Ride the air over a wave to any node within ${3+E}; see within ${2+E}, and ignore hazards this round.` },
     'An inch above the swell, and never a wingbeat.');
   K(['pelican'],'pel_crash','Pelican Crash','M',0,
@@ -2406,7 +2406,7 @@
       fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
       txt:(P,E)=>`Chase up to 2 toward a foe within 3; if you end beside it, melee ${2+P}.` },
     { n:'Group Dive', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
       txt:(P,E)=>`Dive beside a foe within ${3+E} and hit it for ${2+E}; your ally's next hit deals +1.` },
     'Dozens at once, all into the same shoal.');
   K(['booby'],'boo_colony','Colony','T',0,
@@ -2517,7 +2517,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'reveal', radius:1, dur:1}],
       txt:(P,E)=>`Circle down ${1+P}, over foes, and see everything beside where you land.` },
     { n:'Pick the Weak', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'execute', threshold:(P,E)=>1+E}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'execute', threshold:(P,E)=>1+E}],
       txt:(P,E)=>`Drop beside a foe within ${2+E} and peck it for ${2+E}; if that leaves it at ${1+E} hp or less, it falls.` },
     'It knows a fight is coming before the fighters do.');
   K(['raven'],'rav_memory','Raven Memory','T',0,
@@ -2601,7 +2601,7 @@
       fx:[{v:'climb', reach:(P,E)=>1+P}],
       txt:(P,E)=>`Hop onto any node within ${1+P}, height included.` },
     { n:'Branch to Branch', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'empower', val:1, uses:1, dur:1},{v:'reveal', radius:2, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'empower', val:1, uses:1, dur:1},{v:'reveal', radius:2, dur:1}],
       txt:(P,E)=>`Hop to any node within ${2+E}, height included; see within 2, and your next hit this turn deals +1.` },
     'It hops more than it flies.');
   K(['toucan'],'tou_cool','Bill Cool','T',0,
@@ -2832,7 +2832,7 @@
       fx:[{v:'climb', reach:(P,E)=>1+P},{v:'shield', val:1, next:true}],
       txt:(P,E)=>`Burst up onto any node within ${1+P}, height included; Shield: the next hit on you is 1 less.` },
     { n:'Up for the Night', ap:1, el:1, cd:4, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'heal', n:(P,E)=>1+E},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'heal', n:(P,E)=>1+E},{v:'hidden', dur:1}],
       txt:(P,E)=>`Fly up to any node within ${2+E}, height included; heal ${1+E}, and Hidden 1.` },
     'It runs from most things, and flies from the rest.');
   K(['turkey'],'tur_wattle','Wattle Flush','C',0,
@@ -2929,7 +2929,7 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1},{v:'heal', n:1}],
       txt:(P,E)=>`Drop into the water ${1+P} away: Hidden 1, and heal 1.` },
     { n:'Stay Under', ap:1, el:1, cd:4, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:(P,E)=>1+h(E)},{v:'heal', n:(P,E)=>1+E}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:(P,E)=>1+h(E)},{v:'heal', n:(P,E)=>1+E}],
       txt:(P,E)=>`Come up anywhere within ${2+E}; Hidden ${1+h(E)}, and heal ${1+E}.` },
     'Half an hour on one breath.');
   K(['basilisk'],'bas_sprint','Lizard Sprint','S',0,
@@ -2953,7 +2953,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'hazardImmune', dur:1},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Let go of the branch: drop ${1+P}, over foes and hazards, and hold Shield 1 this round.` },
     { n:'Drop and Run', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hazardImmune', dur:1},{v:'engine', kind:'ap', val:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hazardImmune', dur:1},{v:'engine', kind:'ap', val:1, dur:1}],
       txt:(P,E)=>`Drop to any node within ${2+E}, landing running: ignore hazards this round, and gain 1 AP next turn.` },
     'Off the branch, into the river, across it, gone.');
 
@@ -2979,7 +2979,7 @@
       fx:[{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Shimmy into the sand: Hidden 1, and Shield ${1+P} this round.` },
     { n:'Under the Sand', ap:1, el:1, cd:4, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+h(E)},{v:'hazardImmune', dur:2}],
+      fx:[{v:'blink', reach:(P,E)=>1+E},{v:'hidden', dur:(P,E)=>1+h(E)},{v:'hazardImmune', dur:2}],
       txt:(P,E)=>`Wriggle to a node within ${1+E} under the sand: Hidden ${1+h(E)}, and ignore hazards for 2 rounds.` },
     'A shuffle of the ribs, and only the eyes show.');
   K(['horned_lizard'],'hor_ants','Ant Feast','T',0,
@@ -3055,7 +3055,7 @@
       fx:[{v:'move', n:1, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+P, ifAdjacent:true}],
       txt:(P,E)=>`Lunge 1 toward a foe within 2; if you end beside it, melee ${3+P}.` },
     { n:'Out of the Water', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, revealTarget:true},{v:'anchor', who:'foe', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, revealTarget:true},{v:'anchor', who:'foe', dur:1}],
       txt:(P,E)=>`Burst from the water beside a foe within ${2+E}, hidden or not: melee ${3+E}, and it is Anchored 1.` },
     'Faster over two metres than anything that drinks.');
   K(['crocodile'],'cro_tail','Tail Sweep','M',0,
@@ -3187,7 +3187,7 @@
       fx:[{v:'climb', reach:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Leap onto any node within ${1+P}, height included; your next hit this turn deals +1.` },
     { n:'Leaf to Leaf', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>3+E, height:true},{v:'hidden', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>3+E, height:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Leap to any node within ${3+E}, height included, and land Hidden 1.` },
     'Twenty times its own length, and it sticks the landing.');
   K(['tree_frog'],'tfr_rain','Rain Call','C',0,
@@ -3448,7 +3448,7 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Flutter ${1+P}; hazards can't touch you this round.` },
     { n:'Ride the Current', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'hazardImmune', dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Let the current carry you to any node within ${2+E}; Hidden 1, and hazards can't touch you this round.` },
     'The slowest fish in the sea, and it gets there anyway.');
   // ── Molluscs and jellies (2.64): the Mimic Octopus keeps its nine; the snail and jellyfish join it.
@@ -3604,7 +3604,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true}],
       txt:(P,E)=>`Snap your tail and shoot backwards ${1+P}, through foes if need be.` },
     { n:'Gone', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+E, next:true}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'hidden', dur:1},{v:'shield', val:(P,E)=>1+E, next:true}],
       txt:(P,E)=>`One flick and you are elsewhere: go to any node within ${2+E}, Hidden 1, and Shield: the next hit on you is ${1+E} less.` },
     'Forwards is for walking. Backwards is for getting away.');
   K(['lobster'],'lob_march','Long March','T',0,
@@ -3725,7 +3725,7 @@
       fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'statusImmune', dur:1}],
       txt:(P,E)=>`Snap your wing cases shut: Shield ${1+P}, and no Weaken or Anchor from a foe this round.` },
     { n:'Lift Off', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'shield', val:1, dur:1}],
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Open the cases and fly, clumsily, to any node within ${2+E}, height included; Shield 1 this round.` },
     'Hard wings over soft ones.');
   K(['beetle'],'btl_roll','Ball Roller','S',0,
@@ -3791,7 +3791,7 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true, noTrap:true}],
       txt:(P,E)=>`Flit ${1+P} this way and that, past foes and over traps.` },
     { n:'Zigzag', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'teleport', reach:(P,E)=>2+E},{v:'shield', val:(P,E)=>2+E, next:true}],
+      fx:[{v:'blink', reach:(P,E)=>2+E},{v:'shield', val:(P,E)=>2+E, next:true}],
       txt:(P,E)=>`Zigzag where no one can follow: go to any node within ${2+E}, and Shield: the next hit on you is ${2+E} less.` },
     'No bird can guess where it will be next.');
   K(['butterfly'],'but_morph','Metamorphosis','T',0,

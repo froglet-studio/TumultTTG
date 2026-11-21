@@ -93,7 +93,7 @@ function answersOf(x) {
     case 'move':
       add('tempo', 'burst'); // get there sooner; step out of a zone or out of reach
       break;
-    case 'teleport':
+    case 'blink':
       add('tempo', 'burst');
       if (x.height) add('height');
       break;
@@ -195,7 +195,7 @@ function answersOf(x) {
  */
 const STAPLE_VERBS = [
   ...['strike', 'execute', 'wound', 'empower', 'mark', 'morph'], // damage
-  ...['move', 'teleport', 'climb'], // movement
+  ...['move', 'blink', 'climb'], // movement
   ...['shield', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
   ...['mint', 'draw', 'reroll', 'hasten', 'freecast'], // dice and track economy
@@ -221,7 +221,7 @@ const ABLATIONS = [
     'vertical',
     'no way up',
     (x) =>
-      (x.v === 'teleport' && x.height) ||
+      (x.v === 'blink' && x.height) ||
       ['climb', 'weightless'].includes(x.v) ||
       (x.v === 'morph' && x.climb) ||
       (x.v === 'interact' && x.height),
@@ -257,11 +257,7 @@ const ABLATIONS = [
     (x) => ['shield', 'stasis', 'hidden', 'thorns'].includes(x.v) || (x.v === 'heal' && x.ward != null),
   ],
   ['heal', 'no healing', (x) => x.v === 'heal' || (x.v === 'engine' && x.kind === 'regen')],
-  [
-    'mobility',
-    'no movement abilities',
-    (x) => ['move', 'teleport', 'climb', 'swap', 'hover', 'weightless'].includes(x.v),
-  ],
+  ['mobility', 'no movement abilities', (x) => ['move', 'blink', 'climb', 'swap', 'hover', 'weightless'].includes(x.v)],
   [
     'control',
     'no foe control',
@@ -295,7 +291,7 @@ function autoplayerKnows(face) {
   if (has('shield', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
   if (has('field')) return node;
-  if (has('teleport', 'climb', 'move')) return node;
+  if (has('blink', 'climb', 'move')) return node;
   return false;
 }
 

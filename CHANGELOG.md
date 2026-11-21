@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.95.0 — 2026-11-21 — Blink
+
+The ninth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Blink N.** Leave the paths: appear on a free space within N (height only where the face says). The verb `teleport` is `blink` on 54 faces, the Phase-brace and the engine, and every text says Blink. An Anchored unit cannot blink (2.91).
+- No rule changed and no save changed: a rename. The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
+
 ## 2.94.0 — 2026-11-21 — Shield absorbs Pre-empt, Guard and Absorb
 
 The eighth keyword of the sweep (`docs/reference/KEYWORDS.md`).

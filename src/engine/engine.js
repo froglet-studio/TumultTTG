@@ -1382,7 +1382,7 @@
         return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact) };
       }
       case 'node_tele': {
-        const tp = face.fx.find((x) => x.v === 'teleport');
+        const tp = face.fx.find((x) => x.v === 'blink');
         const r = num(tp.reach, P, E) + boonSum(h, 'blinkReach');
         let opts = B.within(bd, h.pos, r, true).filter((n) => !T.occupied(m, n) && (tp.height || !bd.nodes[n].height));
         if (tp.dest === 'adjTarget')
@@ -1704,7 +1704,7 @@
         onHeroEnter(m, actor, dest);
         break;
       }
-      case 'teleport': {
+      case 'blink': {
         if (actor.kind !== 'hero') break;
         const r = num(f.reach, P, E) + boonSum(actor, 'blinkReach');
         let dest = ctx.node;
@@ -2264,7 +2264,7 @@
         say(m, `(unimplemented verb ${f.v})`, 'sys');
     }
     // deferred decoy placement (husk/blink): place at origin after teleport
-    if (ctx.pendingDecoy && f.v === 'teleport') {
+    if (ctx.pendingDecoy && f.v === 'blink') {
       const d = ctx.pendingDecoy;
       if (!T.occupied(m, d.pos)) {
         m.decoys.push(d);

@@ -303,7 +303,7 @@
       const bits = [
         `<b>${n.label ? 'Space ' + n.label : 'Node ' + n.id}</b> — ${n.zones.map((z) => T.ZONES[z].name).join(' and ')} zone`,
       ];
-      if (n.height) bits.push('Height: reachable only by Space verbs (teleport/climb/hover) or the ramp.');
+      if (n.height) bits.push('Height: reachable only by Space verbs (Blink, climb, Hover) or the ramp.');
       if (n.hazard)
         bits.push(
           `Hazard (a Field of damage): ${T.RULES.HAZARD_DMG} true damage at round end to anyone standing here.`,

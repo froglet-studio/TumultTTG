@@ -152,7 +152,7 @@ test('Phase-brace: blinks reach 1 further', () => {
       .map(Number)
       .find((n) => !T.occupied(m, n) && !m.board.nodes[n].height && B.dist(m.board, before, n, true) === 3);
     if (far == null) return null;
-    T.runEffects(m, h, [{ v: 'teleport', reach: 2 }], { P: 0, E: 0, node: far });
+    T.runEffects(m, h, [{ v: 'blink', reach: 2 }], { P: 0, E: 0, node: far });
     return h.pos === far;
   };
   const plain = reach([]);

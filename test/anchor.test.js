@@ -32,7 +32,7 @@ test('an Anchored hero cannot walk, blink, or be pushed, and still acts', () => 
   const to = B.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
   assert.equal(T.walk(m, h, to).ok, false, 'no walking');
   const from = h.pos;
-  play(m, h, { v: 'teleport', reach: 2 }, { node: to });
+  play(m, h, { v: 'blink', reach: 2 }, { node: to });
   assert.equal(h.pos, from, 'no blinking');
   assert.equal(T.pushAway(m, e, h, 1), 0, 'no pushing');
   const hp = e.hp;

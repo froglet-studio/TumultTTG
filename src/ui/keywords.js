@@ -89,6 +89,13 @@
       tip: 'Wound N: at round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). A new Wound replaces a smaller one.',
     },
     {
+      id: 'blink',
+      re: 'Blink(?:s|ed|ing)?',
+      icon: 'kw.hover',
+      tone: 'neutral',
+      tip: 'Blink N: leave the paths and appear on a free space within N (high ground only if it says). An Anchored unit cannot blink.',
+    },
+    {
       id: 'link',
       re: 'Link(?:ed|s)?',
       icon: 'kw.link',
