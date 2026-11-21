@@ -17,7 +17,7 @@ How work moves: `docs/loopatlas/PROCESS.md`.
 | P3 | proposal | Body, magic, tech |
 | P5 | proposal | Three AP and one chosen element |
 
-## Brainstorm: proposed (16)
+## Brainstorm: proposed (17)
 
 | Loop or item | Tier or area | The proposal |
 | --- | --- | --- |
@@ -37,6 +37,7 @@ How work moves: `docs/loopatlas/PROCESS.md`.
 | P7 | proposal | The dossier writes itself: Each expedition adds one line to a made pilot's dossier, from the faces it played and the canon its player wrote. |
 | P8 | proposal | Canon questions name a keyword moment: The game remembers the play that decided a mission (a Pull into a Field, a Link that felled two) and asks about that, so the player embellishes something the game gave. |
 | kw-migration | Game | Keyword migration plan: One PR per keyword family, each with before and after numbers from tools/sim.js 40. |
+| card-previews | Tooling | Pictures in the inspection window: A card's Code node shows a preview of the card in an inspection window, drawn from its data; pilots, places and foes show their art, and the art rolls up to the loops above. |
 
 ## Holes: undecided (9)
 
@@ -52,10 +53,11 @@ How work moves: `docs/loopatlas/PROCESS.md`.
 | arc.pilot | 0 | The pilot keeps cards and points but nothing of what it did, so the workshop job stops at the build. | The dossier (P7): each expedition writes one line about the pilot from the faces it played and the canon its player wrote. |
 | era.release | 0 | A player meeting a release learns of a new rule only by meeting it in play. | The title names what changed in keywords: "New: Link. Stasis now also stops movement." |
 
-## Recent moves (5)
+## Recent moves (6)
 
 | Date | Step | Loop or item | By | What |
 | --- | --- | --- | --- | --- |
+| 2026-11-21 | idea | card-previews | Claude | Pictures in the inspection window: A card's Code node shows a preview of the card in an inspection window, drawn from its data; pilots, places and foes show their art, and the art rolls up to the loops above. |
 | 2026-11-21 | start | atlas-in-repo | Claude |  |
 | 2026-11-21 | develop | atlas-in-repo | Garrett | Garrett 2026-11-21: yes, in the repo, with Cosmic Shore's inspect-everything and advance-anything Board. |
 | 2026-11-21 | plan | atlas-in-repo | Garrett | Garrett 2026-11-21: yes, in the repo, with Cosmic Shore's inspect-everything and advance-anything Board. |

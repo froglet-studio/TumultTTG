@@ -36,3 +36,15 @@ items:
     by: Garrett
     at: '2026-11-21'
     branch: claude/project-thread-g4abr1
+- id: card-previews
+  name: Pictures in the inspection window
+  area: tooling
+  is: A card's Code node shows a preview of the card in an inspection window, drawn from its data; pilots, places and foes
+    show their art, and the art rolls up to the loops above.
+  in: x
+  prop:
+    s: add
+    note: A card's Code node shows a preview of the card in an inspection window, drawn from its data; pilots, places and
+      foes show their art, and the art rolls up to the loops above.
+  src:
+  - map note 7oa4dt8durldvev7pv6f (Garrett, 2026-11-21)
