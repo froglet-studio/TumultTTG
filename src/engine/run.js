@@ -979,7 +979,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 19;
+  T.SAVE_VERSION = 20;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1132,6 +1132,94 @@
     // a version-18 pilot has chosen none, and draws at random as before.
     18(r) {
       r.v = 19;
+    },
+    // 2.86 makes snares, spore zones, triggers and auras one keyword, Field (`mission.fields`). A mission saved
+    // mid-round keeps what was laid: each snare, zone, trigger (`AmbushTrap`) and aura (`Auras`) becomes a Field.
+    19(r) {
+      const m = r.mission;
+      if (m) {
+        const fields = [];
+        const base = (o) =>
+          Object.assign({ nodes: null, around: null, radius: 0, ring: false, trips: null, t: null }, o);
+        for (const [node, list] of Object.entries(m.traps || {}))
+          for (const tr of list || []) {
+            const fx = [{ kw: 'strike', n: tr.dmg || 0, t: 1 }];
+            if (tr.anchor)
+              fx.push(Object.assign({ kw: 'anchor', n: 0, t: tr.anchor }, tr.noTele ? { noTele: true } : {}));
+            fields.push(
+              base({
+                nodes: [+node],
+                on: tr.counted ? 'end' : 'enter',
+                trips: 1,
+                owner: tr.owner,
+                side: 'hero',
+                label: null,
+                fx,
+              }),
+            );
+          }
+        for (const z of m.zones || []) {
+          const fx = [];
+          if (z.dmg) fx.push({ kw: 'strike', n: z.dmg, t: 1 });
+          if (z.weaken) fx.push({ kw: 'weaken', n: z.weaken, t: 1 });
+          if (z.hideHeroes) fx.push({ kw: 'hidden', n: 0, t: 1 });
+          let nodes = [z.node];
+          if (m.board && m.board.nodes) {
+            T.Board.build(m.board);
+            nodes = nodes.concat(T.Board.within(m.board, z.node, z.radius || 1, true));
+          }
+          fields.push(
+            base({ nodes, radius: z.radius || 1, on: 'end', t: z.t, owner: z.owner, side: 'hero', label: null, fx }),
+          );
+        }
+        for (const h of r.heroes || []) {
+          const s = (h && h.states) || {};
+          if (s.AmbushTrap) {
+            const at = s.AmbushTrap;
+            const fx = [{ kw: 'strike', n: at.dmg || 0, t: 1 }];
+            if (at.weaken) fx.push({ kw: 'weaken', n: at.weaken, t: 1 });
+            if (at.anchor) fx.push({ kw: 'anchor', n: 0, t: at.anchor });
+            fields.push(
+              base({
+                around: h.uid,
+                radius: 1,
+                ring: true,
+                on: 'enter',
+                trips: 1,
+                t: at.t,
+                owner: h.uid,
+                side: 'hero',
+                label: null,
+                fx,
+              }),
+            );
+            delete s.AmbushTrap;
+          }
+          for (const a of s.Auras || []) {
+            const fx =
+              a.kind === 'reveal'
+                ? [{ kw: 'reveal', n: 0, t: 1 }]
+                : [{ kw: 'strike', n: a.val || 0, t: 1, pierce: true, if: 'anchored' }];
+            fields.push(
+              base({
+                around: h.uid,
+                radius: a.radius || 2,
+                on: 'end',
+                t: a.t,
+                owner: h.uid,
+                side: 'hero',
+                label: null,
+                fx,
+              }),
+            );
+          }
+          delete s.Auras;
+        }
+        m.fields = fields;
+        delete m.traps;
+        delete m.zones;
+      }
+      r.v = 20;
     },
   };
   T.deserializeRun = function (json) {

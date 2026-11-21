@@ -295,7 +295,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ambush Patience** · Time · `gec_patience`
 
 - *Phys — Hold* · 1 AP · CD 1 — Go motionless: your next strike deals +2. *(P3: Go motionless: your next strike deals +5.)*
-- *Eth — Instant Release* · 1 AP + 1 Time · CD 3 · Dur 2 — Compress the wait: the first foe to enter a node adjacent to you is struck for 4 automatically. Dur 2. *(P3/E3: Compress the wait: the first foe to enter a node adjacent to you is struck for 9 automatically. Dur 2.)*
+- *Eth — Instant Release* · 1 AP + 1 Time · CD 3 · Dur 2 — Compress the wait: a Field on the spaces beside you for 2 rounds. The first foe to enter takes 4. *(P3/E3: Compress the wait: a Field on the spaces beside you for 2 rounds. The first foe to enter takes 9.)*
 
 **Wall Sprint** · Time · `gec_sprint`
 
@@ -368,7 +368,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Electrocyte Charge-Up** · Time · `eel_chargeup`
 
 - *Phys — Store* · 1 AP · CD 1 — Bank charge: your next strike deals +2. *(P3: Bank charge: your next strike deals +5.)*
-- *Eth — Pre-charge* · 1 AP + 1 Time · CD 3 · Dur 2 — Set a trigger: the first foe to step adjacent is jolted for 4; your own next strike deals +2. Dur 2. *(P3/E3: Set a trigger: the first foe to step adjacent is jolted for 6; your own next strike deals +2. Dur 2.)*
+- *Eth — Pre-charge* · 1 AP + 1 Time · CD 3 · Dur 2 — Set a trigger: a Field on the spaces beside you for 2 rounds; the first foe to enter is jolted for 4. Your own next strike deals +2. *(P3/E3: Set a trigger: a Field on the spaces beside you for 2 rounds; the first foe to enter is jolted for 6. Your own next strike deals +2.)*
 
 **Insulated Body** · Mass · `eel_insulated`
 
@@ -398,7 +398,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Galvanic Counterstrike** · Charge · `eel_galvanic`
 
 - *Phys — Static* · 1 AP · CD 1 — Static skin: melee attackers take 1 this round. *(P3: Static skin: melee attackers take 4 this round.)*
-- *Eth — Field Trigger* · 1 AP + 1 Charge · CD 3 · Dur 2 — Auto-jolt the first foe to enter an adjacent node for 3 and Weaken it 1. Dur 2. *(P3/E3: Auto-jolt the first foe to enter an adjacent node for 5 and Weaken it 1 and Anchor it 1. Dur 2.)*
+- *Eth — Field Trigger* · 1 AP + 1 Charge · CD 3 · Dur 2 — A Field on the spaces beside you for 2 rounds: the first foe to enter takes 3 and is Weakened 1. *(P3/E3: A Field on the spaces beside you for 2 rounds: the first foe to enter takes 5 and is Weakened 1 and Anchored 1.)*
 
 ## 8 · Venus Flytrap — leans C/T
 
@@ -406,8 +406,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Snap-Trap** ★ · Time · `fly_snap`
 
-- *Phys — Set Jaws* · 2 AP · CD 2 — Arm a snare on an adjacent node: the first foe to enter takes 2 and is Anchored 1. *(P3: Arm a snare on an adjacent node: the first foe to enter takes 5 and is Anchored 1.)*
-- *Eth — Counted Trap* · 2 AP + 1 Time · CD 3 — A counted snare: it lets the foe in, then springs when it acts from the node — 4 damage, Anchored 3, and no teleporting out. *(P3/E3: A counted snare: it lets the foe in, then springs when it acts from the node — 7 damage, Anchored 5, and no teleporting out.)*
+- *Phys — Set Jaws* · 2 AP · CD 2 — Lay a Field on an adjacent space: the first foe to enter takes 2 and is Anchored 1. *(P3: Lay a Field on an adjacent space: the first foe to enter takes 5 and is Anchored 1.)*
+- *Eth — Counted Trap* · 2 AP + 1 Time · CD 3 — A counted Field on an adjacent space: the first foe to end the round in it takes 4, is Anchored 3 and cannot blink out. *(P3/E3: A counted Field on an adjacent space: the first foe to end the round in it takes 7, is Anchored 5 and cannot blink out.)*
 
 **Photosynthesis** ★ · Charge · `fly_photo`
 
@@ -417,12 +417,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Carnivorous Digestion** · Time · `fly_digest`
 
 - *Phys — Digest* · 1 AP · CD 1 — Feed: melee 1 — or, if it is Anchored, 2 true damage and heal 1. *(P3: Feed: melee 2 — or, if it is Anchored, 5 true damage and heal 1.)*
-- *Eth — Enzymes* · 1 AP + 1 Time · CD 3 · Dur 2 — Accelerate the enzymes: heal 2 now; for 2 rounds, every Anchored foe takes 3 true damage at round end and you heal 1 per foe. *(P3/E3: Accelerate the enzymes: heal 4 now; for 2 rounds, every Anchored foe takes 5 true damage at round end and you heal 1 per foe.)*
+- *Eth — Enzymes* · 1 AP + 1 Time · CD 3 · Dur 2 — Accelerate the enzymes: heal 2 now. For 2 rounds a Field within 2 of you: every Anchored foe that ends the round in it takes 3, Pierce. *(P3/E3: Accelerate the enzymes: heal 4 now. For 2 rounds a Field within 2 of you: every Anchored foe that ends the round in it takes 5, Pierce.)*
 
 **Trigger-Hair Sense** · Space · `fly_hairs`
 
-- *Phys — Hairs* · 1 AP · CD 1 · Dur 2 — Tripwire awareness: for 2 rounds, everything within 1 stays revealed; foes adjacent now are Weakened 1. *(P3: Tripwire awareness: for 2 rounds, everything within 4 stays revealed; foes adjacent now are Weakened 1.)*
-- *Eth — Cilia Field* · 1 AP + 1 Space · CD 4 — Mechanosensitive cilia for 3 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked. Foes adjacent now are Weakened 1. *(P3/E3: Mechanosensitive cilia for 5 rounds: everything within 2 stays revealed, and the first foe to step adjacent each round is Marked. Foes adjacent now are Weakened 1.)*
+- *Phys — Hairs* · 1 AP · CD 1 · Dur 2 — Tripwire awareness: for 2 rounds a Field within 1 of you keeps everything in it Revealed; foes adjacent now are Weakened 1. *(P3: Tripwire awareness: for 2 rounds a Field within 4 of you keeps everything in it Revealed; foes adjacent now are Weakened 1.)*
+- *Eth — Cilia Field* · 1 AP + 1 Space · CD 4 — Mechanosensitive cilia for 3 rounds: a Field within 2 of you keeps everything in it Revealed, and every foe that steps beside you is Marked. Foes adjacent now are Weakened 1. *(P3/E3: Mechanosensitive cilia for 5 rounds: a Field within 2 of you keeps everything in it Revealed, and every foe that steps beside you is Marked. Foes adjacent now are Weakened 1.)*
 
 **Rooting Anchor** · Mass · `fly_root`
 
@@ -432,7 +432,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Rhizome Sprout** · Space · `fly_rhizome`
 
 - *Phys — Sprout* · 2 AP · CD 2 — Grow a sensor offshoot: reveal within 1 and Mark the nearest foe. *(P3: Grow a sensor offshoot: reveal within 4 and Mark the nearest foe.)*
-- *Eth — Runner* · 2 AP + 1 Space · CD 4 — Send a runner underground: arm a snare (2 damage, Anchored 1) on any node within 3. *(P3/E3: Send a runner underground: arm a snare (2 damage, Anchored 1) on any node within 5.)*
+- *Eth — Runner* · 2 AP + 1 Space · CD 4 — Send a runner underground: a Field on any space within 3; the first foe to enter takes 2 and is Anchored 1. *(P3/E3: Send a runner underground: a Field on any space within 5; the first foe to enter takes 2 and is Anchored 1.)*
 
 **Vine Growth** · Mass · `fly_vine`
 
@@ -466,12 +466,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Spore Burst** · Space · `cor_spore`
 
 - *Phys — Puff* · 1 AP · CD 1 — Puff spores: adjacent foes Weakened 1. *(P3: Puff spores: adjacent foes Weakened 2.)*
-- *Eth — Disperse* · 2 AP + 1 Space · CD 3 — Seed a node within 3: it and its neighbours are spored for 2 rounds — foes ending there take 2 and are Weakened 1; heroes there are Hidden. *(P3/E3: Seed a node within 5: it and its neighbours are spored for 2 rounds — foes ending there take 2 and are Weakened 1; heroes there are Hidden.)*
+- *Eth — Disperse* · 2 AP + 1 Space · CD 3 — Seed a space within 3: a Field on it and its neighbours for 2 rounds. Foes ending the round there take 2 and are Weakened 1; allies there are Hidden. *(P3/E3: Seed a space within 5: a Field on it and its neighbours for 2 rounds. Foes ending the round there take 2 and are Weakened 1; allies there are Hidden.)*
 
 **Decomposition** · Mass · `cor_decomp`
 
 - *Phys — Decompose* · 1 AP · CD 1 — Break down the dying: destroy an adjacent foe with 3 or fewer hp and salvage 1 ◇. *(P3: Break down the dying: destroy an adjacent foe with 6 or fewer hp and salvage 1 ◇.)*
-- *Eth — Rot* · 2 AP + 1 Mass · CD 3 — Rot the bonds: strip 2 of its Shield, it takes 2 at the end of each round for 3 rounds, and adjacent hazard tiles are cleared. *(P3/E3: Rot the bonds: strip 4 of its Shield, it takes 4 at the end of each round for 3 rounds, and adjacent hazard tiles are cleared.)*
+- *Eth — Rot* · 2 AP + 1 Mass · CD 3 — Rot the bonds: strip 2 of its Shield, it takes 2 at the end of each round for 3 rounds, and Cleanse the ground within 1 of you (hazards and foes' Fields). *(P3/E3: Rot the bonds: strip 4 of its Shield, it takes 4 at the end of each round for 3 rounds, and Cleanse the ground within 1 of you (hazards and foes' Fields).)*
 
 **Hyphal Drain** · Time · `cor_drain`
 
@@ -633,7 +633,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stink Fight** · Charge · `lem_stink`
 
 - *Phys — Tail Waft* · 1 AP · CD 1 — Adjacent foes are Weakened 1. *(P3: Adjacent foes are Weakened 2.)*
-- *Eth — Stink Cloud* · 2 AP + 1 Charge · CD 3 — Foul a node within 3 and its neighbours for 2 rounds: foes ending there take 1 and are Weakened 1. *(P3/E3: Foul a node within 5 and its neighbours for 2 rounds: foes ending there take 1 and are Weakened 1.)*
+- *Eth — Stink Cloud* · 2 AP + 1 Charge · CD 3 — Foul a space within 3: a Field on it and its neighbours for 2 rounds. Foes ending the round there take 1 and are Weakened 1. *(P3/E3: Foul a space within 5: a Field on it and its neighbours for 2 rounds. Foes ending the round there take 1 and are Weakened 1.)*
 
 **Scent Mark** · Space · `lem_scent`
 
@@ -716,7 +716,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stalk** · Time · `cat_stalk`
 
 - *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
-- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 6.)*
 
 **Killing Bite** · Mass · `cat_bite`
 
@@ -765,7 +765,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stalk** · Time · `cat_stalk`
 
 - *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
-- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 6.)*
 
 **Killing Bite** · Mass · `cat_bite`
 
@@ -814,7 +814,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stalk** · Time · `cat_stalk`
 
 - *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
-- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 6.)*
 
 **Killing Bite** · Mass · `cat_bite`
 
@@ -863,7 +863,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stalk** · Time · `cat_stalk`
 
 - *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
-- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 6.)*
 
 **Killing Bite** · Mass · `cat_bite`
 
@@ -902,7 +902,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stalk** · Time · `cat_stalk`
 
 - *Phys — Stalk* · 1 AP · CD 2 — Hide for 1 round; your next strike within 2 rounds deals +2. *(P3: Hide for 1 round; your next strike within 2 rounds deals +5.)*
-- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: the first foe to close takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: the first foe to close takes 6.)*
+- *Eth — Ambush* · 1 AP + 1 Time · CD 3 — Hide for 2 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 4. *(P3/E3: Hide for 4 rounds, moving freely, and lie in wait: for 2 rounds a Field on the spaces beside you, and the first foe to enter takes 6.)*
 
 **Killing Bite** · Mass · `cat_bite`
 
@@ -1196,7 +1196,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Musk** · Charge · `wea_musk`
 
 - *Phys — Musk* · 1 AP · CD 1 — Foes beside you are Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: Foes beside you are Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
-- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened.)*
+- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and a Field reeks on and beside your space for 3 rounds: foes ending the round there are Weakened 1. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and a Field reeks on and beside your space for 3 rounds: foes ending the round there are Weakened 1.)*
 
 **Dense Fur** · Mass · `wea_fur`
 
@@ -1240,7 +1240,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Musk** · Charge · `wea_musk`
 
 - *Phys — Musk* · 1 AP · CD 1 — Foes beside you are Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: Foes beside you are Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
-- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened.)*
+- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and a Field reeks on and beside your space for 3 rounds: foes ending the round there are Weakened 1. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and a Field reeks on and beside your space for 3 rounds: foes ending the round there are Weakened 1.)*
 
 **Dense Fur** · Mass · `wea_fur`
 
@@ -1299,7 +1299,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Musk** · Charge · `wea_musk`
 
 - *Phys — Musk* · 1 AP · CD 1 — Foes beside you are Weakened 1 for 1 round; the next hit on you is 1 less. *(P3: Foes beside you are Weakened 1 for 2 rounds; the next hit on you is 1 less.)*
-- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and the ground beside you reeks for 3 rounds: foes there are Weakened.)*
+- *Eth — Reek* · 1 AP + 1 Charge · CD 3 — Every foe within 2 is Weakened 1 for 2 rounds, and a Field reeks on and beside your space for 3 rounds: foes ending the round there are Weakened 1. *(P3/E3: Every foe within 2 is Weakened 1 for 4 rounds, and a Field reeks on and beside your space for 3 rounds: foes ending the round there are Weakened 1.)*
 
 **Dense Fur** · Mass · `wea_fur`
 
@@ -1373,7 +1373,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ice Haul** · Time · `wal_ice`
 
 - *Phys — Tusk Up* · 1 AP · CD 1 — Haul yourself up on your tusks: climb 1, and hold Shield 1 this round. *(P3: Haul yourself up on your tusks: climb 4, and hold Shield 1 this round.)*
-- *Eth — Break the Ice* · 1 AP + 1 Time · CD 4 — Smash the ice around you: for 2 rounds every foe within 1 of you is Weakened 1, and you ignore hazards for 2 rounds. *(P3/E3: Smash the ice around you: for 2 rounds every foe within 1 of you is Weakened 1, and you ignore hazards for 4 rounds.)*
+- *Eth — Break the Ice* · 1 AP + 1 Time · CD 4 — Smash the ice: for 2 rounds a Field within 1 of you Weakens 1 every foe that ends the round in it, and you ignore hazards for 2 rounds. *(P3/E3: Smash the ice: for 2 rounds a Field within 1 of you Weakens 1 every foe that ends the round in it, and you ignore hazards for 4 rounds.)*
 
 **Ton of Weight** · Mass · `wal_ton`
 
@@ -2470,7 +2470,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wade** · Space · `wad_wade`
 
 - *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
-- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
 
@@ -2524,7 +2524,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wade** · Space · `wad_wade`
 
 - *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
-- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
 
@@ -2568,7 +2568,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wade** · Space · `wad_wade`
 
 - *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
-- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
 
@@ -2617,7 +2617,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wade** · Space · `wad_wade`
 
 - *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
-- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
 
@@ -2666,7 +2666,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wade** · Space · `wad_wade`
 
 - *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
-- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
 
@@ -2715,7 +2715,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wade** · Space · `wad_wade`
 
 - *Phys — Wade* · 1 AP · CD 1 — Wade 1; hazards can't touch you this round. *(P3: Wade 4; hazards can't touch you this round.)*
-- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, clear the hazards within 1 of where you stop, heal 1, and ignore hazards for 2 rounds.)*
+- *Eth — Shallows* · 1 AP + 1 Space · CD 3 — Wade 3, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds. *(P3/E3: Wade 5, Cleanse the ground within 1 of where you stop (hazards and foes' Fields), heal 1, and ignore hazards for 2 rounds.)*
 
 **Long Legs** · Space · `wad_legs`
 
@@ -3823,7 +3823,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **After Rain** · Space · `snl_rain`
 
 - *Phys — Wet Night* · 1 AP · CD 1 — Out after the rain: move 1 and heal 1. *(P3: Out after the rain: move 4 and heal 1.)*
-- *Eth — Downpour* · 1 AP + 1 Space · CD 4 — Everything comes out in the wet: both heroes heal 1 at the start of their next 2 turns and deal +1 with their next hit, and hazards beside you wash away. *(P3/E3: Everything comes out in the wet: both heroes heal 1 at the start of their next 4 turns and deal +1 with their next hit, and hazards beside you wash away.)*
+- *Eth — Downpour* · 1 AP + 1 Space · CD 4 — Everything comes out in the wet: both heroes heal 1 at the start of their next 2 turns and deal +1 with their next hit, and the ground beside you is Cleansed of hazards and foes' Fields. *(P3/E3: Everything comes out in the wet: both heroes heal 1 at the start of their next 4 turns and deal +1 with their next hit, and the ground beside you is Cleansed of hazards and foes' Fields.)*
 
 **Eye Stalks** · Charge · `snl_stalks`
 

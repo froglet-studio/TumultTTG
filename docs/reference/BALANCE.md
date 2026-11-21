@@ -448,3 +448,7 @@ Garrett, 2026-11-21: "make some more powerful abilities that cost more elemental
 - 3 etherions: Immovable Hold, Tesla Cascade (1 AP), Override, Apex Form, Step Out of Time.
 
 Boons and consumables stay until the keyword migration makes them gear. `node tools/sim.js 80 runs --player strong`, 2.84.0 → 2.85 at 140%: 42 → 49 of 80; `120 runs --player weak`: 13 → 11. So every foe has **145%** of its listed vitality (was 140%): 39 of 80 and 10 of 120 (150%: 45 of 80, which is within the noise). `node tools/sim.js 40`, 2.84.0 → 2.85.0: runs 2 → 3 and 16 → 18; mission wins 65% → 69% and 85% → 86%.
+
+## v2.86.0 — Field
+
+Fourteen faces became Fields (`KEYWORDS.md`), a Field springs on a foe moved onto it, and a Field's Weaken now lasts into the next round. Same seeds, 2.85.0 → 2.86.0: `node tools/sim.js 40` identical in every cell (runs 3 → 3 and 18 → 18 of 40); `80 runs --player strong` 39 → 39; `120 runs --player weak` 10 → 10. The simulated squads rarely carry these cards, so nothing is retuned.

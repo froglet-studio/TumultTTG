@@ -124,9 +124,15 @@ function answersOf(x) {
     case 'locate':
       add('unknown');
       break;
-    case 'aura':
-      add(x.kind === 'reveal' ? 'unknown' : 'crowd');
+    case 'field': {
+      // a Field answers what its keywords answer, and a crowd that has to cross it
+      const kws = x.fx.map((y) => y.kw);
+      if (kws.includes('reveal')) add('unknown');
+      if (kws.includes('strike')) add('crowd');
+      if (kws.some((k) => ['weaken', 'anchor', 'hidden'].includes(k))) add('burst');
+      if (x.on === 'enter' && x.trips != null) add('burst');
       break;
+    }
     case 'hidden':
     case 'preempt':
     case 'counter':
@@ -140,15 +146,9 @@ function answersOf(x) {
       if (x.all || x.party) add('crowd'); // many small hits
       break;
     case 'thorns':
-    case 'ambushTrap':
     case 'decoy':
     case 'redirect':
-    case 'trap':
       add('crowd', 'burst');
-      break;
-    case 'zone':
-      add('crowd');
-      if (x.weaken || x.hideHeroes) add('burst');
       break;
     case 'weaken':
       add('burst');
@@ -162,12 +162,10 @@ function answersOf(x) {
     case 'hazardImmune':
       add('hazard');
       break;
-    case 'clearHazard':
-      add('hazard');
-      break;
     case 'statusImmune':
     case 'cleanse':
-      add('control');
+      if (x.field != null) add('hazard');
+      if (x.field == null || x.states) add('control');
       break;
     case 'heal':
     case 'revive':
@@ -251,7 +249,7 @@ const ABLATIONS = [
     'no reveals',
     (x) =>
       ['reveal', 'locate'].includes(x.v) ||
-      (x.v === 'aura' && x.kind === 'reveal') ||
+      (x.v === 'field' && x.fx.some((y) => y.kw === 'reveal')) ||
       (x.v === 'strike' && x.revealTarget),
   ],
   [
@@ -259,9 +257,8 @@ const ABLATIONS = [
     'no area damage',
     (x) =>
       (x.v === 'strike' && (WIDE.includes(x.kind) || x.chain)) ||
-      x.v === 'zone' ||
-      (x.v === 'dot' && x.area) ||
-      (x.v === 'aura' && x.kind === 'digest'),
+      (x.v === 'field' && x.fx.some((y) => y.kw === 'strike')) ||
+      (x.v === 'dot' && x.area),
   ],
   [
     'mitigation',
@@ -279,13 +276,15 @@ const ABLATIONS = [
     'no foe control',
     (x) =>
       (x.v === 'anchor' && (x.who === 'foe' || x.who === 'target')) ||
-      ['weaken', 'slow', 'force', 'trap', 'redirect'].includes(x.v),
+      ['weaken', 'slow', 'force', 'redirect'].includes(x.v) ||
+      (x.v === 'field' && x.fx.some((y) => ['anchor', 'weaken'].includes(y.kw))),
   ],
   [
     'hazard',
     'no hazard answers',
     (x) =>
-      ['hazardImmune', 'clearHazard', 'hover', 'weightless'].includes(x.v) ||
+      ['hazardImmune', 'hover', 'weightless'].includes(x.v) ||
+      (x.v === 'cleanse' && x.field != null) ||
       (x.v === 'anchor' && (x.who === 'self' || x.who === 'ally')),
   ],
   [
@@ -304,7 +303,7 @@ function autoplayerKnows(face) {
   if (strike) return foe || ['area', 'zone_all'].includes(strike.kind) || !!strike.nearest;
   if (has('shield', 'preempt', 'counter', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
-  if (has('trap')) return node;
+  if (has('field')) return node;
   if (has('teleport', 'climb', 'move')) return node;
   return false;
 }
@@ -680,7 +679,7 @@ function writeReport(usageMissions, gate) {
     PLAYER === 'strong'
       ? 'The look-ahead player needs no rule for a face: every legal action is tried on a copy of the mission and judged by ' +
           'what it leaves behind (`test/lookahead.test.js` checks that every playable face is offered to it).'
-      : 'The heuristic autoplayer only understands strikes, shields, heals, reveals, engines, single-target control, traps and ' +
+      : 'The heuristic autoplayer only understands strikes, shields, heals, reveals, engines, single-target control, Fields and ' +
           'movement. It has no rule for the faces below, so passes B and C say nothing about them. Run the audit without ' +
           '`--player weak` to measure them with the look-ahead player.',
   );

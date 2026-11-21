@@ -371,8 +371,7 @@
       heroes: run.heroes,
       enemies: [],
       decoys: [],
-      traps: {},
-      zones: [],
+      fields: [],
       objective: spec.objective,
       clock: spec.clock ? Object.assign({}, spec.clock) : null,
       spawns: spec.spawns || [],
@@ -1033,9 +1032,7 @@
     ent.pos = node;
     fx(m, { t: 'move', ent: ent.uid, from, to: node, how });
     if (how === 'forced' && isHidden(ent)) breakHidden(m, ent, 'moved');
-    if (ent.kind === 'enemy') {
-      onEnemyEnter(m, ent, node);
-    }
+    onEnter(m, ent, node);
     if (ent.kind === 'hero' && how !== 'forced' && isHidden(ent) && !st(ent).Hidden.canMove)
       breakHidden(m, ent, 'moved');
   }
@@ -1044,65 +1041,96 @@
   T.pullToward = pullToward;
 
   const heroBy = (m, uid) => m.heroes.find((h) => h.uid === uid) || null;
-  function onEnemyEnter(m, e, node) {
-    if (!e.alive) return;
-    // traps
-    const traps = m.traps[node];
-    if (traps && traps.length && !trapImmune(e)) {
-      const tr = traps[0];
-      if (!tr.counted) {
-        traps.shift();
-        say(m, `A snare springs under ${e.name}!`, 'hero');
-        T.damage(m, heroBy(m, tr.owner), e, tr.dmg, { kind: 'area', label: 'snares', trueDmg: false, noReveal: false });
-        if (e.alive && tr.anchor) anchorEnt(m, e, tr.anchor);
-        fx(m, { t: 'trap', node });
-      } else {
-        e.inCounted = node;
-      }
-    }
-    // ambush traps on heroes adjacent
-    for (const h of T.liveHeroes(m)) {
-      const at = h.states.AmbushTrap;
-      if (at && B.adjacent(m.board, h.pos, node)) {
-        say(m, `${h.name}'s trigger snaps: ${e.name} is struck as it closes.`, 'hero');
-        T.damage(m, h, e, at.dmg, { kind: 'melee', label: 'ambushes' });
-        if (e.alive && at.weaken) weaken(m, e, at.weaken, 1);
-        if (e.alive && at.anchor) anchorEnt(m, e, at.anchor);
-        delete h.states.AmbushTrap;
-      }
-      const aura = (h.states.Auras || []).find((a) => a.kind === 'reveal' && a.markEntrants && !a.markedThisRound);
-      if (aura && B.adjacent(m.board, h.pos, node)) {
-        st(e).Marked = {};
-        aura.markedThisRound = true;
-        say(m, `${e.name} brushes the cilia — Marked.`, 'hero');
-      }
-    }
+
+  /* ───────────────────────────── FIELDS ─────────────────────────────
+   * A Field (2.86) is a marked space, or a set of them, that does its keywords to whatever enters it or ends
+   * the round there. It is the one shape behind what were snares, counted snares, spore and musk zones,
+   * triggers and auras; a hazard reads as a Field of damage that belongs to nobody.
+   *   { nodes: [..] | null, around: uid | null, radius, ring, on: 'enter' | 'end', trips, t, owner, side, label,
+   *     fx: [{ kw: 'strike' | 'weaken' | 'anchor' | 'mark' | 'hidden' | 'reveal', n, t, pierce, if, noTele }] }
+   * `around` makes the Field follow a unit (the spaces within `radius` of it; `ring` leaves out its own).
+   * `trips` counts the units it may still spring on (null: every one); `t` counts rounds (null: until spent).
+   * A Field's harm falls on its side's foes and its help on its own side; nothing off the ground (Hover,
+   * Weightless) is touched by one.
+   */
+  const FIELD_HELPS = { hidden: true };
+  function fieldNodes(m, f) {
+    if (f.around == null) return f.nodes || [];
+    const u = heroBy(m, f.around);
+    if (!u || u.downed) return [];
+    const ring = B.within(m.board, u.pos, f.radius || 1, true);
+    return f.ring ? ring : [u.pos].concat(ring);
   }
-  T.springCounted = function (m, e) {
-    if (!e.inCounted || e.pos !== e.inCounted) {
-      e.inCounted = null;
-      return;
+  T.fieldNodes = fieldNodes;
+  function fieldHits(f, u, x) {
+    const foe = (u.kind === 'enemy') === (f.side !== 'enemy');
+    return FIELD_HELPS[x.kw] ? !foe : foe;
+  }
+  /** Spring one Field on one unit. `late` (a round-end trip) makes a state it leaves last into the next round. */
+  function springField(m, f, u, late) {
+    if (trapImmune(u) || (u.kind === 'enemy' ? !u.alive : u.downed)) return false;
+    const owner = f.owner != null ? heroBy(m, f.owner) : null;
+    let hit = false;
+    for (const x of f.fx) {
+      if (x.kw === 'reveal' || !fieldHits(f, u, x)) continue;
+      if (x.if === 'anchored' && (!isAnchored(u) || u.anchoredPerm)) continue;
+      const t = (x.t || 1) + (late ? 1 : 0);
+      if (!hit && !FIELD_HELPS[x.kw])
+        say(
+          m,
+          `${u.name} is caught in ${owner ? owner.name + "'s" : 'a'} Field.`,
+          u.kind === 'enemy' ? 'hero' : 'enemy',
+        );
+      hit = true;
+      if (x.kw === 'strike')
+        T.damage(m, owner, u, x.n, {
+          kind: x.pierce ? 'true' : 'area',
+          trueDmg: !!x.pierce,
+          label: f.label || 'is struck by the Field for',
+        });
+      else if (x.kw === 'weaken') weaken(m, u, x.n, t);
+      else if (x.kw === 'anchor') {
+        anchorEnt(m, u, t);
+        if (x.noTele) st(u).NoTele = { t };
+      } else if (x.kw === 'mark') st(u).Marked = {};
+      else if (x.kw === 'hidden') setHidden(m, u, t, false);
+      if (u.kind === 'enemy' ? !u.alive : u.downed) break;
     }
-    const traps = m.traps[e.pos];
-    if (!traps || !traps.length) {
-      e.inCounted = null;
-      return;
+    if (hit && f.trips != null) f.trips--;
+    return hit;
+  }
+  /** A unit has stepped (or been moved) onto `node`: every 'enter' Field there springs on it. */
+  function onEnter(m, u, node) {
+    let spent = false;
+    for (const f of m.fields) {
+      if (f.on !== 'enter' || (f.trips != null && f.trips <= 0)) continue;
+      if (!fieldNodes(m, f).includes(node)) continue;
+      if (springField(m, f, u, false)) {
+        fx(m, { t: 'trap', node });
+        if (f.trips != null && f.trips <= 0) spent = true;
+      }
     }
-    const i = traps.findIndex((t) => t.counted);
-    if (i < 0) {
-      e.inCounted = null;
-      return;
+    if (spent) m.fields = m.fields.filter((f) => f.trips == null || f.trips > 0);
+  }
+  /** Round end: every 'end' Field springs on the units standing in it, and reveal Fields look again. */
+  function fieldsAtRoundEnd(m) {
+    for (const f of m.fields) {
+      const owner = f.owner != null ? heroBy(m, f.owner) : null;
+      const nodes = fieldNodes(m, f);
+      if (!nodes.length) continue;
+      if (owner && f.fx.some((x) => x.kw === 'reveal')) {
+        const c = f.around != null ? owner.pos : nodes[0];
+        revealArea(m, owner, c, f.radius || 0, 2);
+      }
+      if (f.on !== 'end') continue;
+      const set = new Set(nodes);
+      for (const u of T.liveHeroes(m).concat(T.liveEnemies(m))) {
+        if (f.trips != null && f.trips <= 0) break;
+        if (set.has(u.pos)) springField(m, f, u, true);
+      }
     }
-    const tr = traps.splice(i, 1)[0];
-    e.inCounted = null;
-    say(m, `The counted snare springs shut on ${e.name}!`, 'hero');
-    T.damage(m, heroBy(m, tr.owner), e, tr.dmg, { kind: 'area', label: 'snares' });
-    if (e.alive) {
-      anchorEnt(m, e, tr.anchor);
-      if (tr.noTele) st(e).NoTele = { t: tr.anchor };
-    }
-    fx(m, { t: 'trap', node: e.pos });
-  };
+    m.fields = m.fields.filter((f) => f.trips == null || f.trips > 0);
+  }
 
   /* ───────────────────────────── REVEAL ───────────────────────────── */
   function revealArea(m, actor, center, radius, dur, opts) {
@@ -1928,28 +1956,6 @@
         actor.states.Absorb = { n: num(f.n, P, E), t: num(f.dur, P, E), face: f.face || 'C' };
         say(m, `${actor.name} will absorb the next ${num(f.n, P, E)} ranged hit(s).`, 'hero');
         break;
-      case 'ambushTrap':
-        actor.states.AmbushTrap = {
-          dmg: num(f.dmg, P, E),
-          t: num(f.dur, P, E) || 2,
-          weaken: f.weaken || 0,
-          anchor: num(f.anchor, P, E),
-        };
-        say(m, `${actor.name} sets a trigger (${num(f.dmg, P, E)} to the first foe that closes).`, 'hero');
-        break;
-      case 'aura': {
-        actor.states.Auras = actor.states.Auras || [];
-        actor.states.Auras.push({
-          kind: f.kind,
-          val: num(f.val, P, E),
-          radius: num(f.radius, P, E),
-          t: num(f.dur, P, E),
-          markEntrants: !!f.markEntrants,
-        });
-        if (f.kind === 'reveal') revealArea(m, actor, actor.pos, num(f.radius, P, E), 1);
-        say(m, `${actor.name} extends an aura (${f.kind}).`, 'hero');
-        break;
-      }
       /* ---------- RESOURCES ---------- */
       case 'heal': {
         const n = num(met ? f.n : f.elseVal, P, E);
@@ -1986,6 +1992,17 @@
         break;
       }
       case 'cleanse': {
+        if (f.field != null) {
+          // Cleanse the ground: hazards and foes' Fields within `field` of you are cleared.
+          const r = num(f.field, P, E);
+          const near = new Set([actor.pos].concat(B.within(bd, actor.pos, r, true)));
+          near.forEach((n) => (bd.nodes[n].hazard = false));
+          m.fields = m.fields.filter(
+            (z) => z.side === (actor.kind === 'enemy' ? 'enemy' : 'hero') || !fieldNodes(m, z).some((n) => near.has(n)),
+          );
+          say(m, `${actor.name} cleanses the ground nearby.`, 'hero');
+          if (!f.states) break;
+        }
         const list = f.party ? T.liveHeroes(m) : [actor];
         list.forEach((h) => {
           ['Anchored', 'Rooted', 'Weak', 'Slow', 'SlowSelf', 'NoTele'].forEach((k) => delete h.states[k]);
@@ -2053,40 +2070,44 @@
         break;
       }
       /* ---------- BOARD ---------- */
-      case 'trap': {
-        let node = ctx.node;
-        const r = f.remote != null ? num(f.remote, P, E) : 1;
-        if (node == null) break;
-        if (B.dist(bd, actor.pos, node, true) > r || bd.nodes[node].height) {
-          say(m, 'Too far to set.', 'sys');
-          break;
+      case 'field': {
+        // Lay a Field: on a chosen space (and the spaces within `radius` of it), or around you (`around`).
+        const around = f.around ? actor.uid : null;
+        const radius = num(f.radius, P, E) || 0;
+        let nodes = null;
+        if (around == null) {
+          const c = ctx.node != null ? ctx.node : actor.pos;
+          if (f.remote != null && (B.dist(bd, actor.pos, c, true) > num(f.remote, P, E) || bd.nodes[c].height)) {
+            say(m, 'Too far to set.', 'sys');
+            break;
+          }
+          nodes = [c].concat(radius ? B.within(bd, c, radius, true) : []);
         }
-        m.traps[node] = m.traps[node] || [];
-        m.traps[node].push({
+        const fl = {
+          nodes,
+          around,
+          radius,
+          ring: !!f.ring,
+          on: f.on || 'end',
+          trips: f.trips != null ? num(f.trips, P, E) : null,
+          t: f.dur != null ? num(f.dur, P, E) : null,
           owner: actor.uid,
-          dmg: num(f.dmg, P, E),
-          anchor: num(f.anchor, P, E),
-          counted: !!f.counted,
-          noTele: !!f.noTele,
-        });
-        say(m, `${actor.name} arms a ${f.counted ? 'counted ' : ''}snare on node ${node}.`, 'hero');
-        fx(m, { t: 'trapSet', node });
-        break;
-      }
-      case 'zone': {
-        const node = ctx.node != null ? ctx.node : actor.pos;
-        m.zones.push({
-          node,
-          radius: f.radius || 1,
-          kind: f.kind,
-          dmg: f.dmg || 0,
-          weaken: f.weaken || 0,
-          hideHeroes: !!f.hideHeroes,
-          t: f.dur || 2,
-          owner: actor.uid,
-        });
-        say(m, `${actor.name} seeds spores around node ${node}.`, 'hero');
-        fx(m, { t: 'zone', node });
+          side: actor.kind === 'enemy' ? 'enemy' : 'hero',
+          label: f.label || null,
+          fx: f.fx
+            .map((x) => {
+              const o = { kw: x.kw, n: num(x.n, P, E) || 0, t: x.t != null ? num(x.t, P, E) : 1 };
+              if (x.pierce) o.pierce = true;
+              if (x.if) o.if = x.if;
+              if (x.noTele) o.noTele = true;
+              return o;
+            })
+            .filter((x) => (['strike', 'weaken'].includes(x.kw) ? x.n > 0 : x.t > 0)),
+        };
+        m.fields.push(fl);
+        if (fl.fx.some((x) => x.kw === 'reveal')) revealArea(m, actor, nodes ? nodes[0] : actor.pos, radius, 1);
+        say(m, `${actor.name} lays a Field ${around != null ? 'around themself' : 'on node ' + nodes[0]}.`, 'hero');
+        fx(m, { t: 'trapSet', node: nodes ? nodes[0] : actor.pos });
         break;
       }
       case 'decoy': {
@@ -2113,16 +2134,6 @@
           say(m, `${actor.name} leaves a decoy on node ${node}.`, 'hero');
           fx(m, { t: 'decoy', node });
         }
-        break;
-      }
-      case 'clearHazard': {
-        const r = f.radius || 1;
-        [actor.pos].concat(B.within(bd, actor.pos, r, true)).forEach((n) => {
-          if (bd.nodes[n].hazard) {
-            bd.nodes[n].hazard = false;
-          }
-        });
-        say(m, `${actor.name} clears the nearby hazard.`, 'hero');
         break;
       }
       case 'interact': {
@@ -2490,17 +2501,10 @@
     }
     if (h.states.Hover && !h.states.Hover.noAp) T.mint(h, 'AP', 1);
     if (!h.rolledAhead) T.rollDice(m, h);
-    // zones hide heroes
-    for (const z of m.zones)
-      if (z.hideHeroes && B.dist(m.board, z.node, h.pos, true) <= z.radius) setHidden(m, h, 1, false);
     // keen sense
     if (T.boonVals(h, 'keen').length)
       for (const e of T.liveEnemies(m))
         if (isHidden(e) && B.adjacent(m.board, h.pos, e.pos)) breakHidden(m, e, 'keen sense');
-    (h.states.Auras || []).forEach((a) => {
-      a.markedThisRound = false;
-      if (a.kind === 'reveal') revealArea(m, h, h.pos, a.radius, 1);
-    });
   };
 
   /**
@@ -2561,8 +2565,6 @@
   };
   T.roundEnd = function (m) {
     m.phase = 'end';
-    // counted snares spring on enemies still standing in them
-    for (const e of T.liveEnemies(m)) T.springCounted(m, e);
     // decoy strikes
     for (const d of m.decoys.slice()) {
       if (d.strike) {
@@ -2588,18 +2590,9 @@
       if (m.board.nodes[e.pos].hazard && !hazardImmune(e) && !e.boss) {
         T.damage(m, null, e, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
       }
-    // zones
-    for (const z of m.zones)
-      for (const e of T.liveEnemies(m))
-        if (B.dist(m.board, z.node, e.pos, true) <= z.radius) {
-          if (z.dmg)
-            T.damage(m, m.heroes.find((h) => h.uid === z.owner) || null, e, z.dmg, {
-              kind: 'area',
-              label: 'is choked by spores for',
-            });
-          if (z.weaken && e.alive) weaken(m, e, z.weaken, 1);
-        }
-    // dots & auras
+    // Fields spring on whoever ends the round in them
+    fieldsAtRoundEnd(m);
+    // damage over time
     for (const e of T.liveEnemies(m)) {
       const dots = st(e).Dots || [];
       for (const d of dots) {
@@ -2615,15 +2608,6 @@
       if (e.alive) st(e).Dots = dots.filter((d) => d.t > 0);
       if (e.alive && !st(e).Dots.length) delete st(e).Dots;
     }
-    for (const h of T.liveHeroes(m))
-      for (const a of h.states.Auras || [])
-        if (a.kind === 'digest') {
-          for (const e of T.liveEnemies(m))
-            if (isAnchored(e) && !e.anchoredPerm) {
-              T.damage(m, h, e, a.val, { kind: 'true', trueDmg: true, label: 'digests' });
-              h.hp = Math.min(h.maxHp, h.hp + 1);
-            }
-        }
     // objective: hold
     const ob = m.objective;
     if (ob && ob.kind === 'hold') {
@@ -2677,9 +2661,6 @@
         if (k === 'Engines') {
           s[k] = v.filter((x) => --x.t > 0);
           if (!s[k].length) delete s[k];
-        } else if (k === 'Auras') {
-          s[k] = v.filter((x) => --x.t > 0);
-          if (!s[k].length) delete s[k];
         } else if (k === 'Empower' || k === 'Freecast') {
           s[k] = v.filter((x) => x.t == null || --x.t > 0);
           if (!s[k].length) delete s[k];
@@ -2696,7 +2677,7 @@
         tick(e);
         if (e.baseShield && e.shield < e.baseShield && e.type === 'warden') e.shield = e.baseShield;
       });
-    m.zones = m.zones.filter((z) => --z.t > 0);
+    m.fields = m.fields.filter((f) => f.t == null || --f.t > 0);
     m.decoys = m.decoys.filter((d) => --d.t > 0);
     // boss shield is fed by its spawners
     for (const e of T.liveEnemies(m))
@@ -2771,6 +2752,28 @@
   }
 
   /* ───────────────────────────── BOSS HP PROGRESS for UI ───────────────────────────── */
+  /** A Field in one sentence a player could resolve by hand. */
+  T.fieldText = function (m, f) {
+    const owner = f.owner != null ? heroBy(m, f.owner) : null;
+    const word = (x) =>
+      x.kw === 'strike'
+        ? `${x.n}${x.pierce ? ' pierce' : ''} damage${x.if === 'anchored' ? ' if Anchored' : ''}`
+        : x.kw === 'weaken'
+          ? `Weakened ${x.n}`
+          : x.kw === 'anchor'
+            ? `Anchored ${x.t}${x.noTele ? ', no blinking out' : ''}`
+            : x.kw === 'mark'
+              ? 'Marked'
+              : x.kw === 'hidden'
+                ? 'Hidden (your side)'
+                : 'Revealed';
+    const who =
+      f.trips === 1 ? 'the first foe to ' : f.trips != null ? `the next ${f.trips} foes to ` : 'every foe that ';
+    const when = f.on === 'enter' ? 'enters' : 'ends the round here';
+    const where = f.around != null ? `around ${owner ? owner.name : 'its owner'}` : 'here';
+    const left = f.t != null ? `, ${f.t} round${f.t === 1 ? '' : 's'} left` : '';
+    return `${owner ? owner.name + "'s " : ''}Field ${where}: ${who}${when} — ${f.fx.map(word).join(', ')}${left}.`;
+  };
   T.describeState = function (k, v) {
     const map = {
       Hidden: 'Hidden — immune to zone (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
@@ -2788,8 +2791,8 @@
       Preempt: `Pre-empt — next hit taken is −${v.v}${v.reflect ? ', reflects ' + v.reflect : ''}.`,
       Counter: `Counter — next melee against you is turned back for ${v.dmg}.`,
       Stasis: 'Stasis — untargetable.',
-      Hover: 'Hover — immune to hazards, traps, push/pull.',
-      Weightless: 'Weightless — immune to force/traps/hazards; may walk onto height.',
+      Hover: 'Hover — off the ground: hazards and Fields do not touch it; immune to push/pull.',
+      Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',
       Morph: `Morph — strikes +${v.bonus}${v.reach ? ', reach 2' : ''}${v.climb ? ', can climb' : ''}.`,
       HazardImmune: 'Immune to hazards.',
       StatusImmune: 'Immune to Weaken/Anchor.',
@@ -2797,9 +2800,7 @@
       Freecast: `Next ${Array.isArray(v) ? v.reduce((n, g) => n + g.n, 0) : 0} card(s) skip the track.`,
       Phoenix: `Phoenix — revive with ${v.hp} if downed.`,
       Absorb: `Absorb — next ${v.n} ranged hit(s) negated, minting Charge.`,
-      AmbushTrap: `Trigger — first foe to close takes ${v.dmg}.`,
       Engines: 'Engine running.',
-      Auras: 'Aura active.',
       Empower: 'Empowered — next strike(s) boosted.',
       Slow: 'Cannot move.',
       SlowSelf: 'Cannot move this round.',

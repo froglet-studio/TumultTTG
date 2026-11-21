@@ -140,7 +140,7 @@
       icon: 'kw.hover',
       tone: 'good',
       state: 'Hover',
-      tip: 'Hover: ignores hazards and traps, and cannot be pushed or pulled.',
+      tip: 'Hover: off the ground, so hazards and Fields do not touch it, and it cannot be pushed or pulled.',
     },
     {
       id: 'empower',
@@ -220,7 +220,7 @@
       re: 'Reveal(?:s|ed)?',
       icon: 'kw.reveal',
       tone: 'neutral',
-      tip: 'Reveal: shows everything within range, breaks Hidden there and finds traps and hidden objectives.',
+      tip: 'Reveal: shows everything within range, breaks Hidden there and finds hidden objectives.',
     },
     {
       id: 'mint',
@@ -237,18 +237,18 @@
       tip: 'Decoy: a stand-in on the board that draws attacks meant for the nearer hero.',
     },
     {
-      id: 'trap',
-      re: 'trap(?:s|ped)?',
+      id: 'field',
+      re: 'Field(?:s)?',
       icon: 'kw.trap',
       tone: 'neutral',
-      tip: 'Trap: set on a node; the first foe to enter it springs it.',
+      tip: 'Field: marked spaces that do their keywords to whatever enters them or ends the round there. Its harm falls on foes, its help on allies; Hover is above it. A hazard is a Field of damage.',
     },
     {
       id: 'hazard',
       re: 'hazard(?:s)?',
       icon: 'kw.hazard',
       tone: 'bad',
-      tip: 'Hazard: a node that hurts whoever ends a move there (and whoever is pushed into it).',
+      tip: 'Hazard: a Field of damage that belongs to nobody: whoever ends the round on it takes damage.',
     },
     {
       id: 'height',

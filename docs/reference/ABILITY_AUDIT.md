@@ -29,7 +29,7 @@ The rules this checks:
 | Problem | Where it shows up | Faces that answer it | …of which staples |
 |---|---|---|---|
 | One tough foe | elites, the Heart, Spawners, a Brute | 502 | 489 |
-| A crowd | Swarm waves, the Heart’s Biters | 220 | 197 |
+| A crowd | Swarm waves, the Heart’s Biters | 219 | 197 |
 | Shields | Warden, Bulwark, the Heart | 48 | 47 |
 | Height | the Vault ledge | 51 | 50 |
 | The unseen | hidden caches, Lurkers, a faded Harrier | 152 | 145 |
@@ -51,11 +51,11 @@ Win rate of two random legal heroes (no gear, no boons) played by the look-ahead
 | no way up | 490 | 100% | 100% | 81% | 81% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 100% | 25% |
 | no shield-breakers | 492 | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 100% | 88% | 100% | 100% | 100% | 100% | 25% |
 | no reveals | 442 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 25% |
-| no area damage | 499 | 100% | 100% | 88% | 81% | 100% | 100% | 100% | 100% | 94% | 100% | 94% | 94% | 100% | 100% | 25% |
+| no area damage | 495 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 94% | 100% | 100% | 19% |
 | no shields or wards | 260 | 100% | 100% | 88% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 50% |
 | no healing | 394 | 100% | 100% | 94% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 19% |
 | no movement abilities | 368 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 38% |
-| no foe control | 362 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 38% |
+| no foe control | 360 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 31% |
 | no hazard answers | 434 | 100% | 100% | 100% | 75% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 31% |
 | no dice economy | 456 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 13% |
 | no cards at all | 0 | 100% | 100% | 81% | 81% | 100% | 100% | 100% | 94% | 100% | 88% | 100% | 75% | 94% | 94% | 0% ⚠ |
@@ -636,7 +636,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Suction Feed — Suck In (Phys) | staple | One tough foe, One big telegraphed hit | 0/5 (0.00) |  |
 | Suction Feed — Feast (Eth) | staple | One tough foe, Attrition | 1/5 (0.20) |  |
 | Ice Haul — Tusk Up (Phys) | staple | Height, The clock, One big telegraphed hit | 1/5 (0.20) |  |
-| Ice Haul — Break the Ice (Eth) | tool | A crowd, Hazards and being dragged, One big telegraphed hit | 0/1 (0.00) |  |
+| Ice Haul — Break the Ice (Eth) | tool | Hazards and being dragged, One big telegraphed hit | 0/1 (0.00) |  |
 | Ton of Weight — Lean In (Phys) | staple | One tough foe, One big telegraphed hit | 1/3 (0.33) |  |
 | Ton of Weight — Belly Flop (Eth) | staple | One tough foe, A crowd, The unseen, One big telegraphed hit | 0/3 (0.00) |  |
 

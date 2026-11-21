@@ -679,7 +679,7 @@
                 ctx.target = foe.uid;
                 score = 2;
               } else continue;
-            } else if (face.fx.some((x) => x.v === 'trap')) {
+            } else if (face.fx.some((x) => x.v === 'field' && !x.around)) {
               const foes = T.liveEnemies(m);
               if (!foes.length || chk.tg.need !== 'node') continue;
               const nearest = foes.sort(
