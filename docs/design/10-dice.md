@@ -1,6 +1,6 @@
 # 10 · Dice kinds — a plain die, an ethereal die, and a die for each element
 
-*Status: built in 2.29.0. Garrett's answers (2026-11-14): no AP×2 on the plain die; four dice a turn; how pilots get special dice stays open-ended (2.29 tries awakened cards, Affinity boons and Omni Core); the symbols are Cosmic Shore's, since Froglet's Hypersea games share resources freely. How it works today: `docs/reference/RUN_AND_ECONOMY.md` (Dice).*
+*Status: built in 2.29.0. Garrett's answers (2026-11-14): no AP×2 on the plain die; four dice a turn; how pilots get special dice stays open-ended (2.29 tries awakened cards, Affinity boons and Omni Core); the symbols are Cosmic Shore's, since Froglet's Hypersea games share resources freely. Since 2.82 the player chooses which of the pilot's dice to roll (Garrett, 2026-11-20). How it works today: `docs/reference/RUN_AND_ECONOMY.md` (Dice).*
 
 ## Why
 

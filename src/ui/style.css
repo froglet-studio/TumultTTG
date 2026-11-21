@@ -2636,3 +2636,44 @@ button:disabled .acost {
   color: var(--gold);
   margin-top: 6px;
 }
+/* the next roll's dice, chosen from the pool (2.82) */
+.nextroll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 3px 6px;
+  margin-top: 6px;
+}
+.nextroll .rp-adds {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.nextroll button.rp-add,
+.nextroll button.rp-pick {
+  --c: var(--AP);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 5px;
+}
+.nextroll button svg.dbody {
+  width: 20px;
+  height: 20px;
+  overflow: visible;
+}
+.nextroll button svg.dbody .o {
+  fill: color-mix(in srgb, var(--c) 16%, #121b2e);
+  stroke: color-mix(in srgb, var(--c) 80%, #fff);
+  stroke-width: 2;
+}
+.nextroll button svg.dbody .l {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  opacity: 0.5;
+}
+.nextroll button.rp-pick.banked {
+  opacity: 0.5;
+}

@@ -979,7 +979,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 18;
+  T.SAVE_VERSION = 19;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1127,6 +1127,11 @@
     17(r) {
       if (r.party) Object.assign(r.party, { active: null, rounds: 'turns' });
       r.v = 18;
+    },
+    // 2.82 lets a player choose the dice of a pilot's next roll (`rollPick` on a hero: up to ROLL kinds). Optional:
+    // a version-18 pilot has chosen none, and draws at random as before.
+    18(r) {
+      r.v = 19;
     },
   };
   T.deserializeRun = function (json) {

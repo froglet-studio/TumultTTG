@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.82.0 — 2026-11-20 — choose which dice you roll
+
+Garrett: "when players roll dice, they should be able to select which ones they roll from their pool"
+
+- **Next roll.** Beside your pilot's dice, choose up to four from your pool for the next roll: plain d20s (mostly AP) or your element d8s (no AP, four of their etherion), and the ethereal d12 if you have one. The choice stays from roll to roll until you change it; dice you leave unchosen are drawn at random as before, and so is a chosen die that is banked when the roll comes. You choose the dice, never their faces. Pool and bank still make fifteen (`T.setRollPick`, `h.rollPick`).
+- **Both ways to play.** Choose any time in a mission, on anyone's turn, for your own pilot. Taking turns, your roll comes as your turn ends, so choose before you end it (a choice after is for the roll after); all at once, everyone rolls as the round begins.
+- **Simulated players choose too** (`T.autoRollPick`): an element die for each Ethereal face back in hand next round that the bank can't pay for (two at most), plain dice for the rest. Balance, `node tools/sim.js 40`, 2.81.1 → 2.82: heuristic runs 6 → 6 of 40, mission wins 73% → 73%; look-ahead runs 25 → 18 of 40, mission wins 90% → 85%. Choosing is not easier for either player, so nothing is retuned. (Choosing only element dice and leaving the rest at random was worse still: heuristic vault t3 43% → 18%.) The UI driver allows a mission 60 rounds, since a long boss fight can pass 30.
+- **Saves** are version 19: a pilot may carry its chosen dice. A 2.81 save loads with nothing chosen and draws at random (fixture `save-2.81.json`).
+
 ## 2.81.1 — 2026-11-20 — a run of exactly 4 counts its steps
 
 Garrett, from a playtest of Three Caches on Mast-Crop Hills: "it seemed like our abilities would allow us to go through guys 4 spaces away (hyperspeed), but the card said no spaces available."

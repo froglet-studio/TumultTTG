@@ -460,16 +460,50 @@
   T.notesOf = (m) => m.log.filter((l) => l.who === 'note').map((l) => ({ r: l.r, hero: l.hero, text: l.text }));
 
   /* ───────────────────────────── DICE ───────────────────────────── */
+  /**
+   * Which dice a pilot rolls next (2.82; Garrett, 2026-11-20: "when players roll dice, they should be able to
+   * select which ones they roll from their pool"). `h.rollPick` lists up to ROLL kinds (keys of T.DICE, or
+   * 'plain'), chosen from the pilot's dice, and stays chosen roll after roll until the player changes it. At
+   * the roll, each chosen kind still in the pool is taken; a chosen die that is banked, and every slot not
+   * chosen, is drawn at random from the pool as before. Choosing a die never chooses its face.
+   */
+  T.setRollPick = function (h, kinds) {
+    const set = T.diceSet(h);
+    const pick = [];
+    for (const k of Array.isArray(kinds) ? kinds : []) {
+      if (pick.length >= R().ROLL) break;
+      const j = set.indexOf(k);
+      if (j < 0) continue; // not one of this pilot's dice (or all of that kind already chosen)
+      set.splice(j, 1);
+      pick.push(k);
+    }
+    if (pick.length) h.rollPick = pick;
+    else delete h.rollPick;
+    return { ok: true, pick };
+  };
+  /** The chosen dice that the next roll can take now: those of the pick still in the pool. */
+  T.rollPickNow = function (h) {
+    const left = T.poolDice(h);
+    const out = [];
+    for (const k of h.rollPick || []) {
+      const j = left.indexOf(k);
+      if (j >= 0) out.push(left.splice(j, 1)[0]);
+    }
+    return out;
+  };
   T.rollDice = function (m, h) {
-    // Draw ROLL dice at random from those in the pool, and roll each.
+    // Draw ROLL dice from those in the pool, the ones chosen first (T.setRollPick), the rest at random, and roll each.
     const k = Math.min(R().ROLL, h.pool);
     const dice = T.stream(m.rngs, 'dice');
     const left = T.poolDice(h);
+    const pick = (h.rollPick || []).slice();
     const out = [];
     const kinds = [];
     const at = [];
     for (let i = 0; i < k; i++) {
-      const kind = left.splice(dice.int(left.length), 1)[0];
+      let j = -1;
+      while (pick.length && j < 0) j = left.indexOf(pick.shift());
+      const kind = left.splice(j >= 0 ? j : dice.int(left.length), 1)[0];
       const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
       kinds.push(kind);

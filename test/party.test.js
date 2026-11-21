@@ -203,7 +203,15 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
     if (U.ms.endConfirm) act('endRound');
   };
   // players take turns in the order they choose: the round opens, and this screen (seat 1) may go first
+  U.ms.heroIdx = 1;
   U.updateMission();
+  // choosing the next roll's dice (2.82): from the pilot's own, and it begins no turn
+  act('rollPick', '1|add|plain');
+  assert.equal(JSON.stringify(m.heroes[1].rollPick), '["plain"]');
+  assert.match(d.querySelector('.nextroll').textContent, /3 at random/);
+  act('rollPick', '1|del|0');
+  assert.equal(m.heroes[1].rollPick, undefined);
+  assert.equal(U.run.party.active, null, 'choosing dice begins no turn');
   assert.match(d.querySelector('[data-act="endRound"]').textContent, /End Player 2's turn/);
   ready();
   assert.equal(m.round, round, "ending one player's turn passes it on; the round goes on");

@@ -98,7 +98,7 @@ async function driveRun(html, { seed = 1, auto = true, maxSteps = 40, tide = 'ri
       } else if (U.screen === 'mission') {
         const m = U.run.mission;
         let rounds = 0;
-        while (!m.over && rounds++ < 30) {
+        while (!m.over && rounds++ < 60) {
           act('tutClose');
           if (auto) {
             T.autoHeroPhase(m);

@@ -26,7 +26,10 @@
     'autoUpRun',
     'sellGear',
     'skipCard',
+    'rollPick',
   ]);
+  // choices that change nothing on the board, open to a player whoever's turn it is
+  const ANYTIME = new Set(['rollPick']);
   const HERO_SECOND = new Set(['takeCard', 'swapPick', 'swapDrop', 'takeBoon', 'buyGear', 'buyCons', 'evTakeCard']);
   // the squad's shared choices: the host makes them
   const LEAD = new Set([
@@ -73,6 +76,7 @@
       U.toast(`${esc(T.ownerName(run, i))} plays that pilot.`);
       return false;
     }
+    if (ANYTIME.has(act)) return true;
     const turn = U.screen === 'mission' && HERO_FIRST.has(act) ? T.turnSeat(run) : null;
     if (turn != null && i != null && !isNaN(i) && T.ownerOf(run, i) !== turn) {
       U.toast(`It is ${esc(run.party.players[turn].name)}'s turn.`);
