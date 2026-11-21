@@ -51,16 +51,16 @@
       fx:[{v:'mark'},{v:'weaken', val:(P,E)=>h(P), dur:1}],
       txt:(P,E)=>`Mark a foe: the next hit on it deals +2${P>=2?`, and its own next hit deals −${h(P)}`:''}.` },
     { n:'Pre-empt', ap:0, el:2, cd:3, dur:2, tgt:'self',
-      fx:[{v:'preempt', val:(P,E)=>4+2*E, reflect:(P,E)=>1+E}],
-      txt:(P,E)=>`Pre-arm: the next hit on you is reduced by ${4+2*E} and reflects ${1+E} back. Dur 2.` },
+      fx:[{v:'shield', next:true, val:(P,E)=>4+2*E, reflect:(P,E)=>1+E}],
+      txt:(P,E)=>`Pre-arm: Shield: Shield: the next hit on you is reduced by ${4+2*E} and reflects ${1+E} back. Dur 2.` },
     'A brain that models other minds.');
   C('human','hum_tool','Tool Use','S',2,
     { n:'Improvise', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'empower', val:(P,E)=>1+P, uses:1, dur:1}],
       txt:(P,E)=>`Your next strike this turn deals +${1+P}.` },
     { n:'Reach Rig', ap:1, el:1, cd:2, dur:0, tgt:'node_r2',
-      fx:[{v:'interact', range:(P,E)=>1+E},{v:'preempt', val:(P,E)=>E, reflect:0}],
-      txt:(P,E)=>`Interact with an objective up to ${1+E} nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is ${E} less.` },
+      fx:[{v:'interact', range:(P,E)=>1+E},{v:'shield', val:(P,E)=>E, next:true}],
+      txt:(P,E)=>`Interact with an objective up to ${1+E} nodes away (not one up on a ledge), and brace behind the rig: Shield: the next hit on you is ${E} less.` },
     'Hands that build a lever for anything.');
   C('human','hum_persist','Persistence','T',0,
     { n:'Pace', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -236,11 +236,11 @@
     'Foes waste an action on the shell.');
   C('hopper','hop_eyes','Compound Eyes','S',0,
     { n:'Mosaic', ap:1, el:0, cd:1, dur:1, tgt:'self',
-      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'guard', dur:1}],
-      txt:(P,E)=>`Reveal within ${2+P}; ambushes against you deal half this round.` },
+      fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'shield', val:2, dur:1}],
+      txt:(P,E)=>`Reveal within ${2+P}, and hold Shield 2 this round.` },
     { n:'Panoramic', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>2+E},{v:'preempt', val:2, reflect:0}],
-      txt:(P,E)=>`360° lock for ${2+E} rounds: everything within ${1+E} revealed and unable to Hide, and your next hit taken is −2.` },
+      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>2+E},{v:'shield', val:2, next:true}],
+      txt:(P,E)=>`360° lock for ${2+E} rounds: everything within ${1+E} revealed and unable to Hide, and Shield: your next hit taken is −2.` },
     'Nothing approaches unseen.');
   C('hopper','hop_mandibles','Voracious Mandibles','M',0,
     { n:'Shred', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -281,8 +281,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'move', n:1, free:true}],
       txt:(P,E)=>`Locate everything within ${2+P} by ear alone, then take one free step.` },
     { n:'Acoustic Map', ap:0, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'reveal', radius:(P,E)=>2+E, dur:(P,E)=>2+E},{v:'preempt', val:(P,E)=>E, reflect:0}],
-      txt:(P,E)=>`A 3-D map of everything within ${2+E} for ${2+E} rounds — hidden foes, traps and hidden objectives there all pinpointed, and you hear the next hit on you coming: it deals ${E} less.` },
+      fx:[{v:'reveal', radius:(P,E)=>2+E, dur:(P,E)=>2+E},{v:'shield', val:(P,E)=>E, next:true}],
+      txt:(P,E)=>`A 3-D map of everything within ${2+E} for ${2+E} rounds — hidden foes, traps and hidden objectives there all pinpointed, and you hear Shield: the next hit on you coming: it deals ${E} less.` },
     'Offset ears triangulate prey in total darkness.');
   C('owl','owl_talon','Talon Strike','M',0,
     { n:'Grip', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -297,8 +297,8 @@
       fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'reveal', radius:1, dur:1}],
       txt:(P,E)=>`No blind spot: Shield ${1+P} and reveal adjacent.` },
     { n:'Counter-see', ap:1, el:1, cd:3, dur:2, tgt:'self',
-      fx:[{v:'preempt', val:(P,E)=>3+E, reflect:(P,E)=>E>=2?E:0}],
-      txt:(P,E)=>`You saw it coming: the next hit on you is −${3+E}${E>=2?` and reflects ${E}`:''}. Dur 2.` },
+      fx:[{v:'shield', next:true, val:(P,E)=>3+E, reflect:(P,E)=>E>=2?E:0}],
+      txt:(P,E)=>`You saw it coming: Shield: Shield: the next hit on you is −${3+E}${E>=2?` and reflects ${E}`:''}. Dur 2.` },
     '270 degrees.');
   C('owl','owl_night','Night Eyes','C',0,
     { n:'Amplify', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -329,8 +329,8 @@
       fx:[{v:'reroll', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Reroll up to ${1+h(P)} of your banked dice.` },
     { n:'Foresee', ap:1, el:1, cd:3, dur:2, tgt:'party',
-      fx:[{v:'preempt', val:(P,E)=>3+E, reflect:0, party:true}],
-      txt:(P,E)=>`A few seconds ahead: both heroes' next hit taken is −${3+E}. Dur 2.` },
+      fx:[{v:'shield', val:(P,E)=>3+E, next:true, party:true}],
+      txt:(P,E)=>`A few seconds ahead: Shield: both heroes' next hit taken is −${3+E}. Dur 2.` },
     'Reroll fate.');
   C('owl','owl_threat','Threat Display','C',0,
     { n:'Hiss', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -411,8 +411,8 @@
       fx:[{v:'mark', n:(P,E)=>1+h(P), dur:3}],
       txt:(P,E)=>`Study a foe: it is Marked +${1+h(P)} for 3 rounds.` },
     { n:'Counter-Model', ap:2, el:1, cd:3, dur:2, tgt:'self',
-      fx:[{v:'preempt', val:3, reflect:(P,E)=>E>=2?E:0, reposition:1}],
-      txt:(P,E)=>`Model their next move: the next hit on you is −3${E>=2?` and reflects ${E}`:''}, and you slip 1 node when it lands. Dur 2.` },
+      fx:[{v:'shield', next:true, val:3, reflect:(P,E)=>E>=2?E:0, reposition:1}],
+      txt:(P,E)=>`Model their next move: Shield: Shield: the next hit on you is −3${E>=2?` and reflects ${E}`:''}, and you slip 1 node when it lands. Dur 2.` },
     'Grind a single rival down.');
 
   /* ───────────────────────── 5 · TOKAY GECKO (C/M) ───────────────────────── */
@@ -524,11 +524,11 @@
     'A corrosive smear.');
   C('axolotl','axo_lateral','Lateral Line','C',0,
     { n:'Feel Flow', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'preempt', val:1, reflect:0}],
-      txt:(P,E)=>`Feel pressure and flow: reveal within ${1+P}, and the next hit on you is −1.` },
+      fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'shield', val:1, next:true}],
+      txt:(P,E)=>`Feel pressure and flow: reveal within ${1+P}, and Shield: the next hit on you is −1.` },
     { n:'Pressure Map', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>1+E},{v:'preempt', val:2, reflect:0, party:(P,E)=>E>=2}],
-      txt:(P,E)=>`Read the field within ${1+E} for ${1+E} rounds; ${E>=2?'both heroes feel':'you feel'} the next hit coming (−2).` },
+      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>1+E},{v:'shield', next:true, val:2, party:(P,E)=>E>=2}],
+      txt:(P,E)=>`Read the field within ${1+E} for ${1+E} rounds; ${E>=2?'both heroes feel':'you feel'} the next hit coming: Shield 2 against it.` },
     'Every disturbance and its direction.');
   C('axolotl','axo_tail','Powerful Tail','M',0,
     { n:'Lunge', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
@@ -577,8 +577,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>1, trueDmg:true, nearest:true}],
       txt:(P,E)=>`Sense bioelectric fields: reveal within ${2+P}, and jolt the nearest foe in your zone for 1 true damage.` },
     { n:'Field Map', ap:0, el:1, cd:3, dur:0, tgt:'party',
-      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>2+E},{v:'guard', dur:(P,E)=>2+E, party:true}],
-      txt:(P,E)=>`Cast your field out to ${1+E} for ${2+E} rounds: everything in it revealed and unable to Hide, and ambushes on either hero deal half.` },
+      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>2+E},{v:'shield', val:1, dur:(P,E)=>2+E, party:true}],
+      txt:(P,E)=>`Cast your field out to ${1+E} for ${2+E} rounds: everything in it revealed and unable to Hide, and both heroes hold Shield 1 as long.` },
     'The world through its own electric field.');
   C('eel','eel_chargeup','Electrocyte Charge-Up','T',0,
     { n:'Store', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -781,8 +781,8 @@
       fx:[{v:'heal', n:(P,E)=>2+P, ifOnHazard:true, elseVal:(P,E)=>1+h(P)},{v:'mint', face:'AP', n:1, ifOnHazard:true}],
       txt:(P,E)=>`Thrive on hazard: heal ${2+P} and mint 1 AP if you stand in a hazard (else heal ${1+h(P)}).` },
     { n:'Feed on Energy', ap:1, el:1, cd:3, dur:2, tgt:'self',
-      fx:[{v:'absorb', n:(P,E)=>1+E, dur:2, face:'C'}],
-      txt:(P,E)=>`For 2 rounds, the next ${1+E} ranged hit${E>=1?'s':''} on you are absorbed and each mints you 1 Charge.` },
+      fx:[{v:'shield', val:(P,E)=>3+2*E, next:true},{v:'mint', face:'C', n:1}],
+      txt:(P,E)=>`Drink the field: Shield ${3+2*E} against the next hit on you, and mint 1 Charge now.` },
     'Some kin feed on radiation.');
 
   /* ───────────────────────── 10 · TARDIGRADE (T/M) ───────────────────────── */

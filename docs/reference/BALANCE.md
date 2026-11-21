@@ -492,3 +492,7 @@ Studied (+N to every hit for the whole mission) became a Mark for 3 rounds, and 
 ## v2.93.0 — Thorns
 
 Counter became a next-hit Thorns. Same seeds, 2.92.0 → 2.93.0: `80 runs --player strong` 39 → 39; `120 runs --player weak` 11 → 10; `node tools/sim.js 40` runs 6 → 5 and 21 → 21 of 40, mission wins unchanged. Nothing is retuned.
+
+## v2.94.0 — Shield absorbs Pre-empt, Guard and Absorb
+
+Pre-empt, Guard and Absorb became Shield. Same seeds, 2.93.0 → 2.94.0: `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10; `node tools/sim.js 40` runs 5 → 5 and 21 → 19 of 40, mission wins 71% → 71% and 88% → 87%. Nothing is retuned.

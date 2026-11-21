@@ -131,10 +131,8 @@ function answersOf(x) {
       break;
     }
     case 'hidden':
-    case 'preempt':
     case 'stasis':
     case 'slow':
-    case 'guard':
       add('burst');
       break;
     case 'shield':
@@ -169,9 +167,6 @@ function answersOf(x) {
       add('attrition');
       if (x.ward != null) add('burst'); // a held Heal answers the hit that would down you
       break;
-    case 'absorb':
-      add('burst', 'tempo');
-      break;
     case 'engine':
       add(x.kind === 'regen' ? 'attrition' : 'tempo');
       break;
@@ -201,7 +196,7 @@ function answersOf(x) {
 const STAPLE_VERBS = [
   ...['strike', 'execute', 'wound', 'empower', 'mark', 'morph'], // damage
   ...['move', 'teleport', 'climb'], // movement
-  ...['shield', 'preempt', 'weaken'], // mitigation that works against any hit
+  ...['shield', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
   ...['mint', 'draw', 'reroll', 'hasten', 'freecast'], // dice and track economy
 ];
@@ -259,9 +254,7 @@ const ABLATIONS = [
   [
     'mitigation',
     'no shields or wards',
-    (x) =>
-      ['shield', 'preempt', 'guard', 'stasis', 'hidden', 'absorb', 'thorns'].includes(x.v) ||
-      (x.v === 'heal' && x.ward != null),
+    (x) => ['shield', 'stasis', 'hidden', 'thorns'].includes(x.v) || (x.v === 'heal' && x.ward != null),
   ],
   ['heal', 'no healing', (x) => x.v === 'heal' || (x.v === 'engine' && x.kind === 'regen')],
   [
@@ -299,7 +292,7 @@ function autoplayerKnows(face) {
   const node = /^node_/.test(face.tgt);
   const strike = face.fx.find((x) => x.v === 'strike');
   if (strike) return foe || ['area', 'zone_all'].includes(strike.kind) || !!strike.nearest;
-  if (has('shield', 'preempt', 'stasis', 'heal', 'reveal', 'engine')) return true;
+  if (has('shield', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
   if (has('field')) return node;
   if (has('teleport', 'climb', 'move')) return node;

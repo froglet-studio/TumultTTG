@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.94.0 — 2026-11-21 — Shield absorbs Pre-empt, Guard and Absorb
+
+The eighth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Shield N.** Each hit it takes is N lower while it lasts; a **Shield against the next hit** is spent by that hit, and may send some back (`reflect`) or step you away (`reposition`): what Pre-empt did (`shield` with `next`).
+- **85 Pre-empt faces** are next-hit Shields, and their texts say Shield. **Guard** (ambushes halved) is a Shield 1 or 2 for as long; **Absorb** (the next ranged hits negated, minting Charge) is a Shield of 3+2E against the next hit and a Charge minted now.
+- **Saves** are version 26: a held Guard becomes Shield 1, a held Absorb a Shield of 3 against the next hit (fixture `save-2.93.json`).
+- **Balance.** Same seeds, 2.93.0 → 2.94.0: `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10; `node tools/sim.js 40` runs 5 → 5 and 21 → 19 of 40, mission wins 71% → 71% and 88% → 87%. Nothing is retuned.
+
 ## 2.93.0 — 2026-11-21 — Thorns
 
 The seventh keyword of the sweep (`docs/reference/KEYWORDS.md`).

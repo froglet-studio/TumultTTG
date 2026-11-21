@@ -134,7 +134,7 @@
       icon: 'kw.shield',
       tone: 'good',
       state: 'Shield',
-      tip: 'Shield N: each hit taken is N lower. Area hits bypass it unless it says otherwise; pierce and true damage ignore it.',
+      tip: 'Shield N: each hit taken is N lower while it lasts (a Shield against the next hit is spent by that hit). Area hits bypass it unless it says all; pierce and true damage ignore it.',
     },
     {
       id: 'thorns',
@@ -174,7 +174,7 @@
       icon: 'kw.preempt',
       tone: 'good',
       state: 'Preempt',
-      tip: 'Pre-empt: the next hit it takes is reduced.',
+      tip: 'Shield (next hit): since 2.94 Pre-empt is a Shield against the next hit only, then it is spent.',
     },
     {
       id: 'counter',
