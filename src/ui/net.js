@@ -578,7 +578,7 @@
         U.enterMission();
         // the effects in the state were shown before the reload
         U.ms.fxDone = run.mission.fx.length;
-      } else U.screen = ['reward', 'haven', 'event', 'summary'].includes(run.phase) ? run.phase : 'map';
+      } else U.screen = ['reward', 'haven', 'event', 'garage', 'summary'].includes(run.phase) ? run.phase : 'map';
     } else {
       U.run = null;
       U.screen = 'lobby';
@@ -1051,7 +1051,7 @@
       }
     } else {
       if (U.screen === 'mission') U.modal = null;
-      U.screen = ['reward', 'haven', 'event', 'summary'].includes(run.phase) ? run.phase : 'map';
+      U.screen = ['reward', 'haven', 'event', 'garage', 'summary'].includes(run.phase) ? run.phase : 'map';
       // the expedition is over: this player's own pilot takes its growth home to this device
       if (run.phase === 'summary' && U.keepProgress) U.keepProgress(run);
     }

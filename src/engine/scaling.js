@@ -79,7 +79,7 @@
     const enemyAt = new Set(spec.enemies.map((e) => e.node));
     const free = (id, onGoal) => {
       const n = b.nodes[id];
-      return n && !n.height && !n.hazard && (onGoal || !n.objective) && !n.spawn && !enemyAt.has(id);
+      return n && !n.height && !n.hazard && !n.terrain && (onGoal || !n.objective) && !n.spawn && !enemyAt.has(id);
     };
     // a start for every pilot: the mission's own first, then free spaces from the front column back
     if (spec.starts.length < pilots) {
@@ -107,7 +107,8 @@
         const taken = new Set(spec.enemies.map((e) => e.node).concat(spec.starts));
         const open = (key) => {
           const id = b.at[key];
-          return !taken.has(id) && b.nodes[id] && !b.nodes[id].hazard && !b.nodes[id].objective;
+          const n = b.nodes[id];
+          return !taken.has(id) && n && !n.hazard && !n.objective && (!n.terrain || T.TERRAIN[n.terrain].foot);
         };
         // the back two columns, as the tides' escorts stand; a board full there takes them past the front column
         let spots = Object.keys(b.at).filter((key) => +key.split(',')[0] >= b.cols - 2 && open(key));

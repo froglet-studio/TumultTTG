@@ -139,10 +139,16 @@
       byLabel[label] = id;
       return id++;
     };
-    for (const [label, [x, y, zones]] of Object.entries(page.spaces)) {
+    let cols = 0,
+      rows = 0;
+    for (const [label, [x, y, zones, ground]] of Object.entries(page.spaces)) {
       const c = label.charCodeAt(0) - 65,
         r = +label.slice(1) - 1;
-      at[c + ',' + r] = add(label, x, y, zones);
+      cols = Math.max(cols, c + 1);
+      rows = Math.max(rows, r + 1);
+      // a big map's ground (src/data/vehicles.js): only a space that is not open ground says so
+      const extra = !ground ? null : ground === 'z' ? { hazard: true } : { terrain: T.TERRAIN_KEY[ground] };
+      at[c + ',' + r] = add(label, x, y, zones, extra);
     }
     for (const [label, ex] of Object.entries(page.extras || {}))
       add(label, ex.at[0], ex.at[1], ex.zones, { height: !!ex.h, hazard: !!ex.hz });
@@ -155,7 +161,7 @@
       for (const a of pairs(ex.climb)) climb.push([byLabel[a], byLabel[label]]);
       for (const a of pairs(ex.edges)) edges.push([byLabel[a], byLabel[label]]);
     }
-    return { nodes, edges, climb, at, cols: 5, rows: 3, nextId: id, page: page.id };
+    return { nodes, edges, climb, at, cols, rows, nextId: id, page: page.id };
   }
   /**
    * The board a mission is played on: its atlas page's, or, with no page, a grid. `cols` and `rows` are the
@@ -570,6 +576,68 @@
         };
       },
     },
+    crossing: {
+      // played on a big map (T.BIG_ATLAS), where each player brings a pocket vehicle (src/engine/vehicles.js)
+      big: true,
+      title: ['The Long Crossing', 'Signal Fires', 'Across the Wide Country'],
+      blurb:
+        'Signal posts stand far apart across country too wide to walk, and the light is going. Each player has brought a vehicle: drive it (1 AP a Drive), get out (1 AP) to light a post on foot, standing on it (Interact: 2 AP or a die of its element), and get back in. Foes patrol the far side.',
+      gen(rng, tier, tide, page) {
+        const up = tideAt(tide, tier);
+        const b = boardFor(rng, page, 8, 4);
+        const ground = (id) => {
+          const n = b.nodes[id];
+          return !n.height && !n.hazard && (!n.terrain || T.TERRAIN[n.terrain].foot);
+        };
+        const near = [b.at['0,1'], b.at['0,2'], b.at['0,0'], b.at['0,3']].filter(ground);
+        const starts = near.slice(0, 2);
+        // posts on ground a pilot can stand on, at least one in each third of the way across, the last at the far edge
+        let need = [3, 4, 5][tier - 1] + up.need;
+        const spaces = (c0, c1) =>
+          shuffle(
+            rng,
+            Object.keys(b.at)
+              .filter((k) => +k.split(',')[0] >= c0 && +k.split(',')[0] <= c1)
+              .map((k) => b.at[k])
+              .filter(ground),
+          );
+        const posts = [spaces(2, 3)[0], spaces(4, 5)[0], spaces(6, 7)[0]];
+        const rest = spaces(2, 7).filter((i) => !posts.includes(i));
+        while (posts.length < need + 1 && rest.length) posts.push(rest.shift());
+        need = Math.min(need, posts.length - 1); // one post to spare: which to leave dark is a choice
+        posts.forEach((i) => (b.nodes[i].objective = { kind: 'mark', el: pick(rng, ['M', 'C', 'S', 'T']), veiled: false }));
+        // patrols on the far half, on the ground, never on a post
+        const crew = ['kiter', 'biter', 'stinger']
+          .concat(tier >= 2 ? ['brute', 'binder'] : ['biter'])
+          .concat(tier >= 3 ? ['kiter', 'lurker'] : [])
+          .concat(up.escorts ? ['biter'] : []);
+        const enemies = [];
+        const open = spaces(3, 7).filter((i) => !b.nodes[i].objective);
+        for (const type of crew) if (open.length) enemies.push({ type, node: open.shift() });
+        return {
+          board: b,
+          starts,
+          enemies,
+          objective: {
+            kind: 'survey',
+            need,
+            total: posts.length,
+            done: 0,
+            text: `Light ${need} of the ${posts.length} signal posts (get out, stand on one and Interact: 2 AP or a die of its element)`,
+          },
+          clock: {
+            value: Math.max(4, [8, 8, 7][tier - 1] - up.clock - Math.floor(((tide && tide.squadNeed) || 0) / 2)),
+            label: 'Rounds before dark',
+            onZero: 'lose',
+          },
+          spawns: [],
+          bonus: [
+            { id: 'fast', text: 'Finish with 2+ rounds to spare', clockLeft: 2 },
+            { id: 'intact', text: 'No vehicle wrecked' },
+          ],
+        };
+      },
+    },
   });
 
   /* ───────────────────────────── TIDE MAP ───────────────────────────── */
@@ -581,7 +649,7 @@
   T.LENGTHS = { short: { stops: 5 }, full: { stops: 7 } };
   const SHORT_ROWS = [
     { tier: 1, types: (rng) => shuffle(rng, ['swarm', 'vault', 'cascade']) },
-    { tier: 2, types: (rng) => shuffle(rng, ['hidden', 'event', 'salvage']) },
+    { tier: 2, types: (rng) => shuffle(rng, ['hidden', 'crossing', 'salvage']) },
     { tier: 2, types: () => ['haven', 'elite', 'vault'] },
     { tier: 2, types: (rng) => shuffle(rng, ['survey', 'haven', 'swarm']) },
     { tier: 3, types: () => ['boss'] },
@@ -596,7 +664,7 @@
       if (r === 0) return shuffle(rng, ['swarm', 'vault', 'cascade']);
       if (r === 1) return shuffle(rng, ['hidden', 'event', 'salvage']);
       if (r === 2) return shuffle(rng, ['elite', 'haven', 'vault']);
-      if (r === 3) return shuffle(rng, ['survey', 'event', 'hidden']);
+      if (r === 3) return shuffle(rng, ['survey', 'crossing', 'hidden']);
       if (r === 4) return ['haven', 'elite', 'swarm'];
       if (r === 5) return shuffle(rng, ['vault', 'salvage', 'event']);
       return ['boss'];

@@ -547,7 +547,11 @@
       node.type = type = 'elite';
       run.nextElite = false;
     }
-    if (type === 'haven') {
+    if (T.MISSIONS[type] && T.MISSIONS[type].big) {
+      // a mission that needs vehicles: each player picks one first (Garrett, 2026-11-21), then it launches
+      run.phase = 'garage';
+      run.garage = { type, tier: node.tier, picks: run.heroes.map(() => null) };
+    } else if (type === 'haven') {
       run.phase = 'haven';
       run.haven = T.havenStock(run);
     } else if (type === 'event') {
@@ -572,7 +576,10 @@
     // as the simulators do) one the board's stream picks, unless the caller names one
     const node = run.map && nodeId != null ? run.map.all[nodeId] : null;
     const picked = board.pick(T.ATLAS).id; // drawn either way, so naming a page leaves the rest of the board alike
-    if (!pageId) pageId = node && node.page ? node.page : picked;
+    // a mission for a big map (a Crossing) is played on one of the big pages, drawn after
+    const bigPick = gen.big ? board.pick(T.BIG_ATLAS).id : null;
+    if (gen.big && pageId && !T.PAGE_BY[pageId].big) pageId = null;
+    if (!pageId) pageId = node && node.page && (!gen.big || T.PAGE_BY[node.page].big) ? node.page : bigPick || picked;
     // the squad's size and level ask more of the mission (src/engine/scaling.js); two new pilots ask nothing more
     const sc = T.scaleFor(run);
     const spec = gen.gen(board, tier, T.scaledTide(T.TIDES[run.tide] || T.TIDES.rising, sc), T.PAGE_BY[pageId]);
@@ -582,6 +589,8 @@
     spec.place = T.placeConditions(T.PAGE_BY[pageId], T.makeRng(T.subSeed(seed, 'place')));
     spec.title = board.pick(gen.title);
     spec.blurb = gen.blurb;
+    // the vehicles the players picked for it (T.pickVehicle), or the ones the table would pick by default
+    if (gen.big) spec.vehicles = T.vehiclePicks(run, pageId);
     const threat = T.expeditionOf(run) && T.expeditionOf(run).threatDef;
     if (type === 'boss' && threat) {
       // the finale keeps the Heart's rules; the expedition says what the Heart is this time
@@ -589,6 +598,38 @@
       spec.blurb = threat.look + ' ' + gen.blurb;
     }
     return { spec, seed };
+  };
+  /* ───────────── vehicles: each player picks one before a mission that needs them ───────────── */
+  /**
+   * The vehicle each pilot brings to a big-map mission: the one its player picked (run.garage), or the page's
+   * suggestion for that seat at the table (`suggest`, in turn), which is what the simulated players bring.
+   */
+  T.vehiclePicks = function (run, pageId) {
+    const page = pageId && T.PAGE_BY[pageId];
+    const suggest = (page && page.suggest) || ['crawler', 'skiff', 'wing'];
+    return run.heroes.map((h, i) => (run.garage && run.garage.picks[i]) || suggest[i % suggest.length]);
+  };
+  /** The page a waiting big-map mission will be played on (for the garage to show its ground). */
+  T.garagePage = function (run) {
+    if (!run.garage) return null;
+    return T.missionSpec(run, run.garage.type, run.garage.tier).spec.page;
+  };
+  /** A player picks the vehicle hero i brings. Once every pilot has one, the mission launches. */
+  T.pickVehicle = function (run, i, type) {
+    if (run.phase !== 'garage' || !run.garage) return { ok: false, why: 'not now' };
+    if (!run.heroes[i] || !T.VEHICLE_BY[type]) return { ok: false, why: 'no such vehicle' };
+    run.garage.picks[i] = type;
+    return { ok: true };
+  };
+  /** Set out: every pilot without a pick takes the page's suggestion. */
+  T.leaveGarage = function (run) {
+    if (run.phase !== 'garage' || !run.garage) return { ok: false, why: 'not now' };
+    const g = run.garage;
+    const pageId = T.garagePage(run);
+    g.picks = T.vehiclePicks(run, pageId);
+    T.launchMission(run, g.type, g.tier);
+    delete run.garage;
+    return { ok: true };
   };
   T.launchMission = function (run, type, tier, pageId) {
     T.settlePurses(run);

@@ -98,7 +98,8 @@ test('every board is one connected place with at least two ways across', () => {
 });
 
 test('every mission plays on every page, and its ledges never sit on another space', () => {
-  for (const arch of Object.keys(T.MISSIONS))
+  // a Crossing is played on the big pages only (test/vehicles.test.js)
+  for (const arch of Object.keys(T.MISSIONS).filter((a) => !T.MISSIONS[a].big))
     for (const p of T.ATLAS) {
       const run = T.newRun(7);
       H.prebuiltSquad(run, 0, 1);
@@ -140,6 +141,12 @@ test('a route gives each played stop a page of its leg’s ground, the same for 
       }
       assert.ok(T.PAGE_BY[n.page], `stop ${n.id} has a page`);
       const leg = T.groundAt(run, n.row);
+      if (T.MISSIONS[n.type] && T.MISSIONS[n.type].big) {
+        // a Crossing gets a big page, of its leg's ground when there is one
+        assert.ok(T.PAGE_BY[n.page].big, `stop ${n.id} is on a big page`);
+        if (T.BIG_ATLAS.some((p) => p.ground === leg)) assert.equal(T.PAGE_BY[n.page].ground, leg);
+        continue;
+      }
       if (leg) assert.equal(T.PAGE_BY[n.page].ground, leg, `stop ${n.id} is on its leg's ground`);
       // not the page you arrive from, while the ground has another to give
       const before = Object.values(run.map.all)
