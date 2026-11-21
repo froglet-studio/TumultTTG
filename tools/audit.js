@@ -158,7 +158,6 @@ function answersOf(x) {
     case 'hazardImmune':
       add('hazard');
       break;
-    case 'statusImmune':
     case 'cleanse':
       if (x.field != null) add('hazard');
       if (x.field == null || x.states) add('control');

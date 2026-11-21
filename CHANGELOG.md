@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.97.0 — 2026-11-21 — Cleanse
+
+The eleventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Cleanse.** Remove every harmful state (Weakened, Anchored, Wound), or clear the ground of hazards and foes' Fields; **Cleanse for N** also turns away new ones: for N rounds no foe can Weaken or Anchor you. It absorbs status immunity (`statusImmune` on 33 faces is `cleanse` with `ward`).
+- **What changes.** Those 33 faces now also shed what is on you when you play them (they only kept new states off before). Where a face also Anchors you, the Cleanse comes first, so your own Anchor stands. Four faces that had both a Cleanse and an immunity have one Cleanse for N.
+- No save change (the state is still `StatusImmune`).
+- **Balance.** Same seeds, 2.94.0 → 2.97.0 (Blink and Haste were renames): `80 runs --player strong` 38 → 38; `120 runs --player weak` 10 → 9; `node tools/sim.js 40` runs 5 → 5 and 19 → 19 of 40, mission wins 71% and 87% both. Nothing is retuned.
+
 ## 2.96.0 — 2026-11-21 — Haste
 
 The tenth keyword of the sweep (`docs/reference/KEYWORDS.md`).

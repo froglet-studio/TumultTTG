@@ -103,6 +103,14 @@
       tip: 'Haste N: your track slides N extra columns (your cards come home sooner), or the mission clock gains N rounds, or the next cards you play skip the track, as the face says.',
     },
     {
+      id: 'cleanse',
+      re: 'Cleanse[ds]?',
+      icon: 'kw.shield',
+      tone: 'good',
+      state: 'StatusImmune',
+      tip: 'Cleanse: shed every harmful state (Weakened, Anchored, Wound). Cleanse for N: and for N rounds no foe can Weaken or Anchor you. Cleanse the ground: clear hazards and foes’ Fields nearby.',
+    },
+    {
       id: 'link',
       re: 'Link(?:ed|s)?',
       icon: 'kw.link',

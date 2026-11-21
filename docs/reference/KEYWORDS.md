@@ -161,3 +161,13 @@ In code: the verb `blink` (`reach`, `height`, `dest: 'adjTarget'`, `carryAlly`),
 - **Free:** the next N cards you play do not go to the track (this turn, where it says).
 
 In code: the verb `haste` (`n`, `who`, `clock`, `free`, `dur`), the state `Freecast` for the free cards.
+
+## Cleanse (2.97)
+
+> **Cleanse.** Remove every harmful state, or clear a Field; for N, also ignores new ones.
+
+- **Cleanse:** shed Weakened, Anchored and Wound (yours, or both pilots' where it says).
+- **Cleanse for N:** and for N rounds no foe can Weaken or Anchor you (your own Anchor still can).
+- **Cleanse the ground:** hazards and foes' Fields within N are cleared (2.86).
+
+In code: the verb `cleanse` (`party`, `ward`, `field`); the state `StatusImmune`.

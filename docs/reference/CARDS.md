@@ -373,7 +373,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Insulated Body** · Mass · `eel_insulated`
 
 - *Phys — Ground* · 1 AP · CD 1 · Dur 1 — Ground yourself: Shield 2. *(P3: Ground yourself: Shield 5.)*
-- *Eth — Insulate* · 1 AP + 1 Mass · CD 3 — An insulating shell for 2 rounds: Shield 2 against everything and immune to Weaken and Anchor. *(P3/E3: An insulating shell for 4 rounds: Shield 5 against everything and immune to Weaken and Anchor.)*
+- *Eth — Insulate* · 1 AP + 1 Mass · CD 3 — An insulating shell for 2 rounds: Shield 2 against everything; Cleanse, and you can't be Weakened or Anchored by a foe as long. *(P3/E3: An insulating shell for 4 rounds: Shield 5 against everything; Cleanse, and you can't be Weakened or Anchored by a foe as long.)*
 
 **Air-Gulp Endurance** · Time · `eel_gulp`
 
@@ -726,7 +726,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Land on Your Feet** · Space · `cat_feet`
 
 - *Phys — Twist* · 1 AP · CD 1 — Shield: the next hit on you is 1 less, and hazards don't touch you this round. *(P3: Shield: the next hit on you is 2 less, and hazards don't touch you this round.)*
-- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — Cleanse, and for 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: Cleanse, and for 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
 
 **Tufted Ears** · Space · `cat_tufts`
 
@@ -775,7 +775,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Land on Your Feet** · Space · `cat_feet`
 
 - *Phys — Twist* · 1 AP · CD 1 — Shield: the next hit on you is 1 less, and hazards don't touch you this round. *(P3: Shield: the next hit on you is 2 less, and hazards don't touch you this round.)*
-- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — Cleanse, and for 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: Cleanse, and for 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
 
 **Tufted Ears** · Space · `cat_tufts`
 
@@ -824,7 +824,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Land on Your Feet** · Space · `cat_feet`
 
 - *Phys — Twist* · 1 AP · CD 1 — Shield: the next hit on you is 1 less, and hazards don't touch you this round. *(P3: Shield: the next hit on you is 2 less, and hazards don't touch you this round.)*
-- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — Cleanse, and for 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: Cleanse, and for 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
 
 **Rosette Cloak** ★ · Time · `oce_rosette`
 
@@ -873,7 +873,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Land on Your Feet** · Space · `cat_feet`
 
 - *Phys — Twist* · 1 AP · CD 1 — Shield: the next hit on you is 1 less, and hazards don't touch you this round. *(P3: Shield: the next hit on you is 2 less, and hazards don't touch you this round.)*
-- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — Cleanse, and for 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: Cleanse, and for 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
 
 **Roar** ★ · Charge · `tig_roar`
 
@@ -912,7 +912,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Land on Your Feet** · Space · `cat_feet`
 
 - *Phys — Twist* · 1 AP · CD 1 — Shield: the next hit on you is 1 less, and hazards don't touch you this round. *(P3: Shield: the next hit on you is 2 less, and hazards don't touch you this round.)*
-- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — For 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: For 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
+- *Eth — Nine Lives* · 1 AP + 1 Space · CD 4 — Cleanse, and for 2 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1. *(P3/E3: Cleanse, and for 4 rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.)*
 
 **Hyperspeed** ★ · Space · `che_hyper`
 
@@ -1128,7 +1128,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Adapt Anywhere** · Time · `coy_adapt`
 
 - *Phys — Adapt* · 1 AP · CD 2 — Shake off Anchored and Weakened, ignore hazards for 2 rounds, and heal 1. *(P3: Shake off Anchored and Weakened, ignore hazards for 2 rounds, and heal 2.)*
-- *Eth — Make Do* · 0 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; no foe can Weaken or Anchor you for 2. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; no foe can Weaken or Anchor you for 4.)*
+- *Eth — Make Do* · 0 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; Cleanse, and no foe can Weaken or Anchor you for 2. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; Cleanse, and no foe can Weaken or Anchor you for 4.)*
 
 **Lope Feint** · Space · `coy_lope`
 
@@ -1254,8 +1254,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Venom Shrug** · Time · `bad_venom`
 
-- *Phys — Shrug* · 1 AP · CD 2 — Shake off Anchored and Weakened, heal 1, and no foe can Weaken or Anchor you this round. *(P3: Shake off Anchored and Weakened, heal 2, and no foe can Weaken or Anchor you this round.)*
-- *Eth — Sleep It Off* · 1 AP + 1 Time · CD 4 — Heal 3; no foe can Weaken or Anchor you for 2 rounds. *(P3/E3: Heal 5; no foe can Weaken or Anchor you for 4 rounds.)*
+- *Phys — Shrug* · 1 AP · CD 2 — Shake off Anchored and Weakened, heal 1, and Cleanse, and no foe can Weaken or Anchor you this round. *(P3: Shake off Anchored and Weakened, heal 2, and Cleanse, and no foe can Weaken or Anchor you this round.)*
+- *Eth — Sleep It Off* · 1 AP + 1 Time · CD 4 — Heal 3; Cleanse, and no foe can Weaken or Anchor you for 2 rounds. *(P3/E3: Heal 5; Cleanse, and no foe can Weaken or Anchor you for 4 rounds.)*
 
 **Burrow In** · Mass · `bad_dig`
 
@@ -1275,7 +1275,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Never Retreat** ★ · Mass · `bad_never`
 
 - *Phys — Stand* · 1 AP · CD 1 — Plant your feet: nothing can push or pull you this round, and your next strike deals +1. *(P3: Plant your feet: nothing can push or pull you this round, and your next strike deals +4.)*
-- *Eth — No Retreat* · 0 AP + 1 Mass · CD 4 — For 2 rounds nothing can Weaken or Anchor you, or push or pull you, and a foe that hits you in melee takes 1. *(P3/E3: For 4 rounds nothing can Weaken or Anchor you, or push or pull you, and a foe that hits you in melee takes 2.)*
+- *Eth — No Retreat* · 0 AP + 1 Mass · CD 4 — Cleanse, and for 2 rounds nothing can Weaken or Anchor you, or push or pull you, and a foe that hits you in melee takes 1. *(P3/E3: Cleanse, and for 4 rounds nothing can Weaken or Anchor you, or push or pull you, and a foe that hits you in melee takes 2.)*
 
 **Bite Hold** · Mass · `bad_bite`
 
@@ -1338,7 +1338,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Blubber** · Mass · `sea_blubber`
 
 - *Phys — Insulate* · 1 AP · CD 1 — Shield 2 this round. *(P3: Shield 3 this round.)*
-- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Shield 5 for 2 rounds, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Shield 5 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 **Breath Hold** · Time · `sea_breath`
 
@@ -1387,7 +1387,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Blubber** · Mass · `sea_blubber`
 
 - *Phys — Insulate* · 1 AP · CD 1 — Shield 2 this round. *(P3: Shield 3 this round.)*
-- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Shield 5 for 2 rounds, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Shield 5 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 **Breath Hold** · Time · `sea_breath`
 
@@ -1422,7 +1422,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Apex** · Mass · `orc_apex`
 
 - *Phys — Take Down* · 1 AP · CD 1 — Melee 2; a foe left at 2 or less is finished. *(P3: Melee 5; a foe left at 5 or less is finished.)*
-- *Eth — Top of the Sea* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Melee 7 that ignores Shield, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Top of the Sea* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Melee 7 that ignores Shield, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 **Beach Charge** · Mass · `orc_beach`
 
@@ -1436,7 +1436,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Blubber** · Mass · `sea_blubber`
 
 - *Phys — Insulate* · 1 AP · CD 1 — Shield 2 this round. *(P3: Shield 3 this round.)*
-- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Shield 5 for 2 rounds, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Thick Layer* · 1 AP + 1 Mass · CD 3 — Shield 3 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Shield 5 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 **Breath Hold** · Time · `sea_breath`
 
@@ -1515,7 +1515,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Thick Coat** · Time · `yak_coat`
 
 - *Phys — Shaggy* · 1 AP · CD 1 — Shield 2 and ignore hazards this round. *(P3: Shield 3 and ignore hazards this round.)*
-- *Eth — Winter Fleece* · 1 AP + 1 Time · CD 4 — You and an ally beside you hold Shield 2 for 2 rounds; you can't be Weakened or Anchored by a foe this round. *(P3/E3: You and an ally beside you hold Shield 4 for 2 rounds; you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Winter Fleece* · 1 AP + 1 Time · CD 4 — You and an ally beside you hold Shield 2 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: You and an ally beside you hold Shield 4 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 **Pack Bearer** · Charge · `yak_bearer`
 
@@ -1574,7 +1574,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Shoulder Hump** · Mass · `bis_hump`
 
 - *Phys — Shoulder* · 1 AP · CD 1 — Melee 3, and push it 1. *(P3: Melee 6, and push it 1.)*
-- *Eth — Plough the Snow* · 1 AP + 1 Mass · CD 3 — Melee 5, push it 1, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Melee 7, push it 2, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Plough the Snow* · 1 AP + 1 Mass · CD 3 — Melee 5, push it 1, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Melee 7, push it 2, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 ## 32 · Oryx — leans S/T
 
@@ -1721,7 +1721,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stand Ground** · Mass · `moo_stand`
 
 - *Phys — Plant* · 1 AP · CD 1 — Melee 3, and hold Shield 1 this round. *(P3: Melee 6, and hold Shield 1 this round.)*
-- *Eth — Trample* · 1 AP + 1 Mass · CD 3 — Melee 5, pin it (Anchored 1), and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Melee 7, pin it (Anchored 1), and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Trample* · 1 AP + 1 Mass · CD 3 — Melee 5, pin it (Anchored 1), and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Melee 7, pin it (Anchored 1), and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 ## 35 · Deer — leans S/C
 
@@ -1917,7 +1917,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Waddle** · Space · `por_waddle`
 
 - *Phys — Amble* · 1 AP · CD 1 — Move 1; any foe that hits you in melee this round takes 1. *(P3: Move 4; any foe that hits you in melee this round takes 1.)*
-- *Eth — Unbothered* · 1 AP + 1 Space · CD 3 — Move 3, straight past foes, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Move 5, straight past foes, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Unbothered* · 1 AP + 1 Space · CD 3 — Move 3, straight past foes, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3/E3: Move 5, straight past foes, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
 
 ## 39 · Brown Hare — leans S/M
 
@@ -2078,7 +2078,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Curl Up** · Time · `arm_curl`
 
 - *Phys — Curl* · 1 AP · CD 1 — Curl into a ball: Shield 2 this round, nothing can push or pull you, and any foe that hits you in melee takes 1. *(P3: Curl into a ball: Shield 5 this round, nothing can push or pull you, and any foe that hits you in melee takes 1.)*
-- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and you can't be Weakened or Anchored by a foe for 2. *(P3/E3: Shield 6 for 2 rounds, and you can't be Weakened or Anchored by a foe for 2.)*
+- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2. *(P3/E3: Shield 6 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2.)*
 
 **Dig Claws** · Mass · `arm_dig`
 
@@ -2127,7 +2127,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Curl Up** · Time · `arm_curl`
 
 - *Phys — Curl* · 1 AP · CD 1 — Curl into a ball: Shield 2 this round, nothing can push or pull you, and any foe that hits you in melee takes 1. *(P3: Curl into a ball: Shield 5 this round, nothing can push or pull you, and any foe that hits you in melee takes 1.)*
-- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and you can't be Weakened or Anchored by a foe for 2. *(P3/E3: Shield 6 for 2 rounds, and you can't be Weakened or Anchored by a foe for 2.)*
+- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2. *(P3/E3: Shield 6 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2.)*
 
 **Dig Claws** · Mass · `arm_dig`
 
@@ -2162,7 +2162,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ant Armour** · Charge · `pan_ants`
 
 - *Phys — Ant Bath* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time; Shield 1 this round, and heal 1. *(P3: Shed Anchored, Weakened and damage over time; Shield 2 this round, and heal 1.)*
-- *Eth — Stinging Shield* · 1 AP + 1 Charge · CD 4 — For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 3. *(P3/E3: For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 5.)*
+- *Eth — Stinging Shield* · 1 AP + 1 Charge · CD 4 — Cleanse, and for 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 3. *(P3/E3: Cleanse, and for 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 5.)*
 
 ## 44 · Hedgehog — leans T/M
 
@@ -2171,12 +2171,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Curl Up** · Time · `arm_curl`
 
 - *Phys — Curl* · 1 AP · CD 1 — Curl into a ball: Shield 2 this round, nothing can push or pull you, and any foe that hits you in melee takes 1. *(P3: Curl into a ball: Shield 5 this round, nothing can push or pull you, and any foe that hits you in melee takes 1.)*
-- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and you can't be Weakened or Anchored by a foe for 2. *(P3/E3: Shield 6 for 2 rounds, and you can't be Weakened or Anchored by a foe for 2.)*
+- *Eth — Ball* · 1 AP + 1 Time · CD 4 — Shield 4 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2. *(P3/E3: Shield 6 for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2.)*
 
 **Venom Shrug** · Time · `hed_venom`
 
 - *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
-- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; you can't be Weakened or Anchored by a foe for 4 rounds.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
 
 **Spines** · Mass · `heh_spines`
 
@@ -2196,7 +2196,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Anointing** · Charge · `heh_anoint`
 
 - *Phys — Froth* · 1 AP · CD 1 — Melee 2; it is Weakened 1 for 2 rounds. *(P3: Melee 5; it is Weakened 1 for 2 rounds.)*
-- *Eth — Self-Anoint* · 1 AP + 1 Charge · CD 4 — Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes 2, and you can't be Weakened or Anchored by a foe. *(P3/E3: Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes 4, and you can't be Weakened or Anchored by a foe.)*
+- *Eth — Self-Anoint* · 1 AP + 1 Charge · CD 4 — Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes 2, and Cleanse, and you can't be Weakened or Anchored by a foe. *(P3/E3: Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes 4, and Cleanse, and you can't be Weakened or Anchored by a foe.)*
 
 **Night Forage** · Charge · `heh_forage`
 
@@ -2240,7 +2240,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Prop** · Time · `kan_prop`
 
 - *Phys — Prop* · 1 AP · CD 1 — Brace on your tail: Shield 2 this round, and nothing can push or pull you. *(P3: Brace on your tail: Shield 3 this round, and nothing can push or pull you.)*
-- *Eth — Five Legs* · 1 AP + 1 Time · CD 4 — For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 5 and is pushed 1.)*
+- *Eth — Five Legs* · 1 AP + 1 Time · CD 4 — Cleanse, and for 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 3 and is pushed 1. *(P3/E3: Cleanse, and for 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes 5 and is pushed 1.)*
 
 **Mob Lead** · Charge · `kan_mob`
 
@@ -2269,7 +2269,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Venom Shrug** · Time · `hed_venom`
 
 - *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
-- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; you can't be Weakened or Anchored by a foe for 4 rounds.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
 
 **Pouch** · Charge · `pou_pouch`
 
@@ -2774,7 +2774,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Waterproof** · Time · `sea_proof`
 
 - *Phys — Oil Feathers* · 1 AP · CD 1 — Shield 1 this round, and hazards can't touch you. *(P3: Shield 4 this round, and hazards can't touch you.)*
-- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1.)*
+- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1.)*
 
 **Salt Gland** · Time · `sea_salt`
 
@@ -2823,7 +2823,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Waterproof** · Time · `sea_proof`
 
 - *Phys — Oil Feathers* · 1 AP · CD 1 — Shield 1 this round, and hazards can't touch you. *(P3: Shield 4 this round, and hazards can't touch you.)*
-- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1.)*
+- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1.)*
 
 **Salt Gland** · Time · `sea_salt`
 
@@ -2867,7 +2867,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Waterproof** · Time · `sea_proof`
 
 - *Phys — Oil Feathers* · 1 AP · CD 1 — Shield 1 this round, and hazards can't touch you. *(P3: Shield 4 this round, and hazards can't touch you.)*
-- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1.)*
+- *Eth — Sealed Coat* · 1 AP + 1 Time · CD 3 — Shield 2 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1. *(P3/E3: Shield 4 for 2 rounds; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1.)*
 
 **Salt Gland** · Time · `sea_salt`
 
@@ -2994,8 +2994,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Clay Lick** · Time · `par_clay`
 
-- *Phys — Lick* · 1 AP · CD 1 — Eat the bank's clay: heal 1, and you can't be Weakened or Anchored by a foe this round. *(P3: Eat the bank's clay: heal 4, and you can't be Weakened or Anchored by a foe this round.)*
-- *Eth — Settle the Stomach* · 1 AP + 1 Time · CD 4 — Both heroes shake off Anchored and Weakened and heal 2; you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shake off Anchored and Weakened and heal 4; you can't be Weakened or Anchored by a foe for 2 rounds.)*
+- *Phys — Lick* · 1 AP · CD 1 — Eat the bank's clay: heal 1, and Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3: Eat the bank's clay: heal 4, and Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Settle the Stomach* · 1 AP + 1 Time · CD 4 — Both heroes shake off Anchored and Weakened and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shake off Anchored and Weakened and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds.)*
 
 ## 61 · Toucan — leans S/C
 
@@ -3131,8 +3131,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Snake Eater** · Mass · `pea_snake`
 
-- *Phys — Peck* · 1 AP · CD 1 — Melee 2; you can't be Weakened or Anchored by a foe this round. *(P3: Melee 5; you can't be Weakened or Anchored by a foe this round.)*
-- *Eth — Venom Proof* · 1 AP + 1 Mass · CD 3 — Melee 4, shake off Anchored and Weakened, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Melee 6, shake off Anchored and Weakened, and you can't be Weakened or Anchored by a foe for 2 rounds.)*
+- *Phys — Peck* · 1 AP · CD 1 — Melee 2; Cleanse, and you can't be Weakened or Anchored by a foe this round. *(P3: Melee 5; Cleanse, and you can't be Weakened or Anchored by a foe this round.)*
+- *Eth — Venom Proof* · 1 AP + 1 Mass · CD 3 — Melee 4, shake off Anchored and Weakened, and Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Melee 6, shake off Anchored and Weakened, and Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds.)*
 
 **Jungle Roost** · Space · `pea_roost`
 
@@ -3186,7 +3186,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stone Gizzard** · Mass · `ost_gizzard`
 
 - *Phys — Swallow Stones* · 1 AP · CD 1 — Swallow a few stones: heal 1, and you are too heavy to push or pull this round. *(P3: Swallow a few stones: heal 4, and you are too heavy to push or pull this round.)*
-- *Eth — Grind* · 0 AP + 1 Mass · CD 4 — Heal 1 at the start of each turn for 3 rounds, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds, and you can't be Weakened or Anchored by a foe for 2 rounds.)*
+- *Eth — Grind* · 0 AP + 1 Mass · CD 4 — Heal 1 at the start of each turn for 3 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds.)*
 
 **Nest Ring** · Time · `ost_nest`
 
@@ -3279,7 +3279,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Grip Feet** · Space · `cha_grip`
 
 - *Phys — Grip* · 1 AP · CD 1 — Climb onto any node within 1, height included, and grip: nothing can push or pull you this round. *(P3: Climb onto any node within 4, height included, and grip: nothing can push or pull you this round.)*
-- *Eth — Branch Hold* · 1 AP + 1 Space · CD 3 — Hold on with all four feet and the tail: Shield 2 for 2 rounds; nothing can push or pull you, Weaken you or Anchor you for 2 rounds. *(P3/E3: Hold on with all four feet and the tail: Shield 4 for 2 rounds; nothing can push or pull you, Weaken you or Anchor you for 2 rounds.)*
+- *Eth — Branch Hold* · 1 AP + 1 Space · CD 3 — Hold on with all four feet and the tail: Shield 2 for 2 rounds; Cleanse, and nothing can push or pull you, Weaken you or Anchor you for 2 rounds. *(P3/E3: Hold on with all four feet and the tail: Shield 4 for 2 rounds; Cleanse, and nothing can push or pull you, Weaken you or Anchor you for 2 rounds.)*
 
 **Slow Sway** · Time · `cha_sway`
 
@@ -3377,7 +3377,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ant Feast** · Time · `hor_ants`
 
 - *Phys — Lick Up* · 1 AP · CD 1 — Eat ants by the hundred: heal 1, and gain 1 AP next turn. *(P3: Eat ants by the hundred: heal 4, and gain 1 AP next turn.)*
-- *Eth — Whole Nest* · 0 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; the stings don't bother you: you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; the stings don't bother you: you can't be Weakened or Anchored by a foe for 2 rounds.)*
+- *Eth — Whole Nest* · 0 AP + 1 Time · CD 4 — Heal 1 at the start of each turn for 3 rounds; the stings don't bother you: Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Heal 1 at the start of each turn for 5 rounds; the stings don't bother you: Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds.)*
 
 **Flatten** · Time · `hor_flat`
 
@@ -3464,7 +3464,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Shell** ★ · Mass · `tor_shell`
 
-- *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and you can't be Weakened or Anchored by a foe. *(P3: Shield 5 this round, and you can't be Weakened or Anchored by a foe.)*
+- *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and Cleanse, and you can't be Weakened or Anchored by a foe. *(P3: Shield 5 this round, and Cleanse, and you can't be Weakened or Anchored by a foe.)*
 - *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Slow and Sure** · Time · `tor_sure`
@@ -3485,7 +3485,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Steady Plod** · Space · `tor_plod`
 
 - *Phys — Plod* · 1 AP · CD 1 — Plod 1, and hold Shield 1 this round. *(P3: Plod 4, and hold Shield 1 this round.)*
-- *Eth — Through Anything* · 1 AP + 1 Space · CD 3 — Plod 3 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Anchored by a foe. *(P3/E3: Plod 5 through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Anchored by a foe.)*
+- *Eth — Through Anything* · 1 AP + 1 Space · CD 3 — Plod 3 through anything, setting off no traps; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe. *(P3/E3: Plod 5 through anything, setting off no traps; for 2 rounds ignore hazards, and Cleanse, and you can't be Weakened or Anchored by a foe.)*
 
 ## 71 · Newt — leans T/C
 
@@ -3514,7 +3514,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Eft Wander** ★ · Space · `new_eft`
 
 - *Phys — Wander* · 1 AP · CD 1 — Wander 1 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1. *(P3: Wander 4 through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.)*
-- *Eth — Years on Land* · 1 AP + 1 Space · CD 3 — Walk 3, past foes, bright and unbothered: you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1. *(P3/E3: Walk 5, past foes, bright and unbothered: you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1.)*
+- *Eth — Years on Land* · 1 AP + 1 Space · CD 3 — Walk 3, past foes, bright and unbothered: Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1. *(P3/E3: Walk 5, past foes, bright and unbothered: Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1.)*
 
 **Warning Belly** · Charge · `new_belly`
 
@@ -3617,7 +3617,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Upstream** · Space · `koi_up`
 
 - *Phys — Against the Current* · 1 AP · CD 1 — Swim 1 against the current; nothing can push or pull you this round. *(P3: Swim 4 against the current; nothing can push or pull you this round.)*
-- *Eth — Never Turn Back* · 1 AP + 1 Space · CD 3 — Swim 3, past foes; you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1. *(P3/E3: Swim 5, past foes; you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +2.)*
+- *Eth — Never Turn Back* · 1 AP + 1 Space · CD 3 — Swim 3, past foes; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1. *(P3/E3: Swim 5, past foes; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +2.)*
 
 **Shimmer Scales** · Charge · `koi_shimmer`
 
@@ -3665,7 +3665,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Mucus Coat** · Time · `clo_mucus`
 
-- *Phys — Coat* · 1 AP · CD 1 — A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Anchored by a foe this round, and heal 1. *(P3: A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Anchored by a foe this round, and heal 2.)*
+- *Phys — Coat* · 1 AP · CD 1 — A coat the stings slide off: ignore hazards for 2 rounds, Cleanse, and you can't be Weakened or Anchored by a foe this round, and heal 1. *(P3: A coat the stings slide off: ignore hazards for 2 rounds, Cleanse, and you can't be Weakened or Anchored by a foe this round, and heal 2.)*
 - *Eth — Share the Coat* · 1 AP + 1 Time · CD 4 — Both heroes ignore hazards this round (you for 3 rounds), shake off Anchored and Weakened, and hold Shield 1 this round. *(P3/E3: Both heroes ignore hazards this round (you for 5 rounds), shake off Anchored and Weakened, and hold Shield 1 this round.)*
 
 **Pair Bond** · Charge · `clo_pair`
@@ -3720,7 +3720,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Invader** · Space · `lio_invader`
 
 - *Phys — Settle In* · 1 AP · CD 1 — Move 1 into new water, and heal 1. *(P3: Move 4 into new water, and heal 1.)*
-- *Eth — Take Over* · 0 AP + 1 Space · CD 4 — Make it yours: gain 1 AP at the start of your next turn; Shield 1 and no Weaken or Anchor from a foe for 2 rounds. *(P3/E3: Make it yours: gain 1 AP at the start of your next turn; Shield 2 and no Weaken or Anchor from a foe for 2 rounds.)*
+- *Eth — Take Over* · 0 AP + 1 Space · CD 4 — Make it yours: gain 1 AP at the start of your next turn; Shield 1 and Cleanse, and no Weaken or Anchor from a foe for 2 rounds. *(P3/E3: Make it yours: gain 1 AP at the start of your next turn; Shield 2 and Cleanse, and no Weaken or Anchor from a foe for 2 rounds.)*
 
 **Warning Fins** · Charge · `lio_warn`
 
@@ -3802,7 +3802,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Shell** ★ · Mass · `tor_shell`
 
-- *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and you can't be Weakened or Anchored by a foe. *(P3: Shield 5 this round, and you can't be Weakened or Anchored by a foe.)*
+- *Phys — Shell Up* · 1 AP · CD 1 — Shield 2 this round, and Cleanse, and you can't be Weakened or Anchored by a foe. *(P3: Shield 5 this round, and Cleanse, and you can't be Weakened or Anchored by a foe.)*
 - *Eth — House on Your Back* · 1 AP + 1 Mass · CD 4 — Shield 4 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 2 and is pushed 1. *(P3/E3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes 4 and is pushed 1.)*
 
 **Slime Trail** ★ · Time · `snl_slime`
@@ -3891,7 +3891,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Molt** · Time · `crs_molt`
 
 - *Phys — Shrug Off* · 1 AP · CD 1 — Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 1 this round. *(P3: Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 2 this round.)*
-- *Eth — New Shell* · 1 AP + 1 Time · CD 4 — Step out of the old shell: heal 3, no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +2. *(P3/E3: Step out of the old shell: heal 5, no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +4.)*
+- *Eth — New Shell* · 1 AP + 1 Time · CD 4 — Step out of the old shell: heal 3, Cleanse, and no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +2. *(P3/E3: Step out of the old shell: heal 5, Cleanse, and no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +4.)*
 
 **Carapace** · Mass · `crs_carapace`
 
@@ -3940,7 +3940,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Molt** · Time · `crs_molt`
 
 - *Phys — Shrug Off* · 1 AP · CD 1 — Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 1 this round. *(P3: Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield 2 this round.)*
-- *Eth — New Shell* · 1 AP + 1 Time · CD 4 — Step out of the old shell: heal 3, no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +2. *(P3/E3: Step out of the old shell: heal 5, no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +4.)*
+- *Eth — New Shell* · 1 AP + 1 Time · CD 4 — Step out of the old shell: heal 3, Cleanse, and no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +2. *(P3/E3: Step out of the old shell: heal 5, Cleanse, and no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +4.)*
 
 **Carapace** · Mass · `crs_carapace`
 
@@ -4003,7 +4003,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Wing Cases** · Time · `btl_elytra`
 
-- *Phys — Close Up* · 1 AP · CD 1 — Snap your wing cases shut: Shield 1, and no Weaken or Anchor from a foe this round. *(P3: Snap your wing cases shut: Shield 4, and no Weaken or Anchor from a foe this round.)*
+- *Phys — Close Up* · 1 AP · CD 1 — Snap your wing cases shut: Shield 1, and Cleanse, and no Weaken or Anchor from a foe this round. *(P3: Snap your wing cases shut: Shield 4, and Cleanse, and no Weaken or Anchor from a foe this round.)*
 - *Eth — Lift Off* · 1 AP + 1 Time · CD 3 — Open the cases and fly, clumsily, to any node within 3, height included; Shield 1 this round. *(P3/E3: Open the cases and fly, clumsily, to any node within 5, height included; Shield 1 this round.)*
 
 **Ball Roller** · Space · `btl_roll`
@@ -4190,7 +4190,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Venom Shrug** · Time · `hed_venom`
 
 - *Phys — Shrug It Off* · 1 AP · CD 2 — Shed Anchored, Weakened and damage over time, and heal 1. *(P3: Shed Anchored, Weakened and damage over time, and heal 4.)*
-- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; you can't be Weakened or Anchored by a foe for 4 rounds.)*
+- *Eth — Immune* · 1 AP + 1 Time · CD 4 — Both heroes shed Anchored, Weakened and damage over time and heal 2; Cleanse, and you can't be Weakened or Anchored by a foe for 2 rounds. *(P3/E3: Both heroes shed Anchored, Weakened and damage over time and heal 4; Cleanse, and you can't be Weakened or Anchored by a foe for 4 rounds.)*
 
 **Tail Sting** ★ · Mass · `sco_sting`
 

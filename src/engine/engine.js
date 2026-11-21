@@ -2017,9 +2017,6 @@
         list.forEach((h) => addTimed(m, h, 'HazardImmune', d));
         break;
       }
-      case 'statusImmune':
-        addTimed(m, actor, 'StatusImmune', num(f.dur, P, E));
-        break;
       case 'morph': {
         const d = num(f.dur, P, E);
         actor.states.Morph = {
@@ -2084,6 +2081,17 @@
           );
           say(m, `${actor.name} cleanses the ground nearby.`, 'hero');
           if (!f.states) break;
+        }
+        // Cleanse for N (2.95 absorbs status immunity): shed every harmful state, and for N rounds no foe can
+        // Weaken or Anchor you
+        if (f.ward != null) {
+          const w = num(f.ward, P, E);
+          (f.party ? T.liveHeroes(m) : [actor]).forEach((h) =>
+            ['Weak', 'Wound', 'Anchored'].forEach((k) => delete h.states[k]),
+          );
+          if (w > 0) addTimed(m, actor, 'StatusImmune', w);
+          say(m, `${actor.name} is Cleansed${w > 0 ? ` and stays clean for ${w}` : ''}.`, 'hero');
+          break;
         }
         const list = f.party ? T.liveHeroes(m) : [actor];
         list.forEach((h) => {
@@ -2906,7 +2914,7 @@
       Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',
       Morph: `Morph — strikes +${v.bonus}${v.reach ? ', reach 2' : ''}${v.climb ? ', can climb' : ''}.`,
       HazardImmune: 'Immune to hazards.',
-      StatusImmune: 'Immune to Weaken/Anchor.',
+      StatusImmune: 'Cleansed — no foe can Weaken or Anchor it while this lasts.',
       Freecast: `Next ${Array.isArray(v) ? v.reduce((n, g) => n + g.n, 0) : 0} card(s) skip the track.`,
       Phoenix: `Heal held — if downed within ${v.t}, get up with ${v.hp}.`,
       Engines: 'Engine running.',
