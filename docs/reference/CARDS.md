@@ -55,7 +55,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Adaptive Generalist** · Time · `hum_general`
 
 - *Phys — Improv* · 1 AP · CD 2 — Mint 1 temporary Omni (spends as any etherion this turn). *(P3: Mint 2 temporary Omni (spends as any etherion this turn).)*
-- *Eth — Mimic Form* · 0 AP + 1 Time · CD 4 — Learn on the fly: every card on your track returns 2 columns sooner, and mint 1 Omni. *(P3/E3: Learn on the fly: every card on your track returns 4 columns sooner, and mint 1 Omni.)*
+- *Eth — Mimic Form* · 0 AP + 1 Time · CD 4 — Learn on the fly: Haste: every card on your track returns 2 columns sooner, and mint 1 Omni. *(P3/E3: Learn on the fly: Haste: every card on your track returns 4 columns sooner, and mint 1 Omni.)*
 
 ## 1 · Long-Eared Jerboa — leans S/T
 
@@ -123,7 +123,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tireless Respiration** · Time · `hop_tireless`
 
 - *Phys — Diffuse* · 1 AP · CD 1 — Breathe through every pore: mint 2 temporary AP. *(P3: Breathe through every pore: mint 3 temporary AP.)*
-- *Eth — Compress* · 1 AP + 1 Time · CD 4 — Compress your exertion clock: every card on your track returns 3 columns sooner. *(P3/E3: Compress your exertion clock: every card on your track returns 5 columns sooner.)*
+- *Eth — Compress* · 1 AP + 1 Time · CD 4 — Compress your exertion clock: Haste: every card on your track returns 3 columns sooner. *(P3/E3: Compress your exertion clock: Haste: every card on your track returns 5 columns sooner.)*
 
 **Chitinous Exoskeleton** · Mass · `hop_exo`
 
@@ -235,8 +235,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Distributed Arms** ☆ · Time · `oct_arms`
 
-- *Phys — Multitask* · 1 AP · CD 2 — Eight arms: the next card you play this turn does not go to your track. *(P3: Eight arms: the next card you play this turn does not go to your track, and mint 1 temporary AP.)*
-- *Eth — Parallel* · 0 AP + 2 Time · CD 4 — Parallel-process: the next two cards you play don't go to your track. *(P3/E3: Parallel-process: the next three cards you play don't go to your track.)*
+- *Phys — Multitask* · 1 AP · CD 2 — Eight arms: Haste: the next card you play this turn does not go to your track. *(P3: Eight arms: Haste: the next card you play this turn does not go to your track, and mint 1 temporary AP.)*
+- *Eth — Parallel* · 0 AP + 2 Time · CD 4 — Parallel-process: Haste: the next two cards you play don't go to your track. *(P3/E3: Parallel-process: Haste: the next three cards you play don't go to your track.)*
 
 **Chemo-Suckers** · Charge · `oct_chemo`
 
@@ -300,7 +300,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Wall Sprint** · Time · `gec_sprint`
 
 - *Phys — Sprint* · 1 AP · CD 1 — Dash 1. *(P3: Dash 4.)*
-- *Eth — Haste* · 1 AP + 1 Time · CD 3 — Dash 2 and haste: every card on your track returns 2 columns sooner. *(P3/E3: Dash 2 and haste: every card on your track returns 4 columns sooner.)*
+- *Eth — Haste* · 1 AP + 1 Time · CD 3 — Dash 2 and haste: Haste: every card on your track returns 2 columns sooner. *(P3/E3: Dash 2 and haste: Haste: every card on your track returns 4 columns sooner.)*
 
 ## 6 · Axolotl — leans T/S
 
@@ -505,7 +505,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Cryptobiosis** ★ · Time · `tar_crypto`
 
 - *Phys — Tun* · 2 AP · CD 2 · Dur 1 — Curl into the tun: Shield 4 against everything and immune to push/pull this round. *(P3: Curl into the tun: Shield 7 against everything and immune to push/pull this round.)*
-- *Eth — Step Out of Time* · 0 AP + 3 Time · CD 4 · Dur 1 — Leave time: untargetable through the next enemy phase, heal 3, and your track slides 2 extra columns. *(P3/E3: Leave time: untargetable through the next enemy phase, heal 5, and your track slides 4 extra columns.)*
+- *Eth — Step Out of Time* · 0 AP + 3 Time · CD 4 · Dur 1 — Leave time: untargetable through the next enemy phase, heal 3, and Haste: your track slides 2 extra columns. *(P3/E3: Leave time: untargetable through the next enemy phase, heal 5, and Haste: your track slides 4 extra columns.)*
 
 **Dsup Shielding** ★ · Charge · `tar_dsup`
 
@@ -540,7 +540,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Self-Replication** · Space · `tar_replicate`
 
 - *Phys — Bud* · 2 AP · CD 2 — Bud an inert copy on an adjacent node: a decoy for 1 rounds. *(P3: Bud an inert copy on an adjacent node: a decoy for 2 rounds.)*
-- *Eth — Duplicate* · 2 AP + 1 Space · CD 4 — An active duplicate (2 rounds) that strikes an adjacent foe for 3 once. *(P3/E3: An active duplicate (2 rounds) that strikes an adjacent foe for 5 once; your next card does not go to your track.)*
+- *Eth — Duplicate* · 2 AP + 1 Space · CD 4 — An active duplicate (2 rounds) that strikes an adjacent foe for 3 once. *(P3/E3: An active duplicate (2 rounds) that strikes an adjacent foe for 5 once; Haste: your next card does not go to your track.)*
 
 **Current-Cling Anchor** · Space · `tar_cling`
 
@@ -594,7 +594,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Fruit Memory** · Charge · `ora_memory`
 
 - *Phys — Recall* · 1 AP · CD 2 — Remember where everything was: reveal everything within 1 nodes for 2 rounds, and heal 1 from a remembered meal. *(P3: Remember where everything was: reveal everything within 4 nodes for 2 rounds, and heal 1 from a remembered meal.)*
-- *Eth — Mental Map* · 0 AP + 1 Charge · CD 4 — Every card on your track returns 2 columns sooner. *(P3/E3: Every card on your track returns 4 columns sooner.)*
+- *Eth — Mental Map* · 0 AP + 1 Charge · CD 4 — Haste: every card on your track returns 2 columns sooner. *(P3/E3: Haste: every card on your track returns 4 columns sooner.)*
 
 ## 12 · Ring-Tailed Lemur — leans C/S
 
@@ -642,7 +642,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tail Signal** · Time · `lem_tail`
 
-- *Phys — Wave* · 1 AP · CD 2 — Every card on your track returns 1 column sooner, and reroll 1 banked die. *(P3: Every card on your track returns 1 column sooner, and reroll 2 banked dice.)*
+- *Phys — Wave* · 1 AP · CD 2 — Haste: every card on your track returns 1 column sooner, and reroll 1 banked die. *(P3: Haste: every card on your track returns 1 column sooner, and reroll 2 banked dice.)*
 - *Eth — Rally Flag* · 1 AP + 1 Time · CD 4 · Dur 2 — Tail high, the troop braces: Shield: both heroes' next hit taken is −3. Dur 2. *(P3/E3: Tail high, the troop braces: Shield: both heroes' next hit taken is −5. Dur 2.)*
 
 ## 13 · Mandrill — leans C/M
@@ -839,7 +839,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Night Prowl** · Time · `oce_prowl`
 
 - *Phys — Prowl* · 1 AP · CD 1 — Move 1 without setting off traps, and end Hidden 1. *(P3: Move 4 without setting off traps, and end Hidden 1.)*
-- *Eth — Night Shift* · 1 AP + 1 Time · CD 4 — Every card on your track returns 2 columns sooner; see within 2 this round. *(P3/E3: Every card on your track returns 4 columns sooner; see within 2 this round.)*
+- *Eth — Night Shift* · 1 AP + 1 Time · CD 4 — Haste: every card on your track returns 2 columns sooner; see within 2 this round. *(P3/E3: Haste: every card on your track returns 4 columns sooner; see within 2 this round.)*
 
 ## 17 · Tiger — leans M/C
 
@@ -956,7 +956,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Trot** · Time · `dog_trot`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
-- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; Haste: every card on your track returns 2 columns sooner. *(P3/E3: Move 2; Haste: every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
 
@@ -980,7 +980,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Desert Thrift** · Time · `fen_thrift`
 
-- *Phys — Ration* · 1 AP · CD 2 — Heal 1; every card on your track returns 1 column sooner. *(P3: Heal 2; every card on your track returns 1 column sooner.)*
+- *Phys — Ration* · 1 AP · CD 2 — Heal 1; Haste: every card on your track returns 1 column sooner. *(P3: Heal 2; Haste: every card on your track returns 1 column sooner.)*
 - *Eth — Long Dry* · 0 AP + 1 Time · CD 4 — For 2 rounds you gain 1 AP at the start of each turn; heal 1. *(P3/E3: For 4 rounds you gain 1 AP at the start of each turn; heal 1.)*
 
 **Night Trot** · Space · `fen_night`
@@ -1005,7 +1005,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Trot** · Time · `dog_trot`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
-- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; Haste: every card on your track returns 2 columns sooner. *(P3/E3: Move 2; Haste: every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
 
@@ -1030,7 +1030,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Cunning** ★ · Time · `fox_cunning`
 
 - *Phys — Read It* · 1 AP · CD 1 — Work out a foe within 3: Weakened 1 for 1 round, and it is Marked +1 for 3 rounds. *(P3: Work out a foe within 3: Weakened 1 for 2 rounds, and it is Marked +1 for 3 rounds.)*
-- *Eth — Outfox* · 1 AP + 1 Time · CD 4 — Shield: both heroes' next hit taken is 2 less, and the next card you play this turn doesn't go to the track. *(P3/E3: Shield: both heroes' next hit taken is 4 less, and the next card you play this turn doesn't go to the track.)*
+- *Eth — Outfox* · 1 AP + 1 Time · CD 4 — Shield: both heroes' next hit taken is 2 less, and Haste: the next card you play this turn doesn't go to the track. *(P3/E3: Shield: both heroes' next hit taken is 4 less, and Haste: the next card you play this turn doesn't go to the track.)*
 
 **Brush Feint** · Space · `fox_brush`
 
@@ -1054,7 +1054,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Trot** · Time · `dog_trot`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
-- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; Haste: every card on your track returns 2 columns sooner. *(P3/E3: Move 2; Haste: every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
 
@@ -1103,7 +1103,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Trot** · Time · `dog_trot`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
-- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; Haste: every card on your track returns 2 columns sooner. *(P3/E3: Move 2; Haste: every card on your track returns 4 columns sooner.)*
 
 **Pin Down** · Mass · `dog_pin`
 
@@ -1157,7 +1157,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Trot** · Time · `dog_trot`
 
 - *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
-- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; every card on your track returns 2 columns sooner. *(P3/E3: Move 2; every card on your track returns 4 columns sooner.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; Haste: every card on your track returns 2 columns sooner. *(P3/E3: Move 2; Haste: every card on your track returns 4 columns sooner.)*
 
 **Bone Crush** ★ · Mass · `hye_crush`
 
@@ -1177,7 +1177,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Endurance** · Time · `hye_endure`
 
 - *Phys — Keep Going* · 1 AP · CD 1 — Move 1, and heal 1. *(P3: Move 4, and heal 1.)*
-- *Eth — Run It Down* · 0 AP + 1 Time · CD 4 — For 3 rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner. *(P3/E3: For 5 rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner.)*
+- *Eth — Run It Down* · 0 AP + 1 Time · CD 4 — For 3 rounds you gain 1 AP at the start of each turn; Haste: your track returns 1 column sooner. *(P3/E3: For 5 rounds you gain 1 AP at the start of each turn; Haste: your track returns 1 column sooner.)*
 
 **Matriarch** · Charge · `hye_matri`
 
@@ -1328,7 +1328,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Cold Sleep** · Time · `rpa_cold`
 
-- *Phys — Slow Down* · 1 AP · CD 2 — Shield 1 this round, ignore hazards for 2, and your track returns 1 column sooner. *(P3: Shield 2 this round, ignore hazards for 2, and your track returns 1 column sooner.)*
+- *Phys — Slow Down* · 1 AP · CD 2 — Shield 1 this round, ignore hazards for 2, and Haste: your track returns 1 column sooner. *(P3: Shield 2 this round, ignore hazards for 2, and Haste: your track returns 1 column sooner.)*
 - *Eth — Torpor* · 1 AP + 1 Time · CD 4 — Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for 2 rounds. *(P3/E3: Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for 4 rounds.)*
 
 ## 27 · Walrus — leans M/T
@@ -1509,7 +1509,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ruminate** · Time · `hoof_chew`
 
-- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
 - *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
 
 **Thick Coat** · Time · `yak_coat`
@@ -1558,7 +1558,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ruminate** · Time · `hoof_chew`
 
-- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
 - *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
 
 **Stampede** · Mass · `bis_stampede`
@@ -1607,7 +1607,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ruminate** · Time · `hoof_chew`
 
-- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
 - *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
 
 **Rapier Horns** · Mass · `ory_rapier`
@@ -1656,7 +1656,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Ruminate** · Time · `hoof_chew`
 
-- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Phys — Chew the Cud* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
 - *Eth — Four Stomachs* · 1 AP + 1 Time · CD 4 — Heal 3, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Heal 5, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.)*
 
 **Headbutt** · Mass · `ram_butt`
@@ -2038,8 +2038,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Unhurried** · Time · `slo_unhurried`
 
-- *Phys — Take Your Time* · 1 AP · CD 1 — Your track returns 1 column sooner, and Shield: the next hit on you is 1 less. *(P3: Your track returns 1 column sooner, and Shield: the next hit on you is 2 less.)*
-- *Eth — Slow Hand* · 0 AP + 1 Time · CD 4 — The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 1 round. *(P3/E3: The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 2 rounds.)*
+- *Phys — Take Your Time* · 1 AP · CD 1 — Haste: your track returns 1 column sooner, and Shield: the next hit on you is 1 less. *(P3: Haste: your track returns 1 column sooner, and Shield: the next hit on you is 2 less.)*
+- *Eth — Slow Hand* · 0 AP + 1 Time · CD 4 — Haste: the next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 1 round. *(P3/E3: Haste: the next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for 2 rounds.)*
 
 **Hang On** · Space · `slo_hang`
 
@@ -2190,7 +2190,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Hibernate** · Time · `heh_hibernate`
 
-- *Phys — Drowse* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and your track returns 1 column sooner.)*
+- *Phys — Drowse* · 1 AP · CD 2 — Heal 1 at the start of each turn for 2 rounds, and Haste: your track returns 1 column sooner. *(P3: Heal 1 at the start of each turn for 3 rounds, and Haste: your track returns 1 column sooner.)*
 - *Eth — Winter Nest* · 1 AP + 1 Time · CD 4 — Sleep in your nest: nothing can touch you until your next turn, and heal 1 at the start of each turn for 2 rounds. *(P3/E3: Sleep in your nest: nothing can touch you until your next turn, and heal 2 at the start of each turn for 2 rounds.)*
 
 **Anointing** · Charge · `heh_anoint`
@@ -2490,7 +2490,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Migration** · Space · `cra_migrate`
 
 - *Phys — Long Haul* · 1 AP · CD 1 — Fly 2; hazards can't touch you this round. *(P3: Fly 3; hazards can't touch you this round.)*
-- *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; your track slides 2 extra (your cards come back sooner).)*
+- *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; Haste: your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; Haste: your track slides 2 extra (your cards come back sooner).)*
 
 **Courtship Dance** · Charge · `cra_dance`
 
@@ -2652,7 +2652,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Flock V** · Space · `ibi_flock`
 
 - *Phys — Formation* · 1 AP · CD 1 — Your ally moves 1, where you choose; both heroes hold Shield 1 this round. *(P3: Your ally moves 4, where you choose; both heroes hold Shield 1 this round.)*
-- *Eth — V-Flight* · 1 AP + 1 Space · CD 4 — Your ally moves 3 in your slipstream; both hold Shield 1 this round, and your ally's track slides 1 extra. *(P3/E3: Your ally moves 5 in your slipstream; both hold Shield 2 this round, and your ally's track slides 1 extra.)*
+- *Eth — V-Flight* · 1 AP + 1 Space · CD 4 — Your ally moves 3 in your slipstream; both hold Shield 1 this round, and Haste: your ally's track slides 1 extra. *(P3/E3: Your ally moves 5 in your slipstream; both hold Shield 2 this round, and Haste: your ally's track slides 1 extra.)*
 
 ## 54 · Shoebill — leans M/T
 
@@ -3063,7 +3063,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Thousand Beats** · Time · `hmb_beats`
 
 - *Phys — Blur* · 1 AP · CD 1 — Wings to a blur: gain 1 AP next turn, and Shield: the next hit on you is 1 less. *(P3: Wings to a blur: gain 1 AP next turn, and Shield: the next hit on you is 2 less.)*
-- *Eth — Overdrive* · 0 AP + 1 Time · CD 4 — Your track slides 1 extra. *(P3/E3: Gain 1 AP to spend this turn, and your track slides 1 extra.)*
+- *Eth — Overdrive* · 0 AP + 1 Time · CD 4 — Your track slides 1 extra (Haste 1). *(P3/E3: Gain 1 AP to spend this turn, and your track slides 1 extra (Haste 1).)*
 
 **Night Torpor** · Time · `hmb_torpor`
 
@@ -3093,7 +3093,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Flower Memory** · Time · `hmb_memory`
 
 - *Phys — Route* · 1 AP · CD 1 — Remember the route: reroll up to 1 banked dice, and see within 2. *(P3: Remember the route: reroll up to 2 banked dice, and see within 2.)*
-- *Eth — Every Flower* · 1 AP + 1 Time · CD 4 — Remember every flower on the board: see everything within 2 this round, and both heroes' tracks slide 1 extra. *(P3/E3: Remember every flower on the board: see everything within 4 this round, and both heroes' tracks slide 1 extra.)*
+- *Eth — Every Flower* · 1 AP + 1 Time · CD 4 — Remember every flower on the board: see everything within 2 this round, and Haste: both heroes' tracks slide 1 extra. *(P3/E3: Remember every flower on the board: see everything within 4 this round, and Haste: both heroes' tracks slide 1 extra.)*
 
 ## 63 · Peacock — leans C/M
 
@@ -3166,7 +3166,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ground Sprint** · Space · `gbd_sprint`
 
 - *Phys — Dash* · 1 AP · CD 1 — Run 2; your next hit this turn deals +1. *(P3: Run 3; your next hit this turn deals +1.)*
-- *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; your track slides 2 extra, and your next hit this turn deals +1.)*
+- *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; Haste: your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; Haste: your track slides 2 extra, and your next hit this turn deals +1.)*
 
 **Stride** · Space · `ost_stride`
 
@@ -3220,7 +3220,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Ground Sprint** · Space · `gbd_sprint`
 
 - *Phys — Dash* · 1 AP · CD 1 — Run 2; your next hit this turn deals +1. *(P3: Run 3; your next hit this turn deals +1.)*
-- *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; your track slides 2 extra, and your next hit this turn deals +1.)*
+- *Eth — Flat Out* · 1 AP + 1 Space · CD 3 — Run 3, past foes; Haste: your track slides 1 extra, and your next hit this turn deals +1. *(P3/E3: Run 5, past foes; Haste: your track slides 2 extra, and your next hit this turn deals +1.)*
 
 **Gobble** · Charge · `tur_gobble`
 
@@ -4043,7 +4043,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Migration** · Space · `cra_migrate`
 
 - *Phys — Long Haul* · 1 AP · CD 1 — Fly 2; hazards can't touch you this round. *(P3: Fly 3; hazards can't touch you this round.)*
-- *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; your track slides 2 extra (your cards come back sooner).)*
+- *Eth — Flyway* · 1 AP + 1 Space · CD 3 — Fly 3 and heal 1; Haste: your track slides 1 extra (your cards come back sooner). *(P3/E3: Fly 5 and heal 1; Haste: your track slides 2 extra (your cards come back sooner).)*
 
 **Antennae** · Charge · `ins_antennae`
 

@@ -115,8 +115,8 @@
       fx:[{v:'mint', face:'O', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Mint ${1+h(P)} temporary Omni (spends as any etherion this turn).` },
     { n:'Mimic Form', ap:0, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'hasten', n:(P,E)=>1+E},{v:'mint', face:'O', n:1}],
-      txt:(P,E)=>`Learn on the fly: every card on your track returns ${1+E} columns sooner, and mint 1 Omni.` },
+      fx:[{v:'haste', n:(P,E)=>1+E},{v:'mint', face:'O', n:1}],
+      txt:(P,E)=>`Learn on the fly: Haste: every card on your track returns ${1+E} columns sooner, and mint 1 Omni.` },
     'Jack of all trades, briefly master of one.');
 
   /* ───────────────────────── 1 · JERBOA (S/T) ───────────────────────── */
@@ -215,8 +215,8 @@
       fx:[{v:'mint', face:'AP', n:(P,E)=>2+h(P)}],
       txt:(P,E)=>`Breathe through every pore: mint ${2+h(P)} temporary AP.` },
     { n:'Compress', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'hasten', n:(P,E)=>2+E}],
-      txt:(P,E)=>`Compress your exertion clock: every card on your track returns ${2+E} columns sooner.` },
+      fx:[{v:'haste', n:(P,E)=>2+E}],
+      txt:(P,E)=>`Compress your exertion clock: Haste: every card on your track returns ${2+E} columns sooner.` },
     'No fatigue, ever.');
   C('hopper','hop_exo','Chitinous Exoskeleton','M',0,
     { n:'Brace Plates', ap:1, el:0, cd:1, dur:1, tgt:'self',
@@ -384,11 +384,11 @@
     'Fit through a coin-sized gap.');
   C('octopus','oct_arms','Distributed Arms','T',1,
     { n:'Multitask', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'freecast', n:1, dur:1},{v:'mint', face:'AP', n:(P,E)=>h(P)}],
-      txt:(P,E)=>`Eight arms: the next card you play this turn does not go to your track${P>=2?`, and mint ${h(P)} temporary AP`:''}.` },
+      fx:[{v:'haste', free:true, n:1, dur:1},{v:'mint', face:'AP', n:(P,E)=>h(P)}],
+      txt:(P,E)=>`Eight arms: Haste: the next card you play this turn does not go to your track${P>=2?`, and mint ${h(P)} temporary AP`:''}.` },
     { n:'Parallel', ap:0, el:2, cd:4, dur:0, tgt:'self',
-      fx:[{v:'freecast', n:(P,E)=>E>=3?3:2}],
-      txt:(P,E)=>`Parallel-process: the next ${E>=3?'three':'two'} cards you play don't go to your track.` },
+      fx:[{v:'haste', free:true, n:(P,E)=>E>=3?3:2}],
+      txt:(P,E)=>`Parallel-process: Haste: the next ${E>=3?'three':'two'} cards you play don't go to your track.` },
     'Thinks partly through eight semi-independent arms.');
   C('octopus','oct_chemo','Chemo-Suckers','C',0,
     { n:'Taste', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -485,8 +485,8 @@
       fx:[{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Dash ${1+P}.` },
     { n:'Haste', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:2},{v:'hasten', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Dash 2 and haste: every card on your track returns ${1+E} columns sooner.` },
+      fx:[{v:'move', n:2},{v:'haste', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Dash 2 and haste: Haste: every card on your track returns ${1+E} columns sooner.` },
     'Vertical, inverted, it doesn\'t matter.');
 
   /* ───────────────────────── 6 · AXOLOTL (T/S) ───────────────────────── */
@@ -791,8 +791,8 @@
       fx:[{v:'shield', val:(P,E)=>4+P, dur:1, all:true},{v:'anchor', who:'self', dur:1}],
       txt:(P,E)=>`Curl into the tun: Shield ${4+P} against everything and immune to push/pull this round.` },
     { n:'Step Out of Time', ap:0, el:3, cd:4, dur:1, tgt:'self',
-      fx:[{v:'stasis', dur:1},{v:'hasten', n:(P,E)=>1+E},{v:'heal', n:(P,E)=>2+E}],
-      txt:(P,E)=>`Leave time: untargetable through the next enemy phase, heal ${2+E}, and your track slides ${1+E} extra columns.` },
+      fx:[{v:'stasis', dur:1},{v:'haste', n:(P,E)=>1+E},{v:'heal', n:(P,E)=>2+E}],
+      txt:(P,E)=>`Leave time: untargetable through the next enemy phase, heal ${2+E}, and Haste: your track slides ${1+E} extra columns.` },
     'Vacuum, radiation, boiling, freezing.');
   C('tardigrade','tar_dsup','Dsup Shielding','C',2,
     { n:'Repair Proteins', ap:1, el:0, cd:1, dur:1, tgt:'self',
@@ -847,8 +847,8 @@
       fx:[{v:'decoy', dur:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Bud an inert copy on an adjacent node: a decoy for ${1+h(P)} rounds.` },
     { n:'Duplicate', ap:2, el:1, cd:4, dur:0, tgt:'node_adj',
-      fx:[{v:'decoy', dur:2, strike:(P,E)=>2+E},{v:'freecast', n:(P,E)=>E>=2?1:0}],
-      txt:(P,E)=>`An active duplicate (2 rounds) that strikes an adjacent foe for ${2+E} once${E>=2?'; your next card does not go to your track':''}.` },
+      fx:[{v:'decoy', dur:2, strike:(P,E)=>2+E},{v:'haste', free:true, n:(P,E)=>E>=2?1:0}],
+      txt:(P,E)=>`An active duplicate (2 rounds) that strikes an adjacent foe for ${2+E} once${E>=2?'; Haste: your next card does not go to your track':''}.` },
     'Parthenogenetic.');
   C('tardigrade','tar_cling','Current-Cling Anchor','S',0,
     { n:'Cling', ap:1, el:0, cd:1, dur:0, tgt:'self',

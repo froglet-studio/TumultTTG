@@ -96,8 +96,8 @@
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:2},{v:'heal', n:1}],
       txt:(P,E)=>`Remember where everything was: reveal everything within ${1+P} nodes for 2 rounds, and heal 1 from a remembered meal.` },
     { n:'Mental Map', ap:0, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'hasten', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Every card on your track returns ${1+E} columns sooner.` },
+      fx:[{v:'haste', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Haste: every card on your track returns ${1+E} columns sooner.` },
     'Which tree fruits when, for a hundred miles.');
 
   // Ring-tailed lemur: Opposable Grip, Cooperative Instinct, Grooming, Canopy Leap, Troop Call, and these four
@@ -127,8 +127,8 @@
     'This branch is ours.');
   K(['lemur'],'lem_tail','Tail Signal','T',0,
     { n:'Wave', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'hasten', n:1},{v:'reroll', n:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`Every card on your track returns 1 column sooner, and reroll ${1+h(P)} banked ${1+h(P) > 1 ? 'dice' : 'die'}.` },
+      fx:[{v:'haste', n:1},{v:'reroll', n:(P,E)=>1+h(P)}],
+      txt:(P,E)=>`Haste: every card on your track returns 1 column sooner, and reroll ${1+h(P)} banked ${1+h(P) > 1 ? 'dice' : 'die'}.` },
     { n:'Rally Flag', ap:1, el:1, cd:4, dur:2, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>2+E, next:true, party:true}],
       txt:(P,E)=>`Tail high, the troop braces: Shield: both heroes' next hit taken is −${2+E}. Dur 2.` },
@@ -302,8 +302,8 @@
       fx:[{v:'move', n:(P,E)=>1+P, noTrap:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Move ${1+P} without setting off traps, and end Hidden 1.` },
     { n:'Night Shift', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'hasten', n:(P,E)=>1+E},{v:'reveal', radius:2, dur:1}],
-      txt:(P,E)=>`Every card on your track returns ${1+E} columns sooner; see within 2 this round.` },
+      fx:[{v:'haste', n:(P,E)=>1+E},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Haste: every card on your track returns ${1+E} columns sooner; see within 2 this round.` },
     'Asleep all day, busy all night.');
 
   // Tiger: the six cat traits and these three
@@ -413,8 +413,8 @@
       fx:[{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Move ${1+P}.` },
     { n:'Relay', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:2},{v:'hasten', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Move 2; every card on your track returns ${1+E} columns sooner.` },
+      fx:[{v:'move', n:2},{v:'haste', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Move 2; Haste: every card on your track returns ${1+E} columns sooner.` },
     'Not fast. Just never stopping.', 'Dogs and hyenas');
   K(DOGS,'dog_pin','Pin Down','M',0,
     { n:'Pin', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -472,8 +472,8 @@
     'Half of the fox is ear.');
   K(['fennec'],'fen_thrift','Desert Thrift','T',0,
     { n:'Ration', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'heal', n:(P,E)=>1+h(P)},{v:'hasten', n:1}],
-      txt:(P,E)=>`Heal ${1+h(P)}; every card on your track returns 1 column sooner.` },
+      fx:[{v:'heal', n:(P,E)=>1+h(P)},{v:'haste', n:1}],
+      txt:(P,E)=>`Heal ${1+h(P)}; Haste: every card on your track returns 1 column sooner.` },
     { n:'Long Dry', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E},{v:'heal', n:1}],
       txt:(P,E)=>`For ${1+E} rounds you gain 1 AP at the start of each turn; heal 1.` },
@@ -501,8 +501,8 @@
       fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'mark', n:1, dur:3}],
       txt:(P,E)=>`Work out a foe within 3: Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}, and it is Marked +1 for 3 rounds.` },
     { n:'Outfox', ap:1, el:1, cd:4, dur:0, tgt:'party',
-      fx:[{v:'shield', val:(P,E)=>1+E, next:true, party:true},{v:'freecast', n:1, dur:1}],
-      txt:(P,E)=>`Shield: both heroes' next hit taken is ${1+E} less, and the next card you play this turn doesn't go to the track.` },
+      fx:[{v:'shield', val:(P,E)=>1+E, next:true, party:true},{v:'haste', free:true, n:1, dur:1}],
+      txt:(P,E)=>`Shield: both heroes' next hit taken is ${1+E} less, and Haste: the next card you play this turn doesn't go to the track.` },
     'Already gone the way you were about to look.');
   K(['fox'],'fox_brush','Brush Feint','S',0,
     { n:'Brush', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -595,8 +595,8 @@
       fx:[{v:'move', n:(P,E)=>1+P},{v:'heal', n:1}],
       txt:(P,E)=>`Move ${1+P}, and heal 1.` },
     { n:'Run It Down', ap:0, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>2+E},{v:'hasten', n:1}],
-      txt:(P,E)=>`For ${2+E} rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner.` },
+      fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>2+E},{v:'haste', n:1}],
+      txt:(P,E)=>`For ${2+E} rounds you gain 1 AP at the start of each turn; Haste: your track returns 1 column sooner.` },
     'The chase ends when the prey stops. The hyena doesn\'t.');
   K(['hyena'],'hye_matri','Matriarch','C',0,
     { n:'Rank', ap:1, el:0, cd:1, dur:0, tgt:'ally',
@@ -774,8 +774,8 @@
     'Jaws built for wood.');
   K(['red_panda'],'rpa_cold','Cold Sleep','T',0,
     { n:'Slow Down', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'hazardImmune', dur:2},{v:'hasten', n:1}],
-      txt:(P,E)=>`Shield ${1+h(P)} this round, ignore hazards for 2, and your track returns 1 column sooner.` },
+      fx:[{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'hazardImmune', dur:2},{v:'haste', n:1}],
+      txt:(P,E)=>`Shield ${1+h(P)} this round, ignore hazards for 2, and Haste: your track returns 1 column sooner.` },
     { n:'Torpor', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'stasis', dur:1},{v:'engine', kind:'regen', val:1, dur:(P,E)=>1+E}],
       txt:(P,E)=>`Drop into torpor: nothing can touch you until your next turn, and you heal 1 at the start of each turn for ${1+E} rounds.` },
@@ -1020,8 +1020,8 @@
     'Head down, and go.', 'Hoofed animals');
   K(HORNED,'hoof_chew','Ruminate','T',0,
     { n:'Chew the Cud', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(P)},{v:'hasten', n:1}],
-      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+h(P)} rounds, and your track returns 1 column sooner.` },
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(P)},{v:'haste', n:1}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+h(P)} rounds, and Haste: your track returns 1 column sooner.` },
     { n:'Four Stomachs', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+E},{v:'cleanse'},{v:'engine', kind:'regen', val:1, dur:2}],
       txt:(P,E)=>`Heal ${2+E}, shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for 2 rounds.` },
@@ -1510,11 +1510,11 @@
     'Claws that lock shut on their own.');
   K(['sloth'],'slo_unhurried','Unhurried','T',0,
     { n:'Take Your Time', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'hasten', n:1},{v:'shield', val:(P,E)=>1+h(P), next:true}],
-      txt:(P,E)=>`Your track returns 1 column sooner, and Shield: the next hit on you is ${1+h(P)} less.` },
+      fx:[{v:'haste', n:1},{v:'shield', val:(P,E)=>1+h(P), next:true}],
+      txt:(P,E)=>`Haste: your track returns 1 column sooner, and Shield: the next hit on you is ${1+h(P)} less.` },
     { n:'Slow Hand', ap:0, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'freecast', n:1, dur:1},{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
+      fx:[{v:'haste', free:true, n:1, dur:1},{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Haste: the next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
     'Nothing is so urgent it can’t wait.');
   K(['sloth'],'slo_hang','Hang On','S',0,
     { n:'Hang', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
@@ -1660,8 +1660,8 @@
     'It grunts like a small pig as it goes.');
   K(['hedgehog'],'heh_hibernate','Hibernate','T',0,
     { n:'Drowse', ap:1, el:0, cd:2, dur:0, tgt:'self',
-      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(P)},{v:'hasten', n:1}],
-      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+h(P)} rounds, and your track returns 1 column sooner.` },
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(P)},{v:'haste', n:1}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+h(P)} rounds, and Haste: your track returns 1 column sooner.` },
     { n:'Winter Nest', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'stasis', dur:1},{v:'engine', kind:'regen', val:(P,E)=>1+h(E), dur:2}],
       txt:(P,E)=>`Sleep in your nest: nothing can touch you until your next turn, and heal ${1+h(E)} at the start of each turn for 2 rounds.` },
@@ -2080,8 +2080,8 @@
       fx:[{v:'move', n:(P,E)=>2+h(P)},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Fly ${2+h(P)}; hazards can't touch you this round.` },
     { n:'Flyway', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>2+E},{v:'hasten', n:(P,E)=>1+h(E)},{v:'heal', n:1}],
-      txt:(P,E)=>`Fly ${2+E} and heal 1; your track slides ${1+h(E)} extra (your cards come back sooner).` },
+      fx:[{v:'move', n:(P,E)=>2+E},{v:'haste', n:(P,E)=>1+h(E)},{v:'heal', n:1}],
+      txt:(P,E)=>`Fly ${2+E} and heal 1; Haste: your track slides ${1+h(E)} extra (your cards come back sooner).` },
     'The same road in the sky, every year, for ten thousand years.');
   K(['crane'],'cra_dance','Courtship Dance','C',0,
     { n:'Dance', ap:1, el:0, cd:1, dur:0, tgt:'party',
@@ -2198,8 +2198,8 @@
       fx:[{v:'rally', move:(P,E)=>1+P},{v:'shield', val:1, dur:1, party:true}],
       txt:(P,E)=>`Your ally moves ${1+P}, where you choose; both heroes hold Shield 1 this round.` },
     { n:'V-Flight', ap:1, el:1, cd:4, dur:0, tgt:'ally_move',
-      fx:[{v:'rally', move:(P,E)=>2+E},{v:'shield', val:(P,E)=>1+h(E), dur:1, party:true},{v:'hasten', n:1, who:'ally'}],
-      txt:(P,E)=>`Your ally moves ${2+E} in your slipstream; both hold Shield ${1+h(E)} this round, and your ally's track slides 1 extra.` },
+      fx:[{v:'rally', move:(P,E)=>2+E},{v:'shield', val:(P,E)=>1+h(E), dur:1, party:true},{v:'haste', n:1, who:'ally'}],
+      txt:(P,E)=>`Your ally moves ${2+E} in your slipstream; both hold Shield ${1+h(E)} this round, and Haste: your ally's track slides 1 extra.` },
     'The bird in front breaks the wind for the one behind.');
 
   // Shoebill: Hollow Bones, Spear Bill, Still Hunt, Wade, Long Legs, Big Bill, and these three
@@ -2651,8 +2651,8 @@
       fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'shield', val:(P,E)=>1+h(P), next:true}],
       txt:(P,E)=>`Wings to a blur: gain 1 AP next turn, and Shield: the next hit on you is ${1+h(P)} less.` },
     { n:'Overdrive', ap:0, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'mint', face:'AP', n:(P,E)=>h(E)},{v:'hasten', n:1}],
-      txt:(P,E)=>`${E>=2?`Gain ${h(E)} AP to spend this turn, and your`:'Your'} track slides 1 extra.` },
+      fx:[{v:'mint', face:'AP', n:(P,E)=>h(E)},{v:'haste', n:1}],
+      txt:(P,E)=>`${E>=2?`Gain ${h(E)} AP to spend this turn, and your`:'Your'} track slides 1 extra (Haste 1).` },
     'Seventy beats a second, all day.');
   K(['hummingbird'],'hmb_torpor','Night Torpor','T',0,
     { n:'Slow Down', ap:1, el:0, cd:2, dur:0, tgt:'self',
@@ -2699,8 +2699,8 @@
       fx:[{v:'reroll', n:(P,E)=>1+h(P)},{v:'reveal', radius:2, dur:1}],
       txt:(P,E)=>`Remember the route: reroll up to ${1+h(P)} banked dice, and see within 2.` },
     { n:'Every Flower', ap:1, el:1, cd:4, dur:0, tgt:'party',
-      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:1},{v:'hasten', n:1},{v:'hasten', n:1, who:'ally'}],
-      txt:(P,E)=>`Remember every flower on the board: see everything within ${1+E} this round, and both heroes' tracks slide 1 extra.` },
+      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:1},{v:'haste', n:1},{v:'haste', n:1, who:'ally'}],
+      txt:(P,E)=>`Remember every flower on the board: see everything within ${1+E} this round, and Haste: both heroes' tracks slide 1 extra.` },
     'Which flowers, and when they refill, to the minute.');
 
   // Peacock: Hollow Bones, Display Fan, Alarm Call, Spur, and these five
@@ -2764,8 +2764,8 @@
       fx:[{v:'move', n:(P,E)=>2+h(P)},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Run ${2+h(P)}; your next hit this turn deals +1.` },
     { n:'Flat Out', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
-      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'hasten', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:1}],
-      txt:(P,E)=>`Run ${2+E}, past foes; your track slides ${1+h(E)} extra, and your next hit this turn deals +1.` },
+      fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'haste', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Run ${2+E}, past foes; Haste: your track slides ${1+h(E)} extra, and your next hit this turn deals +1.` },
     'Legs, and nothing but legs.', 'Ground birds');
 
   // Ostrich: Hollow Bones, Ground Sprint, Kick, Wide Eyes, and these five

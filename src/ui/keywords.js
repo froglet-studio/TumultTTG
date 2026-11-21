@@ -96,6 +96,13 @@
       tip: 'Blink N: leave the paths and appear on a free space within N (high ground only if it says). An Anchored unit cannot blink.',
     },
     {
+      id: 'haste',
+      re: 'Haste',
+      icon: 'kw.stasis',
+      tone: 'good',
+      tip: 'Haste N: your track slides N extra columns (your cards come home sooner), or the mission clock gains N rounds, or the next cards you play skip the track, as the face says.',
+    },
+    {
       id: 'link',
       re: 'Link(?:ed|s)?',
       icon: 'kw.link',

@@ -500,3 +500,7 @@ Pre-empt, Guard and Absorb became Shield. Same seeds, 2.93.0 → 2.94.0: `80 run
 ## v2.95.0 — Blink
 
 `teleport` renamed `blink`; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after (the same seeds play the same missions).
+
+## v2.96.0 — Haste
+
+`hasten`, `clock` and `freecast` became one verb, `haste`; no rule changed. `node tools/sim.js 40 missions --player weak` averages 76.1% before and after (the same seeds play the same missions).
