@@ -1,4 +1,4 @@
 {
   "comment": "Where the web version finds Tumult's Worker (docs/reference/BACKEND.md). The build writes it into src/web/server.js. Empty: the web version plays solo only. After the first `wrangler deploy`, put the workers.dev address it prints here, e.g. https://tumult-api.<account>.workers.dev; after a DNS move to Cloudflare, https://api.tumult.froglet.games.",
-  "url": ""
+  "url": "https://tumult-api.bitter-dew-611f.workers.dev"
 }

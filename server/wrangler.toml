@@ -19,7 +19,7 @@ CANON_REVIEWERS = ""
 [[d1_databases]]
 binding = "DB"
 database_name = "tumult"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "f6893fa0-a307-4ec7-afec-0c4fed6137c5"
 migrations_dir = "migrations"
 
 # One live room per game code.
