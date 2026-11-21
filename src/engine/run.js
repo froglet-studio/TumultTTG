@@ -302,7 +302,8 @@
     const onCards = Object.values(h.up || {}).reduce((s, v) => s + v[0] + v[1], 0);
     const bound = Object.values(h.bound || {}).reduce((s, b) => s + b[0] - b[1], 0); // bound but not yet spent
     const pts = onCards + bound + (h.upUnspent || 0) - R().START_UP;
-    const held = Math.min(R().MAX_CARDS, T.collection(h).length); // a kit flies nine at most, whatever waits in reserve
+    // a kit flies nine at most, whatever waits in reserve; a gear card is equipment bought on the expedition, not growth
+    const held = Math.min(R().MAX_CARDS, T.collection(h).filter((c) => !(T.CARD[c] && T.CARD[c].gear)).length);
     return Math.max(0, pts + S.CARD_UP * Math.max(0, held - R().START_CARDS));
   };
   /** A pilot's level: 1 for a new pilot, and one more for every LEVEL_UP points of growth (about a tier of a run). */
