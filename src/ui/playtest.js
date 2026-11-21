@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.83.0',
+    version: '2.84.0',
     items: [
+      {
+        text: 'Many Ethereal faces now cost no AP, only their etherions: the ones that used to give AP back (they give that much less back now), and the ones players hardly ever chose. Do any of them get played now? Does spending only an element die feel like a good use of it?',
+        cards: ['eel_gulp', 'hum_coop', 'oct_arms'],
+      },
       {
         text: 'Every roll is now three plain dice and one element die you choose. Under "Next roll", beside your dice, pick which of your element dice comes up next (one of the colours you have awakened); the choice stays until you change it. Does the fixed roll make turns easier to plan? Do you find yourself changing the element often, or setting it once?',
       },

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.84.0 — 2026-11-21 — Ethereal faces at 0 AP
+
+Garrett: "the underpowered elemental abilities and the ones that refund an ap die should have their ap cost reduced to zero instead"
+
+- **No AP back, no AP cost.** The nine Ethereal faces that gave AP back (Unity, Pocket Fold, Parallel, Reserve, Mental Map, Hoard, Dig In, Catch!, Overdrive) cost 0 AP and give back that much less: the same AP in the end, but playable with an empty bank. Parallel frees a third card at E 3 instead of minting AP.
+- **Underplayed faces cost 0 AP.** 84 more Ethereal faces, the ones the census shows the look-ahead player almost never picks (index under 0.25), now cost only their etherions. 93 of 529 Ethereal faces cost no AP.
+- **Balance.** 80 runs, look-ahead 43 → 42; 120 runs, heuristic 12 → 13; `node tools/sim.js 40`, runs 3 → 2 and 20 → 16. Not easier, so nothing is retuned (`docs/reference/BALANCE.md`). No save change.
+
 ## 2.83.0 — 2026-11-21 — three plain dice and an element die you choose
 
 Garrett: "instead of picking your dice it should be 3 ap dice and 1 element of your choice"

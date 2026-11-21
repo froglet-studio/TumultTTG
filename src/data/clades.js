@@ -71,7 +71,7 @@
     { n:'Reach', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
       fx:[{v:'force', kind:'pull', n:1},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
       txt:(P,E)=>`Pull a foe within 2 one node closer; if it arrives beside you, strike it for ${2+P}.` },
-    { n:'Arm Span', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Arm Span', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'morph', bonus:1, reach:1, dur:(P,E)=>1+E}],
       txt:(P,E)=>`For ${1+E} rounds your melee reaches 2 nodes and your strikes deal +1.` },
     'Arms that span a river.');
@@ -95,9 +95,9 @@
     { n:'Recall', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:2},{v:'heal', n:1}],
       txt:(P,E)=>`Remember where everything was: reveal everything within ${1+P} nodes for 2 rounds, and heal 1 from a remembered meal.` },
-    { n:'Mental Map', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'draw', face:'AP', n:1},{v:'hasten', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Draw 1 pool die as AP, and every card on your track returns ${1+E} columns sooner.` },
+    { n:'Mental Map', ap:0, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'hasten', n:(P,E)=>1+E}],
+      txt:(P,E)=>`Every card on your track returns ${1+E} columns sooner.` },
     'Which tree fruits when, for a hundred miles.');
 
   // Ring-tailed lemur: Opposable Grip, Cooperative Instinct, Grooming, Canopy Leap, Troop Call, and these four
@@ -155,9 +155,9 @@
     { n:'Pouch', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'draw', face:'AP', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Draw ${1+h(P)} pool ${1+h(P) > 1 ? 'dice' : 'die'} straight into your bank as AP.` },
-    { n:'Hoard', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'mint', face:'O', n:1},{v:'mint', face:'AP', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Mint 1 temporary Omni and ${1+E} temporary AP.` },
+    { n:'Hoard', ap:0, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'mint', face:'O', n:1},{v:'mint', face:'AP', n:(P,E)=>E}],
+      txt:(P,E)=>`Mint 1 temporary Omni and ${E} temporary AP.` },
     'Snacks for later, and later is now.');
   K(['mandrill'],'man_charge','Ground Charge','M',0,
     { n:'Rush', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
@@ -285,7 +285,7 @@
     { n:'Dapple', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+h(P), canMove:true},{v:'preempt', val:1, reflect:0}],
       txt:(P,E)=>`Melt into broken light: Hidden ${1+h(P)}, moving freely, and the next hit on you is 1 less.` },
-    { n:'Leaf Light', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Leaf Light', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hidden', dur:(P,E)=>1+E, party:true, radius:2},{v:'empower', val:1, uses:1, dur:2, party:true}],
       txt:(P,E)=>`You and an ally within 2 are Hidden for ${1+E} rounds; both heroes' next strike deals +1.` },
     'Spots that are shadows that are spots.');
@@ -311,7 +311,7 @@
     { n:'Roar', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1, area:'adj'},{v:'force', kind:'push', n:1, area:true}],
       txt:(P,E)=>`Every foe beside you is Weakened ${1+h(P)} this round and knocked back 1.` },
-    { n:'Thunder', ap:2, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Thunder', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:(P,E)=>1+E, area:'zone'},{v:'empower', val:1, uses:1, dur:2, party:true}],
       txt:(P,E)=>`Every foe in sight is Weakened 1 for ${1+E} rounds; both heroes' next strike deals +1.` },
     'Heard three kilometres away, and felt closer.');
@@ -361,9 +361,9 @@
     { n:'Kick Off', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Move ${1+P}; your next strike this turn deals +1.` },
-    { n:'Dig In', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'anchor', who:'self', dur:(P,E)=>1+E},{v:'shield', val:(P,E)=>1+E, dur:1},{v:'draw', face:'AP', n:1}],
-      txt:(P,E)=>`Claws in: you can't be pushed or pulled for ${1+E} rounds, hold Shield ${1+E} this round, and draw 1 die as AP.` },
+    { n:'Dig In', ap:0, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'anchor', who:'self', dur:(P,E)=>1+E},{v:'shield', val:(P,E)=>1+E, dur:1}],
+      txt:(P,E)=>`Claws in: you can't be pushed or pulled for ${1+E} rounds, and hold Shield ${1+E} this round.` },
     'Claws that never sheathe: cleats, not knives.');
   K(['cheetah'],'che_trip','Trip','M',0,
     { n:'Trip', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -466,7 +466,7 @@
     { n:'Cool Down', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'hazardImmune', dur:2}],
       txt:(P,E)=>`Hear everything within ${2+P} this round; your ears shed the heat: hazards don't touch you for 2 rounds.` },
-    { n:'Under the Sand', ap:1, el:1, cd:3, dur:0, tgt:'party',
+    { n:'Under the Sand', ap:0, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>1+E},{v:'preempt', val:(P,E)=>1+h(E), reflect:0}],
       txt:(P,E)=>`Hear everything within ${1+E} for ${1+E} rounds; the next hit on you is ${1+h(E)} less.` },
     'Half of the fox is ear.');
@@ -474,7 +474,7 @@
     { n:'Ration', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+h(P)},{v:'hasten', n:1}],
       txt:(P,E)=>`Heal ${1+h(P)}; every card on your track returns 1 column sooner.` },
-    { n:'Long Dry', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Long Dry', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E},{v:'heal', n:1}],
       txt:(P,E)=>`For ${1+E} rounds you gain 1 AP at the start of each turn; heal 1.` },
     'Never drinks. Doesn\'t need to.');
@@ -552,7 +552,7 @@
     { n:'Adapt', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'hazardImmune', dur:2},{v:'heal', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Shake off Anchored and Weakened, ignore hazards for 2 rounds, and heal ${1+h(P)}.` },
-    { n:'Make Do', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Make Do', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:(P,E)=>1+E}],
       txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; no foe can Weaken or Root you for ${1+E}.` },
     'Desert, forest, city. Same coyote.');
@@ -586,7 +586,7 @@
     { n:'Scavenge', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P, onKill:{v:'heal', n:2}},{v:'heal', n:1}],
       txt:(P,E)=>`Melee ${1+P} and heal 1; if it falls, heal 2 more.` },
-    { n:'Iron Gut', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Iron Gut', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'cleanse'}],
       txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds, and shake off Anchored and Weakened.` },
     'Nothing wasted.');
@@ -594,7 +594,7 @@
     { n:'Keep Going', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'heal', n:1}],
       txt:(P,E)=>`Move ${1+P}, and heal 1.` },
-    { n:'Run It Down', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Run It Down', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>2+E},{v:'hasten', n:1}],
       txt:(P,E)=>`For ${2+E} rounds you gain 1 AP at the start of each turn; your track returns 1 column sooner.` },
     'The chase ends when the prey stops. The hyena doesn\'t.');
@@ -726,7 +726,7 @@
     { n:'Stand', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'anchor', who:'self', dur:1},{v:'empower', val:(P,E)=>1+P, uses:1, dur:2}],
       txt:(P,E)=>`Plant your feet: nothing can push or pull you this round, and your next strike deals +${1+P}.` },
-    { n:'No Retreat', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'No Retreat', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'statusImmune', dur:(P,E)=>1+E},{v:'thorns', val:(P,E)=>1+h(E), dur:(P,E)=>1+E},{v:'anchor', who:'self', dur:(P,E)=>1+E}],
       txt:(P,E)=>`For ${1+E} rounds nothing can Weaken, Root, push or pull you, and a foe that hits you in melee takes ${1+h(E)}.` },
     'There is no other direction.');
@@ -744,7 +744,7 @@
     { n:'Stand Tall', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
       txt:(P,E)=>`Rear up, arms wide: foes beside you are Weakened 1 this round, and the next hit on you is ${1+h(P)} less.` },
-    { n:'Arms Up', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Arms Up', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'force', kind:'push', n:(P,E)=>1+h(E), area:true},{v:'weaken', val:1, dur:(P,E)=>1+E, area:'radius', radius:2}],
       txt:(P,E)=>`Foes beside you are driven back ${1+h(E)}, and every foe within 2 is Weakened 1 for ${1+E} rounds.` },
     'Much bigger than it is, for a moment.');
@@ -752,7 +752,7 @@
     { n:'Nap', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'hidden', dur:1}],
       txt:(P,E)=>`Curl up out of sight: heal ${1+P}, and Hidden 1.` },
-    { n:'Long Nap', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Long Nap', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:(P,E)=>1+h(E), dur:3},{v:'hidden', dur:1}],
       txt:(P,E)=>`Heal ${1+h(E)} at the start of each turn for 3 rounds; Hidden 1.` },
     'Draped over a branch, tail over the nose.');
@@ -819,7 +819,7 @@
     { n:'Call the Pod', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, party:true},{v:'heal', n:1, target:'ally'}],
       txt:(P,E)=>`Both heroes' next hit deals +${1+h(P)}; your ally heals 1.` },
-    { n:'Chorus', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Chorus', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true}],
       txt:(P,E)=>`Both heroes gain 1 AP at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
     'Every pod sings its own dialect.', 'Sea mammals');
@@ -837,7 +837,7 @@
     { n:'Flop Ashore', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
       txt:(P,E)=>`Move ${1+P}, then hold Shield ${1+h(P)} this round.` },
-    { n:'Bask', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Bask', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'shield', val:2, dur:1}],
       txt:(P,E)=>`Shield 2 this round, and heal 1 at the start of each turn for ${2+E} rounds.` },
     'Out of the water, onto the ice, and asleep.');
@@ -877,7 +877,7 @@
     { n:'Lean In', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:1}],
       txt:(P,E)=>`Melee ${3+P}, and push it 1.` },
-    { n:'Belly Flop', ap:2, el:1, cd:3, dur:0, tgt:'foe_adj_all',
+    { n:'Belly Flop', ap:0, el:1, cd:3, dur:0, tgt:'foe_adj_all',
       fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Every foe beside you takes ${2+E} and is Weakened 1 this round.` },
     'Nobody asks a walrus to move.');
@@ -895,7 +895,7 @@
     { n:'Herd the Prey', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
       fx:[{v:'mark'},{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'}],
       txt:(P,E)=>`Mark a foe (the next hit on it deals +2), and your ally's next hit deals +${1+h(P)}.` },
-    { n:'Wave Hunt', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Wave Hunt', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'}],
       txt:(P,E)=>`Both heroes' next hit deals +${1+E}, and your ally gains 1 AP next turn.` },
     'They plan, and they teach the plan to their young.');
@@ -937,7 +937,7 @@
     { n:'Show the Way', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
       fx:[{v:'rally', move:(P,E)=>1+P}],
       txt:(P,E)=>`Your ally moves ${1+P}.` },
-    { n:'Open Water', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Open Water', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hazardImmune', dur:(P,E)=>1+E},{v:'hazardImmune', dur:1, party:true},{v:'engine', kind:'ap', val:1, dur:1, party:true}],
       txt:(P,E)=>`Both heroes gain 1 AP next turn and ignore hazards this round; you for ${1+E} rounds.` },
     'It knows where the ice will open.');
@@ -1074,7 +1074,7 @@
     { n:'Thunder', ap:1, el:0, cd:2, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Move ${1+P}, passing foes; every foe beside you where you stop is Weakened 1 this round, and your next hit this turn deals +1.` },
-    { n:'Run Them Down', ap:2, el:1, cd:4, dur:0, tgt:'foe_adj_all',
+    { n:'Run Them Down', ap:0, el:1, cd:4, dur:0, tgt:'foe_adj_all',
       fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1, area:true}],
       txt:(P,E)=>`Every foe beside you takes ${2+E} and is pushed 1.` },
     'The ground shakes before you see them.');
@@ -1116,7 +1116,7 @@
     { n:'Shimmer', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'preempt', val:(P,E)=>1+h(P), reflect:0, reposition:1}],
       txt:(P,E)=>`Move ${1+P}; the next hit on you is ${1+h(P)} less, and you dodge a step from it.` },
-    { n:'Heat Haze', ap:1, el:1, cd:4, dur:0, tgt:'node_r3',
+    { n:'Heat Haze', ap:0, el:1, cd:4, dur:0, tgt:'node_r3',
       fx:[{v:'decoy', dur:(P,E)=>1+E},{v:'hidden', dur:1, canMove:true}],
       txt:(P,E)=>`A shimmer draws foes to a node within 3 for ${1+E} rounds, and you are Hidden 1 even if you move.` },
     'Out there, in the heat, nothing is quite where it seems.');
@@ -1306,7 +1306,7 @@
     { n:'Nibble', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'engine', kind:'ap', val:1, dur:1}],
       txt:(P,E)=>`Heal ${1+P}, and gain 1 AP next turn.` },
-    { n:'Winter Store', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Winter Store', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'engine', kind:'ap', val:1, dur:1, party:true}],
       txt:(P,E)=>`Both heroes heal ${1+E} and gain 1 AP next turn.` },
     'Seeds in every corner of the house.');
@@ -1364,7 +1364,7 @@
     { n:'Flick', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P}],
       txt:(P,E)=>`A quill stuck in a foe within 2: it takes ${2+P}.` },
-    { n:'Quill Spray', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Quill Spray', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'strike', kind:'zone_all', dmg:(P,E)=>1+E}],
       txt:(P,E)=>`Every foe in your zone takes ${1+E}.` },
     'They come loose, and stay in.');
@@ -1372,7 +1372,7 @@
     { n:'Gnaw Bark', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Heal ${1+P}, and hold Shield 1 this round.` },
-    { n:'Salt Lick', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Salt Lick', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E}],
       txt:(P,E)=>`Shed Anchored, Weakened and damage over time, and heal 1 at the start of each turn for ${2+E} rounds.` },
     'It eats what nothing else will.');
@@ -1390,7 +1390,7 @@
     { n:'Spar', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'move', n:1, free:true}],
       txt:(P,E)=>`Melee ${2+P}, then hop 1.` },
-    { n:'Spring Fever', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Spring Fever', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'empower', val:1, uses:99, dur:(P,E)=>1+E},{v:'engine', kind:'ap', val:1, dur:1}],
       txt:(P,E)=>`Every hit you deal for ${1+E} ${1+E > 1 ? 'rounds' : 'round'} deals +1, and gain 1 AP next turn.` },
     'In spring, every hare goes a little mad.');
@@ -1406,7 +1406,7 @@
     { n:'Thump', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'preempt', val:(P,E)=>1+h(P), reflect:0, party:true}],
       txt:(P,E)=>`Thump a warning: the next hit on each hero is ${1+h(P)} less.` },
-    { n:'Ground Drum', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Ground Drum', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:1, area:'radius', radius:(P,E)=>1+E},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'}],
       txt:(P,E)=>`Every foe within ${1+E} is Weakened 1 this round, and your ally gains 1 AP next turn.` },
     'A back foot on the ground: danger.');
@@ -1496,7 +1496,7 @@
     { n:'Green Coat', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'heal', n:1}],
       txt:(P,E)=>`Hidden ${1+h(P)} in your green coat, and heal 1.` },
-    { n:'A Whole Garden', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'A Whole Garden', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E, party:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Both heroes heal 1 at the start of each turn for ${2+E} rounds; you are Hidden 1.` },
     'Its fur grows a garden, with moths in it.');
@@ -1512,7 +1512,7 @@
     { n:'Take Your Time', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'hasten', n:1},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
       txt:(P,E)=>`Your track returns 1 column sooner, and the next hit on you is ${1+h(P)} less.` },
-    { n:'Slow Hand', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Slow Hand', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'freecast', n:1, dur:1},{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+h(E)}],
       txt:(P,E)=>`The next card you play this turn doesn't go to the track, and gain 1 AP at the start of each turn for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
     'Nothing is so urgent it can’t wait.');
@@ -1628,7 +1628,7 @@
     { n:'Stride', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'reveal', radius:2, dur:1}],
       txt:(P,E)=>`Move ${1+P}, and reveal within 2 of where you stop.` },
-    { n:'Tall and Wary', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Tall and Wary', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>3+E, dur:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
       txt:(P,E)=>`Reveal within ${3+E} for 2 rounds; your next hit deals +${1+E}.` },
     'On its back legs, tail for balance.');
@@ -1780,7 +1780,7 @@
     { n:'Lick Forearms', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'hazardImmune', dur:2}],
       txt:(P,E)=>`Cool down: heal ${1+P}, and ignore hazards for 2 rounds.` },
-    { n:'Rest in the Shade', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Rest in the Shade', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E, party:true},{v:'cleanse'}],
       txt:(P,E)=>`Shed Anchored, Weakened and damage over time; both heroes heal 1 at the start of each turn for ${2+E} rounds.` },
     'It licks its arms to keep cool.');
@@ -1806,7 +1806,7 @@
     { n:'Gape', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Show all fifty teeth and bite: melee ${2+P}, and it is Weakened 1 this round.` },
-    { n:'Hiss and Drool', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Hiss and Drool', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:(P,E)=>1+E, area:'radius', radius:2},{v:'force', kind:'push', n:1, area:true}],
       txt:(P,E)=>`Every foe within 2 is Weakened 1 for ${1+E} rounds, and every foe beside you is pushed 1.` },
     'More teeth than any other land mammal.');
@@ -1838,7 +1838,7 @@
     { n:'Sniff Out', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true},{v:'heal', n:1}],
       txt:(P,E)=>`Reveal within ${2+P}, Mark the nearest foe (the next hit on it deals +2), and heal 1.` },
-    { n:'Leftovers', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Leftovers', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'draw', face:'C', val:1},{v:'heal', n:(P,E)=>1+E}],
       txt:(P,E)=>`Draw a Charge die from your pool, and heal ${1+E}.` },
     'Anything, anywhere, eaten.');
@@ -1872,7 +1872,7 @@
     { n:'Fill Cheeks', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'heal', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Gain 1 AP next turn, and heal ${1+h(P)}.` },
-    { n:'Surface to Eat', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Surface to Eat', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+E},{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+h(E)}],
       txt:(P,E)=>`Heal ${2+E}, and gain 1 AP at the start of each turn for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
     'It stores the catch in its cheeks and eats at the surface.');
@@ -1896,7 +1896,7 @@
     { n:'Guard the Nest', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1}],
       txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round.` },
-    { n:'Sealed Burrow', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Sealed Burrow', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hidden', dur:(P,E)=>1+h(E), party:true, radius:1},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
       txt:(P,E)=>`You and an ally beside you are Hidden ${1+h(E)}; both heroes heal 1 at the start of each turn for 2 rounds.` },
     'A mammal that lays eggs, and guards them.');
@@ -1991,7 +1991,7 @@
     { n:'Hang', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'reveal', radius:2, dur:1},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Slip ${1+P} and hang on the wind: see within 2, and your next hit this turn deals +1.` },
-    { n:'Hold the Wind', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Hold the Wind', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hover', dur:(P,E)=>1+E},{v:'reveal', radius:(P,E)=>2+E, dur:1}],
       txt:(P,E)=>`Hover for ${1+E} rounds: immune to hazards, traps and push/pull, and mint 1 AP each turn; see within ${2+E}.` },
     'Perfectly still in a gale.');
@@ -2087,7 +2087,7 @@
     { n:'Dance', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>1+P, uses:1, dur:2, target:'ally'},{v:'shield', val:1, dur:1, party:true}],
       txt:(P,E)=>`Dance for your partner: their next hit deals +${1+P}, and both heroes hold Shield 1 this round.` },
-    { n:'Pair Dance', ap:1, el:1, cd:3, dur:0, tgt:'party',
+    { n:'Pair Dance', ap:0, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'cleanse', party:true},{v:'heal', n:(P,E)=>1+E, party:true},{v:'empower', val:1, uses:1, dur:2, party:true}],
       txt:(P,E)=>`Both heroes shake off Anchored and Weakened, heal ${1+E}, and deal +1 on their next hit.` },
     'Bow, leap, toss a stick, bow again.');
@@ -2129,7 +2129,7 @@
     { n:'Colony', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>1+h(P), dur:1, party:true},{v:'heal', n:1, target:'ally'}],
       txt:(P,E)=>`Both heroes hold Shield ${1+h(P)} this round, and your ally heals 1.` },
-    { n:'Rookery Watch', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Rookery Watch', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'regen', val:1, dur:2, party:true},{v:'reveal', radius:(P,E)=>1+E, dur:1}],
       txt:(P,E)=>`Someone is always watching: see everything within ${1+E} this round, and both heroes heal 1 at the start of each turn for 2 rounds.` },
     'A hundred nests in one tree, and every one awake.');
@@ -2189,7 +2189,7 @@
     { n:'Read the Signs', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reroll', n:(P,E)=>1+h(P)},{v:'reveal', radius:2, dur:1}],
       txt:(P,E)=>`Reroll up to ${1+h(P)} banked dice, and see within 2.` },
-    { n:'Write It Down', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Write It Down', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'draw', face:'T', val:1},{v:'reroll', n:1},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
       txt:(P,E)=>`Draw a Time die from your pool and reroll 1 banked die; the next hit on you is ${1+E} less.` },
     'The bird of the scribes, in the oldest stories.');
@@ -2241,7 +2241,7 @@
     { n:'Rest', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Stand on one leg: heal ${1+P}, and hold Shield 1 this round.` },
-    { n:'Long Rest', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Long Rest', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
       txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds, and hold Shield ${1+h(E)} for 2 rounds.` },
     'Half the body asleep, and it never falls over.');
@@ -2273,7 +2273,7 @@
     { n:'Feed', ap:1, el:0, cd:1, dur:0, tgt:'ally',
       fx:[{v:'heal', n:(P,E)=>2+P, target:'ally'}],
       txt:(P,E)=>`Your ally heals ${2+P}.` },
-    { n:'Nourish', ap:1, el:1, cd:4, dur:0, tgt:'ally',
+    { n:'Nourish', ap:0, el:1, cd:4, dur:0, tgt:'ally',
       fx:[{v:'heal', n:(P,E)=>2+E, target:'ally'},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'},{v:'cleanse', party:true}],
       txt:(P,E)=>`Your ally heals ${2+E} and gains 1 AP next turn; both heroes shake off Anchored and Weakened.` },
     'Both parents make it, and it is red.');
@@ -2337,7 +2337,7 @@
     { n:'Catch', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1},{v:'heal', n:1}],
       txt:(P,E)=>`Melee ${1+P} and heal 1; there is room for more: your next hit this turn deals +1.` },
-    { n:'Ten Fish', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Ten Fish', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'heal', n:(P,E)=>1+E, party:true},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'}],
       txt:(P,E)=>`Share the catch: both heroes heal ${1+E}, and your ally gains 1 AP next turn.` },
     'A spiny tongue holds the first fish while it catches the tenth.');
@@ -2500,7 +2500,7 @@
     { n:'Stash', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
       txt:(P,E)=>`Stash something for later: gain 1 AP next turn, and hold Shield ${1+h(P)} this round.` },
-    { n:'Dig It Up', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Dig It Up', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'draw', face:'T', val:1},{v:'reroll', n:(P,E)=>1+h(E)},{v:'heal', n:1}],
       txt:(P,E)=>`Draw a Time die from your pool, reroll up to ${1+h(E)} banked dice, and heal 1.` },
     'A hundred hiding places, and it remembers every one.');
@@ -2592,9 +2592,9 @@
     { n:'Toss', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'heal', n:1, target:'ally'}],
       txt:(P,E)=>`Toss fruit: a foe within 3 takes ${1+P}, and your ally catches the next one and heals 1.` },
-    { n:'Catch!', ap:1, el:1, cd:3, dur:0, tgt:'party',
-      fx:[{v:'heal', n:(P,E)=>1+E, target:'ally'},{v:'mint', face:'AP', n:1, target:'ally'},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
-      txt:(P,E)=>`Throw your ally a fruit: they heal ${1+E}, gain 1 AP to spend this turn, and their next hit deals +1.` },
+    { n:'Catch!', ap:0, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'heal', n:(P,E)=>1+E, target:'ally'},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Throw your ally a fruit: they heal ${1+E}, and their next hit deals +1.` },
     'Up, back, open, gone.');
   K(['toucan'],'tou_hop','Canopy Hop','S',0,
     { n:'Hop', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
@@ -2608,7 +2608,7 @@
     { n:'Shed Heat', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Shed heat through your bill: heal ${1+P}, and hazards can't touch you this round.` },
-    { n:'Radiator', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Radiator', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'hazardImmune', dur:2},{v:'shield', val:1, dur:2}],
       txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; ignore hazards and hold Shield 1 for 2 rounds.` },
     'The bill is a radiator, and the toucan the engine.');
@@ -2650,15 +2650,15 @@
     { n:'Blur', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
       txt:(P,E)=>`Wings to a blur: gain 1 AP next turn, and the next hit on you is ${1+h(P)} less.` },
-    { n:'Overdrive', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'mint', face:'AP', n:(P,E)=>1+h(E)},{v:'hasten', n:1}],
-      txt:(P,E)=>`Gain ${1+h(E)} AP to spend this turn, and your track slides 1 extra.` },
+    { n:'Overdrive', ap:0, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'mint', face:'AP', n:(P,E)=>h(E)},{v:'hasten', n:1}],
+      txt:(P,E)=>`${E>=2?`Gain ${h(E)} AP to spend this turn, and your`:'Your'} track slides 1 extra.` },
     'Seventy beats a second, all day.');
   K(['hummingbird'],'hmb_torpor','Night Torpor','T',0,
     { n:'Slow Down', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+P},{v:'rest'}],
       txt:(P,E)=>`Heal ${2+P} and go still (no further actions with this hero this turn).` },
-    { n:'Deep Torpor', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Deep Torpor', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:(P,E)=>1+h(E), dur:2},{v:'shield', val:(P,E)=>1+E, dur:1},{v:'hidden', dur:1}],
       txt:(P,E)=>`Go cold and still: heal ${1+h(E)} at the start of each turn for 2 rounds, Shield ${1+E} this round, and Hidden 1.` },
     'At night its heart slows from a thousand beats to fifty.');
@@ -2682,7 +2682,7 @@
     { n:'Sip', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Sip nectar: heal ${1+P}, and your next hit this turn deals +1.` },
-    { n:'Sugar High', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Sugar High', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'draw', face:'C', val:1},{v:'heal', n:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
       txt:(P,E)=>`Draw a Charge die from your pool, heal 1, and your next hit deals +${1+E}.` },
     'Half its weight in sugar every day.');
@@ -2716,7 +2716,7 @@
     { n:'Sweep', ap:1, el:0, cd:1, dur:0, tgt:'foe_adj_all',
       fx:[{v:'strike', kind:'area', dmg:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Swing the train: every foe beside you takes ${1+h(P)}.` },
-    { n:'Great Sweep', ap:1, el:1, cd:3, dur:0, tgt:'foe_adj_all',
+    { n:'Great Sweep', ap:0, el:1, cd:3, dur:0, tgt:'foe_adj_all',
       fx:[{v:'strike', kind:'area', dmg:(P,E)=>1+E},{v:'force', kind:'push', n:1, area:true, radius:1}],
       txt:(P,E)=>`Every foe beside you takes ${1+E} and is swept back 1.` },
     'Six feet of tail, and it is heavier than it looks.');
@@ -2797,7 +2797,7 @@
     { n:'Swallow Stones', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'anchor', who:'self', dur:1}],
       txt:(P,E)=>`Swallow a few stones: heal ${1+P}, and you are too heavy to push or pull this round.` },
-    { n:'Grind', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Grind', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:2}],
       txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds, and you can't be Weakened or Rooted for 2 rounds.` },
     'A kilo of pebbles inside, grinding.');
@@ -2962,7 +2962,7 @@
     { n:'Squirt', ap:1, el:0, cd:2, dur:0, tgt:'foe_r2',
       fx:[{v:'weaken', val:(P,E)=>1+P, dur:1},{v:'force', kind:'push', n:1}],
       txt:(P,E)=>`Squirt blood from your eye at a foe within 2: it reels back 1 and is Weakened ${1+P} this round.` },
-    { n:'Foul Taste', ap:1, el:1, cd:4, dur:0, tgt:'foe_r2',
+    { n:'Foul Taste', ap:0, el:1, cd:4, dur:0, tgt:'foe_r2',
       fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'dot', kind:'foul', val:1, dur:2},{v:'force', kind:'push', n:2}],
       txt:(P,E)=>`Squirt foul blood at a foe within 2: it reels back 2, is Weakened ${1+h(E)} for 2 rounds, and takes 1 at the start of its next 2 turns.` },
     'A metre of blood, from the eye, and it tastes terrible.');
@@ -2986,7 +2986,7 @@
     { n:'Lick Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'engine', kind:'ap', val:1, dur:1}],
       txt:(P,E)=>`Eat ants by the hundred: heal ${1+P}, and gain 1 AP next turn.` },
-    { n:'Whole Nest', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Whole Nest', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:2}],
       txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; the stings don't bother you: you can't be Weakened or Rooted for 2 rounds.` },
     'Harvester ants, thousands a day, venom and all.');
@@ -3160,7 +3160,7 @@
     { n:'Slip In', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'hidden', dur:1},{v:'heal', n:1}],
       txt:(P,E)=>`Slip into the water ${1+P} away: Hidden 1, and heal 1.` },
-    { n:'Home Pond', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Home Pond', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(E), party:true},{v:'cleanse', party:true}],
       txt:(P,E)=>`Back to the pond where you hatched: both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for ${2+h(E)} rounds.` },
     'It finds its way home to the pond it was born in.');
@@ -3194,7 +3194,7 @@
     { n:'Croak for Rain', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'heal', n:(P,E)=>1+h(P), party:true},{v:'hazardImmune', dur:1, party:true}],
       txt:(P,E)=>`Call the rain: both heroes heal ${1+h(P)} and ignore hazards this round.` },
-    { n:'Downpour', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Downpour', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>1+E, party:true},{v:'reveal', radius:2, dur:1},{v:'empower', val:1, uses:1, dur:2, party:true}],
       txt:(P,E)=>`Bring the downpour: both heroes heal 1 at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'} and deal +1 on their next hit; see within 2.` },
     'It sings before the storm, every time.');
@@ -3265,7 +3265,7 @@
     { n:'Leap the Falls', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
       fx:[{v:'climb', reach:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Leap up the falls onto any node within ${1+P}, height included; your next hit this turn deals +1.` },
-    { n:'Become the Dragon', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Become the Dragon', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'morph', bonus:(P,E)=>1+h(E), reach:0, dur:(P,E)=>1+E},{v:'heal', n:(P,E)=>1+E}],
       txt:(P,E)=>`For ${1+E} rounds your strikes deal +${1+h(E)}; heal ${1+E}.` },
     'The one that leaps the falls at the Dragon Gate becomes a dragon.');
@@ -3289,7 +3289,7 @@
     { n:'Still Water', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'heal', n:(P,E)=>1+h(P), party:true},{v:'reroll', n:1}],
       txt:(P,E)=>`Still the water: both heroes heal ${1+h(P)}, and reroll 1 banked die.` },
-    { n:'Garden Pond', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Garden Pond', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(E), party:true},{v:'cleanse', party:true}],
       txt:(P,E)=>`Both heroes shake off Anchored and Weakened and heal 1 at the start of each turn for ${2+h(E)} rounds.` },
     'Watching koi is the point of the pond.');
@@ -3297,7 +3297,7 @@
     { n:'Gleam', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'},{v:'shield', val:1, dur:1, party:true}],
       txt:(P,E)=>`Catch the light: your ally's next hit deals +${1+h(P)}, and both heroes hold Shield 1 this round.` },
-    { n:'Lucky Fish', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Lucky Fish', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:1, target:'ally'},{v:'reroll', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:2, party:true}],
       txt:(P,E)=>`For luck: your ally gains 1 AP next turn, you reroll up to ${1+h(E)} banked dice, and both heroes' next hit deals +1.` },
     'Gold for luck, and it is lucky.');
@@ -3339,7 +3339,7 @@
     { n:'Step Up', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'empower', val:(P,E)=>1+P, uses:1, dur:2},{v:'heal', n:1}],
       txt:(P,E)=>`Take the lead: heal 1, and your next hit within 2 rounds deals +${1+P}.` },
-    { n:'New Leader', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'New Leader', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, target:'ally'},{v:'engine', kind:'ap', val:1, dur:1, target:'ally'},{v:'heal', n:1, target:'ally'}],
       txt:(P,E)=>`Hand the lead to your partner: they heal 1, gain 1 AP next turn, and their next hit deals +${1+E}.` },
     'When the leader goes, the next in line becomes it.');
@@ -3389,7 +3389,7 @@
     { n:'Settle In', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P},{v:'heal', n:1}],
       txt:(P,E)=>`Move ${1+P} into new water, and heal 1.` },
-    { n:'Take Over', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Take Over', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'statusImmune', dur:2},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
       txt:(P,E)=>`Make it yours: gain 1 AP at the start of your next turn; Shield ${1+h(E)} and no Weaken or Root for 2 rounds.` },
     'No predators here. Not yet.');
@@ -3415,7 +3415,7 @@
     { n:'Hold On', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Wrap your tail round something: Shield ${1+P} this round, and nothing can push or pull you.` },
-    { n:'Moored', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'Moored', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'anchor', who:'self', dur:2},{v:'shield', val:(P,E)=>1+E, dur:2},{v:'engine', kind:'regen', val:1, dur:2}],
       txt:(P,E)=>`Moor yourself: for 2 rounds hold Shield ${1+E}, heal 1 at the start of each turn, and nothing can push or pull you.` },
     'A tail that grips like a hand.');
@@ -3431,7 +3431,7 @@
     { n:'Weed', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:1},{v:'heal', n:(P,E)=>1+h(P)}],
       txt:(P,E)=>`Look like weed: Hidden 1, and heal ${1+h(P)}.` },
-    { n:'Grow Filaments', ap:1, el:1, cd:4, dur:0, tgt:'party',
+    { n:'Grow Filaments', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hidden', dur:(P,E)=>1+h(E), party:true, radius:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:3}],
       txt:(P,E)=>`You and an ally beside you are Hidden ${1+h(E)}; your next hit within 3 rounds deals +${1+E}.` },
     'It grows skin flaps to match the weed it lives in.');
@@ -3732,7 +3732,7 @@
     { n:'Roll', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'force', kind:'push', n:1, area:true, radius:1},{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Shove your ball through: foes beside you are pushed back 1, then you roll ${1+P}.` },
-    { n:'By the Stars', ap:1, el:1, cd:4, dur:0, tgt:'self',
+    { n:'By the Stars', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>3+E, dur:1},{v:'engine', kind:'ap', val:1, dur:1},{v:'hazardImmune', dur:1}],
       txt:(P,E)=>`Steer by the stars: see within ${3+E}, gain 1 AP at the start of your next turn, and hazards can't touch you this round.` },
     'It rolls in a straight line, steering by the Milky Way.');
@@ -3766,7 +3766,7 @@
     { n:'Flash Eyes', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
       txt:(P,E)=>`Open your wings on two great eyes: foes beside you are Weakened 1, and the next hit on you is ${1+h(P)} less.` },
-    { n:'Owl Face', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Owl Face', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'force', kind:'push', n:1, area:true, radius:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2, area:'adj'},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
       txt:(P,E)=>`Show the face of an owl: foes within ${1+h(E)} flinch back 1, foes beside you are Weakened 1 for 2 rounds, and your ally's next hit deals +1.` },
     'Two eyes that are not eyes, and they work anyway.');
@@ -3782,7 +3782,7 @@
     { n:'Sip', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P}],
       txt:(P,E)=>`Uncoil your tongue and drink: heal ${1+P}.` },
-    { n:'Nectar Share', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Nectar Share', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>1+E, party:true},{v:'cleanse'}],
       txt:(P,E)=>`Find a flower for two: both heroes heal 1 at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}, and you shake off every condition.` },
     'A drinking straw, coiled like a watch spring.');
@@ -3808,7 +3808,7 @@
     { n:'Blink', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true}],
       txt:(P,E)=>`Flash your light: see within ${2+P}, and Mark the nearest foe (the next hit on it deals +2).` },
-    { n:'Dazzle', ap:1, el:1, cd:3, dur:0, tgt:'self',
+    { n:'Dazzle', ap:0, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2, area:'adj'},{v:'reveal', radius:(P,E)=>2+E, dur:1}],
       txt:(P,E)=>`Flare bright: foes beside you are Weakened ${1+h(E)} for 2 rounds, and you see within ${2+E}.` },
     'A light with no heat in it.');
