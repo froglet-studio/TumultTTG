@@ -108,7 +108,7 @@
           break;
         }
         case 'binder': {
-          const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero' && !st(c).Rooted);
+          const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero' && !T.isAnchored(c));
           const adj = adjacentTargets(m, e);
           if (lt.length) setI('bind', lt[0], `(${dmgOf(e, A.bind)}, roots 2)`);
           else if (adj.length) setI('drain', adj[0], `(${dmgOf(e, A.drain)}, heals 2)`);
@@ -177,10 +177,10 @@
 
   /* ───────────────────────────── EXECUTION ───────────────────────────── */
   function canMove(e) {
-    return !(st(e).Anchored || st(e).Held || st(e).Slow || e.anchoredPerm);
+    return !T.isAnchored(e);
   }
   function canBlink(e) {
-    return canMove(e) && !st(e).NoTele;
+    return canMove(e);
   }
   function approach(m, e, targetNode, steps) {
     if (!canMove(e) || steps <= 0) return 0;
@@ -253,9 +253,8 @@
       if (ab.push) T.pushAway(m, e, t, ab.push);
       if (ab.anchor) {
         if (!st(t).StatusImmune) {
-          st(t).Rooted = { t: ab.anchor };
-          T.say(m, `${t.name} is rooted for ${ab.anchor}.`, 'enemy');
-          m.fx.push({ t: 'state', ent: t.uid, name: 'Rooted' });
+          T.anchorEnt(m, t, ab.anchor);
+          T.say(m, `${t.name} is Anchored for ${ab.anchor}.`, 'enemy');
         }
       }
       if (ab.weaken) {
@@ -513,7 +512,7 @@
       const r = T.playFace(m, h, best.cid, best.fk, best.ctx);
       if (r.ok) return true;
     }
-    if (T.apValue(h) >= 1 && !st(h).Rooted && !st(h).SlowSelf) {
+    if (T.apValue(h) >= 1 && !T.isAnchored(h)) {
       const opts = T.reachableWalk(m, h, Math.min(3, T.apValue(h)), false);
       if (!opts.length) return false;
       const nxt = opts.sort((a, b) => B.dist(m.board, a, goal.node, true) - B.dist(m.board, b, goal.node, true))[0];
@@ -720,7 +719,7 @@
         if (threatOnMe(m, h) >= 4 && !st(h).Shield && T.useBasic(m, h, 'brace').ok) continue;
         // 5. move toward the objective, else toward the nearest foe
         if (goal && tryMoveToward(m, h, goal)) continue;
-        if (T.apValue(h) >= 1 && !st(h).Rooted && !st(h).SlowSelf) {
+        if (T.apValue(h) >= 1 && !T.isAnchored(h)) {
           const foes = T.liveEnemies(m);
           if (foes.length) {
             const target = foes.sort(

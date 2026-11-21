@@ -162,7 +162,7 @@ test('height: Weightless and a climbing form walk up to a ledge; nobody else doe
   );
 });
 
-test('a Harrier that is Anchored, Slowed or held cannot blink — and still lances a hero beside it', () => {
+test('a Harrier that is Anchored cannot blink — and still lances a hero beside it', () => {
   const B = T.Board;
   // one Harrier, ready to lance, either across the board from the squad or beside a hero
   const harrierTurn = (state, beside) => {
@@ -184,11 +184,7 @@ test('a Harrier that is Anchored, Slowed or held cannot blink — and still lanc
     return { moved: e.pos !== from, hurt: m.heroes.reduce((s, x) => s + x.hp, 0) < hpBefore };
   };
   assert.deepEqual(harrierTurn({}, false), { moved: true, hurt: true }, 'free, it blinks in and strikes');
-  for (const [name, state] of [
-    ['Anchored', { Anchored: { t: 2 } }],
-    ['Slowed', { Slow: { t: 2 } }],
-    ['held by a Counted Trap', { Anchored: { t: 2 }, NoTele: { t: 2 } }],
-  ]) {
+  for (const [name, state] of [['Anchored', { Anchored: { t: 2 } }]]) {
     assert.deepEqual(harrierTurn(state, false), { moved: false, hurt: false }, `${name}: no blink`);
     assert.deepEqual(harrierTurn(state, true), { moved: false, hurt: true }, `${name}: it still acts`);
   }

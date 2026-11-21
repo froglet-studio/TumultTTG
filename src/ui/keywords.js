@@ -70,7 +70,7 @@
       icon: 'kw.anchor',
       tone: 'bad',
       state: 'Anchored',
-      tip: 'Anchored: cannot be pushed or pulled. An anchored foe cannot walk or blink; a hero who walks lets go. It still acts.',
+      tip: 'Anchored: nothing moves it. It cannot be pushed or pulled, and cannot walk or blink. It still acts.',
     },
     {
       id: 'root',
@@ -78,7 +78,7 @@
       icon: 'kw.root',
       tone: 'bad',
       state: 'Rooted',
-      tip: 'Rooted: cannot walk while it lasts. It still acts.',
+      tip: 'Rooted: Anchored (since 2.91 one keyword): nothing moves it, its own walking included. It still acts.',
     },
     {
       id: 'wound',
@@ -288,7 +288,7 @@
       icon: 'kw.slow',
       tone: 'bad',
       state: 'Slow',
-      tip: 'Slow: cannot move while it lasts. It still acts.',
+      tip: 'Slow: Anchored (since 2.91 one keyword): nothing moves it, its own walking included. It still acts.',
     },
   ];
   U.KEYWORDS = K;

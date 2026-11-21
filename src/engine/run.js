@@ -915,7 +915,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 22;
+  T.SAVE_VERSION = 23;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1196,6 +1196,24 @@
         rw.boonPicked = (r.heroes || []).map(() => true);
       }
       r.v = 22;
+    },
+    // 2.91 makes anchor, held, rooted, slow and no-teleport one keyword, Anchor: a unit carries `Anchored` alone.
+    // Each of the old states becomes Anchored for as long as the longest of them.
+    22(r) {
+      const OLD = ['Held', 'Rooted', 'Slow', 'SlowSelf', 'NoTele'];
+      const units = (r.heroes || []).concat((r.mission && r.mission.enemies) || []);
+      for (const u of units) {
+        const s = u && u.states;
+        if (!s) continue;
+        let t = s.Anchored ? s.Anchored.t : 0;
+        for (const k of OLD)
+          if (s[k]) {
+            t = Math.max(t, s[k].t || 1);
+            delete s[k];
+          }
+        if (t > 0) s.Anchored = { t };
+      }
+      r.v = 23;
     },
   };
   T.deserializeRun = function (json) {

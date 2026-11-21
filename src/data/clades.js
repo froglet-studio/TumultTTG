@@ -231,7 +231,7 @@
       txt:(P,E)=>`The next hit on you is ${1+h(P)} less, and hazards don't touch you this round.` },
     { n:'Nine Lives', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'statusImmune', dur:(P,E)=>1+E},{v:'hazardImmune', dur:(P,E)=>1+E},{v:'heal', n:1}],
-      txt:(P,E)=>`For ${1+E} rounds no foe can Weaken or Root you and hazards don't touch you; heal 1.` },
+      txt:(P,E)=>`For ${1+E} rounds no foe can Weaken or Anchor you and hazards don't touch you; heal 1.` },
     'Whatever way up you are dropped.', 'Cats');
 
   // Tufted Ears: the lynx and the caracal, ears tipped with black to catch sound
@@ -367,11 +367,11 @@
     'Claws that never sheathe: cleats, not knives.');
   K(['cheetah'],'che_trip','Trip','M',0,
     { n:'Trip', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'slow', dur:1}],
-      txt:(P,E)=>`Hook a leg: melee ${1+P}, and it cannot move next round.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'anchor', who:'foe', dur:1}],
+      txt:(P,E)=>`Hook a leg: melee ${1+P}, and it is Anchored 1.` },
     { n:'Tumble', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'slow', dur:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`Melee ${2+E}; it cannot move and is Weakened 1 for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Melee ${2+E}; it is Anchored and Weakened 1 for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
     'A swipe at the back leg, at speed.');
 
   /* ───────────────────────── DOGS AND HYENAS ─────────────────────────
@@ -421,8 +421,8 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:1}],
       txt:(P,E)=>`Melee ${2+P}, and it is Anchored 1.` },
     { n:'Hold Down', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E), held:true},{v:'weaken', val:1, dur:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`Melee ${1+E}; hold it down: Anchored, unable to blink, and Weakened 1, for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Melee ${1+E}; hold it down: Anchored and Weakened 1, for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
     'Paws on its back, all your weight behind them.', 'Dogs and hyenas');
 
   // the two foxes
@@ -554,7 +554,7 @@
       txt:(P,E)=>`Shake off Anchored and Weakened, ignore hazards for 2 rounds, and heal ${1+h(P)}.` },
     { n:'Make Do', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; no foe can Weaken or Root you for ${1+E}.` },
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; no foe can Weaken or Anchor you for ${1+E}.` },
     'Desert, forest, city. Same coyote.');
   K(['coyote'],'coy_lope','Lope Feint','S',0,
     { n:'Lope', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -693,10 +693,10 @@
   K(['badger'],'bad_venom','Venom Shrug','T',0,
     { n:'Shrug', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'cleanse'},{v:'heal', n:(P,E)=>1+h(P)},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Shake off Anchored and Weakened, heal ${1+h(P)}, and no foe can Weaken or Root you this round.` },
+      txt:(P,E)=>`Shake off Anchored and Weakened, heal ${1+h(P)}, and no foe can Weaken or Anchor you this round.` },
     { n:'Sleep It Off', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+E},{v:'statusImmune', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`Heal ${2+E}; no foe can Weaken or Root you for ${1+E} rounds.` },
+      txt:(P,E)=>`Heal ${2+E}; no foe can Weaken or Anchor you for ${1+E} rounds.` },
     'Bitten. Shrugs. Carries on.');
   K(['badger'],'bad_dig','Burrow In','M',0,
     { n:'Dig', ap:1, el:0, cd:2, dur:0, tgt:'self',
@@ -728,15 +728,15 @@
       txt:(P,E)=>`Plant your feet: nothing can push or pull you this round, and your next strike deals +${1+P}.` },
     { n:'No Retreat', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'statusImmune', dur:(P,E)=>1+E},{v:'thorns', val:(P,E)=>1+h(E), dur:(P,E)=>1+E},{v:'anchor', who:'self', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`For ${1+E} rounds nothing can Weaken, Root, push or pull you, and a foe that hits you in melee takes ${1+h(E)}.` },
+      txt:(P,E)=>`For ${1+E} rounds nothing can Weaken or Anchor you, or push or pull you, and a foe that hits you in melee takes ${1+h(E)}.` },
     'There is no other direction.');
   K(['badger'],'bad_bite','Bite Hold','M',0,
     { n:'Bite', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'wound', n:2, kind:'crush'}],
       txt:(P,E)=>`Melee ${1+P}, and don't let go: Wounded 2.` },
     { n:'Lockjaw', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'anchor', who:'foe', dur:2, held:true},{v:'wound', n:(P,E)=>2+h(E), kind:'crush'}],
-      txt:(P,E)=>`Melee ${2+E} and lock on: it is Anchored and can't blink for 2 rounds, and is Wounded ${2+h(E)}.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'anchor', who:'foe', dur:2},{v:'wound', n:(P,E)=>2+h(E), kind:'crush'}],
+      txt:(P,E)=>`Melee ${2+E} and lock on: it is Anchored for 2 rounds, and is Wounded ${2+h(E)}.` },
     'Lets go when it decides to.');
 
   // Red panda: Musk, Dense Fur, Opposable Grip, Headfirst Descent, and these five
@@ -797,7 +797,7 @@
       txt:(P,E)=>`Shield ${2+h(P)} this round.` },
     { n:'Thick Layer', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>2+E, dur:2},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Shield ${2+E} for 2 rounds, and you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`Shield ${2+E} for 2 rounds, and you can't be Weakened or Anchored by a foe this round.` },
     'Warm inside, whatever the water.', 'Sea mammals');
   K(SEA,'sea_breath','Breath Hold','T',0,
     { n:'Hold', ap:1, el:0, cd:2, dur:0, tgt:'self',
@@ -913,7 +913,7 @@
       txt:(P,E)=>`Melee ${2+P}; a foe left at ${2+P} or less is finished.` },
     { n:'Top of the Sea', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E, pierce:true},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Melee ${4+E} that ignores Shield, and you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`Melee ${4+E} that ignores Shield, and you can't be Weakened or Anchored by a foe this round.` },
     'Nothing in the sea hunts an orca.');
   K(['orca'],'orc_beach','Beach Charge','M',0,
     { n:'Ride the Surf', ap:1, el:0, cd:2, dur:0, tgt:'node_move',
@@ -1050,7 +1050,7 @@
       txt:(P,E)=>`Shield ${2+h(P)} and ignore hazards this round.` },
     { n:'Winter Fleece', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true, allyRange:1},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`You and an ally beside you hold Shield ${1+E} for 2 rounds; you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+E} for 2 rounds; you can't be Weakened or Anchored by a foe this round.` },
     'Wool that keeps out a mountain night.');
   K(['yak'],'yak_bearer','Pack Bearer','C',0,
     { n:'Carry', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
@@ -1092,7 +1092,7 @@
       txt:(P,E)=>`Melee ${3+P}, and push it 1.` },
     { n:'Plough the Snow', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E},{v:'force', kind:'push', n:(P,E)=>1+h(E)},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Melee ${4+E}, push it ${1+h(E)}, and you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`Melee ${4+E}, push it ${1+h(E)}, and you can't be Weakened or Anchored by a foe this round.` },
     'Its head is a snowplough, and so is the rest of it.');
 
   // Oryx
@@ -1170,7 +1170,7 @@
       txt:(P,E)=>`Melee ${3+P}, and hold Shield 1 this round.` },
     { n:'Trample', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E},{v:'anchor', who:'foe', dur:1},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Melee ${4+E}, pin it (Anchored 1), and you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`Melee ${4+E}, pin it (Anchored 1), and you can't be Weakened or Anchored by a foe this round.` },
     'It does not run from wolves. It waits for them.');
 
   // Deer
@@ -1382,7 +1382,7 @@
       txt:(P,E)=>`Move ${1+P}; any foe that hits you in melee this round takes 1.` },
     { n:'Unbothered', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Move ${2+E}, straight past foes, and you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`Move ${2+E}, straight past foes, and you can't be Weakened or Anchored by a foe this round.` },
     'In no hurry. Nothing makes it hurry.');
 
   // Brown hare
@@ -1464,7 +1464,7 @@
       txt:(P,E)=>`Curl into a ball: Shield ${2+P} this round, nothing can push or pull you, and any foe that hits you in melee takes 1.` },
     { n:'Ball', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>3+E, dur:2},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Shield ${3+E} for 2 rounds, and you can't be Weakened or Rooted for 2.` },
+      txt:(P,E)=>`Shield ${3+E} for 2 rounds, and you can't be Weakened or Anchored by a foe for 2.` },
     'Every soft part tucked away.', 'Armoured and slow');
   K(ANTEATERS,'arm_dig','Dig Claws','M',0,
     { n:'Rip', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -1488,7 +1488,7 @@
       txt:(P,E)=>`Shed Anchored, Weakened and damage over time, and heal ${1+P}.` },
     { n:'Immune', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'cleanse', party:true},{v:'heal', n:(P,E)=>1+E, party:true},{v:'statusImmune', dur:(P,E)=>1+E}],
-      txt:(P,E)=>`Both heroes shed Anchored, Weakened and damage over time and heal ${1+E}; you can't be Weakened or Rooted for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
+      txt:(P,E)=>`Both heroes shed Anchored, Weakened and damage over time and heal ${1+E}; you can't be Weakened or Anchored by a foe for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
     'A snakebite slows it down for an hour.');
 
   // Sloth
@@ -1505,8 +1505,8 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'anchor', who:'foe', dur:1}],
       txt:(P,E)=>`Melee ${3+P}, and hook it: Anchored 1.` },
     { n:'Never Let Go', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E), held:true},{v:'weaken', val:1, dur:2}],
-      txt:(P,E)=>`Melee ${3+E}; it is held, Anchored ${1+h(E)}, and Weakened 1 for 2 rounds.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:2}],
+      txt:(P,E)=>`Melee ${3+E}; it is Anchored ${1+h(E)} and Weakened 1 for 2 rounds.` },
     'Claws that lock shut on their own.');
   K(['sloth'],'slo_unhurried','Unhurried','T',0,
     { n:'Take Your Time', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -1638,7 +1638,7 @@
       txt:(P,E)=>`Shed Anchored, Weakened and damage over time; Shield ${1+h(P)} this round, and heal 1.` },
     { n:'Stinging Shield', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'counter', dmg:(P,E)=>2+E, push:0, dur:2},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`For 2 rounds you can't be Weakened or Rooted, and the next foe to hit you in melee takes ${2+E}.` },
+      txt:(P,E)=>`For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes ${2+E}.` },
     'Ants crawl under the scales, and it lets them.');
 
   // Hedgehog
@@ -1672,7 +1672,7 @@
       txt:(P,E)=>`Melee ${2+P}; it is Weakened 1 for 2 rounds.` },
     { n:'Self-Anoint', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes ${1+E}, and you can't be Weakened or Rooted.` },
+      txt:(P,E)=>`Spread a bitter froth on your spines: for 2 rounds any foe that hits you in melee takes ${1+E}, and you can't be Weakened or Anchored by a foe.` },
     'It chews something bitter and spreads the foam on its spines. Nobody knows why.');
   K(['hedgehog'],'heh_forage','Night Forage','C',0,
     { n:'Beetle Hunt', ap:1, el:0, cd:2, dur:0, tgt:'self',
@@ -1741,7 +1741,7 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Melee ${2+P}; it is Weakened 1 this round.` },
     { n:'Clinch', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'anchor', who:'foe', dur:1, held:true},{v:'empower', val:(P,E)=>1+E, uses:1, dur:1}],
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'anchor', who:'foe', dur:1},{v:'empower', val:(P,E)=>1+E, uses:1, dur:1}],
       txt:(P,E)=>`Melee ${2+E} and hold it (Anchored 1); your next hit this turn deals +${1+E}.` },
     'Forearms up, chest out.');
   K(['kangaroo'],'kan_prop','Tail Prop','T',0,
@@ -1750,7 +1750,7 @@
       txt:(P,E)=>`Brace on your tail: Shield ${2+h(P)} this round, and nothing can push or pull you.` },
     { n:'Five Legs', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'statusImmune', dur:2},{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2}],
-      txt:(P,E)=>`For 2 rounds you can't be Weakened or Rooted, and the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+      txt:(P,E)=>`For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
     'The tail takes its whole weight.');
   K(['kangaroo'],'kan_mob','Mob Lead','C',0,
     { n:'Thump the Mob', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
@@ -1950,7 +1950,7 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'anchor', who:'foe', dur:1},{v:'anchor', who:'self', dur:1}],
       txt:(P,E)=>`Melee ${3+P} and lock on: it and you are both Anchored this round.` },
     { n:'Death Grip', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E), held:true},{v:'wound', n:2, kind:'grip'}],
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'wound', n:2, kind:'grip'}],
       txt:(P,E)=>`Melee ${3+E} and do not let go: it is Anchored ${1+h(E)}, and is Wounded 2.` },
     'A grip that does not open.');
   K(['eagle'],'eag_scream','Eagle Scream','C',0,
@@ -2313,7 +2313,7 @@
       txt:(P,E)=>`Shield ${1+P} this round, and hazards can't touch you.` },
     { n:'Sealed Coat', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>1+E, dur:2},{v:'statusImmune', dur:2},{v:'heal', n:1}],
-      txt:(P,E)=>`Shield ${1+E} for 2 rounds; you can't be Weakened or Rooted for 2 rounds, and heal 1.` },
+      txt:(P,E)=>`Shield ${1+E} for 2 rounds; you can't be Weakened or Anchored by a foe for 2 rounds, and heal 1.` },
     'Water runs off, and the cold with it.', 'Seabirds');
   K(SEABIRDS,'sea_salt','Salt Gland','T',0,
     { n:'Drink the Sea', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -2364,7 +2364,7 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Melee ${2+P}, and it is tangled in your pouch: Weakened 1 this round.` },
     { n:'Gulp', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E), held:true},{v:'heal', n:1}],
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'heal', n:1}],
       txt:(P,E)=>`Melee ${3+E} and hold it in your pouch: Anchored ${1+h(E)}; heal 1.` },
     'Three gallons of water and whatever was in it.');
   K(['pelican'],'pel_line','Fishing Line','C',0,
@@ -2573,10 +2573,10 @@
   K(['parrot'],'par_clay','Clay Lick','T',0,
     { n:'Lick', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Eat the bank's clay: heal ${1+P}, and you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`Eat the bank's clay: heal ${1+P}, and you can't be Weakened or Anchored by a foe this round.` },
     { n:'Settle the Stomach', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'cleanse', party:true},{v:'heal', n:(P,E)=>1+E, party:true},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Both heroes shake off Anchored and Weakened and heal ${1+E}; you can't be Weakened or Rooted for 2 rounds.` },
+      txt:(P,E)=>`Both heroes shake off Anchored and Weakened and heal ${1+E}; you can't be Weakened or Anchored by a foe for 2 rounds.` },
     'Clay first, then the bitter seeds.');
 
   // Toucan: Hollow Bones, Big Bill, and these seven
@@ -2723,10 +2723,10 @@
   K(['peacock'],'pea_snake','Snake Eater','M',0,
     { n:'Peck', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Melee ${2+P}; you can't be Weakened or Rooted this round.` },
+      txt:(P,E)=>`Melee ${2+P}; you can't be Weakened or Anchored by a foe this round.` },
     { n:'Venom Proof', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'cleanse'},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Melee ${3+E}, shake off Anchored and Weakened, and you can't be Weakened or Rooted for 2 rounds.` },
+      txt:(P,E)=>`Melee ${3+E}, shake off Anchored and Weakened, and you can't be Weakened or Anchored by a foe for 2 rounds.` },
     'It eats cobras, and shrugs off the bite.');
   K(['peacock'],'pea_roost','Jungle Roost','S',0,
     { n:'Flap Up', ap:1, el:0, cd:1, dur:0, tgt:'node_climb',
@@ -2799,7 +2799,7 @@
       txt:(P,E)=>`Swallow a few stones: heal ${1+P}, and you are too heavy to push or pull this round.` },
     { n:'Grind', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds, and you can't be Weakened or Rooted for 2 rounds.` },
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds, and you can't be Weakened or Anchored by a foe for 2 rounds.` },
     'A kilo of pebbles inside, grinding.');
   K(['ostrich'],'ost_nest','Nest Ring','T',0,
     { n:'Guard the Ring', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -2888,7 +2888,7 @@
       txt:(P,E)=>`Climb onto any node within ${1+P}, height included, and grip: nothing can push or pull you this round.` },
     { n:'Branch Hold', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'anchor', who:'self', dur:2},{v:'shield', val:(P,E)=>1+E, dur:2},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Hold on with all four feet and the tail: Shield ${1+E} for 2 rounds; nothing can push or pull you, Weaken you or Root you for 2 rounds.` },
+      txt:(P,E)=>`Hold on with all four feet and the tail: Shield ${1+E} for 2 rounds; nothing can push or pull you, Weaken you or Anchor you for 2 rounds.` },
     'Feet like tongs, and a tail that holds on by itself.');
   K(['chameleon'],'cha_sway','Slow Sway','T',0,
     { n:'Sway', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -2988,7 +2988,7 @@
       txt:(P,E)=>`Eat ants by the hundred: heal ${1+P}, and gain 1 AP next turn.` },
     { n:'Whole Nest', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; the stings don't bother you: you can't be Weakened or Rooted for 2 rounds.` },
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; the stings don't bother you: you can't be Weakened or Anchored by a foe for 2 rounds.` },
     'Harvester ants, thousands a day, venom and all.');
   K(['horned_lizard'],'hor_flat','Flatten','T',0,
     { n:'Flatten', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3036,7 +3036,7 @@
   // Crocodile: Solar Basking, Armoured Hide, Slow Heart, and these six
   K(['crocodile'],'cro_roll','Death Roll','M',2,
     { n:'Grab', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:1, held:true}],
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:1}],
       txt:(P,E)=>`Melee ${2+P}, and hold on: Anchored 1.` },
     { n:'Roll', ap:2, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E, pierce:true},{v:'weaken', val:(P,E)=>1+h(E), dur:2}],
@@ -3087,7 +3087,7 @@
   K(['tortoise'],'tor_shell','Shell','M',2,
     { n:'Shell Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>2+P, dur:1},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Shield ${2+P} this round, and you can't be Weakened or Rooted.` },
+      txt:(P,E)=>`Shield ${2+P} this round, and you can't be Weakened or Anchored by a foe.` },
     { n:'House on Your Back', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>3+E, dur:2},{v:'shield', val:1, dur:1, party:true, allyRange:1},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
       txt:(P,E)=>`Shield ${3+E} for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
@@ -3122,7 +3122,7 @@
       txt:(P,E)=>`Plod ${1+P}, and hold Shield 1 this round.` },
     { n:'Through Anything', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>2+E, noTrap:true},{v:'hazardImmune', dur:2},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`Plod ${2+E} through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Rooted.` },
+      txt:(P,E)=>`Plod ${2+E} through anything, setting off no traps; for 2 rounds ignore hazards, and you can't be Weakened or Anchored by a foe.` },
     'It goes where it is going, and it gets there.');
   /* ───────────────────────── AMPHIBIANS ─────────────────────────
      axolotl · newt · tree frog. The axolotl's Toxic Secretion and External Gills are every amphibian's; its
@@ -3146,7 +3146,7 @@
       txt:(P,E)=>`Wander ${1+P} through the leaf litter, setting off no traps; heal 1, and your next hit this turn deals +1.` },
     { n:'Years on Land', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'statusImmune', dur:2},{v:'empower', val:1, uses:1, dur:2}],
-      txt:(P,E)=>`Walk ${2+E}, past foes, bright and unbothered: you can't be Weakened or Rooted for 2 rounds, and your next hit deals +1.` },
+      txt:(P,E)=>`Walk ${2+E}, past foes, bright and unbothered: you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +1.` },
     'Bright orange, walking openly, because nothing wants to eat it.');
   K(['newt'],'new_belly','Warning Belly','C',0,
     { n:'Flash Belly', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3275,7 +3275,7 @@
       txt:(P,E)=>`Swim ${1+P} against the current; nothing can push or pull you this round.` },
     { n:'Never Turn Back', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'statusImmune', dur:2},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2}],
-      txt:(P,E)=>`Swim ${2+E}, past foes; you can't be Weakened or Rooted for 2 rounds, and your next hit deals +${1+h(E)}.` },
+      txt:(P,E)=>`Swim ${2+E}, past foes; you can't be Weakened or Anchored by a foe for 2 rounds, and your next hit deals +${1+h(E)}.` },
     'Upriver, always.');
   K(['koi'],'koi_shimmer','Shimmer Scales','C',0,
     { n:'Flash', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
@@ -3322,7 +3322,7 @@
   K(['clownfish'],'clo_mucus','Mucus Coat','T',0,
     { n:'Coat', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'hazardImmune', dur:2},{v:'statusImmune', dur:1},{v:'heal', n:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Rooted this round, and heal ${1+h(P)}.` },
+      txt:(P,E)=>`A coat the stings slide off: ignore hazards for 2 rounds, you can't be Weakened or Anchored by a foe this round, and heal ${1+h(P)}.` },
     { n:'Share the Coat', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hazardImmune', dur:(P,E)=>2+E},{v:'hazardImmune', dur:1, party:true},{v:'cleanse', party:true},{v:'shield', val:1, dur:1, party:true}],
       txt:(P,E)=>`Both heroes ignore hazards this round (you for ${2+E} rounds), shake off Anchored and Weakened, and hold Shield 1 this round.` },
@@ -3391,7 +3391,7 @@
       txt:(P,E)=>`Move ${1+P} into new water, and heal 1.` },
     { n:'Take Over', ap:0, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'ap', val:1, dur:1},{v:'statusImmune', dur:2},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
-      txt:(P,E)=>`Make it yours: gain 1 AP at the start of your next turn; Shield ${1+h(E)} and no Weaken or Root for 2 rounds.` },
+      txt:(P,E)=>`Make it yours: gain 1 AP at the start of your next turn; Shield ${1+h(E)} and no Weaken or Anchor from a foe for 2 rounds.` },
     'No predators here. Not yet.');
   K(['lionfish'],'lio_warn','Warning Fins','C',0,
     { n:'Fan Out', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3571,7 +3571,7 @@
       txt:(P,E)=>`Wriggle loose of a cracked plate: escape every hold and condition, and hold Shield ${1+h(P)} this round.` },
     { n:'New Shell', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+E},{v:'statusImmune', dur:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2}],
-      txt:(P,E)=>`Step out of the old shell: heal ${2+E}, no Weaken or Root for 2 rounds, and your next hit deals +${1+E}.` },
+      txt:(P,E)=>`Step out of the old shell: heal ${2+E}, no Weaken or Anchor from a foe for 2 rounds, and your next hit deals +${1+E}.` },
     'Too big for its own skin, so it leaves it behind.', 'Crustaceans');
   K(CRUST,'crs_carapace','Carapace','M',0,
     { n:'Plate Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3723,7 +3723,7 @@
   K(['beetle'],'btl_elytra','Wing Cases','T',0,
     { n:'Close Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>1+P, dur:1},{v:'statusImmune', dur:1}],
-      txt:(P,E)=>`Snap your wing cases shut: Shield ${1+P}, and no Weaken or Root this round.` },
+      txt:(P,E)=>`Snap your wing cases shut: Shield ${1+P}, and no Weaken or Anchor from a foe this round.` },
     { n:'Lift Off', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'teleport', reach:(P,E)=>2+E, height:true},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Open the cases and fly, clumsily, to any node within ${2+E}, height included; Shield 1 this round.` },
