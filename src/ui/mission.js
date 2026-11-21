@@ -562,6 +562,13 @@
       const t = m.enemies.find((e) => e.type === ob.target);
       prog = t ? `${t.name} ${Math.max(0, t.hp)}/${t.maxHp}` : 'destroyed';
     }
+    // Resonance (2.118): the elements in the air, strong this round or fading
+    const airPill = (mm) => {
+      const up = T.AIR_ELS.filter((k) => mm.air && mm.air[k] > 0);
+      if (!up.length) return '';
+      const say = up.map((k) => `${T.ETHERIONS[k].name}${mm.air[k] > 1 ? '' : ' (fading)'}`).join(', ');
+      return `<span class="pill air-pill" data-tip="${esc('In the air (Resonance): ' + say + '. A face that draws on one takes it; Omni stands in for any.')}">≋ ${esc(up.map((k) => T.ETHERIONS[k].name).join(' · '))}</span>`;
+    };
     const clock = m.clock
       ? `<span class="clock ${m.clock.value <= 2 ? 'hot' : ''}" data-tip="${esc(m.clock.label + ' · round ' + m.round)}"><span class="cv">⏳ ${m.clock.value}</span><small class="rnd">round ${m.round}</small></span>`
       : `<span class="pill mono">Round ${m.round}</span>`;
@@ -590,7 +597,7 @@
       $('#mtop'),
       `<div class="topbar"><div class="mhead"><div class="kickrow"><span class="kick">${esc(m.archetype === 'boss' ? 'Finale' : m.archetype === 'elite' ? 'Elite' : 'Mission')} · tier ${m.tier}${m.page && T.PAGE_BY[m.page] ? ` · <button class="linkish" data-act="atlasHere" data-tip="This place in the atlas: its board, its rules and its field notes">${esc(T.PAGE_BY[m.page].name)}</button>` : ''}</span>${condsChip}</div><h3 style="margin:0">${esc(m.title)}</h3>
       <div class="obj${U.layout.obj ? ' open' : ''}" data-act="fold" data-arg="obj" title="${U.layout.obj ? 'Click to fold the objective to two lines' : 'Click to read the whole objective'}"><div class="obj-txt"><b>Objective:</b> ${esc(ob.text)}</div><div class="small dim obj-bonus"><span class="obj-bar" style="--p:${Math.round(100 * T.objectiveProgress(m))}%"><i></i></span><span class="pill obj-prog${U.ms.obJust > Date.now() ? ' just' : ''}" style="--p:${Math.round(100 * T.objectiveProgress(m))}%" data-tip="How far the objective has come">${prog}</span> ${m.bonus.map((b) => '<span class="bonus">○ ' + esc(b.text) + '</span>').join(' ')}</div></div></div>
-      <div class="tpills">${clock}${U.purseHTML(m, true)}</div>
+      <div class="tpills">${clock}${airPill(m)}${U.purseHTML(m, true)}</div>
       <div class="endgrp${noteOpen ? ' note-open' : ''}"><div class="endrow">${undoBtn(m)}<button class="ghost sm note-btn${noteOpen ? ' on' : ''}" data-act="noteOpen" aria-expanded="${noteOpen}" aria-label="Write a line of story" data-tip="Give this turn a line of story">✎</button>${menuBtn}<button class="primary endbtn" data-act="endRound" ${m.over ? 'disabled' : ''}>${U.endRoundLabel ? U.endRoundLabel() : 'End Round ▶'}</button></div><div class="turnline small">${turnLine(U.run)}</div>${noteBox(m)}${menu}</div></div>`,
     );
     const end2 = $('#mend2');
@@ -1155,7 +1162,7 @@
     const gear = h.gear
       .map((g, gi) => {
         const def = T.GEAR_BY[g.id];
-        // an ability with a cooldown is played from the gear's card in the hand (2.117): only the rest show here
+        // an ability with a cooldown is played from the gear's card in the hand (2.119): only the rest show here
         return def.abilities
           .map((a, ai) => {
             if (T.onGearCard(a)) return '';

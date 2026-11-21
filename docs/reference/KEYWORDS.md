@@ -80,7 +80,7 @@ Turret), and a gear pull is a Field that pulls (the Winch). Each piece has one p
 passives carry what boons did, and the actives what consumables did (`docs/reference/RUN_AND_ECONOMY.md` has the
 table).
 
-**Equipment cards (2.117).** A gear active with a cooldown is played from the gear's card in the nine, a card of
+**Equipment cards (2.119).** A gear active with a cooldown is played from the gear's card in the nine, a card of
 faces that cost no AP and are free or paid in banked Omni dice; an active with no cooldown (Overcharge) is used from
 the gear. ◇ buys gear and no longer fuels it. No keyword is added.
 

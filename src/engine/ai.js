@@ -551,7 +551,7 @@
     }
     return null;
   }
-  // The heuristic has never used gear: since 2.117 a gear ability with a cooldown is a card in the kit, and the
+  // The heuristic has never used gear: since 2.119 a gear ability with a cooldown is a card in the kit, and the
   // heuristic leaves those cards alone, so it plays as it did and the balance tables keep their meaning. The
   // look-ahead player plays them like any other card (src/engine/lookahead.js).
   const heuristicPlays = (cid) => !(T.CARD[cid] && T.CARD[cid].gear);

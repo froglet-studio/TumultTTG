@@ -206,7 +206,7 @@
     { n:'Rasp', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>P, uses:1, target:'ally'}],
       txt:(P,E)=>`A sustained tone: adjacent foes Weakened 1${P>0?`; an ally's next strike +${P}`:''}.` },
-    { n:'Resonance', ap:0, el:2, cd:4, dur:0, tgt:'self',
+    { n:'Thrum', ap:0, el:2, cd:4, dur:0, tgt:'self',
       fx:[{v:'spring', radius:(P,E)=>1+E}],
       txt:(P,E)=>`A shattering note: within ${1+E} of you, every Field and hazard springs on whoever stands in it and every Wound bites, now (each still does at round end).` },
     'Tune the resonance until it hurts.');
@@ -363,8 +363,8 @@
       fx:[{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Burst ${1+P} in any direction.` },
     { n:'Recoil Slam', ap:2, el:1, cd:2, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:(P,E)=>E},{v:'move', n:1, free:true}],
-      txt:(P,E)=>`Melee ${2+P}, shove the foe ${E}, and recoil 1 node.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:(P,E)=>E},{v:'anchor', who:'foe', dur:1, ifAir:'C'},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Melee ${2+P}, shove the foe ${E}, and recoil 1 node. Draws on Charge in the air: the foe is also Anchored 1.` },
     'Launch yourself and shove them the other way.');
   C('octopus','oct_ink','Ink Screen','S',0,
     { n:'Ink', ap:1, el:0, cd:1, dur:0, tgt:'self',

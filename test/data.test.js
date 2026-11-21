@@ -138,7 +138,7 @@ test('world data: ids are unique and entries are complete', () => {
   uniq(T.EVENTS, 'event');
   for (const g of T.GEAR) {
     assert.equal(g.abilities.length, 2, `${g.id}: two abilities`);
-    // free or paid in banked Omni dice, never in ◇ (2.117); an ability needs a card only if it goes on cooldown,
+    // free or paid in banked Omni dice, never in ◇ (2.119); an ability needs a card only if it goes on cooldown,
     // so one with no cooldown must cost Omni or it could be used without limit
     for (const a of g.abilities) {
       assert.ok(a.n && Array.isArray(a.fx) && a.txt() && a.cost === undefined, `${g.id}/${a.n}`);

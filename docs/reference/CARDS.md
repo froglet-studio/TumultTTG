@@ -118,7 +118,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stridulation** ★ · Charge · `hop_strid`
 
 - *Phys — Rasp* · 1 AP · CD 1 — A sustained tone: adjacent foes Weakened 1. *(P3: A sustained tone: adjacent foes Weakened 1; an ally's next strike +3.)*
-- *Eth — Resonance* · 0 AP + 2 Charge · CD 4 — A shattering note: within 2 of you, every Field and hazard springs on whoever stands in it and every Wound bites, now (each still does at round end). *(P3/E3: A shattering note: within 4 of you, every Field and hazard springs on whoever stands in it and every Wound bites, now (each still does at round end).)*
+- *Eth — Thrum* · 0 AP + 2 Charge · CD 4 — A shattering note: within 2 of you, every Field and hazard springs on whoever stands in it and every Wound bites, now (each still does at round end). *(P3/E3: A shattering note: within 4 of you, every Field and hazard springs on whoever stands in it and every Wound bites, now (each still does at round end).)*
 
 **Tireless Respiration** · Time · `hop_tireless`
 
@@ -221,7 +221,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Jet Propulsion** · Mass · `oct_jet`
 
 - *Phys — Jet* · 1 AP · CD 1 — Burst 1 in any direction. *(P3: Burst 4 in any direction.)*
-- *Eth — Recoil Slam* · 2 AP + 1 Mass · CD 2 — Melee 2, shove the foe 1, and recoil 1 node. *(P3/E3: Melee 5, shove the foe 3, and recoil 1 node.)*
+- *Eth — Recoil Slam* · 2 AP + 1 Mass · CD 2 — Melee 2, shove the foe 1, and recoil 1 node. Draws on Charge in the air: the foe is also Anchored 1. *(P3/E3: Melee 5, shove the foe 3, and recoil 1 node. Draws on Charge in the air: the foe is also Anchored 1.)*
 
 **Ink Screen** · Space · `oct_ink`
 
@@ -2206,7 +2206,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Spine Burst** · Mass · `heh_burst`
 
 - *Phys — Unroll* · 1 AP · CD 1 — Uncurl with a snap: every foe beside you takes 1. *(P3: Uncurl with a snap: every foe beside you takes 4.)*
-- *Eth — Pop* · 1 AP + 1 Mass · CD 3 — Every foe beside you takes 3 and is pushed 1; hold Shield 1 this round. *(P3/E3: Every foe beside you takes 5 and is pushed 1; hold Shield 1 this round.)*
+- *Eth — Pop* · 1 AP + 1 Mass · CD 3 — Every foe beside you takes 3 and is pushed 1; hold Shield 1 this round. Draws on Space in the air: they are pushed 1 more. *(P3/E3: Every foe beside you takes 5 and is pushed 1; hold Shield 1 this round. Draws on Space in the air: they are pushed 1 more.)*
 
 **Huff** · Charge · `heh_huff`
 
@@ -2931,7 +2931,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Carrion Wing** · Space · `rav_carrion`
 
 - *Phys — Circle Down* · 1 AP · CD 1 — Circle down 1, over foes, and see everything beside where you land. *(P3: Circle down 4, over foes, and see everything beside where you land.)*
-- *Eth — Pick the Weak* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3 and peck it for 3; if that leaves it at 2 hp or less, it falls. *(P3/E3: Drop beside a foe within 5 and peck it for 5; if that leaves it at 4 hp or less, it falls.)*
+- *Eth — Pick the Weak* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3 and peck it for 3; if that leaves it at 2 hp or less, it falls. Draws on Mass in the air: it falls at 5 or less. *(P3/E3: Drop beside a foe within 5 and peck it for 5; if that leaves it at 4 hp or less, it falls. Draws on Mass in the air: it falls at 9 or less.)*
 
 **Raven Memory** · Time · `rav_memory`
 
@@ -3950,7 +3950,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Smasher Punch** ★ · Mass · `msh_punch`
 
 - *Phys — Punch* · 1 AP · CD 2 — Club it faster than a bullet: melee 3. *(P3: Club it faster than a bullet: melee 6.)*
-- *Eth — Cavitation* · 1 AP + 1 Mass · CD 4 — Punch so fast the water boils: melee 4, then the shock hits every foe beside you for 1. *(P3/E3: Punch so fast the water boils: melee 6, then the shock hits every foe beside you for 2.)*
+- *Eth — Cavitation* · 1 AP + 1 Mass · CD 4 — Punch so fast the water boils: melee 4, then the shock hits every foe beside you for 1. Draws on Time in the air: the punch lands twice. *(P3/E3: Punch so fast the water boils: melee 6, then the shock hits every foe beside you for 2. Draws on Time in the air: the punch lands twice.)*
 
 **Spearer Arms** · Space · `msh_spear`
 

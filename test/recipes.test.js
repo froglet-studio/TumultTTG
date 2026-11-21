@@ -30,6 +30,20 @@ test('conditions: an unmet condition stops its effect whatever the verb; a met o
     },
     ifHpBelow: { value: 9, unmet: ({ adj }) => (adj.hp = 9), met: ({ adj }) => (adj.hp = 8) },
     ifE: { value: 2, unmet: () => {}, met: () => {}, E: [1, 2] },
+    ifFlanked: {
+      unmet: ({ m, h, ally, adj }) => {
+        ally.pos = Object.keys(m.board.nodes)
+          .map(Number)
+          .find(
+            (n) => !T.occupied(m, n) && B.dist(m.board, adj.pos, n, true) >= 2 && B.dist(m.board, h.pos, n, true) >= 2,
+          );
+      },
+      met: ({ m, h, ally, adj }) => {
+        if (!T.isFlanked(m, adj))
+          ally.pos = B.walkNeighbors(m.board, adj.pos).find((n) => n !== h.pos && !T.occupied(m, n));
+      },
+    },
+    ifAir: { value: 'C', unmet: ({ m }) => (m.air = { M: 2, C: 0, S: 0, T: 0, O: 0 }), met: ({ m }) => (m.air.C = 1) },
   };
   // Verbs that never checked conditions before, each with a way to see whether it happened.
   const verbs = {
@@ -137,6 +151,13 @@ const SITUATIONS = {
   // foes one hit from going down, so what happens on a kill happens
   frail: { arrange: ({ adj, zone }) => [adj, zone].filter(Boolean).forEach((e) => sturdy(e, 1)) },
   onHazard: { arrange: ({ m, h }) => (m.board.nodes[h.pos].hazard = true) },
+  // every element in the air, for the faces that draw on one (Resonance)
+  inTheAir: {
+    arrange: ({ m, adj, zone }) => {
+      [adj, zone].filter(Boolean).forEach((e) => sturdy(e));
+      m.air = { M: 2, C: 2, S: 2, T: 2, O: 0 };
+    },
+  },
   allyDown: {
     arrange: ({ m, h, ally }) => {
       ally.downed = true;
@@ -173,7 +194,7 @@ test('no option on a card, gear or consumable recipe is ignored, and every formu
         unreadKeys(card[faceKey], (situation) => H.fireFace(card.id, faceKey, situation)),
       );
 
-  // an ability with a cooldown is played from the gear's card (2.117): fire that card's face
+  // an ability with a cooldown is played from the gear's card (2.119): fire that card's face
   for (const gear of T.GEAR)
     for (const fk of gear.card ? T.faceKeys(gear.card) : [])
       note(

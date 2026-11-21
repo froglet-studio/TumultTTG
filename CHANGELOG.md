@@ -9,13 +9,24 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.117.0 — 2026-11-21 — gear runs on Omni, and some of it has a card
+## 2.119.0 — 2026-11-21 — gear runs on Omni, and some of it has a card
 
 - **Omnicrystals buy gear; Omni dice run it.** Every gear ability is free or costs banked Omni dice (Garrett, 2026-11-21, on the decision card: rolled Omni dice). The ◇ purse no longer fuels anything in a mission. What cost 1 ◇ is free, 2 ◇ is 1 Omni, and Rewind's 3 ◇ is 2 Omni. Capacitor's Store, a free Omni, cools down for 3 rounds instead of 1.
 - **Equipment cards.** "Equipment cards will be either free or cost omnicrystals and they only need a card if they go on cooldown, which still adds to the 9 card max" (Garrett, 2026-11-21). Every gear ability with a cooldown sits on the gear's one card: face P and, when both cool down, face P2. Neither face costs AP. Playing either face sends the whole card to the track, as a trait does. The card counts toward the nine but toward no clade's three. It is never trained and brings no element die. Bought with room in the kit, it joins the kit; with a full kit, it waits in reserve to be swapped in between missions. Selling the gear takes its card. A weapon's Overcharge has no cooldown, so it needs no card and is used from the gear. A gear card is not growth: it adds nothing to a pilot's power (`T.pilotPower`), so missions do not grow for it.
 - The look-ahead player plays gear cards like any other card; the heuristic leaves them alone, as it always left gear, so the balance tables keep their meaning. The harness flies a gear card bought with a full kit in place of the least-trained trait.
 - **Balance.** Foes have 155% of their listed vitality (was 150%). Without that, full runs got easier: `node tools/sim.js 200 runs --player strong` 92 → 108 of 200 on 2.110. With it, 91 → 88 of 200 on 2.111, and 85 → 87 on 2.115 (noise: 158% gives 86). `docs/reference/BALANCE.md` has the tables.
-- **Saves** are version 32: a pilot's worn gear gets its card, in the kit when there is room and in reserve when not (fixture `save-2.109.json`).
+- **Saves** are version 33: a pilot's worn gear gets its card, in the kit when there is room and in reserve when not (fixture `save-2.109.json`).
+## 2.118.0 — 2026-11-21 — Resonance
+
+- **Resonance** (new keyword, the shortlist's second pick). Every Ethereal face you play leaves its element in the air: strong this round, fading the next, then gone. A face that **draws on** an element takes it for a bonus, and the element is spent. Omni in the air stands in for any element. The squad shares the air, so playing a Charge face first can make a partner's Charge-drawing face land bigger. Every face still works with nothing in the air.
+- Four faces draw on the air. The element can come from your own earlier play or from a partner's:
+  - **Recoil Slam** (Octopus, Jet Propulsion) draws on Charge: the foe is also Anchored 1.
+  - **Pop** (Hedgehog, Spine Burst) draws on Space: everything is pushed 1 more.
+  - **Cavitation** (Mantis Shrimp, Smasher Punch) draws on Time: the punch lands twice.
+  - **Pick the Weak** (Raven, Carrion Wing) draws on Mass: the foe falls at 3 + 2E or less.
+- The board's top bar shows what is in the air. The Stridulation face once called Resonance is now **Thrum**, so the word means one thing.
+- In code: `m.air`, `T.leaveInAir`, `T.inAir`, and the condition `ifAir: 'M'`, which draws on the element once per play. **Saves** are version 32: a mission keeps the air.
+
 ## 2.115.0 — 2026-11-21 — At dusk, and Flanked
 
 - **At dusk** (a timing word, from the shortlist). A face marked At dusk is placed now: you pay for it, it goes to the track, and you choose its space. It lands at round end, once the foes have acted, on whoever is there then. A ring on the board shows where. The puzzle is to read the telegraph for where the foes will finish.

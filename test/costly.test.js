@@ -42,7 +42,7 @@ test('swap with a foe: Become trades spaces with a foe, and an Anchored one hold
   assert.equal(s2.adj.pos, before, 'an Anchored foe is not moved');
 });
 
-test('spring: Resonance sets Fields, hazards and Wounds off now, and they still work at round end', () => {
+test('spring: Thrum sets Fields, hazards and Wounds off now, and they still work at round end', () => {
   const s = H.arena('hop_strid', { up: [1, 1] });
   const { m, h } = s;
   const foe = s.adj;

@@ -187,7 +187,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Catapult Spring — Coil (Phys) | staple | One tough foe | 1/2 (0.50) |  |
 | Catapult Spring — Launch (Eth) | staple | One tough foe, A crowd, Height, The unseen, The clock, One big telegraphed hit | 1/2 (0.50) |  |
 | Stridulation — Rasp (Phys) | staple | One tough foe, A crowd, One big telegraphed hit | 1/3 (0.33) |  |
-| Stridulation — Resonance (Eth) | tool | One tough foe, A crowd | 0/3 (0.00) |  |
+| Stridulation — Thrum (Eth) | tool | One tough foe, A crowd | 0/3 (0.00) |  |
 | Tireless Respiration — Diffuse (Phys) | staple | The clock | 3/3 (1.00) |  |
 | Tireless Respiration — Compress (Eth) | staple | The clock | 0/0 |  |
 | Chitinous Exoskeleton — Brace Plates (Phys) | staple | One big telegraphed hit | 0/2 (0.00) |  |

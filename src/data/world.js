@@ -16,7 +16,7 @@
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 155,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 in 2.108: weapons; 155 since 2.117: gear runs on Omni)
+    FOE_HP: 155,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 in 2.108: weapons; 155 since 2.119: gear runs on Omni)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -138,7 +138,7 @@
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);
 
-  /* Equipment cards (2.117; Garrett, 2026-11-21: "equipment cards will be either free or cost omnicrystals and
+  /* Equipment cards (2.119; Garrett, 2026-11-21: "equipment cards will be either free or cost omnicrystals and
      they only need a card if they go on cooldown, which still adds to the 9 card max"). Every gear ability with a
      cooldown sits on the gear's one card: faces P (and P2), each free or paid in banked Omni dice (`omni`), never
      in ◇. The card counts toward the nine and waits in the reserve like a trait (2.107); playing either face sends

@@ -17,7 +17,7 @@ const sturdy = (e, hp = 40) => Object.assign(e, { hp, maxHp: hp, shield: 0, base
 const nodeIds = (m) => Object.keys(m.board.nodes).map(Number);
 const freeAt = (m, from, d) =>
   nodeIds(m).filter((n) => !T.occupied(m, n) && !m.board.nodes[n].height && B.dist(m.board, from, n, true) === d);
-const CONDITIONS = ['ifOnHazard', 'ifAnchored', 'ifAdjacent', 'ifHpBelow', 'ifE'];
+const CONDITIONS = ['ifOnHazard', 'ifAnchored', 'ifAdjacent', 'ifFlanked', 'ifHpBelow', 'ifE', 'ifAir'];
 const textOf = (face, P, E) => (typeof face.txt === 'function' ? face.txt(P, E) : face.txt);
 const faces = () =>
   T.CARDS.flatMap((card) => ['P', 'E'].map((k) => ({ card, k, face: card[k], id: `${card.id}.${k}` })));
