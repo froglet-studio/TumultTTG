@@ -28,6 +28,7 @@
        gear      { gear, ability, target?, node?, choice? }
        item      { item }
        valve     {}                 fold one of each etherion into an Omni
+       asAP      { dice }           one banked Omni, or two banked etherions (indices), become 1 AP
        board     { vehicle }        get into a vehicle beside you (its uid)
        leave     { node }           get out onto a space beside it
        drive     { node }           drive it there (the driver)
@@ -122,6 +123,7 @@
         if (h.consumables.indexOf(id) === item) out.push({ t: 'item', hero, item }); // two of a kind are one choice
       });
       if (ETHERIONS.every((f) => h.held.includes(f))) out.push({ t: 'valve', hero });
+      if (!h.downed) for (const dice of T.apSpends(h)) out.push({ t: 'asAP', hero, dice });
       // a vehicle (src/engine/vehicles.js): get in, get out, drive, and its cards
       if (m.vehicles) {
         for (const vehicle of T.boardOptions(m, h)) out.push({ t: 'board', hero, vehicle });
@@ -187,6 +189,8 @@
         return T.useConsumable(m, h, a.item);
       case 'valve':
         return { ok: T.valve(m, h) };
+      case 'asAP':
+        return T.spendAsAP(m, h, a.dice);
       case 'board':
         return T.board(m, h, a.vehicle);
       case 'leave':

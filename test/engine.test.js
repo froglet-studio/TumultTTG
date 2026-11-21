@@ -44,6 +44,42 @@ test('dice: the anti-brick valve folds M+C+S+T into one Omni', () => {
   assert.equal(T.valve(m, h), false, 'needs one of each');
 });
 
+test('dice: one Omni, or any two etherions, spend as 1 AP (2.114)', () => {
+  const { m, h } = scene();
+  h.held = ['M', 'M', 'AP', 'C', 'O'];
+  h.heldDie = ['M', 'plain', 'plain', 'C', 'plain'];
+  h.pool = 10;
+  h.temp = [];
+  assert.equal(T.apSpends(h).length, 3, 'the Omni, M+M and M+C, each once');
+  assert.equal(T.apValue(h), 1);
+  assert.equal(T.spendAsAP(m, h, [4]).ok, true, 'an Omni alone');
+  assert.equal(T.apValue(h), 2);
+  assert.equal(T.spendAsAP(m, h, [0, 3]).ok, true, 'two different etherions');
+  assert.deepEqual(h.held, ['M', 'AP']);
+  assert.deepEqual(h.temp, ['AP', 'AP'], 'the AP is minted');
+  assert.equal(T.apValue(h), 3);
+  assert.equal(diceTotal(h), T.RULES.POOL);
+  assert.equal(T.spendAsAP(m, h, [0]).ok, false, 'one etherion is not enough');
+  assert.equal(T.spendAsAP(m, h, [0, 1]).ok, false, 'AP is not an etherion');
+  T.endHeroPhase(m);
+  assert.equal(h.temp.length, 0, 'and evaporates with the hero phase');
+});
+
+test('dice: payableAsAP reads a cost that spare dice could make up', () => {
+  const { h } = scene();
+  h.held = ['S', 'T', 'O', 'AP'];
+  h.heldDie = ['plain', 'plain', 'plain', 'plain'];
+  h.pool = 11;
+  h.temp = [];
+  assert.equal(T.payableAsAP(h, 3, 'M', 0), true, '1 AP + the Omni + the pair');
+  assert.equal(T.payableAsAP(h, 4, 'M', 0), false);
+  assert.equal(T.payableAsAP(h, 2, 'M', 1), true, 'the Omni pays the Mass, the pair the AP');
+  assert.equal(T.payableAsAP(h, 3, 'M', 1), false);
+  assert.equal(T.payableAsAP(h, 1, 'S', 1), false, 'payable already');
+  assert.equal(T.payableAsAP(h, 2, 'O', 1), true, 'an Omni cost takes the Omni, the pair pays the AP');
+  assert.equal(T.payableAsAP(h, 0, 'O', 2), false, 'an Omni cost is paid in Omni alone');
+});
+
 test('track: a card returns after its cooldown; durations cool down afterwards', () => {
   const { h } = scene();
   h.track = [];

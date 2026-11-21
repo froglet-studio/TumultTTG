@@ -249,6 +249,7 @@
     note: (run, m, h, c) => T.addNote(m, c.hero, c.text),
     rollPick: (run, m, h, c) => T.setRollPick(h, c.kinds),
     valve: (run, m, h) => ({ ok: !!T.valve(m, h) }),
+    asAP: (run, m, h, c) => T.spendAsAP(m, h, c.dice),
     dump: (run, m, h, c) => (T.dump(m, h, c.di), { ok: true }),
     reroll: (run, m, h, c) => (c.picked.length && T.rerollHeld(m, h, c.picked), { ok: true }),
     walk: (run, m, h, c) => {
@@ -289,6 +290,7 @@
     'rally',
     'heel',
     'valve',
+    'asAP',
     'dump',
     'reroll',
     'walk',
