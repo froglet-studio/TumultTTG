@@ -1,0 +1,126 @@
+# Tumult Loop Atlas: pilot Nedira (generated from the pre-made hero; combos invented).
+{
+ "label": "Nedira, the Bulwark",
+ "verbs": {
+  "Mass": {
+   "ability": "Shell: House on Your Back",
+   "does": "Shield 5 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 3 and is pushed 1.",
+   "trigger": "Ethereal face: 1 AP + 1 Mass (Physical Shell Up: Shield 3 this round, and you can't be Weakened or Rooted.)",
+   "scales": "At E 3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 4 and is pushed 1.",
+   "source": "src/data/ (card tor_shell)",
+   "arch": "ward",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Time": {
+   "ability": "Persistence: Second Wind",
+   "does": "Engine: regenerate 3 vitality at the start of each of your turns. Dur 4.",
+   "trigger": "Ethereal face: 2 AP + 1 Time (Physical Pace: Shrug off Anchored/Weakened, then move 2.)",
+   "scales": "At E 3: Engine: regenerate 5 vitality at the start of each of your turns. Dur 4.",
+   "source": "src/data/ (card hum_persist)",
+   "arch": "tempo",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Omni": {
+   "ability": "Channel",
+   "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+   "trigger": "A banked etherion or Omni",
+   "scales": "",
+   "source": "src/data/world.js BASIC",
+   "arch": "omni",
+   "t": [
+    2,
+    10
+   ]
+  }
+ },
+ "board": {},
+ "missing": "",
+ "arenas": [
+  "Swarm",
+  "Elite and the Heart"
+ ],
+ "games": {
+  "Mass": [
+   "Shell",
+   "Beak Snap",
+   "Spines",
+   "Spine Burst",
+   "Opposable Grip"
+  ],
+  "Charge": [],
+  "Space": [],
+  "Time": [
+   "Persistence"
+  ]
+ },
+ "excused": [],
+ "lean": "bulwark",
+ "leanWhy": "Shells up, bristles, and keeps foes on itself.",
+ "combos": [
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Shell and spines",
+   "t": [
+    20,
+    90
+   ],
+   "is": "Invite the melee hit, then pay it back.",
+   "chain": [
+    [
+     "Mass",
+     "House on Your Back: Shield 5, the next melee hitter takes 3"
+    ],
+    [
+     "Mass",
+     "Bristling Ball: melee hitters take 3 for 2"
+    ],
+    [
+     "",
+     "The foe hits anyway, and pays"
+    ]
+   ],
+   "drivers": [
+    "solve",
+    "toy"
+   ],
+   "feel": "Being the wall they break on."
+  },
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Grip and pop",
+   "t": [
+    20,
+    60
+   ],
+   "is": "Anchor one foe beside you, then burst everything around you.",
+   "chain": [
+    [
+     "Mass",
+     "Leverage: melee 2, Anchor 2"
+    ],
+    [
+     "",
+     "Others close in"
+    ],
+    [
+     "Mass",
+     "Pop: every foe beside you takes 3, pushed 1"
+    ]
+   ],
+   "drivers": [
+    "break",
+    "toy"
+   ],
+   "feel": "Holding the door and slamming it."
+  }
+ ],
+ "doc": "src/data/world.js PREBUILTS"
+}

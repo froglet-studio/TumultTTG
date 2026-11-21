@@ -24,3 +24,6 @@ CLAUDE.local.md
 *.jks
 .env
 .env.*
+
+# Loop Atlas: the Code Atlas build (node tools/code-atlas.js build)
+docs/loopatlas/code-out/

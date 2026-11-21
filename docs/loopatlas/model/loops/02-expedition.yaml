@@ -1,0 +1,148 @@
+- id: expedition
+  parent: sitting
+  at: 2
+  core: true
+  name: An expedition
+  tier: 5
+  kind: place
+  t: [1800, 5400]
+  is: 'A run: a squad of guides crosses land, sea and air along one route to the Heart. Saved at every node and every
+    action, so it can span sittings.'
+  phases:
+  - n: Squad
+    d: Draft a pilot, or bring a pre-made or made one.
+  - n: Choose the next stop
+    d: Stop cards show the objective, clock, foes, gravity and weather.
+  - n: Play the stop
+    d: A mission, an elite, a haven or an event.
+  - n: Grow
+    d: Points, a trait offer, crystals, gear at a haven.
+  - n: The Heart
+    d: The last row; win, or Tumult keeps the expedition.
+  drivers: [goal, stake, find, crew]
+  reps: '7'
+  repsOf: rows per expedition
+  now:
+    s: built
+    note: 'Seven rows in three acts, six mission kinds plus Elite and the Heart, havens, twelve events, a Lifeline, two tides.'
+  plan:
+    note: 'The atlas plan: a run is a random journey from one atlas page to another, joined by a story, with a tell-your-own
+      mode later.'
+  holes:
+  - 'on': np
+    q: Win rates sit near 100% on most tier 1 and 2 missions for the look-ahead player, with the Heart at 25%, so the middle
+      of an expedition carries little stake.
+    fill: Tune the middle rows against the Gale and the Heart together, from node tools/sim.js 40, before adding content.
+  src:
+  - docs/reference/RUN_AND_ECONOMY.md
+  - docs/reference/ABILITY_AUDIT.md Pass C
+  - docs/design/01-frame-and-campaign.md
+- id: draft
+  parent: expedition
+  at: 0
+  name: The draft
+  tier: 4
+  kind: loop
+  t: [180, 600]
+  is: Make a pilot from human and two clades. The character workshop's first step.
+  phases:
+  - n: Pick two clades
+  - n: Pick 1 of 4, six times
+    d: Packs drawn from the three pools; a trait you hold is never offered again.
+  - n: Spend 6 upgrade points
+    d: Two cards awakened at least.
+  - n: Name and confirm
+    d: The pilot is kept on the device and, online, shared.
+  drivers: [make, own, find]
+  reps: '1'
+  repsOf: per new pilot
+  now:
+    s: built
+    note: Draft, Quick Build of six pre-mades, made pilots kept and shared since 2.72; a canon question about the painted pilot.
+  plan:
+    note: The dossier (design/06) asks for a backstory as the pilot is made.
+  holes:
+  - 'on': npx
+    q: A draft shows card texts with up to 31 different state words, so a new player cannot see what a kit is for.
+    fill: 'With 22 keywords (P2) the draft can show a pilot''s keyword profile: three to five chips that say what it does.'
+  src:
+  - docs/reference/RUN_AND_ECONOMY.md
+  - docs/design/06-pilots-and-backstory.md
+- id: route
+  parent: expedition
+  at: 1
+  name: The route
+  tier: 3
+  kind: loop
+  t: [10, 60]
+  is: Choosing the next stop from the cards side by side.
+  phases:
+  - n: Read the stop cards
+  - n: Weigh the squad against them
+  - n: Choose
+  drivers: [solve, goal]
+  reps: '7'
+  repsOf: choices per expedition
+  now:
+    s: built
+    note: Stop cards since 2.70 (objective, clock, foes, gravity, weather, bonus goals).
+  src:
+  - docs/reference/RUN_AND_ECONOMY.md The route
+- id: haven
+  parent: expedition
+  at: 2
+  name: A haven
+  tier: 3
+  kind: loop
+  t: [30, 180]
+  is: Rest, repair, buy and sell gear, train.
+  phases:
+  - n: Rest or repair
+  - n: Shop
+  - n: Train
+  - n: Leave
+  drivers: [own, reward]
+  now:
+    s: built
+    note: 'Gear only since 2.89: ten pieces, each with one passive (the build-arounds boons were) and two actives paid in
+      crystals (the jobs consumables did).'
+  src:
+  - docs/reference/RUN_AND_ECONOMY.md Omnicrystals and gear
+- id: event
+  parent: expedition
+  at: 2
+  name: An event
+  tier: 3
+  kind: loop
+  t: [20, 90]
+  is: A narrative fork with two or three choices, costs and risks.
+  phases:
+  - n: Read the scene
+  - n: Choose
+  - n: The result
+  drivers: [story, stake]
+  now:
+    s: built
+    note: Twelve events; none repeats in a run.
+  src:
+  - src/data/world.js EVENTS
+- id: reward
+  parent: expedition
+  at: 3
+  name: Reward and train
+  tier: 3
+  kind: loop
+  t: [30, 180]
+  is: After a won mission. Points, crystals, a trait for each pilot; an elite pays more of both.
+  phases:
+  - n: Take the points and crystals
+  - n: Take a trait, or swap one in, or skip
+  - n: Spend points on P or E
+  drivers: [reward, own, make]
+  now:
+    s: built
+  prop:
+    s: change
+    note: 'A trait offer shows its keyword chips beside the pilot''s, so a swap reads as a change of toys.'
+  src:
+  - docs/reference/RUN_AND_ECONOMY.md Rewards

@@ -1,0 +1,139 @@
+# Tumult Loop Atlas: pilot Echo (generated from the pre-made hero; combos invented).
+{
+ "label": "Echo, the Nightwing",
+ "verbs": {
+  "Mass": {
+   "ability": "Talon Strike: Pin",
+   "does": "Melee 4 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2.",
+   "trigger": "Ethereal face: 2 AP + 1 Mass (Physical Grip: Melee 3 and Weaken 1.)",
+   "scales": "At E 3: Melee 4 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.",
+   "source": "src/data/ (card owl_talon)",
+   "arch": "setup",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Space": {
+   "ability": "Silent Flight: Dampen",
+   "does": "Erase your presence: blink 2 and stay Hidden for 2 rounds even while moving.",
+   "trigger": "Ethereal face: 1 AP + 1 Space (Physical Glide: Move 2 without triggering traps; your next strike this turn deals +2 (surprise).)",
+   "scales": "At E 3: Erase your presence: blink 4 and stay Hidden for 4 rounds even while moving.",
+   "source": "src/data/ (card owl_silent)",
+   "arch": "reposition",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Time": {
+   "ability": "Tiny Target: Too Small to See",
+   "does": "Hidden 3 even if you move, and the next hit on you is 2 less.",
+   "trigger": "Ethereal face: 1 AP + 1 Time (Physical Duck: The next hit on you is 2 less, and you dodge a step from it.)",
+   "scales": "At E 3: Hidden 4 even if you move, and the next hit on you is 2 less.",
+   "source": "src/data/ (card mou_tiny)",
+   "arch": "ward",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Omni": {
+   "ability": "Channel",
+   "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+   "trigger": "A banked etherion or Omni",
+   "scales": "",
+   "source": "src/data/world.js BASIC",
+   "arch": "omni",
+   "t": [
+    2,
+    10
+   ]
+  }
+ },
+ "board": {},
+ "missing": "",
+ "arenas": [
+  "The Sought",
+  "Survey"
+ ],
+ "games": {
+  "Mass": [
+   "Talon Strike"
+  ],
+  "Charge": [],
+  "Space": [
+   "Silent Flight",
+   "Sound Mapping",
+   "Scurry",
+   "Pattern Recognition"
+  ],
+  "Time": [
+   "Tiny Target"
+  ]
+ },
+ "excused": [],
+ "lean": "scout",
+ "leanWhy": "Sees everything, is nowhere, strikes from surprise.",
+ "combos": [
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Map and expose",
+   "t": [
+    20,
+    60
+   ],
+   "is": "Find everything, then make one hit ignore its Shield.",
+   "chain": [
+    [
+     "Space",
+     "Acoustic Map: everything within 3 pinpointed"
+    ],
+    [
+     "Space",
+     "Weak Point: the next hit ignores Shield, +1"
+    ],
+    [
+     "Mass",
+     "Pin: melee 4, Anchored 2"
+    ]
+   ],
+   "drivers": [
+    "find",
+    "break"
+   ],
+   "feel": "Knowing exactly where it hurts."
+  },
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Ghost run",
+   "t": [
+    20,
+    90
+   ],
+   "is": "Blink unseen past the line, then strike from surprise.",
+   "chain": [
+    [
+     "Space",
+     "Dampen: blink 2, Hidden 2 while moving"
+    ],
+    [
+     "Space",
+     "Glide: move 2 past traps, next strike +2"
+    ],
+    [
+     "Mass",
+     "Grip: melee 3, Weaken 1"
+    ]
+   ],
+   "drivers": [
+    "toy",
+    "mastery"
+   ],
+   "feel": "Nobody saw it coming."
+  }
+ ],
+ "doc": "src/data/world.js PREBUILTS"
+}

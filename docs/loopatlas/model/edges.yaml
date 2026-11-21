@@ -1,0 +1,12 @@
+edges:
+- {from: m.swarm, to: m.heart, kind: train, why: 'Holding against waves trains for the Heart''s called swarm.'}
+- {from: m.elite, to: m.heart, kind: train, why: 'An elite is a small Heart: one big telegraph to read.'}
+- {from: m.vault, to: m.heart, kind: train, why: The Heart's second phase drowns the vault.}
+- {from: expedition, to: arc.pilot, kind: feed, why: A made pilot comes home with its traits and points., handoff: done}
+- {from: mission, to: arc.canon, kind: feed, why: A question about the page after each mission., handoff: done}
+- {from: draft, to: arc.canon, kind: feed, why: A question about the painted pilot while it is made., handoff: new}
+- {from: arc.friends, to: sitting, kind: cross, why: A game in the lobby pulls you into a sitting., handoff: pull}
+- {from: era.release, to: sitting, kind: cross, why: A release brings new traits and pages., handoff: new}
+- {from: breath, to: expedition, kind: cross, why: 'The same pilot, a harder wind.', handoff: done, in: x}
+- {from: reward, to: arc.pilot, kind: feed, why: Points spent on P and E stay with a made pilot., handoff: spend}
+- {from: arc.canon, to: era.atlas, kind: feed, why: Approved canon becomes field notes and the storyteller pack.}

@@ -1,0 +1,37 @@
+- id: era
+  name: The long game
+  tier: 7
+  kind: loop
+  t: [1209600, 15552000]
+  is: Everything Tumult offers a person over months. Both jobs live here; a good game to replay, and a workshop where
+    Froglet's pilots and their stories get made.
+  phases:
+  - n: Come back
+    d: 'Something pulled you in: a friend in the lobby, a new release, a pilot you made last week.'
+  - n: Open a sitting
+    d: The title screen offers a new expedition, Continue, games to join, the Atlas and your pilots.
+  - n: Fly an expedition
+    d: Draft or bring a pilot, ride the route, face the Heart.
+  - n: Keep what it gave
+    d: The pilot's traits and level, canon notes written, the pages you saw.
+  - n: The world moves on
+    d: A release changes the rules, new pages and traits arrive, approved canon goes to the storytellers.
+  drivers: [find, own, story, crew, make]
+  now:
+    s: part
+    note: 'Releases come often (thirteen on 2026-11-21 alone, up to 2.98.0) and made pilots keep their growth since 2.76, but nothing in the game
+      tells a returning player what changed or what is waiting for them.'
+  plan:
+    note: 'A run becomes a journey across atlas pages joined by a story; the web game gathers canon for AI storytellers;
+      a finished dossier is a pilot ready for Cosmic Shore.'
+  prop:
+    s: change
+    note: Give the last phase a voice. The title shows what changed since you last flew, in keywords you already know.
+  holes:
+  - 'on': np
+    q: How often a person comes back, and how many expeditions they fly a week, is not measured.
+    fill: Count expeditions started and finished per device and per online game (Froglet Analytics, web build only).
+  src:
+  - docs/design/00-pillars.md
+  - docs/design/01-frame-and-campaign.md
+  - docs/HANDOFF.md

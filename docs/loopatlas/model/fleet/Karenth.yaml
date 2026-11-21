@@ -1,0 +1,139 @@
+# Tumult Loop Atlas: pilot Karenth (generated from the pre-made hero; combos invented).
+{
+ "label": "Karenth, the Network",
+ "verbs": {
+  "Mass": {
+   "ability": "Powerful Tail: Momentum Wave",
+   "does": "A wave of thrust: every adjacent foe takes 3 and is knocked back 1.",
+   "trigger": "Ethereal face: 2 AP + 1 Mass (Physical Lunge: Lunge 1 toward a foe, melee 3, and shove it 1.)",
+   "scales": "At E 3: A wave of thrust: every adjacent foe takes 3 and is knocked back 3.",
+   "source": "src/data/ (card axo_tail)",
+   "arch": "reposition",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Charge": {
+   "ability": "Gold Gleam: Lucky Fish",
+   "does": "For luck: your ally gains 1 AP next turn, you reroll up to 2 banked dice, and both heroes' next hit deals +1.",
+   "trigger": "Ethereal face: 1 AP + 1 Charge (Physical Gleam: Catch the light: your ally's next hit deals +1, and both heroes hold Shield 1 this round.)",
+   "scales": "At E 3: For luck: your ally gains 1 AP next turn, you reroll up to 2 banked dice, and both heroes' next hit deals +1.",
+   "source": "src/data/ (card koi_gold)",
+   "arch": "tempo",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Time": {
+   "ability": "Regeneration: Regrow",
+   "does": "Engine for 3 rounds: regenerate 3 each turn.",
+   "trigger": "Ethereal face: 2 AP + 1 Time (Physical Knit: Knit a wound: heal 3.)",
+   "scales": "At E 3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.",
+   "source": "src/data/ (card axo_regen)",
+   "arch": "tempo",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Omni": {
+   "ability": "Channel",
+   "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+   "trigger": "A banked etherion or Omni",
+   "scales": "",
+   "source": "src/data/world.js BASIC",
+   "arch": "omni",
+   "t": [
+    2,
+    10
+   ]
+  }
+ },
+ "board": {},
+ "missing": "",
+ "arenas": [
+  "Salvage",
+  "Cascade"
+ ],
+ "games": {
+  "Mass": [
+   "Powerful Tail"
+  ],
+  "Charge": [
+   "Gold Gleam",
+   "Cooperative Instinct",
+   "Language"
+  ],
+  "Space": [],
+  "Time": [
+   "Regeneration",
+   "Pond Calm"
+  ]
+ },
+ "excused": [],
+ "lean": "support",
+ "leanWhy": "Feeds the partner AP and heals over time.",
+ "combos": [
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Unity",
+   "t": [
+    20,
+    60
+   ],
+   "is": "Hand the partner a whole extra turn of AP and buff the hit.",
+   "chain": [
+    [
+     "Charge",
+     "Assist: ally next strike +3"
+    ],
+    [
+     "Charge",
+     "Unity: ally mints 3 AP"
+    ],
+    [
+     "",
+     "The partner plays two more faces"
+    ]
+   ],
+   "drivers": [
+    "crew",
+    "break"
+   ],
+   "feel": "Winning your partner the round."
+  },
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Calm water",
+   "t": [
+    20,
+    90
+   ],
+   "is": "Shake off holds and regrow while the squad pushes the objective.",
+   "chain": [
+    [
+     "Time",
+     "Garden Pond: both shake off Anchored and Weakened for 2"
+    ],
+    [
+     "Time",
+     "Regrow: regenerate 3 for 3"
+    ],
+    [
+     "Mass",
+     "Momentum Wave: adjacent foes take 3, knocked back 1"
+    ]
+   ],
+   "drivers": [
+    "crew",
+    "stake"
+   ],
+   "feel": "Nothing sticks to us."
+  }
+ ],
+ "doc": "src/data/world.js PREBUILTS"
+}

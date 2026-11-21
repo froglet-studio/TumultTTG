@@ -1,0 +1,42 @@
+proposals:
+- id: P1
+  title: One ladder of words
+  what: Use the eight tier terms (Pulse, Verb, Combo, Round, Mission, Expedition, Arc, Era) in Tumult's design docs and
+    reviews, the same ladder Cosmic Shore uses, so a problem is placed before it is argued.
+  touches: [era]
+- id: P2
+  title: Twenty-two keywords
+  what: Cut about 85 words of art to 22 keywords and a grammar of range and timing words. Field and Link are new; Wound
+    and Hover reshaped; the rest merged. Every tooltip one sentence a player resolves by hand.
+  touches: [face, pulse, turn, duet, draft]
+  stage: planned
+- id: P3
+  title: Body, magic, tech
+  what: 'Biophysical (Physical faces: you and beside you, now), bioethereal (Ethereal faces: any unit, at range, for N rounds)
+    and ethereal technology (gear: spaces, dice, clock, the downed). Boons and consumables fold into gear passives and actives (built in 2.89).'
+  touches: [face, haven, reward, event, expedition]
+  stage: planned
+- id: P4
+  title: Every pilot names two combos
+  what: A feeder into a spender, and one that crosses two elements. The Codex and the hint bar teach them; the audit checks
+    a mission rewards them.
+  touches: [turn, duet]
+- id: P5
+  title: Three AP and one chosen element
+  what: Each turn a pilot rolls 3 AP and picks 1 element; weak and refunding Ethereal faces cost 0 AP; stronger faces cost
+    2 or 3 etherions. Being built in its own thread.
+  touches: [round, face]
+  stage: planned
+- id: P6
+  title: The breath after an expedition
+  what: One question about the moment that mattered and one offered next step, instead of a return to the title.
+  touches: [breath, sitting]
+- id: P7
+  title: The dossier writes itself
+  what: Each expedition adds one line to a made pilot's dossier, from the faces it played and the canon its player wrote.
+  touches: [arc.pilot, arc.canon]
+- id: P8
+  title: Canon questions name a keyword moment
+  what: The game remembers the play that decided a mission (a Pull into a Field, a Link that felled two) and asks about
+    that, so the player embellishes something the game gave.
+  touches: [arc.canon, mission]
