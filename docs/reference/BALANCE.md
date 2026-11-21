@@ -476,3 +476,7 @@ Every gear has a passive (what boons did) and two actives (what consumables did)
 | 2.89.0 at 148% | 44 | 15 |
 
 The weak player's mission wins (`40 missions --player weak`, averaged over the cells): 74.9% on 2.85, 77.3% with the first passives, 75.0% with no passives at all. Removing one passive at a time, only the Capacitor's banked Omni (−1.0) and the Lantern's Mark within 2 (−1.2) moved it, so the Capacitor banks an AP and the Lantern Marks a foe beside you (76.1%). Why vitality cannot come down: boons came only at tier 3 in the simulated kits, while every simulated squad wears gear from tier 2, and now every piece of gear carries a passive. `node tools/sim.js 40` as shipped: runs 3 → 6 and 19 → 21 of 40, mission wins 69% → 70% and 87% → 88%. The 148% row shows the noise: two standard errors on 80 runs is about ±9.
+
+## v2.90.0 — Heal raises the downed
+
+Every heal for both pilots or an ally now gets a downed pilot up; revive and phoenix became Heals; the Medkit lays a mending Field. Same seeds, 2.89.0 → 2.90.0: `80 runs --player strong` 38 → 40; `120 runs --player weak` 11 → 11; `node tools/sim.js 40` runs 6 → 6 and 21 → 22 of 40, mission wins 70% → 70% and 88% → 89%. The weak player's average mission win (`40 missions --player weak`) is unchanged at 76.1%. Within the noise, so nothing is retuned.

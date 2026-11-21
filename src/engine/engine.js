@@ -943,7 +943,7 @@
     if (ph) {
       h.hp = ph.hp;
       delete h.states.Phoenix;
-      say(m, `${h.name} re-forms from the seeded node with ${h.hp} vitality!`, 'sys');
+      say(m, `${h.name}'s held Heal lands: up again with ${h.hp}!`, 'sys');
       fx(m, { t: 'revive', ent: h.uid });
       return;
     }
@@ -1112,6 +1112,22 @@
   }
   T.linkHeal = linkHeal;
 
+  /** Heal a unit: restore vitality, or get a downed pilot up with that much (2.90: Heal raises the downed). */
+  function healUnit(m, u, amt) {
+    if (amt <= 0) return 0;
+    if (u.kind === 'hero' && u.downed) {
+      u.downed = false;
+      u.hp = Math.min(u.maxHp, amt);
+      say(m, `${u.name} gets up with ${u.hp}!`, 'sys');
+      fx(m, { t: 'revive', ent: u.uid });
+      return u.hp;
+    }
+    const before = u.hp;
+    u.hp = Math.min(u.maxHp, u.hp + amt);
+    fx(m, { t: 'heal', ent: u.uid, amount: u.hp - before });
+    return u.hp - before;
+  }
+  T.healUnit = healUnit;
   /** Wound a unit: it takes the Wound at round end, one less each round. A new Wound replaces a smaller one. */
   function woundUnit(m, u, n, source, heal, kind) {
     const w = st(u).Wound;
@@ -1137,7 +1153,7 @@
    * A Field's harm falls on its side's foes and its help on its own side; nothing off the ground (Hover,
    * Weightless) is touched by one.
    */
-  const FIELD_HELPS = { hidden: true };
+  const FIELD_HELPS = { hidden: true, heal: true };
   // the Fields springing now (a Field that pulls a unit across its own spaces does not spring again on the way)
   const SPRINGING = new Set();
   function fieldNodes(m, f) {
@@ -1154,11 +1170,12 @@
   }
   /** Spring one Field on one unit. `late` (a round-end trip) makes a state it leaves last into the next round. */
   function springField(m, f, u, late) {
-    if (trapImmune(u) || (u.kind === 'enemy' ? !u.alive : u.downed)) return false;
+    if (trapImmune(u) || (u.kind === 'enemy' && !u.alive)) return false;
+    const down = u.kind === 'hero' && u.downed; // a downed pilot is reached only by a Heal
     const owner = f.owner != null ? heroBy(m, f.owner) : null;
     let hit = false;
     for (const x of f.fx) {
-      if (x.kw === 'reveal' || !fieldHits(f, u, x)) continue;
+      if (x.kw === 'reveal' || !fieldHits(f, u, x) || (down && x.kw !== 'heal')) continue;
       if (x.if === 'anchored' && (!isAnchored(u) || u.anchoredPerm)) continue;
       const t = (x.t || 1) + (late ? 1 : 0);
       if (!hit && !FIELD_HELPS[x.kw])
@@ -1180,6 +1197,7 @@
         if (x.noTele) st(u).NoTele = { t };
       } else if (x.kw === 'mark') st(u).Marked = {};
       else if (x.kw === 'hidden') setHidden(m, u, t, false);
+      else if (x.kw === 'heal') healUnit(m, u, x.n);
       else if ((x.kw === 'pull' || x.kw === 'push') && owner && !SPRINGING.has(f)) {
         const n = x.n + boonSum(owner, 'fieldForce');
         SPRINGING.add(f);
@@ -1220,7 +1238,7 @@
       }
       if (f.on !== 'end') continue;
       const set = new Set(nodes);
-      for (const u of T.liveHeroes(m).concat(T.liveEnemies(m))) {
+      for (const u of m.heroes.concat(T.liveEnemies(m))) {
         if (f.trips != null && f.trips <= 0) break;
         if (set.has(u.pos)) springField(m, f, u, true);
       }
@@ -2033,48 +2051,40 @@
         );
         break;
       }
-      case 'phoenix':
-        actor.states.Phoenix = { hp: num(f.hp, P, E), t: num(f.dur, P, E) };
-        say(m, `${actor.name} seeds a return (${num(f.hp, P, E)} hp if downed within ${num(f.dur, P, E)}).`, 'hero');
-        break;
       case 'absorb':
         actor.states.Absorb = { n: num(f.n, P, E), t: num(f.dur, P, E), face: f.face || 'C' };
         say(m, `${actor.name} will absorb the next ${num(f.n, P, E)} ranged hit(s).`, 'hero');
         break;
       /* ---------- RESOURCES ---------- */
       case 'heal': {
+        // Heal N (2.90): restore N vitality; a downed pilot it reaches gets up with N. `ward: R` holds it
+        // instead: if you go down within R rounds, it lands then and you get up with N.
         const n = num(met ? f.n : f.elseVal, P, E);
         if (n <= 0) break;
+        if (f.ward != null) {
+          actor.states.Phoenix = { hp: n, t: num(f.ward, P, E) };
+          say(m, `${actor.name} holds a Heal in reserve (${n} if downed within ${num(f.ward, P, E)}).`, 'hero');
+          break;
+        }
         let list = [actor];
-        if (f.party) list = T.liveHeroes(m);
-        else if (f.target === 'ally') list = ally && !ally.downed ? [ally] : [];
+        if (f.party) list = isHero ? m.heroes.slice() : [actor];
+        else if (f.target === 'ally') list = ally ? [ally] : [];
         else if (f.target === 'chosenAlly') {
           const t = targetEnt(m, ctx);
           list = t && t.kind === 'hero' ? [t] : [actor];
+        } else if (f.target === 'downedAdj') {
+          const t = isHero ? T.downedAllyOf(m, actor) : null;
+          list = t && t.downed && B.adjacent(bd, actor.pos, t.pos) ? [t] : [];
+          if (!list.length) say(m, 'No downed ally beside you.', 'sys');
         }
         list.forEach((h) => {
           let amt = n;
           if (f.doubleIfLow && h.hp < h.maxHp / 4) amt *= 2;
-          const before = h.hp;
-          h.hp = Math.min(h.maxHp, h.hp + amt);
-          fx(m, { t: 'heal', ent: h.uid, amount: h.hp - before });
+          healUnit(m, h, amt);
           linkHeal(m, h, amt);
         });
         if (list.length)
           say(m, `${list.map((h) => h.name).join(' & ')} heal${list.length > 1 ? '' : 's'} ${n}.`, 'hero');
-        break;
-      }
-      case 'revive': {
-        const t = isHero ? T.downedAllyOf(m, actor) : ally;
-        if (!t || !t.downed) break;
-        if (f.adjacent && !B.adjacent(bd, actor.pos, t.pos)) {
-          say(m, 'No downed ally adjacent.', 'sys');
-          break;
-        }
-        t.downed = false;
-        t.hp = num(f.hp, P, E);
-        say(m, `${t.name} rises with ${t.hp}!`, 'sys');
-        fx(m, { t: 'revive', ent: t.uid });
         break;
       }
       case 'cleanse': {
@@ -2188,7 +2198,7 @@
               if (x.noTele) o.noTele = true;
               return o;
             })
-            .filter((x) => (['strike', 'weaken', 'pull', 'push'].includes(x.kw) ? x.n > 0 : x.t > 0)),
+            .filter((x) => (['strike', 'weaken', 'pull', 'push', 'heal'].includes(x.kw) ? x.n > 0 : x.t > 0)),
         };
         m.fields.push(fl);
         if (fl.fx.some((x) => x.kw === 'reveal')) revealArea(m, actor, nodes ? nodes[0] : actor.pos, radius, 1);
@@ -2870,7 +2880,9 @@
                 ? 'Marked'
                 : x.kw === 'hidden'
                   ? 'Hidden (your side)'
-                  : 'Revealed';
+                  : x.kw === 'heal'
+                    ? `Heal ${x.n} (your side; the downed get up)`
+                    : 'Revealed';
     const who =
       f.trips === 1 ? 'the first foe to ' : f.trips != null ? `the next ${f.trips} foes to ` : 'every foe that ';
     const when = f.on === 'enter' ? 'enters' : 'ends the round here';
@@ -2902,7 +2914,7 @@
       StatusImmune: 'Immune to Weaken/Anchor.',
       Guard: 'Guarded — ambush damage halved.',
       Freecast: `Next ${Array.isArray(v) ? v.reduce((n, g) => n + g.n, 0) : 0} card(s) skip the track.`,
-      Phoenix: `Phoenix — revive with ${v.hp} if downed.`,
+      Phoenix: `Heal held — if downed within ${v.t}, get up with ${v.hp}.`,
       Absorb: `Absorb — next ${v.n} ranged hit(s) negated, minting Charge.`,
       Engines: 'Engine running.',
       Empower: 'Empowered — next strike(s) boosted.',

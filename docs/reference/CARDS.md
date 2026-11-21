@@ -480,8 +480,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Network Regrowth** ☆ · Time · `cor_regrowth`
 
-- *Phys — Fragment* · 2 AP · CD 3 — Regrow from a fragment: heal 2; if a downed ally is adjacent, they rise with 4 hp. *(P3: Regrow from a fragment: heal 5; if a downed ally is adjacent, they rise with 4 hp.)*
-- *Eth — Reconstitute* · 0 AP + 2 Time · CD 5 · Dur 3 — Seed a node where you stand: if you are downed within 3 rounds, you re-form there with 7 hp. *(P3/E3: Seed a node where you stand: if you are downed within 3 rounds, you re-form there with 9 hp.)*
+- *Phys — Fragment* · 2 AP · CD 3 — Regrow from a fragment: heal 2, and Heal 4 a downed ally beside you (it gets up). *(P3: Regrow from a fragment: heal 5, and Heal 4 a downed ally beside you (it gets up).)*
+- *Eth — Reconstitute* · 0 AP + 2 Time · CD 5 · Dur 3 — Seed a node where you stand and hold a Heal: if you are downed within 3 rounds, Heal 7 (you get up). *(P3/E3: Seed a node where you stand and hold a Heal: if you are downed within 3 rounds, Heal 9 (you get up).)*
 
 **Enzyme Spray** · Mass · `cor_enzyme`
 
@@ -525,7 +525,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Anhydrobiosis Revival** · Time · `tar_revival`
 
 - *Phys — Rehydrate* · 1 AP · CD 2 — Rehydrate: heal 2 (doubled below 25% vitality). *(P3: Rehydrate: heal 5 (doubled below 25% vitality).)*
-- *Eth — Guaranteed Return* · 1 AP + 1 Time · CD 5 · Dur 3 — If you are downed within 3 rounds, revive at once with 6 hp. *(P3/E3: If you are downed within 3 rounds, revive at once with 10 hp.)*
+- *Eth — Guaranteed Return* · 1 AP + 1 Time · CD 5 · Dur 3 — Hold a Heal: if you are downed within 3 rounds, Heal 6 at once (you get up). *(P3/E3: Hold a Heal: if you are downed within 3 rounds, Heal 10 at once (you get up).)*
 
 **Extremophile Traversal** ☆ · Space · `tar_extremo`
 
@@ -2975,7 +2975,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Life** · Time · `bir_life`
 
 - *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
-- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 5 (you get up). *(P3/E3: Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 9 (you get up).)*
 
 **Beak Crack** · Mass · `par_crack`
 
@@ -3450,7 +3450,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Life** · Time · `bir_life`
 
 - *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
-- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 5 (you get up). *(P3/E3: Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 9 (you get up).)*
 
 **Armoured Hide** · Mass · `rep_hide`
 
@@ -3602,7 +3602,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Life** · Time · `bir_life`
 
 - *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
-- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 5 (you get up). *(P3/E3: Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 9 (you get up).)*
 
 **Schooling** · Space · `fis_school`
 
@@ -3877,7 +3877,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Turn Back** · Time · `jel_reverse`
 
 - *Phys — Shed* · 1 AP · CD 2 — Shed the damaged layer: escape every hold and condition, and heal 1. *(P3: Shed the damaged layer: escape every hold and condition, and heal 4.)*
-- *Eth — Young Again* · 1 AP + 1 Time · CD 5 · Dur 3 — Ready to turn young: if you are downed within 3 rounds, you re-form at once with 5 hp. *(P3/E3: Ready to turn young: if you are downed within 3 rounds, you re-form at once with 9 hp.)*
+- *Eth — Young Again* · 1 AP + 1 Time · CD 5 · Dur 3 — Ready to turn young: hold a Heal; if you are downed within 3 rounds, Heal 5 at once (you get up). *(P3/E3: Ready to turn young: hold a Heal; if you are downed within 3 rounds, Heal 9 at once (you get up).)*
 
 ## 79 · Lobster — leans M/T
 
@@ -3886,7 +3886,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Long Life** · Time · `bir_life`
 
 - *Phys — Old Bird* · 1 AP · CD 1 — Heal 1, shake off Anchored and Weakened, and hold Shield 1 this round. *(P3: Heal 4, shake off Anchored and Weakened, and hold Shield 1 this round.)*
-- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1; if you are downed within 3 rounds, you get up where you stand now with 5 hp. *(P3/E3: Heal 1; if you are downed within 3 rounds, you get up where you stand now with 9 hp.)*
+- *Eth — Outlive It* · 1 AP + 1 Time · CD 5 · Dur 3 — Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 5 (you get up). *(P3/E3: Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal 9 (you get up).)*
 
 **Molt** · Time · `crs_molt`
 
@@ -4024,7 +4024,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Play Dead** · Time · `btl_dead`
 
 - *Phys — Drop* · 1 AP · CD 2 — Fall over, legs up: Hidden 1, and the next hit on you is 1 less. *(P3: Fall over, legs up: Hidden 1, and the next hit on you is 4 less.)*
-- *Eth — Not Dead Yet* · 1 AP + 1 Time · CD 5 · Dur 3 — You were only pretending: if you are downed within 3 rounds, get up at once with 4 hp. *(P3/E3: You were only pretending: if you are downed within 3 rounds, get up at once with 8 hp.)*
+- *Eth — Not Dead Yet* · 1 AP + 1 Time · CD 5 · Dur 3 — You were only pretending: hold a Heal; if you are downed within 3 rounds, Heal 4 at once (you get up). *(P3/E3: You were only pretending: hold a Heal; if you are downed within 3 rounds, Heal 8 at once (you get up).)*
 
 ## 82 · Butterfly — leans S/T
 

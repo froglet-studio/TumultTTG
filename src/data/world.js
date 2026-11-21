@@ -115,8 +115,8 @@
       desc:'Heal and revive, fueled by omnicrystals.',
       passive:{ hook:'autoRevive', val:10, txt:'Once a mission, when you would go down, you rise with 10 hp instead.' },
       abilities:[
-        { n:'Patch', cost:1, cd:1, tgt:'foe_or_ally_adj', fx:[{v:'heal', n:f(6), target:'chosenAlly'}], txt:()=>'Heal yourself or an adjacent ally 6.' },
-        { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'revive', hp:f(10), adjacent:true}], txt:()=>'A downed adjacent ally rises with 10 hp.' },
+        { n:'Patch', cost:1, cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
+        { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
       ]},
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);

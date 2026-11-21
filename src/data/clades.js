@@ -2467,8 +2467,8 @@
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'cleanse'},{v:'shield', val:1, dur:1}],
       txt:(P,E)=>`Heal ${1+P}, shake off Anchored and Weakened, and hold Shield 1 this round.` },
     { n:'Outlive It', ap:1, el:1, cd:5, dur:3, tgt:'self',
-      fx:[{v:'phoenix', hp:(P,E)=>3+2*E, dur:3},{v:'heal', n:1}],
-      txt:(P,E)=>`Heal 1; if you are downed within 3 rounds, you get up where you stand now with ${3+2*E} hp.` },
+      fx:[{v:'heal', n:(P,E)=>3+2*E, ward:3},{v:'heal', n:1}],
+      txt:(P,E)=>`Heal 1, and hold a Heal: if you are downed within 3 rounds, Heal ${3+2*E} (you get up).` },
     'It will outlive the person who bought it, and their children.');
   K(['peacock'],'bir_fan','Display Fan','C',0,
     { n:'Fan Out', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
@@ -3552,8 +3552,8 @@
       fx:[{v:'cleanse'},{v:'heal', n:(P,E)=>1+P}],
       txt:(P,E)=>`Shed the damaged layer: escape every hold and condition, and heal ${1+P}.` },
     { n:'Young Again', ap:1, el:1, cd:5, dur:3, tgt:'self',
-      fx:[{v:'phoenix', hp:(P,E)=>3+2*E, dur:3}],
-      txt:(P,E)=>`Ready to turn young: if you are downed within 3 rounds, you re-form at once with ${3+2*E} hp.` },
+      fx:[{v:'heal', n:(P,E)=>3+2*E, ward:3}],
+      txt:(P,E)=>`Ready to turn young: hold a Heal; if you are downed within 3 rounds, Heal ${3+2*E} at once (you get up).` },
     'One kind, when it is dying, simply starts over.');
   // ── Crustaceans (2.65): the lobster and the mantis shrimp. Both molt and wear a carapace;
   // the lobster also has the parrot's Long Life, and the mantis shrimp the chameleon's Turret Eyes.
@@ -3757,8 +3757,8 @@
       fx:[{v:'hidden', dur:1},{v:'preempt', val:(P,E)=>1+P, reflect:0}],
       txt:(P,E)=>`Fall over, legs up: Hidden 1, and the next hit on you is ${1+P} less.` },
     { n:'Not Dead Yet', ap:1, el:1, cd:5, dur:3, tgt:'self',
-      fx:[{v:'phoenix', hp:(P,E)=>2+2*E, dur:3}],
-      txt:(P,E)=>`You were only pretending: if you are downed within 3 rounds, get up at once with ${2+2*E} hp.` },
+      fx:[{v:'heal', n:(P,E)=>2+2*E, ward:3}],
+      txt:(P,E)=>`You were only pretending: hold a Heal; if you are downed within 3 rounds, Heal ${2+2*E} at once (you get up).` },
     'Lie still long enough and the bird goes away.');
 
   // Butterfly: Compound Eyes, Antennae, Glide Wings, Migration, and these five

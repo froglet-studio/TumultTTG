@@ -86,11 +86,11 @@ Gear is ethereal technology (2.89, the keyword plan): it works on spaces, the di
 | Storm Lantern | 5 | as your turn begins, a foe beside you is Marked | Flare (reveal 2 + Mark all revealed, 1◇) · Beacon (ally free move 2, 2◇) |
 | Turret | 6 | your Fields last 1 round longer | Sentry (a Field within 2 and its neighbours for 2 rounds: 2 to every foe ending the round there, 1◇) · Skewer (a Field within 2 for 3 rounds: the first foe in takes 5, Pierce, 2◇) |
 | Climbing Rig | 4 | mag boots: you cannot be pulled | Ascend (climb 1, height ok, 1◇) · Rappel (move 2 through foes, 1◇) |
-| Medkit | 5 | once a mission, rise at 10 instead of going down | Patch (heal 6, 1◇) · Revive (downed adjacent ally at 10, 2◇) |
+| Medkit | 5 | once a mission, rise at 10 instead of going down | Patch (a mending Field on and beside your space for 2 rounds: allies ending the round there Heal 3, 1◇) · Revive (Heal 10 a downed ally beside you, 2◇) |
 
 Gear is the **orthogonality insurance** from the v1.0 mechanic basis: any build can buy the verb it lacks (Space for a vault, Reveal for the Sought, a Turret for a crowd) — general verbs, never keyed counters.
 
-**Boons and consumables were folded into gear in 2.89.** Thick Hide is the Aegis Plate's passive, Keen Sense the Scope's, Quick Hands the Chrono-shim's, Second Wind the Medkit's, Anchor Soul the Climbing Rig's, and Etherion-touched (gentler: an AP) the Capacitor's. The Affinities and Omni Core are cut, since the element die is chosen every turn; Momentum and Defiant are cut. Rally Vial is the Medkit's Patch, Grit the Aegis Plate's Brace, Flashpowder the Scope's Glance, Omni Shard the Capacitor's Store, the Windbreak Charm the Chrono-shim's Rewind. An older save refunds its boons (3 ◇ each) and consumables (their price).
+**Boons and consumables were folded into gear in 2.89.** Thick Hide is the Aegis Plate's passive, Keen Sense the Scope's, Quick Hands the Chrono-shim's, Second Wind the Medkit's, Anchor Soul the Climbing Rig's, and Etherion-touched (gentler: an AP) the Capacitor's. The Affinities and Omni Core are cut, since the element die is chosen every turn; Momentum and Defiant are cut. Rally Vial is the Medkit's Patch (a mending Field since 2.90), Grit the Aegis Plate's Brace, Flashpowder the Scope's Glance, Omni Shard the Capacitor's Store, the Windbreak Charm the Chrono-shim's Rewind. An older save refunds its boons (3 ◇ each) and consumables (their price).
 
 **Havens:** rest for half of missing vitality free, or full repair for 3 ◇.
 
