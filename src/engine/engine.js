@@ -877,16 +877,6 @@
       }
       delete ts.Preempt;
     }
-    // counter (melee/force)
-    if (ts.Counter && kind === 'melee' && source && source.kind === 'enemy') {
-      const c = ts.Counter;
-      source.hp -= c.dmg;
-      fx(m, { t: 'dmg', ent: source.uid, amount: c.dmg, pos: source.pos });
-      say(m, `${target.name} turns the blow back: ${source.name} takes ${c.dmg}.`);
-      if (c.push) pushAway(m, target, source, c.push);
-      delete ts.Counter;
-      checkEnemyDeath(m, source, target);
-    }
     if (dmg > 0) {
       target.hp -= dmg;
       fx(m, { t: 'dmg', ent: target.uid, amount: dmg, pos: target.pos, kind });
@@ -915,11 +905,21 @@
           label: 'reaches through the Link to',
         });
     }
-    // thorns
+    // Thorns (2.93: Counter folded in): a melee striker takes `v`, and the next one `next` more (and a push)
     if (kind === 'melee' && ts.Thorns && source && source.kind === 'enemy') {
-      source.hp -= ts.Thorns.v;
-      fx(m, { t: 'dmg', ent: source.uid, amount: ts.Thorns.v, pos: source.pos });
-      say(m, `${source.name} is seared by ${target.name}'s skin for ${ts.Thorns.v}.`);
+      const th = ts.Thorns;
+      const n = (th.v || 0) + (th.next || 0);
+      if (n > 0) {
+        source.hp -= n;
+        fx(m, { t: 'dmg', ent: source.uid, amount: n, pos: source.pos });
+        say(m, `${source.name} is turned back by ${target.name}'s Thorns for ${n}.`);
+      }
+      if (th.next) {
+        if (th.push && source.alive && source.hp > 0) pushAway(m, target, source, th.push);
+        delete th.next;
+        delete th.push;
+        if (!th.v) delete ts.Thorns;
+      }
       checkEnemyDeath(m, source, target);
     }
     // contact / area reveals
@@ -1982,15 +1982,23 @@
         say(m, `${list.map((h) => h.name).join(' & ')} pre-empt: next hit −${v}.`, 'hero');
         break;
       }
-      case 'counter': {
-        actor.states.Counter = { dmg: num(f.dmg, P, E), push: f.push || 0, t: f.dur || 2 };
-        say(m, `${actor.name} readies a deflection.`, 'hero');
+      case 'thorns': {
+        // Thorns N: anything that strikes you in melee takes N, for `dur` rounds; `next`, only the next one (and
+        // `push` pushes it back). It absorbs Counter.
+        const n = num(f.val, P, E);
+        const d = num(f.dur, P, E) || 1;
+        if (n <= 0) break;
+        const th = st(actor).Thorns || {};
+        if (f.next) {
+          th.next = Math.max(th.next || 0, n);
+          if (f.push) th.push = Math.max(th.push || 0, num(f.push, P, E));
+        } else th.v = Math.max(th.v || 0, n);
+        th.t = Math.max(th.t || 0, d);
+        st(actor).Thorns = th;
+        fx(m, { t: 'state', ent: actor.uid, name: 'Thorns' });
+        say(m, `${actor.name} grows Thorns (${n}${f.next ? ', the next melee hit' : ''}).`, 'hero');
         break;
       }
-      case 'thorns':
-        addTimed(m, actor, 'Thorns', num(f.dur, P, E) || 1, { v: num(f.val, P, E) });
-        say(m, `${actor.name}'s skin turns hostile (${num(f.val, P, E)}).`, 'hero');
-        break;
       case 'stasis':
         addTimed(m, actor, 'Stasis', num(f.dur, P, E) || 1);
         say(m, `${actor.name} steps outside time.`, 'hero');
@@ -2903,9 +2911,8 @@
       Marked: `Marked — ${[v.next ? `the next hit on it deals +${v.next}${v.pierce ? ' and ignores Shield' : ''}` : '', v.each ? `every hit deals +${v.each} for ${v.t}` : ''].filter(Boolean).join('; ')}.`,
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
       Located: 'Located — cannot Hide; can be targeted and struck across a zone even if Hidden.',
-      Thorns: `Thorns ${v.v} — melee attackers take ${v.v}.`,
+      Thorns: `Thorns — ${[v.v ? `melee attackers take ${v.v}` : '', v.next ? `the next takes ${v.next}${v.push ? ' and is pushed ' + v.push : ''}` : ''].filter(Boolean).join('; ')}.`,
       Preempt: `Pre-empt — next hit taken is −${v.v}${v.reflect ? ', reflects ' + v.reflect : ''}.`,
-      Counter: `Counter — next melee against you is turned back for ${v.dmg}.`,
       Stasis: 'Stasis — untargetable.',
       Hover: 'Hover — off the ground: hazards and Fields do not touch it; immune to push/pull.',
       Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',

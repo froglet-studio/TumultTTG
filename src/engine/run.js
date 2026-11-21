@@ -915,7 +915,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 24;
+  T.SAVE_VERSION = 25;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1237,6 +1237,22 @@
         s.Marked = mk;
       }
       r.v = 24;
+    },
+    // 2.93 folds Counter into Thorns: `Thorns` is `{ v, next, push, t }`, and a held Counter becomes its `next`.
+    24(r) {
+      const units = (r.heroes || []).concat((r.mission && r.mission.enemies) || []);
+      for (const u of units) {
+        const s = u && u.states;
+        if (!s || !s.Counter) continue;
+        const c = s.Counter;
+        const th = s.Thorns || {};
+        th.next = Math.max(th.next || 0, c.dmg || 0);
+        if (c.push) th.push = c.push;
+        th.t = Math.max(th.t || 0, c.t || 1);
+        s.Thorns = th;
+        delete s.Counter;
+      }
+      r.v = 25;
     },
   };
   T.deserializeRun = function (json) {

@@ -142,7 +142,7 @@
       icon: 'kw.thorns',
       tone: 'good',
       state: 'Thorns',
-      tip: 'Thorns N: anything that strikes it in melee takes N.',
+      tip: 'Thorns N: anything that strikes it in melee takes N. A next-hit Thorns turns back only the next melee strike (and may push the striker).',
     },
     {
       id: 'stasis',
@@ -182,7 +182,7 @@
       icon: 'kw.counter',
       tone: 'good',
       state: 'Counter',
-      tip: 'Counter: the next melee strike against it is turned back on the striker.',
+      tip: 'Counter: since 2.93 a next-hit Thorns: the next melee strike against it is turned back on the striker.',
     },
     {
       id: 'pierce',

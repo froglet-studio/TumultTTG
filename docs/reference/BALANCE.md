@@ -488,3 +488,7 @@ Anchored, Held, Rooted, Slow, SlowSelf and NoTele became one Anchor (nothing mov
 ## v2.92.0 — Mark
 
 Studied (+N to every hit for the whole mission) became a Mark for 3 rounds, and Exposed a Pierce Mark. Same seeds, 2.91.0 → 2.92.0: `80 runs --player strong` 41 → 39; `120 runs --player weak` 13 → 11; `node tools/sim.js 40` runs 7 → 6 and 23 → 21 of 40, mission wins 71% → 71% and 89% → 88%. A little harder, which takes back Anchor's drift: the sweep is at 39 of 80 and 11 of 120 against 2.85's 39 and 10.
+
+## v2.93.0 — Thorns
+
+Counter became a next-hit Thorns. Same seeds, 2.92.0 → 2.93.0: `80 runs --player strong` 39 → 39; `120 runs --player weak` 11 → 10; `node tools/sim.js 40` runs 6 → 5 and 21 → 21 of 40, mission wins unchanged. Nothing is retuned.

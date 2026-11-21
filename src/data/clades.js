@@ -711,8 +711,8 @@
       fx:[{v:'cleanse'},{v:'preempt', val:(P,E)=>1+h(P), reflect:1}],
       txt:(P,E)=>`Shake off Anchored and Weakened; the next hit on you is ${1+h(P)} less, and you bite back for 1.` },
     { n:'Loose Skin', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'counter', dmg:(P,E)=>2+E, push:0, dur:2},{v:'preempt', val:2, reflect:0}],
-      txt:(P,E)=>`Hold a turn-and-bite ready: the next foe to hit you in melee takes ${2+E}, and that hit is 2 less.` },
+      fx:[{v:'thorns', val:(P,E)=>2+E, next:true, dur:2},{v:'preempt', val:2, reflect:0}],
+      txt:(P,E)=>`Hold a turn-and-bite ready: Thorns: the next foe to hit you in melee takes ${2+E}, and that hit is 2 less.` },
     'Grab it anywhere and it turns round inside its skin.');
   K(['badger'],'bad_bee','Bee Raid','C',0,
     { n:'Raid', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -991,8 +991,8 @@
       fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1, party:true, allyRange:1}],
       txt:(P,E)=>`You and an ally beside you hold Shield ${2+h(P)} this round.` },
     { n:'Ring of Horns', ap:1, el:1, cd:4, dur:0, tgt:'party',
-      fx:[{v:'shield', val:(P,E)=>1+E, dur:1, party:true},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:1}],
-      txt:(P,E)=>`Both heroes hold Shield ${1+E} this round; the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:1, party:true},{v:'thorns', val:(P,E)=>1+E, next:true, push:1, dur:1}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+E} this round; Thorns: the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
     'Young in the middle, everyone else facing out.', 'Hoofed animals');
   K(HOOVED,'hoof_eyes','Wide Eyes','S',0,
     { n:'Look Around', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -1143,8 +1143,8 @@
       fx:[{v:'preempt', val:(P,E)=>2+h(P), reflect:1}],
       txt:(P,E)=>`The next hit on you is ${2+h(P)} less, and its attacker takes 1.` },
     { n:'Hard Head', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:2, dur:1}],
-      txt:(P,E)=>`Shield 2 this round; for 2 rounds, the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+      fx:[{v:'thorns', val:(P,E)=>2+E, next:true, push:1, dur:2},{v:'shield', val:2, dur:1}],
+      txt:(P,E)=>`Shield 2 this round; for 2 rounds, Thorns: the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
     'A skull built to take what it gives.');
 
   // Moose
@@ -1161,8 +1161,8 @@
       fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P), area:'radius', radius:2}],
       txt:(P,E)=>`Every foe within 2 is Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}.` },
     { n:'Rut Call', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'force', kind:'pull', n:1, area:true, radius:(P,E)=>2+E},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:1}],
-      txt:(P,E)=>`Every foe within ${2+E} is drawn 1 toward you; the next to hit you in melee takes ${1+E} and is pushed 1.` },
+      fx:[{v:'force', kind:'pull', n:1, area:true, radius:(P,E)=>2+E},{v:'thorns', val:(P,E)=>1+E, next:true, push:1, dur:1}],
+      txt:(P,E)=>`Every foe within ${2+E} is drawn 1 toward you; Thorns: the next to hit you in melee takes ${1+E} and is pushed 1.` },
     'A low call across the bog, and something answers.');
   K(['moose'],'moo_stand','Stand Ground','M',0,
     { n:'Plant', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -1354,8 +1354,8 @@
     'Slow up the trunk, and nobody follows.');
   K(['porcupine'],'por_back','Back Turn','T',0,
     { n:'Turn Away', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'counter', dmg:(P,E)=>1+P, push:0, dur:1},{v:'preempt', val:1, reflect:0}],
-      txt:(P,E)=>`Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes ${1+P}.` },
+      fx:[{v:'thorns', val:(P,E)=>1+P, next:true, dur:1},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Turn your quills to the threat: the next hit on you is 1 less, and Thorns: the next foe to hit you in melee takes ${1+P}.` },
     { n:'Back into It', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:2},{v:'wound', n:2, kind:'quill'}],
       txt:(P,E)=>`Back into a foe beside you: it takes ${3+E}, is Weakened 1 for 2 rounds, and is Wounded 2.` },
@@ -1637,8 +1637,8 @@
       fx:[{v:'cleanse'},{v:'shield', val:(P,E)=>1+h(P), dur:1},{v:'heal', n:1}],
       txt:(P,E)=>`Shed Anchored, Weakened and damage over time; Shield ${1+h(P)} this round, and heal 1.` },
     { n:'Stinging Shield', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'counter', dmg:(P,E)=>2+E, push:0, dur:2},{v:'statusImmune', dur:2}],
-      txt:(P,E)=>`For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes ${2+E}.` },
+      fx:[{v:'thorns', val:(P,E)=>2+E, next:true, dur:2},{v:'statusImmune', dur:2}],
+      txt:(P,E)=>`For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes ${2+E}.` },
     'Ants crawl under the scales, and it lets them.');
 
   // Hedgehog
@@ -1749,8 +1749,8 @@
       fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>2+h(P), dur:1}],
       txt:(P,E)=>`Brace on your tail: Shield ${2+h(P)} this round, and nothing can push or pull you.` },
     { n:'Five Legs', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'statusImmune', dur:2},{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2}],
-      txt:(P,E)=>`For 2 rounds you can't be Weakened or Anchored by a foe, and the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+      fx:[{v:'statusImmune', dur:2},{v:'thorns', val:(P,E)=>2+E, next:true, push:1, dur:2}],
+      txt:(P,E)=>`For 2 rounds you can't be Weakened or Anchored by a foe, and Thorns: the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
     'The tail takes its whole weight.');
   K(['kangaroo'],'kan_mob','Mob Lead','C',0,
     { n:'Thump the Mob', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
@@ -1971,8 +1971,8 @@
     'Down to the water and up again, and never wet past the ankles.');
   K(['eagle'],'eag_nest','Nest Guard','T',0,
     { n:'Over the Nest', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1},{v:'counter', dmg:1, dur:1}],
-      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round, and the first foe to hit you in melee takes 1.` },
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1},{v:'thorns', val:1, next:true, dur:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round, and Thorns: the first foe to hit you in melee takes 1.` },
     { n:'Eyrie', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
       txt:(P,E)=>`Both heroes hold Shield ${1+E} for 2 rounds and heal 1 at the start of each turn for 2 rounds.` },
@@ -2422,8 +2422,8 @@
       fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>2+h(P), dur:1}],
       txt:(P,E)=>`Sit tight on the nest: Shield ${2+h(P)} this round, and nothing can push or pull you.` },
     { n:'Hold the Nest', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
-      txt:(P,E)=>`Shield ${1+h(E)} for 2 rounds, and the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+      fx:[{v:'thorns', val:(P,E)=>2+E, next:true, push:1, dur:2},{v:'shield', val:(P,E)=>1+h(E), dur:2}],
+      txt:(P,E)=>`Shield ${1+h(E)} for 2 rounds, and Thorns: the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
     'No nest at all: a ring on bare ground, defended.');
   K(['booby'],'boo_charm','Clumsy Charm','C',0,
     { n:'Pratfall', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
@@ -2803,11 +2803,11 @@
     'A kilo of pebbles inside, grinding.');
   K(['ostrich'],'ost_nest','Nest Ring','T',0,
     { n:'Guard the Ring', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1},{v:'counter', dmg:(P,E)=>1+h(P), dur:1}],
-      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round, and the first foe to hit you in melee takes ${1+h(P)}.` },
+      fx:[{v:'shield', val:(P,E)=>1+P, dur:1, party:true, allyRange:1},{v:'thorns', val:(P,E)=>1+h(P), next:true, dur:1}],
+      txt:(P,E)=>`You and an ally beside you hold Shield ${1+P} this round, and Thorns: the first foe to hit you in melee takes ${1+h(P)}.` },
     { n:'Shared Nest', ap:1, el:1, cd:4, dur:0, tgt:'party',
-      fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true},{v:'heal', n:1, party:true},{v:'counter', dmg:2, push:1, dur:2}],
-      txt:(P,E)=>`Both heroes hold Shield ${1+E} for 2 rounds and heal 1; the next foe to hit you in melee takes 2 and is pushed 1.` },
+      fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true},{v:'heal', n:1, party:true},{v:'thorns', val:2, next:true, push:1, dur:2}],
+      txt:(P,E)=>`Both heroes hold Shield ${1+E} for 2 rounds and heal 1; Thorns: the next foe to hit you in melee takes 2 and is pushed 1.` },
     'Many hens lay in one nest, and the pair guard all of it.');
 
   // Wild turkey: Hollow Bones, Display Fan, Alarm Call, Spur, Ground Sprint, and these four
@@ -2903,8 +2903,8 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'force', kind:'push', n:1}],
       txt:(P,E)=>`Butt with your helmet: melee ${2+P}, and push it 1.` },
     { n:'Helmet Up', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'shield', val:(P,E)=>2+E, dur:1},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
-      txt:(P,E)=>`Shield ${2+E} this round, and the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+      fx:[{v:'shield', val:(P,E)=>2+E, dur:1},{v:'thorns', val:(P,E)=>1+E, next:true, push:1, dur:2}],
+      txt:(P,E)=>`Shield ${2+E} this round, and Thorns: the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
     'A helmet of bone on top of its head.');
 
   // Basilisk: Tail Autotomy, Scaled Hide, Solar Basking, and these six
@@ -3071,8 +3071,8 @@
       fx:[{v:'heal', n:1},{v:'weaken', val:1, dur:1, area:'adj'},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
       txt:(P,E)=>`Lie with your jaws wide in the sun: heal 1, hold Shield ${1+h(P)}, and foes beside you are Weakened 1 at the sight.` },
     { n:'Open Wide', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'counter', dmg:(P,E)=>2+E, dur:2}],
-      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; the next foe to hit you in melee takes ${2+E}.` },
+      fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+E},{v:'thorns', val:(P,E)=>2+E, next:true, dur:2}],
+      txt:(P,E)=>`Heal 1 at the start of each turn for ${2+E} rounds; Thorns: the next foe to hit you in melee takes ${2+E}.` },
     'Mouth open on the bank, to cool off. Nobody comes closer.');
   K(['crocodile'],'cro_king','River King','C',0,
     { n:'Bellow', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3089,8 +3089,8 @@
       fx:[{v:'shield', val:(P,E)=>2+P, dur:1},{v:'statusImmune', dur:1}],
       txt:(P,E)=>`Shield ${2+P} this round, and you can't be Weakened or Anchored by a foe.` },
     { n:'House on Your Back', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'shield', val:(P,E)=>3+E, dur:2},{v:'shield', val:1, dur:1, party:true, allyRange:1},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
-      txt:(P,E)=>`Shield ${3+E} for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+      fx:[{v:'shield', val:(P,E)=>3+E, dur:2},{v:'shield', val:1, dur:1, party:true, allyRange:1},{v:'thorns', val:(P,E)=>1+E, next:true, push:1, dur:2}],
+      txt:(P,E)=>`Shield ${3+E} for 2 rounds; an ally beside you holds Shield 1 this round, and Thorns: the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
     'A house, a fortress and a back, all one bone.');
   K(['tortoise'],'tor_sure','Slow and Sure','T',0,
     { n:'Plan Ahead', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3440,8 +3440,8 @@
       fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1},{v:'preempt', val:1, reflect:0}],
       txt:(P,E)=>`Shield ${2+h(P)} this round, and the next hit on you is 1 less.` },
     { n:'Armoured Ring', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'shield', val:(P,E)=>2+E, dur:2},{v:'counter', dmg:(P,E)=>1+E, dur:2}],
-      txt:(P,E)=>`Shield ${2+E} for 2 rounds; the next foe to hit you in melee takes ${1+E}.` },
+      fx:[{v:'shield', val:(P,E)=>2+E, dur:2},{v:'thorns', val:(P,E)=>1+E, next:true, dur:2}],
+      txt:(P,E)=>`Shield ${2+E} for 2 rounds; Thorns: the next foe to hit you in melee takes ${1+E}.` },
     'No scales: rings of bone, all the way down.');
   K(['seahorse'],'sea_fin','Slow Fin','S',0,
     { n:'Flutter', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -3520,8 +3520,8 @@
       fx:[{v:'thorns', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Let your tentacles hang: anything that hits you in melee this round takes ${1+P}.` },
     { n:'Curtain', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
-      txt:(P,E)=>`Spread a curtain of stings: for 2 rounds anything that hits you in melee takes ${1+E}, and the first to do so takes ${1+E} more and is pushed 1.` },
+      fx:[{v:'thorns', val:(P,E)=>1+E, dur:2},{v:'thorns', val:(P,E)=>1+E, next:true, push:1, dur:2}],
+      txt:(P,E)=>`Spread a curtain of stings: for 2 rounds anything that hits you in melee takes ${1+E}, and Thorns: the first to do so takes ${1+E} more and is pushed 1.` },
     'Metres of tentacle, trailing behind something you can barely see.');
   K(['jellyfish'],'jel_pulse','Bell Pulse','S',0,
     { n:'Pulse', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -3628,8 +3628,8 @@
       fx:[{v:'anchor', who:'self', dur:1},{v:'preempt', val:(P,E)=>1+P, reflect:0}],
       txt:(P,E)=>`Back into a crack: nothing can push or pull you this round, and the next hit on you is ${1+P} less.` },
     { n:'Hold the Den', ap:1, el:1, cd:4, dur:0, tgt:'self',
-      fx:[{v:'anchor', who:'self', dur:2},{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:(P,E)=>1+E, dur:2}],
-      txt:(P,E)=>`Claws out at the door: for 2 rounds hold Shield ${1+E} and nothing can push or pull you; the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
+      fx:[{v:'anchor', who:'self', dur:2},{v:'thorns', val:(P,E)=>2+E, next:true, push:1, dur:2},{v:'shield', val:(P,E)=>1+E, dur:2}],
+      txt:(P,E)=>`Claws out at the door: for 2 rounds hold Shield ${1+E} and nothing can push or pull you; Thorns: the next foe to hit you in melee takes ${2+E} and is pushed 1.` },
     'Every lobster has a hole in the rock, and will fight for it.');
 
   // Mantis Shrimp: Molt, Carapace, Turret Eyes, and these six
@@ -3675,11 +3675,11 @@
     'A patch that glows, for talking and for warning.');
   K(['mantis_shrimp'],'msh_ritual','Ritual Fight','M',0,
     { n:'Square Up', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'shield', val:1, dur:1},{v:'counter', dmg:(P,E)=>1+P, push:0, dur:2}],
-      txt:(P,E)=>`Raise your tail plate like a shield: Shield 1 this round, and the next foe to hit you in melee within 2 rounds takes ${1+P}.` },
+      fx:[{v:'shield', val:1, dur:1},{v:'thorns', val:(P,E)=>1+P, next:true, dur:2}],
+      txt:(P,E)=>`Raise your tail plate like a shield: Shield 1 this round, and Thorns: the next foe to hit you in melee within 2 rounds takes ${1+P}.` },
     { n:'Tail Shield', ap:1, el:1, cd:3, dur:0, tgt:'self',
-      fx:[{v:'preempt', val:(P,E)=>2+E, reflect:(P,E)=>E},{v:'counter', dmg:(P,E)=>1+E, push:1, dur:2}],
-      txt:(P,E)=>`Take it on the tail plate: the next hit on you is ${2+E} less and ${E} of it bounces back; the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
+      fx:[{v:'preempt', val:(P,E)=>2+E, reflect:(P,E)=>E},{v:'thorns', val:(P,E)=>1+E, next:true, push:1, dur:2}],
+      txt:(P,E)=>`Take it on the tail plate: the next hit on you is ${2+E} less and ${E} of it bounces back; Thorns: the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
     'They fight by taking turns to hit each other on the tail, and the tail can take it.');
   // ── Insects and arachnids (2.66): the Grasshopper (an unpainted clade) moves onto the branch and lends
   // its Exoskeleton, Compound Eyes, Molt and Glide Wings; every insect here also has Antennae.

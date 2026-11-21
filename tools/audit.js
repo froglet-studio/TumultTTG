@@ -132,7 +132,6 @@ function answersOf(x) {
     }
     case 'hidden':
     case 'preempt':
-    case 'counter':
     case 'stasis':
     case 'slow':
     case 'guard':
@@ -261,7 +260,7 @@ const ABLATIONS = [
     'mitigation',
     'no shields or wards',
     (x) =>
-      ['shield', 'preempt', 'guard', 'stasis', 'counter', 'hidden', 'absorb', 'thorns'].includes(x.v) ||
+      ['shield', 'preempt', 'guard', 'stasis', 'hidden', 'absorb', 'thorns'].includes(x.v) ||
       (x.v === 'heal' && x.ward != null),
   ],
   ['heal', 'no healing', (x) => x.v === 'heal' || (x.v === 'engine' && x.kind === 'regen')],
@@ -300,7 +299,7 @@ function autoplayerKnows(face) {
   const node = /^node_/.test(face.tgt);
   const strike = face.fx.find((x) => x.v === 'strike');
   if (strike) return foe || ['area', 'zone_all'].includes(strike.kind) || !!strike.nearest;
-  if (has('shield', 'preempt', 'counter', 'stasis', 'heal', 'reveal', 'engine')) return true;
+  if (has('shield', 'preempt', 'stasis', 'heal', 'reveal', 'engine')) return true;
   if (face.fx.some((x) => x.v === 'anchor' && x.who === 'foe') || has('weaken')) return foe;
   if (has('field')) return node;
   if (has('teleport', 'climb', 'move')) return node;

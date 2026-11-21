@@ -189,8 +189,8 @@
       fx:[{v:'anchor', who:'self', dur:1},{v:'shield', val:(P,E)=>1+P, dur:1}],
       txt:(P,E)=>`Plant yourself: immune to push/pull and Shield ${1+P} this round.` },
     { n:'Deflect', ap:2, el:1, cd:3, dur:2, tgt:'self',
-      fx:[{v:'counter', dmg:(P,E)=>2+E, push:1, dur:2},{v:'shield', val:(P,E)=>Math.max(1,E), dur:1}],
-      txt:(P,E)=>`Shield ${Math.max(1,E)} this round, and the next melee or force against you is turned back: attacker takes ${2+E} and is pushed 1. Dur 2.` },
+      fx:[{v:'thorns', val:(P,E)=>2+E, next:true, push:1, dur:2},{v:'shield', val:(P,E)=>Math.max(1,E), dur:1}],
+      txt:(P,E)=>`Shield ${Math.max(1,E)} this round, and Thorns: the next foe to hit you in melee takes ${2+E} and is pushed 1. Dur 2.` },
     'Redirect incoming momentum at its source.');
 
   /* ───────────────────────── 2 · GRASSHOPPER (M/C) ───────────────────────── */

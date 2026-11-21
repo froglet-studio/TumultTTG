@@ -370,7 +370,6 @@
     shield: 'basic.brace',
     absorb: 'basic.brace',
     thorns: 'boon.thickhide',
-    counter: 'boon.thickhide',
     hazardImmune: 'boon.thickhide',
     link: 'basic.lend',
     move: 'basic.scramble',

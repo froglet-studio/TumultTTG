@@ -121,3 +121,14 @@ In code: the verb `anchor` (`who`: self / foe / ally / target, `dur`), the state
 
 In code: the verb `mark` (`n`, `dur`, `pierce`, `nearest`, `area` + `radius`), the state `Marked`
 (`{ next, pierce, each, t }`), `T.markUnit`; saves version 24.
+
+## Thorns (2.93)
+
+> **Thorns N.** Anything that strikes it in melee takes N.
+
+- **Lasting** Thorns turn back every melee strike for as long as they last.
+- **Next-hit** Thorns turn back only the next melee strike, and may push the striker back: what Counter did until
+  2.93. Both add up on that next hit.
+
+In code: the verb `thorns` (`val`, `dur`, `next`, `push`), the state `Thorns` (`{ v, next, push, t }`); saves
+version 25.
