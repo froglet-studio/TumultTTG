@@ -9,6 +9,15 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.103.0 — 2026-11-21 — Move, Climb, Trample and Guide
+
+- **Move N, and the ways a move differs.** Garrett settled the movement family: more choices, as long as each is distinct. A move may be *climbing* (its steps take the ledges), *past foes*, *trampling* (new: through foes, each pushed aside as you reach it), *exactly N*, *toward* a unit, or *carrying an ally* beside you (`docs/reference/KEYWORDS.md`).
+- **Climb is a Move now.** The 26 climbing faces and the Climbing Rig's Ascend were a jump to any space within N that ignored foes in the way; now Climb N walks the paths, ledges included, and foes block it. Their texts say Climb.
+- **Trample** comes first to the hoofed animals' Gallop: Move 3+E, trampling, in place of passing foes.
+- **Guide N** moves an ally (Call, Cue, Leg up, the Beacon and twelve more), so the Rally action, which raises a downed ally, no longer shares its word with them. Their texts say Guide.
+- Climb, Trample and Guide have tooltips.
+- No save change.
+
 ## 2.102.0 — 2026-11-21 — Hover lifts you off the ground
 
 - **Hover N: off the ground for N rounds.** No hazard or Field touches you, nothing pushes or pulls you, and your steps may take the ledges. Garrett settled the family: Hover is the fliers' keyword (hummingbirds, dragonflies and the rest hover, whatever their element), and ignoring hazards stays its own keyword for the coats, gills and salt feet that keep a pilot on the ground (`docs/reference/KEYWORDS.md`).

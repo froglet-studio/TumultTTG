@@ -78,11 +78,11 @@ test('every power that moves your partner resolves on the spot, so a turn can be
   // Call, Cue, Leg up and the Beacon gear all name the destination when they are played
   const movers = [];
   for (const c of Object.values(T.CARD))
-    for (const fk of ['P', 'E']) if (c[fk].fx.some((x) => x.v === 'rally')) movers.push(c[fk].tgt);
-  for (const b of T.BASIC) if (b.fx.some((x) => x.v === 'rally')) movers.push(b.tgt);
-  for (const g of T.GEAR) for (const ab of g.abilities) if (ab.fx.some((x) => x.v === 'rally')) movers.push(ab.tgt);
+    for (const fk of ['P', 'E']) if (c[fk].fx.some((x) => x.v === 'guide')) movers.push(c[fk].tgt);
+  for (const b of T.BASIC) if (b.fx.some((x) => x.v === 'guide')) movers.push(b.tgt);
+  for (const g of T.GEAR) for (const ab of g.abilities) if (ab.fx.some((x) => x.v === 'guide')) movers.push(ab.tgt);
   assert.ok(movers.length >= 4);
-  for (const t of movers) assert.ok(['ally_move', 'ally_adj_move'].includes(t), 'a rally names its node: ' + t);
+  for (const t of movers) assert.ok(['ally_move', 'ally_adj_move'].includes(t), 'a guide names its node: ' + t);
   // and the same plan played twice gives the same board
   const a = scene();
   const b = scene();

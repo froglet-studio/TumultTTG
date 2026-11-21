@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.102.0',
+    version: '2.103.0',
     items: [
+      {
+        text: 'Movement has clearer words: Climb is a Move that may take ledges (foes now block it, as they block any walk), Guide moves an ally (Rally only raises the downed), and Gallop now tramples: it goes through foes and pushes each one aside, into a hazard or Field if that is where aside is. Did a climb that used to reach a ledge get stuck behind a foe? Did trampling give you a shove you could plan?',
+      },
       {
         text: 'Fliers now Hover: off the ground, no hazard or Field touches them, nothing pushes or pulls them, and their flights can end on a ledge (hawk, eagle, crane, egret, owl, pelican, hummingbird, seahorse, winged insects). Coats, gills and swims still just ignore hazards. Did a flier reach somewhere you did not expect? Did the two ever read as the same thing?',
       },
