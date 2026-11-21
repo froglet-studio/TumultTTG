@@ -15,7 +15,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Theory of Mind** ★ · Time · `hum_mind`
 
 - *Phys — Read* · 1 AP · CD 1 — Mark a foe: the next hit on it deals +2. *(P3: Mark a foe: the next hit on it deals +2, and its own next hit deals −1.)*
-- *Eth — Pre-empt* · 0 AP + 2 Time · CD 3 · Dur 2 — Pre-arm: Shield: Shield: the next hit on you is reduced by 6 and reflects 2 back. Dur 2. *(P3/E3: Pre-arm: Shield: Shield: the next hit on you is reduced by 10 and reflects 4 back. Dur 2.)*
+- *Eth — Pre-empt* · 0 AP + 2 Time · CD 3 — Read a foe: this round its attack is Aimed, at the space its target stands on now. Step away and it strikes whoever stands there then, foe or pilot. *(P3/E3: Read a foe and every foe within 2 of it: this round its attack is Aimed, at the space its target stands on now. Step away and it strikes whoever stands there then, foe or pilot.)*
 
 **Tool Use** ★ · Space · `hum_tool`
 
@@ -554,7 +554,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Theory of Mind** ★ · Time · `hum_mind`
 
 - *Phys — Read* · 1 AP · CD 1 — Mark a foe: the next hit on it deals +2. *(P3: Mark a foe: the next hit on it deals +2, and its own next hit deals −1.)*
-- *Eth — Pre-empt* · 0 AP + 2 Time · CD 3 · Dur 2 — Pre-arm: Shield: Shield: the next hit on you is reduced by 6 and reflects 2 back. Dur 2. *(P3/E3: Pre-arm: Shield: Shield: the next hit on you is reduced by 10 and reflects 4 back. Dur 2.)*
+- *Eth — Pre-empt* · 0 AP + 2 Time · CD 3 — Read a foe: this round its attack is Aimed, at the space its target stands on now. Step away and it strikes whoever stands there then, foe or pilot. *(P3/E3: Read a foe and every foe within 2 of it: this round its attack is Aimed, at the space its target stands on now. Step away and it strikes whoever stands there then, foe or pilot.)*
 
 **Tool Use** ★ · Space · `hum_tool`
 
