@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.91.0 — 2026-11-21 — Anchor
+
+The fifth keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Anchor.** Nothing moves an Anchored unit: no push or pull, and it cannot walk or blink. It still acts. One state, `Anchored`, in place of five: Anchored, Held, Rooted, Slow, SlowSelf and NoTele (`T.anchorEnt`).
+- **What changes.** A hero who Anchors itself no longer lets go by walking: it stays put for the round, so the order of a turn matters. A foe's root (the Binder's) is an Anchor, so a rooted pilot cannot be pushed either. An Anchored hero cannot blink. `slow` and `slowSelf` faces Anchor; `held` and the counted Field's no-blink went away, since every Anchor is both.
+- **Saves** are version 23: each old state becomes Anchored for as long as the longest of them (fixture `save-2.90.json`).
+- **Balance.** Same seeds, 2.90.0 → 2.91.0: `80 runs --player strong` 40 → 41; `120 runs --player weak` 11 → 13; `node tools/sim.js 40` runs 6 → 7 and 22 → 23 of 40, mission wins 70% → 71% and 89% → 89%. Each within the noise; the sweep's drift is retuned at its end with larger samples.
+
 ## 2.90.0 — 2026-11-21 — Heal raises the downed
 
 The fourth keyword of the sweep (`docs/reference/KEYWORDS.md`; Garrett, 2026-11-21: Heal raises the downed, Rally stays the basic action).

@@ -675,7 +675,7 @@
     return !!st(ent).Hidden;
   }
   function isAnchored(ent) {
-    return !!(st(ent).Anchored || st(ent).Held || st(ent).Rooted || ent.anchoredPerm);
+    return !!(st(ent).Anchored || ent.anchoredPerm);
   }
   function forceImmune(ent) {
     return isAnchored(ent) || !!st(ent).Hover || !!st(ent).Weightless;
@@ -701,14 +701,18 @@
     st(ent).Weak = { v: Math.max(v, cur ? cur.v : 0), t: Math.max(t, cur ? cur.t : 0) };
     fx(m, { t: 'state', ent: ent.uid, name: 'Weak' });
   }
-  /** Anchor a unit. Status immunity turns away an anchor put on a hero by a foe, not one the squad chose (`chosen`). */
-  function anchorEnt(m, ent, t, held, chosen) {
+  /**
+   * Anchor a unit (2.91: one keyword for anchor, held, rooted, slow and no-teleport): nothing moves it, its own
+   * walking and blinking included, and it still acts. Status immunity turns away an anchor put on a hero by a foe,
+   * not one the squad chose (`chosen`).
+   */
+  function anchorEnt(m, ent, t, chosen) {
     if (st(ent).StatusImmune && ent.kind === 'hero' && !chosen) return;
     const cur = st(ent).Anchored;
     st(ent).Anchored = { t: Math.max(t, cur ? cur.t : 0) };
-    if (held) st(ent).Held = { t: Math.max(t, (st(ent).Held || { t: 0 }).t) };
     fx(m, { t: 'state', ent: ent.uid, name: 'Anchored' });
   }
+  T.anchorEnt = anchorEnt;
   T.isHidden = isHidden;
   T.isAnchored = isAnchored;
 
@@ -1194,7 +1198,6 @@
       else if (x.kw === 'weaken') weaken(m, u, x.n, t);
       else if (x.kw === 'anchor') {
         anchorEnt(m, u, t);
-        if (x.noTele) st(u).NoTele = { t };
       } else if (x.kw === 'mark') st(u).Marked = {};
       else if (x.kw === 'hidden') setHidden(m, u, t, false);
       else if (x.kw === 'heal') healUnit(m, u, x.n);
@@ -1305,7 +1308,7 @@
           return { need: 'none', invalid: 'your ally must be beside you' };
         const rl = face && face.fx.find((x) => x.v === 'rally');
         const n = rl ? num(rl.move, P, E) : 0;
-        const steps = st(ally).Rooted || st(ally).SlowSelf ? [] : T.reachableWalk(m, ally, n, false);
+        const steps = isAnchored(ally) ? [] : T.reachableWalk(m, ally, n, false);
         return { need: 'node', options: [ally.pos].concat(steps), ally: ally.uid, allyMove: n };
       }
       case 'foe_melee':
@@ -1647,8 +1650,8 @@
         if (actor.kind !== 'hero') break;
         const n = num(f.n, P, E);
         if (n <= 0) break;
-        if (st(actor).SlowSelf) {
-          say(m, `${actor.name} cannot move this round.`, 'sys');
+        if (isAnchored(actor)) {
+          say(m, `${actor.name} is Anchored and cannot move.`, 'sys');
           break;
         }
         let dest = null;
@@ -1713,8 +1716,8 @@
           say(m, 'Out of reach.', 'sys');
           break;
         }
-        if (st(actor).NoTele) {
-          say(m, `${actor.name} is held — no teleporting out.`, 'sys');
+        if (isAnchored(actor)) {
+          say(m, `${actor.name} is Anchored — no blinking out.`, 'sys');
           break;
         }
         const from = actor.pos;
@@ -1901,21 +1904,21 @@
         if (d <= 0) break;
         const chosen = isHero; // a hero's own anchor on itself or an ally is a choice, not a status put on it
         if (f.who === 'self') {
-          anchorEnt(m, actor, d, false, chosen);
+          anchorEnt(m, actor, d, chosen);
           say(m, `${actor.name} anchors (${d}).`, 'hero');
         } else if (f.who === 'ally') {
           if (ally && !ally.downed && (!f.adjacent || B.adjacent(bd, actor.pos, ally.pos))) {
-            anchorEnt(m, ally, d, false, chosen);
+            anchorEnt(m, ally, d, chosen);
             say(m, `${ally.name} anchored (${d}).`, 'hero');
           }
         } else {
           const t = targetEnt(m, ctx) || ctx.lastTarget;
           if (!t) break;
           if (t.kind === 'enemy') {
-            anchorEnt(m, t, d, !!f.held);
-            say(m, `${t.name} Anchored ${d}${f.held ? ' (held)' : ''}.`, 'hero');
+            anchorEnt(m, t, d);
+            say(m, `${t.name} Anchored ${d}.`, 'hero');
           } else if (t.kind === 'hero') {
-            anchorEnt(m, t, d, false, chosen);
+            anchorEnt(m, t, d, chosen);
           }
         }
         break;
@@ -1941,16 +1944,6 @@
         if (targets.length) say(m, `Weakened ${v}: ${targets.map((t) => t.name).join(', ')}.`, 'hero');
         break;
       }
-      case 'slow': {
-        const t = targetEnt(m, ctx) || ctx.lastTarget;
-        if (!t || t.kind !== 'enemy') break;
-        addTimed(m, t, 'Slow', num(f.dur, P, E));
-        say(m, `${t.name} cannot move for ${num(f.dur, P, E)}.`, 'hero');
-        break;
-      }
-      case 'slowSelf':
-        addTimed(m, actor, 'SlowSelf', num(f.dur, P, E) || 1);
-        break;
       case 'empower': {
         const v = num(f.val, P, E);
         if (v <= 0 && !f.pierce) break;
@@ -2101,7 +2094,7 @@
         }
         const list = f.party ? T.liveHeroes(m) : [actor];
         list.forEach((h) => {
-          ['Anchored', 'Rooted', 'Weak', 'Slow', 'SlowSelf', 'NoTele', 'Wound'].forEach((k) => delete h.states[k]);
+          ['Anchored', 'Weak', 'Wound'].forEach((k) => delete h.states[k]);
         });
         say(m, `${list.map((h) => h.name).join(' & ')} shake free.`, 'hero');
         break;
@@ -2326,7 +2319,7 @@
   /* ───────────────────────────── BASIC ACTIONS ───────────────────────────── */
   T.walk = function (m, h, dest) {
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
-    if (st(h).Rooted || st(h).SlowSelf) return { ok: false, why: 'rooted' };
+    if (isAnchored(h)) return { ok: false, why: 'Anchored' };
     const bd = m.board;
     const free = h.freeMove || 0;
     const climber = canClimb(h);
@@ -2350,7 +2343,6 @@
     if (T.apValue(h) < payable) return { ok: false, why: 'need ' + payable + ' AP' };
     T.pay(h, payable);
     h.freeMove = Math.max(0, free - steps);
-    if (isAnchored(h) && st(h).Anchored && !st(h).Rooted) delete st(h).Anchored; // choosing to walk ends a self-anchor
     for (let i = 1; i < p.length; i++) {
       moveEntity(m, h, p[i], 'walk');
       onHeroEnter(m, h, p[i]);
@@ -2597,7 +2589,7 @@
           say(m, `${h.name} regenerates ${h.hp - b}.`, 'hero');
           fx(m, { t: 'heal', ent: h.uid, amount: h.hp - b });
         }
-        if (en.cleanse) ['Anchored', 'Rooted', 'Weak', 'Slow'].forEach((k) => delete h.states[k]);
+        if (en.cleanse) ['Anchored', 'Weak'].forEach((k) => delete h.states[k]);
       } else if (en.kind === 'draw') {
         if (en.mintAlt) T.mint(h, en.face || 'C', en.mintAlt);
         else T.draw(h, en.face || 'C', en.val || 1);
@@ -2873,7 +2865,7 @@
         : x.kw === 'weaken'
           ? `Weakened ${x.n}`
           : x.kw === 'anchor'
-            ? `Anchored ${x.t}${x.noTele ? ', no blinking out' : ''}`
+            ? `Anchored ${x.t}`
             : x.kw === 'pull' || x.kw === 'push'
               ? `${x.kw === 'pull' ? 'pulled' : 'pushed'} ${x.n} ${x.kw === 'pull' ? 'toward' : 'away from'} its owner`
               : x.kw === 'mark'
@@ -2894,10 +2886,7 @@
     const map = {
       Hidden: 'Hidden — immune to zone (ranged) strikes. Broken by melee contact, area, being moved, or being Located.',
       Shield: `Shield ${v.v} — each hit is reduced by ${v.v}${v.all ? ', even area' : ' (area bypasses)'}. Pierce and true damage ignore it.`,
-      Anchored:
-        'Anchored — cannot be pushed or pulled. An anchored foe cannot walk or blink; a hero who walks lets go. Still acts fully.',
-      Held: 'Held — immovable by anyone.',
-      Rooted: 'Rooted — cannot walk while it lasts. Still acts.',
+      Anchored: 'Anchored — nothing moves it: no push, no pull, and it cannot walk or blink. It still acts.',
       Marked: 'Marked — the next hit on this foe deals +2.',
       Weak: `Weakened ${v.v} — its hits deal −${v.v}.`,
       Located: 'Located — cannot Hide; can be targeted and struck across a zone even if Hidden.',
@@ -2918,9 +2907,6 @@
       Absorb: `Absorb — next ${v.n} ranged hit(s) negated, minting Charge.`,
       Engines: 'Engine running.',
       Empower: 'Empowered — next strike(s) boosted.',
-      Slow: 'Cannot move.',
-      SlowSelf: 'Cannot move this round.',
-      NoTele: 'Cannot teleport.',
       Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,
       Wound: `Wound ${v.n} — takes ${v.n} at round end, then the Wound drops by 1.`,
     };

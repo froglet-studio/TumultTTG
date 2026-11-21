@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.90.0',
+    version: '2.91.0',
     items: [
+      {
+        text: 'Anchor is now one keyword: nothing moves an Anchored unit, its own walking and blinking included, and it still acts. Rooted, Slowed, held and "can’t blink" are all Anchored now. That cuts both ways: Anchor yourself against a drag and you stay put for the round, so walk first. When a foe roots you, nothing can push you either. Does planning around your own Anchor feel like a fair price?',
+        cards: ['fly_root'],
+      },
       {
         text: 'Heal now gets a downed pilot up: a Heal that reaches a downed ally raises it with that much (Bond, Raft and every heal for both pilots do it). Faces that used to revive you are a held Heal: if you go down within 3 rounds, it lands. The Medkit lays a mending Field (Heal 3 to allies ending the round on or beside your space). Rally is still the basic action (2 AP, beside you, up with 8). When a partner is down, do you now reach for a heal instead of walking over to Rally?',
         cards: ['pri_groom', 'ott_raft'],

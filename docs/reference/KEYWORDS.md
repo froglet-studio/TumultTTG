@@ -94,3 +94,17 @@ Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Pu
 
 It replaced `revive` and `phoenix`. In code: the verb `heal` (`n`, `party`, `target`: `ally` / `chosenAlly` /
 `downedAdj`, `ward`, `doubleIfLow`), `T.healUnit`, the Field keyword `heal`.
+
+## Anchor (2.91)
+
+> **Anchor.** It cannot be moved by anything, its own walking included. It still acts.
+
+- Nothing pushes, pulls, blows or drags it, and it cannot walk or blink. It can still strike, play cards and use
+  gear.
+- **Yours or theirs.** Anchor yourself and you hold against a drag, but you stay put this round; a foe's root
+  is an Anchor too. Status immunity turns away a foe's Anchor, never one you chose.
+- It replaced five states: Held, Rooted, Slow, SlowSelf and NoTele (and the `slow`, `slowSelf` verbs and the
+  `held` option).
+
+In code: the verb `anchor` (`who`: self / foe / ally / target, `dur`), the state `Anchored`, `T.anchorEnt`,
+`T.isAnchored`; saves version 23.
