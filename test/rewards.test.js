@@ -121,39 +121,64 @@ function fullKitReward(seed) {
   return { run, h, rw: run.lastReward };
 }
 
-test('a full kit is offered exchanges: a new trait in, an old one out, nine kept (Garrett, 2026-11-20)', () => {
+test('a full kit keeps every new trait: it flies in place of one left behind, or waits in reserve (Garrett, 2026-11-21)', () => {
   for (let seed = 1; seed <= 12; seed++) {
     const { run, h, rw } = fullKitReward(seed);
     assert.equal(h.cards.length, T.RULES.MAX_CARDS);
     assert.ok(rw.offers[0].length > 0, 'a full kit still gets an offer');
     const cid = rw.offers[0].find((c) => T.isSwapOffer(run, 0, c));
     if (!cid) continue;
-    assert.equal(T.takeOfferedCard(run, cid, 0).ok, false, 'an exchange names the trait it gives up');
     const drop = T.swapDrops(h, cid)[0];
-    // every point on the old trait comes back, and any a second copy bound to it, spent or not
-    const b = h.bound && h.bound[drop];
-    const pts = h.upUnspent + h.up[drop][0] + h.up[drop][1] + (b ? b[0] - b[1] : 0);
+    const was = h.up[drop].slice();
+    const pts = h.upUnspent;
     assert.ok(T.takeOfferedCard(run, cid, 0, drop).ok);
-    assert.equal(h.cards.length, T.RULES.MAX_CARDS, 'still nine');
+    assert.equal(h.cards.length, T.RULES.MAX_CARDS, 'still nine fly');
     assert.ok(h.cards.includes(cid) && !h.cards.includes(drop));
+    assert.deepEqual(h.reserve, [drop], 'the one left behind is kept');
+    assert.deepEqual(h.up[drop], was, 'with its points on it');
+    assert.equal(h.upUnspent, pts, 'nothing is refunded: nothing was lost');
     assert.deepEqual(h.up[cid], [0, 0]);
-    assert.equal(h.up[drop], undefined);
-    assert.equal(h.upUnspent, pts, "the old trait's points all come back");
     assert.ok(T.cladeSlots(h, h.cards), 'the 3-of-9 cap holds');
     assert.ok(rw.picked[0]);
+    // without naming one to leave behind, the new trait waits in reserve
+    const again = fullKitReward(seed);
+    const kit = again.h.cards.slice();
+    assert.deepEqual(T.takeOfferedCard(again.run, cid, 0), { ok: true, reserve: true });
+    assert.deepEqual(again.h.cards, kit, 'the kit flies as it was');
+    assert.deepEqual(again.h.reserve, [cid]);
     return;
   }
   assert.fail('no seed offered an exchange');
 });
 
-test('an exchange is refused when it would break the cap, or when the kit has room', () => {
-  const { run, h } = fullKitReward(3);
-  const other = run.heroes[1];
+test('between missions a reserve trait swaps into the kit, the cap holds, and the dice follow the kit', () => {
+  const { run, h, rw } = fullKitReward(3);
+  const cid = rw.offers[0].find((c) => T.isSwapOffer(run, 0, c));
+  assert.ok(T.takeOfferedCard(run, cid, 0).ok);
+  const out = T.loadOuts(h, cid)[0];
+  // the reserve card is awakened, the one it replaces is not: the dice change with them
+  h.up[cid] = [0, 1];
+  h.up[out] = [1, 0];
+  const before = T.diceSet(h).filter((k) => k !== 'plain').length;
+  run.mission = { over: false };
+  assert.equal(T.changeLoadout(run, 0, cid, out).ok, false, 'not in a mission');
+  run.mission = null;
+  assert.equal(T.changeLoadout(run, 0, cid, null).ok, false, 'a full kit names one to leave behind');
+  assert.ok(T.execCommand(run, { op: 'loadCard', hero: 0, card: cid, out }, null).ok);
+  assert.ok(h.cards.includes(cid) && h.reserve.includes(out) && h.cards.length === T.RULES.MAX_CARDS);
+  assert.equal(T.diceSet(h).filter((k) => k !== 'plain').length, before + 1, 'one more element die');
+  for (const d of h.cards) {
+    const ok = T.canLoadCard(h, out, d).ok;
+    assert.equal(ok, !!T.cladeSlots(h, h.cards.filter((x) => x !== d).concat(out)), 'only builds within the cap');
+  }
+  assert.equal(T.canAddCard(h, out).ok, false, 'a reserve trait is held: never offered again');
+});
+
+test('an exchange is refused when it would break the cap, or when the trait is held', () => {
+  const { h } = fullKitReward(3);
   const outside = T.CARDS.find((c) => !c.clades.some((sp) => h.species.includes(sp)));
   assert.equal(T.canSwapCard(h, outside.id, h.cards[0]).ok, false, 'not of the bloodline');
   assert.equal(T.canSwapCard(h, h.cards[1], h.cards[0]).ok, false, 'already held');
-  const spare = T.CARDS.find((c) => T.canAddCard(other, c.id).ok && !other.cards.includes(c.id));
-  assert.equal(T.canSwapCard(other, spare.id, other.cards[0]).ok, false, 'six cards: take it, do not exchange');
   // a trait of one clade can only come in for a trait that frees a slot of that clade, when that clade is full
   for (const c of T.CARDS) {
     if (h.cards.includes(c.id) || !c.clades.some((sp) => h.species.includes(sp))) continue;
@@ -171,4 +196,19 @@ test('an exchange goes through the party command', () => {
   const drop = T.swapDrops(run.heroes[0], cid)[0];
   assert.ok(T.execCommand(run, { op: 'takeCard', hero: 0, card: cid, drop }, null).ok);
   assert.ok(run.heroes[0].cards.includes(cid));
+});
+
+test('a 2.104 save (version 28, two full kits) loads with empty reserves, and its pilots can keep a tenth trait', () => {
+  const old = require('./fixtures/save-2.104-fullkit.json');
+  assert.equal(old.v, 28, 'the fixture is a version-28 save');
+  assert.ok(old.heroes.every((h) => h.reserve === undefined));
+  const run = T.deserializeRun(JSON.stringify(old));
+  assert.equal(run.v, T.SAVE_VERSION);
+  run.heroes.forEach((h) => assert.deepEqual(h.reserve, []));
+  const h = run.heroes[0];
+  const c = T.CARDS.find((x) => T.canCollect(h, x.id).ok);
+  assert.ok(T.addCard(h, c.id).reserve, 'a tenth trait waits in reserve');
+  assert.equal(T.collection(h).length, T.RULES.MAX_CARDS + 1);
+  const s = T.serializeRun(run);
+  assert.equal(T.serializeRun(T.deserializeRun(s)), s);
 });

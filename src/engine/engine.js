@@ -207,6 +207,7 @@
       title: spec.title || '',
       species: spec.species.slice(),
       cards: spec.cards.slice(),
+      reserve: (spec.reserve || []).slice(), // traits it holds but leaves behind this mission (T.loadCard)
       up: {},
       hp: R().VITALITY,
       maxHp: R().VITALITY,
@@ -234,7 +235,7 @@
       })),
     };
     T.registerPets([h]);
-    spec.cards.forEach((c) => (h.up[c] = [0, 0]));
+    spec.cards.concat(h.reserve).forEach((c) => (h.up[c] = [0, 0]));
     if (spec.up)
       Object.keys(spec.up).forEach((c) => {
         if (h.up[c]) h.up[c] = spec.up[c].slice();
@@ -425,7 +426,8 @@
     });
     // each pilot's pets set out on its own node with it (src/data/pets.js)
     T.registerPets(m.heroes);
-    m.heroes.forEach((h) => (h.pets || []).forEach((pr) => T.addPet(m, h, pr)));
+    // a pet sets out only when its card flies this mission; with its card in reserve it stays in the pocket
+    m.heroes.forEach((h) => (h.pets || []).forEach((pr) => h.cards.includes(pr.card) && T.addPet(m, h, pr)));
     if (run.bossBonusHp && m.isBoss)
       m.enemies
         .filter((e) => e.boss)
@@ -1733,11 +1735,12 @@
     const elt = face.elt || card.el;
     const eln = face.el || 0;
     if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
-    if (h.ride != null && !T.isPetCard(h, cardId) && !T.isMounted(card, faceKey))
-      return { ok: false, why: 'not Mounted: get out first' };
     // a pet's card acts from the pet (src/data/pets.js): no pet on the board, no play
     const body = T.isPetCard(h, cardId) ? T.petFor(m, h, cardId) : h;
     if (!body) return { ok: false, why: 'your pet is not here' };
+    // inside a vehicle only Mounted faces; a pet riding with its pilot plays by the same rule
+    if (T.ridingWith(m, h, body) && !T.isMountedFace(card, faceKey))
+      return { ok: false, why: 'not Mounted: get out first' };
     if (!T.canPay(h, face.ap, elt, eln)) return { ok: false, why: 'cannot pay' };
     const tg = T.targetsFor(m, body, face.tgt, face, P, E, pick);
     if (tg.invalid) return { ok: false, why: tg.invalid };
@@ -2825,9 +2828,14 @@
    * Heel (src/data/pets.js): for T.PET.HEEL_AP, one of the hero's pets moves up to T.PET.SPEED, a walk like any
    * other (through the squad, around foes), and may end on its pilot's node.
    */
+  /** Is this body (the pilot, or a pet of theirs) inside a vehicle? A pet on its riding pilot's node rides along. */
+  T.ridingWith = (m, h, body) => h.ride != null && (body === h || body.pos === h.pos);
+  /** Is this face Mounted? A pet card's face is Mounted when the trait face it was made from is. */
+  T.isMountedFace = (card, faceKey) =>
+    card.pet ? T.isMounted(T.CARD[card[faceKey].from], 'P') : T.isMounted(card, faceKey);
   T.heelTargets = function (m, h, petUid) {
     const p = T.petsOf(m, h).find((x) => x.uid === petUid);
-    if (!p || isAnchored(p)) return [];
+    if (!p || isAnchored(p) || T.ridingWith(m, h, p)) return [];
     return T.reachableWalk(m, p, T.PET.SPEED, false);
   };
   T.canHeel = function (m, h, petUid) {
@@ -2835,6 +2843,7 @@
     const p = T.petsOf(m, h).find((x) => x.uid === petUid);
     if (!p) return { ok: false, why: 'no such pet' };
     if (isAnchored(p)) return { ok: false, why: 'Anchored' };
+    if (T.ridingWith(m, h, p)) return { ok: false, why: 'riding with you' };
     if (T.apValue(h) < T.PET.HEEL_AP) return { ok: false, why: 'need ' + T.PET.HEEL_AP + ' AP' };
     const options = T.heelTargets(m, h, petUid);
     if (!options.length) return { ok: false, why: 'nowhere to go' };

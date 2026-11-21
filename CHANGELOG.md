@@ -9,14 +9,23 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.107.0 — 2026-11-21 — pets
+## 2.108.0 — 2026-11-21 — pocket pets
 
-- **Pets, sidekicks on the board.** A haven may have a stray: a hybrid of three clades, none of them human, with its own vitality (8). When it is found, one trait is drawn from each of its clades, and their three Physical faces make one pet card. Adopt it for 4 ◇ and the card joins the kit, where it counts toward the nine (a full kit takes it in exchange). A pilot keeps two pets at most. Pet cards grow with P; they have no Ethereal face (Garrett, 2026-11-21).
+- **Pocket pets, sidekicks on the board.** Pets are inventory, like pocket vehicles (Garrett, 2026-11-21: "Pocket vehicles and pocket pets. It is all inventory"). A haven may have a stray: a hybrid of three clades, none of them human, with its own vitality (8). When it is found, one trait is drawn from each of its clades, and their three Physical faces make one pet card. Adopt it for 4 ◇. Its card is a card like any other: it joins the kit when there is room, or in place of a card that waits in reserve, or waits in reserve itself, and nothing is refunded. A pet sets out only when its card flies. A pilot keeps two pets at most. Pet cards grow with P; they have no Ethereal face.
 - **The card plays from the pet.** The pilot pays with their own dice, and any one face sends the whole card to the track. Range, strikes, steps and states on "you" are the pet's; what a face does to dice, the track or the purse is the pilot's. Heel (1 AP) walks the pet up to 3.
-- **Safe on its pilot's node.** A pet may share its own pilot's node, and nothing can hurt it there; foes cannot target it. Off that node they can, and at 0 it dies: it leaves the board, and its card is out for the rest of the mission. It comes back, whole, for the next one (Garrett, 2026-11-21).
+- **Safe on its pilot's node.** A pet may share its own pilot's node, and nothing can hurt it there; foes cannot target it. Off that node they can, and at 0 it dies: it leaves the board, and its card is out for the rest of the mission. It comes back, whole, for the next one.
+- **Pets ride along.** A pet on its pilot's node gets in, drives and gets out with them, even in a one-seater, and takes no seat (Garrett, 2026-11-21). While it rides, its card plays only Mounted faces, as the pilot's do, and it cannot Heel.
 - The look-ahead player plays pet faces and Heel, weighing a pet's vitality at 0.5 a point and its death at 12 (`T.EVAL`). `node tools/sim.js 40 missions --pets` gives every pilot a pet in place of a trait. Without pets nothing changes: the default tables are identical before and after.
-- **Saves** are version 29: every hero gains `pets`, a mission `pets`. `docs/reference/PETS.md`.
+- **Saves** are version 30: every hero gains `pets`, a mission `pets`. `docs/reference/PETS.md`.
 
+## 2.107.0 — 2026-11-21 — every trait kept, nine fly
+
+- **A pilot keeps every trait it earns** (Garrett, 2026-11-21). Nine fly into a mission (the kit); the rest wait in a **reserve**, each with its points on it. Once the kit holds nine, a new trait either waits in reserve (**Keep in reserve**) or comes in at once for one that stays behind (**Fly it now**).
+- **Choose the nine between missions.** On the route, at a reward, a haven or an event, the Kit view brings a reserve trait in for one of the nine; the 3-of-9 cap holds for the kit that flies. Never in a mission.
+- **The dice follow the kit.** Each awakened card that flies brings its element die; a trait in reserve brings none.
+- **No refunds.** A trait left behind is not lost, so its points stay on it (from 2.75 to 2.106 an exchange gave the old trait up and refunded its points). Molt and Trade set the old trait aside the same way.
+- **Made pilots** come home with their reserve and the points on it.
+- **Saves** are version 29: every pilot gains an empty `reserve`.
 ## 2.105.0 — 2026-11-21 — costly faces that do something new
 
 Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap faces in one; it must make a play that is not possible otherwise. Four of the nine that were bundles are reworked; the rest follow in the next release.
