@@ -9,6 +9,14 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.115.0 — 2026-11-21 — At dusk, and Flanked
+
+- **At dusk** (a timing word, from the shortlist). A face marked At dusk is placed now: you pay for it, it goes to the track, and you choose its space. It lands at round end, once the foes have acted, on whoever is there then. A ring on the board shows where. The puzzle is to read the telegraph for where the foes will finish.
+- **Patience** (Mantis, Hold Still) is At dusk: when the foes have acted, every foe then beside you takes 4 + E. It was Hidden, a Shield and an empowered hit.
+- **Under the Surface** (Crocodile, Lurk; was Log in the River) is At dusk: choose a space within 2 + E, and the foe standing on it at dusk takes 5 + 2E, through Shield.
+- **Flanked** (a range word). A foe is flanked when the squad (pilots, pets or decoys) stands on two different spaces beside it. Three pack hunters' Physical faces hit 2 harder on a flanked foe and still hit without one: the jackal's **Flank** (Pair Hunt), the hyena's **Crunch** (Bone Crush) and the orca's **Take Down** (Apex).
+- In code: a face's `dusk: true`, `m.dusk`, the condition `ifFlanked` and `T.isFlanked`, and `radius` on a `nodeArea` strike or wound. **Saves** are version 31: a mission keeps the faces waiting for dusk.
+
 ## 2.112.0 — 2026-11-21 — Aimed blows
 
 - **Aimed** (new keyword, from the shortlist's first pick). An Aimed attack is telegraphed at a space, not a pilot: when the foe acts, it strikes whoever stands on that space, foe or pilot, and a melee foe walks to it first. Step away and the blow lands on empty ground; leave a foe there and it takes the hit. The foe still acts, so no turn is taken.

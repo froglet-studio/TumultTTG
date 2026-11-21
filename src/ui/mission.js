@@ -1498,6 +1498,20 @@
       const lbl = svgEl('text', { x: g.px(a), y: g.py(a) - 34, class: 'intent-lbl', 'text-anchor': 'middle' }, it);
       lbl.textContent = e.intent.label.replace(/ → [^(]*/, ' ').slice(0, 34);
     });
+    // Dusk faces waiting to land (2.115): a ring on the space they will strike, or on the pilot who placed them
+    (m.dusk || []).forEach((d) => {
+      const who = m.heroes.find((h) => h.uid === d.uid) || (m.pets || []).find((p) => p.uid === d.uid);
+      const at = d.node != null ? d.node : who && who.pos;
+      if (at == null || !N[at]) return;
+      svgEl(
+        'circle',
+        { cx: g.px(at), cy: g.py(at), r: 26, class: 'intent-line dusk-ring', 'stroke-dasharray': '2 5' },
+        it,
+      );
+      const face = T.CARD[d.card] && T.CARD[d.card][d.face];
+      const lbl = svgEl('text', { x: g.px(at), y: g.py(at) + 40, class: 'intent-lbl', 'text-anchor': 'middle' }, it);
+      lbl.textContent = '🌘 ' + (face ? face.n : 'dusk');
+    });
     // tokens
     const tk = $('#tokens', svg);
     const seen = new Set();
