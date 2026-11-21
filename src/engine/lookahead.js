@@ -101,7 +101,7 @@
         out.push({ t: 'rally', hero });
       h.gear.forEach((g, gear) =>
         T.GEAR_BY[g.id].abilities.forEach((ab, ability) => {
-          if (g.cds[ability] > 0 || T.crystalsFor(m, hero) < ab.cost) return;
+          if (!T.canUseGear(m, h, gear, ability).ok) return;
           const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0);
           if (tg.invalid || (tg.need !== 'none' && !(tg.options && tg.options.length))) return;
           for (const r of resolutionsByAlly(tg, ab, (a) => T.targetsFor(m, h, ab.tgt, ab, 0, 0, a)))

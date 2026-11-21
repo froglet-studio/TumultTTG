@@ -280,6 +280,7 @@
     'spot', // val: as the holder's turn begins, the nearest foe within that many steps is Marked
     'fieldDur', // val: added to the rounds of every Field the holder lays that has rounds
     'fieldForce', // val: added to every push and pull of the holder's Fields
+    'weapon', // val: { reach: 'melee' | 'ranged', n } — added to every strike of that reach the holder makes (2.101)
   ];
   T.boonVals = function (h, hook) {
     if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown passive hook ' + hook);
@@ -291,6 +292,21 @@
       .map((b) => b.val);
   };
   const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
+  /** A weapon's reach for a strike of this kind: melee is melee; a strike along a line or anywhere is ranged;
+   *  an area strike has none, so no weapon adds to it (2.101). */
+  T.weaponReach = (kind) => (kind === 'melee' ? 'melee' : kind === 'los' || kind === 'any' ? 'ranged' : null);
+  /**
+   * How much more a pilot's strike of this kind deals for its weapons (2.101): each weapon of that reach adds its
+   * number. The one place a weapon's bonus is read, so any other source of weapons (a vehicle's, say) joins here.
+   * A weapon's Overcharge is an Empower on the same strike kinds (src/data/world.js).
+   */
+  T.weaponBonus = function (h, kind) {
+    const reach = T.weaponReach(kind);
+    if (!reach || !h || h.kind !== 'hero') return 0;
+    return T.boonVals(h, 'weapon')
+      .filter((v) => v.reach === reach)
+      .reduce((sum, v) => sum + v.n, 0);
+  };
 
   /** Put a new foe on the board. The only way one comes to be: it takes its uid from the mission. */
   /** A foe's vitality: its bestiary value scaled by T.RULES.FOE_HP (percent), rounded. */
@@ -812,7 +828,9 @@
       const ss = st(source);
       if (opts.strike && ss.Empower && ss.Empower.length) {
         // consume the first matching empower
-        const idx = ss.Empower.findIndex((e) => !e.kind || e.kind === kind);
+        const idx = ss.Empower.findIndex(
+          (e) => !e.kind || e.kind === kind || (Array.isArray(e.kind) && e.kind.includes(kind)),
+        );
         if (idx >= 0) {
           const e = ss.Empower[idx];
           dmg += e.v;
@@ -823,6 +841,8 @@
         }
       }
       if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
+      // a weapon adds to every strike of its reach (2.101); a strike that deals nothing stays at nothing
+      if (opts.strike && dmg > 0) dmg += T.weaponBonus(source, kind);
       if (opts.strike) {
         const flags = source.roundFlags || (source.roundFlags = {});
         flags.struck = true;
@@ -2037,13 +2057,19 @@
         const list = f.party ? T.liveHeroes(m) : f.target === 'ally' ? (ally && !ally.downed ? [ally] : []) : [actor];
         list.forEach((h) => {
           h.states.Empower = h.states.Empower || [];
-          h.states.Empower.push({
-            v,
-            uses: f.uses || 1,
-            kind: f.kind || null,
-            pierce: !!f.pierce,
-            t: num(f.dur, P, E) || null,
-          });
+          // `stack` (a weapon's Overcharge, 2.101): a second one adds to the first instead of waiting behind it
+          const same =
+            f.stack &&
+            h.states.Empower.find((e) => e.stack && JSON.stringify(e.kind) === JSON.stringify(f.kind || null));
+          if (same) {
+            same.v += v;
+            same.t = Math.max(same.t || 0, num(f.dur, P, E) || 0) || null;
+            fx(m, { t: 'state', ent: h.uid, name: 'Empower' });
+            return;
+          }
+          const e = { v, uses: f.uses || 1, kind: f.kind || null, pierce: !!f.pierce, t: num(f.dur, P, E) || null };
+          if (f.stack) e.stack = true;
+          h.states.Empower.push(e);
           fx(m, { t: 'state', ent: h.uid, name: 'Empower' });
         });
         if (list.length)
@@ -2573,22 +2599,36 @@
     T.afterAction(m);
     return { ok: true, ctx: rctx };
   };
+  /** What a gear ability costs, as a player reads it: omnicrystals from the purse, or banked Omni dice (2.101). */
+  T.gearCostText = (ab) =>
+    [ab.cost ? `${ab.cost} ◇` : '', ab.omni ? `${ab.omni} Omni` : ''].filter(Boolean).join(' + ') || 'free';
+  /** Whether this pilot can pay for and use this gear ability now, leaving aside its target. */
+  T.canUseGear = function (m, h, gi, ai) {
+    const g = h.gear[gi];
+    if (!g) return { ok: false };
+    const ab = T.GEAR_BY[g.id].abilities[ai];
+    if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
+    if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
+    if (m.purses[T.purseSeat(m, m.heroes.indexOf(h))] < ab.cost) return { ok: false, why: 'need ◇' };
+    if (ab.omni && T.omniCount(h) < ab.omni) return { ok: false, why: 'need a banked Omni' };
+    return { ok: true };
+  };
   T.useGear = function (m, h, gi, ai, ctx) {
     const g = h.gear[gi];
     if (!g) return { ok: false };
     const def = T.GEAR_BY[g.id];
     const ab = def.abilities[ai];
-    if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
-    if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
+    const can = T.canUseGear(m, h, gi, ai);
+    if (!can.ok) return can;
     const seat = T.purseSeat(m, m.heroes.indexOf(h));
-    if (m.purses[seat] < ab.cost) return { ok: false, why: 'need ◇' };
     const tg = T.targetsFor(m, h, ab.tgt, ab, 0, 0, ctx && ctx.ally);
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no target' };
     const al = allyFor(m, tg, ctx);
     if (!al.ok) return al;
     m.purses[seat] -= ab.cost;
+    if (ab.omni) T.pay(h, 0, 'O', ab.omni);
     g.cds[ai] = ab.cd;
-    say(m, `${h.name} uses ${def.name} — ${ab.n} (${ab.cost} ◇).`, 'hero');
+    say(m, `${h.name} uses ${def.name} — ${ab.n} (${T.gearCostText(ab)}).`, 'hero');
     fx(m, { t: 'gear', hero: h.uid });
     const rctx = ctx || {};
     Object.assign(rctx, { P: 0, E: 0 });

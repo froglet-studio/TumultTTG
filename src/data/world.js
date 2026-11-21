@@ -16,7 +16,7 @@
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 145,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 since 2.85)
+    FOE_HP: 150,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 since 2.101: weapons)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -117,6 +117,23 @@
       abilities:[
         { n:'Patch', cost:1, cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
         { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
+      ]},
+    // Weapons (2.101: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
+    // its own; its passive adds to every strike of its reach you make, and its Overcharge takes banked Omni dice
+    // (the omnicrystals a player rolls) for an Empower on every such strike this round.
+    { id:'baton', name:'Shock Baton', price:6, icon:'⚡',
+      desc:'A melee weapon. Every blow you land in melee hits harder; feed it Omni and it hits much harder.',
+      passive:{ hook:'weapon', val:{ reach:'melee', n:1 }, txt:'Your melee strikes deal 1 more.' },
+      abilities:[
+        { n:'Overcharge', cost:0, omni:1, cd:0, tgt:'self', fx:[{v:'empower', val:f(2), kind:['melee'], uses:99, dur:f(1), stack:true}], txt:()=>'Put a banked Omni on the baton: Empowered 2 for every melee strike you make this round. Stack as many as you have.' },
+        { n:'Arc Guard', cost:1, cd:2, tgt:'self', fx:[{v:'thorns', val:f(2), dur:f(1)}], txt:()=>'Thorns 2 this round: anything that strikes you in melee takes 2.' },
+      ]},
+    { id:'coilgun', name:'Coil Rifle', price:6, icon:'🔫',
+      desc:'A ranged weapon. Every shot you take at range hits harder; feed it Omni and it hits much harder.',
+      passive:{ hook:'weapon', val:{ reach:'ranged', n:1 }, txt:'Your ranged strikes deal 1 more.' },
+      abilities:[
+        { n:'Overcharge', cost:0, omni:1, cd:0, tgt:'self', fx:[{v:'empower', val:f(2), kind:['los','any'], uses:99, dur:f(1), stack:true}], txt:()=>'Put a banked Omni on the rifle: Empowered 2 for every ranged strike you make this round. Stack as many as you have.' },
+        { n:'Rangefinder', cost:1, cd:2, tgt:'foe_los', fx:[{v:'reveal', target:true, dur:f(2)},{v:'mark'}], txt:()=>'A foe in your zone is Revealed for 2 rounds and Marked: the next hit on it deals 2 more.' },
       ]},
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);

@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.100.0',
+    version: '2.101.0',
     items: [
+      {
+        text: 'Weapons: two new pieces of gear at the havens. The Shock Baton adds 1 to every melee strike you make (the basic Strike too), and the Coil Rifle adds 1 to every ranged one. Each has an Overcharge that takes a banked Omni die instead of omnicrystals: every Omni you put on the weapon adds 2 to every strike of its reach this round, and you can stack them. An Omni spent there cannot pay an Ethereal face. Foes are a little tougher to make up for it. Did you ever Overcharge, and was it worth the Omni? Did a weapon change which cards you reached for?',
+      },
       {
         text: 'The mission screen, the draft and the route now follow the designs picked on the Frogma board. On a mission the board sits in a frame with the sea around it; ⛶ Full screen lets it fill the screen, and the foes’ plans and your hand become trays you can slide away. A Squad panel lists every pilot and, with friends, whose turn it is, who is done and who still has one to take. Taking turns at one screen, a cover goes over the board between turns and names who is up, so nobody sees the last hand. On a phone the foot of the screen is one sheet with tabs: Hand, Plans, Squad and Log. The draft fills your kit along the bottom as you pick, and the route reads like a climb: the Heart at the top, your next stops as big cards, the stops you passed below. Is anything you used often harder to find? Did the cover between turns ever get in the way?',
       },
