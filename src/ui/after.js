@@ -51,12 +51,19 @@
     o = o || {};
     const c = T.CARD[cid];
     const sp = U.cladeIn(c, o.clades);
-    const lv = o.P != null ? `P${o.P} · E${o.E}` : `${c.sig >= 2 ? '★ ' : ''}${esc(EL[elOf(c)].name)}`;
+    const lv =
+      o.P != null
+        ? c.pet
+          ? `P${o.P} · pet`
+          : `P${o.P} · E${o.E}`
+        : `${c.sig >= 2 ? '★ ' : ''}${esc(EL[elOf(c)].name)}`;
     const inner = `<span class="am-gem" style="--el:${EL[elOf(c)].color}"></span>${U.cardArt(c, false, sp)}<span class="am-tn">${esc(c.name)}</span><span class="am-tc">${U.icClade(sp)} ${esc(c.kin || T.SPECIES[sp].name)}</span><span class="am-tl">${lv}</span>${o.out ? '<span class="am-x" aria-hidden="true">✕</span>' : ''}`;
     const cls = `am-tile${o.sel ? ' sel' : ''}${o.out ? ' out' : ''}${o.dim ? ' dim' : ''}${o.cls ? ' ' + o.cls : ''}`;
     const tip = o.tip
       ? ` data-tip="${esc(o.tip)}"`
-      : ` data-tip="${esc(U.faceTipHTML(c, 'P', o.P || 0, o.E || 0) + '<hr>' + U.faceTipHTML(c, 'E', o.P || 0, Math.max(o.E || 0, T.RULES.ETHEREAL_MIN_E)))}"`;
+      : c.pet
+        ? ` data-tip="${esc(T.PET_FACES.map((k) => U.faceTipHTML(c, k, o.P || 0, 0)).join('<hr>'))}"`
+        : ` data-tip="${esc(U.faceTipHTML(c, 'P', o.P || 0, o.E || 0) + '<hr>' + U.faceTipHTML(c, 'E', o.P || 0, Math.max(o.E || 0, T.RULES.ETHEREAL_MIN_E)))}"`;
     if (!o.act) return `<div class="${cls}"${tip}>${inner}</div>`;
     return `<button class="${cls}" data-act="${o.act}" data-arg="${esc(o.arg)}"${o.disabled ? ' disabled' : ''}${tip} aria-pressed="${!!o.sel}">${inner}</button>`;
   }
@@ -67,7 +74,7 @@
       const face = c[fk];
       return `<div class="am-face ${fk}"><b>${esc(face.n)}</b> <span class="mono dim">${face.ap} AP${face.el ? ` + ${face.el}<span class="el-${face.elt || c.el}">◆</span>` : ''}</span><span>${U.kw(esc(face.txt(P || 0, Math.max(E || 0, fk === 'E' ? T.RULES.ETHEREAL_MIN_E : 0))))}</span></div>`;
     };
-    return `<div class="am-faces">${f('P')}${f('E')}</div>`;
+    return `<div class="am-faces">${T.faceKeys(cid).map(f).join('')}</div>`;
   }
   /** Each pilot's portrait, name and vitality. */
   function squad(run, cls) {
@@ -249,7 +256,7 @@
     const h = run.heroes[i];
     if (!am.up || am.up.hero !== i || !h.cards.includes(am.up.card)) {
       // start on the first card with room to grow, a sleeping card first
-      const asleep = h.cards.find((c) => T.heroE(h, c) < T.RULES.ETHEREAL_MIN_E);
+      const asleep = h.cards.find((c) => !T.CARD[c].pet && T.heroE(h, c) < T.RULES.ETHEREAL_MIN_E);
       am.up = { hero: i, card: asleep || h.cards[0], face: asleep ? 'E' : 'E' };
     }
     const cid = am.up.card;
@@ -258,7 +265,7 @@
     const E = T.heroE(h, cid);
     const capP = T.RULES.P_CAP;
     const capE = T.RULES.E_CAP;
-    const fk = am.up.face;
+    const fk = c.pet ? 'P' : am.up.face; // a pet's card grows with P alone
     const lv = fk === 'P' ? P : E;
     const cap = fk === 'P' ? capP : capE;
     const pts = h.upUnspent + T.boundLeft(h, cid);
@@ -294,13 +301,21 @@
               P: kp,
               E: ke,
               clades: h.species,
-              cls: ke < T.RULES.ETHEREAL_MIN_E ? 'asleep' : kp + ke >= capP + capE ? 'maxed' : '',
+              cls: T.CARD[k].pet
+                ? kp >= capP
+                  ? 'maxed'
+                  : ''
+                : ke < T.RULES.ETHEREAL_MIN_E
+                  ? 'asleep'
+                  : kp + ke >= capP + capE
+                    ? 'maxed'
+                    : '',
             });
           })
           .join('')}</div>
         <div class="am-upcard${flash}"><div class="am-spark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>${U.cardHTML(cid, { P, E, showUp: true, flavor: false, clades: h.species, bound: T.boundLeft(h, cid) })}</div>
         <div class="panel am-upside">
-          <div class="am-fbtns">${faceBtn('P')}${faceBtn('E')}</div>
+          <div class="am-fbtns">${c.pet ? faceBtn('P') : faceBtn('P') + faceBtn('E')}</div>
           <div class="am-lab">${esc(face.n)}, ${asleep ? 'now' : 'before'}</div><div class="am-before">${U.kw(esc(before))}</div>
           ${after != null ? `<div class="am-lab gold">${esc(face.n)}, ${asleep ? 'awake' : 'after'}</div><div class="am-after">${U.kw(esc(after))}</div>` : `<div class="am-lab gold">At its height</div><div class="am-after dim">${esc(face.n)} is at ${fk} ${cap}, as far as it grows.</div>`}
           <p class="small dim">${fk === 'P' ? 'Physical costs AP only and grows with P.' : `Ethereal unlocks at E ${T.RULES.ETHEREAL_MIN_E} and grows with E.`} Caps: P ${capP}, E ${capE}.</p>
@@ -329,6 +344,27 @@
           .join('')}</div></div>`;
       })
       .join('');
+    // a stray (src/data/pets.js): a pocket pet, whose card joins the kit or the reserve like any other
+    const pr = hv.pet;
+    const stray = pr
+      ? `<div class="am-ware am-pet"><div class="row"><span class="am-wi">🐾</span><b>${esc(pr.name)}</b><span class="small dim">&nbsp;a ${esc(pr.species.map((sp) => T.SPECIES[sp].name).join(', '))} hybrid</span><span class="right chip gold">${T.PET.PRICE} ◇</span></div><div class="small dim">A pet: a small unit of its own on the board (${T.PET.HP} vitality). Its card holds a Physical face from each of its clades and plays from the pet; any one face sends the whole card to the track. It may share your node, where nothing can hurt it, and rides with you in any vehicle. At 0 it is out for the mission, back for the next.</div>${U.cardHTML(pr.card, { P: 0, E: 0, flavor: true })}<div class="am-buy">${run.heroes
+          .map((h, i) => {
+            if (!own(i)) return '';
+            const full = h.cards.length >= T.RULES.MAX_CARDS;
+            const can = T.crystalsFor(run, i) >= T.PET.PRICE && (h.pets || []).length < T.PET.MAX;
+            const drop = full
+              ? `<select id="petdrop-${i}" aria-label="Where the pet's card goes for ${esc(h.name)}"><option value="">Keep in reserve</option>${h.cards.map((c) => `<option value="${esc(c)}">Fly it, ${esc(T.CARD[c].name)} to reserve</option>`).join('')}</select>`
+              : '';
+            const why =
+              (h.pets || []).length >= T.PET.MAX
+                ? `data-tip="${T.PET.MAX} pets at most"`
+                : full
+                  ? 'data-tip="The kit is full: the pet\'s card waits in reserve, or flies in place of a card that does"'
+                  : '';
+            return `${drop}<button class="sm ${can ? 'primary' : ''}" data-act="adoptPet" data-arg="${i}" ${can ? '' : 'disabled'} ${why}>Adopt for ${esc(h.name.split(' ')[0])}</button>`;
+          })
+          .join('')}</div></div>`
+      : '';
     const story = 'Walls against the wind, a fire, and someone who mends things for crystals. Nothing hunts here.';
     return `<div class="am am-haven">${backdrop(U.EVENT_SCENES.haven, 'side')}${topbar(run)}
       <div class="am-split"><div class="am-art ${art(U.EVENT_SCENES.haven)}" aria-hidden="true"></div>
@@ -341,7 +377,7 @@
           <div class="am-opt"><div class="row"><span class="am-oi canon">✎</span><b>Listen</b></div><span class="small dim am-story">${esc(story)} ${U.canonMark ? U.canonMark('event:haven', story, 'event:text') : ''}</span><div class="am-ob"><button class="sm ghost" data-act="kit" data-arg="0">Look over the kits</button></div></div>
         </div>
         <div class="am-row2">${squad(run)}</div>
-        <div id="am-stalls" class="am-stalls"><div class="am-lab gold">The stalls · gear</div><div class="am-wares">${gear || '<span class="dim small">Sold out.</span>'}</div></div>
+        <div id="am-stalls" class="am-stalls"><div class="am-lab gold">The stalls · gear</div><div class="am-wares">${gear || '<span class="dim small">Sold out.</span>'}</div>${stray ? `<div class="am-lab gold">A stray</div><div class="am-wares">${stray}</div>` : ''}</div>
       </div></div>
       <div class="am-foot"><button class="primary am-cta" data-act="leaveHaven">Leave ▶</button></div></div>`;
   };

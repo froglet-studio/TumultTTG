@@ -2,6 +2,7 @@
   "comment": "Load order for the single-file build and for Node tools. Every file attaches to the global namespace T; later files may use anything defined by earlier ones. The playtest files are added only to the playtest build (npm run build:playtest). The same list builds the web version (npm run build:web), which loads the scripts, styles and art as separate cacheable files.",
   "engine": [
     "data/cards.js",
+    "data/pets.js",
     "data/clades.js",
     "data/world.js",
     "data/story.js",

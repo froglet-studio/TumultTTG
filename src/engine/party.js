@@ -245,6 +245,7 @@
     item: (run, m, h, c) => T.useConsumable(m, h, c.ci),
     interact: (run, m, h, c) => T.doInteract(m, h, c.node, false, c.pay),
     rally: (run, m, h) => T.rally(m, h),
+    heel: (run, m, h, c) => T.heel(m, h, c.pet, c.node),
     note: (run, m, h, c) => T.addNote(m, c.hero, c.text),
     rollPick: (run, m, h, c) => T.setRollPick(h, c.kinds),
     valve: (run, m, h) => ({ ok: !!T.valve(m, h) }),
@@ -271,6 +272,7 @@
     takeCard: (run, m, h, c) => T.takeOfferedCard(run, c.card, c.hero, typeof c.drop === 'string' ? c.drop : undefined),
     skipCard: (run, m, h, c) => T.skipOfferedCard(run, c.hero),
     buyGear: (run, m, h, c) => T.buyGear(run, c.gear, c.hero),
+    adoptPet: (run, m, h, c) => T.adoptPet(run, c.hero, typeof c.drop === 'string' ? c.drop : undefined),
     evTakeCard: (run, m, h, c) => {
       const r = T.addCard(h, c.card);
       if (r.ok && run.event && run.event.followup) run.event.followup.done = true;
@@ -285,6 +287,7 @@
     'item',
     'interact',
     'rally',
+    'heel',
     'valve',
     'dump',
     'reroll',

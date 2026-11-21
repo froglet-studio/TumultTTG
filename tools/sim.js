@@ -21,6 +21,7 @@
  *   --length  how long a run's expedition is, a key of T.LENGTHS (default full; runs only).
  *   --pilots  the squad's size, 2 to 5 (default 2); the missions scale to it (src/engine/scaling.js).
  *   --level   every pilot's level (default 1): what pilots bring back from earlier expeditions.
+ *   --pets    every pilot has a pet (src/data/pets.js) in place of its last trait (missions only).
  *   --noscale the missions do not answer the squad's power (to see what the scaling buys).
  *   --scaling try other scaling numbers, for this run only: --scaling power.hp=0.04,PILOT=12
  *   --rule    try a different value for a constant in T.RULES, for this run only:
@@ -40,6 +41,7 @@ let tide = 'rising';
 let length = 'full';
 let pilots = 2;
 let level = 1;
+let pets = false;
 for (let i = 0; i < argv.length; i++) {
   if (argv[i] === '--player') {
     const who = argv[++i];
@@ -93,6 +95,11 @@ for (let i = 0; i < argv.length; i++) {
       else T.SCALING[k] = Number(v);
     }
     console.log('scaling', JSON.stringify(T.SCALING));
+    continue;
+  }
+  if (argv[i] === '--pets') {
+    pets = true;
+    console.log('pets: every pilot has one, in place of a trait');
     continue;
   }
   if (argv[i] === '--noscale') {
@@ -151,6 +158,7 @@ if (mode === 'all' || mode === 'missions') {
           else H.prebuiltSquad(run, H.squadIds(i, pilots));
           H.addProgression(run, tier);
           if (level > 1) H.addLevel(run, level);
+          if (pets) H.givePets(run);
           try {
             T.launchMission(run, arch, tier);
             const m = H.playMission(run.mission, { player });

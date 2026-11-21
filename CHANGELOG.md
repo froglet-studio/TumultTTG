@@ -9,12 +9,22 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.109.0 — 2026-11-21 — missions sized by squad power
+## 2.110.0 — 2026-11-21 — missions sized by squad power
 
 - **Squad power.** An expedition is sized from its squad's power and the chosen wind (Garrett, 2026-11-21). A pilot's power is 10, and 1 more for every level past 1 it set out with; the squad's power is its pilots' added up. Every point past 20 (two new pilots) gives foes +5% vitality, and every 5 points one more foe, every 10 one more to do and a swarm 1 larger, so a third new pilot asks what it did before. A level now counts for every pilot who has it, not as the squad's average (`T.squadPower`, `T.pilotPowerFor`, `docs/reference/SCALING.md`).
 - **Growth on the road.** The route expects about 3 points a pilot a row; a pilot that grows faster brings 1 more power for every 6 points ahead to each later mission, and none brings less than it set out with.
 - **A full wipe ends the expedition.** With the whole squad down the expedition is over, and the Lifeline is kept only for a mission lost with someone standing. Pilots are whole again for the next expedition.
 - The route's ⚖ pill shows the squad's power. `tools/sim.js --scaling` takes `power.F=N`, `boss.F=N` or `PILOT=N`.
+
+## 2.109.0 — 2026-11-21 — pocket pets
+
+- **Pocket pets, sidekicks on the board.** Pets are inventory, like pocket vehicles (Garrett, 2026-11-21: "Pocket vehicles and pocket pets. It is all inventory"). A haven may have a stray: a hybrid of three clades, none of them human, with its own vitality (8). When it is found, one trait is drawn from each of its clades, and their three Physical faces make one pet card. Adopt it for 4 ◇. Its card is a card like any other: it joins the kit when there is room, or in place of a card that waits in reserve, or waits in reserve itself, and nothing is refunded. A pet sets out only when its card flies. A pilot keeps two pets at most. Pet cards grow with P; they have no Ethereal face.
+- **The card plays from the pet.** The pilot pays with their own dice, and any one face sends the whole card to the track. Range, strikes, steps and states on "you" are the pet's; what a face does to dice, the track or the purse is the pilot's. Heel (1 AP) walks the pet up to 3.
+- **Safe on its pilot's node.** A pet may share its own pilot's node, and nothing can hurt it there; foes cannot target it. Off that node they can, and at 0 it dies: it leaves the board, and its card is out for the rest of the mission. It comes back, whole, for the next one.
+- **Pets ride along.** A pet on its pilot's node gets in, drives and gets out with them, even in a one-seater, and takes no seat (Garrett, 2026-11-21). While it rides, its card plays only Mounted faces, as the pilot's do, and it cannot Heel.
+- The look-ahead player plays pet faces and Heel, weighing a pet's vitality at 0.5 a point and its death at 12 (`T.EVAL`). `node tools/sim.js 40 missions --pets` gives every pilot a pet in place of a trait. Without pets nothing changes: the default tables are identical before and after.
+- **Saves** are version 30: every hero gains `pets`, a mission `pets`. `docs/reference/PETS.md`.
+
 ## 2.108.0 — 2026-11-21 — weapons
 
 - **Weapons are gear that makes your own strikes hit harder** (Garrett, 2026-11-21). The **Shock Baton** (6 ◇) adds 1 to every melee strike you make, the basic Strike and a Mass Channel included; the **Coil Rifle** (6 ◇) adds 1 to every ranged strike (along a line or at any range). Area strikes get nothing. A weapon never strikes on its own.

@@ -4,7 +4,7 @@ Since 2.76 a squad flies two to five pilots, and a pilot a player made keeps its
 
 Everything here is a number a table can work out before the mission starts.
 
-## Squad power and difficulty (2.109)
+## Squad power and difficulty (2.110)
 
 Garrett, 2026-11-21: "before a full arc is made it is based on the sum of the total power of all the characters at the start and the chosen difficulty level… as characters are updated from mission to mission they can continue to grow, but the mission can scale accordingly."
 
@@ -13,6 +13,8 @@ An expedition is sized from two things the players settle before it starts: the 
 - **A pilot's power** is **10**, and **1** more for every level past 1 it set out with (`T.pilotPowerFor`, `T.SCALING.PILOT`). A new pilot is power 10; a pilot back at level 4 is power 13.
 - **The squad's power** is its pilots' power added up (`T.squadPower`). Two new pilots, the squad every mission is written for, are power 20. A seat whose pilot is still drafting counts as a new pilot.
 - **Growth on the road.** The route already expects a squad to grow: about **3** upgrade points a pilot for every row it has come (`ROAD_UP`; the simulated runs grow 3.1 a row). A pilot that has grown faster than that brings **1** more power for every **6** points it is ahead, to every mission after; one that grows slower never brings less than it set out with (`h.setOut` holds the growth it set out with). A mission launched outside a route (the simulators, the playtest jump) expects a level a tier instead.
+
+Traits count up to the nine a pilot flies, whatever waits in reserve (2.107), and a pet's card counts as a trait while its pet is with the squad. Gear and pets stay with their expedition, so they are part of the road's growth, never what a pilot sets out with.
 
 A **pilot's level** is `1 + floor(growth / 6)`, where growth is every upgrade point it holds past the six a new pilot starts with (spent, spare, or bound to a card) plus **2** for every trait past its first six (`T.pilotPower`, `LEVEL_UP`, `CARD_UP`).
 
@@ -29,7 +31,7 @@ For every point of squad power past 20:
 
 Fractions round down at the end. A squad of three at level 5 (power 3 × 14 = 42, 22 past 20) gets foes at 210% vitality, 4 extra foes, the objective +2 and the swarm +2. Two pilots at level 6 (power 30) meet the same missions as three new pilots: power is power, however it is spread.
 
-Before 2.109 the squad's size and its *average* level were two separate numbers; a level now counts for every pilot who has it, so five seasoned pilots meet more than two.
+Before 2.110 the squad's size and its *average* level were two separate numbers; a level now counts for every pilot who has it, so five seasoned pilots meet more than two.
 
 - **Extra foes** are the mission's own rank and file (never its boss, elite or Spawners), placed in the back two columns where the tides' escorts stand, or past the front column if those are full. They come from a random stream of their own (`squad`), so the board, its objectives and everything else the seed names stay the same whoever plays it. The Heart's chamber takes half as many extras, from its own spawn, and its foes take another +2% vitality per point of power past 20 (+20% per new pilot, `T.SCALING.boss`): the Heart has no objective to grow, so the fight itself does.
 - **Starts.** Every pilot starts on a space of its own: the mission's two starts first, then free spaces from the front column back, and on a crowded board a space with an objective on it.
@@ -38,7 +40,7 @@ Before 2.109 the squad's size and its *average* level were two separate numbers;
 
 The route shows the squad's power as a ⚖ pill, and every stop card shows the numbers it will be played with.
 
-## Before and after 2.109 (power)
+## Before and after 2.110 (power)
 
 Measured on 2.104 (before the weapons and keep-all-traits changes), the same code with and without power. Mean win rate over all mission cells (heuristic player 40 squads a cell unless marked), and full runs with the heuristic player (80 runs, 40 with three pilots):
 
@@ -73,7 +75,7 @@ Unscaled, a third pilot makes nearly everything a win; scaled, three, four and f
 
 **Level.** Veteran squads (`H.addLevel`: up to three more traits, the rest of the level's growth as points) win about as often as new ones in most missions, because both players already win most of them; the Heart is where growth shows (look-ahead: 40% new, 53% at level 4, 63% at level 7, unscaled). Scaled, the look-ahead player wins 93% of missions at level 4 and 91% at level 7 against 95% new (the Heart 35% and 50% against 40%), and the heuristic player 73% and 58% against 78.5%: a seasoned squad is no easier than a new one, and its missions stay the same missions.
 
-## A full wipe ends the expedition (2.109)
+## A full wipe ends the expedition (2.110)
 
 If every pilot is down when a mission ends, the expedition is over, whatever the Lifeline (Garrett, 2026-11-21: "if all players die the arc is over but they are revived for the next arc"). The Lifeline still carries a mission lost with someone standing (its clock ran out). A downed pilot is still out only until an ally raises it, and is back for the next mission.
 
