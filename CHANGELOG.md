@@ -64,7 +64,7 @@ The rework was built on `bleeding-edge` while the dice and keyword plan went str
 
 ## 2.98.1 — 2026-11-21 — the old words leave the card texts
 
-- **Card texts speak the keywords.** Faces that said _immune to push/pull_ say _Anchored (nothing moves you, your own steps included)_, which is what they have done since 2.91; _shed Anchored, Weakened and damage over time_ and _every hold and dot_ say _Cleanse_; _Locate everything_ says _Reveal_. The texts that promised to set off no traps lose that clause, and `move`'s `noTrap` option goes: a pilot never set off a trap, and since 2.86 a pilot's own Fields never touch it.
+- **Card texts speak the keywords.** Faces that said *immune to push/pull* say *Anchored (nothing moves you, your own steps included)*, which is what they have done since 2.91; *shed Anchored, Weakened and damage over time* and *every hold and dot* say *Cleanse*; *Locate everything* says *Reveal*. The texts that promised to set off no traps lose that clause, and `move`'s `noTrap` option goes: a pilot never set off a trap, and since 2.86 a pilot's own Fields never touch it.
 - No rule, number or save changed.
 
 ## 2.98.0 — 2026-11-21 — Reveal; Lane cut
@@ -72,8 +72,8 @@ The rework was built on `bleeding-edge` while the dice and keyword plan went str
 The twelfth keyword of the sweep (`docs/reference/KEYWORDS.md`).
 
 - **Reveal.** Everything within N is shown, and a Revealed foe cannot be Hidden while it lasts and a zone strike finds it. One verb for both: an area Reveal around you, or one foe (`target`, `nearest`) Revealed for N rounds, which is what `locate` did on 28 faces; their texts say Revealed.
-- **Cut: Lane.** Lanes were retired by zones in 2.18 but kept a tooltip; the three faces that still said _Lane strike_ say _Zone strike_, which is what they did.
-- **The board names states by their keyword.** A pilot's chips, a foe's tooltip and the floating words say _Shield (next hit)_, _Revealed_, _Cleansed_ and _Weakened_ where the engine's older names (Preempt, Located, StatusImmune, Weak) showed through (`T.UI.stateName`).
+- **Cut: Lane.** Lanes were retired by zones in 2.18 but kept a tooltip; the three faces that still said *Lane strike* say *Zone strike*, which is what they did.
+- **The board names states by their keyword.** A pilot's chips, a foe's tooltip and the floating words say *Shield (next hit)*, *Revealed*, *Cleansed* and *Weakened* where the engine's older names (Preempt, Located, StatusImmune, Weak) showed through (`T.UI.stateName`).
 - No rule or save change (the state is still `Located`, shown as Revealed). The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
 
 ## 2.97.0 — 2026-11-21 — Cleanse
@@ -121,7 +121,7 @@ The seventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
 
 The sixth keyword of the sweep (`docs/reference/KEYWORDS.md`).
 
-- **Mark N.** The next hit on it, by anyone, deals N more (2 unless the face says), then the Mark is spent. _For N rounds_: every hit deals N more until it wears off. _Pierce_: that next hit ignores Shield. The larger of each part stands (`mark` with `n`, `dur`, `pierce`; state `Marked` = `{ next, pierce, each, t }`).
+- **Mark N.** The next hit on it, by anyone, deals N more (2 unless the face says), then the Mark is spent. *For N rounds*: every hit deals N more until it wears off. *Pierce*: that next hit ignores Shield. The larger of each part stands (`mark` with `n`, `dur`, `pierce`; state `Marked` = `{ next, pierce, each, t }`).
 - **Studied is a Mark for 3 rounds.** Its +N to every hero hit used to last the whole mission and stack, a lock-on the 2.73 rule forbids; 29 faces now Mark +N for 3 rounds. **Exposed is a Pierce Mark** (5 faces).
 - **Saves** are version 24: a bare Mark is +2 to the next hit, Studied +n to every hit for 3 rounds, Exposed a Pierce Mark (fixture `save-2.91.json`).
 - **Balance.** Same seeds, 2.91.0 → 2.92.0: `80 runs --player strong` 41 → 39; `120 runs --player weak` 13 → 11; `node tools/sim.js 40` runs 7 → 6 and 23 → 21 of 40, mission wins 71% → 71% and 89% → 88%. Studied's end makes it a little harder, which takes back Anchor's drift; nothing is retuned.
@@ -140,7 +140,7 @@ The fifth keyword of the sweep (`docs/reference/KEYWORDS.md`).
 The fourth keyword of the sweep (`docs/reference/KEYWORDS.md`; Garrett, 2026-11-21: Heal raises the downed, Rally stays the basic action).
 
 - **Heal N.** Restore N vitality; a downed pilot a Heal reaches gets up with N. Every heal for both pilots, or for your ally, now raises a downed one (`T.healUnit`).
-- **Revive and Phoenix are Heals.** Regrow's revive is _Heal 4 a downed ally beside you_; the five faces that brought you back are a **held Heal** (`ward`): if you go down within 3 rounds, it lands and you get up with that much.
+- **Revive and Phoenix are Heals.** Regrow's revive is *Heal 4 a downed ally beside you*; the five faces that brought you back are a **held Heal** (`ward`): if you go down within 3 rounds, it lands and you get up with that much.
 - **Medkit (tech heals only through a Field or the downed).** Patch lays a mending Field on and beside your space for 2 rounds (allies ending the round there Heal 3, a downed one gets up); Revive is Heal 10 a downed ally beside you. Field gained the Heal keyword.
 - **Rally** stays the basic action: 2 AP, a downed ally beside you gets up with 8.
 - **Balance.** Same seeds, 2.89.0 → 2.90.0: `80 runs --player strong` 38 → 40; `120 runs --player weak` 11 → 11; `node tools/sim.js 40` runs 6 → 6 and 21 → 22 of 40, mission wins 70% → 70% and 88% → 89%. Within the noise, so nothing is retuned. No save change (a held Heal is the old `Phoenix` state).
@@ -219,7 +219,7 @@ Garrett: "the underpowered elemental abilities and the ones that refund an ap di
 
 Garrett: "instead of picking your dice it should be 3 ap dice and 1 element of your choice"
 
-- **A fixed roll.** Every turn a pilot rolls three plain d20s (the AP dice) and one element die of its player's choice, picked from the pilot's own element dice: a d8 of an element it has awakened, or Omni Core's d12 (Garrett chose this over any element, or a sure etherion). It replaces 2.82's free choice of all four. Choose under _Next roll_, any time in a mission, on anyone's turn; the choice stays until changed. With nothing chosen, or every die of that kind banked, the roll takes the element die the pool holds most of; with none left in the pool, all four are plain. Pool and bank still make fifteen (`T.RULES.ROLL_EL`, `T.setRollPick`, `h.rollPick`).
+- **A fixed roll.** Every turn a pilot rolls three plain d20s (the AP dice) and one element die of its player's choice, picked from the pilot's own element dice: a d8 of an element it has awakened, or Omni Core's d12 (Garrett chose this over any element, or a sure etherion). It replaces 2.82's free choice of all four. Choose under *Next roll*, any time in a mission, on anyone's turn; the choice stays until changed. With nothing chosen, or every die of that kind banked, the roll takes the element die the pool holds most of; with none left in the pool, all four are plain. Pool and bank still make fifteen (`T.RULES.ROLL_EL`, `T.setRollPick`, `h.rollPick`).
 - **Simulated players** choose the element of an Ethereal face back in hand next round that the bank can't pay for, or else the element their awakened cards use most (`T.autoRollPick`).
 - **Balance.** The sure etherion helped the careful player: 80 runs, look-ahead 40 → 52 at the old vitality. So every foe has **140%** of its listed vitality (was 130%). `node tools/sim.js 40`, 2.82.0 → 2.83.0: heuristic runs 6 → 3 of 40, mission wins 73% → 66%; look-ahead runs 18 → 20 of 40, mission wins 85% → 87%. Details in `docs/reference/BALANCE.md`.
 - **Saves** keep version 19: `h.rollPick` is still a list of kinds, and a 2.82 choice loads as its first element die (plain dice in it are ignored).
@@ -232,7 +232,6 @@ Garrett: "when players roll dice, they should be able to select which ones they 
 - **Both ways to play.** Choose any time in a mission, on anyone's turn, for your own pilot. Taking turns, your roll comes as your turn ends, so choose before you end it (a choice after is for the roll after); all at once, everyone rolls as the round begins.
 - **Simulated players choose too** (`T.autoRollPick`): an element die for each Ethereal face back in hand next round that the bank can't pay for (two at most), plain dice for the rest. Balance, `node tools/sim.js 40`, 2.81.1 → 2.82: heuristic runs 6 → 6 of 40, mission wins 73% → 73%; look-ahead runs 25 → 18 of 40, mission wins 90% → 85%. Choosing is not easier for either player, so nothing is retuned. (Choosing only element dice and leaving the rest at random was worse still: heuristic vault t3 43% → 18%.) The UI driver allows a mission 60 rounds, since a long boss fight can pass 30.
 - **Saves** are version 19: a pilot may carry its chosen dice. A 2.81 save loads with nothing chosen and draws at random (fixture `save-2.81.json`).
-
 ## 2.87.0 (rework) — 2026-11-21 — the mission HUD, the draft and the route, as designed
 
 From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
@@ -249,7 +248,7 @@ From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
 
 ## 2.86.0 (rework) — 2026-11-21 — the pages around the game
 
-From the Frogma board's _Finalised UI_ tabs, desktop and phone. No rule changes.
+From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
 
 - **One shell for every page.** Home, Route, Pilots, Cards, Atlas and Canon sit as tabs across the top, with ⚙ for Settings; on a phone they become a bar at the bottom with More (Atlas, Canon, Codex, How to play, Settings) in a sheet (`src/ui/shell.js`, `src/ui/shell.css`). Other screens add their page through `U.SCREENS`, `U.ACTS` and `U.INPUTS`, and use `U.shell(tab, html)`.
 - **Pilots.** The crew as a wall of scenes, filtered by Everyone, Ready-made, Made by you and On expedition; a page for each pilot with its kit, expeditions, story and canon notes. **Make a pilot** in four steps: two clades (head, then feature), a name, callsign and domain, three story questions that can go in as canon notes, then save to the crew or draft their cards; either way the pilot keeps its callsign, domain and story, and its answers can go to canon. A made pilot keeps its callsign, domain and story in its recipe (`T.validMade`), and takes them home from an expedition (`src/ui/crew.js`).

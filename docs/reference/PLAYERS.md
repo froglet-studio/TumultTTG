@@ -23,10 +23,10 @@ An action is a plain object. `hero` is an index into `m.heroes`.
 | `walk`     | `node`                                                                                                           | walk there, one AP a step                |
 | `interact` | `node`                                                                                                           | work the objective on or beside the hero |
 | `rally`    |                                                                                                                  | put a downed ally back on their feet     |
-| `heel`     | `pet` (a uid), `node`                                                                                            | a pet walks up to its speed (1 AP)       |
 | `gear`     | `gear`, `ability`, and `target`, `node` or `choice` as for a face                                                | use a gear ability                       |
 | `item`     | `item`                                                                                                           | use a consumable                         |
 | `valve`    |                                                                                                                  | fold one of each etherion into an Omni   |
+| `heel`     | `pet` (a uid), `node` | a pet walks up to its speed (1 AP) |
 
 - `T.legalActions(m)` lists every action the squad could take next. Every playable face is in it once for each way it can be resolved, and everything in it works.
 - `T.applyAction(m, action)` does one, and returns what the engine returns.
@@ -54,23 +54,23 @@ One thing is decided for the player: a face that lets its player reroll banked d
 
 One measure for every mission, in points of about one hero vitality each (`T.EVAL`):
 
-| weight             | points  | for                                                                                                                                                                                                           |
-| ------------------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `win`              | 1000    | the mission won (lost: the same, negative)                                                                                                                                                                    |
-| `progress`         | 70      | the whole objective; `T.objectiveProgress(m)` runs from 0 to 1 for every kind of mission                                                                                                                      |
-| `heroHp`           | 1       | each point of vitality a hero has                                                                                                                                                                             |
-| `heroDown`         | 18      | a hero down, on top of the vitality lost                                                                                                                                                                      |
-| `foeHp`            | 0.9     | each point of vitality and shield a foe still has; a Marked foe counts 2 less, since its next hit deals +2                                                                                                    |
-| `foeAlive`         | 4       | each foe still standing: it will act again                                                                                                                                                                    |
-| `clock`            | 2.5     | each round left on a clock                                                                                                                                                                                    |
-| `approach`         | 1.6     | each step between a hero and where the objective needs someone — the nearest hero in full, the next at half                                                                                                   |
-| `dice`             | 0.5     | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that)                                                                                                                                   |
-| `short`            | 5       | each AP held by a hero who stands where the objective takes an Interact and cannot yet pay for one                                                                                                            |
-| `cooldown`         | 0.25    | each column a played card still has to travel                                                                                                                                                                 |
-| `crystal`, `item`  | 0.4, 2  | crystals and consumables kept                                                                                                                                                                                 |
-| `ahead`            | 0.6     | the share counted of what a hero has bought for later rounds: a regen engine (up to the vitality it can restore), AP to come, a strike bonus not yet spent; and two hits' worth on a Studied foe (since 2.73) |
-| `spare`            | 0.5     | each temporary die minted and not yet spent — counted only while the search ranks its lines, so a line that has just minted dice is not dropped before it spends them (since 2.73)                            |
-| `petHp`, `petDead` | 0.5, 12 | each point of vitality a pet has; a pet dead (its card is lost for the rest of the mission, `docs/reference/PETS.md`)                                                                                                            |
+| weight            | points | for                                                                                                                                                                                                           |
+| ----------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `win`             | 1000   | the mission won (lost: the same, negative)                                                                                                                                                                    |
+| `progress`        | 70     | the whole objective; `T.objectiveProgress(m)` runs from 0 to 1 for every kind of mission                                                                                                                      |
+| `heroHp`          | 1      | each point of vitality a hero has                                                                                                                                                                             |
+| `heroDown`        | 18     | a hero down, on top of the vitality lost                                                                                                                                                                      |
+| `foeHp`           | 0.9    | each point of vitality and shield a foe still has; a Marked foe counts 2 less, since its next hit deals +2                                                                                                    |
+| `foeAlive`        | 4      | each foe still standing: it will act again                                                                                                                                                                    |
+| `clock`           | 2.5    | each round left on a clock                                                                                                                                                                                    |
+| `approach`        | 1.6    | each step between a hero and where the objective needs someone — the nearest hero in full, the next at half                                                                                                   |
+| `dice`            | 0.5    | each die kept for next round, up to four a hero (`hoard`, 0.1, beyond that)                                                                                                                                   |
+| `short`           | 5      | each AP held by a hero who stands where the objective takes an Interact and cannot yet pay for one                                                                                                            |
+| `cooldown`        | 0.25   | each column a played card still has to travel                                                                                                                                                                 |
+| `crystal`, `item` | 0.4, 2 | crystals and consumables kept                                                                                                                                                                                 |
+| `ahead`           | 0.6    | the share counted of what a hero has bought for later rounds: a regen engine (up to the vitality it can restore), AP to come, a strike bonus not yet spent; and two hits' worth on a Studied foe (since 2.73) |
+| `spare`           | 0.5    | each temporary die minted and not yet spent — counted only while the search ranks its lines, so a line that has just minted dice is not dropped before it spends them (since 2.73)                            |
+| `petHp`, `petDead` | 0.5, 12 | each point of vitality a pet has; a pet dead (its card is lost for the rest of the mission, `docs/reference/PETS.md`) |
 
 A face's free step (`move` with `free`) is a walk the player may take later in the same turn: the interface asks for it at once, this player keeps it for the turn (`h.freeMove`) so the search can place it where it serves best.
 
