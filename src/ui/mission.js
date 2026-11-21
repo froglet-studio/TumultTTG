@@ -1191,7 +1191,11 @@
           `<button class="gbtn" data-act="cons" data-arg="${i}|${ci}" data-tip="${esc(T.CONSUMABLE_BY[c].txt)}" ${m.over || h.downed ? 'disabled' : ''}>${U.icCons(c)} ${esc(T.CONSUMABLE_BY[c].name)}</button>`,
       )
       .join('');
-    const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm">${esc(h.name)}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
+    // instincts (2.121): a clade's always-on rule, in the name's tip
+    const inst = T.instinctsOf(h)
+      .map((x) => `✦ ${x.name}: ${x.txt}`)
+      .join(' · ');
+    const head = `<div class="hh">${U.portrait(h, 'md')}<span class="nm"${inst ? ` data-tip="${esc(inst)}"` : ''}>${esc(h.name)}${inst ? ' <small class="dim">✦</small>' : ''}</span>${U.seatTag ? U.seatTag(i) : ''}<span class="tt">${esc(h.title)}</span><span class="hp">${h.downed ? 'DOWNED' : h.hp + '/' + h.maxHp}${heading(i)}</span></div>
       <div class="hpbar" style="margin-top:4px"><i style="width:${(100 * Math.max(0, h.hp)) / h.maxHp}%"></i></div>
       <div class="states">${T.petsOf(m, h)
         .concat((m.pets || []).filter((p) => p.dead && p.owner === h.uid))

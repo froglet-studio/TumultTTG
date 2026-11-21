@@ -604,7 +604,14 @@
           h,
           i,
         ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b>${U.seatTag ? U.seatTag(i) : ''}<span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
-      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards${h.reserve && h.reserve.length ? ` · ${h.reserve.length} in reserve` : ''}</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc + (T.GEAR_BY[g.id].passive ? ' Passive: ' + T.GEAR_BY[g.id].passive.txt : ''))}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}</div>
+      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards${h.reserve && h.reserve.length ? ` · ${h.reserve.length} in reserve` : ''}</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc + (T.GEAR_BY[g.id].passive ? ' Passive: ' + T.GEAR_BY[g.id].passive.txt : ''))}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}${T.instinctsOf(
+        h,
+      )
+        .map(
+          (x) =>
+            `<span class="pill" data-tip="${esc(`Instinct of the ${T.SPECIES[x.clade] ? T.SPECIES[x.clade].name : x.clade}, always on: ${x.txt}`)}">✦ ${esc(x.name)}</span>`,
+        )
+        .join('')}</div>
       <div class="row" style="margin-top:6px">${own(i) ? `<button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button>` : ''}<button class="sm ghost" data-act="kit" data-arg="${i}">Kit${h.reserve && h.reserve.length ? ' · swap' : ''}</button>${T.playerCount(run) > 1 && run.purses ? `<span class="right pill small" data-tip="${esc(T.ownerName(run, i))}'s omnicrystals">${U.ic('crystal', '◇', 'tiny')} ${T.crystalsFor(run, i)}</span>` : ''}</div></div>`,
       )
       .join('')}</div>`;

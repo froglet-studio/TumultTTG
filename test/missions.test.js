@@ -6,10 +6,14 @@ const { createHarness, ARCHETYPES } = require('../tools/harness');
 const H = createHarness();
 const { T } = H;
 const SEEDS = 8;
+// Tier 1 is checked against a win-rate floor, so it plays more missions: with 8, one
+// mission's luck moves the rate by 12.5 points (crossing t1 sits near 62% for the heuristic).
+const FLOOR_SEEDS = 40;
 
 function playMany(arch, tier) {
+  const n = tier === 1 ? FLOOR_SEEDS : SEEDS;
   let wins = 0;
-  for (let i = 0; i < SEEDS; i++) {
+  for (let i = 0; i < n; i++) {
     const run = T.newRun(1000 + i);
     if (i % 3 === 2) H.draftedSquad(run);
     else H.prebuiltSquad(run, i % 6, (i + 1 + (i % 5)) % 6);
@@ -22,7 +26,7 @@ function playMany(arch, tier) {
     for (const h of m.heroes) assert.equal(h.pool + h.held.length, T.RULES.POOL, 'dice invariant after a mission');
     if (m.won) wins++;
   }
-  return wins / SEEDS;
+  return wins / n;
 }
 
 for (const arch of ARCHETYPES) {

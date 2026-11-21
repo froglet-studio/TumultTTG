@@ -137,6 +137,7 @@ test('Climbing Rig: its holder cannot be pulled, and can still be pushed', () =>
     return s;
   };
   const plain = far(withBoons([]));
+  plain.h.species = ['human', 'owl', 'gecko']; // not the octopus: its Suckers instinct (2.121) holds against a pull
   const soul = far(withBoons(['climbrig']));
   assert.ok(T.pullToward(plain.m, plain.e, plain.h, 1) > 0, 'the comparison hero is dragged');
   assert.equal(T.pullToward(soul.m, soul.e, soul.h, 1), 0);

@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.121.0',
+    version: '2.122.0',
     items: [
+      {
+        text: "Instincts: each clade now brings one always-on rule (a ✦ on the pilot sheet). The octopus cannot be pulled, the tortoise's Shields are 1 bigger, the koi starts with an Omni banked, the mantis shrimp hits 1 harder in melee, and so on for the pre-made pilots' twelve clades. Does yours make your pilot play differently?",
+      },
       {
         text: 'Burn: a face that spends its whole card until the mission ends, for a play nothing else makes. Full Dose (scorpion) leaves a Wound that holds before it fades; Boiling Burst (beetle) leaves boiling ground for the rest of the mission. When is it worth it?',
         cards: ['sco_sting', 'btl_spray'],

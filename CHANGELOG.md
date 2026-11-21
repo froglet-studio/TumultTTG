@@ -9,6 +9,26 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.122.0 — 2026-11-21 — clade instincts
+
+- **Instincts** (the shortlist's third pick). Each clade brings one always-on rule to every pilot of it. An instinct is one line on the pilot sheet, not a card, so a pilot has at most two. Each one bends a keyword a little, so the same board reads differently to each pilot. The first twelve cover the pre-made pilots' clades:
+  - Octopus **Suckers**: nothing can pull you.
+  - Raven **Watcher**: the nearest foe within 2 is Marked as your turn begins.
+  - Otter **Pocket Stone**: start each mission with 1 AP banked.
+  - Eel **Live Wire**: your Fields last 1 round longer.
+  - Hedgehog **Spines**: +1 to every Thorns.
+  - Tortoise **Shell**: +1 to every Shield.
+  - Mouse **Scurry**: Blinks reach 1 further.
+  - Owl **Night Sight**: reveals reach 1 further, and Hidden foes beside you are seen.
+  - Axolotl **Regrowth**: once a mission, rise with 3 instead of going down.
+  - Koi **Lucky Scales**: start each mission with 1 Omni banked.
+  - Flamingo **Caustic Feet**: hazards deal 1 less.
+  - Mantis Shrimp **Smasher**: +1 to your melee strikes.
+- Human, in every pilot, has none. The other clades follow.
+- They show as ✦ pills on the pilot sheet and in the tip of a pilot's name in a mission.
+- **Foes have 180% of their listed vitality** (was 166%), so the game is not easier. In full `node tools/sim.js 40` runs on 2.121, look-ahead wins went from 14 before, to 21 with instincts, to 15 with instincts at 180%. Heuristic wins went from 0, to 2, to 0.
+- In code: `src/data/instincts.js` (`T.INSTINCTS`, `T.instinctsOf`). An instinct is a passive on the hooks gear uses (`T.boonVals` reads all three sources), plus two new hooks, `thornsBonus` and `hazardSoft`.
+
 ## 2.121.0 — 2026-11-21 — Burn
 
 - **Burn** (new keyword, the shortlist's fifth pick). Once a Burn face resolves, its whole card is gone until the mission ends, both faces with it. Haste and every other effect cannot bring it back sooner, and it is back in hand at the next mission. A Burn face does something its card cannot do any other way, never the same effect doubled. The puzzle is when to spend it.
