@@ -205,12 +205,11 @@ test('UI: with two players, each screen acts only for its own pilot', { skip, ti
   // players take turns in the order they choose: the round opens, and this screen (seat 1) may go first
   U.ms.heroIdx = 1;
   U.updateMission();
-  // choosing the next roll's dice (2.82): from the pilot's own, and it begins no turn
-  act('rollPick', '1|add|plain');
-  assert.equal(JSON.stringify(m.heroes[1].rollPick), '["plain"]');
-  assert.match(d.querySelector('.nextroll').textContent, /3 at random/);
-  act('rollPick', '1|del|0');
-  assert.equal(m.heroes[1].rollPick, undefined);
+  // choosing the next roll's element die (2.83): one of the pilot's own, and it begins no turn
+  const el = w.T.diceSet(m.heroes[1]).find((k) => k !== 'plain');
+  act('rollPick', '1|' + el);
+  assert.equal(JSON.stringify(m.heroes[1].rollPick), JSON.stringify([el]));
+  assert.match(d.querySelector('.nextroll').textContent, /Next roll 3/);
   assert.equal(U.run.party.active, null, 'choosing dice begins no turn');
   assert.match(d.querySelector('[data-act="endRound"]').textContent, /End Player 2's turn/);
   ready();

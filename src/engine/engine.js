@@ -461,49 +461,61 @@
 
   /* ───────────────────────────── DICE ───────────────────────────── */
   /**
-   * Which dice a pilot rolls next (2.82; Garrett, 2026-11-20: "when players roll dice, they should be able to
-   * select which ones they roll from their pool"). `h.rollPick` lists up to ROLL kinds (keys of T.DICE, or
-   * 'plain'), chosen from the pilot's dice, and stays chosen roll after roll until the player changes it. At
-   * the roll, each chosen kind still in the pool is taken; a chosen die that is banked, and every slot not
-   * chosen, is drawn at random from the pool as before. Choosing a die never chooses its face.
+   * What a pilot rolls (2.83; Garrett, 2026-11-21: "instead of picking your dice it should be 3 ap dice and 1
+   * element of your choice"). Each turn ROLL dice come out of the pool: ROLL_EL of them element dice, the kind
+   * the player chose (`h.rollPick`, one kind from the pilot's own element dice: a d8 of an awakened card's
+   * element, or Omni Core's ethereal d12), and the rest plain d20s, the AP dice. The choice stays from roll to
+   * roll until changed. With nothing chosen, or none of that kind left in the pool, the element die is the kind
+   * the pool holds most of (the first such in the pilot's set); with no element die in the pool it is plain, and
+   * with too few plain dice the rest are drawn at random. Choosing a die never chooses its face.
    */
   T.setRollPick = function (h, kinds) {
     const set = T.diceSet(h);
     const pick = [];
-    for (const k of Array.isArray(kinds) ? kinds : []) {
-      if (pick.length >= R().ROLL) break;
-      const j = set.indexOf(k);
-      if (j < 0) continue; // not one of this pilot's dice (or all of that kind already chosen)
-      set.splice(j, 1);
+    for (const k of Array.isArray(kinds) ? kinds : [kinds]) {
+      if (pick.length >= R().ROLL_EL) break;
+      if (k === 'plain' || !set.includes(k) || pick.includes(k)) continue; // not one of this pilot's element dice
       pick.push(k);
     }
     if (pick.length) h.rollPick = pick;
     else delete h.rollPick;
     return { ok: true, pick };
   };
-  /** The chosen dice that the next roll can take now: those of the pick still in the pool. */
+  /** The element dice the pilot's next roll takes, as kinds: its choice where the pool still holds it. */
   T.rollPickNow = function (h) {
     const left = T.poolDice(h);
     const out = [];
-    for (const k of h.rollPick || []) {
-      const j = left.indexOf(k);
-      if (j >= 0) out.push(left.splice(j, 1)[0]);
+    const want = (h.rollPick || []).filter((k) => k !== 'plain');
+    for (let n = 0; n < R().ROLL_EL; n++) {
+      let k = want.find((x) => left.includes(x));
+      if (!k) {
+        // the kind the pool holds most of, the first such in the pilot's set
+        let best = 0;
+        for (const x of T.diceSet(h)) {
+          const c = left.filter((y) => y === x).length;
+          if (x !== 'plain' && c > best) ((best = c), (k = x));
+        }
+      }
+      if (!k) break;
+      out.push(left.splice(left.indexOf(k), 1)[0]);
+      want.splice(want.indexOf(k), 1);
     }
     return out;
   };
   T.rollDice = function (m, h) {
-    // Draw ROLL dice from those in the pool, the ones chosen first (T.setRollPick), the rest at random, and roll each.
+    // ROLL dice from the pool: ROLL_EL element dice as the player chose (T.rollPickNow), the rest plain, each rolled.
     const k = Math.min(R().ROLL, h.pool);
     const dice = T.stream(m.rngs, 'dice');
     const left = T.poolDice(h);
-    const pick = (h.rollPick || []).slice();
+    const take = T.rollPickNow(h).slice(0, k);
+    while (take.length < k && left.filter((x) => x === 'plain').length > take.filter((x) => x === 'plain').length)
+      take.push('plain');
     const out = [];
     const kinds = [];
     const at = [];
     for (let i = 0; i < k; i++) {
-      let j = -1;
-      while (pick.length && j < 0) j = left.indexOf(pick.shift());
-      const kind = left.splice(j >= 0 ? j : dice.int(left.length), 1)[0];
+      const j = i < take.length ? left.indexOf(take[i]) : dice.int(left.length);
+      const kind = left.splice(j, 1)[0];
       const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
       kinds.push(kind);
