@@ -192,7 +192,7 @@
   function gear(q) {
     const g = T.GEAR.filter((x) => !q || (x.name + ' ' + x.desc).toLowerCase().includes(q)).map(
       (x) =>
-        `<article class="cx-card cx-gold"><h3>${U.icGear(x.id)} ${esc(x.name)} <small class="dim">${x.price} ◇</small></h3><p class="small dim">${esc(x.desc)}</p>${x.passive ? `<p class="small">◆ <b>Passive</b>: ${esc(x.passive.txt)}</p>` : ''}${x.abilities.map((a) => `<p class="small">• <b>${esc(a.n)}</b> (${a.cost} ◇, cooldown ${a.cd}): ${esc(a.txt())}</p>`).join('')}</article>`,
+        `<article class="cx-card cx-gold"><h3>${U.icGear(x.id)} ${esc(x.name)} <small class="dim">${x.price} ◇</small></h3><p class="small dim">${esc(x.desc)}</p>${x.passive ? `<p class="small">◆ <b>Passive</b>: ${esc(x.passive.txt)}</p>` : ''}${x.abilities.map((a) => `<p class="small">• <b>${esc(a.n)}</b> (${T.gearCostText(a)}, cooldown ${a.cd}): ${esc(a.txt())}</p>`).join('')}</article>`,
     );
     return g.join('');
   }

@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.107.0',
+    version: '2.108.0',
     items: [
+      {
+        text: 'Weapons: two new pieces of gear at the havens. The Shock Baton adds 1 to every melee strike you make (the basic Strike too), and the Coil Rifle adds 1 to every ranged one. Each has an Overcharge that takes a banked Omni die instead of omnicrystals: every Omni you put on the weapon adds 2 to every strike of its reach this round, and you can stack them. An Omni spent there cannot pay an Ethereal face. Foes are a little tougher to make up for it. Did you ever Overcharge, and was it worth the Omni? Did a weapon change which cards you reached for?',
+      },
       {
         text: 'A pilot keeps every trait it earns now. Nine fly into a mission; once the kit holds nine, a new trait either waits in reserve (Keep in reserve) or comes in at once for one that stays behind (Fly it now). Nothing is lost and nothing is refunded: a trait left behind keeps its points. Between missions, open Kit on the route to change which nine fly: pick a reserve trait, then the one it replaces. The dice follow the kit (each awakened card that flies brings its element die). Molt and Trade set the old trait aside the same way. Did you change your kit to suit the next stop? Was it clear where the reserve lives?',
       },

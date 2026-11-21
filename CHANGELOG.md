@@ -9,6 +9,14 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.108.0 — 2026-11-21 — weapons
+
+- **Weapons are gear that makes your own strikes hit harder** (Garrett, 2026-11-21). The **Shock Baton** (6 ◇) adds 1 to every melee strike you make, the basic Strike and a Mass Channel included; the **Coil Rifle** (6 ◇) adds 1 to every ranged strike (along a line or at any range). Area strikes get nothing. A weapon never strikes on its own.
+- **Overcharge** takes a banked Omni die, not ◇: every Omni put on the weapon Empowers every strike of its reach by 2 this round, and they stack. No cooldown. An Omni spent there cannot pay an Ethereal face. Empower is the existing keyword; it can now cover a list of strike kinds and `stack`.
+- Each weapon has a second active paid in ◇: the Baton's Arc Guard (Thorns 2 this round) and the Rifle's Rangefinder (Revealed 2 rounds and Marked).
+- **Foes have 150% of their listed vitality** (was 145%), so the game is not easier: full look-ahead runs 101 of 200 before, 112 with weapons at 145%, 102 at 150% (`docs/reference/BALANCE.md`).
+- In code: the passive hook `weapon` (`{ reach, n }`), `T.weaponBonus(h, kind)`, `T.canUseGear`, `T.gearCostText`, and a gear ability's `omni` cost. No save change.
+
 ## 2.107.0 — 2026-11-21 — every trait kept, nine fly
 
 - **A pilot keeps every trait it earns** (Garrett, 2026-11-21). Nine fly into a mission (the kit); the rest wait in a **reserve**, each with its points on it. Once the kit holds nine, a new trait either waits in reserve (**Keep in reserve**) or comes in at once for one that stays behind (**Fly it now**).
