@@ -25,7 +25,7 @@ Three lines share the keywords, and each is set by what it touches, how far it r
 - **How long.** For N rounds, or until it has sprung on as many units as it says (*the first foe to enter*
   is one).
 - **Who.** Its harm (Strike, Weaken, Anchor, Mark) falls on its side's foes, and its help (Hidden) on its own
-  side; a Reveal Field shows everything in it. Nothing off the ground (Hover, Weightless) is touched by a Field.
+  side; a Reveal Field shows everything in it. Nothing off the ground (Hover) is touched by a Field.
 - **A hazard is a Field of damage** that belongs to nobody: whoever ends the round on it takes the hazard's
   damage, Pierce.
 - **Cleanse the ground** within N clears hazards and foes' Fields there, never your own.
@@ -203,3 +203,25 @@ great, and grabbing a specific die is great, but not a random one").
 
 In code: the verbs `reroll` (`n`), `draw` (`face`, `n`; the engine kind `draw` each turn), `mint` (`face`, `n`,
 `target`); `T.drawKind`, `T.draw`, `T.mint`, `T.rerollHeld`.
+
+## Hover, and ignoring hazards (2.102)
+
+> **Hover N.** Off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you, and your
+> steps may take the ledges.
+>
+> **Ignore hazards N.** For N rounds a hazard does you no harm. You are still on the ground.
+
+- **Two keywords, two meanings** (Garrett, 2026-11-21: "we want thematic and each to hold their own distinct
+  meaning"). Ignoring hazards is the body shrugging the place off: gills, a coat, salt feet, shed heat. Hover is
+  being above it all, so Fields, pushes and pulls miss you too, and the ledges are open to your steps. The plan's
+  option of folding all 87 hazard faces into Hover was not taken: that would have handed every coat and gill the
+  ledges.
+- **Who hovers.** Fliers, not one element: the hummingbird, hawk, eagle, crane, egret, owl, pelican, seahorse and
+  the winged insects (Glide Wings, Migration). Their flying moves Hover for the round before they move, so a flight
+  can end on a ledge; a coat, a swim or a run still ignores hazards.
+- **Weightless is Hover.** It was Hover plus the ledges; now Hover has the ledges, so the word went. Hover no
+  longer mints 1 AP a turn: a keyword says one thing, and the ledges are what it gained.
+
+In code: the verb `hover` (`dur`), the state `Hover` (an older save's `Weightless` reads as Hover); a face whose
+`hover` comes before its `move` is offered the ledges (`T.reachableWalk`'s `climb`). Ignoring hazards is the verb
+`hazardImmune` (`dur`, `party`), the state `HazardImmune`.

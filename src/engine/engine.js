@@ -721,9 +721,9 @@
   function trapImmune(ent) {
     return !!(st(ent).Hover || st(ent).Weightless);
   }
-  /** Weightless heroes and climbing forms walk the climb edges up to height nodes. */
+  /** Hovering heroes and climbing forms walk the climb edges up to height nodes (Weightless: an older save's Hover). */
   function canClimb(ent) {
-    return !!(st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
+    return !!(st(ent).Hover || st(ent).Weightless || (st(ent).Morph && st(ent).Morph.climb));
   }
   function addTimed(m, ent, name, t, extra) {
     const cur = st(ent)[name];
@@ -1480,7 +1480,10 @@
       case 'node_move': {
         const mv = face.fx.find((x) => x.v === 'move');
         const n = num(mv.n, P, E);
-        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact) };
+        // a face that lifts you off the ground before it moves you (Hover, then Move) may take the ledges
+        const hi = face.fx.findIndex((x) => x.v === 'hover');
+        const lift = hi >= 0 && hi < face.fx.indexOf(mv);
+        return { need: 'node', options: T.reachableWalk(m, h, n, mv.ignoreFoes, mv.exact, lift) };
       }
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'blink');
@@ -1508,9 +1511,9 @@
    * 2.81.1 it was the nodes whose *shortest* walk is n, which on a small or well-joined board left a run of 4
    * nowhere to go from most of it: the whole threshing floor of Mast-Crop Hills.)
    */
-  T.reachableWalk = function (m, h, n, ignoreFoes, exact) {
+  T.reachableWalk = function (m, h, n, ignoreFoes, exact, climb) {
     const bd = m.board;
-    const climber = canClimb(h);
+    const climber = canClimb(h) || !!climb;
     // a step onto y: is it allowed, and is y somewhere a walk may pass (but not stop, if occupied)?
     const step = (y) => {
       if (bd.nodes[y].height && !climber && !bd.ramp) return null;
@@ -2107,12 +2110,10 @@
         say(m, `${actor.name} steps outside time.`, 'hero');
         break;
       case 'hover':
-        addTimed(m, actor, 'Hover', num(f.dur, P, E), { noAp: !!f.noAp });
-        say(m, `${actor.name} hovers.`, 'hero');
-        break;
-      case 'weightless':
-        addTimed(m, actor, 'Weightless', num(f.dur, P, E));
-        say(m, `${actor.name} is weightless.`, 'hero');
+        // Hover N (2.102): off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you,
+        // and your steps may take the ledges. It folds in Weightless, and no longer mints AP.
+        addTimed(m, actor, 'Hover', num(f.dur, P, E));
+        say(m, `${actor.name} lifts off the ground.`, 'hero');
         break;
       case 'hazardImmune': {
         const d = num(f.dur, P, E);
@@ -2721,7 +2722,6 @@
         T.mint(h, 'AP', en.val || 1);
       }
     }
-    if (h.states.Hover && !h.states.Hover.noAp) T.mint(h, 'AP', 1);
     if (!h.rolledAhead) T.rollDice(m, h);
     // keen sense
     if (T.boonVals(h, 'keen').length)
@@ -3020,8 +3020,10 @@
       Thorns: `Thorns — ${[v.v ? `melee attackers take ${v.v}` : '', v.next ? `the next takes ${v.next}${v.push ? ' and is pushed ' + v.push : ''}` : ''].filter(Boolean).join('; ')}.`,
       Preempt: `Shield ${v.v} against the next hit${v.reflect ? ', and ' + v.reflect + ' of it goes back' : ''}${v.reposition ? ', and you step away' : ''}.`,
       Stasis: 'Stasis — untargetable.',
-      Hover: 'Hover — off the ground: hazards and Fields do not touch it; immune to push/pull.',
-      Weightless: 'Weightless — immune to force, Fields and hazards; may walk onto height.',
+      Hover:
+        'Hover — off the ground: hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges.',
+      Weightless:
+        'Hover — off the ground: hazards and Fields do not touch it, nothing pushes or pulls it, and its steps may take the ledges.',
       Morph: `Morph — strikes +${v.bonus}${v.reach ? ', reach 2' : ''}${v.climb ? ', can climb' : ''}.`,
       HazardImmune: 'Immune to hazards.',
       StatusImmune: 'Cleansed — no foe can Weaken or Anchor it while this lasts.',
