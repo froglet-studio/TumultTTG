@@ -381,8 +381,6 @@
     swap: 'gear.phasebrace',
     reveal: 'boon.keensense',
     locate: 'boon.keensense',
-    expose: 'boon.keensense',
-    studied: 'boon.keensense',
     mark: 'basic.spot',
     hidden: 'enemy.lurker',
     decoy: 'event.mirror',

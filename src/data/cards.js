@@ -91,7 +91,7 @@
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Reveal everything within ${1+P} nodes (breaks Hidden, finds traps and hidden objectives); your next strike this turn deals +1.` },
     { n:'Weak Point', ap:0, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'expose', bonus:(P,E)=>E}],
+      fx:[{v:'mark', n:(P,E)=>E, pierce:true}],
       txt:(P,E)=>`Expose a foe: the next hit on it ignores Shield and deals +${E}.` },
     'Find the seam in the system.');
   C('human','hum_grip','Opposable Grip','M',0,
@@ -395,8 +395,8 @@
       fx:[{v:'reveal', radius:(P,E)=>1+h(P), dur:1},{v:'mark', nearest:true}],
       txt:(P,E)=>`Taste by touch: reveal within ${1+h(P)} and Mark the nearest foe.` },
     { n:'Cling-Read', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'weaken', val:1, dur:(P,E)=>2+E},{v:'studied', n:1}],
-      txt:(P,E)=>`Tag a foe for ${2+E} rounds: it cannot Hide, is Weakened 1, and your hits on it deal +1 permanently.` },
+      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'weaken', val:1, dur:(P,E)=>2+E},{v:'mark', n:1, dur:3}],
+      txt:(P,E)=>`Tag a foe for ${2+E} rounds: it cannot Hide, is Weakened 1, and it is Marked +1 for 3 rounds.` },
     'Always know where it is.');
   C('octopus','oct_bite','Paralytic Bite','T',0,
     { n:'Bite', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -408,8 +408,8 @@
     'It still acts fully; it just does less per effort.');
   C('octopus','oct_intellect','Adaptive Intellect','C',0,
     { n:'Study', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
-      fx:[{v:'studied', n:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`Study a foe: your hits on it deal +${1+h(P)}, permanently and stacking.` },
+      fx:[{v:'mark', n:(P,E)=>1+h(P), dur:3}],
+      txt:(P,E)=>`Study a foe: it is Marked +${1+h(P)} for 3 rounds.` },
     { n:'Counter-Model', ap:2, el:1, cd:3, dur:2, tgt:'self',
       fx:[{v:'preempt', val:3, reflect:(P,E)=>E>=2?E:0, reposition:1}],
       txt:(P,E)=>`Model their next move: the next hit on you is −3${E>=2?` and reflects ${E}`:''}, and you slip 1 node when it lands. Dur 2.` },

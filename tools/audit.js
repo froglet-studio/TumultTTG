@@ -69,13 +69,13 @@ function answersOf(x) {
       if (x.revealTarget || x.kind === 'area' || x.kind === 'nodeArea') add('unknown');
       break;
     case 'execute':
-    case 'studied':
       add('single');
       break;
     case 'wound':
     case 'mark':
       add('single');
       if (x.area) add('crowd');
+      if (x.v === 'mark' && x.pierce) add('armor');
       break;
     case 'empower':
       add('single');
@@ -89,9 +89,6 @@ function answersOf(x) {
       break;
     case 'stripShield':
       add('armor');
-      break;
-    case 'expose':
-      add('armor', 'single');
       break;
     case 'move':
       add('tempo', 'burst'); // get there sooner; step out of a zone or out of reach
@@ -203,7 +200,7 @@ function answersOf(x) {
  * (Whether their numbers are good enough is a balance question, not an audit question.)
  */
 const STAPLE_VERBS = [
-  ...['strike', 'execute', 'wound', 'empower', 'mark', 'studied', 'expose', 'morph'], // damage
+  ...['strike', 'execute', 'wound', 'empower', 'mark', 'morph'], // damage
   ...['move', 'teleport', 'climb'], // movement
   ...['shield', 'preempt', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
@@ -240,7 +237,8 @@ const ABLATIONS = [
     'no shield-breakers',
     (x) =>
       (x.v === 'strike' && (x.pierce || x.trueDmg || x.stripShield)) ||
-      ['stripShield', 'expose'].includes(x.v) ||
+      x.v === 'stripShield' ||
+      (x.v === 'mark' && x.pierce) ||
       (x.v === 'empower' && x.pierce),
   ],
   [

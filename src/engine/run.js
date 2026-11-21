@@ -915,7 +915,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 23;
+  T.SAVE_VERSION = 24;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1214,6 +1214,29 @@
         if (t > 0) s.Anchored = { t };
       }
       r.v = 23;
+    },
+    // 2.92 makes Mark one keyword for Marked, Studied and Exposed: `Marked` is `{ next, pierce, each, t }`. A bare
+    // Mark is +2 to the next hit; Studied (+n to every hero hit, for good) is +n to every hit for 3 rounds; Exposed
+    // (+bonus and ignore Shield, next hit) is a Pierce Mark of that much.
+    23(r) {
+      for (const e of (r.mission && r.mission.enemies) || []) {
+        const s = e && e.states;
+        if (!s || !(s.Marked || s.Studied || s.Exposed)) continue;
+        const mk = {};
+        if (s.Marked) mk.next = 2;
+        if (s.Exposed) {
+          mk.next = Math.max(mk.next || 0, s.Exposed.bonus || 0);
+          mk.pierce = true;
+        }
+        if (s.Studied) {
+          mk.each = s.Studied.n || 1;
+          mk.t = 3;
+        }
+        delete s.Studied;
+        delete s.Exposed;
+        s.Marked = mk;
+      }
+      r.v = 24;
     },
   };
   T.deserializeRun = function (json) {

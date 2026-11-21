@@ -85,8 +85,8 @@
     'A leaf the size of a roof.');
   K(['orangutan'],'ora_study','Patient Study','T',0,
     { n:'Watch', ap:1, el:0, cd:2, dur:0, tgt:'foe_any',
-      fx:[{v:'studied', n:(P,E)=>1+h(P)},{v:'mark'}],
-      txt:(P,E)=>`Study a foe: your hits on it deal +${1+h(P)} from now on, and the next hit on it deals +2.` },
+      fx:[{v:'mark', n:(P,E)=>1+h(P), dur:3},{v:'mark'}],
+      txt:(P,E)=>`Study a foe: it is Marked +${1+h(P)} for 3 rounds, and the next hit on it deals +2.` },
     { n:'Outthink', ap:1, el:1, cd:3, dur:2, tgt:'self',
       fx:[{v:'preempt', val:(P,E)=>2+E, reflect:0, reposition:1}],
       txt:(P,E)=>`The next hit on you is −${2+E}, and you slip 1 node when it lands. Dur 2.` },
@@ -237,8 +237,8 @@
   // Tufted Ears: the lynx and the caracal, ears tipped with black to catch sound
   K(['lynx','caracal'],'cat_tufts','Tufted Ears','S',0,
     { n:'Listen', ap:1, el:0, cd:1, dur:0, tgt:'self',
-      fx:[{v:'locate', nearest:true, dur:2},{v:'studied', n:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`Hear the nearest foe, hidden or not: it is Located for 2 rounds and your hits on it deal +${1+h(P)}.` },
+      fx:[{v:'locate', nearest:true, dur:2},{v:'mark', n:(P,E)=>1+h(P), dur:3}],
+      txt:(P,E)=>`Hear the nearest foe, hidden or not: it is Located for 2 rounds and it is Marked +${1+h(P)} for 3 rounds.` },
     { n:'Sound Map', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:(P,E)=>1+E},{v:'mark', area:true, radius:(P,E)=>1+E}],
       txt:(P,E)=>`Hear everything within ${1+E} for ${1+E} rounds; every foe within ${1+E} is Marked.` },
@@ -325,8 +325,8 @@
     'A cat that likes the water.');
   K(['tiger'],'tig_stripes','Stripes','T',0,
     { n:'Stripes', ap:1, el:0, cd:2, dur:0, tgt:'foe_r3',
-      fx:[{v:'studied', n:(P,E)=>1+h(P)},{v:'hidden', dur:1}],
-      txt:(P,E)=>`Watch a foe within 3 from the grass: your hits on it deal +${1+h(P)}, and you are Hidden 1.` },
+      fx:[{v:'mark', n:(P,E)=>1+h(P), dur:3},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Watch a foe within 3 from the grass: it is Marked +${1+h(P)} for 3 rounds, and you are Hidden 1.` },
     { n:'Tall Grass', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+E, canMove:true},{v:'empower', val:(P,E)=>2+E, uses:1, dur:3, pierce:true}],
       txt:(P,E)=>`Hide for ${1+E} rounds, moving freely; your next strike deals +${2+E} through Shield.` },
@@ -351,11 +351,11 @@
     'A long tail, for turning.');
   K(['cheetah'],'che_tear','Tear Marks','C',0,
     { n:'Focus', ap:1, el:0, cd:1, dur:0, tgt:'foe_los',
-      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`Fix a foe in sight: it is Located for 2 rounds and your hits on it deal +${1+h(P)}.` },
+      fx:[{v:'locate', dur:2},{v:'mark', n:(P,E)=>1+h(P), dur:3}],
+      txt:(P,E)=>`Fix a foe in sight: it is Located for 2 rounds and it is Marked +${1+h(P)} for 3 rounds.` },
     { n:'Long Look', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:(P,E)=>1+E},{v:'mark'}],
-      txt:(P,E)=>`Pick out any foe: Located for ${2+E} rounds, Marked, and your hits on it deal +${1+E}.` },
+      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'mark', n:(P,E)=>1+E, dur:3},{v:'mark'}],
+      txt:(P,E)=>`Pick out any foe: Located for ${2+E} rounds, and Marked: +2 to the next hit, +${1+E} to every hit for 3 rounds.` },
     'Dark lines that keep the sun out of the eyes.');
   K(['cheetah'],'che_claws','Sprinter\'s Claws','M',0,
     { n:'Kick Off', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -397,8 +397,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'locate', nearest:true, dur:2},{v:'mark', nearest:true}],
       txt:(P,E)=>`Smell out everything within ${2+P} this round; the nearest foe can't Hide for 2 rounds and is Marked (the next hit on it deals +2).` },
     { n:'Scent Lock', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:(P,E)=>E}],
-      txt:(P,E)=>`Lock onto a foe's scent: it can't Hide for ${2+E} rounds, and your hits on it deal +${E}.` },
+      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'mark', n:(P,E)=>E, dur:3}],
+      txt:(P,E)=>`Lock onto a foe's scent: it can't Hide for ${2+E} rounds, and it is Marked +${E} for 3 rounds.` },
     'A thousand smells, and the one that matters.', 'Dogs and hyenas');
   K(DOG_KIN,'dog_howl','Pack Howl','C',0,
     { n:'Howl', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -428,8 +428,8 @@
   // the two foxes
   K(['fennec','fox'],'fox_pounce','Mousing Pounce','M',0,
     { n:'Snow Dive', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
-      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P, revealTarget:true},{v:'studied', n:1}],
-      txt:(P,E)=>`Dive on a foe within 2 for ${2+P}, hidden or not, and your hits on it deal +1 after.` },
+      fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P, revealTarget:true},{v:'mark', n:1, dur:3}],
+      txt:(P,E)=>`Dive on a foe within 2 for ${2+P}, hidden or not, and it is Marked +1 for 3 rounds.` },
     { n:'High Arc', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'teleport', reach:(P,E)=>2+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, revealTarget:true}],
       txt:(P,E)=>`Arc through the air to beside a foe within ${2+E}, height included, and land on it for ${3+E}.` },
@@ -490,16 +490,16 @@
   // Red fox: the dogs' four, the foxes' two, and these three
   K(['fox'],'fox_magnet','Magnetic Sense','S',0,
     { n:'Line Up', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:(P,E)=>2+P},{v:'studied', n:1}],
-      txt:(P,E)=>`Line up on any foe: it can't Hide for ${2+P} rounds, and your hits on it deal +1.` },
+      fx:[{v:'locate', dur:(P,E)=>2+P},{v:'mark', n:1, dur:3}],
+      txt:(P,E)=>`Line up on any foe: it can't Hide for ${2+P} rounds, and it is Marked +1 for 3 rounds.` },
     { n:'North Leap', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'teleport', reach:(P,E)=>3+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E}],
       txt:(P,E)=>`Leap the long way to beside a foe within ${3+E}, and land on it for ${2+E}.` },
     'It pounces facing north, and it hits more often that way.');
   K(['fox'],'fox_cunning','Cunning','T',2,
     { n:'Read It', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
-      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'studied', n:1}],
-      txt:(P,E)=>`Work out a foe within 3: Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}, and your hits on it deal +1.` },
+      fx:[{v:'weaken', val:1, dur:(P,E)=>1+h(P)},{v:'mark', n:1, dur:3}],
+      txt:(P,E)=>`Work out a foe within 3: Weakened 1 for ${1+h(P)} ${1+h(P) > 1 ? 'rounds' : 'round'}, and it is Marked +1 for 3 rounds.` },
     { n:'Outfox', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'preempt', val:(P,E)=>1+E, reflect:0, party:true},{v:'freecast', n:1, dur:1}],
       txt:(P,E)=>`Both heroes' next hit taken is ${1+E} less, and the next card you play this turn doesn't go to the track.` },
@@ -516,8 +516,8 @@
   // Golden jackal: the dogs' four, the jackal and coyote's two, and these three
   K(['jackal'],'jac_pair','Pair Hunt','C',2,
     { n:'Flank', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'studied', n:1}],
-      txt:(P,E)=>`Melee ${1+P}, opening it up: both heroes' hits on it deal +1 after.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'mark', n:1, dur:3}],
+      txt:(P,E)=>`Melee ${1+P}, opening it up: it is Marked +1 for 3 rounds.` },
     { n:'Pair Hunt', ap:1, el:1, cd:3, dur:0, tgt:'ally_move',
       fx:[{v:'rally', move:2},{v:'empower', val:(P,E)=>1+E, uses:1, dur:2, party:true}],
       txt:(P,E)=>`Send your partner up to 2; both heroes' next strike deals +${1+E}.` },
@@ -682,8 +682,8 @@
     'Tied to the forest so the tide can\'t take you.');
   K(['otter'],'ott_whisker','Whisker Hunt','S',0,
     { n:'Whiskers', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
-      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+h(P)}],
-      txt:(P,E)=>`Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and your hits on it deal +${1+h(P)}.` },
+      fx:[{v:'locate', dur:2},{v:'mark', n:(P,E)=>1+h(P), dur:3}],
+      txt:(P,E)=>`Feel out a foe within 2, seen or not: it can't Hide for 2 rounds, and it is Marked +${1+h(P)} for 3 rounds.` },
     { n:'Murky Hunt', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:3, dur:(P,E)=>1+E},{v:'mark', area:true, radius:2}],
       txt:(P,E)=>`Feel the water within 3 for ${1+E} rounds; every foe within 2 is Marked.` },
@@ -846,8 +846,8 @@
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'mark', nearest:true},{v:'heal', n:1}],
       txt:(P,E)=>`Reveal within ${1+P}, Mark the nearest foe (the next hit on it deals +2), and heal 1.` },
     { n:'Read the Current', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E},{v:'weaken', val:1, dur:1}],
-      txt:(P,E)=>`Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and your hits on it deal +${1+E}.` },
+      fx:[{v:'locate', dur:3},{v:'mark', n:(P,E)=>1+E, dur:3},{v:'weaken', val:1, dur:1}],
+      txt:(P,E)=>`Feel out any foe: it can't Hide for 3 rounds, it is Weakened 1 this round, and it is Marked +${1+E} for 3 rounds.` },
     'Four hundred whiskers, all of them listening.');
   K(['walrus'],'wal_bellow','Herd Bellow','C',0,
     { n:'Bellow', ap:1, el:0, cd:1, dur:0, tgt:'party',
@@ -1587,8 +1587,8 @@
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'mark', nearest:true},{v:'heal', n:1}],
       txt:(P,E)=>`Reveal within ${1+P}, Mark the nearest foe (the next hit on it deals +2), and heal 1.` },
     { n:'Root Out', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Root out any foe: it can't Hide for 3 rounds, and your hits on it deal +${1+E}.` },
+      fx:[{v:'locate', dur:3},{v:'mark', n:(P,E)=>1+E, dur:3}],
+      txt:(P,E)=>`Root out any foe: it can't Hide for 3 rounds, and it is Marked +${1+E} for 3 rounds.` },
     'Nose down, all night, grunting.');
   K(['armadillo'],'adi_shove','Armour Shove','M',0,
     { n:'Barge', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -1849,8 +1849,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1},{v:'mark', nearest:true}],
       txt:(P,E)=>`Feel the electric field: reveal within ${2+P}, Mark the nearest foe (the next hit on it deals +2), and your next hit this turn deals +1.` },
     { n:'Every Heartbeat', ap:1, el:1, cd:4, dur:0, tgt:'foe_any',
-      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:2},{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Feel every heartbeat within ${1+E} for 2 rounds; pick one foe: it can't Hide for 3 rounds, and your hits on it deal +${1+E}.` },
+      fx:[{v:'reveal', radius:(P,E)=>1+E, dur:2},{v:'locate', dur:3},{v:'mark', n:(P,E)=>1+E, dur:3}],
+      txt:(P,E)=>`Feel every heartbeat within ${1+E} for 2 rounds; pick one foe: it can't Hide for 3 rounds, and it is Marked +${1+E} for 3 rounds.` },
     'Forty thousand sensors in the bill.');
   K(['platypus'],'pla_spur','Venom Spur','M',0,
     { n:'Spur', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
@@ -1881,8 +1881,8 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>2+P, revealTarget:true}],
       txt:(P,E)=>`Strike a foe within 2 for ${2+P}, hidden or not.` },
     { n:'Find by Feel', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'strike', kind:'los', dmg:(P,E)=>2+E, revealTarget:true},{v:'studied', n:1}],
-      txt:(P,E)=>`Find any foe by feel: it takes ${2+E}, can't Hide for 2 rounds, and your hits on it deal +1.` },
+      fx:[{v:'locate', dur:2},{v:'strike', kind:'los', dmg:(P,E)=>2+E, revealTarget:true},{v:'mark', n:1, dur:3}],
+      txt:(P,E)=>`Find any foe by feel: it takes ${2+E}, can't Hide for 2 rounds, and it is Marked +1 for 3 rounds.` },
     'Eyes, ears and nose all closed underwater.');
   K(['platypus'],'pla_web','Webbed Fold','S',0,
     { n:'Paddle', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -1924,8 +1924,8 @@
       fx:[{v:'reveal', radius:(P,E)=>3+P, dur:1},{v:'mark', nearest:true}],
       txt:(P,E)=>`See everything within ${3+P}, and Mark the nearest foe (the next hit on it deals +2).` },
     { n:'Eye of the Sky', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`See everything within ${2+E} this round; pick a foe: it can't Hide for ${2+E} rounds, and your hits on it deal +${1+h(E)}.` },
+      fx:[{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'locate', dur:(P,E)=>2+E},{v:'mark', n:(P,E)=>1+h(E), dur:3}],
+      txt:(P,E)=>`See everything within ${2+E} this round; pick a foe: it can't Hide for ${2+E} rounds, and it is Marked +${1+h(E)} for 3 rounds.` },
     'It reads a newspaper from a mile up, if it cared to.', 'Birds of prey and owls');
   K(['eagle','hawk'],'rap_stoop','Stoop','M',0,
     { n:'Drop', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
@@ -2140,16 +2140,16 @@
       fx:[{v:'decoy', dur:1, here:true},{v:'move', n:(P,E)=>1+P}],
       txt:(P,E)=>`Flare your plumes and slip away: leave a decoy where you stood for 1 round, and move ${1+P}.` },
     { n:'Dazzle', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
-      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'mark'},{v:'studied', n:1}],
-      txt:(P,E)=>`Dazzle a foe within 3: it is Weakened ${1+h(E)} for 2 rounds and Marked, and your hits on it deal +1.` },
+      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'mark'},{v:'mark', n:1, dur:3}],
+      txt:(P,E)=>`Dazzle a foe within 3: it is Weakened ${1+h(E)} for 2 rounds and Marked: +2 to the next hit, +1 to every hit for 3 rounds.` },
     'Plumes once worth more than gold.');
   K(['egret'],'egr_stir','Foot Stir','T',0,
     { n:'Stir', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'mark', nearest:true},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Stir the mud with a yellow foot: see within ${1+P}, Mark the nearest foe, and your next hit this turn deals +1.` },
     { n:'Flush Out', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'strike', kind:'los', dmg:1, revealTarget:true},{v:'studied', n:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`Flush out any foe: it takes 1, can't Hide for 2 rounds, and your hits on it deal +${1+h(E)}.` },
+      fx:[{v:'locate', dur:2},{v:'strike', kind:'los', dmg:1, revealTarget:true},{v:'mark', n:(P,E)=>1+h(E), dur:3}],
+      txt:(P,E)=>`Flush out any foe: it takes 1, can't Hide for 2 rounds, and it is Marked +${1+h(E)} for 3 rounds.` },
     'Bright feet, shuffled, and everything hiding moves.');
   K(['egret'],'egr_cattle','Cattle Rider','S',0,
     { n:'Follow the Herd', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -2509,8 +2509,8 @@
       fx:[{v:'strike', kind:'los', dmg:(P,E)=>1+P},{v:'weaken', val:1, dur:1},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
       txt:(P,E)=>`Harry a foe within 2: it takes ${1+P} and is Weakened 1 this round, and your ally's next hit deals +1.` },
     { n:'Call the Mob', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
-      fx:[{v:'mark'},{v:'studied', n:(P,E)=>1+h(E)},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
-      txt:(P,E)=>`Point the mob at a foe within 3: it is Marked, your hits on it deal +${1+h(E)}, and both heroes' next hit deals +${1+h(E)}.` },
+      fx:[{v:'mark'},{v:'mark', n:(P,E)=>1+h(E), dur:3},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Point the mob at a foe within 3: it is Marked (+2 to the next hit, +${1+h(E)} to every hit for 3 rounds), and both heroes' next hit deals +${1+h(E)}.` },
     'Every raven in the valley, at the owl, at once.');
   K(['raven'],'rav_carrion','Carrion Wing','S',0,
     { n:'Circle Down', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -2525,8 +2525,8 @@
       fx:[{v:'locate', dur:(P,E)=>2+P},{v:'mark'}],
       txt:(P,E)=>`Remember a foe within 3: it can't Hide for ${2+P} rounds and is Marked (the next hit on it deals +2).` },
     { n:'Old Grudge', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E},{v:'preempt', val:1, reflect:0}],
-      txt:(P,E)=>`Name any foe: it can't Hide for 3 rounds, your hits on it deal +${1+E}, and the next hit on you is 1 less.` },
+      fx:[{v:'locate', dur:3},{v:'mark', n:(P,E)=>1+E, dur:3},{v:'preempt', val:1, reflect:0}],
+      txt:(P,E)=>`Name any foe: it can't Hide for 3 rounds, it is Marked +${1+E} for 3 rounds, and the next hit on you is 1 less.` },
     'It remembers a face for years, and tells its children.');
   K(['raven'],'rav_wolf','Wolf Guide','C',0,
     { n:'This Way', ap:1, el:0, cd:1, dur:0, tgt:'ally_move',
@@ -2551,7 +2551,7 @@
       fx:[{v:'stripShield', amount:1},{v:'strike', kind:'melee', dmg:(P,E)=>2+P}],
       txt:(P,E)=>`Peel 1 Shield off a foe beside you, then melee ${2+P}.` },
     { n:'Nutcracker', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'expose', bonus:(P,E)=>1+h(E)}],
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'mark', n:(P,E)=>1+h(E), pierce:true}],
       txt:(P,E)=>`Melee ${3+E} that ignores Shield, and open a weak point: its next hit taken deals +${1+h(E)}.` },
     'It opens nuts a hammer would bounce off.');
   K(['parrot'],'par_chatter','Flock Chatter','C',0,
@@ -2863,8 +2863,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:1, reflect:0},{v:'mark', nearest:true}],
       txt:(P,E)=>`One eye forward, one back: see within ${2+P}, Mark the nearest foe, and the next hit on you is 1 less.` },
     { n:'Lock Both Eyes', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:3},{v:'studied', n:(P,E)=>1+E},{v:'reveal', radius:2, dur:1}],
-      txt:(P,E)=>`Swing both eyes onto any foe: it can't Hide for 3 rounds, your hits on it deal +${1+E}, and you see within 2.` },
+      fx:[{v:'locate', dur:3},{v:'mark', n:(P,E)=>1+E, dur:3},{v:'reveal', radius:2, dur:1}],
+      txt:(P,E)=>`Swing both eyes onto any foe: it can't Hide for 3 rounds, it is Marked +${1+E} for 3 rounds, and you see within 2.` },
     'Each eye on its own turret, each turret on its own errand.');
   K(['chameleon'],'cha_colour','Colour Shift','C',0,
     { n:'Fade', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3406,8 +3406,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true}],
       txt:(P,E)=>`Hunt at dusk: see within ${2+P}, and Mark the nearest foe (the next hit on it deals +2).` },
     { n:'Dark Reef', ap:1, el:1, cd:4, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+E},{v:'hidden', dur:1}],
-      txt:(P,E)=>`Choose prey on the dark reef: it can't Hide for 2 rounds, your hits on it deal +${1+E}, and you are Hidden 1.` },
+      fx:[{v:'locate', dur:2},{v:'mark', n:(P,E)=>1+E, dur:3},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Choose prey on the dark reef: it can't Hide for 2 rounds, it is Marked +${1+E} for 3 rounds, and you are Hidden 1.` },
     'It feeds when the reef goes dark.');
 
   // Seahorse: Buoyancy Control, Lateral Line, Pouch, Turret Eyes, and these five
@@ -3486,7 +3486,7 @@
       fx:[{v:'stripShield', amount:1},{v:'strike', kind:'melee', dmg:(P,E)=>3+P}],
       txt:(P,E)=>`Rasp with a tongue of tiny teeth: strip 1 Shield, then melee ${3+P}.` },
     { n:'File Down', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
-      fx:[{v:'stripShield', amount:2},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'expose', bonus:(P,E)=>1+E}],
+      fx:[{v:'stripShield', amount:2},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'mark', n:(P,E)=>1+E, pierce:true}],
       txt:(P,E)=>`File it down: strip 2 Shield and melee ${2+E}; the next hit on it ignores Shield and deals +${1+E}.` },
     'Twenty thousand teeth, all very small.');
   K(['snail'],'snl_rain','After Rain','S',0,
@@ -3502,8 +3502,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'preempt', val:1, reflect:0}],
       txt:(P,E)=>`Raise your eyes on their stalks: see within ${2+P}, and the next hit on you is 1 less.` },
     { n:'Shell Watch', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'studied', n:1},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
-      txt:(P,E)=>`Watch one foe from the shell's edge: it can't Hide for 2 rounds, your hits on it deal +1, and the next hit on you is ${1+E} less.` },
+      fx:[{v:'locate', dur:2},{v:'mark', n:1, dur:3},{v:'preempt', val:(P,E)=>1+E, reflect:0}],
+      txt:(P,E)=>`Watch one foe from the shell's edge: it can't Hide for 2 rounds, it is Marked +1 for 3 rounds, and the next hit on you is ${1+E} less.` },
     'Two eyes on stalks, quick to duck.');
 
   // Jellyfish: Boneless Squeeze, Regeneration, Buoyancy Control (a variant: it drifts like a fish but is none), and these six
@@ -3620,8 +3620,8 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Sweep your feelers: see within ${2+P} (breaks Hidden, finds traps and hidden objectives), and your next hit this turn deals +1.` },
     { n:'Taste the Water', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+E}],
-      txt:(P,E)=>`Taste one foe on the water: it can't Hide for 2 rounds, and your hits on it deal +${1+E}.` },
+      fx:[{v:'locate', dur:2},{v:'mark', n:(P,E)=>1+E, dur:3}],
+      txt:(P,E)=>`Taste one foe on the water: it can't Hide for 2 rounds, and it is Marked +${1+E} for 3 rounds.` },
     'Feelers longer than its body, never still.');
   K(['lobster'],'lob_den','Rock Den','M',0,
     { n:'Back In', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3654,7 +3654,7 @@
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'mark', nearest:true}],
       txt:(P,E)=>`See in colours no one else can: see within ${2+P}, and Mark the nearest foe (the next hit on it deals +2).` },
     { n:'Weak Spot', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'expose', bonus:(P,E)=>1+E}],
+      fx:[{v:'locate', dur:2},{v:'mark', n:(P,E)=>1+E, pierce:true}],
       txt:(P,E)=>`Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +${1+E}.` },
     'Sixteen kinds of colour cell. We have three.');
   K(['mantis_shrimp'],'msh_burrow','Burrow','T',0,
@@ -3707,8 +3707,8 @@
       fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'preempt', val:1, reflect:0}],
       txt:(P,E)=>`Feel the air: see within ${1+P} (breaks Hidden, finds traps and hidden objectives), and the next hit on you is 1 less.` },
     { n:'Scent Trail', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'studied', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
-      txt:(P,E)=>`Smell out one foe: it can't Hide for 2 rounds, your hits on it deal +${1+h(E)}, and your ally's next hit deals +1.` },
+      fx:[{v:'locate', dur:2},{v:'mark', n:(P,E)=>1+h(E), dur:3},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Smell out one foe: it can't Hide for 2 rounds, it is Marked +${1+h(E)} for 3 rounds, and your ally's next hit deals +1.` },
     'Two feelers that taste, smell and listen all at once.', 'Insects and arachnids');
 
   // Beetle: Exoskeleton, Compound Eyes, Antennae, and these six
@@ -3880,10 +3880,10 @@
     'It sways, so it looks like the leaves around it.');
   K(['mantis'],'man_head','Swivel Head','C',0,
     { n:'Turn and Look', ap:1, el:0, cd:1, dur:0, tgt:'foe_any',
-      fx:[{v:'studied', n:1},{v:'reveal', radius:(P,E)=>1+h(P), dur:1}],
-      txt:(P,E)=>`Turn your head to watch one foe: your hits on it deal +1, and you see within ${1+h(P)}.` },
+      fx:[{v:'mark', n:1, dur:3},{v:'reveal', radius:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Turn your head to watch one foe: it is Marked +1 for 3 rounds, and you see within ${1+h(P)}.` },
     { n:'Measure', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:2},{v:'expose', bonus:(P,E)=>1+E}],
+      fx:[{v:'locate', dur:2},{v:'mark', n:(P,E)=>1+E, pierce:true}],
       txt:(P,E)=>`Judge the distance exactly: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +${1+E}.` },
     'The only insect that looks over its shoulder.');
   K(['mantis'],'man_wings','Startle Display','C',0,
@@ -3933,8 +3933,8 @@
       fx:[{v:'mark', nearest:true},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
       txt:(P,E)=>`Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is ${1+h(P)} less.` },
     { n:'Every Step', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:1},{v:'link', within:2, dur:2}],
-      txt:(P,E)=>`Read one foe through the ground: it can't Hide for ${2+E} rounds, your hits on it deal +1, and it is Linked to the nearest foe within 2 of it for 2 rounds.` },
+      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'mark', n:1, dur:3},{v:'link', within:2, dur:2}],
+      txt:(P,E)=>`Read one foe through the ground: it can't Hide for ${2+E} rounds, it is Marked +1 for 3 rounds, and it is Linked to the nearest foe within 2 of it for 2 rounds.` },
     'Tiny slits in its legs hear the sand move.');
   K(['scorpion'],'sco_burrow','Burrow','T',0,
     { n:'Under', ap:1, el:0, cd:1, dur:0, tgt:'self',

@@ -73,7 +73,7 @@ test('damage: Shield reduces; Pierce, true damage and area bypass it; Mark adds 
   e.states.Shield = { v: 2, t: 2, all: true };
   assert.equal(T.damage(m, h, e, 3, { kind: 'area' }), 1, 'an all-Shield does');
   delete e.states.Shield;
-  e.states.Marked = {};
+  e.states.Marked = { next: 2 };
   assert.equal(T.damage(m, h, e, 3, { kind: 'melee' }), 5);
   assert.equal(e.states.Marked, undefined, 'Mark is consumed');
 });

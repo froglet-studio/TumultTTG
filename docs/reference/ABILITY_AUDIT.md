@@ -19,10 +19,10 @@ The rules this checks:
 | Rule | Result |
 |---|---|
 | 1 · useful somewhere | OK — every face answers at least one problem |
-| 2 · no gates | OK — no mission type collapses when one family of answers is removed; but with no cards at all, missions whose objective is a kill are all but unwinnable |
+| 2 · no gates | OK — no mission type collapses when one family of answers is removed (boss t3 cannot be judged — the baseline is too low); but with no cards at all, missions whose objective is a kill are all but unwinnable |
 | 3 · no hard counters | OK — no narrow face settles a mission on its own |
 | 4 · staple or flexible tool | 1003 staples, 55 tools, **0 narrow** |
-| what was played | the look-ahead player can play all 1058 faces; 6 it held and never played, and 6 it played almost only in one mission type |
+| what was played | the look-ahead player can play all 1058 faces; 6 it held and never played, and 7 it played almost only in one mission type |
 
 ## The ten problems, and how many faces answer each
 
@@ -45,22 +45,22 @@ A problem with few answers is a gate waiting to happen; a problem with very many
 
 Win rate of two random legal heroes (no gear, no boons) played by the look-ahead player, 16 missions per cell. Every row plays the same boards and opposition; squads are re-drawn from the cards that remain, so rows are independent samples and differences under about twenty-five points are noise. Each row removes every card that has the named kind of effect on either face. **⚠** marks a cell that fell to a quarter of its baseline or less; **†** marks a column whose baseline is under 30%, where a collapse could not show.
 
-| Squads built with… | cards left | swarm t1 | swarm t2 | vault t1 | vault t2 | hidden t1 | hidden t2 | cascade t1 | cascade t2 | salvage t1 | salvage t2 | survey t1 | survey t2 | elite t1 | elite t2 | boss t3 |
+| Squads built with… | cards left | swarm t1 | swarm t2 | vault t1 | vault t2 | hidden t1 | hidden t2 | cascade t1 | cascade t2 | salvage t1 | salvage t2 | survey t1 | survey t2 | elite t1 | elite t2 | boss t3 † |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| any cards (baseline) | 529 | 100% | 100% | 81% | 94% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 94% | 100% | 100% | 31% |
-| no way up | 490 | 100% | 100% | 81% | 88% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 100% | 31% |
-| no shield-breakers | 492 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 88% | 100% | 100% | 100% | 100% | 31% |
-| no reveals | 442 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 31% |
-| no area damage | 496 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 94% | 100% | 100% | 19% |
-| no shields or wards | 260 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 50% |
-| no healing | 393 | 100% | 100% | 100% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 25% |
-| no movement abilities | 368 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 38% |
+| any cards (baseline) | 529 | 100% | 100% | 81% | 94% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 94% | 100% | 100% | 25% |
+| no way up | 490 | 100% | 100% | 81% | 88% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 100% | 100% | 100% | 13% |
+| no shield-breakers | 492 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 88% | 100% | 100% | 100% | 100% | 25% |
+| no reveals | 442 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 25% |
+| no area damage | 496 | 100% | 100% | 88% | 81% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 94% | 100% | 100% | 19% |
+| no shields or wards | 260 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 38% |
+| no healing | 393 | 100% | 100% | 100% | 69% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 94% | 100% | 100% | 25% |
+| no movement abilities | 368 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 88% | 100% | 100% | 100% | 100% | 38% |
 | no foe control | 359 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 31% |
 | no hazard answers | 433 | 100% | 100% | 100% | 75% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 38% |
 | no dice economy | 456 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 13% |
-| no cards at all | 0 | 100% | 100% | 81% | 81% | 100% | 100% | 100% | 94% | 100% | 88% | 100% | 75% | 94% | 94% | 0% ⚠ |
+| no cards at all | 0 | 100% | 100% | 81% | 81% | 100% | 100% | 100% | 94% | 100% | 88% | 100% | 75% | 94% | 94% | 0% |
 
-No mission type collapses when any one family of answers is removed.
+No mission type collapses when any one family of answers is removed — among those that can be judged. Not judged: boss t3.
 
 The last row is the pure test of rule 2: squads with **no abilities at all** — only walking, Interact, Rally and the basic actions every hero has (Strike, Brace, Shove; `T.BASIC`, since 2.5.0). Wherever that row is at or near 0%, the mission cannot be finished without cards.
 
@@ -102,11 +102,12 @@ The look-ahead player held these faces in at least 8 missions and never found th
 - **White Winter — Snow Coat (Phys)** `har_winter.P` — Hidden 1, Shield 1 this round, and ignore hazards for 2 rounds. *(held in 9 missions)*
 - **Gold Gleam — Lucky Fish (Eth)** `koi_gold.E` — For luck: your ally gains 1 AP next turn, you reroll up to 1 banked dice, and both heroes' next hit deals +1. *(held in 11 missions)*
 
-### Played almost only in one mission type (6)
+### Played almost only in one mission type (7)
 
 At least 70% of this face’s use (per mission held) came from a single mission type — a hint that it is a specialist.
 
 - **Ambush Patience — Hold (Phys)** `gec_patience.P` — Go motionless: your next strike deals +3. *(74% in boss; 21 plays)*
+- **Huff — Huff (Phys)** `heh_huff.P` — Huff at a foe within 2: it takes 1, is Weakened 1 this round, and is pushed 1. *(96% in boss; 14 plays)*
 - **Beakful — Catch (Phys)** `puf_beakful.P` — Melee 2 and heal 1; there is room for more: your next hit this turn deals +1. *(78% in boss; 12 plays)*
 - **Turret Eyes — Two Ways (Phys)** `cha_turret.P` — One eye forward, one back: see within 3, Mark the nearest foe, and the next hit on you is 1 less. *(82% in swarm; 11 plays)*
 - **Casque — Head Butt (Phys)** `cha_casque.P` — Butt with your helmet: melee 3, and push it 1. *(70% in boss; 43 plays)*
@@ -127,24 +128,24 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Theory of Mind — Read (Phys) | staple | One tough foe, One big telegraphed hit | 226/184 (1.23) |  |
-| Theory of Mind — Pre-empt (Eth) | staple | One big telegraphed hit | 85/184 (0.46) |  |
+| Theory of Mind — Read (Phys) | staple | One tough foe, One big telegraphed hit | 229/184 (1.24) |  |
+| Theory of Mind — Pre-empt (Eth) | staple | One big telegraphed hit | 84/184 (0.46) |  |
 | Tool Use — Improvise (Phys) | staple | One tough foe | 1/182 (0.01) |  |
-| Tool Use — Reach Rig (Eth) | staple | The clock, One big telegraphed hit | 144/182 (0.79) |  |
-| Persistence — Pace (Phys) | staple | The clock, One big telegraphed hit, Control on you | 66/201 (0.33) |  |
+| Tool Use — Reach Rig (Eth) | staple | The clock, One big telegraphed hit | 145/182 (0.80) |  |
+| Persistence — Pace (Phys) | staple | The clock, One big telegraphed hit, Control on you | 67/201 (0.33) |  |
 | Persistence — Second Wind (Eth) | staple | Attrition | 11/177 (0.06) |  |
 | Throwing Arm — Hurl (Phys) | staple | One tough foe | 115/174 (0.66) |  |
 | Throwing Arm — Heavy Throw (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 37/156 (0.24) |  |
 | Language — Call (Phys) | tool | The clock, One big telegraphed hit | 102/171 (0.60) |  |
-| Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 85/138 (0.62) |  |
+| Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 84/138 (0.61) |  |
 | Pattern Recognition — Spot (Phys) | staple | One tough foe, The unseen | 6/213 (0.03) |  |
-| Pattern Recognition — Weak Point (Eth) | staple | One tough foe, Shields | 4/46 (0.09) |  |
-| Opposable Grip — Manipulate (Phys) | staple | One tough foe, One big telegraphed hit | 100/204 (0.49) |  |
-| Opposable Grip — Leverage (Eth) | staple | One tough foe, One big telegraphed hit | 100/181 (0.55) |  |
-| Cooperative Instinct — Assist (Phys) | staple | One tough foe | 533/231 (2.31) |  |
+| Pattern Recognition — Weak Point (Eth) | staple | One tough foe, Shields | 7/46 (0.15) |  |
+| Opposable Grip — Manipulate (Phys) | staple | One tough foe, One big telegraphed hit | 103/204 (0.50) |  |
+| Opposable Grip — Leverage (Eth) | staple | One tough foe, One big telegraphed hit | 99/181 (0.55) |  |
+| Cooperative Instinct — Assist (Phys) | staple | One tough foe | 541/231 (2.34) |  |
 | Cooperative Instinct — Unity (Eth) | staple | The clock | 14/41 (0.34) |  |
-| Adaptive Generalist — Improv (Phys) | staple | The clock | 104/168 (0.62) |  |
-| Adaptive Generalist — Mimic Form (Eth) | staple | The clock | 56/41 (1.37) |  |
+| Adaptive Generalist — Improv (Phys) | staple | The clock | 106/168 (0.63) |  |
+| Adaptive Generalist — Mimic Form (Eth) | staple | The clock | 55/41 (1.34) |  |
 
 ### Long-Eared Jerboa
 
@@ -224,7 +225,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Chromatic Cloak — Blend (Phys) | staple | One big telegraphed hit | 0/3 (0.00) |  |
 | Chromatic Cloak — Vanish (Eth) | staple | One big telegraphed hit | 0/3 (0.00) |  |
 | Jet Propulsion — Jet (Phys) | staple | The clock, One big telegraphed hit | 2/6 (0.33) |  |
-| Jet Propulsion — Recoil Slam (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 1/6 (0.17) |  |
+| Jet Propulsion — Recoil Slam (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 3/6 (0.50) |  |
 | Ink Screen — Ink (Phys) | staple | A crowd, One big telegraphed hit | 0/2 (0.00) |  |
 | Ink Screen — Smoke Step (Eth) | staple | The clock, One big telegraphed hit | 1/2 (0.50) |  |
 | Boneless Squeeze — Squeeze (Phys) | staple | The clock, One big telegraphed hit, Control on you | 1/5 (0.20) |  |
@@ -235,7 +236,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Chemo-Suckers — Cling-Read (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/2 (0.00) |  |
 | Paralytic Bite — Bite (Phys) | staple | One tough foe, One big telegraphed hit | 8/6 (1.33) |  |
 | Paralytic Bite — Neurotoxin (Eth) | staple | One tough foe, One big telegraphed hit | 2/6 (0.33) |  |
-| Adaptive Intellect — Study (Phys) | staple | One tough foe | 15/4 (3.75) |  |
+| Adaptive Intellect — Study (Phys) | staple | One tough foe | 17/4 (4.25) |  |
 | Adaptive Intellect — Counter-Model (Eth) | staple | One big telegraphed hit | 0/1 (0.00) |  |
 
 ### Tokay Gecko
@@ -319,7 +320,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Carnivorous Digestion — Enzymes (Eth) | staple | A crowd, Attrition | 0/1 (0.00) |  |
 | Trigger-Hair Sense — Hairs (Phys) | staple | A crowd, The unseen, One big telegraphed hit | 0/6 (0.00) |  |
 | Trigger-Hair Sense — Cilia Field (Eth) | staple | A crowd, The unseen, One big telegraphed hit | 0/1 (0.00) |  |
-| Rooting Anchor — Root (Phys) | staple | Hazards and being dragged, Attrition, Control on you | 2/5 (0.40) |  |
+| Rooting Anchor — Root (Phys) | staple | Hazards and being dragged, Attrition, Control on you | 4/5 (0.80) |  |
 | Rooting Anchor — Taproot (Eth) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 0/1 (0.00) |  |
 | Rhizome Sprout — Sprout (Phys) | staple | One tough foe, The unseen | 0/8 (0.00) |  |
 | Rhizome Sprout — Runner (Eth) | tool | A crowd, One big telegraphed hit | 0/0 |  |
@@ -472,7 +473,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Roar — Thunder (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/6 (0.00) |  |
 | Strong Swimmer — Swim (Phys) | staple | The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 1/4 (0.25) |  |
 | Strong Swimmer — Undertow (Eth) | tool | One tough foe, Hazards and being dragged, One big telegraphed hit | 0/0 |  |
-| Stripes — Stripes (Phys) | staple | One tough foe, One big telegraphed hit | 4/2 (2.00) |  |
+| Stripes — Stripes (Phys) | staple | One tough foe, One big telegraphed hit | 8/2 (4.00) |  |
 | Stripes — Tall Grass (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 0/0 |  |
 
 ### Cheetah
@@ -518,10 +519,10 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Magnetic Sense — Line Up (Phys) | staple | One tough foe, The unseen | 3/7 (0.43) |  |
-| Magnetic Sense — North Leap (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 7/7 (1.00) |  |
-| Cunning — Read It (Phys) | staple | One tough foe, One big telegraphed hit | 4/5 (0.80) |  |
+| Magnetic Sense — North Leap (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 5/7 (0.71) |  |
+| Cunning — Read It (Phys) | staple | One tough foe, One big telegraphed hit | 2/5 (0.40) |  |
 | Cunning — Outfox (Eth) | staple | The clock, One big telegraphed hit | 1/5 (0.20) |  |
-| Brush Feint — Brush (Phys) | staple | The clock, One big telegraphed hit | 2/10 (0.20) |  |
+| Brush Feint — Brush (Phys) | staple | The clock, One big telegraphed hit | 3/10 (0.30) |  |
 | Brush Feint — Tail Flag (Eth) | tool | A crowd, One big telegraphed hit | 0/1 (0.00) |  |
 
 ### Golden Jackal
@@ -598,7 +599,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Loose Hide — Loose Skin (Eth) | staple | One big telegraphed hit | 0/0 |  |
 | Bee Raid — Raid (Phys) | staple | One tough foe | 2/3 (0.67) |  |
 | Bee Raid — Kick the Hive (Eth) | staple | One tough foe, A crowd, Hazards and being dragged | 0/0 |  |
-| Never Retreat — Stand (Phys) | staple | One tough foe, Hazards and being dragged, Control on you | 4/3 (1.33) |  |
+| Never Retreat — Stand (Phys) | staple | One tough foe, Hazards and being dragged, Control on you | 5/3 (1.67) |  |
 | Never Retreat — No Retreat (Eth) | tool | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 1/3 (0.33) |  |
 | Bite Hold — Bite (Phys) | staple | One tough foe | 3/4 (0.75) |  |
 | Bite Hold — Lockjaw (Eth) | staple | One tough foe, One big telegraphed hit | 3/4 (0.75) |  |
@@ -611,7 +612,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Stand Tall — Arms Up (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/4 (0.00) |  |
 | Tree Nap — Nap (Phys) | staple | One big telegraphed hit, Attrition | 5/3 (1.67) |  |
 | Tree Nap — Long Nap (Eth) | staple | One big telegraphed hit, Attrition | 0/1 (0.00) |  |
-| Tail Wrap — Balance (Phys) | staple | Height, The clock, One big telegraphed hit | 16/5 (3.20) |  |
+| Tail Wrap — Balance (Phys) | staple | Height, The clock, One big telegraphed hit | 15/5 (3.00) |  |
 | Tail Wrap — Wrap Up (Eth) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 0/2 (0.00) |  |
 | Bamboo Jaw — Chew (Phys) | staple | One tough foe | 5/7 (0.71) |  |
 | Bamboo Jaw — Crush Stalk (Eth) | staple | One tough foe, One big telegraphed hit | 9/7 (1.29) |  |
@@ -899,17 +900,17 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Venom Shrug — Immune (Eth) | staple | Attrition, Control on you | 1/1 (1.00) |  |
 | Spines — Prickle (Phys) | staple | A crowd, One big telegraphed hit | 6/5 (1.20) |  |
 | Spines — Bristling Ball (Eth) | staple | A crowd, One big telegraphed hit | 0/0 |  |
-| Snuffle — Sniff About (Phys) | staple | The unseen, The clock, One big telegraphed hit | 9/8 (1.13) |  |
+| Snuffle — Sniff About (Phys) | staple | The unseen, The clock, One big telegraphed hit | 10/8 (1.25) |  |
 | Snuffle — Under the Hedge (Eth) | staple | The clock, One big telegraphed hit | 0/4 (0.00) |  |
 | Hibernate — Drowse (Phys) | staple | The clock, Attrition | 1/7 (0.14) |  |
 | Hibernate — Winter Nest (Eth) | staple | One big telegraphed hit, Attrition | 2/6 (0.33) |  |
 | Anointing — Froth (Phys) | staple | One tough foe, One big telegraphed hit | 7/4 (1.75) |  |
 | Anointing — Self-Anoint (Eth) | tool | A crowd, One big telegraphed hit, Control on you | 0/1 (0.00) |  |
-| Night Forage — Beetle Hunt (Phys) | staple | The clock, Attrition | 1/3 (0.33) |  |
+| Night Forage — Beetle Hunt (Phys) | staple | The clock, Attrition | 2/3 (0.67) |  |
 | Night Forage — Garden Rounds (Eth) | staple | The unseen, Attrition | 0/1 (0.00) |  |
 | Spine Burst — Unroll (Phys) | staple | One tough foe, A crowd, The unseen | 1/3 (0.33) |  |
 | Spine Burst — Pop (Eth) | staple | One tough foe, A crowd, The unseen, One big telegraphed hit | 2/3 (0.67) |  |
-| Huff — Huff (Phys) | staple | One tough foe, One big telegraphed hit | 7/5 (1.40) |  |
+| Huff — Huff (Phys) | staple | One tough foe, One big telegraphed hit | 14/5 (2.80) | 96% of use in boss |
 | Huff — Snort and Pop (Eth) | staple | A crowd, One big telegraphed hit | 0/2 (0.00) |  |
 
 ### Red Kangaroo
@@ -1047,7 +1048,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 |---|---|---|---|---|
 | Plumes — Display (Phys) | staple | A crowd, The clock, One big telegraphed hit | 3/6 (0.50) |  |
 | Plumes — Dazzle (Eth) | staple | One tough foe, One big telegraphed hit | 2/2 (1.00) |  |
-| Foot Stir — Stir (Phys) | staple | One tough foe, The unseen | 4/7 (0.57) |  |
+| Foot Stir — Stir (Phys) | staple | One tough foe, The unseen | 3/7 (0.43) |  |
 | Foot Stir — Flush Out (Eth) | staple | One tough foe, The unseen | 2/6 (0.33) |  |
 | Cattle Rider — Follow the Herd (Phys) | staple | One tough foe, The clock, One big telegraphed hit, Attrition | 17/8 (2.13) |  |
 | Cattle Rider — Ride Along (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 0/0 |  |
@@ -1072,9 +1073,9 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
 | Big Bill — Bill Grab (Phys) | staple | One tough foe, One big telegraphed hit | 5/8 (0.63) |  |
-| Big Bill — Clamp Bill (Eth) | staple | One tough foe, One big telegraphed hit | 4/6 (0.67) |  |
-| Collapse Strike — Collapse (Phys) | staple | One tough foe | 6/6 (1.00) |  |
-| Collapse Strike — Full Collapse (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 5/6 (0.83) |  |
+| Big Bill — Clamp Bill (Eth) | staple | One tough foe, One big telegraphed hit | 5/6 (0.83) |  |
+| Collapse Strike — Collapse (Phys) | staple | One tough foe | 5/6 (0.83) |  |
+| Collapse Strike — Full Collapse (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 6/6 (1.00) |  |
 | Bill Clatter — Clatter (Phys) | staple | A crowd, One big telegraphed hit | 0/5 (0.00) |  |
 | Bill Clatter — Machine-Gun Bill (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/0 |  |
 | Swamp Ghost — Stand Still (Phys) | staple | One tough foe, One big telegraphed hit | 3/5 (0.60) |  |
@@ -1113,7 +1114,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Beakful — Ten Fish (Eth) | staple | The clock, Attrition | 0/6 (0.00) |  |
 | Cliff Launch — Drop Off (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 3/4 (0.75) |  |
 | Cliff Launch — Cliff Top (Eth) | staple | A crowd, Height, The clock, One big telegraphed hit | 1/4 (0.25) |  |
-| Bright Bill — Flash (Phys) | staple | One tough foe, One big telegraphed hit | 1/3 (0.33) |  |
+| Bright Bill — Flash (Phys) | staple | One tough foe, One big telegraphed hit | 2/3 (0.67) |  |
 | Bright Bill — Breeding Colours (Eth) | staple | One tough foe, Attrition | 0/1 (0.00) |  |
 
 ### Pelican
@@ -1156,7 +1157,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Mob — Call the Mob (Eth) | staple | One tough foe | 1/1 (1.00) |  |
 | Carrion Wing — Circle Down (Phys) | staple | The unseen, The clock, One big telegraphed hit | 2/4 (0.50) |  |
 | Carrion Wing — Pick the Weak (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 2/4 (0.50) |  |
-| Raven Memory — I Know You (Phys) | staple | One tough foe, The unseen | 10/5 (2.00) |  |
+| Raven Memory — I Know You (Phys) | staple | One tough foe, The unseen | 12/5 (2.40) |  |
 | Raven Memory — Old Grudge (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/1 (0.00) |  |
 | Wolf Guide — This Way (Phys) | tool | The unseen, The clock, One big telegraphed hit | 1/9 (0.11) |  |
 | Wolf Guide — Lead the Hunt (Eth) | staple | One tough foe, The unseen | 1/2 (0.50) |  |
@@ -1290,9 +1291,9 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Water Run — Skitter (Phys) | staple | The clock, Hazards and being dragged, One big telegraphed hit | 3/5 (0.60) |  |
-| Water Run — Walk on Water (Eth) | staple | One tough foe, The clock, Hazards and being dragged, One big telegraphed hit | 4/5 (0.80) |  |
-| Crest Flare — Flare (Phys) | staple | One tough foe, One big telegraphed hit | 11/8 (1.38) |  |
+| Water Run — Skitter (Phys) | staple | The clock, Hazards and being dragged, One big telegraphed hit | 7/5 (1.40) |  |
+| Water Run — Walk on Water (Eth) | staple | One tough foe, The clock, Hazards and being dragged, One big telegraphed hit | 2/5 (0.40) |  |
+| Crest Flare — Flare (Phys) | staple | One tough foe, One big telegraphed hit | 10/8 (1.25) |  |
 | Crest Flare — Full Sail (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/2 (0.00) |  |
 | Dive — Plop (Phys) | staple | The clock, One big telegraphed hit, Attrition | 0/2 (0.00) |  |
 | Dive — Stay Under (Eth) | staple | The clock, One big telegraphed hit, Attrition | 0/2 (0.00) |  |
@@ -1309,7 +1310,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 |---|---|---|---|---|
 | Blood Squirt — Squirt (Phys) | staple | One tough foe, One big telegraphed hit | 1/7 (0.14) |  |
 | Blood Squirt — Foul Taste (Eth) | staple | One tough foe, One big telegraphed hit | 5/7 (0.71) |  |
-| Spiked Crown — Horns (Phys) | staple | One tough foe, A crowd, One big telegraphed hit | 5/5 (1.00) |  |
+| Spiked Crown — Horns (Phys) | staple | One tough foe, A crowd, One big telegraphed hit | 4/5 (0.80) |  |
 | Spiked Crown — Unswallowable (Eth) | staple | A crowd, One big telegraphed hit | 0/0 |  |
 | Sand Shimmy — Shimmy (Phys) | staple | One big telegraphed hit | 0/4 (0.00) |  |
 | Sand Shimmy — Under the Sand (Eth) | staple | The clock, Hazards and being dragged, One big telegraphed hit | 2/4 (0.50) |  |
@@ -1462,12 +1463,12 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 |---|---|---|---|---|
 | Slime Trail — Glide (Phys) | staple | One tough foe, Height, The clock, Hazards and being dragged | 3/3 (1.00) |  |
 | Slime Trail — Slick (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 2/3 (0.67) |  |
-| Seal In — Withdraw (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 6/4 (1.50) |  |
+| Seal In — Withdraw (Phys) | staple | Hazards and being dragged, One big telegraphed hit, Control on you | 7/4 (1.75) |  |
 | Seal In — Epiphragm (Eth) | staple | One tough foe, One big telegraphed hit, Attrition | 0/0 |  |
-| Radula — Rasp (Phys) | staple | One tough foe, Shields | 6/4 (1.50) |  |
-| Radula — File Down (Eth) | staple | One tough foe, Shields | 2/4 (0.50) |  |
+| Radula — Rasp (Phys) | staple | One tough foe, Shields | 4/4 (1.00) |  |
+| Radula — File Down (Eth) | staple | One tough foe, Shields | 3/4 (0.75) |  |
 | After Rain — Wet Night (Phys) | staple | The clock, One big telegraphed hit, Attrition | 3/4 (0.75) |  |
-| After Rain — Downpour (Eth) | staple | One tough foe, Hazards and being dragged, Attrition | 2/4 (0.50) |  |
+| After Rain — Downpour (Eth) | staple | One tough foe, Hazards and being dragged, Attrition | 3/4 (0.75) |  |
 | Eye Stalks — Peek (Phys) | staple | The unseen, One big telegraphed hit | 1/3 (0.33) |  |
 | Eye Stalks — Shell Watch (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/0 |  |
 
@@ -1475,7 +1476,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Nematocysts — Sting (Phys) | staple | One tough foe | 7/7 (1.00) |  |
+| Nematocysts — Sting (Phys) | staple | One tough foe | 10/7 (1.43) |  |
 | Nematocysts — Fire All (Eth) | staple | One tough foe, A crowd, The unseen | 7/7 (1.00) |  |
 | Trailing Tentacles — Trail (Phys) | tool | A crowd, One big telegraphed hit | 13/7 (1.86) | 75% of use in boss |
 | Trailing Tentacles — Curtain (Eth) | tool | A crowd, One big telegraphed hit | 0/3 (0.00) |  |
@@ -1573,7 +1574,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Bitter Blood — Bad Taste (Phys) | tool | A crowd, One big telegraphed hit | 0/1 (0.00) |  |
 | Bitter Blood — Reflex Bleed (Eth) | staple | A crowd, One big telegraphed hit | 0/0 |  |
 | Glow-Worm Bite — Bite (Phys) | staple | One tough foe | 1/7 (0.14) |  |
-| Glow-Worm Bite — Numbing Bite (Eth) | staple | One tough foe, One big telegraphed hit | 4/6 (0.67) |  |
+| Glow-Worm Bite — Numbing Bite (Eth) | staple | One tough foe, One big telegraphed hit | 5/6 (0.83) |  |
 | Cold Light — Go Dark (Phys) | staple | The clock, One big telegraphed hit | 4/6 (0.67) |  |
 | Cold Light — Night Field (Eth) | tool | The unseen, One big telegraphed hit | 0/1 (0.00) |  |
 
