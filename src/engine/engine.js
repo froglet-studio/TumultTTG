@@ -91,9 +91,13 @@
         board.walkAdj[k] = [];
         board.allAdj[k] = [];
       });
+      // a big map's water and gaps are never walked (src/data/vehicles.js): their paths are for vehicles only
+      const foot = (k) => !board.nodes[k].terrain || T.TERRAIN[board.nodes[k].terrain].foot;
       board.edges.forEach(([a, b]) => {
-        board.walkAdj[a].push(b);
-        board.walkAdj[b].push(a);
+        if (foot(a) && foot(b)) {
+          board.walkAdj[a].push(b);
+          board.walkAdj[b].push(a);
+        }
         board.allAdj[a].push(b);
         board.allAdj[b].push(a);
       });
@@ -410,6 +414,7 @@
       h.pool = R().POOL;
       h.rested = false;
       h.carrying = 0;
+      delete h.ride;
       h.gear.forEach((g) => (g.cds = [0, 0]));
       h.roundFlags = { struck: false };
       for (const v of T.boonVals(h, 'missionStart'))
@@ -428,6 +433,7 @@
           e.hp += run.bossBonusHp;
           e.maxHp += run.bossBonusHp;
         });
+    if (spec.vehicles) T.setupVehicles(m, spec.vehicles);
     m.log.push({ r: 0, who: 'dm', text: spec.blurb });
     m.board.fog = m.place.weather === 'fog' ? T.FOG_RANGE : 0;
     for (const t of T.placeRules(m)) m.log.push({ r: 0, who: 'sys', text: t });
@@ -439,6 +445,7 @@
   const say = (m, text, who) => m.log.push({ r: m.round, who: who || 'dm', text });
   const fx = (m, o) => m.fx.push(o);
   T.say = say;
+  T.fx = fx;
   /**
    * A player's line of story for a turn (the box beside End turn): kept in the mission's log as
    * { r, who: 'note', hero, text }, one per hero a round (a new one replaces it; an empty one takes it
@@ -726,7 +733,8 @@
     return !!(st(ent).Anchored || ent.anchoredPerm);
   }
   function forceImmune(ent) {
-    return isAnchored(ent) || !!st(ent).Hover || !!st(ent).Weightless;
+    // a vehicle's riders go where it goes, and nowhere else (src/engine/vehicles.js)
+    return isAnchored(ent) || !!st(ent).Hover || !!st(ent).Weightless || ent.ride != null;
   }
   function hazardImmune(ent) {
     return !!(st(ent).HazardImmune || st(ent).Hover || st(ent).Weightless || st(ent).Stasis);
@@ -828,10 +836,12 @@
    * pilot (and that pilot's other pets).
    */
   T.freeFor = (m, ent, node) =>
+    !(m.vehicles && T.vehicleAt(m, node)) &&
     T.unitsAt(m, node).every(
       (u) => u === ent || partners(ent, u) || (ent.kind === 'pet' && u.kind === 'pet' && u.owner === ent.owner),
     );
-  T.occupied = (m, node) => !!T.entityAt(m, node);
+  // a parked vehicle stands on its space too: nobody stops there, though anyone may pass
+  T.occupied = (m, node) => !!T.entityAt(m, node) || !!(m.vehicles && m.vehicles.some((v) => v.pos === node));
   T.liveEnemies = (m) => m.enemies.filter((e) => e.alive);
   T.liveHeroes = (m) => m.heroes.filter((h) => !h.downed);
   T.foesFor = (m, actor) =>
@@ -987,7 +997,7 @@
         say(m, `${target.name} pre-empted the blow and reflects ${p.reflect}.`);
         checkEnemyDeath(m, source, target);
       }
-      if (p.reposition && target.kind === 'hero') {
+      if (p.reposition && target.kind === 'hero' && target.ride == null) {
         const away = B.walkNeighbors(m.board, target.pos)
           .filter((n) => !T.occupied(m, n))
           .sort((a, b) => B.dist(m.board, b, source ? source.pos : a) - B.dist(m.board, a, source ? source.pos : b))[0];
@@ -998,8 +1008,10 @@
       }
       delete ts.Preempt;
     }
+    // a blow on anyone inside a vehicle lands on its hull (src/engine/vehicles.js)
+    const hull = dmg > 0 && target.kind === 'hero' && target.ride != null ? T.vehicleOf(m, target) : null;
     if (dmg > 0) {
-      target.hp -= dmg;
+      if (!hull) target.hp -= dmg;
       // `by`: who struck, for the screen to show the blow coming from them (no rule reads it)
       const hit = { t: 'dmg', ent: target.uid, amount: dmg, pos: target.pos, kind };
       if (source && source.uid != null && kind !== 'area' && kind !== 'true') hit.by = source.uid;
@@ -1016,9 +1028,10 @@
       }
       say(
         m,
-        `${source ? source.name : 'The hazard'} ${opts.label || 'hits'} ${target.name} for ${dmg}${pierce ? ' (pierce)' : ''}${trueDmg ? ' (true)' : ''}.`,
+        `${source ? source.name : 'The hazard'} ${opts.label || 'hits'} ${target.name}${hull ? `'s ${T.VEHICLE_BY[hull.type].name}` : ''} for ${dmg}${pierce ? ' (pierce)' : ''}${trueDmg ? ' (true)' : ''}.`,
         source && (source.kind === 'hero' || source.kind === 'pet') ? 'hero' : 'enemy',
       );
+      if (hull) T.hitHull(m, hull, dmg);
     } else {
       say(m, `${source ? source.name : 'The blow'} is fully blunted by ${target.name}.`);
     }
@@ -1669,6 +1682,8 @@
     const elt = face.elt || card.el;
     const eln = face.el || 0;
     if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
+    if (h.ride != null && !T.isPetCard(h, cardId) && !T.isMounted(card, faceKey))
+      return { ok: false, why: 'not Mounted: get out first' };
     // a pet's card acts from the pet (src/data/pets.js): no pet on the board, no play
     const body = T.isPetCard(h, cardId) ? T.petFor(m, h, cardId) : h;
     if (!body) return { ok: false, why: 'your pet is not here' };
@@ -2549,6 +2564,7 @@
   /* ───────────────────────────── BASIC ACTIONS ───────────────────────────── */
   T.walk = function (m, h, dest) {
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
+    if (h.ride != null) return { ok: false, why: 'inside a vehicle: drive, or get out' };
     if (isAnchored(h)) return { ok: false, why: 'Anchored' };
     const bd = m.board;
     const free = h.freeMove || 0;
@@ -2598,6 +2614,7 @@
     const nd = bd.nodes[node];
     const ob = m.objective;
     if (!nd || !nd.objective) return { ok: false, why: 'nothing here' };
+    if (h.ride != null) return { ok: false, why: 'get out first: objectives are worked on foot' };
     const here = h.pos === node,
       adj = B.adjacent(bd, h.pos, node);
     if (nd.objective.kind === 'crate' && h.carrying) return { ok: false, why: 'already carrying a crate' };
@@ -2684,6 +2701,7 @@
   T.rally = function (m, h) {
     const ally = T.downedAllyOf(m, h);
     if (!ally || !ally.downed) return { ok: false, why: 'no downed ally' };
+    if (h.ride != null) return { ok: false, why: 'get out first' };
     if (!B.adjacent(m.board, h.pos, ally.pos)) return { ok: false, why: 'not adjacent' };
     if (T.apValue(h) < R().RALLY_AP) return { ok: false, why: 'need 2 AP' };
     T.pay(h, R().RALLY_AP);
@@ -2731,6 +2749,7 @@
     const b = T.BASIC_BY[id];
     if (!b) return { ok: false, why: 'unknown action' };
     if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
+    if (h.ride != null) return { ok: false, why: 'inside a vehicle: its cards, or a Mounted face' };
     if (T.apValue(h) < b.ap) return { ok: false, why: 'need ' + b.ap + ' AP' };
     if (b.el && !T.canPay(h, b.ap, b.el, 1)) return { ok: false, why: 'needs ' + b.el + ' (or Omni)' };
     const tg = T.targetsFor(m, h, b.tgt, b, 0, 0, pick);
@@ -2759,6 +2778,7 @@
     const def = T.GEAR_BY[g.id];
     const ab = def.abilities[ai];
     if (h.downed || h.rested) return { ok: false, why: 'cannot act' };
+    if (h.ride != null) return { ok: false, why: 'inside a vehicle: its cards, or a Mounted face' };
     if (g.cds[ai] > 0) return { ok: false, why: 'cooling' };
     const seat = T.purseSeat(m, m.heroes.indexOf(h));
     if (m.purses[seat] < ab.cost) return { ok: false, why: 'need ◇' };
@@ -2795,6 +2815,7 @@
   /* ───────────────────────────── ROUND STRUCTURE ───────────────────────────── */
   T.beginRound = function (m) {
     m.round += 1;
+    if (m.vehicles) m.vehicles.forEach((v) => (v.used = [])); // a vehicle's cards are once a round
     m.phase = 'hero';
     say(m, `— Round ${m.round} —`, 'sys');
     // spawns
@@ -2953,12 +2974,17 @@
     // wind: every unit moves 1 space downwind if it can (before hazards, so the wind can blow you into one)
     if (m.place && m.place.weather === 'wind') T.blowWind(m);
     // hazards
-    for (const h of T.liveHeroes(m))
-      if (m.board.nodes[h.pos].hazard && !hazardImmune(h)) {
-        say(m, `${h.name} is caught in the hazard.`, 'enemy');
-        const d = T.damage(m, null, h, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
-        m.stats.hazardDmg += d;
+    const hulls = new Set(); // a vehicle on a hazard is caught once, however many ride in it
+    for (const h of T.liveHeroes(m)) {
+      if (!m.board.nodes[h.pos].hazard || hazardImmune(h)) continue;
+      if (h.ride != null) {
+        if (hulls.has(h.ride)) continue;
+        hulls.add(h.ride);
       }
+      say(m, `${h.name} is caught in the hazard.`, 'enemy');
+      const d = T.damage(m, null, h, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
+      m.stats.hazardDmg += d;
+    }
     for (const p of T.livePets(m))
       if (m.board.nodes[p.pos].hazard && !hazardImmune(p)) {
         say(m, `${p.name} is caught in the hazard.`, 'enemy');
@@ -3126,6 +3152,7 @@
         b.achieved = m.won && (m.stats.foundRound != null ? m.stats.foundRound : m.round) <= b.byRound;
       else if (b.id === 'noambush') b.achieved = m.stats.ambushDmg === 0;
       else if (b.id === 'dry') b.achieved = m.stats.hazardDmg === 0;
+      else if (b.id === 'intact') b.achieved = !m.stats.wrecks;
       else if (b.id === 'both') b.achieved = m.won && T.liveHeroes(m).length === 2;
       else if (b.id === 'spawners') b.achieved = !m.enemies.some((e) => e.type === 'spawner' && e.alive);
       if (!m.won) b.achieved = false;

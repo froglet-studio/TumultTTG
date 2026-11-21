@@ -257,7 +257,13 @@
       h.freeMove = 0;
       return r;
     },
+    // in a vehicle (src/engine/vehicles.js)
+    board: (run, m, h, c) => T.board(m, h, c.vehicle),
+    leave: (run, m, h, c) => T.leave(m, h, c.node),
+    drive: (run, m, h, c) => T.drive(m, h, c.node),
+    vcard: (run, m, h, c) => T.useVehicleCard(m, h, c.id, c.ctx),
     // between missions
+    pickVehicle: (run, m, h, c) => T.pickVehicle(run, c.hero, c.vehicle),
     adjustUp: (run, m, h, c) => T.adjustUp(h, c.card, c.which, c.delta),
     autoUp: (run, m, h) => (T.autoAllocate(h), { ok: true }),
     sellGear: (run, m, h, c) => (T.sellGear(run, c.hero, c.gi), { ok: true }),
@@ -284,8 +290,12 @@
     'dump',
     'reroll',
     'walk',
+    'board',
+    'leave',
+    'drive',
+    'vcard',
   ]);
-  T.COMMAND_OPS = Object.keys(HERO_OPS).concat(['ready', 'addHero', 'rounds']);
+  T.COMMAND_OPS = Object.keys(HERO_OPS).concat(['ready', 'addHero', 'rounds', 'setOut']);
 
   T.execCommand = function (run, cmd, seats) {
     const op = cmd && cmd.op;
@@ -320,6 +330,12 @@
       T.endHeroPhase(m);
       m.heroes.forEach((x) => (x.freeMove = 0));
       return { ok: true, ended: true };
+    }
+    if (op === 'setOut') {
+      // the squad has its vehicles: the mission begins (the host's call, as how rounds go is)
+      if (run.phase !== 'garage') return { ok: false, why: 'not now' };
+      if (run.party && !T.mayLead(run, seats)) return { ok: false, why: `${run.party.players[0].name} sets out.` };
+      return T.leaveGarage(run);
     }
     if (op === 'rounds') {
       // how rounds go is the host's choice, and may change at any time; a turn under way is let go

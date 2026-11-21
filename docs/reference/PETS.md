@@ -1,6 +1,6 @@
 # Pets
 
-A pet is a sidekick, the way Unmatched has them: a small unit of its own on the board, with its own vitality. Foes can see it, target it and hit it. It is not a decoy, because it lasts the whole mission and it acts. Built in 2.102.0 from Garrett's brief of 2026-11-21. The rules are in `src/data/pets.js`, the board in `src/engine/engine.js` (PETS), the run in `src/engine/run.js` (PETS), and the tests in `test/pets.test.js`.
+A pet is a sidekick, the way Unmatched has them: a small unit of its own on the board, with its own vitality. Foes can see it, target it and hit it. It is not a decoy, because it lasts the whole mission and it acts. Built in 2.105.0 from Garrett's brief of 2026-11-21. The rules are in `src/data/pets.js`, the board in `src/engine/engine.js` (PETS), the run in `src/engine/run.js` (PETS), and the tests in `test/pets.test.js`.
 
 ## At the table
 
@@ -19,7 +19,7 @@ A pet is a sidekick, the way Unmatched has them: a small unit of its own on the 
 - On the board, `m.pets` holds `{ kind: 'pet', uid, owner (the pilot's uid), pid, species, name, hp, maxHp, pos, states, dead }`.
 - `T.faceKeys(cardId)` gives `['P', 'P2', 'P3']` for a pet card and `['P', 'E']` for a trait.
 - A new random stream, `'pets'`, draws strays, so the gear a haven offers is the same either way.
-- The save version is 28. Older saves gain `pets: []` on every hero and on a mission in progress.
+- The save version is 29. Older saves (28 and before) gain `pets: []` on every hero and on a mission in progress.
 
 ## How the players play them
 

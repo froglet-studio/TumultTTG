@@ -131,7 +131,7 @@
     const face = (fk) => {
       const f = c[fk];
       const asleep = fk === 'E' && (o.up || o.showUp) && E < T.RULES.ETHEREAL_MIN_E;
-      return `<div class="face ${fk === 'E' ? 'E' : 'P'} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk !== 'E' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${U.kw(esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E)))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
+      return `<div class="face ${fk === 'E' ? 'E' : 'P'} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk !== 'E' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}${T.isMounted && T.isMounted(c, fk) ? '<span class="tag mounted" data-tip="Mounted: you can play this face from inside a vehicle.">Mounted</span>' : ''}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${U.kw(esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E)))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
     };
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
       <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : ''}>${U.icClade(shownSp)} ${esc(c.kin || sp.name)}</span></div>
@@ -566,6 +566,7 @@
     cascade: 'Cascade',
     salvage: 'Salvage',
     survey: 'Survey',
+    crossing: 'Crossing',
     elite: 'Elite',
     haven: 'Haven',
     event: 'Event',
@@ -1208,7 +1209,7 @@
           // a mission in progress is part of the save: carry on in the middle of the round
           U.screen = 'mission';
           U.enterMission();
-        } else U.screen = ['reward', 'haven', 'event'].includes(r.phase) ? r.phase : 'map';
+        } else U.screen = ['reward', 'haven', 'event', 'garage'].includes(r.phase) ? r.phase : 'map';
         U.render();
         return;
       }

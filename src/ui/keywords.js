@@ -28,6 +28,7 @@
     'kw.stasis': 'M5 2h14v2l-5 8 5 8v2H5v-2l5-8-5-8zm3 2 4 6 4-6z',
     'kw.hover': 'M12 2 20 10l-1.4 1.4L12 4.8l-6.6 6.6L4 10zM12 9l8 8-1.4 1.4-6.6-6.6-6.6 6.6L4 17z',
     'kw.empower': 'M12 1 20 11h-5v12H9V11H4z',
+    'kw.mounted': 'M3 15h14l2-5h2v2l-1.5 3H22v2H2v-2zM6 10h7l1 3H5zM6 19a2 2 0 1 0 0 .1zM18 19a2 2 0 1 0 0 .1z',
     'kw.pierce': 'M1 11h16V7l6 5-6 5v-4H1zM8 4h3v16H8z',
     'kw.push': 'M2 10h11V5l9 7-9 7v-5H2z',
     'kw.pull': 'M22 10H11V5l-9 7 9 7v-5h11z',
@@ -189,6 +190,20 @@
       tone: 'good',
       state: 'HazardImmune',
       tip: 'Ignore hazards N: for N rounds a hazard does you no harm. You are still on the ground: Fields, pushes and pulls still reach you (Hover lifts you above all three).',
+    },
+    {
+      id: 'mounted',
+      re: 'Mounted',
+      icon: 'kw.mounted',
+      tone: 'good',
+      tip: 'Mounted: this face can be played from inside a vehicle. A face that moves you or touches is not Mounted.',
+    },
+    {
+      id: 'hull',
+      re: 'hull',
+      icon: 'kw.mounted',
+      tone: 'good',
+      tip: 'Hull: a vehicle’s toughness. A blow on anyone inside lands on the hull; at 0 the vehicle is wrecked and its riders are thrown clear.',
     },
     {
       id: 'empower',
