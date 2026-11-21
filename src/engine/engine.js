@@ -772,6 +772,10 @@
     for (let k = 0; k < n; k++) {
       const keep = [];
       for (const t of h.track) {
+        if (t.phase === 'burnt') {
+          keep.push(t); // a burnt card stays off the hand until the mission ends
+          continue;
+        }
         t.left -= 1;
         if (t.left <= 0) {
           if (t.phase === 'dur' && t.cd > 0) {
@@ -1474,15 +1478,17 @@
   }
   T.healUnit = healUnit;
   /** Wound a unit: it takes the Wound at round end, one less each round. A new Wound replaces a smaller one. */
-  function woundUnit(m, u, n, source, heal, kind) {
+  function woundUnit(m, u, n, source, heal, kind, stay) {
     const w = st(u).Wound;
-    if (w && w.n >= n) return;
+    if (w && w.n >= n && (w.stay || 0) >= (stay || 0)) return;
     st(u).Wound = {
-      n,
+      n: Math.max(n, w ? w.n : 0),
       owner: source ? source.uid : w ? w.owner : null,
       heal: Math.max(heal || 0, w ? w.heal : 0),
       kind: kind || (w && w.kind) || 'wound',
     };
+    // a Wound that holds (2.119): it does not drop for `stay` round ends
+    if (stay > 0 || (w && w.stay)) st(u).Wound.stay = Math.max(stay || 0, (w && w.stay) || 0);
     fx(m, { t: 'state', ent: u.uid, name: 'Wound' });
   }
   T.woundUnit = woundUnit;
@@ -1933,7 +1939,12 @@
     );
     fx(m, { t: 'play', hero: h.uid, card: cardId, face: faceKey });
     const how = T.commit(h, cardId, face.dur || 0, face.cd || 0, face.n);
-    if (how === 'free') say(m, `(${card.name} does not go to the track.)`, 'sys');
+    if (face.burn) {
+      // Burn (2.119): the card leaves the track until the mission ends; nothing brings it back sooner
+      h.track = h.track.filter((t) => t.card !== cardId);
+      h.track.push({ card: cardId, phase: 'burnt', left: 0, cd: 0, note: 'burnt' });
+      say(m, `(${card.name} is burnt: it is gone until the mission ends.)`, 'sys');
+    } else if (how === 'free') say(m, `(${card.name} does not go to the track.)`, 'sys');
     const rctx = ctx || {};
     Object.assign(rctx, { P, E, card, faceKey });
     if (al.ally != null) rctx.ally = al.ally;
@@ -2113,9 +2124,10 @@
         }
         const n = num(f.n, P, E);
         const heal = num(f.healOwner, P, E) || 0;
+        const stay = num(f.stay, P, E) || 0;
         for (const t of targets) {
           if (n <= 0 || (t.kind === 'enemy' ? !t.alive : t.downed)) continue;
-          woundUnit(m, t, n, actor, heal, f.kind);
+          woundUnit(m, t, n, actor, heal, f.kind, stay);
         }
         break;
       }
@@ -3383,7 +3395,8 @@
       T.damage(m, owner || null, u, w.n, { kind: 'true', trueDmg: true, label: `(${w.kind || 'wound'}) wounds` });
       if (w.heal && owner && owner.kind === 'hero' && !owner.downed)
         owner.hp = Math.min(owner.maxHp, owner.hp + w.heal);
-      w.n--;
+      if (w.stay > 0) w.stay--;
+      else w.n--;
       if (w.n <= 0) delete st(u).Wound;
     }
     // Rewind: regain what this round took since it was set, up to its cap
@@ -3599,7 +3612,7 @@
       Engines: 'Engine running.',
       Empower: 'Empowered — next strike(s) boosted.',
       Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,
-      Wound: `Wound ${v.n} — takes ${v.n} at round end, then the Wound drops by 1.`,
+      Wound: `Wound ${v.n} — takes ${v.n} at round end, then the Wound drops by 1${v.stay ? ` (it holds for ${v.stay} more round${v.stay === 1 ? '' : 's'} first)` : ''}.`,
       Rewind: `At round end, regains what it lost since, up to ${v.cap}.`,
       Holding: `Holding a foe for ${v.t}: when it walks, the foe is dragged along.`,
       Held: `Held for ${v.t}: dragged along when its holder walks. It still acts.`,

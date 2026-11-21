@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.120.0',
+    version: '2.121.0',
     items: [
+      {
+        text: 'Burn: a face that spends its whole card until the mission ends, for a play nothing else makes. Full Dose (scorpion) leaves a Wound that holds before it fades; Boiling Burst (beetle) leaves boiling ground for the rest of the mission. When is it worth it?',
+        cards: ['sco_sting', 'btl_spray'],
+      },
       {
         text: 'Dice as AP: a banked Omni, or any two banked etherions (the same or different), now make 1 AP, at no cost and as often as you like. Press ◇→AP (it stands beside the four basic actions when spare dice would pay for a card you hold), then click an Omni or two element dice: they go back to the pool and you gain 1 AP for this turn. A face you could pay for this way says ◇→AP to pay. Folding one each of M, C, S and T into an Omni still works. Did you ever end a turn with an element you could not use? Was spending it as AP a real choice against saving it for an Ethereal face or an Overcharge?',
       },

@@ -97,6 +97,13 @@
       tip: 'Aimed: the attack lands on the space its target stood on when it was telegraphed. It strikes whoever stands there then, foe or pilot; an empty space and it misses.',
     },
     {
+      id: 'burn',
+      re: 'Burn(?:s|t)?',
+      icon: 'kw.burst',
+      tone: 'neutral',
+      tip: 'Burn: once this face resolves, its whole card is gone until the mission ends, both faces with it. Haste and every other effect cannot bring it back sooner; it is back in hand at the next mission.',
+    },
+    {
       id: 'resonance',
       re: 'Resonance|Draws on (?:Mass|Charge|Space|Time|Omni) in the air',
       icon: 'kw.empower',
