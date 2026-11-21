@@ -1687,8 +1687,8 @@
       fx:[{v:'strike', kind:'area', dmg:(P,E)=>1+P}],
       txt:(P,E)=>`Uncurl with a snap: every foe beside you takes ${1+P}.` },
     { n:'Pop', ap:1, el:1, cd:3, dur:0, tgt:'foe_adj_all',
-      fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1, area:true},{v:'shield', val:1, dur:1}],
-      txt:(P,E)=>`Every foe beside you takes ${2+E} and is pushed 1; hold Shield 1 this round.` },
+      fx:[{v:'strike', kind:'area', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1, area:true},{v:'force', kind:'push', n:1, area:true, ifAir:'S'},{v:'shield', val:1, dur:1}],
+      txt:(P,E)=>`Every foe beside you takes ${2+E} and is pushed 1; hold Shield 1 this round. Draws on Space in the air: they are pushed 1 more.` },
     'Curled tight, then all at once.');
   K(['hedgehog'],'heh_huff','Huff','C',0,
     { n:'Huff', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',
@@ -2517,8 +2517,8 @@
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'reveal', radius:1, dur:1}],
       txt:(P,E)=>`Circle down ${1+P}, over foes, and see everything beside where you land.` },
     { n:'Pick the Weak', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
-      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'execute', threshold:(P,E)=>1+E}],
-      txt:(P,E)=>`Drop beside a foe within ${2+E} and peck it for ${2+E}; if that leaves it at ${1+E} hp or less, it falls.` },
+      fx:[{v:'blink', reach:(P,E)=>2+E, dest:'adjTarget'},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'execute', threshold:(P,E)=>1+E},{v:'execute', threshold:(P,E)=>3+2*E, ifAir:'M'}],
+      txt:(P,E)=>`Drop beside a foe within ${2+E} and peck it for ${2+E}; if that leaves it at ${1+E} hp or less, it falls. Draws on Mass in the air: it falls at ${3+2*E} or less.` },
     'It knows a fight is coming before the fighters do.');
   K(['raven'],'rav_memory','Raven Memory','T',0,
     { n:'I Know You', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
@@ -3638,8 +3638,8 @@
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P}],
       txt:(P,E)=>`Club it faster than a bullet: melee ${3+P}.` },
     { n:'Cavitation', ap:1, el:1, cd:4, dur:0, tgt:'foe_melee',
-      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'strike', kind:'area', dmg:(P,E)=>1+h(E)}],
-      txt:(P,E)=>`Punch so fast the water boils: melee ${3+E}, then the shock hits every foe beside you for ${1+h(E)}.` },
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'strike', kind:'melee', dmg:(P,E)=>3+E, ifAir:'T'},{v:'strike', kind:'area', dmg:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Punch so fast the water boils: melee ${3+E}, then the shock hits every foe beside you for ${1+h(E)}. Draws on Time in the air: the punch lands twice.` },
     'Two strikes from one punch: the club, then the bubble.');
   K(['mantis_shrimp'],'msh_spear','Spearer Arms','S',0,
     { n:'Spear', ap:1, el:0, cd:1, dur:0, tgt:'foe_r2',

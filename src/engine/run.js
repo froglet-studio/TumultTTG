@@ -1150,7 +1150,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 31;
+  T.SAVE_VERSION = 32;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1546,6 +1546,11 @@
     30(r) {
       if (r.mission && !Array.isArray(r.mission.dusk)) r.mission.dusk = [];
       r.v = 31;
+    },
+    // 2.118 added Resonance: a mission keeps the elements in the air. An older one has none there.
+    31(r) {
+      if (r.mission && !r.mission.air) r.mission.air = { M: 0, C: 0, S: 0, T: 0, O: 0 };
+      r.v = 32;
     },
   };
   T.deserializeRun = function (json) {

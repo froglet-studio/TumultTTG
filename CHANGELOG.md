@@ -9,12 +9,23 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.116.0 — 2026-11-21 — dice as AP
+## 2.119.0 — 2026-11-21 — dice as AP
 
 - **Dice as AP** (Garrett, 2026-11-21: "make any two or any omni work as an AP"). A banked Omni, or any two banked etherions (the same or different), become 1 AP: no cost, as often as the bank allows. At the table, put the dice back in the pool and mint 1 AP; like any minted die it evaporates at the end of the hero phase. So a rolled element is never dead weight: with no face to pay, it still walks, strikes or works an objective. The anti-brick fold (one each of M, C, S and T into an Omni) stays.
 - **Self-explaining.** The ◇→AP button stands beside the four basic actions whenever spare dice would pay for a face in hand (under More otherwise); click it, then an Omni or two element dice. A face they would pay for says ◇→AP to pay.
 - **Foes have 160% of their listed vitality** (was 150%), so the game is not easier: `node tools/sim.js 200 runs --player strong` on top of 2.115.0 gives 85 of 200 before and 82 with dice as AP at 160% (163%: 62); measured first on 2.109, 61 → 80 of 120 at 150% (`docs/reference/BALANCE.md`).
 - Both simulated players use it: the look-ahead player tries each different spend, the heuristic spends spare dice when that pays for a face with something to do. Engine: `T.spendAsAP`, `T.apSpends`, `T.canSpendAsAP`, `T.payableAsAP`; the command `asAP { dice }`. No save change.
+## 2.118.0 — 2026-11-21 — Resonance
+
+- **Resonance** (new keyword, the shortlist's second pick). Every Ethereal face you play leaves its element in the air: strong this round, fading the next, then gone. A face that **draws on** an element takes it for a bonus, and the element is spent. Omni in the air stands in for any element. The squad shares the air, so playing a Charge face first can make a partner's Charge-drawing face land bigger. Every face still works with nothing in the air.
+- Four faces draw on the air. The element can come from your own earlier play or from a partner's:
+  - **Recoil Slam** (Octopus, Jet Propulsion) draws on Charge: the foe is also Anchored 1.
+  - **Pop** (Hedgehog, Spine Burst) draws on Space: everything is pushed 1 more.
+  - **Cavitation** (Mantis Shrimp, Smasher Punch) draws on Time: the punch lands twice.
+  - **Pick the Weak** (Raven, Carrion Wing) draws on Mass: the foe falls at 3 + 2E or less.
+- The board's top bar shows what is in the air. The Stridulation face once called Resonance is now **Thrum**, so the word means one thing.
+- In code: `m.air`, `T.leaveInAir`, `T.inAir`, and the condition `ifAir: 'M'`, which draws on the element once per play. **Saves** are version 32: a mission keeps the air.
+
 ## 2.115.0 — 2026-11-21 — At dusk, and Flanked
 
 - **At dusk** (a timing word, from the shortlist). A face marked At dusk is placed now: you pay for it, it goes to the track, and you choose its space. It lands at round end, once the foes have acted, on whoever is there then. A ring on the board shows where. The puzzle is to read the telegraph for where the foes will finish.

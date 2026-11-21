@@ -97,6 +97,13 @@
       tip: 'Aimed: the attack lands on the space its target stood on when it was telegraphed. It strikes whoever stands there then, foe or pilot; an empty space and it misses.',
     },
     {
+      id: 'resonance',
+      re: 'Resonance|Draws on (?:Mass|Charge|Space|Time|Omni) in the air',
+      icon: 'kw.empower',
+      tone: 'good',
+      tip: 'Resonance: every Ethereal face you play leaves its element in the air, for this round and the next. A face that draws on an element takes it for its bonus, and it is gone; Omni in the air stands in for any element. The squad shares the air.',
+    },
+    {
       id: 'dusk',
       re: 'At dusk',
       icon: 'kw.mark',

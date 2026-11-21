@@ -392,6 +392,7 @@
       decoys: [],
       pets: [],
       dusk: [],
+      air: { M: 0, C: 0, S: 0, T: 0, O: 0 },
       fields: [],
       objective: spec.objective,
       clock: spec.clock ? Object.assign({}, spec.clock) : null,
@@ -669,7 +670,7 @@
     return true;
   };
   /**
-   * Dice as AP (2.116; Garrett, 2026-11-21: "make any two or any omni work as an AP"): one banked Omni, or any
+   * Dice as AP (2.119; Garrett, 2026-11-21: "make any two or any omni work as an AP"): one banked Omni, or any
    * two banked etherions (the same or different), become 1 AP. At the table: put the dice back in the pool and
    * mint 1 AP (it evaporates with the hero phase, like any minted die). No AP to do it, as often as the bank
    * allows, so a rolled element is never dead weight: unused, it still walks, strikes or works an objective.
@@ -885,6 +886,30 @@
     return p;
   };
   T.livePets = (m) => (m.pets || []).filter((p) => !p.dead);
+  /**
+   * Resonance (2.118): elements in the air. Playing an Ethereal face leaves its element there, strong
+   * (2) this round and fading (1) the next, then gone. A face that draws on an element takes it for a
+   * bonus and spends it; Omni in the air stands in for any element. The squad shares the air.
+   */
+  T.AIR_ELS = ['M', 'C', 'S', 'T', 'O'];
+  T.leaveInAir = function (m, el) {
+    m.air = m.air || { M: 0, C: 0, S: 0, T: 0, O: 0 };
+    m.air[el] = 2;
+    say(m, `${T.ETHERIONS[el].name} hangs in the air.`, 'sys');
+  };
+  /** What the air holds of `el` (its own, else Omni), or null. */
+  T.inAir = (m, el) => (m.air && m.air[el] > 0 ? el : m.air && m.air.O > 0 ? 'O' : null);
+  /** Draw on `el` for this play: spend it (or Omni) once, however many effects of the face ask for it. */
+  function drawAir(m, el, ctx) {
+    ctx.drewAir = ctx.drewAir || {};
+    if (ctx.drewAir[el]) return true;
+    const got = T.inAir(m, el);
+    if (!got) return false;
+    m.air[got] = 0;
+    ctx.drewAir[el] = got;
+    say(m, `It draws on the ${T.ETHERIONS[got].name} in the air.`, 'sys');
+    return true;
+  }
   /**
    * Flanked (2.115): a unit with units of the other side on two different spaces beside it. For a foe,
    * the other side is the squad: pilots standing, their pets and their decoys. For a pilot, it is foes.
@@ -1924,6 +1949,8 @@
       });
       say(m, `${body.name} waits for dusk.`, 'hero');
     } else T.runEffects(m, body, face.fx, rctx);
+    // Resonance (2.118): an Ethereal face leaves its element in the air, after it has drawn on what was there
+    if (faceKey === 'E' && T.AIR_ELS.includes(elt)) T.leaveInAir(m, elt);
     if (body !== h) delete rctx.pendingFreeMove; // a free step a pet's face grants is the pet's, and it has taken it
     T.afterAction(m);
     return { ok: true, ctx: rctx };
@@ -1994,6 +2021,8 @@
         if (f.ifFlanked && !T.isFlanked(m, t)) return false;
         if (f.ifHpBelow != null && t.hp >= num(f.ifHpBelow, P, E)) return false;
       }
+      // last, so the element is spent only when everything else holds
+      if (f.ifAir && !drawAir(m, f.ifAir, ctx)) return false;
       return true;
     };
     const met = condOk();
@@ -3340,6 +3369,8 @@
       }
     // Fields spring on whoever ends the round in them
     fieldsAtRoundEnd(m);
+    // Resonance: strong fades, fading is gone
+    if (m.air) for (const k of T.AIR_ELS) if (m.air[k] > 0) m.air[k]--;
     // Wounds bite, then drop by 1
     for (const u of T.liveEnemies(m).concat(T.liveHeroes(m), T.livePets(m))) {
       const w = st(u).Wound;

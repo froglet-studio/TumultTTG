@@ -529,6 +529,6 @@ Two weapons join the gear (the Shock Baton, +1 to melee strikes; the Coil Rifle,
 
 The look-ahead player hardly ever Overcharges: its beam keeps two lines, and an Overcharge scores below a strike until the strike that follows it. Forcing an Overcharge whenever a foe is near (each pilot wearing one weapon, tier 2 and 3, 90 missions) wins 90.0% (baton) and 91.1% (rifle) against 92.2% and 90.0% without forcing, and 88.9% with no gear. So it is a choice, not a free win: the Omni it eats would have paid an Ethereal face.
 
-## 2.116 — dice as AP
+## 2.119 — dice as AP
 
 A banked Omni, or any two banked etherions, can be spent as 1 AP (Garrett, 2026-11-21). It made full runs easier: `node tools/sim.js 120 runs --player strong`, 2.109.0 → with dice as AP at 150%: 61 → 80 of 120, mostly at the Heart (155%: 69; 157%: 57; 160%: 51). Measured again on top of 2.115.0, `200 runs --player strong`: 85 of 200 before; with dice as AP at 160%, 82 (163%: 62). So every foe has **160%** of its listed vitality (was 150%). Not easier for a careful squad.
