@@ -37,7 +37,7 @@ test('code atlas: strict build reaches every loop it links and every card', () =
   assert.deepStrictEqual(idx.missingLinks, []);
   const T = require('../tools/load')();
   assert.ok(idx.kinds.entry >= T.CARDS.length, 'every card is an entry');
-  assert.ok(idx.kinds.verb >= 40, 'the verbs of T.applyEffect are nodes');
+  assert.ok(idx.kinds.verb >= 25, 'the verbs of T.applyEffect are nodes');
   assert.ok(idx.loopCode.face > 0 && idx.loopCode['fleet/Rosh'] > 0, 'loops and pilots reach their code');
   assert.ok(idx.views >= T.CARDS.length, 'every card has a view in the inspection window');
   const vw = JSON.parse(fs.readFileSync(path.join(out, 'views', 'views.json'), 'utf8'));

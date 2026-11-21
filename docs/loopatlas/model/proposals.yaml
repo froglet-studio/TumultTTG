@@ -13,7 +13,7 @@ proposals:
 - id: P3
   title: Body, magic, tech
   what: 'Biophysical (Physical faces: you and beside you, now), bioethereal (Ethereal faces: any unit, at range, for N rounds)
-    and ethereal technology (gear: spaces, dice, clock, the downed). Boons and consumables fold into gear passives and actives.'
+    and ethereal technology (gear: spaces, dice, clock, the downed). Boons and consumables fold into gear passives and actives (built in 2.89).'
   touches: [face, haven, reward, event, expedition]
   stage: planned
 - id: P4

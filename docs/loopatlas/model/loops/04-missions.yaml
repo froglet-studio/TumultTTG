@@ -114,7 +114,7 @@
   kind: loop
   t: [600, 1800]
   kit: fight
-  is: 'One tough foe with escorts; it offers a boon (gear, proposed) when beaten.'
+  is: 'One tough foe with escorts; beaten, it pays an extra UP and 4 crystals.'
   phases:
   - n: Briefing
   - n: Rounds

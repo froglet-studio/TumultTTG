@@ -14,8 +14,8 @@ down the tree, and a cycle unrolls into a chain that fits in its first ring. Thi
 | --- | --- | --- |
 | Folder, file | `d:<path>`, `f:<path>` | `src/`, `tools/`, `test/`, `docs/`, the root's docs, `.github/` |
 | Definition | `m:T.<name>` (global) or `m:<file>#<name>` (local) | every top-level `T.x = ...`, `function f`, `const x = ...` in a JS file: line, signature or value, length, and which `T.*` its body calls or reads |
-| Verb | `m:verb.<verb>` | each `case '<verb>':` of `T.applyEffect`, linked to every card, gear piece, consumable and foe whose `fx` uses it |
-| Data entry | `o:<file>#<COLLECTION>/<id>` | every entry of every data table on `T` (cards, clades, gear, boons, foes, missions, events, pages, canon prompts...), loaded through `tools/load.js`, with every value as a row; a magnitude shows its source and its value at P/E 1 and 3, a face's text what a player reads at the first level and at the cap. Tables of constants (`T.RULES`, `T.EVAL`) are one entry each. |
+| Verb | `m:verb.<verb>` | each `case '<verb>':` of `T.applyEffect`, linked to every card, gear piece and foe whose `fx` uses it |
+| Data entry | `o:<file>#<COLLECTION>/<id>` | every entry of every data table on `T` (cards, clades, gear, foes, missions, events, pages, canon prompts...), loaded through `tools/load.js`, with every value as a row; a magnitude shows its source and its value at P/E 1 and 3, a face's text what a player reads at the first level and at the cap. Tables of constants (`T.RULES`, `T.EVAL`) are one entry each. |
 | Doc section | `s:<file>#<slug>` | every heading of every Markdown file |
 | Loop | `L:<loop id>`, `L:vessel/<Pilot>`, `L:verb/<Pilot>/<Element>` | `model.json`: linked to every repo path and card a loop cites, each pre-made pilot to its entry, and by hand in `code/links.json` |
 

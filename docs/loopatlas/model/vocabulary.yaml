@@ -3,7 +3,7 @@ layers:
 - id: now
   letter: n
   name: Now
-  is: What the game on main (2.82.0) does today. A loop the plan has and the game lacks shows as a ghost.
+  is: What the game on main (2.98.0) does today. A loop the plan has and the game lacks shows as a ghost.
 - id: plan
   letter: p
   name: Planned

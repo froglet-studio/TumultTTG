@@ -17,18 +17,14 @@ How work moves: `docs/loopatlas/PROCESS.md`.
 | P3 | proposal | Body, magic, tech |
 | P5 | proposal | Three AP and one chosen element |
 
-## Brainstorm: proposed (17)
+## Brainstorm: proposed (13)
 
 | Loop or item | Tier or area | The proposal |
 | --- | --- | --- |
 | era | Era | Give the last phase a voice. The title shows what changed since you last flew, in keywords you already know. |
 | breath | Round | Proposal P6. The canon prompts and the playtest report already know what happened; this adds the hand-off. |
-| expedition | Expedition | Havens sell only gear (boons and consumables fold into it, P3), and the gear passives are the build-arounds the boons were. |
-| haven | Round | Gear only. Each piece has two actives and one passive, so the shop is the build-around choice boons were. |
-| event | Round | The Etherion Storm and Shrine hand out Affinities and boons today; they would hand out a gear passive or a trait instead. |
-| reward | Round | Elites offer gear instead of a boon. A trait offer shows its keyword chips beside the pilot's, so a swap reads as a change of toys. |
+| reward | Round | A trait offer shows its keyword chips beside the pilot's, so a swap reads as a change of toys. |
 | turn | Combo | With 22 keywords (P2), every chain a turn can build is a pair of keywords from section 2 of the review doc; the hint bar can name the pair it sees. |
-| duet | Combo | Link (P2) is the duet keyword that reaches across the board. |
 | face | Verb | Every face says which line it is (body, magic, tech) by its keywords alone (P3). |
 | arc.canon | Arc | A question names a keyword moment: "Your Pull dragged the Brute into the flood. What did the crowd shout?" |
 | P1 | proposal | One ladder of words: Use the eight tier terms (Pulse, Verb, Combo, Round, Mission, Expedition, Arc, Era) in Tumult's design docs and reviews, the same ladder Cosmic Shore uses, so a problem is placed before it is argued. |

@@ -6,7 +6,7 @@
    "id": "now",
    "letter": "n",
    "name": "Now",
-   "is": "What the game on main (2.82.0) does today. A loop the plan has and the game lacks shows as a ghost."
+   "is": "What the game on main (2.98.0) does today. A loop the plan has and the game lacks shows as a ghost."
   },
   {
    "id": "plan",
@@ -268,7 +268,7 @@
    ],
    "now": {
     "s": "part",
-    "note": "Releases come often (2.82.0 on 2026-11-20) and made pilots keep their growth since 2.76, but nothing in the game tells a returning player what changed or what is waiting for them."
+    "note": "Releases come often (thirteen on 2026-11-21 alone, up to 2.98.0) and made pilots keep their growth since 2.76, but nothing in the game tells a returning player what changed or what is waiting for them."
    },
    "plan": {
     "note": "A run becomes a journey across atlas pages joined by a story; the web game gathers canon for AI storytellers; a finished dossier is a pilot ready for Cosmic Shore."
@@ -441,10 +441,6 @@
    "plan": {
     "note": "The atlas plan: a run is a random journey from one atlas page to another, joined by a story, with a tell-your-own mode later."
    },
-   "prop": {
-    "s": "change",
-    "note": "Havens sell only gear (boons and consumables fold into it, P3), and the gear passives are the build-arounds the boons were."
-   },
    "holes": [
     {
      "on": "np",
@@ -561,7 +557,7 @@
     30,
     180
    ],
-   "is": "Rest, repair, buy and sell gear and consumables, train.",
+   "is": "Rest, repair, buy and sell gear, train.",
    "phases": [
     {
      "n": "Rest or repair"
@@ -581,11 +577,8 @@
     "reward"
    ],
    "now": {
-    "s": "built"
-   },
-   "prop": {
-    "s": "change",
-    "note": "Gear only. Each piece has two actives and one passive, so the shop is the build-around choice boons were."
+    "s": "built",
+    "note": "Gear only since 2.89: ten pieces, each with one passive (the build-arounds boons were) and two actives paid in crystals (the jobs consumables did)."
    },
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md Omnicrystals and gear"
@@ -622,10 +615,6 @@
     "s": "built",
     "note": "Twelve events; none repeats in a run."
    },
-   "prop": {
-    "s": "change",
-    "note": "The Etherion Storm and Shrine hand out Affinities and boons today; they would hand out a gear passive or a trait instead."
-   },
    "src": [
     "src/data/world.js EVENTS"
    ]
@@ -641,7 +630,7 @@
     30,
     180
    ],
-   "is": "After a won mission. Points, crystals, a trait for each pilot, a boon from an elite.",
+   "is": "After a won mission. Points, crystals, a trait for each pilot; an elite pays more of both.",
    "phases": [
     {
      "n": "Take the points and crystals"
@@ -663,7 +652,7 @@
    },
    "prop": {
     "s": "change",
-    "note": "Elites offer gear instead of a boon. A trait offer shows its keyword chips beside the pilot's, so a swap reads as a change of toys."
+    "note": "A trait offer shows its keyword chips beside the pilot's, so a swap reads as a change of toys."
    },
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md Rewards"
@@ -872,11 +861,7 @@
    ],
    "now": {
     "s": "built",
-    "note": "Duet moves since 2.28. Deterministic for the acting player, so a turn never waits on the partner."
-   },
-   "prop": {
-    "s": "change",
-    "note": "Link (P2) is the duet keyword that reaches across the board."
+    "note": "Duet moves since 2.28, and Link since 2.87, the keyword that reaches across the board. Deterministic for the acting player, so a turn never waits on the partner."
    },
    "src": [
     "docs/design/two-player memory, 2026-11-14",
@@ -922,7 +907,8 @@
     "solve"
    ],
    "now": {
-    "s": "built"
+    "s": "built",
+    "note": "Twelve of the 22 keywords have landed (2.86 to 2.98: Field, Link, Wound, Heal, Anchor, Mark, Thorns, Shield, Blink, Haste, Cleanse, Reveal), each in one sentence in docs/reference/KEYWORDS.md; gear became the tech line in 2.89."
    },
    "prop": {
     "s": "change",
@@ -961,7 +947,7 @@
    ],
    "now": {
     "s": "built",
-    "note": "Keyword chips with icons and one-sentence tips (src/ui/keywords.js), 29 of them."
+    "note": "Keyword chips with icons and one-sentence tips (src/ui/keywords.js), rewritten as each keyword lands."
    },
    "holes": [
     {
@@ -1196,7 +1182,7 @@
     1800
    ],
    "kit": "fight",
-   "is": "One tough foe with escorts; it offers a boon (gear, proposed) when beaten.",
+   "is": "One tough foe with escorts; beaten, it pays an extra UP and 4 crystals.",
    "phases": [
     {
      "n": "Briefing"
@@ -2046,7 +2032,7 @@
   {
    "id": "P3",
    "title": "Body, magic, tech",
-   "what": "Biophysical (Physical faces: you and beside you, now), bioethereal (Ethereal faces: any unit, at range, for N rounds) and ethereal technology (gear: spaces, dice, clock, the downed). Boons and consumables fold into gear passives and actives.",
+   "what": "Biophysical (Physical faces: you and beside you, now), bioethereal (Ethereal faces: any unit, at range, for N rounds) and ethereal technology (gear: spaces, dice, clock, the downed). Boons and consumables fold into gear passives and actives (built in 2.89).",
    "touches": [
     "face",
     "haven",

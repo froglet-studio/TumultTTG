@@ -6,7 +6,7 @@
   "expedition": ["f:src/engine/run.js", "m:T.newRun", "m:T.startMap", "m:T.genTideMap"],
   "draft": ["m:T.newDraftHero", "m:T.draftPack", "f:src/ui/party.js", "f:src/ui/pilots.js"],
   "route": ["m:T.genTideMap", "m:T.startMap", "m:T.scaledTide", "o:src/data/world.js#TIDES/*"],
-  "haven": ["m:T.havenStock", "m:T.havenRest", "o:src/data/world.js#GEAR/*", "o:src/data/world.js#BOONS/*", "o:src/data/world.js#CONSUMABLES/*"],
+  "haven": ["m:T.havenStock", "m:T.havenRest", "o:src/data/world.js#GEAR/*"],
   "event": ["m:T.pickEvent", "m:T.resolveEvent", "o:src/data/world.js#EVENTS/*"],
   "reward": ["m:T.missionRewards", "m:T.rewardSettled"],
   "mission": ["f:src/engine/generators.js", "f:src/ui/mission.js", "f:src/engine/scaling.js", "o:src/engine/generators.js#MISSIONS/*", "o:src/data/world.js#ENEMIES/*"],

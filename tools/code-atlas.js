@@ -12,7 +12,7 @@
  *  - every JS file under src/, tools/ and test/: top-level definitions (T.x = ..., function f, const x = ...), their
  *    line, signature and which other T definitions their body mentions (a light scan, not a compiler);
  *  - the engine's verbs: each `case 'verb':` of T.applyEffect, linked to every card face, gear ability and foe that uses it;
- *  - the data itself, loaded through tools/load.js: every entry of T.CARDS, T.GEAR, T.BOONS, T.ENEMIES, T.RULES, ...
+ *  - the data itself, loaded through tools/load.js: every entry of T.CARDS, T.GEAR, T.ENEMIES, T.RULES, ...
  *    with every value (a magnitude function shows its source and its value at P/E 1 and 3);
  *  - every Markdown file's sections; the Loop Atlas model's loops and pilots, linked to code from the paths and cards
  *    they cite and by hand in docs/loopatlas/code/links.json.
@@ -399,7 +399,7 @@ class Builder {
         g.node(id, 'entry', entryName(x, keys[i]), holder, { f: flatten(x, '', []), path: file, eid: keys[i] });
       });
     }
-    // relations the data states: a card's faces use verbs; a pilot flies cards and is of clades; gear, boons and foes
+    // relations the data states: a card's faces use verbs; a pilot flies cards and is of clades; gear and foes
     const C = (id) => {
       const f = this.defs.get('T.CARDS');
       return f ? `o:${g.recs.get(f).path}#CARDS/${id}` : null;
@@ -424,7 +424,6 @@ class Builder {
       for (const sp of h.species || []) g.link(id, 'clade', S(sp), 'pilots');
     }
     for (const gear of T.GEAR || []) for (const a of gear.abilities || []) verbOf(a.fx, at('GEAR', gear.id));
-    for (const b of T.CONSUMABLES || []) verbOf(b.fx, at('CONSUMABLES', b.id));
     for (const [k, e] of Object.entries(T.ENEMIES || {}))
       for (const a of Object.values(e.abilities || {})) verbOf(a.fx, at('ENEMIES', k));
   }

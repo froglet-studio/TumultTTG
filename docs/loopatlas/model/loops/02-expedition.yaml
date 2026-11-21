@@ -28,10 +28,6 @@
   plan:
     note: 'The atlas plan: a run is a random journey from one atlas page to another, joined by a story, with a tell-your-own
       mode later.'
-  prop:
-    s: change
-    note: 'Havens sell only gear (boons and consumables fold into it, P3), and the gear passives are the build-arounds the
-      boons were.'
   holes:
   - 'on': np
     q: Win rates sit near 100% on most tier 1 and 2 missions for the look-ahead player, with the Heart at 25%, so the middle
@@ -99,7 +95,7 @@
   tier: 3
   kind: loop
   t: [30, 180]
-  is: Rest, repair, buy and sell gear and consumables, train.
+  is: Rest, repair, buy and sell gear, train.
   phases:
   - n: Rest or repair
   - n: Shop
@@ -108,9 +104,8 @@
   drivers: [own, reward]
   now:
     s: built
-  prop:
-    s: change
-    note: Gear only. Each piece has two actives and one passive, so the shop is the build-around choice boons were.
+    note: 'Gear only since 2.89: ten pieces, each with one passive (the build-arounds boons were) and two actives paid in
+      crystals (the jobs consumables did).'
   src:
   - docs/reference/RUN_AND_ECONOMY.md Omnicrystals and gear
 - id: event
@@ -129,9 +124,6 @@
   now:
     s: built
     note: Twelve events; none repeats in a run.
-  prop:
-    s: change
-    note: The Etherion Storm and Shrine hand out Affinities and boons today; they would hand out a gear passive or a trait instead.
   src:
   - src/data/world.js EVENTS
 - id: reward
@@ -141,7 +133,7 @@
   tier: 3
   kind: loop
   t: [30, 180]
-  is: After a won mission. Points, crystals, a trait for each pilot, a boon from an elite.
+  is: After a won mission. Points, crystals, a trait for each pilot; an elite pays more of both.
   phases:
   - n: Take the points and crystals
   - n: Take a trait, or swap one in, or skip
@@ -151,7 +143,6 @@
     s: built
   prop:
     s: change
-    note: 'Elites offer gear instead of a boon. A trait offer shows its keyword chips beside the pilot''s, so a swap reads
-      as a change of toys.'
+    note: 'A trait offer shows its keyword chips beside the pilot''s, so a swap reads as a change of toys.'
   src:
   - docs/reference/RUN_AND_ECONOMY.md Rewards
