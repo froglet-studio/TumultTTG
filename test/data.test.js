@@ -138,7 +138,9 @@ test('world data: ids are unique and entries are complete', () => {
   uniq(T.EVENTS, 'event');
   for (const g of T.GEAR) {
     assert.equal(g.abilities.length, 2, `${g.id}: two abilities`);
-    for (const a of g.abilities) assert.ok(a.n && a.cost >= 1 && Array.isArray(a.fx) && a.txt(), `${g.id}/${a.n}`);
+    // paid in omnicrystals, or (a weapon's Overcharge, 2.108) in banked Omni dice
+    for (const a of g.abilities)
+      assert.ok(a.n && (a.cost >= 1 || a.omni >= 1) && Array.isArray(a.fx) && a.txt(), `${g.id}/${a.n}`);
   }
   for (const ev of T.EVENTS) assert.ok(ev.options.length >= 2 && ev.text && ev.title, `${ev.id}: at least two options`);
   for (const [id, e] of Object.entries(T.ENEMIES)) {

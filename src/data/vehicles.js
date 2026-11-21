@@ -107,8 +107,8 @@
    *   lays a decoy or rests, or one that strikes, shoves or pulls in melee, or works on a space or an ally beside you.
    * T.MOUNTED_EXCEPT can turn the rule over for a face by id ('card:P').
    */
-  const NOT_MOUNTED_VERBS = new Set(['move', 'climb', 'blink', 'rally', 'guide', 'hidden', 'rest', 'swap', 'morph', 'stasis', 'decoy', 'force']);
-  const NOT_MOUNTED_TGT = new Set(['foe_melee', 'foe_adj_all', 'node_move', 'node_climb', 'node_tele', 'ally_adj_move', 'ally_move', 'node_adj', 'ally_adj', 'foe_or_ally_adj']);
+  const NOT_MOUNTED_VERBS = new Set(['move', 'climb', 'blink', 'rally', 'guide', 'hidden', 'rest', 'swap', 'morph', 'stasis', 'decoy', 'force', 'throw']);
+  const NOT_MOUNTED_TGT = new Set(['foe_melee', 'foe_adj_all', 'node_move', 'node_climb', 'node_tele', 'ally_adj_move', 'ally_move', 'node_adj', 'ally_adj', 'foe_or_ally_adj', 'ally_throw']);
   T.MOUNTED_EXCEPT = {};
   T.isMounted = function (card, faceKey) {
     const face = card[faceKey];

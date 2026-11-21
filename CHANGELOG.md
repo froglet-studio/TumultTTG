@@ -9,12 +9,37 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.106.0 — 2026-11-21 — missions sized by squad power
+## 2.109.0 — 2026-11-21 — missions sized by squad power
 
 - **Squad power.** An expedition is sized from its squad's power and the chosen wind (Garrett, 2026-11-21). A pilot's power is 10, and 1 more for every level past 1 it set out with; the squad's power is its pilots' added up. Every point past 20 (two new pilots) gives foes +5% vitality, and every 5 points one more foe, every 10 one more to do and a swarm 1 larger, so a third new pilot asks what it did before. A level now counts for every pilot who has it, not as the squad's average (`T.squadPower`, `T.pilotPowerFor`, `docs/reference/SCALING.md`).
 - **Growth on the road.** The route expects about 3 points a pilot a row; a pilot that grows faster brings 1 more power for every 6 points ahead to each later mission, and none brings less than it set out with.
 - **A full wipe ends the expedition.** With the whole squad down the expedition is over, and the Lifeline is kept only for a mission lost with someone standing. Pilots are whole again for the next expedition.
 - The route's ⚖ pill shows the squad's power. `tools/sim.js --scaling` takes `power.F=N`, `boss.F=N` or `PILOT=N`.
+## 2.108.0 — 2026-11-21 — weapons
+
+- **Weapons are gear that makes your own strikes hit harder** (Garrett, 2026-11-21). The **Shock Baton** (6 ◇) adds 1 to every melee strike you make, the basic Strike and a Mass Channel included; the **Coil Rifle** (6 ◇) adds 1 to every ranged strike (along a line or at any range). Area strikes get nothing. A weapon never strikes on its own.
+- **Overcharge** takes a banked Omni die, not ◇: every Omni put on the weapon Empowers every strike of its reach by 2 this round, and they stack. No cooldown. An Omni spent there cannot pay an Ethereal face. Empower is the existing keyword; it can now cover a list of strike kinds and `stack`.
+- Each weapon has a second active paid in ◇: the Baton's Arc Guard (Thorns 2 this round) and the Rifle's Rangefinder (Revealed 2 rounds and Marked).
+- **Foes have 150% of their listed vitality** (was 145%), so the game is not easier: full look-ahead runs 101 of 200 before, 112 with weapons at 145%, 102 at 150% (`docs/reference/BALANCE.md`).
+- In code: the passive hook `weapon` (`{ reach, n }`), `T.weaponBonus(h, kind)`, `T.canUseGear`, `T.gearCostText`, and a gear ability's `omni` cost. No save change.
+
+## 2.107.0 — 2026-11-21 — every trait kept, nine fly
+
+- **A pilot keeps every trait it earns** (Garrett, 2026-11-21). Nine fly into a mission (the kit); the rest wait in a **reserve**, each with its points on it. Once the kit holds nine, a new trait either waits in reserve (**Keep in reserve**) or comes in at once for one that stays behind (**Fly it now**).
+- **Choose the nine between missions.** On the route, at a reward, a haven or an event, the Kit view brings a reserve trait in for one of the nine; the 3-of-9 cap holds for the kit that flies. Never in a mission.
+- **The dice follow the kit.** Each awakened card that flies brings its element die; a trait in reserve brings none.
+- **No refunds.** A trait left behind is not lost, so its points stay on it (from 2.75 to 2.106 an exchange gave the old trait up and refunded its points). Molt and Trade set the old trait aside the same way.
+- **Made pilots** come home with their reserve and the points on it.
+- **Saves** are version 29: every pilot gains an empty `reserve`.
+## 2.105.0 — 2026-11-21 — costly faces that do something new
+
+Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap faces in one; it must make a play that is not possible otherwise. Four of the nine that were bundles are reworked; the rest follow in the next release.
+
+- **Heavy Throw** (Throwing Arm) throws the ally beside you onto a free space within 2 + E of you, ledges included (`throw`, the target `ally_throw`). It was a zone strike, a pierce and a knockback.
+- **Become** (Impersonation) trades places with a foe within 1 + E; a foe that nothing can move holds fast (`swap` with `foe`). It was Hidden and an empowered strike.
+- **Resonance** (Stridulation) sets everything around you off now: within 1 + E, every Field and hazard springs on whoever stands in it and every Wound bites, none of them spent (`spring`, `T.springAround`). It was a zone strike and a Weaken.
+- **Second Wind** (Persistence) gives back at round end what you lose from playing it until then, up to 4 + 2E (`rewind`, the state `Rewind`). It was four turns of regeneration.
+- `foe_r2` reaches further when an effect on the face names a `reach`.
 
 ## 2.104.0 — 2026-11-21 — pocket vehicles and big maps
 

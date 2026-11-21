@@ -99,6 +99,10 @@ test(
       url: 'https://tumult.froglet.games/',
       setup: catcher(sent),
       after: async (w) => {
+        // the last events (run_ended, pilot_saved) reach the sender through a promise: let them land
+        // before asking what is queued, or a slow machine finds the queue still empty
+        await w.T.Backend.use('analytics');
+        await new Promise((res) => setTimeout(res, 5));
         for (let i = 0; i < 20 && w.T.Analytics.queued(); i++) {
           await w.T.Analytics.flush(false);
           await new Promise((res) => setTimeout(res, 5));

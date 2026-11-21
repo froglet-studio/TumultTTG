@@ -109,18 +109,39 @@
     if (!c) return { ok: false, why: 'unknown' };
     const mine = c.clades.filter((sp) => h.species.includes(sp));
     if (!mine.length) return { ok: false, why: 'not your bloodline' };
-    if (h.cards.includes(cardId)) return { ok: false, why: 'already held' };
+    if (T.holds(h, cardId)) return { ok: false, why: 'already held' };
     if (h.cards.length >= R().MAX_CARDS) return { ok: false, why: 'kit is full (9)' };
     if (!T.cladeSlots(h, h.cards.concat(cardId)))
       return { ok: false, why: `already 3 of 9 from ${mine.map((sp) => T.SPECIES[sp].name).join(' and ')}` };
     return { ok: true };
   };
+  /**
+   * A pilot keeps every trait it earns (Garrett, 2026-11-21: "all old cards are kept, but only 9 cards can be
+   * taken into a mission"). h.cards is what flies this mission, at most MAX_CARDS; h.reserve holds the rest,
+   * left behind with their points still on them. Between missions any of them can change places (T.loadCard).
+   */
+  T.reserveOf = (h) => h.reserve || (h.reserve = []);
+  /** Every trait a pilot holds: those it flies with and those in reserve. */
+  T.collection = (h) => h.cards.concat(h.reserve || []);
+  T.holds = (h, cardId) => h.cards.includes(cardId) || (h.reserve || []).includes(cardId);
+  /** Can this trait join the pilot at all: its bloodline, not held, and some kit of nine could fly it? */
+  T.canCollect = function (h, cardId) {
+    const r = T.canAddCard(h, cardId);
+    if (r.ok || ['unknown', 'not your bloodline', 'already held'].includes(r.why)) return r;
+    return T.swapDrops(h, cardId).length ? { ok: true } : { ok: false, why: 'that would break the 3-of-9 cap' };
+  };
+  /** A new trait joins the kit when it has room, and the reserve when it is full. */
   T.addCard = function (h, cardId) {
     const r = T.canAddCard(h, cardId);
-    if (!r.ok) return r;
-    h.cards.push(cardId);
+    if (r.ok) {
+      h.cards.push(cardId);
+      h.up[cardId] = [0, 0];
+      return { ok: true };
+    }
+    if (!T.canCollect(h, cardId).ok) return r;
+    T.reserveOf(h).push(cardId);
     h.up[cardId] = [0, 0];
-    return { ok: true };
+    return { ok: true, reserve: true };
   };
   /**
    * A trait taken twice carries h.bound[id] = [n, spent]: n points that only it may use, of which `spent`
@@ -138,47 +159,78 @@
     return b ? b[0] - b[1] : 0;
   };
   /**
-   * A trait leaves the kit (an exchange, a molt or a trade): every upgrade point on it comes back to spend
-   * again, and so do the points a second copy bound to it, spent or not (Garrett, 2026-11-20: "when players
-   * lose a card they should get their points refunded"). With the card gone, they are free points.
+   * A trait leaves the pilot for good: every upgrade point on it comes back to spend again, bound ones too
+   * (Garrett, 2026-11-20). Since 2.107 the game itself never takes a trait away (a trait left behind waits in
+   * reserve, its points on it), so this is for what truly ends, such as a companion lost.
    */
   T.removeCard = function (h, cardId) {
     const b = boundOf(h, cardId);
     h.upUnspent += freeSpent(h, cardId) + (b ? b[0] : 0);
     h.cards = h.cards.filter((c) => c !== cardId);
+    if (h.reserve) h.reserve = h.reserve.filter((c) => c !== cardId);
     delete h.up[cardId];
     if (h.bound) delete h.bound[cardId];
   };
   /**
-   * A pilot whose kit is full (MAX_CARDS) grows by exchange: a new trait comes in and an old one goes out,
-   * so the kit stays at nine (Garrett, 2026-11-20). The new card must be of the pilot's bloodline, not held,
-   * and fit the 3-of-9 cap once the old card has gone.
+   * A new trait comes into the kit in place of one that stays behind (2.107; before, the one that went was
+   * lost and its points refunded). The new card must be of the pilot's bloodline, not held, and fit the
+   * 3-of-9 cap once the other has gone to the reserve.
    */
   T.canSwapCard = function (h, cardId, dropId) {
     const c = T.CARD[cardId];
     if (!c || !T.CARD[dropId]) return { ok: false, why: 'unknown' };
-    if (h.cards.length < R().MAX_CARDS) return { ok: false, why: 'the kit has room: take the trait instead' };
-    if (!h.cards.includes(dropId)) return { ok: false, why: 'not held' };
-    if (h.cards.includes(cardId)) return { ok: false, why: 'already held' };
+    if (!h.cards.includes(dropId)) return { ok: false, why: 'not in the kit' };
+    if (T.holds(h, cardId)) return { ok: false, why: 'already held' };
     if (!c.clades.some((sp) => h.species.includes(sp))) return { ok: false, why: 'not your bloodline' };
     if (!T.cladeSlots(h, h.cards.filter((x) => x !== dropId).concat(cardId)))
       return { ok: false, why: 'that would break the 3-of-9 cap' };
     return { ok: true };
   };
-  /** The held traits a full kit could give up for this one. */
+  /** The traits in the kit that could stay behind for this one. */
   T.swapDrops = (h, cardId) => h.cards.filter((d) => T.canSwapCard(h, cardId, d).ok);
-  /**
-   * Exchange: the old trait leaves and the new one takes its place in the kit, unupgraded. The points
-   * on the old one, bound ones included, come back to the free pool (`T.removeCard`).
-   */
+  /** Exchange: the new trait takes the other's place in the kit, unupgraded; the other waits in reserve, points and all. */
   T.swapCard = function (h, cardId, dropId) {
     const r = T.canSwapCard(h, cardId, dropId);
     if (!r.ok) return r;
     const at = h.cards.indexOf(dropId);
-    T.removeCard(h, dropId);
-    h.cards.splice(at, 0, cardId);
+    h.cards.splice(at, 1, cardId);
+    T.reserveOf(h).push(dropId);
     h.up[cardId] = [0, 0];
     return { ok: true, swapped: dropId };
+  };
+  /**
+   * Between missions, a trait in reserve comes into the kit: in place of `outId`, which goes to the reserve, or
+   * into an empty place when the kit has fewer than nine. The 3-of-9 cap holds for the kit that flies. The dice
+   * follow: each awakened card in the kit swaps a plain die for its element's (T.diceSet).
+   */
+  T.canLoadCard = function (h, inId, outId) {
+    if (!(h.reserve || []).includes(inId)) return { ok: false, why: 'not in reserve' };
+    if (outId && !h.cards.includes(outId)) return { ok: false, why: 'not in the kit' };
+    if (!outId && h.cards.length >= R().MAX_CARDS)
+      return { ok: false, why: 'the kit is full: choose one to leave behind' };
+    const kit = h.cards.filter((x) => x !== outId).concat(inId);
+    if (!T.cladeSlots(h, kit)) return { ok: false, why: `no more than ${R().MAX_PER_SPECIES} from one bloodline` };
+    return { ok: true };
+  };
+  /** The traits in the kit that could stay behind for this reserve trait. */
+  T.loadOuts = (h, inId) => h.cards.filter((d) => T.canLoadCard(h, inId, d).ok);
+  T.loadCard = function (h, inId, outId) {
+    const r = T.canLoadCard(h, inId, outId);
+    if (!r.ok) return r;
+    const res = T.reserveOf(h);
+    res.splice(res.indexOf(inId), 1);
+    if (outId) {
+      h.cards.splice(h.cards.indexOf(outId), 1, inId);
+      res.push(outId);
+    } else h.cards.push(inId);
+    return { ok: true };
+  };
+  /** The squad's loadout changes on the route, at havens and events, and at rewards: never in a mission. */
+  T.changeLoadout = function (run, heroIdx, inId, outId) {
+    if (run.mission || run.phase === 'mission') return { ok: false, why: 'the kit is set for this mission' };
+    const h = run.heroes[heroIdx];
+    if (!h) return { ok: false, why: 'no such pilot' };
+    return T.loadCard(h, inId, outId || null);
   };
   T.draftPack = function (run, h, size) {
     size = size || 4;
@@ -216,6 +268,7 @@
       title: pb.title,
       species: pb.species,
       cards: pb.cards,
+      reserve: pb.reserve,
       up: pb.up,
     });
     // a trait taken twice brings its own points: those on it now are not from the free pool
@@ -246,7 +299,8 @@
     const onCards = Object.values(h.up || {}).reduce((s, v) => s + v[0] + v[1], 0);
     const bound = Object.values(h.bound || {}).reduce((s, b) => s + b[0] - b[1], 0); // bound but not yet spent
     const pts = onCards + bound + (h.upUnspent || 0) - R().START_UP;
-    return Math.max(0, pts + S.CARD_UP * Math.max(0, h.cards.length - R().START_CARDS));
+    const held = Math.min(R().MAX_CARDS, T.collection(h).length); // a kit flies nine at most, whatever waits in reserve
+    return Math.max(0, pts + S.CARD_UP * Math.max(0, held - R().START_CARDS));
   };
   /** A pilot's level: 1 for a new pilot, and one more for every LEVEL_UP points of growth (about a tier of a run). */
   T.pilotLevel = (h) => 1 + Math.floor(T.pilotPower(h) / T.SCALING.LEVEL_UP);
@@ -279,7 +333,7 @@
   /** The recipe of a hero a player built: its name, clades, cards and the points on them. */
   T.madeFrom = function (h, at) {
     const up = {};
-    h.cards.forEach((c) => (up[c] = (h.up[c] || [0, 0]).slice(0, 2)));
+    T.collection(h).forEach((c) => (up[c] = (h.up[c] || [0, 0]).slice(0, 2)));
     const bound = {};
     Object.keys(h.bound || {}).forEach((c) => (bound[c] = h.bound[c].slice(0, 2)));
     const key = [h.name, h.species.join('+'), h.cards.slice().sort().join('+')].join('|');
@@ -289,6 +343,7 @@
       title: h.title || '',
       species: h.species.slice(),
       cards: h.cards.slice(),
+      reserve: (h.reserve || []).slice(),
       up,
       bound,
       spare: h.upUnspent || 0,
@@ -318,9 +373,17 @@
       if (!T.canAddCard(probe, c).ok) return null;
       probe.cards.push(c);
     }
+    // the traits it keeps in reserve (2.107): of its bloodline, none twice, each one some kit of nine could fly
+    const reserve = rec.reserve == null ? [] : rec.reserve;
+    if (!Array.isArray(reserve) || reserve.length > T.CARDS.length) return null;
+    for (const c of reserve) {
+      if (typeof c !== 'string' || !T.CARD[c] || T.holds(probe, c)) return null;
+      if (!T.canCollect(probe, c).ok) return null;
+      probe.reserve = (probe.reserve || []).concat(c);
+    }
     const up = {};
     let spent = 0;
-    for (const c of cards) {
+    for (const c of cards.concat(reserve)) {
       const u = (rec.up && rec.up[c]) || [0, 0];
       if (!Array.isArray(u) || !isInt(u[0], 0, R().P_CAP) || !isInt(u[1], 0, R().E_CAP)) return null;
       up[c] = [u[0], u[1]];
@@ -330,14 +393,15 @@
     for (const c of Object.keys(rec.bound || {})) {
       const b = rec.bound[c];
       const shared = T.CARD[c] && T.CARD[c].clades.filter((s) => sp.includes(s)).length >= 2;
-      if (!cards.includes(c) || !shared || !Array.isArray(b) || b[0] !== R().DOUBLE_UP) return null;
+      if (!probe.cards.concat(reserve).includes(c) || !shared || !Array.isArray(b) || b[0] !== R().DOUBLE_UP)
+        return null;
       if (!isInt(b[1], 0, b[0]) || b[1] > up[c][0] + up[c][1]) return null;
       bound[c] = [b[0], b[1]];
       spent -= b[1];
     }
     // a pilot back from expeditions may hold more than a new one's six points, never more than its kit can carry
     const spare = rec.spare == null ? null : rec.spare;
-    if (spare != null && !isInt(spare, 0, (R().P_CAP + R().E_CAP) * R().MAX_CARDS)) return null;
+    if (spare != null && !isInt(spare, 0, (R().P_CAP + R().E_CAP) * (R().MAX_CARDS + reserve.length))) return null;
     const runs = rec.runs == null ? 0 : rec.runs;
     if (!isInt(runs, 0, 9999)) return null;
     if (!runs && spent + (spare || 0) > R().START_UP) return null; // a new pilot has six points, no more
@@ -352,6 +416,7 @@
       at: typeof rec.at === 'string' ? rec.at.slice(0, 30) : '',
     };
     if (spare != null) out.spare = spare;
+    if (reserve.length) out.reserve = reserve.slice();
     if (runs) out.runs = runs;
     // who a pilot made in Make a pilot is (2.83): a callsign, a domain, and three short answers. Optional.
     const word = (v, n) => (typeof v === 'string' ? v.replace(/\s+/g, ' ').trim().slice(0, n) : '');
@@ -458,7 +523,7 @@
     }
   };
   T.respecHero = function (h) {
-    h.cards.forEach((c) => {
+    T.collection(h).forEach((c) => {
       h.upUnspent += freeSpent(h, c);
       h.up[c] = [0, 0];
       if (boundOf(h, c)) boundOf(h, c)[1] = 0;
@@ -867,15 +932,17 @@
     });
     run.phase = 'reward';
   };
-  /** A hero takes a card from their own offer; a hero whose kit is full names the trait it gives up for it. */
+  /**
+   * A hero takes a card from their own offer. A hero whose kit is full keeps it too: it waits in reserve, or
+   * comes in now in place of `dropId`, which stays behind with its points (nothing is lost, nothing refunded).
+   */
   T.takeOfferedCard = function (run, cardId, heroIdx, dropId) {
     const rw = run.lastReward;
     if (rw.picked[heroIdx] || !rw.offers[heroIdx].includes(cardId))
       return { ok: false, why: 'that trait is not on offer to this hero' };
     const h = run.heroes[heroIdx];
     if (h.cards.length >= R().MAX_CARDS && !h.cards.includes(cardId)) {
-      if (!dropId) return { ok: false, why: 'the kit is full (9): choose a trait to give up for it' };
-      const s = T.swapCard(h, cardId, dropId);
+      const s = dropId ? T.swapCard(h, cardId, dropId) : T.addCard(h, cardId);
       if (s.ok) rw.picked[heroIdx] = true;
       return s;
     }
@@ -974,13 +1041,16 @@
     run.event.followup = followup;
     return { ok: true, result: opt.result, followup };
   };
+  /**
+   * A trade or a molt: a new trait of the same bloodline takes this one's place in the kit, and the old one goes
+   * to the reserve with its points (2.107: a pilot keeps every trait it has earned).
+   */
   T.tradeCard = function (run, heroIdx, dropId) {
     const h = run.heroes[heroIdx];
     const sp = T.CARD[dropId].clades.find((x) => h.species.includes(x)) || T.CARD[dropId].sp;
-    T.removeCard(h, dropId);
-    const cands = T.cardsOf(sp).filter((c) => c.id !== dropId && T.canAddCard(h, c.id).ok);
+    const cands = T.cardsOf(sp).filter((c) => T.canSwapCard(h, c.id, dropId).ok);
     const nc = T.runStream(run, 'event').pick(cands);
-    if (nc) T.addCard(h, nc.id);
+    if (nc) T.swapCard(h, nc.id, dropId);
     return nc ? nc.id : null;
   };
 
@@ -991,7 +1061,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 28;
+  T.SAVE_VERSION = 29;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1369,6 +1439,12 @@
     // a Crossing `garage`. A save from before has none of them, and nothing in it changes.
     27(r) {
       r.v = 28;
+    },
+    // 2.107: a pilot keeps every trait it earns, and flies nine (h.reserve holds the rest). Nothing in a save from
+    // before was in reserve: what an exchange gave up then was gone, its points refunded.
+    28(r) {
+      for (const h of r.heroes || []) if (h && !Array.isArray(h.reserve)) h.reserve = [];
+      r.v = 29;
     },
   };
   T.deserializeRun = function (json) {

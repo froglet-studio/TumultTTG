@@ -99,6 +99,8 @@
     'gear.harpoon': 'M2 20 16 6l-2-2 8-2-2 8-2-2L4 22z',
     'gear.climbrig': 'M5 2h3v20H5zM16 2h3v20h-3zM8 5h8v2H8zM8 11h8v2H8zM8 17h8v2H8z',
     'gear.medkit': 'M3 6h18v15H3zM9 3h6v3h-2V5h-2v1H9zM11 9v3H8v3h3v3h2v-3h3v-3h-3V9z',
+    'gear.baton': 'M3 19 15 7l2 2L5 21zM16 1l-3 6h3l-2 5 6-7h-3l2-4z', // a rod with a spark at its tip
+    'gear.coilgun': 'M2 9h15V7h3v2h2v3h-2v2h-3v-2h-4l-2 6H7l1-6H2zM5 10v1h1v-1zm3 0v1h1v-1zm3 0v1h1v-1z', // a rifle, coils along it
 
     /* ── consumables ── */
     'cons.vial': 'M9 2h6v2h-1v5l6 11v2H4v-2l6-11V4H9zM8 16l-2 4h12l-2-4z',

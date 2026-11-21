@@ -256,6 +256,11 @@ function createHarness(T = loadTumult()) {
    */
   function fireFace(cardId, faceKey, { arrange, choose } = {}) {
     const scene = arena(cardId);
+    // a throw needs the partner beside you
+    if (T.CARD[cardId][faceKey].tgt === 'ally_throw') {
+      const spot = T.Board.walkNeighbors(scene.m.board, scene.h.pos).find((n) => !T.occupied(scene.m, n));
+      if (spot != null) scene.ally.pos = spot;
+    }
     if (arrange) arrange(scene);
     const r = playIn(scene, cardId, faceKey, choose);
     if (!r.ok) return { status: 'unplayable', why: r.why };
