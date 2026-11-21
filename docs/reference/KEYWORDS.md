@@ -36,3 +36,21 @@ push a foe onto your Field, pull one across a spore cloud, or Anchor yourself on
 
 In code: the verb `field` (`docs/reference/EXTENDING.md`), `m.fields` in a mission (saves version 20), and
 `T.fieldNodes`, `T.fieldText` for the board.
+
+## Link (2.87)
+
+> **Link.** Join two units for N rounds: when one takes damage, a push or a pull, or a Heal, the other takes
+> the same.
+
+- **The same.** The damage the first was dealt, after its Shield, reaches the other as true damage; the same
+  push or pull, from the same source and as far, moves the other; the same heal heals the other.
+- **One at a time.** A unit has one Link; a new one replaces it. It ends when its rounds run out or either unit
+  falls.
+- **Who.** A face Links its target to the nearest other unit of the target's side within N of it.
+- **Charge's keyword.** Link is Charge's signature (energy and links). It replaced Redirect (cut: making a foe's
+  attack hit its own side bordered on turn theft) and the chain strike (Tesla Cascade Links its target instead).
+
+Link combines with every other keyword: Mark one end and hit it, push one end into a Field and both go, or Link
+a foe to the one a Brute is about to drag.
+
+In code: the verb `link` (`within`, `dur`), the state `Linked` (`{ to, t }` on both units), `T.linkedTo`.

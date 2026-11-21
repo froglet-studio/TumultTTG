@@ -248,24 +248,6 @@
       { kind: ab.kind === 'area' ? 'area' : ab.kind === 'los' ? 'los' : 'melee', label: `uses ${ab.n} on` },
       opts || {},
     );
-    // redirect: hit an adjacent enemy instead
-    if (st(e).Redirect) {
-      delete st(e).Redirect;
-      const ally = T.liveEnemies(m).find((x) => x !== e && B.adjacent(m.board, e.pos, x.pos));
-      if (ally) {
-        T.say(m, `${e.name}, overridden, turns on ${ally.name}!`, 'hero');
-        ally.hp -= d;
-        T.say(m, `${ally.name} takes ${d}.`, 'hero');
-        m.fx.push({ t: 'dmg', ent: ally.uid, amount: d, pos: ally.pos });
-        if (ally.hp <= 0) {
-          ally.alive = false;
-          m.stats.kills++;
-          T.say(m, `${ally.name} is destroyed.`, 'sys');
-          m.fx.push({ t: 'death', ent: ally.uid, pos: ally.pos });
-        }
-      } else T.say(m, `${e.name}, overridden, flails at nothing.`, 'hero');
-      return 0;
-    }
     const dealt = T.damage(m, e, t, d, o);
     if (t.kind === 'hero' && !t.downed) {
       if (ab.push) T.pushAway(m, e, t, ab.push);
@@ -285,6 +267,7 @@
     }
     if (ab.heal && dealt > 0) {
       e.hp = Math.min(e.maxHp, e.hp + ab.heal);
+      T.linkHeal(m, e, ab.heal);
     }
     return dealt;
   }

@@ -2372,8 +2372,8 @@
       fx:[{v:'rally', move:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
       txt:(P,E)=>`Your ally moves ${1+P}, where you choose, and their next hit deals +1.` },
     { n:'Drive the Shoal', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
-      fx:[{v:'force', kind:'pull', n:2},{v:'weaken', val:1, dur:1},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
-      txt:(P,E)=>`Drive a foe within 3 two nodes toward you; it is Weakened 1 this round, and both heroes' next hit deals +${1+h(E)}.` },
+      fx:[{v:'link', within:2, dur:2},{v:'force', kind:'pull', n:2},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Link a foe within 3 to the nearest foe within 2 of it for 2 rounds, then drive it two nodes toward you (the other comes too); both heroes' next hit deals +${1+h(E)}.` },
     'A row of pelicans, beating the water, herding the fish.');
   K(['pelican'],'pel_glide','Long Glide','S',0,
     { n:'Glide', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -2430,8 +2430,8 @@
       fx:[{v:'weaken', val:(P,E)=>1+h(P), dur:1},{v:'heal', n:1}],
       txt:(P,E)=>`Trip over your own feet: a foe within 3 is Weakened ${1+h(P)} this round, laughing, and you heal 1.` },
     { n:'Disarming', ap:1, el:1, cd:3, dur:0, tgt:'foe_r3',
-      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'mark'},{v:'studied', n:1}],
-      txt:(P,E)=>`A foe within 3 is Weakened ${1+h(E)} for 2 rounds and Marked, and your hits on it deal +1.` },
+      fx:[{v:'weaken', val:(P,E)=>1+h(E), dur:2},{v:'mark'},{v:'link', within:2, dur:2}],
+      txt:(P,E)=>`A foe within 3 is Weakened ${1+h(E)} for 2 rounds and Marked, and Linked to the nearest foe within 2 of it for 2 rounds.` },
     'They named it for a fool. It was not the fool.');
   /* ───────────────────────── PERCHING AND BRIGHT BIRDS ─────────────────────────
      raven · parrot · toucan · hummingbird · peacock. Every bird's Hollow Bones. The raven and the parrot share
@@ -2459,8 +2459,8 @@
       fx:[{v:'decoy', dur:1, here:true},{v:'move', n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:2}],
       txt:(P,E)=>`Throw your voice: leave a decoy where you stood for 1 round, move ${1+P}, and your next hit deals +1.` },
     { n:'Its Own Voice', ap:2, el:1, cd:4, dur:0, tgt:'foe_r3',
-      fx:[{v:'redirect'},{v:'weaken', val:1, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>E}],
-      txt:(P,E)=>`Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round${E ? `; it takes ${E}` : ''}.` },
+      fx:[{v:'link', within:1, dur:2},{v:'weaken', val:1, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>E}],
+      txt:(P,E)=>`Call in a foe's own voice: Link a foe within 3 to a foe beside it for 2 rounds; it is Weakened 1 this round${E ? ` and takes ${E}, and so does the other` : ''}.` },
     'It says your name better than you do.', 'Perching and bright birds');
   K(['parrot'],'bir_life','Long Life','T',0,
     { n:'Old Bird', ap:1, el:0, cd:1, dur:0, tgt:'self',
@@ -3933,8 +3933,8 @@
       fx:[{v:'mark', nearest:true},{v:'preempt', val:(P,E)=>1+h(P), reflect:0}],
       txt:(P,E)=>`Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is ${1+h(P)} less.` },
     { n:'Every Step', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
-      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:1},{v:'redirect'}],
-      txt:(P,E)=>`Read one foe through the ground: it can't Hide for ${2+E} rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is).` },
+      fx:[{v:'locate', dur:(P,E)=>2+E},{v:'studied', n:1},{v:'link', within:2, dur:2}],
+      txt:(P,E)=>`Read one foe through the ground: it can't Hide for ${2+E} rounds, your hits on it deal +1, and it is Linked to the nearest foe within 2 of it for 2 rounds.` },
     'Tiny slits in its legs hear the sand move.');
   K(['scorpion'],'sco_burrow','Burrow','T',0,
     { n:'Under', ap:1, el:0, cd:1, dur:0, tgt:'self',

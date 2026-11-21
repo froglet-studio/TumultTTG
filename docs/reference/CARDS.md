@@ -358,7 +358,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Electric Discharge** ★ · Charge · `eel_discharge`
 
 - *Phys — Jolt* · 1 AP · CD 1 — Lane strike for 2. *(P3: Lane strike for 5.)*
-- *Eth — Tesla Cascade* · 1 AP + 3 Charge · CD 4 — Strip 3 of the target's Shield and strike it for 6; the arc chains to 2 more foes within 1 of it for 4 each. *(P3/E3: Strip 5 of the target's Shield and strike it for 9; the arc chains to 4 more foes within 1 of it for 6 each.)*
+- *Eth — Tesla Cascade* · 1 AP + 3 Charge · CD 4 — Strip 3 of the target's Shield, Link it to the nearest foe within 2 of it for 1 round, and strike it for 6: the Linked foe takes the same. *(P3/E3: Strip 5 of the target's Shield, Link it to the nearest foe within 2 of it for 3 rounds, and strike it for 9: the Linked foe takes the same.)*
 
 **Electroreception** ★ · Space · `eel_electro`
 
@@ -388,7 +388,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Doublet Jolt** · Charge · `eel_doublet`
 
 - *Phys — Twitch* · 1 AP · CD 1 — Twin taps: zone strike 1 that reveals a Hidden target and Weakens 1. *(P3: Twin taps: zone strike 4 that reveals a Hidden target and Weakens 1.)*
-- *Eth — Spasm* · 1 AP + 1 Charge · CD 3 — Drive an involuntary spasm: push or pull a foe in your zone 2 and Weaken it 1. *(P3/E3: Drive an involuntary spasm: push or pull a foe in your zone 4 and Weaken it 1.)*
+- *Eth — Spasm* · 1 AP + 1 Charge · CD 3 — Drive an involuntary spasm: Link a foe in your zone to the nearest foe within 2 of it for 2 rounds, then push or pull it 2 (the other moves the same). *(P3/E3: Drive an involuntary spasm: Link a foe in your zone to the nearest foe within 2 of it for 2 rounds, then push or pull it 4 (the other moves the same).)*
 
 **Buoyancy Control** · Mass · `eel_buoyancy`
 
@@ -456,7 +456,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Behavioral Hijack** ★ · Charge · `cor_hijack`
 
 - *Phys — Tendrils* · 2 AP · CD 2 — Sink tendrils in: melee 2 and force one step (push or pull). *(P3: Sink tendrils in: melee 5 and force one step (push or pull).)*
-- *Eth — Override* · 0 AP + 3 Charge · CD 4 — Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none), and it takes 4. *(P3/E3: Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none), and it takes 6.)*
+- *Eth — Override* · 0 AP + 3 Charge · CD 4 — Override its nervous field: Link any foe to the nearest foe within 2 of it for 2 rounds, and it takes 4 (so does the other). *(P3/E3: Override its nervous field: Link any foe to the nearest foe within 2 of it for 4 rounds, and it takes 6 (so does the other).)*
 
 **Mycelial Network** ★ · Space · `cor_network`
 
@@ -2838,7 +2838,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Fishing Line** · Charge · `pel_line`
 
 - *Phys — Line Up* · 1 AP · CD 1 — Your ally moves 1, where you choose, and their next hit deals +1. *(P3: Your ally moves 4, where you choose, and their next hit deals +1.)*
-- *Eth — Drive the Shoal* · 1 AP + 1 Charge · CD 3 — Drive a foe within 3 two nodes toward you; it is Weakened 1 this round, and both heroes' next hit deals +1. *(P3/E3: Drive a foe within 3 two nodes toward you; it is Weakened 1 this round, and both heroes' next hit deals +2.)*
+- *Eth — Drive the Shoal* · 1 AP + 1 Charge · CD 3 — Link a foe within 3 to the nearest foe within 2 of it for 2 rounds, then drive it two nodes toward you (the other comes too); both heroes' next hit deals +1. *(P3/E3: Link a foe within 3 to the nearest foe within 2 of it for 2 rounds, then drive it two nodes toward you (the other comes too); both heroes' next hit deals +2.)*
 
 **Long Glide** · Space · `pel_glide`
 
@@ -2897,7 +2897,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Clumsy Charm** · Charge · `boo_charm`
 
 - *Phys — Pratfall* · 1 AP · CD 1 — Trip over your own feet: a foe within 3 is Weakened 1 this round, laughing, and you heal 1. *(P3: Trip over your own feet: a foe within 3 is Weakened 2 this round, laughing, and you heal 1.)*
-- *Eth — Disarming* · 1 AP + 1 Charge · CD 3 — A foe within 3 is Weakened 1 for 2 rounds and Marked, and your hits on it deal +1. *(P3/E3: A foe within 3 is Weakened 2 for 2 rounds and Marked, and your hits on it deal +1.)*
+- *Eth — Disarming* · 1 AP + 1 Charge · CD 3 — A foe within 3 is Weakened 1 for 2 rounds and Marked, and Linked to the nearest foe within 2 of it for 2 rounds. *(P3/E3: A foe within 3 is Weakened 2 for 2 rounds and Marked, and Linked to the nearest foe within 2 of it for 2 rounds.)*
 
 ## 59 · Raven — leans T/C
 
@@ -2916,7 +2916,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Mimicry** · Charge · `bir_mimic`
 
 - *Phys — Sound Like* · 1 AP · CD 1 — Throw your voice: leave a decoy where you stood for 1 round, move 1, and your next hit deals +1. *(P3: Throw your voice: leave a decoy where you stood for 1 round, move 4, and your next hit deals +1.)*
-- *Eth — Its Own Voice* · 2 AP + 1 Charge · CD 4 — Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 1. *(P3/E3: Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 3.)*
+- *Eth — Its Own Voice* · 2 AP + 1 Charge · CD 4 — Call in a foe's own voice: Link a foe within 3 to a foe beside it for 2 rounds; it is Weakened 1 this round and takes 1, and so does the other. *(P3/E3: Call in a foe's own voice: Link a foe within 3 to a foe beside it for 2 rounds; it is Weakened 1 this round and takes 3, and so does the other.)*
 
 **Shiny Cache** · Time · `rav_cache`
 
@@ -2970,7 +2970,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Mimicry** · Charge · `bir_mimic`
 
 - *Phys — Sound Like* · 1 AP · CD 1 — Throw your voice: leave a decoy where you stood for 1 round, move 1, and your next hit deals +1. *(P3: Throw your voice: leave a decoy where you stood for 1 round, move 4, and your next hit deals +1.)*
-- *Eth — Its Own Voice* · 2 AP + 1 Charge · CD 4 — Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 1. *(P3/E3: Call in a foe's own voice: a foe within 3 turns its next attack on a foe beside it (or loses it if none is) and is Weakened 1 this round; it takes 3.)*
+- *Eth — Its Own Voice* · 2 AP + 1 Charge · CD 4 — Call in a foe's own voice: Link a foe within 3 to a foe beside it for 2 rounds; it is Weakened 1 this round and takes 1, and so does the other. *(P3/E3: Call in a foe's own voice: Link a foe within 3 to a foe beside it for 2 rounds; it is Weakened 1 this round and takes 3, and so does the other.)*
 
 **Long Life** · Time · `bir_life`
 
@@ -4210,7 +4210,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Sand Sense** · Charge · `sco_sense`
 
 - *Phys — Feel the Ground* · 1 AP · CD 1 — Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 1 less. *(P3: Feel the footsteps through your legs: Mark the nearest foe (the next hit on it deals +2), and the next hit on you is 2 less.)*
-- *Eth — Every Step* · 1 AP + 1 Charge · CD 3 — Read one foe through the ground: it can't Hide for 3 rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is). *(P3/E3: Read one foe through the ground: it can't Hide for 5 rounds, your hits on it deal +1, and its next attack turns on a foe beside it (or is lost if none is).)*
+- *Eth — Every Step* · 1 AP + 1 Charge · CD 3 — Read one foe through the ground: it can't Hide for 3 rounds, your hits on it deal +1, and it is Linked to the nearest foe within 2 of it for 2 rounds. *(P3/E3: Read one foe through the ground: it can't Hide for 5 rounds, your hits on it deal +1, and it is Linked to the nearest foe within 2 of it for 2 rounds.)*
 
 **Burrow** · Time · `sco_burrow`
 

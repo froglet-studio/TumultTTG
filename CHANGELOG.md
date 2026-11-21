@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.87.0 — 2026-11-21 — Link
+
+The second keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Link (Charge).** Two units joined for N rounds: when one takes damage, a push or a pull, or a heal, the other takes the same (the damage it was dealt, after Shield, as true damage; the same push or pull from the same source; the same heal). A unit has one Link at a time, and it ends with its rounds or when either falls (`link`, state `Linked`).
+- **Seven Charge faces Link their target to the nearest foe.** Tesla Cascade (in place of its chain: Linked for E rounds, then struck for 6+P), Override, Its Own Voice and Every Step (in place of Redirect), Spasm and Drive the Shoal (in place of their Weaken: the push or pull moves both), and Disarming (in place of its +1 Studied).
+- **Cut: Redirect** (a foe's next attack turned on its own side bordered on turn theft) and the chain strike.
+- **Balance.** Same seeds, 2.86.0 → 2.87.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 18 of 40 (one cell's kills moved by 0.1); `80 runs --player strong` 39 → 38; `120 runs --player weak` 10 → 10. Not easier, so nothing is retuned. No save change: `Linked` is a state like any other.
+
 ## 2.86.0 — 2026-11-21 — Field, the first keyword of the sweep
 
 Garrett approved the 22-keyword plan on 2026-11-21 (Field and Link in, tech as drawn, Heal raises the downed); it lands one keyword family per release (`docs/reference/KEYWORDS.md`).
