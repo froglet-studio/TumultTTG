@@ -181,3 +181,25 @@ In code: the verb `cleanse` (`party`, `ward`, `field`); the state `StatusImmune`
 - A Reveal Field keeps everything in it Revealed (2.86).
 
 In code: the verb `reveal` (`radius`, `dur`, `target`, `nearest`, `findObjective`, `hintObjective`); the state `Located`.
+
+## Reroll, Draw and Mint: the dice (2.101)
+
+Three keywords for the dice, each a different thing a hand does at the table (Garrett, 2026-11-21: "reroll is
+great, and grabbing a specific die is great, but not a random one").
+
+> **Reroll N.** Pick up to N of your banked dice and roll them again.
+>
+> **Draw N.** Take N dice of your choice from your pool and bank them showing that face.
+>
+> **Mint N.** Bank N temporary dice showing that face; they are not among your 15 and are gone as the round ends.
+
+- **Never at random.** A hand in the bag feels a d20 from a d8, so no die ever leaves the pool at random. Draw
+  takes a plain d20 while the pool has one (it has every face), then the element die that shows the face most;
+  a d8 never shows AP. The roll's own dice are chosen the same way: three plain, one element die of your choice,
+  and with too few plain dice left, the element dice the pool holds most of (before 2.101 those were drawn at
+  random).
+- **What each spends.** Reroll changes what you hold, Draw spends your pool early (the 15 stay 15), and Mint adds
+  dice from outside it. The keyword plan's single Mint (Reroll and Draw folded into it) was not taken.
+
+In code: the verbs `reroll` (`n`), `draw` (`face`, `n`; the engine kind `draw` each turn), `mint` (`face`, `n`,
+`target`); `T.drawKind`, `T.draw`, `T.mint`, `T.rerollHeld`.

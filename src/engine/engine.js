@@ -455,7 +455,8 @@
    * element, or Omni Core's ethereal d12), and the rest plain d20s, the AP dice. The choice stays from roll to
    * roll until changed. With nothing chosen, or none of that kind left in the pool, the element die is the kind
    * the pool holds most of (the first such in the pilot's set); with no element die in the pool it is plain, and
-   * with too few plain dice the rest are drawn at random. Choosing a die never chooses its face.
+   * with too few plain dice the rest are the element dice the pool holds most of. No die is ever drawn at random
+   * (2.101): a hand in the bag feels a d20 from a d8. Choosing a die never chooses its face.
    */
   T.setRollPick = function (h, kinds) {
     const set = T.diceSet(h);
@@ -498,11 +499,25 @@
     const take = T.rollPickNow(h).slice(0, k);
     while (take.length < k && left.filter((x) => x === 'plain').length > take.filter((x) => x === 'plain').length)
       take.push('plain');
+    // too few plain dice: the rest are element dice taken by hand, never at random (2.101): the kind the pool
+    // still holds most of, the first such in the pilot's set
+    while (take.length < k) {
+      const rest = left.slice();
+      take.forEach((x) => rest.splice(rest.indexOf(x), 1));
+      let best = null;
+      let most = 0;
+      for (const x of T.diceSet(h)) {
+        const c = rest.filter((y) => y === x).length;
+        if (c > most) ((most = c), (best = x));
+      }
+      if (!best) break;
+      take.push(best);
+    }
     const out = [];
     const kinds = [];
     const at = [];
     for (let i = 0; i < k; i++) {
-      const j = i < take.length ? left.indexOf(take[i]) : dice.int(left.length);
+      const j = left.indexOf(take[i]);
       const kind = left.splice(j, 1)[0];
       const f = dice.pick(T.dieFaces(h, kind));
       out.push(f);
@@ -572,11 +587,31 @@
   T.mint = (h, face, n) => {
     for (let i = 0; i < n; i++) h.temp.push(face);
   };
+  /**
+   * The die a pilot takes from the pool to Draw a face (2.101; Garrett, 2026-11-21: "grabbing a specific die is
+   * great, but not a random one"): a die is picked by hand, never at random. The plain d20 first (it has every
+   * face), then the element die that shows that face most, then any die that shows it; null if none can.
+   */
+  T.drawKind = function (h, face) {
+    const left = T.poolDice(h);
+    let best = null;
+    let most = 0;
+    for (const k of ['plain'].concat(left.filter((x, i) => x !== 'plain' && left.indexOf(x) === i))) {
+      if (!left.includes(k)) continue;
+      const c = T.dieFaces(h, k).filter((x) => x === face).length;
+      if (k === 'plain' && c > 0) return k;
+      if (c > most) ((most = c), (best = k));
+    }
+    return best;
+  };
+  /** Draw N: take N dice of your choice from the pool and bank them showing that face (T.drawKind). */
   T.draw = (h, face, n) => {
     let got = 0;
     for (let i = 0; i < n && h.pool > 0; i++) {
+      const kind = T.drawKind(h, face);
+      if (!kind) break;
       h.pool--;
-      bank(h, face, 'plain');
+      bank(h, face, kind);
       got++;
     }
     return got;
@@ -590,7 +625,7 @@
       h.pool++;
     });
     h.pool--;
-    bank(h, 'O', 'plain');
+    bank(h, 'O', T.drawKind(h, 'O') || 'plain');
     say(m, `${h.name} folds one of each etherion into an Omni.`, 'sys');
     return true;
   };
