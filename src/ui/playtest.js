@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.105.0',
+    version: '2.107.0',
     items: [
+      {
+        text: 'A pilot keeps every trait it earns now. Nine fly into a mission; once the kit holds nine, a new trait either waits in reserve (Keep in reserve) or comes in at once for one that stays behind (Fly it now). Nothing is lost and nothing is refunded: a trait left behind keeps its points. Between missions, open Kit on the route to change which nine fly: pick a reserve trait, then the one it replaces. The dice follow the kit (each awakened card that flies brings its element die). Molt and Trade set the old trait aside the same way. Did you change your kit to suit the next stop? Was it clear where the reserve lives?',
+      },
       {
         text: 'Four costly faces now do something no cheaper play can. Heavy Throw throws the ally beside you onto a free space within reach, a ledge included. Become trades places with a foe. Resonance sets every Field, hazard and Wound around you off at once (they still go off at round end). Second Wind gives back, at round end, what you lose after playing it. Did any of them make a turn you could not have played before? Was any of them hard to aim?',
         cards: ['hum_throw', 'oct_imperson', 'hop_strid', 'hum_persist'],
@@ -162,9 +165,6 @@
         text: 'A trait a pilot already holds is never offered to it again. Pilots of two clades that share traits (a primate with a human side, two cats) used to be offered a shared trait a second time for 1 upgrade point; now the draft and every reward draw only traits it could take, so its pool is smaller and the ones it is after come up more often. Pilots saved with such a point keep it. Did the late exchanges offer what you were hoping for?',
       },
       {
-        text: 'A trait you lose now gives back every point on it. Exchange one of nine traits for a new one, or lose one to the Molt or Trade events, and all its upgrade points return to spend again, including the point a second copy of that trait added. Did the refund show up where you expected it?',
-      },
-      {
         text: 'Up to five players. Pick 3, 4 or 5 players on the title (or host online and let up to four join with the code): each player drafts and flies one pilot, and you take turns. A bigger squad meets bigger missions: tougher foes, more of them, and more to do; the ⚖ pill on the route says how much. Does a squad of four feel as pressed as a squad of two? Is the board too crowded?',
       },
       {
@@ -173,9 +173,6 @@
       {
         text: 'Three clades take Cosmic Shore’s names: the Honey Badger is now the Ratel, the Hawk is the Red-tailed Hawk (a real species), and the Orca keeps its name. Saved pilots of those clades load as before. Cards that move dice from your pool now say “draw”, not “pull”, so Pull’s tip only shows where a foe is moved. Does every clade name read as a real animal?',
         cards: ['fly_photo', 'jer_cache', 'gec_basking'],
-      },
-      {
-        text: 'A pilot that holds nine traits keeps growing: after a mission its trait offer becomes an exchange. Pick “Exchange for…” on a new trait, then choose which of your nine gives way. The new one starts unupgraded and the points you had spent on the old one come back to spend again. Did you find a trade worth making? Did losing an old favourite sting in a good way or a bad one?',
       },
       {
         text: 'Online play should feel quicker: the other player’s moves, the handoff at the end of a turn and the enemy phase now cross between the two screens over a live channel, instead of waiting on the page’s store, which could take up to half a minute. If the channel drops, the partner’s screen still checks every 2 seconds. And either player can now reload and pick up the game: the title offers “Rejoin game ABCD”. Does the partner’s screen keep up now? Did a rejoin put you back where you were?',

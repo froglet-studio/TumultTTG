@@ -23,6 +23,8 @@
     'die',
     'train',
     'kit',
+    'kitPick',
+    'kitSwap',
     'autoUpRun',
     'sellGear',
     'skipCard',

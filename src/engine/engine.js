@@ -207,6 +207,7 @@
       title: spec.title || '',
       species: spec.species.slice(),
       cards: spec.cards.slice(),
+      reserve: (spec.reserve || []).slice(), // traits it holds but leaves behind this mission (T.loadCard)
       up: {},
       hp: R().VITALITY,
       maxHp: R().VITALITY,
@@ -225,7 +226,7 @@
       boons: [],
       faces: null,
     };
-    spec.cards.forEach((c) => (h.up[c] = [0, 0]));
+    spec.cards.concat(h.reserve).forEach((c) => (h.up[c] = [0, 0]));
     if (spec.up)
       Object.keys(spec.up).forEach((c) => {
         if (h.up[c]) h.up[c] = spec.up[c].slice();

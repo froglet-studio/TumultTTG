@@ -259,7 +259,7 @@
       options:[
         { label:'Pay the toll (3 ◇)', cost:{crystals:3}, fx:{}, result:'They salute, almost sincerely, and let you through.' },
         { label:'Refuse', fx:{nextElite:true, crystals:4}, result:'You keep your crystals and take theirs (+4 ◇) — but word travels. The next stop will be guarded by an elite.' },
-        { label:'Offer a trade', fx:{tradeCard:true}, result:'One hero swaps a trait for something from the privateers\' hold.' },
+        { label:'Offer a trade', fx:{tradeCard:true}, result:'One hero sets a trait aside, kept in reserve, for something from the privateers\' hold.' },
       ]},
     { id:'storm', title:'Etherion Storm', icon:'⛈️',
       text:'The weather itself turns to etherion. Mass, Charge, Space, Time — a raw front of one of them rolls over the squad. To stand in it is to be changed by it.',
@@ -306,7 +306,7 @@
     { id:'molt', title:'Molt Season', icon:'🐚',
       text:'The whole reef is shedding. A hero could shed too — one trait for another from the same bloodline.',
       options:[
-        { label:'Molt a trait', fx:{tradeCard:true}, result:'One hero swaps a trait for a new one from their species.' },
+        { label:'Molt a trait', fx:{tradeCard:true}, result:'One hero sheds a trait into reserve and grows a new one from their species in its place.' },
         { label:'Keep your skin', fx:{}, result:'Not this season.' },
       ]},
     { id:'audit', title:'Terminal Audit', icon:'⚖️',
