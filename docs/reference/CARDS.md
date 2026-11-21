@@ -15,7 +15,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Theory of Mind** ★ · Time · `hum_mind`
 
 - *Phys — Read* · 1 AP · CD 1 — Mark a foe: the next hit on it deals +2. *(P3: Mark a foe: the next hit on it deals +2, and its own next hit deals −1.)*
-- *Eth — Pre-empt* · 2 AP + 1 Time · CD 3 · Dur 2 — Pre-arm: the next hit on you is reduced by 3. Dur 2. *(P3/E3: Pre-arm: the next hit on you is reduced by 7 and reflects 3 back. Dur 2.)*
+- *Eth — Pre-empt* · 0 AP + 2 Time · CD 3 · Dur 2 — Pre-arm: the next hit on you is reduced by 6 and reflects 2 back. Dur 2. *(P3/E3: Pre-arm: the next hit on you is reduced by 10 and reflects 4 back. Dur 2.)*
 
 **Tool Use** ★ · Space · `hum_tool`
 
@@ -25,12 +25,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Persistence** · Time · `hum_persist`
 
 - *Phys — Pace* · 1 AP · CD 1 — Shrug off Anchored/Weakened, then move 1. *(P3: Shrug off Anchored/Weakened, then move 4.)*
-- *Eth — Second Wind* · 0 AP + 1 Time · CD 4 · Dur 4 — Engine: regenerate 3 vitality at the start of each of your turns. Dur 4. *(P3/E3: Engine: regenerate 5 vitality at the start of each of your turns. Dur 4.)*
+- *Eth — Second Wind* · 0 AP + 2 Time · CD 4 · Dur 4 — Engine: regenerate 4 vitality at the start of each of your turns. Dur 4. *(P3/E3: Engine: regenerate 6 vitality at the start of each of your turns. Dur 4.)*
 
 **Throwing Arm** · Mass · `hum_throw`
 
 - *Phys — Hurl* · 1 AP · CD 1 — Lane strike for 2. *(P3: Lane strike for 5.)*
-- *Eth — Heavy Throw* · 2 AP + 1 Mass · CD 2 — Lane strike for 3, knockback 1. *(P3/E3: Lane strike for 6 that pierces Shield, knockback 3.)*
+- *Eth — Heavy Throw* · 0 AP + 2 Mass · CD 3 — Lane strike for 6, knockback 2. *(P3/E3: Lane strike for 11 that pierces Shield, knockback 4.)*
 
 **Language** ☆ · Charge · `hum_lang`
 
@@ -64,7 +64,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Saltatorial Leap** ★ · Space · `jer_leap`
 
 - *Phys — Spring* · 1 AP · CD 1 — Move 1, leaping over foes. *(P3: Move 4, leaping over foes.)*
-- *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
+- *Eth — Fold-hop* · 0 AP + 2 Space · CD 3 — Blink to any node within 4 (height included), then take two free steps. *(P3/E3: Blink to any node within 6 (height included), then take two free steps.)*
 
 **Radiator Ears** ★ · Charge · `jer_ears`
 
@@ -94,7 +94,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Burrowing** · Space · `jer_burrow`
 
 - *Phys — Dig* · 2 AP · CD 2 — Dig in: Hidden 1 and Shield 1. *(P3: Dig in: Hidden 2 and Shield 1.)*
-- *Eth — Phase-tunnel* · 2 AP + 1 Space · CD 4 — Tunnel through anything to a node within 3 and surface Hidden. *(P3/E3: Tunnel through anything to a node within 5 and surface Hidden.)*
+- *Eth — Phase-tunnel* · 0 AP + 2 Space · CD 4 — Tunnel through anything to a node within 4 and surface Hidden 1. *(P3/E3: Tunnel through anything to a node within 6 and surface Hidden 2.)*
 
 **Metabolic Torpor** ☆ · Time · `jer_torpor`
 
@@ -118,7 +118,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Stridulation** ★ · Charge · `hop_strid`
 
 - *Phys — Rasp* · 1 AP · CD 1 — A sustained tone: adjacent foes Weakened 1. *(P3: A sustained tone: adjacent foes Weakened 1; your ally's next strike +3.)*
-- *Eth — Resonance* · 0 AP + 1 Charge · CD 4 — A harmful frequency: every foe in your zone takes 3. *(P3/E3: A harmful frequency: every foe in your zone takes 5 and is Weakened 2.)*
+- *Eth — Resonance* · 0 AP + 2 Charge · CD 4 — A harmful frequency: every foe in your zone takes 4 and is Weakened 1 this round. *(P3/E3: A harmful frequency: every foe in your zone takes 6 and is Weakened 2 this round.)*
 
 **Tireless Respiration** · Time · `hop_tireless`
 
@@ -339,12 +339,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Metamorphosis** ☆ · Space · `axo_meta`
 
 - *Phys — Surge* · 2 AP · CD 3 · Dur 2 — Trigger the buried adult form for 2 rounds: strikes +2, +1 move. *(P3: Trigger the buried adult form for 2 rounds: strikes +3, +1 move.)*
-- *Eth — Apex Form* · 0 AP + 2 Space · CD 5 — The war-form, for 2 rounds: strikes +3, melee reaches 2 nodes, +1 move, Shield 2. *(P3/E3: The war-form, for 4 rounds: strikes +3, melee reaches 2 nodes, +1 move, Shield 2.)*
+- *Eth — Apex Form* · 0 AP + 3 Space · CD 5 — The war-form, for 2 rounds: strikes +4, melee reaches 2 nodes, +1 move, Shield 3. *(P3/E3: The war-form, for 4 rounds: strikes +4, melee reaches 2 nodes, +1 move, Shield 3.)*
 
 **Suction Gape** · Mass · `axo_suction`
 
 - *Phys — Gulp* · 1 AP · CD 1 — Vacuum a foe within 2 1 toward you. *(P3: Vacuum a foe within 2 2 toward you.)*
-- *Eth — Vacuum* · 2 AP + 1 Mass · CD 3 — A pulling pressure differential: drag a foe within 3 up to 3 toward you and Weaken it 1. *(P3/E3: A pulling pressure differential: drag a foe within 3 up to 5 toward you and Weaken it 1.)*
+- *Eth — Vacuum* · 0 AP + 2 Mass · CD 3 — A pulling pressure differential: every foe within 2 is drawn 1 toward you and Weakened 1 for 1 round. *(P3/E3: A pulling pressure differential: every foe within 4 is drawn 1 toward you and Weakened 1 for 3 rounds.)*
 
 **Degeneration Resistance** · Time · `axo_degen`
 
@@ -358,7 +358,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Electric Discharge** ★ · Charge · `eel_discharge`
 
 - *Phys — Jolt* · 1 AP · CD 1 — Lane strike for 2. *(P3: Lane strike for 5.)*
-- *Eth — Tesla Cascade* · 3 AP + 1 Charge · CD 4 — Strip 2 of the target's Shield and strike it for 5; the arc chains to 1 more foe within 1 of it for 4 each. *(P3/E3: Strip 4 of the target's Shield and strike it for 8; the arc chains to 3 more foes within 1 of it for 6 each.)*
+- *Eth — Tesla Cascade* · 1 AP + 3 Charge · CD 4 — Strip 3 of the target's Shield and strike it for 6; the arc chains to 2 more foes within 1 of it for 4 each. *(P3/E3: Strip 5 of the target's Shield and strike it for 9; the arc chains to 4 more foes within 1 of it for 6 each.)*
 
 **Electroreception** ★ · Space · `eel_electro`
 
@@ -456,7 +456,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Behavioral Hijack** ★ · Charge · `cor_hijack`
 
 - *Phys — Tendrils* · 2 AP · CD 2 — Sink tendrils in: melee 2 and force one step (push or pull). *(P3: Sink tendrils in: melee 5 and force one step (push or pull).)*
-- *Eth — Override* · 0 AP + 2 Charge · CD 4 — Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none). *(P3/E3: Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none), and it takes 5.)*
+- *Eth — Override* · 0 AP + 3 Charge · CD 4 — Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none), and it takes 4. *(P3/E3: Override its nervous field: the foe's next attack is turned on an adjacent foe (or lost if it has none), and it takes 6.)*
 
 **Mycelial Network** ★ · Space · `cor_network`
 
@@ -505,7 +505,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Cryptobiosis** ★ · Time · `tar_crypto`
 
 - *Phys — Tun* · 2 AP · CD 2 · Dur 1 — Curl into the tun: Shield 4 against everything and immune to push/pull this round. *(P3: Curl into the tun: Shield 7 against everything and immune to push/pull this round.)*
-- *Eth — Step Out of Time* · 1 AP + 1 Time · CD 4 · Dur 1 — Leave time: untargetable through the next enemy phase. *(P3/E3: Leave time: untargetable through the next enemy phase, and your track slides 2 extra columns.)*
+- *Eth — Step Out of Time* · 0 AP + 3 Time · CD 4 · Dur 1 — Leave time: untargetable through the next enemy phase, heal 3, and your track slides 2 extra columns. *(P3/E3: Leave time: untargetable through the next enemy phase, heal 5, and your track slides 4 extra columns.)*
 
 **Dsup Shielding** ★ · Charge · `tar_dsup`
 
@@ -520,7 +520,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Clawed Grip** · Mass · `tar_claw`
 
 - *Phys — Clamp* · 1 AP · CD 1 — Eight claws lock on: melee 1; you and the foe are both Anchored 1. *(P3: Eight claws lock on: melee 4; you and the foe are both Anchored 1.)*
-- *Eth — Immovable Hold* · 2 AP + 1 Mass · CD 3 — An immovable hold for 2 rounds: the foe cannot move or be moved by anyone, and is Weakened 1. *(P3/E3: An immovable hold for 4 rounds: the foe cannot move or be moved by anyone, and is Weakened 1.)*
+- *Eth — Immovable Hold* · 0 AP + 3 Mass · CD 4 — An immovable hold for 3 rounds: the foe takes 3, cannot move or be moved by anyone, and is Weakened 2. *(P3/E3: An immovable hold for 5 rounds: the foe takes 5, cannot move or be moved by anyone, and is Weakened 2.)*
 
 **Anhydrobiosis Revival** · Time · `tar_revival`
 
@@ -554,7 +554,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Theory of Mind** ★ · Time · `hum_mind`
 
 - *Phys — Read* · 1 AP · CD 1 — Mark a foe: the next hit on it deals +2. *(P3: Mark a foe: the next hit on it deals +2, and its own next hit deals −1.)*
-- *Eth — Pre-empt* · 2 AP + 1 Time · CD 3 · Dur 2 — Pre-arm: the next hit on you is reduced by 3. Dur 2. *(P3/E3: Pre-arm: the next hit on you is reduced by 7 and reflects 3 back. Dur 2.)*
+- *Eth — Pre-empt* · 0 AP + 2 Time · CD 3 · Dur 2 — Pre-arm: the next hit on you is reduced by 6 and reflects 2 back. Dur 2. *(P3/E3: Pre-arm: the next hit on you is reduced by 10 and reflects 4 back. Dur 2.)*
 
 **Tool Use** ★ · Space · `hum_tool`
 
@@ -1843,7 +1843,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Burrowing** · Space · `jer_burrow`
 
 - *Phys — Dig* · 2 AP · CD 2 — Dig in: Hidden 1 and Shield 1. *(P3: Dig in: Hidden 2 and Shield 1.)*
-- *Eth — Phase-tunnel* · 2 AP + 1 Space · CD 4 — Tunnel through anything to a node within 3 and surface Hidden. *(P3/E3: Tunnel through anything to a node within 5 and surface Hidden.)*
+- *Eth — Phase-tunnel* · 0 AP + 2 Space · CD 4 — Tunnel through anything to a node within 4 and surface Hidden 1. *(P3/E3: Tunnel through anything to a node within 6 and surface Hidden 2.)*
 
 **Scurry** · Space · `mou_scurry`
 
@@ -1926,7 +1926,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Saltatorial Leap** ★ · Space · `jer_leap`
 
 - *Phys — Spring* · 1 AP · CD 1 — Move 1, leaping over foes. *(P3: Move 4, leaping over foes.)*
-- *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
+- *Eth — Fold-hop* · 0 AP + 2 Space · CD 3 — Blink to any node within 4 (height included), then take two free steps. *(P3/E3: Blink to any node within 6 (height included), then take two free steps.)*
 
 **Erratic Bounding** · Time · `jer_erratic`
 
@@ -1975,7 +1975,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Saltatorial Leap** ★ · Space · `jer_leap`
 
 - *Phys — Spring* · 1 AP · CD 1 — Move 1, leaping over foes. *(P3: Move 4, leaping over foes.)*
-- *Eth — Fold-hop* · 2 AP + 1 Space · CD 3 — Blink to any node within 3 (height included), then take one free step. *(P3/E3: Blink to any node within 5 (height included), then take one free step.)*
+- *Eth — Fold-hop* · 0 AP + 2 Space · CD 3 — Blink to any node within 4 (height included), then take two free steps. *(P3/E3: Blink to any node within 6 (height included), then take two free steps.)*
 
 **Erratic Bounding** · Time · `jer_erratic`
 
@@ -2318,7 +2318,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Burrowing** · Space · `jer_burrow`
 
 - *Phys — Dig* · 2 AP · CD 2 — Dig in: Hidden 1 and Shield 1. *(P3: Dig in: Hidden 2 and Shield 1.)*
-- *Eth — Phase-tunnel* · 2 AP + 1 Space · CD 4 — Tunnel through anything to a node within 3 and surface Hidden. *(P3/E3: Tunnel through anything to a node within 5 and surface Hidden.)*
+- *Eth — Phase-tunnel* · 0 AP + 2 Space · CD 4 — Tunnel through anything to a node within 4 and surface Hidden 1. *(P3/E3: Tunnel through anything to a node within 6 and surface Hidden 2.)*
 
 **Electroreception** · Charge · `pla_electro`
 
@@ -2759,7 +2759,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Burrowing** · Space · `jer_burrow`
 
 - *Phys — Dig* · 2 AP · CD 2 — Dig in: Hidden 1 and Shield 1. *(P3: Dig in: Hidden 2 and Shield 1.)*
-- *Eth — Phase-tunnel* · 2 AP + 1 Space · CD 4 — Tunnel through anything to a node within 3 and surface Hidden. *(P3/E3: Tunnel through anything to a node within 5 and surface Hidden.)*
+- *Eth — Phase-tunnel* · 0 AP + 2 Space · CD 4 — Tunnel through anything to a node within 4 and surface Hidden 1. *(P3/E3: Tunnel through anything to a node within 6 and surface Hidden 2.)*
 
 **Hollow Bones** · Mass · `owl_bones`
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.85.0 — 2026-11-21 — big Ethereal faces
+
+Garrett: "make some more powerful abilities that cost more elemental dice. simply so we don't need boons or consumables"
+
+- **Two and three etherions.** Twelve Ethereal faces now cost two or three etherions of their element and do much more, most of them for no AP. 2: Heavy Throw, Vacuum (every foe near you drawn in and Weakened), Resonance, Phase-tunnel, Fold-hop, Second Wind, Pre-empt. 3: Immovable Hold, Tesla Cascade, Override, Apex Form, Step Out of Time. Since you choose one element die a turn, a three-etherion face is one you save up for. This follows the keyword plan Garrett accepted: big etherion abilities are Ethereal faces; boons and consumables will become gear in the keyword migration, so they stay for now.
+- **Balance.** Runs got easier (80 runs, look-ahead 42 → 49), so every foe has **145%** of its listed vitality (was 140%): 80 runs look-ahead 42 → 39, 120 runs heuristic 13 → 10 (`docs/reference/BALANCE.md`). No save change.
+
 ## 2.84.0 — 2026-11-21 — Ethereal faces at 0 AP
 
 Garrett: "the underpowered elemental abilities and the ones that refund an ap die should have their ap cost reduced to zero instead"

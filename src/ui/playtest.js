@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.84.0',
+    version: '2.85.0',
     items: [
+      {
+        text: 'Some Ethereal faces now cost two or three etherions and hit much harder, mostly for no AP (Heavy Throw, Vacuum, Tesla Cascade, Step Out of Time, Apex Form and more). With one element die of your choice a turn, a big face is one you save up for. Did you bank etherions across turns for one? Was it worth the wait?',
+        cards: ['hum_throw', 'eel_discharge', 'tar_crypto'],
+      },
       {
         text: 'Many Ethereal faces now cost no AP, only their etherions: the ones that used to give AP back (they give that much less back now), and the ones players hardly ever chose. Do any of them get played now? Does spending only an element die feel like a good use of it?',
         cards: ['eel_gulp', 'hum_coop', 'oct_arms'],
