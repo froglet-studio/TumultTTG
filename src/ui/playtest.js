@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.109.0',
+    version: '2.113.0',
     items: [
+      {
+        text: 'Gear runs on Omni now, and some of it has a card. Omnicrystals only buy gear: every gear ability is free or costs banked Omni dice. An ability with a cooldown lives on the gear\'s card, which joins your kit and counts toward your nine (but not toward a clade\'s three); with a full kit it waits in your reserve. Playing either face sends the card to your track. A weapon\'s Overcharge has no cooldown, so it stays on the gear. Did a gear card earn its place in your nine? Was it clear which abilities sit on the card and which on the gear?',
+      },
       {
         text: 'Pocket pets are here. A haven may have a stray: a hybrid of three clades (never human) with one card that holds a Physical face from each of them. Adopt it for 4 ◇ (two pets at most); its card is a card like any other, in your kit or your reserve, and the pet only sets out when its card flies. A pet on your node rides with you in any vehicle. Any one of its three faces sends the whole card to your track, and the face acts from the pet: its reach, its strike, its steps. Heel (1 AP) walks it up to 3. Did playing a card through the pet read clearly on the board?',
       },

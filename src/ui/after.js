@@ -52,17 +52,19 @@
     const c = T.CARD[cid];
     const sp = U.cladeIn(c, o.clades);
     const lv =
-      o.P != null
+      o.P != null && c.gear
+        ? `gear · ${esc(T.gearCostText({ omni: Math.max(...T.faceKeys(cid).map((k) => c[k].el || 0)) }))}`
+        : o.P != null
         ? c.pet
           ? `P${o.P} · pet`
           : `P${o.P} · E${o.E}`
         : `${c.sig >= 2 ? '★ ' : ''}${esc(EL[elOf(c)].name)}`;
-    const inner = `<span class="am-gem" style="--el:${EL[elOf(c)].color}"></span>${U.cardArt(c, false, sp)}<span class="am-tn">${esc(c.name)}</span><span class="am-tc">${U.icClade(sp)} ${esc(c.kin || T.SPECIES[sp].name)}</span><span class="am-tl">${lv}</span>${o.out ? '<span class="am-x" aria-hidden="true">✕</span>' : ''}`;
+    const inner = `<span class="am-gem" style="--el:${EL[elOf(c)].color}"></span>${U.cardArt(c, false, sp)}<span class="am-tn">${esc(c.name)}</span><span class="am-tc">${c.gear ? U.icGear(c.gear) : U.icClade(sp)} ${esc(c.kin || T.SPECIES[sp].name)}</span><span class="am-tl">${lv}</span>${o.out ? '<span class="am-x" aria-hidden="true">✕</span>' : ''}`;
     const cls = `am-tile${o.sel ? ' sel' : ''}${o.out ? ' out' : ''}${o.dim ? ' dim' : ''}${o.cls ? ' ' + o.cls : ''}`;
     const tip = o.tip
       ? ` data-tip="${esc(o.tip)}"`
-      : c.pet
-        ? ` data-tip="${esc(T.PET_FACES.map((k) => U.faceTipHTML(c, k, o.P || 0, 0)).join('<hr>'))}"`
+      : c.pet || c.gear
+        ? ` data-tip="${esc(T.faceKeys(cid).map((k) => U.faceTipHTML(c, k, o.P || 0, 0)).join('<hr>'))}"`
         : ` data-tip="${esc(U.faceTipHTML(c, 'P', o.P || 0, o.E || 0) + '<hr>' + U.faceTipHTML(c, 'E', o.P || 0, Math.max(o.E || 0, T.RULES.ETHEREAL_MIN_E)))}"`;
     if (!o.act) return `<div class="${cls}"${tip}>${inner}</div>`;
     return `<button class="${cls}" data-act="${o.act}" data-arg="${esc(o.arg)}"${o.disabled ? ' disabled' : ''}${tip} aria-pressed="${!!o.sel}">${inner}</button>`;
@@ -254,10 +256,12 @@
   U.openTrain = function (i) {
     const run = U.run;
     const h = run.heroes[i];
-    if (!am.up || am.up.hero !== i || !h.cards.includes(am.up.card)) {
+    // a gear card is bought as it is, never trained (2.113): the upgrade view leaves it out
+    const trainable = h.cards.filter((c) => !T.CARD[c].gear);
+    if (!am.up || am.up.hero !== i || !trainable.includes(am.up.card)) {
       // start on the first card with room to grow, a sleeping card first
-      const asleep = h.cards.find((c) => !T.CARD[c].pet && T.heroE(h, c) < T.RULES.ETHEREAL_MIN_E);
-      am.up = { hero: i, card: asleep || h.cards[0], face: asleep ? 'E' : 'E' };
+      const asleep = trainable.find((c) => !T.CARD[c].pet && T.heroE(h, c) < T.RULES.ETHEREAL_MIN_E);
+      am.up = { hero: i, card: asleep || trainable[0], face: asleep ? 'E' : 'E' };
     }
     const cid = am.up.card;
     const c = T.CARD[cid];
@@ -290,7 +294,7 @@
       <div class="am-uphead"><span class="am-eye">Upgrade · ${esc(h.name.split(' ')[0])} has ${h.upUnspent} point${h.upUnspent === 1 ? '' : 's'}</span><h2 class="am-h">Grow one card</h2>
         <span class="am-uptools">${others.map(({ x, k }) => `<button class="ghost sm" data-act="train" data-arg="${k}">${U.portrait(x, 'am-pf-xs')} ${esc(x.name.split(' ')[0])}</button>`).join('')}<button class="ghost sm" data-act="autoUpRun" data-arg="${i}" data-tip="Spend every point the way the simulated players do">Auto</button><button class="sm" data-act="closeModal">Done</button></span></div>
       <div class="am-upbody">
-        <div class="am-upkit" role="listbox" aria-label="${esc(h.name)}'s cards">${h.cards
+        <div class="am-upkit" role="listbox" aria-label="${esc(h.name)}'s cards">${trainable
           .map((k) => {
             const kp = T.heroP(h, k);
             const ke = T.heroE(h, k);
@@ -335,7 +339,7 @@
     const gear = hv.gear
       .map((gid) => {
         const g = T.GEAR_BY[gid];
-        return `<div class="am-ware"><div class="row"><span class="am-wi">${U.icGear(g.id)}</span><b>${esc(g.name)}</b><span class="right chip gold">${g.price} ◇</span></div><div class="small dim">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> <span class="mono dim">${T.gearCostText(a)} · cd ${a.cd}</span> ${esc(a.txt())}</div>`).join('')}<div class="am-buy">${run.heroes
+        return `<div class="am-ware"><div class="row"><span class="am-wi">${U.icGear(g.id)}</span><b>${esc(g.name)}</b><span class="right chip gold">${g.price} ◇</span></div><div class="small dim">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> <span class="mono dim">${T.gearUseText(a)}</span> ${esc(a.txt())}</div>`).join('')}${g.card ? `<div class="small dim">${T.gearCardNote(g)}</div>` : ''}<div class="am-buy">${run.heroes
           .map((h, i) => {
             if (!own(i)) return '';
             const ok = T.crystalsFor(run, i) >= g.price && h.gear.length < 2;

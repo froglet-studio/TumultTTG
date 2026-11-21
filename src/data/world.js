@@ -52,71 +52,71 @@
       desc:'Fields that drag. Lay a line on the ground and whatever crosses it is reeled toward you.',
       passive:{ hook:'fieldForce', val:1, txt:'Your Fields push and pull 1 further.' },
       abilities:[
-        { n:'Reel Line', cost:1, cd:1, tgt:'node_r2', fx:[{v:'field', on:'enter', trips:1, dur:f(3), remote:f(2), fx:[{kw:'pull', n:f(2)}]}], txt:()=>'A Field on a space within 2 for 3 rounds: the first foe to enter is pulled 2 toward you.' },
-        { n:'Winch', cost:2, cd:3, tgt:'node_r3', fx:[{v:'field', radius:f(1), on:'enter', trips:f(2), dur:f(2), remote:f(3), fx:[{kw:'pull', n:f(2)},{kw:'anchor', t:f(1)}]}], txt:()=>'A Field on a space within 3 and its neighbours for 2 rounds: the first 2 foes to enter are pulled 2 toward you and Anchored 1.' },
+        { n:'Reel Line', cd:1, tgt:'node_r2', fx:[{v:'field', on:'enter', trips:1, dur:f(3), remote:f(2), fx:[{kw:'pull', n:f(2)}]}], txt:()=>'A Field on a space within 2 for 3 rounds: the first foe to enter is pulled 2 toward you.' },
+        { n:'Winch', omni:1, cd:3, tgt:'node_r3', fx:[{v:'field', radius:f(1), on:'enter', trips:f(2), dur:f(2), remote:f(3), fx:[{kw:'pull', n:f(2)},{kw:'anchor', t:f(1)}]}], txt:()=>'A Field on a space within 3 and its neighbours for 2 rounds: the first 2 foes to enter are pulled 2 toward you and Anchored 1.' },
       ]},
     { id:'scope', name:'Scope', price:5, icon:'🔭',
       desc:'Reveal for any build. Finds Hidden foes and the hidden objective.',
       passive:{ hook:'keen', val:1, txt:'Your reveals reach 1 further, and Hidden foes beside you are revealed as your turn begins.' },
       abilities:[
-        { n:'Glance', cost:1, cd:1, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)}], txt:()=>'Reveal everything within 2.' },
-        { n:'Survey', cost:2, cd:3, tgt:'self', fx:[{v:'reveal', radius:f(99), dur:f(2), findObjective:true}], txt:()=>'Reveal the whole board for 2 rounds and pinpoint the hidden objective.' },
+        { n:'Glance', cd:1, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)}], txt:()=>'Reveal everything within 2.' },
+        { n:'Survey', omni:1, cd:3, tgt:'self', fx:[{v:'reveal', radius:f(99), dur:f(2), findObjective:true}], txt:()=>'Reveal the whole board for 2 rounds and pinpoint the hidden objective.' },
       ]},
     { id:'capacitor', name:'Capacitor', price:6, icon:'🔋',
       desc:'Economy. Convert omnicrystals into dice when the weather is bad.',
       passive:{ hook:'missionStart', val:{bank:'AP'}, txt:'Start each mission with 1 AP already banked.' },
       abilities:[
-        { n:'Store', cost:1, cd:1, tgt:'self', fx:[{v:'draw', face:'O', n:f(1)}], txt:()=>'Draw 1 pool die into your bank as Omni.' },
-        { n:'Discharge', cost:2, cd:3, tgt:'self', fx:[{v:'mint', face:'AP', n:f(2)},{v:'mint', face:'C', n:f(1)}], txt:()=>'Mint 2 AP and 1 Charge this turn.' },
+        { n:'Store', cd:3, tgt:'self', fx:[{v:'draw', face:'O', n:f(1)}], txt:()=>'Draw 1 pool die into your bank as Omni.' },
+        { n:'Discharge', omni:1, cd:3, tgt:'self', fx:[{v:'mint', face:'AP', n:f(2)},{v:'mint', face:'C', n:f(1)}], txt:()=>'Mint 2 AP and 1 Charge this turn.' },
       ]},
     { id:'phasebrace', name:'Phase-brace', price:7, icon:'🌀',
       desc:'Space for any build. Reaches height nodes.',
       passive:{ hook:'blinkReach', val:1, txt:'Your blinks reach 1 further.' },
       abilities:[
-        { n:'Blink', cost:2, cd:2, tgt:'node_tele', fx:[{v:'blink', reach:f(2), height:true}], txt:()=>'Blink to any node within 2 — height included.' },
-        { n:'Fade', cost:1, cd:2, tgt:'self', fx:[{v:'hidden', dur:f(1)}], txt:()=>'Hidden 1.' },
+        { n:'Blink', omni:1, cd:2, tgt:'node_tele', fx:[{v:'blink', reach:f(2), height:true}], txt:()=>'Blink to any node within 2 — height included.' },
+        { n:'Fade', cd:2, tgt:'self', fx:[{v:'hidden', dur:f(1)}], txt:()=>'Hidden 1.' },
       ]},
     { id:'chronoshim', name:'Chrono-shim', price:7, icon:'⏳',
       desc:'Time for any build. Returns cards sooner, buys rounds from the clock.',
       passive:{ hook:'roundStart', val:{round:2, hasten:1}, txt:'As round 2 begins, your track slides 1 extra column: what you played in round 1 comes home sooner.' },
       abilities:[
-        { n:'Shim', cost:1, cd:1, tgt:'self', fx:[{v:'haste', n:f(1)}], txt:()=>'Haste: every card on your track returns 1 column sooner.' },
-        { n:'Rewind', cost:3, cd:4, tgt:'self', fx:[{v:'haste', n:f(3)},{v:'haste', clock:true, n:f(2)}], txt:()=>'Haste: your track slides 3 extra columns, and the mission clock gains 2.' },
+        { n:'Shim', cd:1, tgt:'self', fx:[{v:'haste', n:f(1)}], txt:()=>'Haste: every card on your track returns 1 column sooner.' },
+        { n:'Rewind', omni:2, cd:4, tgt:'self', fx:[{v:'haste', n:f(3)},{v:'haste', clock:true, n:f(2)}], txt:()=>'Haste: your track slides 3 extra columns, and the mission clock gains 2.' },
       ]},
     { id:'aegis', name:'Aegis Plate', price:6, icon:'🛡️',
       desc:'Mitigation for any build. Even against area.',
       passive:{ hook:'shieldBonus', val:1, txt:'Every Shield you gain is +1.' },
       abilities:[
-        { n:'Brace', cost:1, cd:1, tgt:'self', fx:[{v:'shield', val:f(3), dur:f(1), all:true}], txt:()=>'Shield 3 against everything this round.' },
-        { n:'Bulwark', cost:2, cd:3, tgt:'party', fx:[{v:'shield', val:f(3), dur:f(2), all:true, party:true, allyRange:f(1)}], txt:()=>'Shield 3 against everything for 2 rounds, on you and every ally beside you.' },
+        { n:'Brace', cd:1, tgt:'self', fx:[{v:'shield', val:f(3), dur:f(1), all:true}], txt:()=>'Shield 3 against everything this round.' },
+        { n:'Bulwark', omni:1, cd:3, tgt:'party', fx:[{v:'shield', val:f(3), dur:f(2), all:true, party:true, allyRange:f(1)}], txt:()=>'Shield 3 against everything for 2 rounds, on you and every ally beside you.' },
       ]},
     { id:'lantern', name:'Storm Lantern', price:5, icon:'🏮',
       desc:'Reveal + Mark, and a beacon for an ally.',
       passive:{ hook:'spot', val:1, txt:'As your turn begins, a foe within 1 of you (beside you) is Marked.' },
       abilities:[
-        { n:'Flare', cost:1, cd:2, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)},{v:'mark', area:true, radius:f(2)}], txt:()=>'Reveal within 2 and Mark every foe revealed.' },
-        { n:'Beacon', cost:2, cd:2, tgt:'ally_move', fx:[{v:'guide', n:f(2)}], txt:()=>'Guide an ally up to 2 nodes, to a node you choose, now.' },
+        { n:'Flare', cd:2, tgt:'self', fx:[{v:'reveal', radius:f(2), dur:f(1)},{v:'mark', area:true, radius:f(2)}], txt:()=>'Reveal within 2 and Mark every foe revealed.' },
+        { n:'Beacon', omni:1, cd:2, tgt:'ally_move', fx:[{v:'guide', n:f(2)}], txt:()=>'Guide an ally up to 2 nodes, to a node you choose, now.' },
       ]},
     { id:'harpoon', name:'Turret', price:6, icon:'🎯',
       desc:'Fields that strike. Set a turret down and it holds the ground around it.',
       passive:{ hook:'fieldDur', val:1, txt:'Your Fields last 1 round longer.' },
       abilities:[
-        { n:'Sentry', cost:1, cd:1, tgt:'node_r2', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), remote:f(2), fx:[{kw:'strike', n:f(2)}]}], txt:()=>'A turret on a space within 2 for 2 rounds: every foe that ends the round on it or beside it takes 2.' },
-        { n:'Skewer', cost:2, cd:3, tgt:'node_r2', fx:[{v:'field', on:'enter', trips:1, dur:f(3), remote:f(2), fx:[{kw:'strike', n:f(5), pierce:true}]}], txt:()=>'A spike on a space within 2 for 3 rounds: the first foe to enter takes 5, Pierce.' },
+        { n:'Sentry', cd:1, tgt:'node_r2', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), remote:f(2), fx:[{kw:'strike', n:f(2)}]}], txt:()=>'A turret on a space within 2 for 2 rounds: every foe that ends the round on it or beside it takes 2.' },
+        { n:'Skewer', omni:1, cd:3, tgt:'node_r2', fx:[{v:'field', on:'enter', trips:1, dur:f(3), remote:f(2), fx:[{kw:'strike', n:f(5), pierce:true}]}], txt:()=>'A spike on a space within 2 for 3 rounds: the first foe to enter takes 5, Pierce.' },
       ]},
     { id:'climbrig', name:'Climbing Rig', price:4, icon:'🧗',
       desc:'The cheap answer to height.',
       passive:{ hook:'noPull', val:true, txt:'Mag boots: you cannot be pulled.' },
       abilities:[
-        { n:'Ascend', cost:1, cd:1, tgt:'node_move', fx:[{v:'move', climb:true, n:f(1)}], txt:()=>'Climb 1.' },
-        { n:'Rappel', cost:1, cd:1, tgt:'node_move', fx:[{v:'move', n:f(2), ignoreFoes:true}], txt:()=>'Move 2, through foes.' },
+        { n:'Ascend', cd:1, tgt:'node_move', fx:[{v:'move', climb:true, n:f(1)}], txt:()=>'Climb 1.' },
+        { n:'Rappel', cd:1, tgt:'node_move', fx:[{v:'move', n:f(2), ignoreFoes:true}], txt:()=>'Move 2, through foes.' },
       ]},
     { id:'medkit', name:'Medkit', price:5, icon:'🩹',
       desc:'Heal and revive, fueled by omnicrystals.',
       passive:{ hook:'autoRevive', val:10, txt:'Once a mission, when you would go down, you rise with 10 hp instead.' },
       abilities:[
-        { n:'Patch', cost:1, cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
-        { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
+        { n:'Patch', cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
+        { n:'Revive', omni:1, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
       ]},
     // Weapons (2.108: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
     // its own; its passive adds to every strike of its reach you make, and its Overcharge takes banked Omni dice
@@ -125,18 +125,38 @@
       desc:'A melee weapon. Every blow you land in melee hits harder; feed it Omni and it hits much harder.',
       passive:{ hook:'weapon', val:{ reach:'melee', n:1 }, txt:'Your melee strikes deal 1 more.' },
       abilities:[
-        { n:'Overcharge', cost:0, omni:1, cd:0, tgt:'self', fx:[{v:'empower', val:f(2), kind:['melee'], uses:99, dur:f(1), stack:true}], txt:()=>'Put a banked Omni on the baton: Empowered 2 for every melee strike you make this round. Stack as many as you have.' },
-        { n:'Arc Guard', cost:1, cd:2, tgt:'self', fx:[{v:'thorns', val:f(2), dur:f(1)}], txt:()=>'Thorns 2 this round: anything that strikes you in melee takes 2.' },
+        { n:'Overcharge', omni:1, cd:0, tgt:'self', fx:[{v:'empower', val:f(2), kind:['melee'], uses:99, dur:f(1), stack:true}], txt:()=>'Put a banked Omni on the baton: Empowered 2 for every melee strike you make this round. Stack as many as you have.' },
+        { n:'Arc Guard', cd:2, tgt:'self', fx:[{v:'thorns', val:f(2), dur:f(1)}], txt:()=>'Thorns 2 this round: anything that strikes you in melee takes 2.' },
       ]},
     { id:'coilgun', name:'Coil Rifle', price:6, icon:'🔫',
       desc:'A ranged weapon. Every shot you take at range hits harder; feed it Omni and it hits much harder.',
       passive:{ hook:'weapon', val:{ reach:'ranged', n:1 }, txt:'Your ranged strikes deal 1 more.' },
       abilities:[
-        { n:'Overcharge', cost:0, omni:1, cd:0, tgt:'self', fx:[{v:'empower', val:f(2), kind:['los','any'], uses:99, dur:f(1), stack:true}], txt:()=>'Put a banked Omni on the rifle: Empowered 2 for every ranged strike you make this round. Stack as many as you have.' },
-        { n:'Rangefinder', cost:1, cd:2, tgt:'foe_los', fx:[{v:'reveal', target:true, dur:f(2)},{v:'mark'}], txt:()=>'A foe in your zone is Revealed for 2 rounds and Marked: the next hit on it deals 2 more.' },
+        { n:'Overcharge', omni:1, cd:0, tgt:'self', fx:[{v:'empower', val:f(2), kind:['los','any'], uses:99, dur:f(1), stack:true}], txt:()=>'Put a banked Omni on the rifle: Empowered 2 for every ranged strike you make this round. Stack as many as you have.' },
+        { n:'Rangefinder', cd:2, tgt:'foe_los', fx:[{v:'reveal', target:true, dur:f(2)},{v:'mark'}], txt:()=>'A foe in your zone is Revealed for 2 rounds and Marked: the next hit on it deals 2 more.' },
       ]},
   ];
   T.GEAR_BY = {}; T.GEAR.forEach(g => T.GEAR_BY[g.id] = g);
+
+  /* Equipment cards (2.113; Garrett, 2026-11-21: "equipment cards will be either free or cost omnicrystals and
+     they only need a card if they go on cooldown, which still adds to the 9 card max"). Every gear ability with a
+     cooldown sits on the gear's one card: faces P (and P2), each free or paid in banked Omni dice (`omni`), never
+     in ◇. The card counts toward the nine and waits in the reserve like a trait (2.107); playing either face sends
+     the whole card to the track for that face's cooldown. It is bought, not trained: no P or E ever goes on it.
+     An ability with no cooldown (a weapon's Overcharge) needs no card: it is used from the gear itself, for Omni. */
+  T.GEAR_FACES = ['P', 'P2'];
+  T.gearCardId = (gearId) => 'gear~' + gearId;
+  T.onGearCard = (ab) => ab.cd > 0;
+  T.GEAR.forEach(g => {
+    const abs = g.abilities.filter(T.onGearCard);
+    if (!abs.length) return;
+    const card = { id: T.gearCardId(g.id), gear: g.id, sp: null, clades: [], kin: 'Gear', name: g.name, el: 'O',
+      sig: 0, E: null, flavor: g.desc, faces: T.GEAR_FACES.slice(0, abs.length) };
+    abs.forEach((ab, i) => (card[T.GEAR_FACES[i]] = { n: ab.n, ap: 0, el: ab.omni || 0, elt: 'O', cd: ab.cd, dur: 0,
+      tgt: ab.tgt, fx: ab.fx, txt: ab.txt, ability: g.abilities.indexOf(ab) }));
+    g.card = card.id;
+    T.CARD[card.id] = card;
+  });
 
   /* ───────────────────────────── DICE KINDS (2.29) ───────────────────────────── */
   // Garrett's original dice: a plain d20 (T.RULES.FACES: every element once, the rest AP), an ethereal d12 with two

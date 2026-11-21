@@ -173,8 +173,16 @@ test('no option on a card, gear or consumable recipe is ignored, and every formu
         unreadKeys(card[faceKey], (situation) => H.fireFace(card.id, faceKey, situation)),
       );
 
+  // an ability with a cooldown is played from the gear's card (2.113): fire that card's face
+  for (const gear of T.GEAR)
+    for (const fk of gear.card ? T.faceKeys(gear.card) : [])
+      note(
+        `${gear.card}.${fk}`,
+        unreadKeys(T.CARD[gear.card][fk], (situation) => H.fireFace(gear.card, fk, situation)),
+      );
   for (const gear of T.GEAR)
     gear.abilities.forEach((ability, ai) =>
+      !T.onGearCard(ability) &&
       note(
         `${gear.id} — ${ability.n}`,
         unreadKeys(ability, ({ arrange, choose }) => {

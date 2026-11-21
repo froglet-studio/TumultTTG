@@ -7,7 +7,7 @@ each in the sentence a player resolves by hand. The rest still work as described
 
 Three lines share the keywords, and each is set by what it touches, how far it reaches and how long it lasts:
 
-| | Biophysical (Physical faces, AP) | Bioethereal (Ethereal faces, AP + etherions) | Ethereal technology (gear, ◇) |
+| | Biophysical (Physical faces, AP) | Bioethereal (Ethereal faces, AP + etherions) | Ethereal technology (gear: bought with ◇, run on Omni) |
 |---|---|---|---|
 | Touches | you and units beside you | any unit | spaces, the dice, the clock, the downed |
 | Reaches | melee, along paths | zone, area, any | wherever the Field or gear is placed |
@@ -79,6 +79,10 @@ never scales with P or E; and it **never strikes a unit directly**: a gear strik
 Turret), and a gear pull is a Field that pulls (the Winch). Each piece has one passive and two actives. The
 passives carry what boons did, and the actives what consumables did (`docs/reference/RUN_AND_ECONOMY.md` has the
 table).
+
+**Equipment cards (2.113).** A gear active with a cooldown is played from the gear's card in the nine, a card of
+faces that cost no AP and are free or paid in banked Omni dice; an active with no cooldown (Overcharge) is used from
+the gear. ◇ buys gear and no longer fuels it. No keyword is added.
 
 Field gained two keywords for it: **Pull N** (toward the Field's owner) and **Push N** (away from it).
 

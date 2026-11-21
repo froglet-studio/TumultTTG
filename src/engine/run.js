@@ -82,8 +82,8 @@
     const cap = R().MAX_PER_SPECIES;
     const load = {};
     const slot = {};
-    // a pet's card counts toward the nine, not toward a clade (src/data/pets.js)
-    const ids = cards.filter((id) => !T.CARD[id].pet).sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
+    // a pet's or a piece of gear's card counts toward the nine, not toward a clade (src/data/pets.js)
+    const ids = cards.filter((id) => !T.isKinless(id)).sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
     const place = (i) => {
       if (i === ids.length) return true;
       for (const sp of T.CARD[ids[i]].clades) {
@@ -333,8 +333,8 @@
   /** The recipe of a hero a player built: its name, clades, cards and the points on them. */
   T.madeFrom = function (h, at) {
     const up = {};
-    // pets stay with the expedition they were found on, as gear does (src/data/pets.js)
-    const own = (c) => !T.CARD[c] || !T.CARD[c].pet;
+    // pets stay with the expedition they were found on, as gear and its card do (src/data/pets.js)
+    const own = (c) => !T.isKinless(c);
     h = Object.assign({}, h, { cards: h.cards.filter(own), reserve: (h.reserve || []).filter(own) });
     T.collection(h).forEach((c) => (up[c] = (h.up[c] || [0, 0]).slice(0, 2)));
     const bound = {};
@@ -462,7 +462,9 @@
   // UP allocation
   T.adjustUp = function (h, cardId, which, delta) {
     const i = which === 'E' ? 1 : 0;
-    const cap = which === 'E' ? (T.CARD[cardId] && T.CARD[cardId].pet ? 0 : R().E_CAP) : R().P_CAP; // a pet's card has no Ethereal face
+    // a pet's card has no Ethereal face; a gear card is bought as it is, never trained (2.113)
+    const c = T.CARD[cardId];
+    const cap = c && c.gear ? 0 : which === 'E' ? (c && c.pet ? 0 : R().E_CAP) : R().P_CAP;
     const cur = h.up[cardId] || [0, 0];
     // a point bound to this card (a trait taken twice) is spent before a free one, and comes back last
     if (delta > 0) {
@@ -495,7 +497,7 @@
       .map((x) => x.cid);
     for (const cid of order) {
       if (h.upUnspent <= 0 || T.awakenedCount(h) >= R().START_AWAKE) break;
-      if (T.heroE(h, cid) === 0 && !T.CARD[cid].pet) T.adjustUp(h, cid, 'E', 1);
+      if (T.heroE(h, cid) === 0 && !T.isKinless(cid)) T.adjustUp(h, cid, 'E', 1);
     }
   };
   T.autoAllocate = function (h) {
@@ -546,9 +548,9 @@
     if (tier >= 2) {
       const rng = T.runStream(run, 'squad');
       run.heroes.forEach((h) => {
-        h.gear.push({ id: T.GEAR[rng.int(T.GEAR.length)].id, cds: [0, 0] });
+        T.equipGear(h, T.GEAR[rng.int(T.GEAR.length)].id);
         if (tier >= 3) {
-          h.gear.push({ id: T.GEAR[rng.int(T.GEAR.length)].id, cds: [0, 0] });
+          T.equipGear(h, T.GEAR[rng.int(T.GEAR.length)].id);
           const extra = T.cardOffer(run, 1)[0];
           if (extra) T.addCard(h, extra);
           T.autoAllocate(h);
@@ -988,13 +990,14 @@
     return rec;
   };
   /**
-   * Where a card in a kit comes from: a clade's bloodline, or a pet (src/data/pets.js). Equipment cards add
-   * their own kind here. Everything in h.cards counts toward the nine whatever its source.
+   * Where a card in a kit comes from: a clade's bloodline, a pet (src/data/pets.js) or a piece of gear (2.113).
+   * Everything in h.cards counts toward the nine whatever its source.
    */
   T.cardSource = function (h, cardId) {
     const rec = T.petRecOf(h, cardId);
     if (rec) return { kind: 'pet', id: rec.id };
     const c = T.CARD[cardId];
+    if (c && c.gear) return { kind: 'gear', id: c.gear };
     return { kind: 'clade', id: c ? c.clades.find((sp) => h.species.includes(sp)) || c.sp : null };
   };
   /**
@@ -1046,6 +1049,30 @@
     run.haven.pet = null;
     return { ok: true };
   };
+  /**
+   * Equip a piece of gear. Gear whose abilities go on cooldown has a card (src/data/world.js, 2.113): it joins
+   * the kit when there is room and waits in the reserve when not, as a trait earned with a full kit does.
+   */
+  T.equipGear = function (h, gearId) {
+    h.gear.push({ id: gearId, cds: [0, 0] });
+    const cid = T.GEAR_BY[gearId].card;
+    if (!cid || T.holds(h, cid)) return { ok: true };
+    h.up[cid] = [0, 0];
+    if (h.cards.length < R().MAX_CARDS) {
+      h.cards.push(cid);
+      return { ok: true };
+    }
+    T.reserveOf(h).push(cid);
+    return { ok: true, reserve: true };
+  };
+  /** Take a piece of gear off: its card goes with it, unless a second of the same gear is still worn. */
+  T.unequipGear = function (h, gi) {
+    const g = h.gear.splice(gi, 1)[0];
+    if (!g) return null;
+    const cid = T.GEAR_BY[g.id].card;
+    if (cid && !h.gear.some((x) => x.id === g.id)) T.removeCard(h, cid);
+    return g;
+  };
   T.buyGear = function (run, gearId, heroIdx) {
     const g = T.GEAR_BY[gearId];
     const h = run.heroes[heroIdx];
@@ -1053,14 +1080,14 @@
     if (run.purses[s] < g.price) return { ok: false, why: 'not enough ◇' };
     if (h.gear.length >= R().GEAR_SLOTS) return { ok: false, why: 'gear slots full (2)' };
     run.purses[s] -= g.price;
-    h.gear.push({ id: gearId, cds: [0, 0] });
+    const eq = T.equipGear(h, gearId);
     run.haven.gear = run.haven.gear.filter((x) => x !== gearId);
     run.haven.bought.push(gearId);
-    return { ok: true };
+    return { ok: true, reserve: !!eq.reserve };
   };
   T.sellGear = function (run, heroIdx, gi) {
     const h = run.heroes[heroIdx];
-    const g = h.gear.splice(gi, 1)[0];
+    const g = T.unequipGear(h, gi);
     if (g) run.purses[T.purseSeat(run, heroIdx)] += Math.floor(T.GEAR_BY[g.id].price / 2);
   };
   T.havenRest = function (run, full) {
@@ -1125,7 +1152,7 @@
    */
   T.tradeCard = function (run, heroIdx, dropId) {
     const h = run.heroes[heroIdx];
-    if (T.CARD[dropId] && T.CARD[dropId].pet) return null; // a pet is not traded
+    if (T.isKinless(dropId)) return null; // a pet's or a gear's card is not traded
     const sp = T.CARD[dropId].clades.find((x) => h.species.includes(x)) || T.CARD[dropId].sp;
     const cands = T.cardsOf(sp).filter((c) => T.canSwapCard(h, c.id, dropId).ok);
     const nc = T.runStream(run, 'event').pick(cands);
@@ -1140,7 +1167,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 30;
+  T.SAVE_VERSION = 31;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1532,7 +1559,25 @@
       if (r.haven && r.haven.pet === undefined) r.haven.pet = null;
       r.v = 30;
     },
+    // 2.113 put every gear ability with a cooldown on a card in the nine (src/data/world.js): worn gear gets its
+    // card, in the kit when there is room and in the reserve when not. Its old per-ability cooldowns are kept.
+    30(r) {
+      for (const h of r.heroes || []) {
+        if (!h || !Array.isArray(h.gear) || !Array.isArray(h.cards)) continue;
+        h.up = h.up || {};
+        h.reserve = h.reserve || [];
+        for (const g of h.gear) if (T.GEAR_BY[g.id]) migrateGearCard(h, g.id);
+      }
+      r.v = 31;
+    },
   };
+  function migrateGearCard(h, gearId) {
+    const cid = T.GEAR_BY[gearId].card;
+    if (!cid || h.cards.includes(cid) || h.reserve.includes(cid)) return;
+    h.up[cid] = [0, 0];
+    if (h.cards.length < R().MAX_CARDS) h.cards.push(cid);
+    else h.reserve.push(cid);
+  }
   T.deserializeRun = function (json) {
     const r = JSON.parse(json);
     if (r.v == null) r.v = 1;
