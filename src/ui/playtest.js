@@ -19,10 +19,14 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.105.0',
+    version: '2.106.0',
     items: [
       {
         text: 'Weapons: two new pieces of gear at the havens. The Shock Baton adds 1 to every melee strike you make (the basic Strike too), and the Coil Rifle adds 1 to every ranged one. Each has an Overcharge that takes a banked Omni die instead of omnicrystals: every Omni you put on the weapon adds 2 to every strike of its reach this round, and you can stack them. An Omni spent there cannot pay an Ethereal face. Foes are a little tougher to make up for it. Did you ever Overcharge, and was it worth the Omni? Did a weapon change which cards you reached for?',
+      },
+      {
+        text: 'Four costly faces now do something no cheaper play can. Heavy Throw throws the ally beside you onto a free space within reach, a ledge included. Become trades places with a foe. Resonance sets every Field, hazard and Wound around you off at once (they still go off at round end). Second Wind gives back, at round end, what you lose after playing it. Did any of them make a turn you could not have played before? Was any of them hard to aim?',
+        cards: ['hum_throw', 'oct_imperson', 'hop_strid', 'hum_persist'],
       },
       {
         text: "Pocket vehicles and big maps. A new stop on the route, the Crossing, is played on a big map (Reed Delta or Ashfall Salt Flat: eight spaces across, with water, reeds, fissures and vents). Before it, each player picks a vehicle for their pilot: Skiff, Wing, Crawler, Diver or Runner, each with its own seats, speed, hull, ground it can cross and two cards (some carry long guns). Getting in or out is 1 AP, and so is each Drive. Inside you play only the vehicle's cards and your faces marked Mounted; blows land on the hull. Which vehicle did you pick, and did it pay for itself? Did you ever want to get out and walk?",

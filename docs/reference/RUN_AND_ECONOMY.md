@@ -94,7 +94,7 @@ Gear is ethereal technology (2.89, the keyword plan): it works on spaces, the di
 | Shock Baton | 6 | weapon: your melee strikes deal 1 more | Overcharge (Empowered 2 for every melee strike this round, 1 banked Omni, no cooldown, stacks) · Arc Guard (Thorns 2 this round, 1◇) |
 | Coil Rifle | 6 | weapon: your ranged strikes deal 1 more | Overcharge (Empowered 2 for every ranged strike this round, 1 banked Omni, no cooldown, stacks) · Rangefinder (a foe in your zone is Revealed 2 rounds and Marked, 1◇) |
 
-**Weapons (2.105; Garrett, 2026-11-21).** A weapon is gear that makes your own strikes hit harder; it never strikes
+**Weapons (2.106; Garrett, 2026-11-21).** A weapon is gear that makes your own strikes hit harder; it never strikes
 on its own. Its passive adds its number to every strike of its reach you make: *melee* is a melee strike (the basic
 Strike and a Mass Channel included), *ranged* a strike along a line or at any range (`los`, `any`); area strikes get
 nothing. Its Overcharge is the one gear ability paid in **banked Omni dice** rather than ◇: at the table, put a

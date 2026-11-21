@@ -284,7 +284,7 @@
     'spot', // val: as the holder's turn begins, the nearest foe within that many steps is Marked
     'fieldDur', // val: added to the rounds of every Field the holder lays that has rounds
     'fieldForce', // val: added to every push and pull of the holder's Fields
-    'weapon', // val: { reach: 'melee' | 'ranged', n } — added to every strike of that reach the holder makes (2.105)
+    'weapon', // val: { reach: 'melee' | 'ranged', n } — added to every strike of that reach the holder makes (2.106)
   ];
   T.boonVals = function (h, hook) {
     if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown passive hook ' + hook);
@@ -297,10 +297,10 @@
   };
   const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
   /** A weapon's reach for a strike of this kind: melee is melee; a strike along a line or anywhere is ranged;
-   *  an area strike has none, so no weapon adds to it (2.105). */
+   *  an area strike has none, so no weapon adds to it (2.106). */
   T.weaponReach = (kind) => (kind === 'melee' ? 'melee' : kind === 'los' || kind === 'any' ? 'ranged' : null);
   /**
-   * How much more a pilot's strike of this kind deals for its weapons (2.105): each weapon of that reach adds its
+   * How much more a pilot's strike of this kind deals for its weapons (2.106): each weapon of that reach adds its
    * number. The one place a weapon's bonus is read, so any other source of weapons (a vehicle's, say) joins here.
    * A weapon's Overcharge is an Empower on the same strike kinds (src/data/world.js).
    */
@@ -885,7 +885,7 @@
         }
       }
       if (opts.strike && ss.Morph) dmg += ss.Morph.bonus || 0;
-      // a weapon adds to every strike of its reach (2.105); a strike that deals nothing stays at nothing
+      // a weapon adds to every strike of its reach (2.106); a strike that deals nothing stays at nothing
       if (opts.strike && dmg > 0) dmg += T.weaponBonus(source, kind);
       if (opts.strike) {
         const flags = source.roundFlags || (source.roundFlags = {});
@@ -1341,6 +1341,41 @@
     m.fields = m.fields.filter((f) => f.trips == null || f.trips > 0);
   }
 
+  /**
+   * Spring everything set within `radius` of a unit, now: every Field (anyone's) on the units standing in
+   * its spaces there, every hazard there on whoever stands on it, and every Wound there bites (without
+   * dropping). None of it is spent: each still does its work at round end.
+   */
+  T.springAround = function (m, actor, radius) {
+    const bd = m.board;
+    const near = new Set([actor.pos].concat(B.within(bd, actor.pos, radius, true)));
+    const units = () =>
+      T.liveHeroes(m)
+        .concat(T.liveEnemies(m))
+        .filter((u) => near.has(u.pos));
+    say(m, `${actor.name} sets everything within ${radius} springing.`, actor.kind === 'enemy' ? 'enemy' : 'hero');
+    for (const f of m.fields.slice()) {
+      const set = new Set(fieldNodes(m, f).filter((n) => near.has(n)));
+      if (!set.size) continue;
+      for (const u of units()) {
+        if (f.trips != null && f.trips <= 0) break;
+        if (set.has(u.pos) && springField(m, f, u, false)) fx(m, { t: 'trap', node: u.pos });
+      }
+    }
+    m.fields = m.fields.filter((f) => f.trips == null || f.trips > 0);
+    for (const u of units())
+      if (bd.nodes[u.pos].hazard && !hazardImmune(u) && !u.boss) {
+        const d = T.damage(m, null, u, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
+        if (u.kind === 'hero') m.stats.hazardDmg += d;
+      }
+    for (const u of units()) {
+      const w = st(u).Wound;
+      if (!w) continue;
+      const owner = unitBy(m, w.owner);
+      T.damage(m, owner || null, u, w.n, { kind: 'true', trueDmg: true, label: `(${w.kind || 'wound'}) wounds` });
+    }
+  };
+
   /* ───────────────────────────── REVEAL ───────────────────────────── */
   function revealArea(m, actor, center, radius, dur, opts) {
     opts = opts || {};
@@ -1381,14 +1416,14 @@
    */
   const allyRef = (f, P, E) => {
     if (f.carryAlly != null) return bool(f.carryAlly, P, E) ? 'adj' : null;
-    if (f.v === 'guide' || f.v === 'swap') return 'any';
+    if (f.v === 'guide' || (f.v === 'swap' && !f.foe)) return 'any';
     if (f.target !== 'ally' && f.who !== 'ally') return null;
     if (!f.pierce && ['val', 'n'].some((k) => f[k] != null && num(f[k], P, E) <= 0)) return null;
     if (f.v === 'anchor' && num(f.dur, P, E) <= 0) return null;
     return f.adjacent ? 'adj' : 'any';
   };
   const allyReach = (tgt, face, P, E) => {
-    if (tgt === 'ally_adj' || tgt === 'ally_adj_move') return 'adj';
+    if (tgt === 'ally_adj' || tgt === 'ally_adj_move' || tgt === 'ally_throw') return 'adj';
     if (tgt === 'ally' || tgt === 'ally_move') return 'any';
     const refs = ((face && face.fx) || []).map((f) => allyRef(f, P, E)).filter(Boolean);
     if (!refs.length) return null;
@@ -1467,11 +1502,15 @@
         return { need: 'foe', options: foes.filter((e) => B.los(bd, h.pos, e.pos) && vis(e)).map((e) => e.uid) };
       case 'foe_any':
         return { need: 'foe', options: foes.filter(vis).map((e) => e.uid) };
-      case 'foe_r2':
+      case 'foe_r2': {
+        // a face may reach further as it grows: an effect's `reach` sets the range (2 at least)
+        const rx = face && face.fx.find((x) => x.reach != null);
+        const r = rx ? Math.max(2, num(rx.reach, P, E)) : 2;
         return {
           need: 'foe',
-          options: foes.filter((e) => B.dist(bd, h.pos, e.pos, true) <= 2 && vis(e)).map((e) => e.uid),
+          options: foes.filter((e) => B.dist(bd, h.pos, e.pos, true) <= r && vis(e)).map((e) => e.uid),
         };
+      }
       case 'foe_r3':
         return {
           need: 'foe',
@@ -1529,6 +1568,18 @@
             options: foes.filter((e) => B.dist(bd, h.pos, e.pos, true) <= r && vis(e)).map((e) => e.uid),
           };
         return { need: 'node', options: opts };
+      }
+      case 'ally_throw': {
+        // you throw your ally, beside you, to a free node within reach of you
+        if (!ally || ally.downed) return { need: 'none', invalid: 'no ally standing' };
+        if (!B.adjacent(bd, h.pos, ally.pos)) return { need: 'none', invalid: 'your ally must be beside you' };
+        if (isAnchored(ally)) return { need: 'none', invalid: 'your ally is Anchored' };
+        const tw = face.fx.find((x) => x.v === 'throw');
+        const r = num(tw.reach, P, E);
+        const opts = B.within(bd, h.pos, r, true).filter(
+          (n) => n !== ally.pos && !T.occupied(m, n) && (tw.height || !bd.nodes[n].height),
+        );
+        return { need: 'node', options: opts, ally: ally.uid };
       }
       default:
         return { need: 'none' };
@@ -1899,6 +1950,32 @@
         break;
       }
       case 'swap': {
+        if (f.foe) {
+          // Take its place: you and a foe trade spaces. Anything that cannot be moved holds fast.
+          const t = targetEnt(m, ctx);
+          if (!standing(t) || t.kind !== 'enemy') break;
+          if (B.dist(bd, actor.pos, t.pos, true) > Math.max(2, num(f.reach, P, E))) {
+            say(m, 'Out of reach.', 'sys');
+            break;
+          }
+          if (isAnchored(actor) || forceImmune(t)) {
+            say(m, `${isAnchored(actor) ? actor.name : t.name} holds fast.`, 'sys');
+            break;
+          }
+          const a = actor.pos,
+            b = t.pos;
+          actor.pos = b;
+          t.pos = a;
+          fx(m, { t: 'move', ent: actor.uid, from: a, to: b, how: 'swap' });
+          fx(m, { t: 'move', ent: t.uid, from: b, to: a, how: 'forced' });
+          if (isHidden(t)) breakHidden(m, t, 'moved');
+          say(m, `${actor.name} and ${t.name} trade places.`, 'hero');
+          onEnter(m, t, a);
+          onEnter(m, actor, b);
+          if (actor.kind === 'hero') onHeroEnter(m, actor, b);
+          ctx.lastTarget = t;
+          break;
+        }
         if (!ally || ally.downed) break;
         const a = actor.pos,
           b = ally.pos;
@@ -1907,6 +1984,38 @@
         fx(m, { t: 'move', ent: actor.uid, from: a, to: b, how: 'swap' });
         fx(m, { t: 'move', ent: ally.uid, from: b, to: a, how: 'swap' });
         say(m, `${actor.name} and ${ally.name} swap places.`, 'hero');
+        break;
+      }
+      case 'throw': {
+        // Throw your ally, beside you, onto a free node within reach (ledges where it says).
+        if (!ally || ally.downed || !B.adjacent(bd, actor.pos, ally.pos)) break;
+        const dest = ctx.node;
+        const r = num(f.reach, P, E);
+        if (dest == null || T.occupied(m, dest) || B.dist(bd, actor.pos, dest, true) > r) {
+          say(m, 'Out of reach.', 'sys');
+          break;
+        }
+        if (bd.nodes[dest].height && !f.height) break;
+        if (isAnchored(ally)) {
+          say(m, `${ally.name} is Anchored and cannot be thrown.`, 'sys');
+          break;
+        }
+        const from = ally.pos;
+        moveEntity(m, ally, dest, 'thrown');
+        say(m, `${actor.name} throws ${ally.name} ${from} → ${dest}.`, 'hero');
+        if (ally.kind === 'hero') onHeroEnter(m, ally, dest);
+        break;
+      }
+      case 'spring': {
+        // Everything set springs now: within `radius` of you, every Field and hazard on whoever stands in it,
+        // and every Wound bites. They still do again at round end.
+        T.springAround(m, actor, num(f.radius, P, E));
+        break;
+      }
+      case 'rewind': {
+        // At round end, regain what you lose from now until then, up to `cap`.
+        st(actor).Rewind = { hp: actor.hp, cap: num(f.cap, P, E), t: 1 };
+        say(m, `${actor.name} braces to recover what this round takes.`, 'hero');
         break;
       }
       case 'guide': {
@@ -2107,7 +2216,7 @@
         const list = f.party ? T.liveHeroes(m) : f.target === 'ally' ? (ally && !ally.downed ? [ally] : []) : [actor];
         list.forEach((h) => {
           h.states.Empower = h.states.Empower || [];
-          // `stack` (a weapon's Overcharge, 2.105): a second one adds to the first instead of waiting behind it
+          // `stack` (a weapon's Overcharge, 2.106): a second one adds to the first instead of waiting behind it
           const same =
             f.stack &&
             h.states.Empower.find((e) => e.stack && JSON.stringify(e.kind) === JSON.stringify(f.kind || null));
@@ -2148,7 +2257,7 @@
         say(m, `${actor.name} steps outside time.`, 'hero');
         break;
       case 'hover':
-        // Hover N (2.105): off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you,
+        // Hover N (2.102): off the ground for N rounds: no hazard or Field touches you, nothing pushes or pulls you,
         // and your steps may take the ledges. It folds in Weightless, and no longer mints AP.
         addTimed(m, actor, 'Hover', num(f.dur, P, E));
         say(m, `${actor.name} lifts off the ground.`, 'hero');
@@ -2651,7 +2760,7 @@
     T.afterAction(m);
     return { ok: true, ctx: rctx };
   };
-  /** What a gear ability costs, as a player reads it: omnicrystals from the purse, or banked Omni dice (2.105). */
+  /** What a gear ability costs, as a player reads it: omnicrystals from the purse, or banked Omni dice (2.106). */
   T.gearCostText = (ab) =>
     [ab.cost ? `${ab.cost} ◇` : '', ab.omni ? `${ab.omni} Omni` : ''].filter(Boolean).join(' + ') || 'free';
   /** Whether this pilot can pay for and use this gear ability now, leaving aside its target. */
@@ -2895,6 +3004,17 @@
       w.n--;
       if (w.n <= 0) delete st(u).Wound;
     }
+    // Rewind: regain what this round took since it was set, up to its cap
+    for (const h of T.liveHeroes(m)) {
+      const rw = st(h).Rewind;
+      if (!rw) continue;
+      const back = Math.min(rw.cap, rw.hp - h.hp);
+      if (back > 0) {
+        h.hp = Math.min(h.maxHp, h.hp + back);
+        say(m, `${h.name} recovers ${back} of what the round took.`, 'hero');
+      }
+      delete st(h).Rewind;
+    }
     // objective: hold
     const ob = m.objective;
     if (ob && ob.kind === 'hold') {
@@ -3097,6 +3217,7 @@
       Empower: 'Empowered — next strike(s) boosted.',
       Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,
       Wound: `Wound ${v.n} — takes ${v.n} at round end, then the Wound drops by 1.`,
+      Rewind: `At round end, regains what it lost since, up to ${v.cap}.`,
     };
     return map[k] || k;
   };

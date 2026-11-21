@@ -53,7 +53,7 @@ test('every gear has a passive on a hook the engine acts on, and two actives; th
     for (const n of numbers) assert.ok(g.passive.txt.includes(String(n)), `${g.id}: text does not mention ${n}`);
     assert.equal(g.abilities.length, 2, `${g.id}: two actives`);
   }
-  // two weapons share the hook, never the passive: each adds to strikes of its own reach (2.105)
+  // two weapons share the hook, never the passive: each adds to strikes of its own reach (2.106)
   const passives = new Set(T.GEAR.map((g) => g.passive.hook + JSON.stringify(g.passive.val)));
   assert.equal(passives.size, T.GEAR.length, 'no two pieces share a passive');
 });
@@ -207,7 +207,7 @@ test('a 2.88 save refunds its boons (3 ◇ each) and consumables (their price), 
   assert.ok(T.rewardSettled(run.lastReward), 'with the traits passed, the reward is settled');
 });
 
-/* ── Weapons (2.105) ── */
+/* ── Weapons (2.106) ── */
 const shoot = ({ m, h, e }, kind, dmg = 3) => {
   const before = e.hp;
   T.runEffects(m, h, [{ v: 'strike', kind, dmg }], { P: 0, E: 0, target: e.uid });
