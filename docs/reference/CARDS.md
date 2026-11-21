@@ -265,7 +265,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Lockjaw Bite** · Mass · `gec_lockjaw`
 
 - *Phys — Latch* · 1 AP · CD 1 — Melee 2 and latch on: Anchored 1. *(P3: Melee 5 and latch on: Anchored 1.)*
-- *Eth — Crush* · 0 AP + 1 Mass · CD 3 — Melee 2; the grip can't be broken: Anchored 3 and crushed for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5; the grip can't be broken: Anchored 5 and crushed for 2 at the end of each round (2 rounds).)*
+- *Eth — Crush* · 0 AP + 1 Mass · CD 3 — Melee 2; the grip can't be broken: Anchored 3 and Wounded 2. *(P3/E3: Melee 5; the grip can't be broken: Anchored 5 and Wounded 2.)*
 
 **Tail Autotomy** · Space · `gec_autotomy`
 
@@ -324,7 +324,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Toxic Secretion** · Mass · `axo_toxic`
 
 - *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
-- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve 4 of its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and it is Wounded 2. *(P3/E3: Melee 5, dissolve 4 of its Shield, and it is Wounded 4.)*
 
 **Lateral Line** · Charge · `axo_lateral`
 
@@ -437,7 +437,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Vine Growth** · Mass · `fly_vine`
 
 - *Phys — Vine* · 1 AP · CD 1 — Thigmotropic reach: pull a foe within 2 one node closer; if it arrives adjacent, strike it for 1. *(P3: Thigmotropic reach: pull a foe within 2 one node closer; if it arrives adjacent, strike it for 4.)*
-- *Eth — Constrict* · 2 AP + 1 Mass · CD 3 — Constrict: melee 2, Anchored 2, crushed for 2 at the end of each round (2 rounds). *(P3/E3: Constrict: melee 5, Anchored 2, crushed for 4 at the end of each round (2 rounds).)*
+- *Eth — Constrict* · 2 AP + 1 Mass · CD 3 — Constrict: melee 2, Anchored 2, Wounded 2. *(P3/E3: Constrict: melee 5, Anchored 2, Wounded 4.)*
 
 **Dormancy** · Time · `fly_dormancy`
 
@@ -471,12 +471,12 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Decomposition** · Mass · `cor_decomp`
 
 - *Phys — Decompose* · 1 AP · CD 1 — Break down the dying: destroy an adjacent foe with 3 or fewer hp and salvage 1 ◇. *(P3: Break down the dying: destroy an adjacent foe with 6 or fewer hp and salvage 1 ◇.)*
-- *Eth — Rot* · 2 AP + 1 Mass · CD 3 — Rot the bonds: strip 2 of its Shield, it takes 2 at the end of each round for 3 rounds, and Cleanse the ground within 1 of you (hazards and foes' Fields). *(P3/E3: Rot the bonds: strip 4 of its Shield, it takes 4 at the end of each round for 3 rounds, and Cleanse the ground within 1 of you (hazards and foes' Fields).)*
+- *Eth — Rot* · 2 AP + 1 Mass · CD 3 — Rot the bonds: strip 2 of its Shield, it is Wounded 3, and Cleanse the ground within 1 of you (hazards and foes' Fields). *(P3/E3: Rot the bonds: strip 4 of its Shield, it is Wounded 5, and Cleanse the ground within 1 of you (hazards and foes' Fields).)*
 
 **Hyphal Drain** · Time · `cor_drain`
 
 - *Phys — Bore* · 1 AP · CD 1 — Bore filaments in: melee 1, heal 1. *(P3: Bore filaments in: melee 4, heal 1.)*
-- *Eth — Parasitize* · 1 AP + 1 Time · CD 3 — Deepen the parasitism: for 3 rounds the foe takes 2 at round end and you heal 1. *(P3/E3: Deepen the parasitism: for 3 rounds the foe takes 4 (+1 more each round) at round end and you heal 2.)*
+- *Eth — Parasitize* · 1 AP + 1 Time · CD 3 — Deepen the parasitism: the foe is Wounded 3, and each round its Wound bites, you heal 1. *(P3/E3: Deepen the parasitism: the foe is Wounded 5, and each round its Wound bites, you heal 2.)*
 
 **Network Regrowth** ☆ · Time · `cor_regrowth`
 
@@ -486,7 +486,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Enzyme Spray** · Mass · `cor_enzyme`
 
 - *Phys — Spit* · 1 AP · CD 1 — Spit exoenzymes across your zone: 1 damage and −1 to its Shield. *(P3: Spit exoenzymes across your zone: 4 damage and −1 to its Shield.)*
-- *Eth — Saturate* · 2 AP + 1 Mass · CD 3 — Saturate a node within 2 and its neighbours: every foe there loses 2 Shield and takes 3. *(P3/E3: Saturate a node within 2 and its neighbours: every foe there loses 4 Shield and takes 5, then corrodes for 1 (2 rounds).)*
+- *Eth — Saturate* · 2 AP + 1 Mass · CD 3 — Saturate a node within 2 and its neighbours: every foe there loses 2 Shield and takes 3. *(P3/E3: Saturate a node within 2 and its neighbours: every foe there loses 4 Shield and takes 5, and is Wounded 2.)*
 
 **Mycorrhizal Bond** · Space · `cor_bond`
 
@@ -1269,8 +1269,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bee Raid** · Charge · `bad_bee`
 
-- *Phys — Raid* · 1 AP · CD 1 — Melee 1, and it is stung: 1 a round for 2 rounds. *(P3: Melee 4, and it is stung: 1 a round for 2 rounds.)*
-- *Eth — Kick the Hive* · 1 AP + 1 Charge · CD 3 — Kick a hive open at a node within 2: every foe on or beside it is stung, 1 a round for 2 rounds. Stings don't bother you for 2. *(P3/E3: Kick a hive open at a node within 2: every foe on or beside it is stung, 2 a round for 2 rounds. Stings don't bother you for 2.)*
+- *Phys — Raid* · 1 AP · CD 1 — Melee 1, and it is stung: Wounded 2. *(P3: Melee 4, and it is stung: Wounded 2.)*
+- *Eth — Kick the Hive* · 1 AP + 1 Charge · CD 3 — Kick a hive open at a node within 2: every foe on or beside it is stung: Wounded 2. Stings don't bother you for 2. *(P3/E3: Kick a hive open at a node within 2: every foe on or beside it is stung: Wounded 3. Stings don't bother you for 2.)*
 
 **Never Retreat** ★ · Mass · `bad_never`
 
@@ -1279,8 +1279,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Bite Hold** · Mass · `bad_bite`
 
-- *Phys — Bite* · 1 AP · CD 1 — Melee 1, and don't let go: 1 a round for 2 rounds. *(P3: Melee 4, and don't let go: 1 a round for 2 rounds.)*
-- *Eth — Lockjaw* · 1 AP + 1 Mass · CD 3 — Melee 3 and lock on: it is Anchored and can't blink for 2 rounds, and takes 1 a round for 2. *(P3/E3: Melee 5 and lock on: it is Anchored and can't blink for 2 rounds, and takes 2 a round for 2.)*
+- *Phys — Bite* · 1 AP · CD 1 — Melee 1, and don't let go: Wounded 2. *(P3: Melee 4, and don't let go: Wounded 2.)*
+- *Eth — Lockjaw* · 1 AP + 1 Mass · CD 3 — Melee 3 and lock on: it is Anchored and can't blink for 2 rounds, and is Wounded 2. *(P3/E3: Melee 5 and lock on: it is Anchored and can't blink for 2 rounds, and is Wounded 3.)*
 
 ## 26 · Red Panda — leans T/S
 
@@ -1902,7 +1902,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Back Turn** · Time · `por_back`
 
 - *Phys — Turn Away* · 1 AP · CD 1 — Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes 1. *(P3: Turn your quills to the threat: the next hit on you is 1 less, and the next foe to hit you in melee takes 4.)*
-- *Eth — Back into It* · 1 AP + 1 Time · CD 3 — Back into a foe beside you: it takes 4, is Weakened 1 for 2 rounds, and takes 1 at the start of its next 2 turns. *(P3/E3: Back into a foe beside you: it takes 6, is Weakened 1 for 2 rounds, and takes 1 at the start of its next 2 turns.)*
+- *Eth — Back into It* · 1 AP + 1 Time · CD 3 — Back into a foe beside you: it takes 4, is Weakened 1 for 2 rounds, and is Wounded 2. *(P3/E3: Back into a foe beside you: it takes 6, is Weakened 1 for 2 rounds, and is Wounded 2.)*
 
 **Quill Shed** · Mass · `por_shed`
 
@@ -2152,7 +2152,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Sharp Edges** · Mass · `pan_edges`
 
 - *Phys — Scale Slash* · 1 AP · CD 1 — Melee 3. *(P3: Melee 6.)*
-- *Eth — Saw* · 1 AP + 1 Mass · CD 3 — Every foe beside you takes 3, then 1 at the start of its next 2 turns. *(P3/E3: Every foe beside you takes 5, then 1 at the start of its next 2 turns.)*
+- *Eth — Saw* · 1 AP + 1 Mass · CD 3 — Every foe beside you takes 3, then each is Wounded 2. *(P3/E3: Every foe beside you takes 5, then each is Wounded 2.)*
 
 **Walk Upright** · Space · `pan_upright`
 
@@ -2230,7 +2230,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Tail Kick** · Mass · `kan_tailkick`
 
 - *Phys — Lean Back and Kick* · 1 AP · CD 1 — Rock back on your tail and kick: melee 3, and push it 2. *(P3: Rock back on your tail and kick: melee 6, and push it 2.)*
-- *Eth — Gut Rake* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield; it takes 1 at the start of its next 2 turns. *(P3/E3: Melee 7 that ignores Shield; it takes 1 at the start of its next 2 turns.)*
+- *Eth — Gut Rake* · 1 AP + 1 Mass · CD 3 — Melee 5 that ignores Shield; it is Wounded 2. *(P3/E3: Melee 7 that ignores Shield; it is Wounded 2.)*
 
 **Box** · Mass · `kan_box`
 
@@ -2327,8 +2327,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Venom Spur** · Mass · `pla_spur`
 
-- *Phys — Spur* · 1 AP · CD 1 — Melee 2; it takes 1 at the start of its next 2 turns. *(P3: Melee 5; it takes 1 at the start of its next 2 turns.)*
-- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Melee 3; it takes 2 at the start of its next 3 turns and is Weakened 1 for 2 rounds. *(P3/E3: Melee 5; it takes 4 at the start of its next 3 turns and is Weakened 1 for 2 rounds.)*
+- *Phys — Spur* · 1 AP · CD 1 — Melee 2; it is Wounded 2. *(P3: Melee 5; it is Wounded 2.)*
+- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Melee 3; it is Wounded 3 and is Weakened 1 for 2 rounds. *(P3/E3: Melee 5; it is Wounded 5 and is Weakened 1 for 2 rounds.)*
 
 **Duck Dive** · Space · `pla_dive`
 
@@ -2392,7 +2392,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Talon Lock** · Mass · `eag_lock`
 
 - *Phys — Clamp* · 1 AP · CD 1 — Melee 3 and lock on: it and you are both Anchored this round. *(P3: Melee 6 and lock on: it and you are both Anchored this round.)*
-- *Eth — Death Grip* · 1 AP + 1 Mass · CD 3 — Melee 4 and do not let go: it is Anchored 1, and takes 1 at the start of its next 2 turns. *(P3/E3: Melee 6 and do not let go: it is Anchored 2, and takes 1 at the start of its next 2 turns.)*
+- *Eth — Death Grip* · 1 AP + 1 Mass · CD 3 — Melee 4 and do not let go: it is Anchored 1, and is Wounded 2. *(P3/E3: Melee 6 and do not let go: it is Anchored 2, and is Wounded 2.)*
 
 **Eagle Scream** · Charge · `eag_scream`
 
@@ -2740,7 +2740,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Salt Flats** · Time · `fla_salt`
 
 - *Phys — Salt Feet* · 1 AP · CD 1 — Ignore hazards for 2 rounds, and hold Shield 1 this round. *(P3: Ignore hazards for 2 rounds, and hold Shield 4 this round.)*
-- *Eth — Caustic Lake* · 1 AP + 1 Time · CD 3 — Stir the bitter lake at a node within 2: every foe on or beside it takes 1 at the start of its next 2 turns; both heroes ignore hazards this round. *(P3/E3: Stir the bitter lake at a node within 2: every foe on or beside it takes 2 at the start of its next 2 turns; both heroes ignore hazards this round.)*
+- *Eth — Caustic Lake* · 1 AP + 1 Time · CD 3 — Stir the bitter lake at a node within 2: every foe on or beside it is Wounded 2; both heroes ignore hazards this round. *(P3/E3: Stir the bitter lake at a node within 2: every foe on or beside it is Wounded 3; both heroes ignore hazards this round.)*
 
 **Crop Milk** · Time · `fla_milk`
 
@@ -3362,7 +3362,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Blood Squirt** ★ · Charge · `hor_squirt`
 
 - *Phys — Squirt* · 1 AP · CD 2 — Squirt blood from your eye at a foe within 2: it reels back 1 and is Weakened 1 this round. *(P3: Squirt blood from your eye at a foe within 2: it reels back 1 and is Weakened 4 this round.)*
-- *Eth — Foul Taste* · 0 AP + 1 Charge · CD 4 — Squirt foul blood at a foe within 2: it reels back 2, is Weakened 1 for 2 rounds, and takes 1 at the start of its next 2 turns. *(P3/E3: Squirt foul blood at a foe within 2: it reels back 2, is Weakened 2 for 2 rounds, and takes 1 at the start of its next 2 turns.)*
+- *Eth — Foul Taste* · 0 AP + 1 Charge · CD 4 — Squirt foul blood at a foe within 2: it reels back 2, is Weakened 1 for 2 rounds, and is Wounded 2. *(P3/E3: Squirt foul blood at a foe within 2: it reels back 2, is Weakened 2 for 2 rounds, and is Wounded 2.)*
 
 **Spiked Crown** · Mass · `hor_crown`
 
@@ -3504,7 +3504,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Toxic Secretion** · Mass · `axo_toxic`
 
 - *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
-- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve 4 of its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and it is Wounded 2. *(P3/E3: Melee 5, dissolve 4 of its Shield, and it is Wounded 4.)*
 
 **Lateral Line** · Charge · `axo_lateral`
 
@@ -3533,7 +3533,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Rough Skin** · Mass · `new_rough`
 
-- *Phys — Nip* · 1 AP · CD 1 — Melee 3; your skin's poison gets in: it takes 1 at the start of its next 2 turns. *(P3: Melee 6; your skin's poison gets in: it takes 1 at the start of its next 2 turns.)*
+- *Phys — Nip* · 1 AP · CD 1 — Melee 3; your skin's poison gets in: it is Wounded 2. *(P3: Melee 6; your skin's poison gets in: it is Wounded 2.)*
 - *Eth — Deadly to Swallow* · 1 AP + 1 Mass · CD 3 — Seep toxin: for 2 rounds you hold Shield 1 and anything that hits you in melee takes 2; heal 1. *(P3/E3: Seep toxin: for 2 rounds you hold Shield 2 and anything that hits you in melee takes 4; heal 1.)*
 
 ## 72 · Tree Frog — leans S/C
@@ -3553,7 +3553,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Toxic Secretion** · Mass · `axo_toxic`
 
 - *Phys — Exude* · 1 AP · CD 1 — Exude an irritant: melee attackers take 1 for 2 rounds. *(P3: Exude an irritant: melee attackers take 4 for 2 rounds.)*
-- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and corrode it for 2 at the end of each round (2 rounds). *(P3/E3: Melee 5, dissolve 4 of its Shield, and corrode it for 4 at the end of each round (2 rounds).)*
+- *Eth — Corrode* · 2 AP + 1 Mass · CD 3 — Melee 2, dissolve 2 of its Shield, and it is Wounded 2. *(P3/E3: Melee 5, dissolve 4 of its Shield, and it is Wounded 4.)*
 
 **Leaf Leap** ★ · Space · `tfr_leap`
 
@@ -3656,7 +3656,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Anemone Home** ★ · Time · `clo_anemone`
 
 - *Phys — Back Home* · 1 AP · CD 1 — Back among the tentacles: Shield 1 this round, and anything that hits you in melee takes 1. *(P3: Back among the tentacles: Shield 4 this round, and anything that hits you in melee takes 1.)*
-- *Eth — Sting Garden* · 1 AP + 1 Time · CD 4 — Lead foes into the anemone at a node within 2: every foe on or beside it is stung, 1 a round for 2 rounds; both heroes hold Shield 1 for 2 rounds. *(P3/E3: Lead foes into the anemone at a node within 2: every foe on or beside it is stung, 2 a round for 2 rounds; both heroes hold Shield 1 for 2 rounds.)*
+- *Eth — Sting Garden* · 1 AP + 1 Time · CD 4 — Lead foes into the anemone at a node within 2: every foe on or beside it is stung: Wounded 2; both heroes hold Shield 1 for 2 rounds. *(P3/E3: Lead foes into the anemone at a node within 2: every foe on or beside it is stung: Wounded 3; both heroes hold Shield 1 for 2 rounds.)*
 
 **Dart** · Space · `clo_dart`
 
@@ -3699,7 +3699,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Venom Spines** ★ · Mass · `lio_spines`
 
-- *Phys — Spine* · 1 AP · CD 1 — Melee 2; it takes 1 at the start of its next 2 turns. *(P3: Melee 5; it takes 1 at the start of its next 2 turns.)*
+- *Phys — Spine* · 1 AP · CD 1 — Melee 2; it is Wounded 2. *(P3: Melee 5; it is Wounded 2.)*
 - *Eth — Full Spines* · 1 AP + 1 Mass · CD 3 — Raise every spine: for 2 rounds you hold Shield 1, and anything that hits you in melee takes 3. *(P3/E3: Raise every spine: for 2 rounds you hold Shield 1, and anything that hits you in melee takes 5.)*
 
 **Fan Corral** · Charge · `lio_corral`
@@ -3808,7 +3808,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Slime Trail** ★ · Time · `snl_slime`
 
 - *Phys — Glide* · 1 AP · CD 1 — Glide 1 on your own slime, up walls and over anything sharp: height nodes included, hazards can't touch you this round, and your next hit this turn deals +1. *(P3: Glide 4 on your own slime, up walls and over anything sharp: height nodes included, hazards can't touch you this round, and your next hit this turn deals +1.)*
-- *Eth — Slick* · 1 AP + 1 Time · CD 3 — Lay a slick on a node within 2: foes on or beside it take 1 a round for 2 rounds, and foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Lay a slick on a node within 2: foes on or beside it take 1 a round for 2 rounds, and foes beside you are Weakened 1 for 4 rounds.)*
+- *Eth — Slick* · 1 AP + 1 Time · CD 3 — Lay a slick on a node within 2: foes on or beside it are Wounded 2, and foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Lay a slick on a node within 2: foes on or beside it are Wounded 2, and foes beside you are Weakened 1 for 4 rounds.)*
 
 **Seal In** · Mass · `snl_seal`
 
@@ -3851,8 +3851,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Nematocysts** ★ · Charge · `jel_sting`
 
-- *Phys — Sting* · 1 AP · CD 1 — Melee 1; it takes 1 at the start of its next 2 turns. *(P3: Melee 4; it takes 1 at the start of its next 2 turns.)*
-- *Eth — Fire All* · 1 AP + 1 Charge · CD 3 — Every sting fires at once: each foe beside you takes 2, then 1 a round for 2 rounds. *(P3/E3: Every sting fires at once: each foe beside you takes 4, then 1 a round for 2 rounds.)*
+- *Phys — Sting* · 1 AP · CD 1 — Melee 1; it is Wounded 2. *(P3: Melee 4; it is Wounded 2.)*
+- *Eth — Fire All* · 1 AP + 1 Charge · CD 3 — Every sting fires at once: each foe beside you takes 2, then each is Wounded 2. *(P3/E3: Every sting fires at once: each foe beside you takes 4, then each is Wounded 2.)*
 
 **Trailing Tentacles** · Mass · `jel_trail`
 
@@ -4014,7 +4014,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Bombardier Spray** · Charge · `btl_spray`
 
 - *Phys — Pop* · 1 AP · CD 1 — Spray boiling chemicals at a foe within 2: 1, and it is Weakened 1. *(P3: Spray boiling chemicals at a foe within 2: 4, and it is Weakened 1.)*
-- *Eth — Boiling Burst* · 1 AP + 1 Charge · CD 4 — Burst at a node within 2: every foe on or beside it is scalded, 1 a round for 2 rounds; foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Burst at a node within 2: every foe on or beside it is scalded, 2 a round for 2 rounds; foes beside you are Weakened 1 for 2 rounds.)*
+- *Eth — Boiling Burst* · 1 AP + 1 Charge · CD 4 — Burst at a node within 2: every foe on or beside it is scalded: Wounded 2; foes beside you are Weakened 1 for 2 rounds. *(P3/E3: Burst at a node within 2: every foe on or beside it is scalded: Wounded 3; foes beside you are Weakened 1 for 2 rounds.)*
 
 **Strong Back** · Mass · `btl_strong`
 
@@ -4117,7 +4117,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Glow-Worm Bite** · Mass · `ffl_larva`
 
 - *Phys — Bite* · 1 AP · CD 1 — Bite with the jaws you had as a larva: melee 2. *(P3: Bite with the jaws you had as a larva: melee 5.)*
-- *Eth — Numbing Bite* · 1 AP + 1 Mass · CD 3 — Bite and numb: melee 3; it takes 1 at the start of its next 2 turns and is Weakened 1 for 2 rounds. *(P3/E3: Bite and numb: melee 5; it takes 1 at the start of its next 2 turns and is Weakened 1 for 2 rounds.)*
+- *Eth — Numbing Bite* · 1 AP + 1 Mass · CD 3 — Bite and numb: melee 3; it is Wounded 2 and is Weakened 1 for 2 rounds. *(P3/E3: Bite and numb: melee 5; it is Wounded 2 and is Weakened 1 for 2 rounds.)*
 
 **Cold Light** · Space · `ffl_dark`
 
@@ -4194,8 +4194,8 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 **Tail Sting** ★ · Mass · `sco_sting`
 
-- *Phys — Sting* · 1 AP · CD 1 — Arch your tail and sting: melee 1; it takes 1 at the start of its next 2 turns. *(P3: Arch your tail and sting: melee 4; it takes 1 at the start of its next 2 turns.)*
-- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Spend the venom: melee 3; it takes 1 at the start of its next 2 turns and is Weakened 1 for 2 rounds. *(P3/E3: Spend the venom: melee 5; it takes 2 at the start of its next 2 turns and is Weakened 1 for 2 rounds.)*
+- *Phys — Sting* · 1 AP · CD 1 — Arch your tail and sting: melee 1; it is Wounded 2. *(P3: Arch your tail and sting: melee 4; it is Wounded 2.)*
+- *Eth — Full Dose* · 1 AP + 1 Mass · CD 3 — Spend the venom: melee 3; it is Wounded 2 and is Weakened 1 for 2 rounds. *(P3/E3: Spend the venom: melee 5; it is Wounded 3 and is Weakened 1 for 2 rounds.)*
 
 **Pincers** · Mass · `sco_pincers`
 

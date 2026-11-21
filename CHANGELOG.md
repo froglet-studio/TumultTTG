@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.88.0 — 2026-11-21 — Wound
+
+The third keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Wound N.** At round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). It replaces damage over time and its fifteen names (venom, crush, corrode, rot, drain, sting…), which stay as the flavour word in the log. Its bite is true damage; a new Wound replaces a smaller one; Cleanse sheds it (`wound`, state `Wound`).
+- **28 faces.** A dot of 1 for 2 rounds is Wound 2; 1+h(E) for 2 is Wound 2+h(E); 1+E for 2 is Wound 1+E; 1+E for 3 is Wound 2+E; 2 for 2 is Wound 2. Deepen the parasitism keeps its heal at each bite and loses its +1 a round at E 2.
+- **Saves** are version 21: a foe's damage over time loads as one Wound dealing about as much in all (fixture `save-2.87.json`).
+- **Balance.** Same seeds, 2.87.0 → 2.88.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 19 of 40, mission wins 69% → 69% and 87% → 87%; `80 runs --player strong` 38 → 40; `120 runs --player weak` 10 → 10. Within the noise (two standard errors on 80 runs is about ±9). When Wounds added up, it was easier (41 of 80, 12 of 120), so the larger Wound stands instead. Nothing is retuned.
+
 ## 2.87.0 — 2026-11-21 — Link
 
 The second keyword of the sweep (`docs/reference/KEYWORDS.md`).

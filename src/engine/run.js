@@ -979,7 +979,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 20;
+  T.SAVE_VERSION = 21;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1220,6 +1220,25 @@
         delete m.zones;
       }
       r.v = 20;
+    },
+    // 2.88 makes damage over time one keyword, Wound: N at round end, then one less each round (`states.Wound`,
+    // `{ n, owner, heal, kind }`). A foe's old `Dots` become one Wound dealing about as much in all.
+    20(r) {
+      const W = (d) => Math.max(1, Math.round((Math.sqrt(8 * d + 1) - 1) / 2));
+      for (const e of (r.mission && r.mission.enemies) || []) {
+        const dots = e && e.states && e.states.Dots;
+        if (!dots) continue;
+        delete e.states.Dots;
+        const total = dots.reduce((n, d) => n + (d.v || 0) * (d.t || 0), 0);
+        if (total > 0)
+          e.states.Wound = {
+            n: W(total),
+            owner: dots[0].owner != null ? dots[0].owner : null,
+            heal: Math.max(0, ...dots.map((d) => d.healOwner || 0)),
+            kind: dots[0].kind || 'wound',
+          };
+      }
+      r.v = 21;
     },
   };
   T.deserializeRun = function (json) {

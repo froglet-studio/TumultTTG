@@ -72,7 +72,7 @@ function answersOf(x) {
     case 'studied':
       add('single');
       break;
-    case 'dot':
+    case 'wound':
     case 'mark':
       add('single');
       if (x.area) add('crowd');
@@ -206,7 +206,7 @@ function answersOf(x) {
  * (Whether their numbers are good enough is a balance question, not an audit question.)
  */
 const STAPLE_VERBS = [
-  ...['strike', 'execute', 'dot', 'empower', 'mark', 'studied', 'expose', 'morph'], // damage
+  ...['strike', 'execute', 'wound', 'empower', 'mark', 'studied', 'expose', 'morph'], // damage
   ...['move', 'teleport', 'climb'], // movement
   ...['shield', 'preempt', 'weaken'], // mitigation that works against any hit
   ...['heal', 'engine'], // sustain and engines
@@ -260,7 +260,7 @@ const ABLATIONS = [
     (x) =>
       (x.v === 'strike' && (WIDE.includes(x.kind) || x.chain)) ||
       (x.v === 'field' && x.fx.some((y) => y.kw === 'strike')) ||
-      (x.v === 'dot' && x.area),
+      (x.v === 'wound' && x.area),
   ],
   [
     'mitigation',

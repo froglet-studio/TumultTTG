@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.87.0',
+    version: '2.88.0',
     items: [
+      {
+        text: 'Damage over time is now one keyword, Wound: at round end the foe takes the Wound, then it drops by 1 (Wound 3 is 3, then 2, then 1). Venom, crush, corrode, rot and the rest are all Wounds now, and a new Wound replaces a smaller one. Is the number on the foe easy to follow from round to round?',
+        cards: ['gec_lockjaw', 'axo_toxic'],
+      },
       {
         text: 'A new keyword, Link (Charge): two foes joined for a few rounds, so damage, pushes, pulls and heals on one reach the other. Tesla Cascade, Override, Spasm, Its Own Voice, Every Step, Disarming and Drive the Shoal Link their target to the nearest foe. Redirect is gone. Try Linking two foes and pushing one into a Field, or Marking one end before you hit it. Is it clear on the board which two are Linked?',
         cards: ['eel_discharge', 'eel_doublet', 'pel_line'],
