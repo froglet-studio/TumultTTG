@@ -653,15 +653,23 @@
         const asleep = E < T.RULES.ETHEREAL_MIN_E;
         const elC = EL[(c.E && c.E.elt) || c.el].color;
         const title = `<div class="hn">${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P} E${E}</span></div>`;
-        if (onTrack)
-          return `<div class="hcard cooling" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}<div class="small dim back">on track · back in ${onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0)}</div></div>`;
         const fb = (fk) => {
           const f = c[fk];
-          const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
           const elt = f.elt || c.el;
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
-          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;')}" ${chk.ok ? '' : 'disabled'}><span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
+          const body = `<span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>`;
+          const tip = U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;');
+          // a card on the track still reads in full: its faces stay at full strength, only not pressable
+          if (onTrack)
+            return `<div class="fbtn ${fk} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
+          const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
+          return `<button class="fbtn ${fk} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
         };
+        if (onTrack) {
+          const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
+          const what = onTrack.phase === 'dur' ? 'active, then cooling' : 'cooling';
+          return `<div class="hcard cooling" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is on the track (${what}): back in hand in ${back}. Its faces read as usual.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">${onTrack.phase === 'dur' ? '●' : '○'} back in ${back}</span></div>${title}${fb('P')}${fb('E')}</div>`;
+        }
         return `<div class="hcard" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${fb('P')}${fb('E')}</div>`;
       })
       .join('');

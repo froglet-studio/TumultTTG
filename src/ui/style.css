@@ -2163,11 +2163,40 @@ button:disabled .acost {
 .hcard .back {
   margin-top: 2px;
 }
+/* a card on the track keeps every word readable; the art and the frame say it is away */
 .hcard.cooling {
-  opacity: 0.45;
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--c) 30%, var(--line));
+  background: var(--panel2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+.hcard.cooling .artwrap {
+  position: relative;
 }
 .hcard.cooling .hart {
-  filter: grayscale(0.7);
+  filter: grayscale(0.75) brightness(0.6);
+}
+.hcard.cooling .cdband {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: calc(100% - 8px);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--txt);
+  background: rgba(8, 12, 20, 0.82);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 9px;
+}
+.fbtn.cool {
+  cursor: default;
+  border-style: dashed;
 }
 .fbtn .fic {
   line-height: 0;

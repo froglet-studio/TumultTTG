@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.85.0',
+    version: '2.85.1',
     items: [
+      {
+        text: 'A card on the track now stays readable: its name, both faces and their costs are shown at full strength (hover a face for its full text), with a band across the art saying when it is back in hand. Can you still tell at a glance which cards are away?',
+      },
       {
         text: 'Some Ethereal faces now cost two or three etherions and hit much harder, mostly for no AP (Heavy Throw, Vacuum, Tesla Cascade, Step Out of Time, Apex Form and more). With one element die of your choice a turn, a big face is one you save up for. Did you bank etherions across turns for one? Was it worth the wait?',
         cards: ['hum_throw', 'eel_discharge', 'tar_crypto'],
