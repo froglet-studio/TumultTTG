@@ -1547,7 +1547,7 @@
       if (r.mission && !Array.isArray(r.mission.dusk)) r.mission.dusk = [];
       r.v = 31;
     },
-    // 2.116 added Resonance: a mission keeps the elements in the air. An older one has none there.
+    // 2.118 added Resonance: a mission keeps the elements in the air. An older one has none there.
     31(r) {
       if (r.mission && !r.mission.air) r.mission.air = { M: 0, C: 0, S: 0, T: 0, O: 0 };
       r.v = 32;

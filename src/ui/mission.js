@@ -562,7 +562,7 @@
       const t = m.enemies.find((e) => e.type === ob.target);
       prog = t ? `${t.name} ${Math.max(0, t.hp)}/${t.maxHp}` : 'destroyed';
     }
-    // Resonance (2.116): the elements in the air, strong this round or fading
+    // Resonance (2.118): the elements in the air, strong this round or fading
     const airPill = (mm) => {
       const up = T.AIR_ELS.filter((k) => mm.air && mm.air[k] > 0);
       if (!up.length) return '';

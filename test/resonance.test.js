@@ -1,5 +1,5 @@
 'use strict';
-// Resonance (2.116): an Ethereal face leaves its element in the air; a face that draws on it takes it for a bonus.
+// Resonance (2.118): an Ethereal face leaves its element in the air; a face that draws on it takes it for a bonus.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { createHarness } = require('../tools/harness');

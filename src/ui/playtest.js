@@ -19,7 +19,7 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.116.0',
+    version: '2.118.0',
     items: [
       {
         text: "Resonance: every Ethereal face leaves its element in the air for this round and the next (the top bar shows it). Recoil Slam, Pop, Cavitation and Pick the Weak each draw on an element for a bonus: play a partner's face first and yours lands bigger. Omni in the air counts as any. The Stridulation face once called Resonance is now Thrum.",

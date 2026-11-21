@@ -821,7 +821,7 @@
   };
   T.livePets = (m) => (m.pets || []).filter((p) => !p.dead);
   /**
-   * Resonance (2.116): elements in the air. Playing an Ethereal face leaves its element there, strong
+   * Resonance (2.118): elements in the air. Playing an Ethereal face leaves its element there, strong
    * (2) this round and fading (1) the next, then gone. A face that draws on an element takes it for a
    * bonus and spends it; Omni in the air stands in for any element. The squad shares the air.
    */
@@ -1883,7 +1883,7 @@
       });
       say(m, `${body.name} waits for dusk.`, 'hero');
     } else T.runEffects(m, body, face.fx, rctx);
-    // Resonance (2.116): an Ethereal face leaves its element in the air, after it has drawn on what was there
+    // Resonance (2.118): an Ethereal face leaves its element in the air, after it has drawn on what was there
     if (faceKey === 'E' && T.AIR_ELS.includes(elt)) T.leaveInAir(m, elt);
     if (body !== h) delete rctx.pendingFreeMove; // a free step a pet's face grants is the pet's, and it has taken it
     T.afterAction(m);
