@@ -263,6 +263,20 @@
       tip: 'Mint: adds dice to the bank for this round only. Minted dice never count toward the 15 and vanish at the end of the round.',
     },
     {
+      id: 'draw',
+      re: 'Draws?(?= (?:\\d|an? \\w+ die))',
+      icon: 'kw.mint',
+      tone: 'good',
+      tip: 'Draw N: take N dice of your choice from your pool and bank them showing that face (a plain die first; never one at random). They count toward your 15.',
+    },
+    {
+      id: 'reroll',
+      re: 'Reroll(?:s|ed)?',
+      icon: 'kw.mint',
+      tone: 'good',
+      tip: 'Reroll N: pick up to N of your banked dice and roll them again.',
+    },
+    {
       id: 'decoy',
       re: 'decoy',
       icon: 'kw.decoy',

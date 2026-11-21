@@ -523,8 +523,8 @@ Text only (and the dead `noTrap` option); no rule or number changed.
 
 With three or more pilots a face that reaches an ally lets its player choose which. Two pilots are untouched: `node tools/sim.js 40` is identical before and after. Three pilots (`node tools/sim.js 20 --pilots 3`): the heuristic player is identical (it takes the default ally); the look-ahead player, which now weighs every ally, averages 93.9% → 94.1% across the mission cells, and 9/20 → 7/20 full runs (within the noise of 20 runs).
 
-## v2.101.0 — weapons
+## v2.102.0 — weapons
 
-Two weapons join the gear (the Shock Baton, +1 to melee strikes; the Coil Rifle, +1 to ranged), each with an Overcharge paid in banked Omni dice. They made full runs easier: `node tools/sim.js 200 runs --player strong`, 2.100.0 → 2.101.0 at 145%: 101 → 112 of 200. So every foe has **150%** of its listed vitality (was 145%): 102 of 200 (148%: 106; 152%: 85). `node tools/sim.js 40`, 2.100.0 → 2.101.0 at 150%: runs 5 → 3 and 19 → 20 of 40; mission cells average 79.6% → 79.7% (heuristic) and 94.5% → 94.3% (look-ahead). Not easier.
+Two weapons join the gear (the Shock Baton, +1 to melee strikes; the Coil Rifle, +1 to ranged), each with an Overcharge paid in banked Omni dice. They made full runs easier: `node tools/sim.js 200 runs --player strong`, 2.101.0 → 2.102.0 at 145%: 101 → 112 of 200. So every foe has **150%** of its listed vitality (was 145%): 102 of 200 (148%: 106; 152%: 85). `node tools/sim.js 40`, 2.101.0 → 2.102.0 at 150%: runs 5 → 3 and 19 → 20 of 40; mission cells average 79.6% → 79.7% (heuristic) and 94.5% → 94.3% (look-ahead). Not easier.
 
 The look-ahead player hardly ever Overcharges: its beam keeps two lines, and an Overcharge scores below a strike until the strike that follows it. Forcing an Overcharge whenever a foe is near (each pilot wearing one weapon, tier 2 and 3, 90 missions) wins 90.0% (baton) and 91.1% (rifle) against 92.2% and 90.0% without forcing, and 88.9% with no gear. So it is a choice, not a free win: the Omni it eats would have paid an Ethereal face.

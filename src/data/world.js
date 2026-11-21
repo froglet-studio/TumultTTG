@@ -16,7 +16,7 @@
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 150,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 since 2.101: weapons)
+    FOE_HP: 150,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 since 2.102: weapons)
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -118,7 +118,7 @@
         { n:'Patch', cost:1, cd:1, tgt:'self', fx:[{v:'field', radius:f(1), on:'end', dur:f(2), fx:[{kw:'heal', n:f(3)}]}], txt:()=>'A mending Field on your space and beside it for 2 rounds: allies ending the round there Heal 3 (a downed one gets up).' },
         { n:'Revive', cost:2, cd:3, tgt:'self', fx:[{v:'heal', n:f(10), target:'downedAdj'}], txt:()=>'Heal 10 a downed ally beside you: it gets up with 10.' },
       ]},
-    // Weapons (2.101: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
+    // Weapons (2.102: Garrett, 2026-11-21): tech that makes your own strikes hit harder. A weapon never strikes on
     // its own; its passive adds to every strike of its reach you make, and its Overcharge takes banked Omni dice
     // (the omnicrystals a player rolls) for an Empower on every such strike this round.
     { id:'baton', name:'Shock Baton', price:6, icon:'⚡',
