@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.104.0',
+    version: '2.106.0',
     items: [
+      {
+        text: 'Missions are sized by squad power: each pilot brings 10, and 1 more for every level past 1; two new pilots are 20, and every point past that makes foes tougher, and more of them, with more to do. Pilots who grow faster than the route expects meet missions that grow with them, and if the whole squad goes down the expedition ends (the Lifeline only carries a mission lost with someone standing). Hover the ⚖ pill on the route to see your power. With seasoned pilots, did a mission feel too easy or too hard? Did a bigger, newer squad and a smaller, seasoned one with the same power feel alike?',
+      },
       {
         text: "Pocket vehicles and big maps. A new stop on the route, the Crossing, is played on a big map (Reed Delta or Ashfall Salt Flat: eight spaces across, with water, reeds, fissures and vents). Before it, each player picks a vehicle for their pilot: Skiff, Wing, Crawler, Diver or Runner, each with its own seats, speed, hull, ground it can cross and two cards (some carry long guns). Getting in or out is 1 AP, and so is each Drive. Inside you play only the vehicle's cards and your faces marked Mounted; blows land on the hull. Which vehicle did you pick, and did it pay for itself? Did you ever want to get out and walk?",
       },

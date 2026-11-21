@@ -254,20 +254,19 @@
     </div>`;
   }
 
-  /** What this squad's size and level ask of its missions (T.scaleFor), as a pill on the route; nothing for two new pilots. */
+  /** What this squad's power asks of its missions (T.scaleFor), as a pill on the route; nothing for two new pilots. */
   U.scalePill = function (run) {
     const sc = T.scaleFor(run);
-    if (!sc.size && !sc.level) return '';
-    const who = [sc.size ? `a squad of ${sc.size + 2}` : '', sc.level ? `level ${sc.level + 1}` : '']
-      .filter(Boolean)
-      .join(', ');
+    if (!sc.over) return '';
+    const who = `power ${sc.power}` + (sc.size ? `, a squad of ${sc.size + 2}` : '');
     const what = [
       `foes have ${sc.hp}% vitality`,
       sc.foes ? `${sc.foes} more foe${sc.foes > 1 ? 's' : ''} where a mission has room` : '',
       sc.need ? `objectives ask ${sc.need} more` : '',
       sc.swarm ? `swarms grow ${sc.swarm} larger` : '',
     ].filter(Boolean);
-    return `<span class="pill" data-tip="${esc(`<b>The missions answer ${who}</b><div>${what.join('; ')}. The Heart keeps its rules and grows only in vitality.</div>`)}">⚖ ${esc(who)}</span>`;
+    const how = `Each pilot brings power ${T.SCALING.PILOT}, and 1 more for every level past 1; missions are written for two new pilots (${2 * T.SCALING.PILOT}). A pilot that grows faster than the route expects (about 3 points a row) brings 1 more for every 6 points ahead.`;
+    return `<span class="pill" data-tip="${esc(`<b>The missions answer ${who}</b><div>${what.join('; ')}. The Heart keeps its rules and grows only in its fight.</div><div class="dim">${how}</div>`)}">⚖ ${esc(who)}</span>`;
   };
 
   /* ───────────── DRAFT ───────────── */
@@ -664,7 +663,7 @@
       return { x: n === 1 ? 50 : ((nd.col + 0.5) / n) * 100, y: HEAD + (nd.row + 0.5) * ROW };
     };
     const legs = [];
-    for (let r = 0; r < map.rows.length;) {
+    for (let r = 0; r < map.rows.length; ) {
       const a = T.actOf(r, map);
       let r2 = r;
       while (r2 + 1 < map.rows.length && T.actOf(r2 + 1, map) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss')
@@ -894,7 +893,7 @@
    */
   function legsOf(map) {
     const legs = [];
-    for (let r = 0; r < map.rows.length;) {
+    for (let r = 0; r < map.rows.length; ) {
       const a = T.actOf(r);
       let r2 = r;
       while (r2 + 1 < map.rows.length && T.actOf(r2 + 1) === a && map.all[map.rows[r2 + 1][0]].type !== 'boss') r2++;
@@ -974,7 +973,7 @@
   function renderMap() {
     const run = U.run;
     const map = run.map;
-    return `<div class="wrap route-screen">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission and limp on with no rewards.">🕯️ Lifeline</span>' : ''}${U.scalePill(run)}${titleBtn()}`)}
+    return `<div class="wrap route-screen">${header('The Route', `<span style="margin-left:6px"></span>${U.purseHTML(run)}${run.tide !== 'rising' ? `<span class="pill" data-tip="${esc(T.TIDES[run.tide].txt)}">${U.ic('node.cascade', '🌊', 'tiny')} ${esc(T.TIDES[run.tide].n)}</span>` : ''}${run.lifeline ? '<span class="pill" data-tip="Once per run: lose a non-boss mission with someone still standing and limp on with no rewards. If the whole squad goes down, the expedition ends.">🕯️ Lifeline</span>' : ''}${U.scalePill(run)}${titleBtn()}`)}
       ${renderPassage(run)}
       ${joinCard(run)}
       <div class="route3"><div class="r3-squad">${partyBar(run)}</div><div class="r3-main">${run.phase === 'map' && run.available.length ? `<div class="small dim r3-line">${expeditionLine(run)}${esc(T.threatTitle(run))} waits at the end of the route.</div>` : ''}${renderJourney(run)}</div></div>

@@ -230,6 +230,9 @@
     // its level is set as it sets out, and the missions of this expedition answer it (T.squadLevel)
     const lvl = T.pilotLevel(h);
     if (lvl > 1) h.level = lvl;
+    // and the growth it set out with, so what it grows on the road can be told apart (T.pilotPowerFor)
+    const grown = T.pilotPower(h);
+    if (grown) h.setOut = grown;
     return h;
   };
 
@@ -496,8 +499,11 @@
     const run = T.newRun(seed);
     run.heroes = heroes.map((i) => T.heroFromPrebuilt(run, T.PREBUILTS[i]));
     run.heroes.forEach((h) => T.autoAllocate(h));
-    if (kit === 'tier') T.addProgression(run, tier);
-    else run.crystals = 12;
+    if (kit === 'tier') {
+      T.addProgression(run, tier);
+      // the tier's kit is what the squad brings to its first stop, not growth ahead of the road (T.pilotPowerFor)
+      run.heroes.forEach((h) => (h.setOut = T.pilotPower(h)));
+    } else run.crystals = 12;
     // the mission is the first node of a whole Tide, so the run can go on afterwards
     T.startMap(run);
     const node = run.map.all[run.map.rows[0][0]];
@@ -580,8 +586,8 @@
     const bigPick = gen.big ? board.pick(T.BIG_ATLAS).id : null;
     if (gen.big && pageId && !T.PAGE_BY[pageId].big) pageId = null;
     if (!pageId) pageId = node && node.page && (!gen.big || T.PAGE_BY[node.page].big) ? node.page : bigPick || picked;
-    // the squad's size and level ask more of the mission (src/engine/scaling.js); two new pilots ask nothing more
-    const sc = T.scaleFor(run);
+    // the squad's power asks more of the mission (src/engine/scaling.js); two new pilots ask nothing more
+    const sc = T.scaleFor(run, { tier, row: node ? node.row : null });
     const spec = gen.gen(board, tier, T.scaledTide(T.TIDES[run.tide] || T.TIDES.rising, sc), T.PAGE_BY[pageId]);
     T.scaleSpec(spec, sc, T.squadSize(run), T.makeRng(T.subSeed(seed, 'squad')));
     spec.page = pageId;

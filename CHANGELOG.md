@@ -9,6 +9,13 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.106.0 — 2026-11-21 — missions sized by squad power
+
+- **Squad power.** An expedition is sized from its squad's power and the chosen wind (Garrett, 2026-11-21). A pilot's power is 10, and 1 more for every level past 1 it set out with; the squad's power is its pilots' added up. Every point past 20 (two new pilots) gives foes +5% vitality, and every 5 points one more foe, every 10 one more to do and a swarm 1 larger, so a third new pilot asks what it did before. A level now counts for every pilot who has it, not as the squad's average (`T.squadPower`, `T.pilotPowerFor`, `docs/reference/SCALING.md`).
+- **Growth on the road.** The route expects about 3 points a pilot a row; a pilot that grows faster brings 1 more power for every 6 points ahead to each later mission, and none brings less than it set out with.
+- **A full wipe ends the expedition.** With the whole squad down the expedition is over, and the Lifeline is kept only for a mission lost with someone standing. Pilots are whole again for the next expedition.
+- The route's ⚖ pill shows the squad's power. `tools/sim.js --scaling` takes `power.F=N`, `boss.F=N` or `PILOT=N`.
+
 ## 2.104.0 — 2026-11-21 — pocket vehicles and big maps
 
 - **Big maps.** Two new atlas pages eight spaces across and four deep, too far to walk comfortably: *Reed Delta* (sea; channels, reed beds and sandbars) and *Ashfall Salt Flat* (land; open salt, two fissures, vents). A space on a big map has a ground: open, rough (walkable), water or a gap (never walked). Every ground space can still be reached on foot, two ways across, so no mission needs a vehicle (`T.BIG_ATLAS`, `docs/reference/VEHICLES.md`).

@@ -69,6 +69,7 @@
    */
   T.joinPilot = function (run, i, h) {
     const others = run.heroes.filter((x, j) => x && j !== i);
+    if (h.setOut == null && T.pilotPower(h)) h.setOut = T.pilotPower(h); // what it came with, before catching up
     const behind = others.length ? Math.min(...others.map(T.pilotPower)) - T.pilotPower(h) : 0;
     if (behind > 0) h.upUnspent = (h.upUnspent || 0) + behind;
     if (h.level == null) h.level = 1;

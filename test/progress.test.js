@@ -84,18 +84,19 @@ test('a recipe with more than a new pilot holds is refused unless it has flown',
   assert.equal(T.validMade(Object.assign({}, rec, { runs: -1 })), null);
 });
 
-test("the missions answer the squad's level as it set out, not what it grows on the way", () => {
+test("the missions answer the squad's power as it set out, not what it grows on the way within a tier", () => {
   const run = T.newRun(9);
   run.heroes = [T.heroFromPrebuilt(run, T.PREBUILTS[0]), T.heroFromPrebuilt(run, T.PREBUILTS[1])];
-  assert.equal(T.scaleFor(run).level, 0);
+  const S = T.SCALING;
+  assert.equal(T.scaleFor(run).over, 0);
   run.heroes[0].upUnspent += 30; // growth on this expedition
-  assert.equal(T.scaleFor(run).level, 0);
+  assert.equal(T.scaleFor(run).over, 0, 'as it set out');
   run.heroes.forEach((h) => (h.level = 5));
   const sc = T.scaleFor(run);
-  assert.equal(sc.level, 4);
-  assert.equal(sc.hp, Math.round(100 * (1 + 4 * T.SCALING.level.hp)));
+  assert.equal(sc.power, 2 * S.PILOT + 8, "each pilot's power is PILOT and its levels past 1, summed");
+  assert.equal(sc.hp, Math.round(100 * (1 + 8 * S.power.hp)));
   run.heroes[1].level = 1;
-  assert.equal(T.scaleFor(run).level, 2, 'the squad level is its pilots’ levels past 1, averaged, rounded down');
+  assert.equal(T.scaleFor(run).power, 2 * S.PILOT + 4);
 });
 
 test('a 2.75 save loads, plays on and saves again unchanged in shape', () => {

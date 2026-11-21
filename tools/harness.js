@@ -52,6 +52,7 @@ function createHarness(T = loadTumult()) {
       T.autoAllocate(h);
       // the level it set out at: a tier's kit (T.addProgression) is growth on this expedition, not before it
       h.level = level;
+      h.setOut = T.pilotPower(h);
     });
   }
 
