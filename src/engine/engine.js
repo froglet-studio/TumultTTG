@@ -295,17 +295,24 @@
     'fieldDur', // val: added to the rounds of every Field the holder lays that has rounds
     'fieldForce', // val: added to every push and pull of the holder's Fields
     'weapon', // val: { reach: 'melee' | 'ranged', n } — added to every strike of that reach the holder makes (2.108)
+    'thornsBonus', // val: added to every Thorns the holder gains (2.121)
+    'hazardSoft', // val: taken off every hazard's damage to the holder (2.121)
   ];
   T.boonVals = function (h, hook) {
     if (!T.BOON_HOOKS.includes(hook)) throw new Error('unknown passive hook ' + hook);
     const gear = (h.gear || []).map((g) => T.GEAR_BY[g.id] && T.GEAR_BY[g.id].passive);
     const boons = (h.boons || []).map((id) => T.BOON_BY[id]);
+    // a clade's instinct (2.121) is a passive the pilot is born with: one per clade, src/data/instincts.js
+    const inst = h.kind === 'hero' ? T.instinctsOf(h) : [];
     return gear
-      .concat(boons)
+      .concat(boons, inst)
       .filter((b) => b && b.hook === hook)
       .map((b) => b.val);
   };
   const boonSum = (h, hook) => T.boonVals(h, hook).reduce((sum, v) => sum + v, 0);
+  T.boonSum = boonSum;
+  /** The damage a hazard does to this unit: the rule's, less what softens it for a pilot (2.121). */
+  const hazardDmg = (u) => Math.max(0, R().HAZARD_DMG - (u.kind === 'hero' ? boonSum(u, 'hazardSoft') : 0));
   /** A weapon's reach for a strike of this kind: melee is melee; a strike along a line or anywhere is ranged;
    *  an area strike has none, so no weapon adds to it (2.108). */
   T.weaponReach = (kind) => (kind === 'melee' ? 'melee' : kind === 'los' || kind === 'any' ? 'ranged' : null);
@@ -1620,7 +1627,7 @@
     m.fields = m.fields.filter((f) => f.trips == null || f.trips > 0);
     for (const u of units())
       if (bd.nodes[u.pos].hazard && !hazardImmune(u) && !u.boss) {
-        const d = T.damage(m, null, u, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
+        const d = T.damage(m, null, u, hazardDmg(u), { kind: 'true', trueDmg: true, label: 'floods over' });
         if (u.kind === 'hero') m.stats.hazardDmg += d;
       }
     for (const u of units()) {
@@ -2571,7 +2578,7 @@
       case 'thorns': {
         // Thorns N: anything that strikes you in melee takes N, for `dur` rounds; `next`, only the next one (and
         // `push` pushes it back). It absorbs Counter.
-        const n = num(f.val, P, E);
+        const n = num(f.val, P, E) + (actor.kind === 'hero' ? boonSum(actor, 'thornsBonus') : 0);
         const d = num(f.dur, P, E) || 1;
         if (n <= 0) break;
         const th = st(actor).Thorns || {};
@@ -3371,7 +3378,7 @@
         hulls.add(h.ride);
       }
       say(m, `${h.name} is caught in the hazard.`, 'enemy');
-      const d = T.damage(m, null, h, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
+      const d = T.damage(m, null, h, hazardDmg(h), { kind: 'true', trueDmg: true, label: 'floods over' });
       m.stats.hazardDmg += d;
     }
     for (const p of T.livePets(m))
