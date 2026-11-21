@@ -29,13 +29,13 @@ The rules this checks:
 | Problem | Where it shows up | Faces that answer it | …of which staples |
 |---|---|---|---|
 | One tough foe | elites, the Heart, Spawners, a Brute | 502 | 484 |
-| A crowd | Swarm waves, the Heart’s Biters | 254 | 227 |
-| Shields | Warden, Bulwark, the Heart | 45 | 44 |
+| A crowd | Swarm waves, the Heart’s Biters | 256 | 229 |
+| Shields | Warden, Bulwark, the Heart | 46 | 45 |
 | Height | the Vault ledge | 64 | 59 |
-| The unseen | hidden caches, Lurkers, a faded Harrier | 152 | 148 |
-| The clock | every objective mission, the flood | 347 | 343 |
+| The unseen | hidden caches, Lurkers, a faded Harrier | 154 | 150 |
+| The clock | every objective mission, the flood | 346 | 342 |
 | Hazards and being dragged | flood tiles, undertow, the Heart’s pull | 126 | 115 |
-| One big telegraphed hit | Slam, Ambush, Phase Lance, Crush | 751 | 707 |
+| One big telegraphed hit | Slam, Ambush, Phase Lance, Crush | 749 | 705 |
 | Attrition | vitality carried from mission to mission | 194 | 191 |
 | Control on you | Rooted, Weakened, pushed and pulled | 130 | 120 |
 
@@ -49,13 +49,13 @@ Win rate of two random legal heroes (no gear, no boons) played by the look-ahead
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | any cards (baseline) | 529 | 100% | 100% | 88% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 19% | 94% | 56% |
 | no way up | 480 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 25% | 81% | 69% |
-| no shield-breakers | 495 | 100% | 100% | 88% | 94% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 25% | 81% | 69% |
-| no reveals | 442 | 100% | 100% | 88% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 19% | 88% | 56% |
-| no area damage | 497 | 100% | 100% | 75% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 88% | 100% | 100% | 13% | 94% | 56% |
+| no shield-breakers | 494 | 100% | 100% | 88% | 94% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 25% | 94% | 69% |
+| no reveals | 442 | 100% | 100% | 88% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 13% | 88% | 56% |
+| no area damage | 495 | 100% | 100% | 75% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 13% | 94% | 63% |
 | no shields or wards | 262 | 100% | 100% | 100% | 81% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 31% | 88% | 50% |
 | no healing | 394 | 100% | 100% | 100% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 19% | 63% | 63% |
-| no movement abilities | 354 | 100% | 100% | 81% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 88% | 100% | 100% | 13% | 69% | 56% |
-| no foe control | 360 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 19% | 94% | 75% |
+| no movement abilities | 355 | 100% | 100% | 81% | 75% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 88% | 100% | 100% | 13% | 75% | 56% |
+| no foe control | 360 | 100% | 100% | 94% | 88% | 100% | 100% | 100% | 100% | 100% | 94% | 100% | 100% | 100% | 100% | 19% | 94% | 75% |
 | no hazard answers | 433 | 100% | 100% | 94% | 81% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 25% | 81% | 81% |
 | no dice economy | 456 | 100% | 100% | 88% | 88% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 6% | 81% | 56% |
 | no cards at all | 0 | 100% | 100% | 69% | 81% | 100% | 94% | 100% | 94% | 100% | 94% | 100% | 81% | 81% | 94% | 0% | 88% | 6% ⚠ |
@@ -142,18 +142,18 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Theory of Mind — Read (Phys) | staple | One tough foe, One big telegraphed hit | 329/202 (1.63) |  |
+| Theory of Mind — Read (Phys) | staple | One tough foe, One big telegraphed hit | 330/202 (1.63) |  |
 | Theory of Mind — Pre-empt (Eth) | tool | One tough foe, A crowd, One big telegraphed hit | 0/202 (0.00) |  |
 | Tool Use — Improvise (Phys) | staple | One tough foe | 4/201 (0.02) |  |
-| Tool Use — Reach Rig (Eth) | staple | The clock, One big telegraphed hit | 170/201 (0.85) |  |
-| Persistence — Pace (Phys) | staple | The clock, One big telegraphed hit, Control on you | 122/225 (0.54) |  |
+| Tool Use — Reach Rig (Eth) | staple | The clock, One big telegraphed hit | 171/201 (0.85) |  |
+| Persistence — Pace (Phys) | staple | The clock, One big telegraphed hit, Control on you | 121/225 (0.54) |  |
 | Persistence — Second Wind (Eth) | tool | One big telegraphed hit, Attrition | 6/43 (0.14) |  |
 | Throwing Arm — Hurl (Phys) | staple | One tough foe | 237/204 (1.16) |  |
 | Throwing Arm — Heavy Throw (Eth) | tool | Height, The clock, One big telegraphed hit | 4/39 (0.10) |  |
 | Language — Call (Phys) | staple | The clock, One big telegraphed hit | 107/206 (0.52) |  |
-| Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 109/169 (0.64) |  |
+| Language — Rally (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 108/169 (0.64) |  |
 | Pattern Recognition — Spot (Phys) | staple | One tough foe, The unseen | 12/237 (0.05) |  |
-| Pattern Recognition — Weak Point (Eth) | staple | One tough foe, Shields | 14/51 (0.27) |  |
+| Pattern Recognition — Weak Point (Eth) | staple | One tough foe, Shields | 13/51 (0.25) |  |
 | Opposable Grip — Manipulate (Phys) | staple | One tough foe, One big telegraphed hit | 96/235 (0.41) |  |
 | Opposable Grip — Leverage (Eth) | staple | One tough foe, One big telegraphed hit | 133/205 (0.65) |  |
 | Cooperative Instinct — Assist (Phys) | staple | One tough foe | 552/255 (2.16) |  |
@@ -290,7 +290,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Toxic Secretion — Corrode (Eth) | staple | One tough foe, Shields | 3/6 (0.50) |  |
 | Lateral Line — Feel Flow (Phys) | staple | The unseen, One big telegraphed hit | 0/3 (0.00) |  |
 | Lateral Line — Pressure Map (Eth) | staple | A crowd, The unseen, One big telegraphed hit | 0/0 |  |
-| Powerful Tail — Lunge (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 13/8 (1.63) |  |
+| Powerful Tail — Lunge (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 12/8 (1.50) |  |
 | Powerful Tail — Momentum Wave (Eth) | staple | One tough foe, A crowd, The unseen, One big telegraphed hit | 3/6 (0.50) |  |
 | Metamorphosis — Surge (Phys) | staple | One tough foe, The clock | 0/4 (0.00) |  |
 | Metamorphosis — Apex Form (Eth) | staple | One tough foe, A crowd | 0/2 (0.00) |  |
@@ -569,15 +569,15 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Bone Crush — Crunch (Phys) | staple | One tough foe, Shields, One big telegraphed hit | 3/7 (0.43) |  |
-| Bone Crush — Bone Crack (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 5/7 (0.71) |  |
+| Bone Crush — Crunch (Phys) | staple | One tough foe, Shields, One big telegraphed hit | 4/7 (0.57) |  |
+| Bone Crush — Bone Crack (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 4/7 (0.57) |  |
 | Clan Whoop — Whoop (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 9/6 (1.50) |  |
 | Clan Whoop — Mob (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/1 (0.00) |  |
 | Scavenge — Scavenge (Phys) | staple | One tough foe, Attrition | 3/9 (0.33) |  |
 | Scavenge — Iron Gut (Eth) | staple | Attrition, Control on you | 0/6 (0.00) |  |
 | Endurance — Keep Going (Phys) | staple | The clock, One big telegraphed hit, Attrition | 4/9 (0.44) |  |
 | Endurance — Run It Down (Eth) | staple | The clock | 9/9 (1.00) |  |
-| Matriarch — Rank (Phys) | staple | One tough foe, Attrition | 2/4 (0.50) |  |
+| Matriarch — Rank (Phys) | staple | One tough foe, Attrition | 3/4 (0.75) |  |
 | Matriarch — Clan (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 0/1 (0.00) |  |
 
 ### Sea Otter
@@ -649,7 +649,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Whisker Feel — Read the Current (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/2 (0.00) |  |
 | Herd Bellow — Bellow (Phys) | staple | A crowd, One big telegraphed hit | 8/9 (0.89) |  |
 | Herd Bellow — Herd Up (Eth) | staple | A crowd, One big telegraphed hit, Control on you | 0/4 (0.00) |  |
-| Suction Feed — Suck In (Phys) | staple | One tough foe, One big telegraphed hit | 1/5 (0.20) |  |
+| Suction Feed — Suck In (Phys) | staple | One tough foe, One big telegraphed hit | 0/5 (0.00) |  |
 | Suction Feed — Feast (Eth) | staple | One tough foe, Attrition | 2/5 (0.40) |  |
 | Ice Haul — Tusk Up (Phys) | staple | Height, The clock, One big telegraphed hit | 2/6 (0.33) |  |
 | Ice Haul — Break the Ice (Eth) | tool | Hazards and being dragged, One big telegraphed hit | 0/2 (0.00) |  |
@@ -1013,7 +1013,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Sky Hyperspeed — Sky Dash (Phys) | staple | One tough foe, Height, The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 8/6 (1.33) |  |
+| Sky Hyperspeed — Sky Dash (Phys) | staple | One tough foe, Height, The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 9/6 (1.50) |  |
 | Sky Hyperspeed — Sky Burst (Eth) | staple | One tough foe, Height, The clock, Hazards and being dragged, One big telegraphed hit, Control on you | 0/0 |  |
 | Kite — Hang (Phys) | staple | One tough foe, The unseen, The clock, One big telegraphed hit | 3/5 (0.60) |  |
 | Kite — Hold the Wind (Eth) | tool | Height, The unseen, Hazards and being dragged, Control on you | 0/2 (0.00) |  |
@@ -1345,8 +1345,8 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Slow Heart — Two Beats a Minute (Eth) | staple | One big telegraphed hit, Attrition | 0/0 |  |
 | Death Roll — Grab (Phys) | staple | One tough foe, One big telegraphed hit | 0/3 (0.00) |  |
 | Death Roll — Roll (Eth) | staple | One tough foe, Shields, One big telegraphed hit | 1/3 (0.33) |  |
-| Lurk — Sink (Phys) | staple | One tough foe, One big telegraphed hit | 2/4 (0.50) |  |
-| Lurk — Log in the River (Eth) | staple | One tough foe, The clock, One big telegraphed hit | 0/0 |  |
+| Lurk — Sink (Phys) | staple | One tough foe, One big telegraphed hit | 0/4 (0.00) |  |
+| Lurk — Under the Surface (Eth) | staple | One tough foe, A crowd, Shields, The unseen | 2/2 (1.00) |  |
 | Ambush Jaws — Lunge (Phys) | staple | One tough foe, The clock, One big telegraphed hit | 1/3 (0.33) |  |
 | Ambush Jaws — Out of the Water (Eth) | staple | One tough foe, The unseen, The clock, One big telegraphed hit | 2/2 (1.00) |  |
 | Tail Sweep — Sweep (Phys) | staple | One tough foe, A crowd, The unseen, One big telegraphed hit | 0/2 (0.00) |  |
@@ -1599,7 +1599,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Raptorial Strike — Snatch (Phys) | staple | One tough foe, One big telegraphed hit | 5/4 (1.25) |  |
 | Raptorial Strike — Lightning Grab (Eth) | tool | One tough foe, One big telegraphed hit | 2/4 (0.50) |  |
 | Hold Still — Wait (Phys) | staple | One tough foe, One big telegraphed hit | 0/3 (0.00) |  |
-| Hold Still — Patience (Eth) | staple | One tough foe, One big telegraphed hit | 0/1 (0.00) |  |
+| Hold Still — Patience (Eth) | staple | One tough foe, A crowd, The unseen | 2/3 (0.67) |  |
 | Leaf Sway — Sway (Phys) | staple | The clock, One big telegraphed hit | 3/2 (1.50) |  |
 | Leaf Sway — Just a Twig (Eth) | staple | The clock, One big telegraphed hit | 0/0 |  |
 | Swivel Head — Turn and Look (Phys) | staple | One tough foe, The unseen | 1/4 (0.25) |  |
