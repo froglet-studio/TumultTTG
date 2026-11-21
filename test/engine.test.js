@@ -76,6 +76,8 @@ test('dice: payableAsAP reads a cost that spare dice could make up', () => {
   assert.equal(T.payableAsAP(h, 2, 'M', 1), true, 'the Omni pays the Mass, the pair the AP');
   assert.equal(T.payableAsAP(h, 3, 'M', 1), false);
   assert.equal(T.payableAsAP(h, 1, 'S', 1), false, 'payable already');
+  assert.equal(T.payableAsAP(h, 2, 'O', 1), true, 'an Omni cost takes the Omni, the pair pays the AP');
+  assert.equal(T.payableAsAP(h, 0, 'O', 2), false, 'an Omni cost is paid in Omni alone');
 });
 
 test('track: a card returns after its cooldown; durations cool down afterwards', () => {

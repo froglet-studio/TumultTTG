@@ -194,23 +194,32 @@ test('no option on a card, gear or consumable recipe is ignored, and every formu
         unreadKeys(card[faceKey], (situation) => H.fireFace(card.id, faceKey, situation)),
       );
 
+  // an ability with a cooldown is played from the gear's card (2.119): fire that card's face
   for (const gear of T.GEAR)
-    gear.abilities.forEach((ability, ai) =>
+    for (const fk of gear.card ? T.faceKeys(gear.card) : [])
       note(
-        `${gear.id} — ${ability.n}`,
-        unreadKeys(ability, ({ arrange, choose }) => {
-          const scene = H.arena('hum_tool');
-          scene.h.gear = [{ id: gear.id, cds: [0, 0] }];
-          if (arrange) arrange(scene);
-          const tg = T.targetsFor(scene.m, scene.h, ability.tgt, ability, 0, 0);
-          const ctx = {};
-          if (tg.need === 'foe' || tg.need === 'foeOrAlly') ctx.target = (tg.options || [])[0];
-          if (tg.need === 'node') ctx.node = (tg.options || [])[0];
-          if (choose && tg.options) Object.assign(ctx, choose(tg, scene));
-          T.useGear(scene.m, scene.h, 0, ai, ctx);
-          H.assertPlain(scene.m, `after ${gear.id} — ${ability.n}`);
-        }),
-      ),
+        `${gear.card}.${fk}`,
+        unreadKeys(T.CARD[gear.card][fk], (situation) => H.fireFace(gear.card, fk, situation)),
+      );
+  for (const gear of T.GEAR)
+    gear.abilities.forEach(
+      (ability, ai) =>
+        !T.onGearCard(ability) &&
+        note(
+          `${gear.id} — ${ability.n}`,
+          unreadKeys(ability, ({ arrange, choose }) => {
+            const scene = H.arena('hum_tool');
+            scene.h.gear = [{ id: gear.id, cds: [0, 0] }];
+            if (arrange) arrange(scene);
+            const tg = T.targetsFor(scene.m, scene.h, ability.tgt, ability, 0, 0);
+            const ctx = {};
+            if (tg.need === 'foe' || tg.need === 'foeOrAlly') ctx.target = (tg.options || [])[0];
+            if (tg.need === 'node') ctx.node = (tg.options || [])[0];
+            if (choose && tg.options) Object.assign(ctx, choose(tg, scene));
+            T.useGear(scene.m, scene.h, 0, ai, ctx);
+            H.assertPlain(scene.m, `after ${gear.id} — ${ability.n}`);
+          }),
+        ),
     );
 
   for (const b of T.BASIC)

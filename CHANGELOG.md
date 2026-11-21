@@ -9,12 +9,20 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.119.0 — 2026-11-21 — dice as AP
+## 2.120.0 — 2026-11-21 — dice as AP
 
 - **Dice as AP** (Garrett, 2026-11-21: "make any two or any omni work as an AP"). A banked Omni, or any two banked etherions (the same or different), become 1 AP: no cost, as often as the bank allows. At the table, put the dice back in the pool and mint 1 AP; like any minted die it evaporates at the end of the hero phase. So a rolled element is never dead weight: with no face to pay, it still walks, strikes or works an objective. The anti-brick fold (one each of M, C, S and T into an Omni) stays.
 - **Self-explaining.** The ◇→AP button stands beside the four basic actions whenever spare dice would pay for a face in hand (under More otherwise); click it, then an Omni or two element dice. A face they would pay for says ◇→AP to pay.
 - **Foes have 160% of their listed vitality** (was 150%), so the game is not easier: `node tools/sim.js 200 runs --player strong` on top of 2.115.0 gives 85 of 200 before and 82 with dice as AP at 160% (163%: 62), and on top of 2.118.0, 82 before and 83 at 160%; measured first on 2.109, 61 → 80 of 120 at 150% (`docs/reference/BALANCE.md`).
 - Both simulated players use it: the look-ahead player tries each different spend, the heuristic spends spare dice when that pays for a face with something to do. Engine: `T.spendAsAP`, `T.apSpends`, `T.canSpendAsAP`, `T.payableAsAP`; the command `asAP { dice }`. No save change.
+## 2.119.0 — 2026-11-21 — gear runs on Omni, and some of it has a card
+
+- **Omnicrystals buy gear; Omni dice run it.** Every gear ability is free or costs banked Omni dice (Garrett, 2026-11-21, on the decision card: rolled Omni dice). The ◇ purse no longer fuels anything in a mission. What cost 1 ◇ is free, 2 ◇ is 1 Omni, and Rewind's 3 ◇ is 2 Omni. Capacitor's Store, a free Omni, cools down for 3 rounds instead of 1.
+- **Equipment cards.** "Equipment cards will be either free or cost omnicrystals and they only need a card if they go on cooldown, which still adds to the 9 card max" (Garrett, 2026-11-21). Every gear ability with a cooldown sits on the gear's one card: face P and, when both cool down, face P2. Neither face costs AP. Playing either face sends the whole card to the track, as a trait does. The card counts toward the nine but toward no clade's three. It is never trained and brings no element die. Bought with room in the kit, it joins the kit; with a full kit, it waits in reserve to be swapped in between missions. Selling the gear takes its card. A weapon's Overcharge has no cooldown, so it needs no card and is used from the gear. A gear card is not growth: it adds nothing to a pilot's power (`T.pilotPower`), so missions do not grow for it.
+- The look-ahead player plays gear cards like any other card; the heuristic leaves them alone, as it always left gear, so the balance tables keep their meaning. The harness flies a gear card bought with a full kit in place of the least-trained trait.
+- **Balance.** Foes have 160% of their listed vitality (was 150%). Without that, full runs got easier: `node tools/sim.js 200 runs --player strong` 92 → 108 of 200 on 2.110. On top of 2.118 at 155%: 82 → 90; at 160%: 84 of 200. `docs/reference/BALANCE.md` has the tables.
+- **Saves** are version 33: a pilot's worn gear gets its card, in the kit when there is room and in reserve when not (fixture `save-2.109.json`).
+
 ## 2.118.0 — 2026-11-21 — Resonance
 
 - **Resonance** (new keyword, the shortlist's second pick). Every Ethereal face you play leaves its element in the air: strong this round, fading the next, then gone. A face that **draws on** an element takes it for a bonus, and the element is spent. Omni in the air stands in for any element. The squad shares the air, so playing a Charge face first can make a partner's Charge-drawing face land bigger. Every face still works with nothing in the air.
@@ -83,6 +91,7 @@ The other five of the nine bundled costly faces (2.105.0 has the rule).
 - **No refunds.** A trait left behind is not lost, so its points stay on it (from 2.75 to 2.106 an exchange gave the old trait up and refunded its points). Molt and Trade set the old trait aside the same way.
 - **Made pilots** come home with their reserve and the points on it.
 - **Saves** are version 29: every pilot gains an empty `reserve`.
+
 ## 2.105.0 — 2026-11-21 — costly faces that do something new
 
 Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap faces in one; it must make a play that is not possible otherwise. Four of the nine that were bundles are reworked; the rest follow in the next release.
@@ -95,7 +104,7 @@ Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap fac
 
 ## 2.104.0 — 2026-11-21 — pocket vehicles and big maps
 
-- **Big maps.** Two new atlas pages eight spaces across and four deep, too far to walk comfortably: *Reed Delta* (sea; channels, reed beds and sandbars) and *Ashfall Salt Flat* (land; open salt, two fissures, vents). A space on a big map has a ground: open, rough (walkable), water or a gap (never walked). Every ground space can still be reached on foot, two ways across, so no mission needs a vehicle (`T.BIG_ATLAS`, `docs/reference/VEHICLES.md`).
+- **Big maps.** Two new atlas pages eight spaces across and four deep, too far to walk comfortably: _Reed Delta_ (sea; channels, reed beds and sandbars) and _Ashfall Salt Flat_ (land; open salt, two fissures, vents). A space on a big map has a ground: open, rough (walkable), water or a gap (never walked). Every ground space can still be reached on foot, two ways across, so no mission needs a vehicle (`T.BIG_ATLAS`, `docs/reference/VEHICLES.md`).
 - **Pocket vehicles** (Garrett, 2026-11-21). Right before a mission that needs them, each player picks one for their pilot, one vehicle slot each: **Skiff** (2 seats, open and water), **Wing** (1 seat, anything, high ground too; its rider Hovers), **Crawler** (3 seats, open and rough, sealed against hazards, a Long Gun that reaches any foe), **Diver** (2 seats, water only, fast), **Runner** (1 seat, open only, fastest). Getting in or out costs 1 AP; so does each Drive, up to the vehicle's speed over its own ground with everyone inside. Each vehicle has two cards, once a round, some for the driver and some for any seat (a gunner); three carry guns. Blows on a rider land on the hull; at 0 the vehicle is wrecked and its riders are thrown clear.
 - **Mounted** (new keyword). Inside a vehicle a pilot plays only its cards and their own faces marked Mounted: a face that neither moves you nor needs to touch (ranged strikes, shields, marks, reveals, heals, squad buffs). Printed on every card face it applies to.
 - **The Crossing**, a new mission on the big maps: light most of the signal posts across the far side before dark, getting out to work each post on foot. It takes the place of an event in a tier-2 row of the route (Short row 2, Full row 4), and both simulated players drive, get out and fire the guns. Numbers in the PR.
@@ -103,7 +112,7 @@ Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap fac
 
 ## 2.103.0 — 2026-11-21 — Move, Climb, Trample and Guide
 
-- **Move N, and the ways a move differs.** Garrett settled the movement family: more choices, as long as each is distinct. A move may be *climbing* (its steps take the ledges), *past foes*, *trampling* (new: through foes, each pushed aside as you reach it), *exactly N*, *toward* a unit, or *carrying an ally* beside you (`docs/reference/KEYWORDS.md`).
+- **Move N, and the ways a move differs.** Garrett settled the movement family: more choices, as long as each is distinct. A move may be _climbing_ (its steps take the ledges), _past foes_, _trampling_ (new: through foes, each pushed aside as you reach it), _exactly N_, _toward_ a unit, or _carrying an ally_ beside you (`docs/reference/KEYWORDS.md`).
 - **Climb is a Move now.** The 26 climbing faces and the Climbing Rig's Ascend were a jump to any space within N that ignored foes in the way; now Climb N walks the paths, ledges included, and foes block it. Their texts say Climb.
 - **Trample** comes first to the hoofed animals' Gallop: Move 3+E, trampling, in place of passing foes.
 - **Guide N** moves an ally (Call, Cue, Leg up, the Beacon and twelve more), so the Rally action, which raises a downed ally, no longer shares its word with them. Their texts say Guide.
@@ -140,7 +149,7 @@ The rework was built on `bleeding-edge` while the dice and keyword plan went str
 
 ## 2.98.1 — 2026-11-21 — the old words leave the card texts
 
-- **Card texts speak the keywords.** Faces that said *immune to push/pull* say *Anchored (nothing moves you, your own steps included)*, which is what they have done since 2.91; *shed Anchored, Weakened and damage over time* and *every hold and dot* say *Cleanse*; *Locate everything* says *Reveal*. The texts that promised to set off no traps lose that clause, and `move`'s `noTrap` option goes: a pilot never set off a trap, and since 2.86 a pilot's own Fields never touch it.
+- **Card texts speak the keywords.** Faces that said _immune to push/pull_ say _Anchored (nothing moves you, your own steps included)_, which is what they have done since 2.91; _shed Anchored, Weakened and damage over time_ and _every hold and dot_ say _Cleanse_; _Locate everything_ says _Reveal_. The texts that promised to set off no traps lose that clause, and `move`'s `noTrap` option goes: a pilot never set off a trap, and since 2.86 a pilot's own Fields never touch it.
 - No rule, number or save changed.
 
 ## 2.98.0 — 2026-11-21 — Reveal; Lane cut
@@ -148,8 +157,8 @@ The rework was built on `bleeding-edge` while the dice and keyword plan went str
 The twelfth keyword of the sweep (`docs/reference/KEYWORDS.md`).
 
 - **Reveal.** Everything within N is shown, and a Revealed foe cannot be Hidden while it lasts and a zone strike finds it. One verb for both: an area Reveal around you, or one foe (`target`, `nearest`) Revealed for N rounds, which is what `locate` did on 28 faces; their texts say Revealed.
-- **Cut: Lane.** Lanes were retired by zones in 2.18 but kept a tooltip; the three faces that still said *Lane strike* say *Zone strike*, which is what they did.
-- **The board names states by their keyword.** A pilot's chips, a foe's tooltip and the floating words say *Shield (next hit)*, *Revealed*, *Cleansed* and *Weakened* where the engine's older names (Preempt, Located, StatusImmune, Weak) showed through (`T.UI.stateName`).
+- **Cut: Lane.** Lanes were retired by zones in 2.18 but kept a tooltip; the three faces that still said _Lane strike_ say _Zone strike_, which is what they did.
+- **The board names states by their keyword.** A pilot's chips, a foe's tooltip and the floating words say _Shield (next hit)_, _Revealed_, _Cleansed_ and _Weakened_ where the engine's older names (Preempt, Located, StatusImmune, Weak) showed through (`T.UI.stateName`).
 - No rule or save change (the state is still `Located`, shown as Revealed). The weak player's missions (`40 missions --player weak`) are identical, 76.1%.
 
 ## 2.97.0 — 2026-11-21 — Cleanse
@@ -197,7 +206,7 @@ The seventh keyword of the sweep (`docs/reference/KEYWORDS.md`).
 
 The sixth keyword of the sweep (`docs/reference/KEYWORDS.md`).
 
-- **Mark N.** The next hit on it, by anyone, deals N more (2 unless the face says), then the Mark is spent. *For N rounds*: every hit deals N more until it wears off. *Pierce*: that next hit ignores Shield. The larger of each part stands (`mark` with `n`, `dur`, `pierce`; state `Marked` = `{ next, pierce, each, t }`).
+- **Mark N.** The next hit on it, by anyone, deals N more (2 unless the face says), then the Mark is spent. _For N rounds_: every hit deals N more until it wears off. _Pierce_: that next hit ignores Shield. The larger of each part stands (`mark` with `n`, `dur`, `pierce`; state `Marked` = `{ next, pierce, each, t }`).
 - **Studied is a Mark for 3 rounds.** Its +N to every hero hit used to last the whole mission and stack, a lock-on the 2.73 rule forbids; 29 faces now Mark +N for 3 rounds. **Exposed is a Pierce Mark** (5 faces).
 - **Saves** are version 24: a bare Mark is +2 to the next hit, Studied +n to every hit for 3 rounds, Exposed a Pierce Mark (fixture `save-2.91.json`).
 - **Balance.** Same seeds, 2.91.0 → 2.92.0: `80 runs --player strong` 41 → 39; `120 runs --player weak` 13 → 11; `node tools/sim.js 40` runs 7 → 6 and 23 → 21 of 40, mission wins 71% → 71% and 89% → 88%. Studied's end makes it a little harder, which takes back Anchor's drift; nothing is retuned.
@@ -216,7 +225,7 @@ The fifth keyword of the sweep (`docs/reference/KEYWORDS.md`).
 The fourth keyword of the sweep (`docs/reference/KEYWORDS.md`; Garrett, 2026-11-21: Heal raises the downed, Rally stays the basic action).
 
 - **Heal N.** Restore N vitality; a downed pilot a Heal reaches gets up with N. Every heal for both pilots, or for your ally, now raises a downed one (`T.healUnit`).
-- **Revive and Phoenix are Heals.** Regrow's revive is *Heal 4 a downed ally beside you*; the five faces that brought you back are a **held Heal** (`ward`): if you go down within 3 rounds, it lands and you get up with that much.
+- **Revive and Phoenix are Heals.** Regrow's revive is _Heal 4 a downed ally beside you_; the five faces that brought you back are a **held Heal** (`ward`): if you go down within 3 rounds, it lands and you get up with that much.
 - **Medkit (tech heals only through a Field or the downed).** Patch lays a mending Field on and beside your space for 2 rounds (allies ending the round there Heal 3, a downed one gets up); Revive is Heal 10 a downed ally beside you. Field gained the Heal keyword.
 - **Rally** stays the basic action: 2 AP, a downed ally beside you gets up with 8.
 - **Balance.** Same seeds, 2.89.0 → 2.90.0: `80 runs --player strong` 38 → 40; `120 runs --player weak` 11 → 11; `node tools/sim.js 40` runs 6 → 6 and 21 → 22 of 40, mission wins 70% → 70% and 88% → 89%. Within the noise, so nothing is retuned. No save change (a held Heal is the old `Phoenix` state).
@@ -295,7 +304,7 @@ Garrett: "the underpowered elemental abilities and the ones that refund an ap di
 
 Garrett: "instead of picking your dice it should be 3 ap dice and 1 element of your choice"
 
-- **A fixed roll.** Every turn a pilot rolls three plain d20s (the AP dice) and one element die of its player's choice, picked from the pilot's own element dice: a d8 of an element it has awakened, or Omni Core's d12 (Garrett chose this over any element, or a sure etherion). It replaces 2.82's free choice of all four. Choose under *Next roll*, any time in a mission, on anyone's turn; the choice stays until changed. With nothing chosen, or every die of that kind banked, the roll takes the element die the pool holds most of; with none left in the pool, all four are plain. Pool and bank still make fifteen (`T.RULES.ROLL_EL`, `T.setRollPick`, `h.rollPick`).
+- **A fixed roll.** Every turn a pilot rolls three plain d20s (the AP dice) and one element die of its player's choice, picked from the pilot's own element dice: a d8 of an element it has awakened, or Omni Core's d12 (Garrett chose this over any element, or a sure etherion). It replaces 2.82's free choice of all four. Choose under _Next roll_, any time in a mission, on anyone's turn; the choice stays until changed. With nothing chosen, or every die of that kind banked, the roll takes the element die the pool holds most of; with none left in the pool, all four are plain. Pool and bank still make fifteen (`T.RULES.ROLL_EL`, `T.setRollPick`, `h.rollPick`).
 - **Simulated players** choose the element of an Ethereal face back in hand next round that the bank can't pay for, or else the element their awakened cards use most (`T.autoRollPick`).
 - **Balance.** The sure etherion helped the careful player: 80 runs, look-ahead 40 → 52 at the old vitality. So every foe has **140%** of its listed vitality (was 130%). `node tools/sim.js 40`, 2.82.0 → 2.83.0: heuristic runs 6 → 3 of 40, mission wins 73% → 66%; look-ahead runs 18 → 20 of 40, mission wins 85% → 87%. Details in `docs/reference/BALANCE.md`.
 - **Saves** keep version 19: `h.rollPick` is still a list of kinds, and a 2.82 choice loads as its first element die (plain dice in it are ignored).
@@ -308,6 +317,7 @@ Garrett: "when players roll dice, they should be able to select which ones they 
 - **Both ways to play.** Choose any time in a mission, on anyone's turn, for your own pilot. Taking turns, your roll comes as your turn ends, so choose before you end it (a choice after is for the roll after); all at once, everyone rolls as the round begins.
 - **Simulated players choose too** (`T.autoRollPick`): an element die for each Ethereal face back in hand next round that the bank can't pay for (two at most), plain dice for the rest. Balance, `node tools/sim.js 40`, 2.81.1 → 2.82: heuristic runs 6 → 6 of 40, mission wins 73% → 73%; look-ahead runs 25 → 18 of 40, mission wins 90% → 85%. Choosing is not easier for either player, so nothing is retuned. (Choosing only element dice and leaving the rest at random was worse still: heuristic vault t3 43% → 18%.) The UI driver allows a mission 60 rounds, since a long boss fight can pass 30.
 - **Saves** are version 19: a pilot may carry its chosen dice. A 2.81 save loads with nothing chosen and draws at random (fixture `save-2.81.json`).
+
 ## 2.87.0 (rework) — 2026-11-21 — the mission HUD, the draft and the route, as designed
 
 From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
@@ -324,7 +334,7 @@ From the Frogma board's Finalised UI pages (desktop and phone). No rule changes.
 
 ## 2.86.0 (rework) — 2026-11-21 — the pages around the game
 
-From the Frogma board's *Finalised UI* tabs, desktop and phone. No rule changes.
+From the Frogma board's _Finalised UI_ tabs, desktop and phone. No rule changes.
 
 - **One shell for every page.** Home, Route, Pilots, Cards, Atlas and Canon sit as tabs across the top, with ⚙ for Settings; on a phone they become a bar at the bottom with More (Atlas, Canon, Codex, How to play, Settings) in a sheet (`src/ui/shell.js`, `src/ui/shell.css`). Other screens add their page through `U.SCREENS`, `U.ACTS` and `U.INPUTS`, and use `U.shell(tab, html)`.
 - **Pilots.** The crew as a wall of scenes, filtered by Everyone, Ready-made, Made by you and On expedition; a page for each pilot with its kit, expeditions, story and canon notes. **Make a pilot** in four steps: two clades (head, then feature), a name, callsign and domain, three story questions that can go in as canon notes, then save to the crew or draft their cards; either way the pilot keeps its callsign, domain and story, and its answers can go to canon. A made pilot keeps its callsign, domain and story in its recipe (`T.validMade`), and takes them home from an expedition (`src/ui/crew.js`).

@@ -115,7 +115,7 @@
   };
   U.faceTipHTML = function (card, fk, P, E) {
     const face = card[fk];
-    return `<b>${esc(card.name)} — ${esc(face.n)}</b> <span class="dim">(${fk !== 'E' ? (card.pet ? 'Physical face, played through the pet' : 'Physical') : EL[face.elt || card.el].name + ' face'}${card.pet ? '' : fk !== 'E' ? ' face' : ''})</span><div style="margin:4px 0" class="mono small">${costStr(card, face, fk)}</div><div>${esc(face.txt(P, E))}</div>${U.kwGloss(face.txt(P, E))}${fk === 'E' ? `<div class="mute small" style="margin-top:4px">E unlocks and scales this capability; P ${face.txt(1, 0) !== face.txt(0, 0) ? 'also scales a physical sub-part' : 'does not substitute for it'}.</div>` : ''}`;
+    return `<b>${esc(card.name)} — ${esc(face.n)}</b> <span class="dim">(${fk !== 'E' ? (card.pet ? 'Physical face, played through the pet' : card.gear ? 'Gear face: ' + T.gearCostText({ omni: face.el }) + ', never trained' : 'Physical') : EL[face.elt || card.el].name + ' face'}${card.pet || card.gear ? '' : fk !== 'E' ? ' face' : ''})</span><div style="margin:4px 0" class="mono small">${costStr(card, face, fk)}</div><div>${esc(face.txt(P, E))}</div>${U.kwGloss(face.txt(P, E))}${fk === 'E' ? `<div class="mute small" style="margin-top:4px">E unlocks and scales this capability; P ${face.txt(1, 0) !== face.txt(0, 0) ? 'also scales a physical sub-part' : 'does not substitute for it'}.</div>` : ''}`;
   };
   /** The clade a pilot with these clades carries card `c` through: its own bloodline first, else a clade that shares it. */
   U.cladeIn = (c, clades) =>
@@ -131,13 +131,13 @@
     const face = (fk) => {
       const f = c[fk];
       const asleep = fk === 'E' && (o.up || o.showUp) && E < T.RULES.ETHEREAL_MIN_E;
-      return `<div class="face ${fk === 'E' ? 'E' : 'P'} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk !== 'E' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}${T.isMounted && T.isMounted(c, fk) ? '<span class="tag mounted" data-tip="Mounted: you can play this face from inside a vehicle.">Mounted</span>' : ''}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${U.kw(esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E)))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
+      return `<div class="face ${fk === 'E' ? 'E' : 'P'} el-${f.elt || c.el}${asleep ? ' asleep' : ''}"><div class="fh"><span class="fn" style="color:${fk !== 'E' ? '#dfe7f2' : ''}">${esc(f.n)}</span>${fk === 'E' ? `<span class="tag bg-${f.elt || c.el} el-${f.elt || c.el}">${EL[f.elt || c.el].name}</span>` : c.gear ? '<span class="tag" style="border:1px solid var(--line2);color:var(--O)">Gear</span>' : '<span class="tag" style="border:1px solid var(--line2);color:var(--AP)">Physical</span>'}${T.isMounted && T.isMounted(c, fk) ? '<span class="tag mounted" data-tip="Mounted: you can play this face from inside a vehicle.">Mounted</span>' : ''}<span class="cost">${costStr(c, f, fk)}</span></div><div class="ft">${U.kw(esc(f.txt(P, asleep ? T.RULES.ETHEREAL_MIN_E : E)))}</div>${asleep ? `<div class="small asleep-note">Asleep — awaken it with ${T.RULES.ETHEREAL_MIN_E} E</div>` : ''}</div>`;
     };
     return `<div class="tcard ${o.pickable ? 'pickable' : ''} ${o.sel ? 'sel' : ''}" data-card="${cardId}" ${o.act ? `data-act="${o.act}" data-arg="${cardId}"` : ''}>
-      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : ''}>${U.icClade(shownSp)} ${esc(c.kin || sp.name)}</span></div>
+      <div class="head"><span class="name">${esc(c.name)}</span>${c.sig >= 2 ? '<span class="star" title="signature">★</span>' : c.sig === 1 ? '<span class="star" title="minor signature">☆</span>' : ''}<span class="sp"${c.clades.length > 1 ? ` data-tip="Carried by ${esc(c.clades.map((x) => T.SPECIES[x].name).join(', '))}"` : c.gear ? ' data-tip="A gear card: it counts toward the nine, is never trained and goes with its gear"' : ''}>${c.gear ? U.icGear(c.gear) : U.icClade(shownSp)} ${esc(c.kin || sp.name)}</span></div>
       ${U.cardArt(c, false, shownSp)}${T.faceKeys(cardId).map(face).join('')}
       ${o.bound ? `<div class="small double-note">${o.bound} UP bound to this card</div>` : ''}
-      ${o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button>${c.pet ? '' : ` &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button>`}</div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P}${c.pet ? '' : ' · E' + E}</div>` : ''}
+      ${c.gear ? '' : o.up ? `<div class="upctl">P <button class="sm" data-act="up" data-arg="${cardId}|P|-1">−</button><b>${P}</b><button class="sm" data-act="up" data-arg="${cardId}|P|1">+</button>${c.pet ? '' : ` &nbsp; E <button class="sm" data-act="up" data-arg="${cardId}|E|-1">−</button><b>${E}</b><button class="sm" data-act="up" data-arg="${cardId}|E|1">+</button>`}</div>` : o.showUp ? `<div class="mono small dim" style="margin-top:6px">P${P}${c.pet ? '' : ' · E' + E}</div>` : ''}
       ${o.flavor !== false ? `<div class="flavor">${esc(c.flavor)}</div>` : ''}
     </div>`;
   };
@@ -178,7 +178,7 @@
    */
   U.cardArt = (c, asleep, sp) => {
     const elt = (c.E && c.E.elt) || c.el;
-    return `<div class="hart${asleep ? ' asleep' : ''}" style="--c:${EL[elt].color}" aria-hidden="true"><i class="clade">${U.icClade(sp || c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E || c.P2, c.el)}</i></div>`;
+    return `<div class="hart${asleep ? ' asleep' : ''}" style="--c:${EL[elt].color}" aria-hidden="true"><i class="clade">${c.gear ? U.icGear(c.gear) : U.icClade(sp || c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E || c.P2, c.el)}</i></div>`;
   };
   /**
    * A die showing face `f`. `kind` is a key of T.DICE (the plain die when left out); `attrs` adds attributes to
@@ -1086,7 +1086,7 @@
         )
         .join('')}</div>`;
     } else if (c.tab === 'gear') {
-      body = `<div class="shop-grid">${T.GEAR.map((g) => `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${T.gearCostText(a)}, cd ${a.cd}): ${esc(a.txt())}</div>`).join('')}</div>`).join('')}</div>`;
+      body = `<div class="shop-grid">${T.GEAR.map((g) => `<div class="panel tight"><b>${U.icGear(g.id)} ${esc(g.name)} <span class="dim">· ${g.price} ◇</span></b><div class="small dim" style="margin:4px 0">${esc(g.desc)}</div>${g.passive ? `<div class="small">◆ <b>Passive</b>: ${esc(g.passive.txt)}</div>` : ''}${g.abilities.map((a) => `<div class="small">• <b>${esc(a.n)}</b> (${T.gearUseText(a)}): ${esc(a.txt())}</div>`).join('')}${g.card ? `<div class="small dim">${T.gearCardNote(g)}</div>` : ''}</div>`).join('')}</div>`;
     } else body = U.helpHTML();
     return `<div class="wrap">${header('Codex', `<button class="sm" data-act="codexBack">Back</button>`)}<div class="codex-nav" style="margin-bottom:10px">${tabs.map((t) => `<button class="${c.tab === t ? 'primary' : ''}" data-act="codexTab" data-arg="${t}">${t[0].toUpperCase() + t.slice(1)}</button>`).join('')}</div>${body}</div>`;
   }

@@ -1145,9 +1145,9 @@
         const P = T.heroP(h, cid),
           E = T.heroE(h, cid);
         const onTrack = h.track.find((t) => t.card === cid);
-        const asleep = !c.pet && E < T.RULES.ETHEREAL_MIN_E;
+        const asleep = !T.isKinless(cid) && E < T.RULES.ETHEREAL_MIN_E;
         const elC = EL[(c.E && c.E.elt) || c.el].color;
-        const title = `<div class="hn">${c.pet ? '<span class="petmark" data-tip="A pet\'s card: its faces act from the pet">🐾</span> ' : ''}${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}<span class="pe">P${P}${c.pet ? '' : ' E' + E}</span></div>`;
+        const title = `<div class="hn">${c.pet ? '<span class="petmark" data-tip="A pet\'s card: its faces act from the pet">🐾</span> ' : ''}${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}${c.gear ? '<span class="pe" data-tip="A gear card: free or paid in Omni, never trained">gear</span>' : `<span class="pe">P${P}${c.pet ? '' : ' E' + E}</span>`}</div>`;
         const fb = (fk) => {
           const f = c[fk];
           const elt = f.elt || c.el;
@@ -1173,10 +1173,12 @@
     const gear = h.gear
       .map((g, gi) => {
         const def = T.GEAR_BY[g.id];
+        // an ability with a cooldown is played from the gear's card in the hand (2.119): only the rest show here
         return def.abilities
           .map((a, ai) => {
+            if (T.onGearCard(a)) return '';
             const ok = !m.over && T.canUseGear(m, h, gi, ai).ok;
-            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="${esc(`<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${T.gearCostText(a)} · cd ${a.cd}</div>${U.kwGloss(a.txt())}`)}" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${a.omni ? a.omni + ' Omni' : a.cost + '◇'}${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
+            return `<button class="gbtn ${ok ? 'ok' : ''}" data-act="gear" data-arg="${i}|${gi}|${ai}" data-tip="${esc(`<b>${esc(def.name)} — ${esc(a.n)}</b><div>${esc(a.txt())}</div><div class='mono small'>${T.gearUseText(a)}</div>${U.kwGloss(a.txt())}`)}" ${ok ? '' : 'disabled'}>${U.icGear(g.id)} ${esc(a.n)} <span class="dim">${T.gearCostText(a)}${g.cds[ai] > 0 ? ' · ' + g.cds[ai] : ''}</span></button>`;
           })
           .join('');
       })
