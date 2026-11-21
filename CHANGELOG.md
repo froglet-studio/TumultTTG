@@ -9,6 +9,16 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.106.0 — 2026-11-21 — the rest of the costly faces
+
+The other five of the nine bundled costly faces (2.105.0 has the rule).
+
+- **Apex Form** (Metamorphosis): for 1 + E rounds your melee strikes knock the foe back 1, and a foe you push that is stopped short **crashes**: it takes 3 + E, and so does the unit in the way (`morph` with `push` and `crash`). It was strikes +4, reach, move and Shield.
+- **Immovable Hold** (Clawed Grip) locks on to a foe beside you for 1 + E rounds: when you walk, it is dragged into the space you leave, or the free space beside you nearest it (`hold`, the states `Holding` and `Held`). It still acts; if it walks off or is Anchored, it is let go. It was two Anchors, a Weaken and a strike.
+- **Neurotoxin** (Paralytic Bite): melee 2 + P, and for E rounds after this one the foe repeats this round's intent, the same move at the same target (`fix`, the state `Fixed`). It still acts. It was a strike, a Weaken and an Anchor.
+- **Step Out of Time** drops its heal (untargetable and Haste stay). **Tesla Cascade** drops its Shield strip; its Link reaches 1 + E.
+- No save change.
+
 ## 2.105.0 — 2026-11-21 — costly faces that do something new
 
 Garrett's rule: a face that costs 2 or 3 etherions must not be several cheap faces in one; it must make a play that is not possible otherwise. Four of the nine that were bundles are reworked; the rest follow in the next release.

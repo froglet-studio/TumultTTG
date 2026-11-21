@@ -246,7 +246,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Paralytic Bite** · Time · `oct_bite`
 
 - *Phys — Bite* · 1 AP · CD 1 — Melee 2 and Weaken 1. *(P3: Melee 5 and Weaken 1.)*
-- *Eth — Neurotoxin* · 0 AP + 2 Time · CD 4 — Melee 2; the foe is enervated for 1 round: its hits deal −2 and it is Anchored. It still acts. *(P3/E3: Melee 5; the foe is enervated for 2 rounds: its hits deal −2 and it is Anchored. It still acts.)*
+- *Eth — Neurotoxin* · 0 AP + 2 Time · CD 4 — Melee 2; the venom fixes its mind: for 1 round after this, it repeats this round's intent, the same move at the same target. It still acts. *(P3/E3: Melee 5; the venom fixes its mind: for 3 rounds after this, it repeats this round's intent, the same move at the same target. It still acts.)*
 
 **Adaptive Intellect** · Charge · `oct_intellect`
 
@@ -339,7 +339,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Metamorphosis** ☆ · Space · `axo_meta`
 
 - *Phys — Surge* · 2 AP · CD 3 · Dur 2 — Trigger the buried adult form for 2 rounds: strikes +2, +1 move. *(P3: Trigger the buried adult form for 2 rounds: strikes +3, +1 move.)*
-- *Eth — Apex Form* · 0 AP + 3 Space · CD 5 — The war-form, for 2 rounds: strikes +4, melee reaches 2 nodes, +1 move, Shield 3. *(P3/E3: The war-form, for 4 rounds: strikes +4, melee reaches 2 nodes, +1 move, Shield 3.)*
+- *Eth — Apex Form* · 0 AP + 3 Space · CD 5 — The war-form, for 2 rounds: your melee strikes knock the foe back 1, and a foe you push that is stopped short crashes: it takes 4, and so does whatever stopped it. *(P3/E3: The war-form, for 4 rounds: your melee strikes knock the foe back 1, and a foe you push that is stopped short crashes: it takes 6, and so does whatever stopped it.)*
 
 **Suction Gape** · Mass · `axo_suction`
 
@@ -358,7 +358,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Electric Discharge** ★ · Charge · `eel_discharge`
 
 - *Phys — Jolt* · 1 AP · CD 1 — Zone strike for 2. *(P3: Zone strike for 5.)*
-- *Eth — Tesla Cascade* · 1 AP + 3 Charge · CD 4 — Strip 3 of the target's Shield, Link it to the nearest foe within 2 of it for 1 round, and strike it for 6: the Linked foe takes the same. *(P3/E3: Strip 5 of the target's Shield, Link it to the nearest foe within 2 of it for 3 rounds, and strike it for 9: the Linked foe takes the same.)*
+- *Eth — Tesla Cascade* · 1 AP + 3 Charge · CD 4 — Arc it: Link the target to the nearest foe within 2 of it this round, then strike it for 6: the Linked foe takes the same. *(P3/E3: Arc it: Link the target to the nearest foe within 4 of it this round, then strike it for 9: the Linked foe takes the same.)*
 
 **Electroreception** ★ · Space · `eel_electro`
 
@@ -505,7 +505,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Cryptobiosis** ★ · Time · `tar_crypto`
 
 - *Phys — Tun* · 2 AP · CD 2 · Dur 1 — Curl into the tun: Shield 4 against everything and Anchored (nothing moves you, your own steps included) this round. *(P3: Curl into the tun: Shield 7 against everything and Anchored (nothing moves you, your own steps included) this round.)*
-- *Eth — Step Out of Time* · 0 AP + 3 Time · CD 4 · Dur 1 — Leave time: untargetable through the next enemy phase, heal 3, and Haste: your track slides 2 extra columns. *(P3/E3: Leave time: untargetable through the next enemy phase, heal 5, and Haste: your track slides 4 extra columns.)*
+- *Eth — Step Out of Time* · 0 AP + 3 Time · CD 4 · Dur 1 — Leave time: untargetable through the next enemy phase, and Haste: your track slides 2 extra columns. *(P3/E3: Leave time: untargetable through the next enemy phase, and Haste: your track slides 4 extra columns.)*
 
 **Dsup Shielding** ★ · Charge · `tar_dsup`
 
@@ -520,7 +520,7 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 **Clawed Grip** · Mass · `tar_claw`
 
 - *Phys — Clamp* · 1 AP · CD 1 — Eight claws lock on: melee 1; you and the foe are both Anchored 1. *(P3: Eight claws lock on: melee 4; you and the foe are both Anchored 1.)*
-- *Eth — Immovable Hold* · 0 AP + 3 Mass · CD 4 — An immovable hold for 3 rounds: the foe takes 3, cannot move or be moved by anyone, and is Weakened 2. *(P3/E3: An immovable hold for 5 rounds: the foe takes 5, cannot move or be moved by anyone, and is Weakened 2.)*
+- *Eth — Immovable Hold* · 0 AP + 3 Mass · CD 4 — Eight claws lock on for 2 rounds: when you walk, the foe beside you is dragged along to stay beside you. It still acts; if it walks off, it is free. *(P3/E3: Eight claws lock on for 4 rounds: when you walk, the foe beside you is dragged along to stay beside you. It still acts; if it walks off, it is free.)*
 
 **Anhydrobiosis Revival** · Time · `tar_revival`
 

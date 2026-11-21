@@ -50,6 +50,11 @@
   /* ───────────────────────────── INTENTS ───────────────────────────── */
   T.chooseIntents = function (m) {
     for (const e of T.liveEnemies(m)) {
+      // a Fixed foe repeats the intent it was fixed on (same move, same target)
+      if (e.states.Fixed && e.states.Fixed.intent) {
+        e.intent = JSON.parse(JSON.stringify(e.states.Fixed.intent));
+        continue;
+      }
       const A = T.ENEMIES[e.type].abilities;
       let intent = null;
       const setI = (key, target, extra, opts) => {

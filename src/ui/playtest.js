@@ -19,8 +19,12 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.105.0',
+    version: '2.106.0',
     items: [
+      {
+        text: 'Five more costly faces now each do one thing nothing else does. Apex Form makes your melee strikes knock foes back, and a foe stopped short crashes into whatever is in the way: both take the hit. Immovable Hold locks on to a foe, which is dragged along beside you when you walk. Neurotoxin fixes a foe on its plan: it repeats this round’s intent for the next rounds, so you know what it will do. Step Out of Time no longer heals, and Tesla Cascade no longer strips Shield; their Link and untargetable parts stay. Did a crash, a drag or a fixed foe ever set up a turn you planned around?',
+        cards: ['axo_meta', 'tar_claw', 'oct_bite', 'tar_crypto', 'eel_discharge'],
+      },
       {
         text: 'Four costly faces now do something no cheaper play can. Heavy Throw throws the ally beside you onto a free space within reach, a ledge included. Become trades places with a foe. Resonance sets every Field, hazard and Wound around you off at once (they still go off at round end). Second Wind gives back, at round end, what you lose after playing it. Did any of them make a turn you could not have played before? Was any of them hard to aim?',
         cards: ['hum_throw', 'oct_imperson', 'hop_strid', 'hum_persist'],
