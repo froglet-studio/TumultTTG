@@ -605,8 +605,8 @@
           h,
           i,
         ) => `<div class="panel tight"><div class="row">${U.portrait(h, 'sm')}<b style="font-family:var(--serif)">${esc(h.name)}</b>${U.seatTag ? U.seatTag(i) : ''}<span class="dim small">${esc(h.title)}</span><span class="right mono small">${h.hp}/${h.maxHp}</span></div><div class="hpbar"><i style="width:${(100 * h.hp) / h.maxHp}%"></i></div>
-      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc + (T.GEAR_BY[g.id].passive ? ' Passive: ' + T.GEAR_BY[g.id].passive.txt : ''))}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}</div>
-      <div class="row" style="margin-top:6px">${own(i) ? `<button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button>` : ''}<button class="sm ghost" data-act="kit" data-arg="${i}">Kit</button>${T.playerCount(run) > 1 && run.purses ? `<span class="right pill small" data-tip="${esc(T.ownerName(run, i))}'s omnicrystals">${U.ic('crystal', '◇', 'tiny')} ${T.crystalsFor(run, i)}</span>` : ''}</div></div>`,
+      <div class="row small" style="margin-top:6px"><span class="pill">${h.cards.length} cards${h.reserve && h.reserve.length ? ` · ${h.reserve.length} in reserve` : ''}</span><span class="pill">UP ${h.upUnspent}</span>${h.gear.map((g) => `<span class="pill" data-tip="${esc(T.GEAR_BY[g.id].desc + (T.GEAR_BY[g.id].passive ? ' Passive: ' + T.GEAR_BY[g.id].passive.txt : ''))}">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)}</span>`).join('')}</div>
+      <div class="row" style="margin-top:6px">${own(i) ? `<button class="sm" data-act="train" data-arg="${i}">Train (UP ${h.upUnspent})</button>` : ''}<button class="sm ghost" data-act="kit" data-arg="${i}">Kit${h.reserve && h.reserve.length ? ' · swap' : ''}</button>${T.playerCount(run) > 1 && run.purses ? `<span class="right pill small" data-tip="${esc(T.ownerName(run, i))}'s omnicrystals">${U.ic('crystal', '◇', 'tiny')} ${T.crystalsFor(run, i)}</span>` : ''}</div></div>`,
       )
       .join('')}</div>`;
   }
@@ -987,8 +987,51 @@
     const h = U.run.heroes[i];
     U.openModal(`<div class="row"><h3>${esc(h.name)} <span class="dim" style="font-weight:400">${esc(h.title)}</span></h3><span class="right small dim">${h.species.map((s) => U.icClade(s) + ' ' + T.SPECIES[s].name).join(' · ')}</span><button class="sm" data-act="closeModal">Close</button></div>
     <div class="row small" style="margin:6px 0">${h.gear.map((g, gi) => `<span class="pill">${U.icGear(g.id)} ${esc(T.GEAR_BY[g.id].name)} ${own(i) ? `<button class="sm ghost" data-act="sellGear" data-arg="${i}|${gi}" title="sell for half, to your own purse">sell</button>` : ''}</span>`).join('')}</div>
-    <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false, clades: h.species })).join('')}</div>`);
+    ${kitLoadout(i, h)}`);
   };
+  /**
+   * The kit that flies and the traits kept in reserve (2.105). Between missions a reserve trait comes in for one
+   * of the nine: pick it, then the one that stays behind. In a mission the kit is set, and the reserve only shown.
+   */
+  U.kitIn = null;
+  function kitLoadout(i, h) {
+    const res = h.reserve || [];
+    const card = (cid, o) =>
+      U.cardHTML(
+        cid,
+        Object.assign({ P: T.heroP(h, cid), E: T.heroE(h, cid), showUp: true, flavor: false, clades: h.species }, o),
+      );
+    const free = !U.run.mission && U.run.phase !== 'mission' && own(i);
+    const pick = free && U.kitIn && U.kitIn.hero === i && res.includes(U.kitIn.card) ? U.kitIn.card : null;
+    const outs = pick ? new Set(T.loadOuts(h, pick)) : null;
+    const el = T.diceSet(h).filter((k) => k !== 'plain');
+    const dice = `${el.length} element ${el.length === 1 ? 'die' : 'dice'} from awakened cards, ${T.RULES.POOL - el.length} plain`;
+    const wrap = (cid, html, act, arg, tip) =>
+      act
+        ? `<div class="kit-pick${cid === pick ? ' on' : ''}" data-act="${act}" data-arg="${esc(arg)}" data-tip="${esc(tip)}" role="button" tabindex="0">${html}</div>`
+        : html;
+    const kit = h.cards
+      .map((cid) => {
+        if (!outs) return card(cid);
+        return outs.has(cid)
+          ? wrap(
+              cid,
+              card(cid),
+              'kitSwap',
+              `${i}|${pick}|${cid}`,
+              `${T.CARD[pick].name} flies, ${T.CARD[cid].name} stays behind with its points.`,
+            )
+          : `<div class="kit-pick dim" data-tip="${esc(`${T.CARD[cid].name} flies: leaving it behind would break the bloodline rule.`)}">${card(cid)}</div>`;
+      })
+      .join('');
+    const room = pick && h.cards.length < T.RULES.MAX_CARDS && T.canLoadCard(h, pick, null).ok;
+    const reserve = res.length
+      ? `<div class="row small" style="margin:10px 0 4px"><b>Reserve · ${res.length}</b><span class="dim">${free ? (pick ? `Now choose the trait ${esc(T.CARD[pick].name)} flies in place of${room ? ', or bring it into the empty place' : ''}.` : 'Kept, points and all. Pick one to bring into the kit for the next mission.') : 'Left behind for this mission.'}</span>${room ? `<button class="sm" data-act="kitSwap" data-arg="${i}|${pick}|">Bring it in</button>` : ''}${pick ? `<button class="sm ghost" data-act="kitPick" data-arg="${i}|">Cancel</button>` : ''}</div>
+      <div class="pack reserve">${res.map((cid) => (free ? wrap(cid, card(cid), 'kitPick', `${i}|${cid}`, cid === pick ? 'Chosen: now pick the one it replaces' : `Bring ${T.CARD[cid].name} into the kit`) : `<div class="kit-pick dim">${card(cid)}</div>`)).join('')}</div>`
+      : '';
+    return `<div class="row small" style="margin:6px 0"><b>Flies this mission · ${h.cards.length} of ${T.RULES.MAX_CARDS}</b><span class="dim">${esc(dice)}</span></div>
+    <div class="pack">${kit}</div>${reserve}`;
+  }
 
   /* ───────────── HAVEN ───────────── */
   /**
@@ -1274,6 +1317,22 @@
       case 'kit':
         U.openKit(parseInt(arg, 10));
         return;
+      case 'kitPick': {
+        const [i, cid] = arg.split('|');
+        U.kitIn = cid ? { hero: parseInt(i, 10), card: cid } : null;
+        U.openKit(parseInt(i, 10));
+        return;
+      }
+      case 'kitSwap': {
+        const [i, cid, out] = arg.split('|');
+        const r = U.exec({ op: 'loadCard', hero: parseInt(i, 10), card: cid, out: out || null });
+        if (!r.ok) U.toast(r.why);
+        else U.sfx.click();
+        U.kitIn = null;
+        T.saveRun(U.run);
+        U.openKit(parseInt(i, 10));
+        return;
+      }
       case 'upRun': {
         const i = parseInt(t.getAttribute('data-hero'), 10);
         const [cid, which, delta] = arg.split('|');

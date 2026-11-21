@@ -111,6 +111,16 @@ test('After a mission: a full kit exchanges a trait through the swap view', { sk
     assert.ok(h.cards.includes(sw) && !h.cards.includes(drop), 'one in, one out');
     assert.equal(h.cards.length, T.RULES.MAX_CARDS);
     assert.ok(!d.querySelector('.am-swap'), 'back to the rewards');
+    assert.equal(h.reserve.join(), drop, 'the trait left behind is kept, in reserve');
+    // between missions, Kit brings it back for one of the nine (2.105)
+    click('[data-act="kit"][data-arg="0"]');
+    click(`[data-act="kitPick"][data-arg="0|${drop}"]`);
+    const out = T.loadOuts(h, drop)[0];
+    const btn = d.querySelector(`[data-act="kitSwap"][data-arg="0|${drop}|${out}"]`);
+    assert.ok(btn, 'the traits it could replace are offered');
+    click(`[data-act="kitSwap"][data-arg="0|${drop}|${out}"]`);
+    assert.ok(h.cards.includes(drop) && h.reserve.includes(out), 'swapped back in');
+    assert.equal(h.cards.length, T.RULES.MAX_CARDS);
   } finally {
     ctx.dom.window.close();
   }

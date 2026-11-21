@@ -9,6 +9,15 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.105.0 — 2026-11-21 — every trait kept, nine fly
+
+- **A pilot keeps every trait it earns** (Garrett, 2026-11-21). Nine fly into a mission (the kit); the rest wait in a **reserve**, each with its points on it. Once the kit holds nine, a new trait either waits in reserve (**Keep in reserve**) or comes in at once for one that stays behind (**Fly it now**).
+- **Choose the nine between missions.** On the route, at a reward, a haven or an event, the Kit view brings a reserve trait in for one of the nine; the 3-of-9 cap holds for the kit that flies. Never in a mission.
+- **The dice follow the kit.** Each awakened card that flies brings its element die; a trait in reserve brings none.
+- **No refunds.** A trait left behind is not lost, so its points stay on it (from 2.75 to 2.104 an exchange gave the old trait up and refunded its points). Molt and Trade set the old trait aside the same way.
+- **Made pilots** come home with their reserve and the points on it.
+- **Saves** are version 29: every pilot gains an empty `reserve`.
+
 ## 2.104.0 — 2026-11-21 — pocket vehicles and big maps
 
 - **Big maps.** Two new atlas pages eight spaces across and four deep, too far to walk comfortably: *Reed Delta* (sea; channels, reed beds and sandbars) and *Ashfall Salt Flat* (land; open salt, two fissures, vents). A space on a big map has a ground: open, rough (walkable), water or a gap (never walked). Every ground space can still be reached on foot, two ways across, so no mission needs a vehicle (`T.BIG_ATLAS`, `docs/reference/VEHICLES.md`).

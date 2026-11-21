@@ -128,16 +128,19 @@ test('a 2.47 save keeps its bound points, counted as spent on the card the way 2
   assert.ok(run.over);
 });
 
-test('a trait lost to a molt or a trade gives back every point on it, bound ones too', () => {
+test('a trait given up to a molt or a trade waits in reserve with every point on it, bound ones too', () => {
   const run = T.newRun(11);
   const h = hero(['orangutan', 'gecko'], ['hum_tool', 'gec_hide']);
   run.heroes = [h];
   h.upUnspent = 3;
   bind(h, 'hum_tool'); // a second copy from an older save: a bound point
   T.autoAllocate(h);
-  const before = h.upUnspent + h.cards.reduce((s, c) => s + h.up[c][0] + h.up[c][1], 0) + T.boundLeft(h, 'hum_tool');
-  T.tradeCard(run, 0, 'hum_tool');
-  const after = h.upUnspent + h.cards.reduce((s, c) => s + h.up[c][0] + h.up[c][1], 0);
-  assert.ok(!h.cards.includes('hum_tool') || h.up.hum_tool.every((x) => x === 0));
-  assert.equal(after, before, 'no point is lost with the card');
+  const was = h.up.hum_tool.slice();
+  const spare = h.upUnspent;
+  const gained = T.tradeCard(run, 0, 'hum_tool');
+  assert.ok(gained && h.cards.includes(gained), 'a new trait flies in its place');
+  assert.ok(!h.cards.includes('hum_tool') && h.reserve.includes('hum_tool'), 'the old one is kept, in reserve');
+  assert.deepEqual(h.up.hum_tool, was, 'its points stay on it');
+  assert.ok(h.bound.hum_tool, 'bound ones too');
+  assert.equal(h.upUnspent, spare, 'and nothing is refunded');
 });

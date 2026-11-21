@@ -123,19 +123,20 @@
     const offer = rw.offers[i];
     let trait;
     if (rw.picked[i]) {
-      const took = am.taken && am.taken[i] && h.cards.includes(am.taken[i]) ? am.taken[i] : null;
-      trait = `<p class="am-done">✓ ${took ? `<b>${esc(T.CARD[took].name)}</b> joins ${esc(h.name.split(' ')[0])}'s kit` : `${esc(h.name.split(' ')[0])}'s trait is chosen`}.</p>`;
+      const took = am.taken && am.taken[i] && T.holds(h, am.taken[i]) ? am.taken[i] : null;
+      const first = esc(h.name.split(' ')[0]);
+      trait = `<p class="am-done">✓ ${took ? `<b>${esc(T.CARD[took].name)}</b> ${h.cards.includes(took) ? `joins ${first}'s kit` : `waits in ${first}'s reserve: bring it in from Kit between missions`}` : `${first}'s trait is chosen`}.</p>`;
     } else {
       const sel = offer.includes(am.rwCard[i]) ? am.rwCard[i] : offer[0];
       const ex = sel && T.isSwapOffer(run, i, sel);
       const full = h.cards.length >= T.RULES.MAX_CARDS;
-      trait = `<div class="am-lab">${full ? `Trait · ${esc(h.name.split(' ')[0])}'s kit is full: an exchange` : 'Trait · pick one'}</div>
+      trait = `<div class="am-lab">${full ? `Trait · ${esc(h.name.split(' ')[0])}'s kit is full: keep it in reserve, or fly it now` : 'Trait · pick one'}</div>
         <div class="am-offer">${offer.map((cid) => tile(cid, { act: 'amRwCard', arg: `${i}|${cid}`, sel: cid === sel, clades: h.species, cls: T.isSwapOffer(run, i, cid) ? 'swap' : '' })).join('')}</div>
         ${sel ? faces(sel, 0, 0) : ''}
         <div class="am-acts">${
           sel
             ? ex
-              ? `<button class="primary am-cta" data-act="swapPick" data-arg="${sel}|${i}" data-tip="Give up one of ${esc(h.name)}'s nine traits for this one.">Exchange for ${esc(T.CARD[sel].name)} ▶</button>`
+              ? `<button class="primary am-cta" data-act="swapPick" data-arg="${sel}|${i}" data-tip="${esc(`${T.CARD[sel].name} comes into the kit and one of the nine stays behind, in reserve, with its points.`)}">Fly ${esc(T.CARD[sel].name)} now ▶</button><button class="am-cta" data-act="takeCard" data-arg="${sel}|${i}" data-tip="${esc(`Keep ${T.CARD[sel].name} in reserve: the kit flies as it is, and Kit swaps it in between missions.`)}">Keep in reserve</button>`
               : `<button class="primary am-cta" data-act="takeCard" data-arg="${sel}|${i}">Take ${esc(T.CARD[sel].name)} ▶</button>`
             : ''
         }<button class="ghost am-ghost" data-act="skipCard" data-arg="${i}">Skip · +2 ◇</button></div>`;
@@ -162,6 +163,13 @@
     const who = ready.length === 1 ? ready[0].h.name.split(' ')[0] : 'the squad';
     return `<div class="am-grow"><button class="ghost am-ghost sm" data-act="train" data-arg="${ready[0].i}" data-tip="${esc(ready.map(({ h }) => `${h.name}: ${h.upUnspent}`).join(' · '))}">✦ Grow a card · ${pts} point${pts === 1 ? '' : 's'} for ${esc(who)}</button></div>`;
   }
+  /** A pilot with traits in reserve can choose the nine that fly next, here as on the route (2.105). */
+  function kitOffer(run) {
+    const i = run.heroes.findIndex((h, k) => U.own(k) && h.reserve && h.reserve.length);
+    if (i < 0) return '';
+    const h = run.heroes[i];
+    return `<button class="ghost am-ghost sm" data-act="kit" data-arg="${i}" data-tip="${esc(`Choose which nine traits fly next: ${h.reserve.length} wait in reserve.`)}">Kit · ${esc(h.name.split(' ')[0])}'s reserve ${h.reserve.length}</button>`;
+  }
   /** The full kit's exchange: the trait coming in, the nine there now, and the one that goes. */
   function renderSwap(run, rw) {
     const i = U.swapPick.hero;
@@ -169,7 +177,7 @@
     const sw = U.swapPick.card;
     const drops = new Set(T.swapDrops(h, sw));
     const drop = drops.has(am.drop) ? am.drop : null;
-    let foot = `<span class="dim">Choose the trait that goes out.</span>`;
+    let foot = `<span class="dim">Choose the trait that stays behind.</span>`;
     if (drop) {
       const u = h.up[drop] || [0, 0];
       const after = h.cards.filter((c) => c !== drop).concat(sw);
@@ -179,10 +187,10 @@
       const caps = Object.keys(counts)
         .map((s) => `${T.SPECIES[s].name} ${counts[s]}/${T.RULES.MAX_PER_SPECIES || 3}`)
         .join(' · ');
-      foot = `Give up <b>${esc(T.CARD[drop].name)}</b> · <span class="ok">${u[0] + u[1] ? `its ${u[0] + u[1]} point${u[0] + u[1] === 1 ? '' : 's'} come back` : 'no points on it'}</span>${caps ? ` · ${esc(caps)}` : ''}`;
+      foot = `Leave <b>${esc(T.CARD[drop].name)}</b> behind · <span class="ok">${u[0] + u[1] ? `its ${u[0] + u[1]} point${u[0] + u[1] === 1 ? '' : 's'} stay on it` : 'it waits in reserve'}</span>${caps ? ` · ${esc(caps)}` : ''}`;
     }
     return `<div class="am am-swap">${backdrop(null)}${topbar(run)}
-      <div class="am-head"><span class="am-eye">Reward · ${esc(h.name.split(' ')[0])}'s kit is full (${h.cards.length} of ${T.RULES.MAX_CARDS})</span><h1 class="am-h">${esc(T.CARD[sw].name)} comes in. Which trait goes out?</h1><p class="dim">The points spent on the one you give up come back to spend again${h.bound && Object.keys(h.bound).length ? ' (points a second copy bound to it go with it)' : ''}. No more than ${T.RULES.MAX_PER_SPECIES || 3} from one bloodline.</p></div>
+      <div class="am-head"><span class="am-eye">Reward · ${esc(h.name.split(' ')[0])}'s kit is full (${h.cards.length} of ${T.RULES.MAX_CARDS})</span><h1 class="am-h">${esc(T.CARD[sw].name)} comes in. Which trait stays behind?</h1><p class="dim">Nothing is lost: the one left behind waits in reserve with its points, and Kit brings it back between missions. Nine fly, no more than ${T.RULES.MAX_PER_SPECIES || 3} from one bloodline, and the dice follow the cards that fly.</p></div>
       <div class="am-swaprow"><div class="am-in"><div class="am-lab ok">Coming in</div>${tile(sw, { clades: h.species, cls: 'big glow' })}</div><div class="am-arrow" aria-hidden="true">⇄</div>
       <div class="am-kit">${h.cards
         .map((d) => {
@@ -196,11 +204,11 @@
             clades: h.species,
             out: d === drop,
             dim: !can,
-            tip: can ? null : `${T.CARD[d].name} stays: giving it up would break the bloodline rule.`,
+            tip: can ? null : `${T.CARD[d].name} flies: leaving it behind would break the bloodline rule.`,
           });
         })
         .join('')}</div></div>
-      <div class="am-bar panel"><div class="am-bartxt">${foot}</div><button class="ghost am-ghost" data-act="swapPick" data-arg="">Back to the offer</button><button class="primary am-cta" data-act="swapDrop" data-arg="${drop ? `${sw}|${i}|${drop}` : ''}" ${drop ? '' : 'disabled'}>Swap</button></div></div>`;
+      <div class="am-bar panel"><div class="am-bartxt">${foot}</div><button class="ghost am-ghost" data-act="swapPick" data-arg="">Back to the offer</button><button class="primary am-cta" data-act="swapDrop" data-arg="${drop ? `${sw}|${i}|${drop}` : ''}" ${drop ? '' : 'disabled'}>Swap in</button></div></div>`;
   }
   U.renderReward = function () {
     const run = U.run;
@@ -231,7 +239,7 @@
           ${pilotTabs(run, rw, cur)}
           <div class="am-pick">${rewardPick(run, rw, cur)}</div></div>
       </div>
-      <div class="am-foot">${growOffer(run)}<button class="primary am-cta" data-act="rewardDone" ${ready ? '' : 'disabled'} ${ready ? '' : `data-tip="${esc('Still to choose: ' + waiting.map(({ h }) => h.name.split(' ')[0]).join(', '))}"`}>${ready ? 'Onward ▶' : `Choosing… ${run.heroes.length - waiting.length}/${run.heroes.length}`}</button></div></div>`;
+      <div class="am-foot">${growOffer(run)}${kitOffer(run)}<button class="primary am-cta" data-act="rewardDone" ${ready ? '' : 'disabled'} ${ready ? '' : `data-tip="${esc('Still to choose: ' + waiting.map(({ h }) => h.name.split(' ')[0]).join(', '))}"`}>${ready ? 'Onward ▶' : `Choosing… ${run.heroes.length - waiting.length}/${run.heroes.length}`}</button></div></div>`;
   };
 
   /* ───────────── UPGRADE AND AWAKEN: grow one card ───────────── */
@@ -370,9 +378,9 @@
           .join('')}</div><button class="ghost am-ghost sm" data-act="evSkipCard">Take nothing</button>`;
       else if (f && f.kind === 'tradeCard' && !f.done) {
         const h = run.heroes[f.heroIdx];
-        fu = `<div class="am-lab gold">${esc(h.name)} sheds a trait</div><p class="small dim">A random trait of the same bloodline grows in its place.</p><div class="am-kit">${h.cards.map((cid) => tile(cid, { act: 'evTrade', arg: cid, P: T.heroP(h, cid), E: T.heroE(h, cid), clades: h.species })).join('')}</div><button class="ghost am-ghost sm" data-act="evSkipCard">Keep everything</button>`;
+        fu = `<div class="am-lab gold">${esc(h.name)} sheds a trait</div><p class="small dim">A random trait of the same bloodline grows in its place; the one shed waits in reserve, points and all.</p><div class="am-kit">${h.cards.map((cid) => tile(cid, { act: 'evTrade', arg: cid, P: T.heroP(h, cid), E: T.heroE(h, cid), clades: h.species })).join('')}</div><button class="ghost am-ghost sm" data-act="evSkipCard">Keep everything</button>`;
       } else if (f && f.kind === 'tradeCard' && f.done)
-        fu = `<p>${esc(run.heroes[f.heroIdx].name)} sheds <b>${esc(T.CARD[f.dropped].name)}</b> and grows <b>${f.gained ? esc(T.CARD[f.gained].name) : 'nothing: the bloodline is exhausted'}</b>.</p>`;
+        fu = `<p>${f.gained ? `${esc(run.heroes[f.heroIdx].name)} sets <b>${esc(T.CARD[f.dropped].name)}</b> into reserve and grows <b>${esc(T.CARD[f.gained].name)}</b>` : `${esc(run.heroes[f.heroIdx].name)} keeps <b>${esc(T.CARD[f.dropped].name)}</b>: no trait of the bloodline could grow in its place`}.</p>`;
       else if (f && f.kind === 'boonGiven')
         fu = `<p>${esc(f.hero)} gains <b>${U.icBoon(f.boon)} ${esc(T.BOON_BY[f.boon].name)}</b>: ${esc(T.BOON_BY[f.boon].desc)}</p>`;
       else if (f && f.kind === 'respec')
