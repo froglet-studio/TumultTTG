@@ -1125,6 +1125,20 @@
   }
   T.linkHeal = linkHeal;
 
+  /** Wound a unit: it takes the Wound at round end, one less each round. A new Wound replaces a smaller one. */
+  function woundUnit(m, u, n, source, heal, kind) {
+    const w = st(u).Wound;
+    if (w && w.n >= n) return;
+    st(u).Wound = {
+      n,
+      owner: source ? source.uid : w ? w.owner : null,
+      heal: Math.max(heal || 0, w ? w.heal : 0),
+      kind: kind || (w && w.kind) || 'wound',
+    };
+    fx(m, { t: 'state', ent: u.uid, name: 'Wound' });
+  }
+  T.woundUnit = woundUnit;
+
   /* ───────────────────────────── FIELDS ─────────────────────────────
    * A Field (2.86) is a marked space, or a set of them, that does its keywords to whatever enters it or ends
    * the round there. It is the one shape behind what were snares, counted snares, spore and musk zones,
@@ -1593,7 +1607,8 @@
         say(m, `${t.name}'s Shield is ${amount ? 'weakened' : 'stripped'}.`, 'hero');
         break;
       }
-      case 'dot': {
+      case 'wound': {
+        // Wound N (2.88): at round end it takes N, then the Wound drops by 1. The larger Wound stands.
         let targets = [];
         if (f.area === 'nodeArea') {
           const center = ctx.node != null ? ctx.node : actor.pos;
@@ -1602,18 +1617,11 @@
           const t = targetEnt(m, ctx) || ctx.lastTarget;
           if (t) targets = [t];
         }
+        const n = num(f.n, P, E);
+        const heal = num(f.healOwner, P, E) || 0;
         for (const t of targets) {
-          if (t.kind !== 'enemy') continue;
-          st(t).Dots = st(t).Dots || [];
-          st(t).Dots.push({
-            v: num(f.val, P, E),
-            t: num(f.dur, P, E),
-            kind: f.kind,
-            escalate: num(f.escalate, P, E),
-            healOwner: num(f.healOwner, P, E),
-            owner: actor.uid,
-          });
-          fx(m, { t: 'state', ent: t.uid, name: f.kind });
+          if (n <= 0 || (t.kind === 'enemy' ? !t.alive : t.downed)) continue;
+          woundUnit(m, t, n, actor, heal, f.kind);
         }
         break;
       }
@@ -2084,7 +2092,7 @@
         }
         const list = f.party ? T.liveHeroes(m) : [actor];
         list.forEach((h) => {
-          ['Anchored', 'Rooted', 'Weak', 'Slow', 'SlowSelf', 'NoTele'].forEach((k) => delete h.states[k]);
+          ['Anchored', 'Rooted', 'Weak', 'Slow', 'SlowSelf', 'NoTele', 'Wound'].forEach((k) => delete h.states[k]);
         });
         say(m, `${list.map((h) => h.name).join(' & ')} shake free.`, 'hero');
         break;
@@ -2682,21 +2690,16 @@
       }
     // Fields spring on whoever ends the round in them
     fieldsAtRoundEnd(m);
-    // damage over time
-    for (const e of T.liveEnemies(m)) {
-      const dots = st(e).Dots || [];
-      for (const d of dots) {
-        const owner = m.heroes.find((h) => h.uid === d.owner);
-        T.damage(m, owner || null, e, d.v, { kind: 'true', trueDmg: true, label: `(${d.kind}) wears down` });
-        if (d.healOwner && owner && !owner.downed) {
-          owner.hp = Math.min(owner.maxHp, owner.hp + d.healOwner);
-        }
-        d.t--;
-        if (d.escalate) d.v += d.escalate;
-        if (!e.alive) break;
-      }
-      if (e.alive) st(e).Dots = dots.filter((d) => d.t > 0);
-      if (e.alive && !st(e).Dots.length) delete st(e).Dots;
+    // Wounds bite, then drop by 1
+    for (const u of T.liveEnemies(m).concat(T.liveHeroes(m))) {
+      const w = st(u).Wound;
+      if (!w) continue;
+      const owner = unitBy(m, w.owner);
+      T.damage(m, owner || null, u, w.n, { kind: 'true', trueDmg: true, label: `(${w.kind || 'wound'}) wounds` });
+      if (w.heal && owner && owner.kind === 'hero' && !owner.downed)
+        owner.hp = Math.min(owner.maxHp, owner.hp + w.heal);
+      w.n--;
+      if (w.n <= 0) delete st(u).Wound;
     }
     // objective: hold
     const ob = m.objective;
@@ -2896,7 +2899,7 @@
       SlowSelf: 'Cannot move this round.',
       NoTele: 'Cannot teleport.',
       Linked: `Linked for ${v.t} — damage, pushes, pulls and heals on either reach the other.`,
-      Dots: 'Taking damage over time.',
+      Wound: `Wound ${v.n} — takes ${v.n} at round end, then the Wound drops by 1.`,
     };
     return map[k] || k;
   };

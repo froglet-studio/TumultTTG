@@ -52,7 +52,7 @@ test('Momentum: the first strike each round deals more — every round, and only
   const s = quiet(['momentum']);
   assert.equal(strike(s), 3 + val('momentum'), 'first strike of round 1');
   assert.equal(strike(s), 3, 'second strike of round 1');
-  T.runEffects(s.m, s.h, [{ v: 'dot', val: 1, dur: 5, kind: 'corrode' }], { P: 0, E: 0, target: s.e.uid });
+  T.runEffects(s.m, s.h, [{ v: 'wound', n: 2, kind: 'corrode' }], { P: 0, E: 0, target: s.e.uid });
   T.endHeroPhase(s.m);
   const before = s.e.hp;
   T.endHeroPhase(s.m); // a whole round with no strike: only the corrosion ticks

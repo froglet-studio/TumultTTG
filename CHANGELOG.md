@@ -1,13 +1,22 @@
 # Changelog
 
-## 2.87.1 — 2026-11-21 — every ability does what it says
+## 2.88.1 — 2026-11-21 — every ability does what it says
 
 Garrett: "make sure that decoys actually leave decoys, and all movement abilities actually grant their movement etc."
 
 - **A new test plays every card face** (all 529 cards, both faces) in a dozen situations and checks that each effect on it changes the game somewhere, that every decoy face leaves its decoy where and for as long as its text says, that every move, blink, climb and rally reaches as far as its number and really moves the unit, and that the numbers a face prints are the numbers it plays (`test/abilities.test.js`).
 - **Fixed what it found.** Five decoys that stay where you are (Very Convincing, A Thousand Pink, Rainbow, Swarm, Door Stone) never appeared, because the hero was still on the node: the decoy now shares your node and keeps it when you go. Smoke Step dropped its Hidden as soon as you blinked; it now hides you after. No Retreat's own status immunity turned away its own anchor, so push and pull still moved you; a hero's own anchor is now a choice, not a status. A decoy cast at a node within 2 (Lure Light) could be aimed at an occupied node and vanish; it now offers empty nodes only. Strand's "drag it 1 toward you" on a foe already beside you never did anything, so the text now says what it does: melee and pin. Two texts now print a number they played without saying (Blink's decoy lasts 2; Lock Both Eyes sees within 2).
 - **The look-ahead player walks a free move in full** (it capped every walk at 3 steps, so free moves of 4 and 5 were cut short).
-- **Balance.** `node tools/sim.js 40`: every table identical before and after (look-ahead 18/40 runs, heuristic 3/40). No save change.
+- **Balance.** `node tools/sim.js 40`: every table identical before and after, on 2.88.0 (look-ahead 19/40 runs, heuristic 3/40). No save change.
+
+## 2.88.0 — 2026-11-21 — Wound
+
+The third keyword of the sweep (`docs/reference/KEYWORDS.md`).
+
+- **Wound N.** At round end it takes N, then the Wound drops by 1 (Wound 3 is 3, then 2, then 1). It replaces damage over time and its fifteen names (venom, crush, corrode, rot, drain, sting…), which stay as the flavour word in the log. Its bite is true damage; a new Wound replaces a smaller one; Cleanse sheds it (`wound`, state `Wound`).
+- **28 faces.** A dot of 1 for 2 rounds is Wound 2; 1+h(E) for 2 is Wound 2+h(E); 1+E for 2 is Wound 1+E; 1+E for 3 is Wound 2+E; 2 for 2 is Wound 2. Deepen the parasitism keeps its heal at each bite and loses its +1 a round at E 2.
+- **Saves** are version 21: a foe's damage over time loads as one Wound dealing about as much in all (fixture `save-2.87.json`).
+- **Balance.** Same seeds, 2.87.0 → 2.88.0: `node tools/sim.js 40` runs 3 → 3 and 18 → 19 of 40, mission wins 69% → 69% and 87% → 87%; `80 runs --player strong` 38 → 40; `120 runs --player weak` 10 → 10. Within the noise (two standard errors on 80 runs is about ±9). When Wounds added up, it was easier (41 of 80, 12 of 120), so the larger Wound stands instead. Nothing is retuned.
 
 ## 2.87.0 — 2026-11-21 — Link
 

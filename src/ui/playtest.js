@@ -19,7 +19,7 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.87.1',
+    version: '2.88.1',
     items: [
       {
         text: 'Decoys that stay where you are now really appear: Very Convincing (Play Dead), A Thousand Pink, Rainbow, Swarm (Bloom) and Door Stone (Burrow) used to leave nothing, because you were still standing there. Now the decoy shares your space (a small token at its edge) and keeps it when you leave. Do foes go for it the way the card says?',
@@ -28,6 +28,10 @@
       {
         text: 'Smoke Step now leaves you Hidden after the blink (it used to drop Hidden as you moved), and No Retreat (Never Retreat) really stops you being pushed or pulled. Do they do what their cards say now?',
         cards: ['oct_ink', 'bad_never'],
+      },
+      {
+        text: 'Damage over time is now one keyword, Wound: at round end the foe takes the Wound, then it drops by 1 (Wound 3 is 3, then 2, then 1). Venom, crush, corrode, rot and the rest are all Wounds now, and a new Wound replaces a smaller one. Is the number on the foe easy to follow from round to round?',
+        cards: ['gec_lockjaw', 'axo_toxic'],
       },
       {
         text: 'A new keyword, Link (Charge): two foes joined for a few rounds, so damage, pushes, pulls and heals on one reach the other. Tesla Cascade, Override, Spasm, Its Own Voice, Every Step, Disarming and Drive the Shoal Link their target to the nearest foe. Redirect is gone. Try Linking two foes and pushing one into a Field, or Marking one end before you hit it. Is it clear on the board which two are Linked?',
