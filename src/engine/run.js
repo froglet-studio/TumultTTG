@@ -82,7 +82,8 @@
     const cap = R().MAX_PER_SPECIES;
     const load = {};
     const slot = {};
-    const ids = cards.slice().sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
+    // a pet's card counts toward the nine, not toward a clade (src/data/pets.js)
+    const ids = cards.filter((id) => !T.CARD[id].pet).sort((a, b) => T.CARD[a].clades.length - T.CARD[b].clades.length);
     const place = (i) => {
       if (i === ids.length) return true;
       for (const sp of T.CARD[ids[i]].clades) {
@@ -164,6 +165,8 @@
    * reserve, its points on it), so this is for what truly ends, such as a companion lost.
    */
   T.removeCard = function (h, cardId) {
+    // a pet's card goes with its pet, and the pet with its card
+    if (h.pets) h.pets = h.pets.filter((p) => p.card !== cardId);
     const b = boundOf(h, cardId);
     h.upUnspent += freeSpent(h, cardId) + (b ? b[0] : 0);
     h.cards = h.cards.filter((c) => c !== cardId);
@@ -330,6 +333,9 @@
   /** The recipe of a hero a player built: its name, clades, cards and the points on them. */
   T.madeFrom = function (h, at) {
     const up = {};
+    // pets stay with the expedition they were found on, as gear does (src/data/pets.js)
+    const own = (c) => !T.CARD[c] || !T.CARD[c].pet;
+    h = Object.assign({}, h, { cards: h.cards.filter(own), reserve: (h.reserve || []).filter(own) });
     T.collection(h).forEach((c) => (up[c] = (h.up[c] || [0, 0]).slice(0, 2)));
     const bound = {};
     Object.keys(h.bound || {}).forEach((c) => (bound[c] = h.bound[c].slice(0, 2)));
@@ -456,7 +462,7 @@
   // UP allocation
   T.adjustUp = function (h, cardId, which, delta) {
     const i = which === 'E' ? 1 : 0;
-    const cap = which === 'E' ? R().E_CAP : R().P_CAP;
+    const cap = which === 'E' ? (T.CARD[cardId] && T.CARD[cardId].pet ? 0 : R().E_CAP) : R().P_CAP; // a pet's card has no Ethereal face
     const cur = h.up[cardId] || [0, 0];
     // a point bound to this card (a trait taken twice) is spent before a free one, and comes back last
     if (delta > 0) {
@@ -489,7 +495,7 @@
       .map((x) => x.cid);
     for (const cid of order) {
       if (h.upUnspent <= 0 || T.awakenedCount(h) >= R().START_AWAKE) break;
-      if (T.heroE(h, cid) === 0) T.adjustUp(h, cid, 'E', 1);
+      if (T.heroE(h, cid) === 0 && !T.CARD[cid].pet) T.adjustUp(h, cid, 'E', 1);
     }
   };
   T.autoAllocate = function (h) {
@@ -511,6 +517,7 @@
         if (h.upUnspent <= 0) break;
         const c = T.CARD[cid];
         const which =
+          c.E &&
           (c.sig >= 2 || c.E.fx.some((x) => ['blink', 'engine', 'strike'].includes(x.v))) &&
           h.up[cid][1] < h.up[cid][0] + 1
             ? 'E'
@@ -857,6 +864,7 @@
     const rw = run.lastReward;
     run.mission = null;
     run.purses = m.purses.slice();
+    // a pet that died is gone for that mission only: it sets out again, whole, with the next (Garrett, 2026-11-21)
     run.secondWindUsed = m.secondWindUsed;
     run.stats.missions++;
     run.stats.kills += m.stats.kills;
@@ -956,7 +964,87 @@
       .shuffle(T.GEAR.filter((g) => !owned.has(g.id)))
       .slice(0, 3)
       .map((g) => g.id);
-    return { gear, cons: [], healed: false, bought: [] };
+    // a stray (src/data/pets.js), from a stream of its own so the gear on offer is the same either way
+    const pet = run.heroes.some((h) => (h.pets || []).length < T.PET.MAX) ? T.newPet(run) : null;
+    return { gear, cons: [], healed: false, bought: [], pet };
+  };
+  /* ───────────────────────────── PETS ───────────────────────────── */
+  /**
+   * A pet found on the expedition (src/data/pets.js): three clades, none human, one trait drawn from each, and
+   * the card their three Physical faces make. Draws from the run's 'pets' stream only.
+   */
+  T.newPet = function (run) {
+    const rng = T.runStream(run, 'pets');
+    const species = rng.shuffle(T.SPECIES_ORDER.filter((sp) => sp !== 'human')).slice(0, 3);
+    const traits = [];
+    for (const sp of species) {
+      const pool = T.cardsOf(sp).filter((c) => !traits.includes(c.id));
+      traits.push(pool[rng.int(pool.length)].id);
+    }
+    run.petSeq = (run.petSeq || 0) + 1;
+    const id = 'pet' + run.petSeq;
+    const rec = { id, name: rng.pick(T.PET_NAMES), species, traits, card: `pet~${id}~${traits.join('~')}` };
+    T.registerPet(rec);
+    return rec;
+  };
+  /**
+   * Where a card in a kit comes from: a clade's bloodline, or a pet (src/data/pets.js). Equipment cards add
+   * their own kind here. Everything in h.cards counts toward the nine whatever its source.
+   */
+  T.cardSource = function (h, cardId) {
+    const rec = T.petRecOf(h, cardId);
+    if (rec) return { kind: 'pet', id: rec.id };
+    const c = T.CARD[cardId];
+    return { kind: 'clade', id: c ? c.clades.find((sp) => h.species.includes(sp)) || c.sp : null };
+  };
+  /**
+   * Can this hero take this pet in? A pet is pocketed like a vehicle (Garrett, 2026-11-21: "Pocket vehicles and
+   * pocket pets. It is all inventory"): its card joins the kit when there is room, or in place of dropId, which
+   * waits in reserve with its points; with a full kit and no dropId, the card waits in reserve itself (2.107).
+   */
+  T.canAdopt = function (h, rec, dropId) {
+    if (!rec) return { ok: false, why: 'no pet here' };
+    if ((h.pets || []).length >= T.PET.MAX) return { ok: false, why: `already ${T.PET.MAX} pets` };
+    if (T.holds(h, rec.card)) return { ok: false, why: 'already yours' };
+    if (dropId && !h.cards.includes(dropId)) return { ok: false, why: 'not in the kit' };
+    return { ok: true };
+  };
+  /** Give a pet to a hero. Nothing is refunded: a card the pet's displaces goes to the reserve. */
+  T.givePet = function (h, rec, dropId) {
+    const r = T.canAdopt(h, rec, dropId);
+    if (!r.ok) return r;
+    T.registerPet(rec);
+    h.pets = (h.pets || []).concat({
+      id: rec.id,
+      name: rec.name,
+      species: rec.species.slice(),
+      traits: rec.traits.slice(),
+      card: rec.card,
+    });
+    h.up[rec.card] = [0, 0];
+    let reserve = false;
+    if (h.cards.length < R().MAX_CARDS && !dropId) h.cards.push(rec.card);
+    else if (dropId) {
+      h.cards.splice(h.cards.indexOf(dropId), 1, rec.card);
+      T.reserveOf(h).push(dropId);
+    } else {
+      T.reserveOf(h).push(rec.card);
+      reserve = true;
+    }
+    return { ok: true, reserve };
+  };
+  /** Adopt the haven's stray: T.PET.PRICE crystals from the hero's purse. */
+  T.adoptPet = function (run, heroIdx, dropId) {
+    const h = run.heroes[heroIdx];
+    const rec = run.haven && run.haven.pet;
+    const r = T.canAdopt(h, rec, dropId);
+    if (!r.ok) return r;
+    const s = T.purseSeat(run, heroIdx);
+    if (run.purses[s] < T.PET.PRICE) return { ok: false, why: 'not enough ◇' };
+    run.purses[s] -= T.PET.PRICE;
+    T.givePet(h, rec, dropId);
+    run.haven.pet = null;
+    return { ok: true };
   };
   T.buyGear = function (run, gearId, heroIdx) {
     const g = T.GEAR_BY[gearId];
@@ -1037,6 +1125,7 @@
    */
   T.tradeCard = function (run, heroIdx, dropId) {
     const h = run.heroes[heroIdx];
+    if (T.CARD[dropId] && T.CARD[dropId].pet) return null; // a pet is not traded
     const sp = T.CARD[dropId].clades.find((x) => h.species.includes(x)) || T.CARD[dropId].sp;
     const cands = T.cardsOf(sp).filter((c) => T.canSwapCard(h, c.id, dropId).ok);
     const nc = T.runStream(run, 'event').pick(cands);
@@ -1051,7 +1140,7 @@
    * exactly where it was, in the middle of a round if need be. Saving draws no random number.
    * T.SAVE_VERSION goes up whenever the saved shape changes; `migrate` brings older saves forward.
    */
-  T.SAVE_VERSION = 29;
+  T.SAVE_VERSION = 30;
   T.serializeRun = function (run) {
     const m = run.mission;
     // the mission plays the run's own heroes: write them once, and leave out the animation queue
@@ -1436,6 +1525,13 @@
       for (const h of r.heroes || []) if (h && !Array.isArray(h.reserve)) h.reserve = [];
       r.v = 29;
     },
+    // 2.109 added pets (src/data/pets.js): a hero's pets, and the pets on the board of a mission in progress.
+    29(r) {
+      (r.heroes || []).forEach((h) => (h.pets = h.pets || []));
+      if (r.mission && !r.mission.pets) r.mission.pets = [];
+      if (r.haven && r.haven.pet === undefined) r.haven.pet = null;
+      r.v = 30;
+    },
   };
   T.deserializeRun = function (json) {
     const r = JSON.parse(json);
@@ -1443,6 +1539,7 @@
     if (r.v > T.SAVE_VERSION) throw new Error('this save is from a newer version of the game');
     while (r.v < T.SAVE_VERSION) migrate[r.v](r);
     if (r.mission) r.mission.heroes = r.heroes;
+    T.registerPets(r.heroes);
     return r;
   };
   T.saveRun = function (run) {

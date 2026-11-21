@@ -55,6 +55,23 @@ function createHarness(T = loadTumult()) {
     });
   }
 
+  /**
+   * Every pilot takes one pet (src/data/pets.js) in place of its last trait, that trait's points moved onto the
+   * pet card's P as far as they go: the kit stays the same size, so a table with and without measures the pet.
+   */
+  function givePets(run) {
+    run.heroes.forEach((h) => {
+      const drop = h.cards[h.cards.length - 1];
+      const pts = (h.up[drop] || [0, 0])[0] + (h.up[drop] || [0, 0])[1];
+      const rec = T.newPet(run);
+      T.removeCard(h, drop);
+      T.givePet(h, rec);
+      h.upUnspent -= pts;
+      h.up[rec.card] = [Math.min(T.RULES.P_CAP, pts), 0];
+      h.upUnspent += Math.max(0, pts - T.RULES.P_CAP);
+      T.autoAllocate(h);
+    });
+  }
   /** Give a squad the kit it would plausibly have at this tier of a real run (T.addProgression). */
   const addProgression = (run, tier) => T.addProgression(run, tier);
 
@@ -194,7 +211,7 @@ function createHarness(T = loadTumult()) {
    * moved two steps off and the zone foe out of reach where the page allows, so the tester always
    * has a free node to step to. `page` names the atlas page (otherwise the board's stream picks one).
    */
-  function arena(cardIds, { up = [2, 2], archetype = 'swarm', tier = 2, seed = 78, page } = {}) {
+  function arena(cardIds, { up = [2, 2], archetype = 'swarm', tier = 2, seed = 78, page, pet } = {}) {
     const ids = [].concat(cardIds);
     const run = T.newRun(seed);
     const h = T.makeHero({
@@ -205,6 +222,12 @@ function createHarness(T = loadTumult()) {
       up: Object.fromEntries(ids.map((id) => [id, up.slice()])),
     });
     const ally = T.makeHero({ id: 'y', name: 'Buddy', species: ['human', 'owl', 'gecko'], cards: ['owl_talon'] });
+    // `pet`: a trait id. The tester has a pet whose card is that trait's Physical face three times over
+    if (pet) {
+      const traits = [pet, pet, pet];
+      T.givePet(h, { id: 'petX', name: 'Testpet', species: ['owl', 'gecko', 'eel'], traits, card: `pet~petX~${pet}` });
+      h.up[`pet~petX~${pet}`] = [up[0], 0];
+    }
     run.heroes = [h, ally];
     run.crystals = 20;
     T.launchMission(run, archetype, tier, page);
@@ -253,8 +276,13 @@ function createHarness(T = loadTumult()) {
    * anything in the mission that is not plain data. `arrange(scene)` may rearrange the arena
    * first; `choose` is passed to playIn.
    */
-  function fireFace(cardId, faceKey, { arrange, choose } = {}) {
-    const scene = arena(cardId);
+  function fireFace(cardId, faceKey, { arrange, choose, pet } = {}) {
+    // with `pet`, cardId is a trait and the face fired is its Physical face on a pet's card (faceKey ignored)
+    const scene = pet ? arena('hum_tool', { pet: cardId }) : arena(cardId);
+    if (pet) {
+      cardId = `pet~petX~${cardId}`;
+      faceKey = 'P';
+    }
     // a throw needs the partner beside you
     if (T.CARD[cardId][faceKey].tgt === 'ally_throw') {
       const spot = T.Board.walkNeighbors(scene.m.board, scene.h.pos).find((n) => !T.occupied(scene.m, n));
@@ -284,6 +312,7 @@ function createHarness(T = loadTumult()) {
     addLevel,
     draftedSquad,
     addProgression,
+    givePets,
     playMission,
     playRun,
     plainProblems,

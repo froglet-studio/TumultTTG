@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.108.0',
+    version: '2.109.0',
     items: [
+      {
+        text: 'Pocket pets are here. A haven may have a stray: a hybrid of three clades (never human) with one card that holds a Physical face from each of them. Adopt it for 4 ◇ (two pets at most); its card is a card like any other, in your kit or your reserve, and the pet only sets out when its card flies. A pet on your node rides with you in any vehicle. Any one of its three faces sends the whole card to your track, and the face acts from the pet: its reach, its strike, its steps. Heel (1 AP) walks it up to 3. Did playing a card through the pet read clearly on the board?',
+      },
       {
         text: 'Weapons: two new pieces of gear at the havens. The Shock Baton adds 1 to every melee strike you make (the basic Strike too), and the Coil Rifle adds 1 to every ranged one. Each has an Overcharge that takes a banked Omni die instead of omnicrystals: every Omni you put on the weapon adds 2 to every strike of its reach this round, and you can stack them. An Omni spent there cannot pay an Ethereal face. Foes are a little tougher to make up for it. Did you ever Overcharge, and was it worth the Omni? Did a weapon change which cards you reached for?',
       },
@@ -42,6 +45,9 @@
       },
       {
         text: 'No die is ever drawn at random now: Draw takes a plain die while your pool has one, then the element die that shows the face most, and a roll with few plain dice left takes the element dice you hold most of. Did any Draw bank a die you did not expect?',
+      },
+      {
+        text: 'A pet can share your node, and there nothing can hurt it; off your node foes can target it, and at 0 it dies and is gone for the rest of the mission (it comes back for the next). Did you find yourself parking it on your node, or sending it out? Was it worth risking?',
       },
       {
         text: 'The mission screen, the draft and the route now follow the designs picked on the Frogma board. On a mission the board sits in a frame with the sea around it; ⛶ Full screen lets it fill the screen, and the foes’ plans and your hand become trays you can slide away. A Squad panel lists every pilot and, with friends, whose turn it is, who is done and who still has one to take. Taking turns at one screen, a cover goes over the board between turns and names who is up, so nobody sees the last hand. On a phone the foot of the screen is one sheet with tabs: Hand, Plans, Squad and Log. The draft fills your kit along the bottom as you pick, and the route reads like a climb: the Heart at the top, your next stops as big cards, the stops you passed below. Is anything you used often harder to find? Did the cover between turns ever get in the way?',

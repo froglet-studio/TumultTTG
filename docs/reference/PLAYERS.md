@@ -26,6 +26,7 @@ An action is a plain object. `hero` is an index into `m.heroes`.
 | `gear`     | `gear`, `ability`, and `target`, `node` or `choice` as for a face                                                | use a gear ability                       |
 | `item`     | `item`                                                                                                           | use a consumable                         |
 | `valve`    |                                                                                                                  | fold one of each etherion into an Omni   |
+| `heel`     | `pet` (a uid), `node` | a pet walks up to its speed (1 AP) |
 
 - `T.legalActions(m)` lists every action the squad could take next. Every playable face is in it once for each way it can be resolved, and everything in it works.
 - `T.applyAction(m, action)` does one, and returns what the engine returns.
@@ -69,6 +70,7 @@ One measure for every mission, in points of about one hero vitality each (`T.EVA
 | `crystal`, `item` | 0.4, 2 | crystals and consumables kept                                                                                                                                                                                 |
 | `ahead`           | 0.6    | the share counted of what a hero has bought for later rounds: a regen engine (up to the vitality it can restore), AP to come, a strike bonus not yet spent; and two hits' worth on a Studied foe (since 2.73) |
 | `spare`           | 0.5    | each temporary die minted and not yet spent — counted only while the search ranks its lines, so a line that has just minted dice is not dropped before it spends them (since 2.73)                            |
+| `petHp`, `petDead` | 0.5, 12 | each point of vitality a pet has; a pet dead (its card is lost for the rest of the mission, `docs/reference/PETS.md`) |
 
 A face's free step (`move` with `free`) is a walk the player may take later in the same turn: the interface asks for it at once, this player keeps it for the turn (`h.freeMove`) so the search can place it where it serves best.
 

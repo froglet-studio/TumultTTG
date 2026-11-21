@@ -44,6 +44,16 @@
     for (const k of Object.keys(st(h))) if (st(h)[k] && st(h)[k].ride) delete st(h)[k];
     delete h.ride;
   }
+  /**
+   * Pocket pets ride along (Garrett, 2026-11-21: "a pet on a player will ride with them even in a one seater"):
+   * the pets standing on their pilot's node go where the pilot goes, in and out, and take no seat.
+   */
+  function petsOn(m, h, node) {
+    return (T.petsOf ? T.petsOf(m, h) : []).filter((p) => !p.dead && p.pos === node);
+  }
+  function carryPets(pets, node) {
+    for (const p of pets) p.pos = node;
+  }
   /** The next rider in squad order takes the controls when the driver gets out (or none: it is parked). */
   function passControls(m, v) {
     const r = T.ridersOf(m, v).find((x) => !x.downed);
@@ -121,7 +131,9 @@
       return { ok: false, why: T.isAnchored(h) ? 'Anchored' : 'need 1 AP' };
     }
     T.pay(h, ENTER_AP);
+    const pets = petsOn(m, h, h.pos);
     T.moveEntity(m, h, v.pos, 'board');
+    carryPets(pets, h.pos);
     h.ride = v.uid;
     if (v.driver == null) v.driver = h.uid;
     rideOn(h, v);
@@ -145,9 +157,11 @@
     if (!T.leaveOptions(m, h).includes(node))
       return { ok: false, why: T.apValue(h) < ENTER_AP ? 'need 1 AP' : 'nowhere to step' };
     T.pay(h, ENTER_AP);
+    const pets = petsOn(m, h, h.pos);
     rideOff(h);
     if (v.driver === h.uid) passControls(m, v);
     T.moveEntity(m, h, node, 'leave');
+    carryPets(pets, h.pos);
     T.sightAround(m, h);
     say(m, `${h.name} gets out of the ${T.vehicleDef(v).name}.`, 'hero');
     T.afterAction(m);
@@ -229,6 +243,7 @@
     T.pay(h, ENTER_AP);
     const riders = T.ridersOf(m, v);
     for (let i = 1; i < path.length; i++) {
+      for (const r of riders) if (r.ride === v.uid) carryPets(petsOn(m, r, v.pos), path[i]);
       v.pos = path[i];
       for (const r of riders) if (r.ride === v.uid) T.moveEntity(m, r, path[i], 'drive');
       if (!m.vehicles.includes(v)) break; // a Field on the way wrecked it
@@ -295,6 +310,7 @@
     m.stats.wrecks = (m.stats.wrecks || 0) + 1;
     say(m, `The ${T.vehicleDef(v).name} is wrecked!`, 'enemy');
     for (const r of riders) {
+      const pets = petsOn(m, r, r.pos);
       rideOff(r);
       let spot = null;
       if (
@@ -322,6 +338,7 @@
         }
       }
       if (spot != null && spot !== r.pos) T.moveEntity(m, r, spot, 'forced');
+      carryPets(pets, r.pos);
       say(m, `${r.name} is thrown clear.`, 'enemy');
     }
     T.fx(m, { t: 'wreck', vehicle: v.uid, pos: v.pos });
