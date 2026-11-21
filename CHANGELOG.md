@@ -9,7 +9,7 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
-## 2.109.0 — 2026-11-21 — the rest of the costly faces
+## 2.110.0 — 2026-11-21 — the rest of the costly faces
 
 The other five of the nine bundled costly faces (2.105.0 has the rule).
 
@@ -18,6 +18,15 @@ The other five of the nine bundled costly faces (2.105.0 has the rule).
 - **Neurotoxin** (Paralytic Bite): melee 2 + P, and for E rounds after this one the foe repeats this round's intent, the same move at the same target (`fix`, the state `Fixed`). It still acts. It was a strike, a Weaken and an Anchor.
 - **Step Out of Time** drops its heal (untargetable and Haste stay). **Tesla Cascade** drops its Shield strip; its Link reaches 1 + E.
 - No save change.
+
+## 2.109.0 — 2026-11-21 — pocket pets
+
+- **Pocket pets, sidekicks on the board.** Pets are inventory, like pocket vehicles (Garrett, 2026-11-21: "Pocket vehicles and pocket pets. It is all inventory"). A haven may have a stray: a hybrid of three clades, none of them human, with its own vitality (8). When it is found, one trait is drawn from each of its clades, and their three Physical faces make one pet card. Adopt it for 4 ◇. Its card is a card like any other: it joins the kit when there is room, or in place of a card that waits in reserve, or waits in reserve itself, and nothing is refunded. A pet sets out only when its card flies. A pilot keeps two pets at most. Pet cards grow with P; they have no Ethereal face.
+- **The card plays from the pet.** The pilot pays with their own dice, and any one face sends the whole card to the track. Range, strikes, steps and states on "you" are the pet's; what a face does to dice, the track or the purse is the pilot's. Heel (1 AP) walks the pet up to 3.
+- **Safe on its pilot's node.** A pet may share its own pilot's node, and nothing can hurt it there; foes cannot target it. Off that node they can, and at 0 it dies: it leaves the board, and its card is out for the rest of the mission. It comes back, whole, for the next one.
+- **Pets ride along.** A pet on its pilot's node gets in, drives and gets out with them, even in a one-seater, and takes no seat (Garrett, 2026-11-21). While it rides, its card plays only Mounted faces, as the pilot's do, and it cannot Heel.
+- The look-ahead player plays pet faces and Heel, weighing a pet's vitality at 0.5 a point and its death at 12 (`T.EVAL`). `node tools/sim.js 40 missions --pets` gives every pilot a pet in place of a trait. Without pets nothing changes: the default tables are identical before and after.
+- **Saves** are version 30: every hero gains `pets`, a mission `pets`. `docs/reference/PETS.md`.
 
 ## 2.108.0 — 2026-11-21 — weapons
 

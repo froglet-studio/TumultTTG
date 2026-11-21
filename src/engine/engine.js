@@ -225,7 +225,16 @@
       stats: { dmgDealt: 0, dmgTaken: 0, kills: 0 },
       boons: [],
       faces: null,
+      // pets (src/data/pets.js): each one's clades, the three traits its card is made of, and that card's id
+      pets: (spec.pets || []).map((p) => ({
+        id: p.id,
+        name: p.name,
+        species: p.species.slice(),
+        traits: p.traits.slice(),
+        card: p.card,
+      })),
     };
+    T.registerPets([h]);
     spec.cards.concat(h.reserve).forEach((c) => (h.up[c] = [0, 0]));
     if (spec.up)
       Object.keys(spec.up).forEach((c) => {
@@ -381,6 +390,7 @@
       heroes: run.heroes,
       enemies: [],
       decoys: [],
+      pets: [],
       fields: [],
       objective: spec.objective,
       clock: spec.clock ? Object.assign({}, spec.clock) : null,
@@ -430,6 +440,10 @@
           bank(h, v.bank, 'plain');
         }
     });
+    // each pilot's pets set out on its own node with it (src/data/pets.js)
+    T.registerPets(m.heroes);
+    // a pet sets out only when its card flies this mission; with its card in reserve it stays in the pocket
+    m.heroes.forEach((h) => (h.pets || []).forEach((pr) => h.cards.includes(pr.card) && T.addPet(m, h, pr)));
     if (run.bossBonusHp && m.isBoss)
       m.enemies
         .filter((e) => e.boss)
@@ -781,13 +795,77 @@
     for (const h of m.heroes) if (!h.downed && h.pos === node) return h;
     for (const e of m.enemies) if (e.alive && e.pos === node) return e;
     for (const d of m.decoys) if (d.pos === node) return d;
+    for (const p of m.pets || []) if (!p.dead && p.pos === node) return p;
     return null;
   };
+  /* ───────────────────────────── PETS ───────────────────────────── */
+  /** A pilot's pet joins the mission on the pilot's own node (a pet may share it: Garrett, 2026-11-21). */
+  T.addPet = function (m, h, rec) {
+    const p = {
+      kind: 'pet',
+      uid: nextUid(m),
+      owner: h.uid,
+      pid: rec.id,
+      species: rec.species.slice(),
+      name: rec.name,
+      hp: T.PET.HP,
+      maxHp: T.PET.HP,
+      pos: h.pos,
+      states: {},
+      dead: false,
+    };
+    m.pets.push(p);
+    return p;
+  };
+  T.livePets = (m) => (m.pets || []).filter((p) => !p.dead);
+  T.petsOf = (m, h) => (m.pets || []).filter((p) => p.owner === h.uid && !p.dead);
+  T.petOwner = (m, p) => m.heroes.find((h) => h.uid === p.owner) || null;
+  /** The pet a pet card plays off, or null if that pet is not (or no longer) with its pilot. */
+  /** Is this card one of the hero's pets' cards (whether or not that pet is on the board)? */
+  T.petRecOf = (h, cardId) => (h.pets || []).find((p) => p.card === cardId) || null;
+  T.isPetCard = (h, cardId) => !!T.petRecOf(h, cardId);
+  T.petFor = (m, h, cardId) => {
+    const rec = T.petRecOf(h, cardId);
+    return rec ? T.petsOf(m, h).find((p) => p.pid === rec.id) || null : null;
+  };
+  /** A pet on its own pilot's node, the pilot standing, is invulnerable (Garrett, 2026-11-21). */
+  T.sheltered = (m, p) => {
+    if (p.kind !== 'pet' || p.dead) return false;
+    const o = T.petOwner(m, p);
+    return !!(o && !o.downed && o.pos === p.pos);
+  };
+  /** Pets a foe can go for: alive, and not sheltered on their pilot's node. */
+  T.exposedPets = (m) => T.livePets(m).filter((p) => !T.sheltered(m, p));
+  /** Pilot and pet are partners: one may stand on the other's node. */
+  const partners = (a, b) =>
+    (a.kind === 'pet' && b.kind === 'hero' && a.owner === b.uid) ||
+    (b.kind === 'pet' && a.kind === 'hero' && b.owner === a.uid);
+  /** Everything standing on a node. */
+  T.unitsAt = (m, node) =>
+    []
+      .concat(
+        m.heroes.filter((h) => !h.downed && h.pos === node),
+        m.enemies.filter((e) => e.alive && e.pos === node),
+        m.decoys.filter((d) => d.pos === node),
+      )
+      .concat(T.livePets(m).filter((p) => p.pos === node));
+  /**
+   * Can this unit stop on this node? Empty, or holding only its partners: a pilot's own pets, or a pet's own
+   * pilot (and that pilot's other pets).
+   */
+  T.freeFor = (m, ent, node) =>
+    !(m.vehicles && T.vehicleAt(m, node)) &&
+    T.unitsAt(m, node).every(
+      (u) => u === ent || partners(ent, u) || (ent.kind === 'pet' && u.kind === 'pet' && u.owner === ent.owner),
+    );
   // a parked vehicle stands on its space too: nobody stops there, though anyone may pass
   T.occupied = (m, node) => !!T.entityAt(m, node) || !!(m.vehicles && m.vehicles.some((v) => v.pos === node));
   T.liveEnemies = (m) => m.enemies.filter((e) => e.alive);
   T.liveHeroes = (m) => m.heroes.filter((h) => !h.downed);
-  T.foesFor = (m, actor) => (actor.kind === 'hero' ? T.liveEnemies(m) : T.liveHeroes(m).concat(m.decoys));
+  T.foesFor = (m, actor) =>
+    actor.kind === 'hero' || actor.kind === 'pet'
+      ? T.liveEnemies(m)
+      : T.liveHeroes(m).concat(m.decoys, T.exposedPets(m));
   /**
    * "Your ally": with two pilots, the other one. With more, the nearest ally standing (the first in squad order
    * on a tie), or if none stands, the nearest one down, so a face that reaches "your ally" reaches the
@@ -855,6 +933,10 @@
       }
       return amount;
     }
+    if (target.kind === 'pet' && T.sheltered(m, target)) {
+      say(m, `${target.name} is safe beside ${T.petOwner(m, target).name}: the blow finds nothing.`);
+      return 0;
+    }
     const ts = st(target);
     if (ts.Stasis) {
       say(m, `${target.name} is outside time — the blow passes through nothing.`);
@@ -868,8 +950,8 @@
     let dmg = amount;
     let pierce = !!opts.pierce;
     const trueDmg = !!opts.trueDmg;
-    // attacker modifiers (heroes)
-    if (source && source.kind === 'hero') {
+    // attacker modifiers (heroes, and pets, who strike for their pilot)
+    if (source && (source.kind === 'hero' || source.kind === 'pet')) {
       const ss = st(source);
       if (opts.strike && ss.Empower && ss.Empower.length) {
         // consume the first matching empower
@@ -957,6 +1039,10 @@
       if (source && source.uid != null && kind !== 'area' && kind !== 'true') hit.by = source.uid;
       fx(m, hit);
       if (source && source.kind === 'hero') source.stats.dmgDealt += dmg;
+      else if (source && source.kind === 'pet') {
+        const o = T.petOwner(m, source);
+        if (o) o.stats.dmgDealt += dmg;
+      }
       if (target.kind === 'hero') {
         target.stats.dmgTaken += dmg;
         if (opts.ambush) m.stats.ambushDmg += dmg;
@@ -965,7 +1051,7 @@
       say(
         m,
         `${source ? source.name : 'The hazard'} ${opts.label || 'hits'} ${target.name}${hull ? `'s ${T.VEHICLE_BY[hull.type].name}` : ''} for ${dmg}${pierce ? ' (pierce)' : ''}${trueDmg ? ' (true)' : ''}.`,
-        source && source.kind === 'hero' ? 'hero' : 'enemy',
+        source && (source.kind === 'hero' || source.kind === 'pet') ? 'hero' : 'enemy',
       );
       if (hull) T.hitHull(m, hull, dmg);
     } else {
@@ -1002,10 +1088,13 @@
     // contact / area reveals
     if (isHidden(target) && (kind === 'melee' || kind === 'area' || kind === 'any') && !opts.noReveal)
       breakHidden(m, target, 'contact');
-    if (source && source.kind === 'hero' && isHidden(source)) breakHidden(m, source, 'striking');
+    if (source && (source.kind === 'hero' || source.kind === 'pet') && isHidden(source))
+      breakHidden(m, source, 'striking');
     // death
-    if (target.kind === 'enemy') checkEnemyDeath(m, target, source);
+    if (target.kind === 'enemy')
+      checkEnemyDeath(m, target, source && source.kind === 'pet' ? T.petOwner(m, source) : source);
     else if (target.kind === 'hero') checkHeroDown(m, target);
+    else if (target.kind === 'pet') checkPetDeath(m, target);
     return dmg;
   };
   function checkEnemyDeath(m, e, killer) {
@@ -1019,6 +1108,15 @@
       m.won = true;
     }
   }
+  /** A pet at 0 dies: it leaves the board, and after the mission its pilot loses it and its cards. */
+  function checkPetDeath(m, p) {
+    if (p.dead || p.hp > 0) return;
+    p.dead = true;
+    p.hp = 0;
+    say(m, `${p.name} dies.`, 'sys');
+    fx(m, { t: 'death', ent: p.uid, pos: p.pos });
+  }
+  T.checkPetDeath = checkPetDeath;
   function checkHeroDown(m, h) {
     if (h.downed || h.hp > 0) return;
     const ph = h.states.Phoenix;
@@ -1185,8 +1283,12 @@
    * takes the same: the damage it was dealt (as true damage), the same push or pull from the same source,
    * the same heal. A unit has one Link at a time; a new one replaces it, and it ends when either falls.
    */
-  const unitBy = (m, uid) => m.heroes.find((h) => h.uid === uid) || m.enemies.find((e) => e.uid === uid) || null;
-  const standing = (u) => !!u && (u.kind === 'enemy' ? u.alive : !u.downed);
+  const unitBy = (m, uid) =>
+    m.heroes.find((h) => h.uid === uid) ||
+    m.enemies.find((e) => e.uid === uid) ||
+    (m.pets || []).find((p) => p.uid === uid) ||
+    null;
+  const standing = (u) => !!u && (u.kind === 'enemy' ? u.alive : u.kind === 'pet' ? !u.dead : !u.downed);
   function linkedTo(m, u) {
     const l = u && st(u).Linked;
     if (!l) return null;
@@ -1252,7 +1354,7 @@
   T.markUnit = markUnit;
   /** Heal a unit: restore vitality, or get a downed pilot up with that much (2.90: Heal raises the downed). */
   function healUnit(m, u, amt) {
-    if (amt <= 0) return 0;
+    if (amt <= 0 || u.dead) return 0;
     if (u.kind === 'hero' && u.downed) {
       u.downed = false;
       u.hp = Math.min(u.maxHp, amt);
@@ -1568,7 +1670,7 @@
         return { need: 'foeOrAlly', options: opts };
       }
       case 'node_adj':
-        return { need: 'node', options: B.walkNeighbors(bd, h.pos).filter((n) => !T.occupied(m, n)) };
+        return { need: 'node', options: B.walkNeighbors(bd, h.pos).filter((n) => T.freeFor(m, h, n)) };
       case 'node_r2': {
         const r = face
           ? Math.max(
@@ -1584,11 +1686,11 @@
           face &&
           face.fx.some((x) => x.v === 'decoy' && !x.here) &&
           !face.fx.some((x) => /^(interact|dot|zone|strike|trap)$/.test(x.v));
-        return { need: 'node', options: decoyOnly ? all.filter((n) => !T.occupied(m, n)) : all };
+        return { need: 'node', options: decoyOnly ? all.filter((n) => T.freeFor(m, h, n)) : all };
       }
       case 'node_r3': {
         const r = face ? Math.max(...face.fx.map((x) => (x.remote != null ? num(x.remote, P, E) : 0)), 3) : 3;
-        return { need: 'node', options: B.within(bd, h.pos, r, true).filter((n) => !T.occupied(m, n)) };
+        return { need: 'node', options: B.within(bd, h.pos, r, true).filter((n) => T.freeFor(m, h, n)) };
       }
       case 'node_move': {
         const mv = face.fx.find((x) => x.v === 'move');
@@ -1603,7 +1705,7 @@
       case 'node_tele': {
         const tp = face.fx.find((x) => x.v === 'blink');
         const r = num(tp.reach, P, E) + boonSum(h, 'blinkReach');
-        let opts = B.within(bd, h.pos, r, true).filter((n) => !T.occupied(m, n) && (tp.height || !bd.nodes[n].height));
+        let opts = B.within(bd, h.pos, r, true).filter((n) => T.freeFor(m, h, n) && (tp.height || !bd.nodes[n].height));
         if (tp.dest === 'adjTarget')
           return {
             need: 'foe',
@@ -1639,9 +1741,10 @@
     // a step onto y: is it allowed, and is y somewhere a walk may pass (but not stop, if occupied)?
     const step = (y) => {
       if (bd.nodes[y].height && !climber && !bd.ramp) return null;
-      const occ = T.entityAt(m, y);
-      if (occ && !(ignoreFoes || occ.kind === 'hero')) return null; // can't pass through foes unless ignoring
-      return { empty: !occ && !(m.vehicles && T.vehicleAt(m, y)) }; // a parked vehicle is passed, not stood on
+      const occ = T.unitsAt(m, y).filter((u) => u !== h);
+      // the squad's pilots and pets can be walked through; foes only when ignoring them
+      if (occ.some((u) => !(ignoreFoes || u.kind === 'hero' || u.kind === 'pet'))) return null;
+      return { empty: T.freeFor(m, h, y) };
     };
     if (exact) {
       const out = new Set();
@@ -1693,12 +1796,17 @@
     const elt = face.elt || card.el;
     const eln = face.el || 0;
     if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
-    if (h.ride != null && !T.isMounted(card, faceKey)) return { ok: false, why: 'not Mounted: get out first' };
+    // a pet's card acts from the pet (src/data/pets.js): no pet on the board, no play
+    const body = T.isPetCard(h, cardId) ? T.petFor(m, h, cardId) : h;
+    if (!body) return { ok: false, why: 'your pet is not here' };
+    // inside a vehicle only Mounted faces; a pet riding with its pilot plays by the same rule
+    if (T.ridingWith(m, h, body) && !T.isMountedFace(card, faceKey))
+      return { ok: false, why: 'not Mounted: get out first' };
     if (!T.canPay(h, face.ap, elt, eln)) return { ok: false, why: 'cannot pay' };
-    const tg = T.targetsFor(m, h, face.tgt, face, P, E, pick);
+    const tg = T.targetsFor(m, body, face.tgt, face, P, E, pick);
     if (tg.invalid) return { ok: false, why: tg.invalid };
     if (tg.need !== 'none' && (!tg.options || !tg.options.length)) return { ok: false, why: 'no valid target' };
-    return { ok: true, tg };
+    return { ok: true, tg, body };
   };
   T.playFace = function (m, h, cardId, faceKey, ctx) {
     const chk = T.canPlay(m, h, cardId, faceKey, ctx && ctx.ally);
@@ -1712,9 +1820,10 @@
     const elt = face.elt || card.el;
     const eln = face.el || 0;
     T.pay(h, face.ap, elt, eln);
+    const body = chk.body;
     say(
       m,
-      `${h.name} plays ${card.name} — ${face.n}${faceKey === 'E' ? ' (' + T.ETHERIONS[elt].name + ')' : ''}.`,
+      `${h.name} plays ${card.name} — ${face.n}${faceKey === 'E' ? ' (' + T.ETHERIONS[elt].name + ')' : ''}${body !== h ? ', through ' + body.name : ''}.`,
       'hero',
     );
     fx(m, { t: 'play', hero: h.uid, card: cardId, face: faceKey });
@@ -1723,7 +1832,8 @@
     const rctx = ctx || {};
     Object.assign(rctx, { P, E, card, faceKey });
     if (al.ally != null) rctx.ally = al.ally;
-    T.runEffects(m, h, face.fx, rctx);
+    T.runEffects(m, body, face.fx, rctx);
+    if (body !== h) delete rctx.pendingFreeMove; // a free step a pet's face grants is the pet's, and it has taken it
     T.afterAction(m);
     return { ok: true, ctx: rctx };
   };
@@ -1747,6 +1857,7 @@
       m.enemies.find((e) => e.uid === ctx.target && e.alive) ||
       m.heroes.find((h) => h.uid === ctx.target) ||
       m.decoys.find((d) => d.uid === ctx.target) ||
+      (m.pets || []).find((p) => p.uid === ctx.target && !p.dead) ||
       null
     );
   };
@@ -1773,7 +1884,9 @@
     const P = ctx.P || 0,
       E = ctx.E || 0;
     const bd = m.board;
-    const isHero = actor.kind === 'hero';
+    // a pet card acts from the pet, but what it does to dice, the track or the purse goes to the pilot
+    if (actor.kind === 'pet' && T.PET_PILOT_VERBS.includes(f.v)) actor = T.petOwner(m, actor) || actor;
+    const isHero = actor.kind === 'hero' || actor.kind === 'pet';
     const ally = isHero ? T.chosenAlly(m, actor, ctx) : null;
     const party = () => (isHero ? T.liveHeroes(m) : [actor]);
     // Conditions gate the whole effect, whatever its verb. The ones about a target need it
@@ -1886,7 +1999,7 @@
       }
       /* ---------- MOVEMENT ---------- */
       case 'move': {
-        if (actor.kind !== 'hero') break;
+        if (!isHero) break;
         const n = num(f.n, P, E);
         if (n <= 0) break;
         if (isAnchored(actor)) {
@@ -1958,7 +2071,7 @@
         break;
       }
       case 'blink': {
-        if (actor.kind !== 'hero') break;
+        if (!isHero) break;
         const r = num(f.reach, P, E) + boonSum(actor, 'blinkReach');
         let dest = ctx.node;
         if (f.dest === 'adjTarget') {
@@ -1972,7 +2085,11 @@
           dest = cands.sort((a, b) => B.dist(bd, actor.pos, a, true) - B.dist(bd, actor.pos, b, true))[0];
         }
         if (dest == null) break;
-        if (B.dist(bd, actor.pos, dest, true) > r || T.occupied(m, dest) || (bd.nodes[dest].height && !f.height)) {
+        if (
+          B.dist(bd, actor.pos, dest, true) > r ||
+          !T.freeFor(m, actor, dest) ||
+          (bd.nodes[dest].height && !f.height)
+        ) {
           say(m, 'Out of reach.', 'sys');
           break;
         }
@@ -2668,7 +2785,7 @@
       climber,
     );
     if (!p || p.length < 2) return { ok: false, why: 'no path' };
-    if (T.occupied(m, dest)) return { ok: false, why: 'occupied' };
+    if (!T.freeFor(m, h, dest)) return { ok: false, why: 'occupied' };
     const steps = p.length - 1;
     const bonus = st(h).Morph && st(h).Morph.move ? 1 : 0;
     const payable = Math.max(0, steps - free - bonus);
@@ -2795,6 +2912,44 @@
     ally.hp = R().RALLY_HP;
     say(m, `${h.name} rallies ${ally.name} back to their feet (${R().RALLY_HP}).`, 'sys');
     fx(m, { t: 'revive', ent: ally.uid });
+    T.afterAction(m);
+    return { ok: true };
+  };
+  /**
+   * Heel (src/data/pets.js): for T.PET.HEEL_AP, one of the hero's pets moves up to T.PET.SPEED, a walk like any
+   * other (through the squad, around foes), and may end on its pilot's node.
+   */
+  /** Is this body (the pilot, or a pet of theirs) inside a vehicle? A pet on its riding pilot's node rides along. */
+  T.ridingWith = (m, h, body) => h.ride != null && (body === h || body.pos === h.pos);
+  /** Is this face Mounted? A pet card's face is Mounted when the trait face it was made from is. */
+  T.isMountedFace = (card, faceKey) =>
+    card.pet ? T.isMounted(T.CARD[card[faceKey].from], 'P') : T.isMounted(card, faceKey);
+  T.heelTargets = function (m, h, petUid) {
+    const p = T.petsOf(m, h).find((x) => x.uid === petUid);
+    if (!p || isAnchored(p) || T.ridingWith(m, h, p)) return [];
+    return T.reachableWalk(m, p, T.PET.SPEED, false);
+  };
+  T.canHeel = function (m, h, petUid) {
+    if (h.downed || h.rested) return { ok: false, why: h.downed ? 'downed' : 'resting' };
+    const p = T.petsOf(m, h).find((x) => x.uid === petUid);
+    if (!p) return { ok: false, why: 'no such pet' };
+    if (isAnchored(p)) return { ok: false, why: 'Anchored' };
+    if (T.ridingWith(m, h, p)) return { ok: false, why: 'riding with you' };
+    if (T.apValue(h) < T.PET.HEEL_AP) return { ok: false, why: 'need ' + T.PET.HEEL_AP + ' AP' };
+    const options = T.heelTargets(m, h, petUid);
+    if (!options.length) return { ok: false, why: 'nowhere to go' };
+    return { ok: true, options };
+  };
+  T.heel = function (m, h, petUid, node) {
+    const chk = T.canHeel(m, h, petUid);
+    if (!chk.ok) return chk;
+    if (!chk.options.includes(node)) return { ok: false, why: 'out of reach' };
+    const p = T.petsOf(m, h).find((x) => x.uid === petUid);
+    T.pay(h, T.PET.HEEL_AP);
+    const from = p.pos;
+    moveEntity(m, p, node, 'walk');
+    onHeroEnter(m, p, node);
+    say(m, `${h.name} calls ${p.name} to heel: ${from} → ${node}.`, 'hero');
     T.afterAction(m);
     return { ok: true };
   };
@@ -3053,6 +3208,11 @@
       const d = T.damage(m, null, h, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
       m.stats.hazardDmg += d;
     }
+    for (const p of T.livePets(m))
+      if (m.board.nodes[p.pos].hazard && !hazardImmune(p)) {
+        say(m, `${p.name} is caught in the hazard.`, 'enemy');
+        T.damage(m, null, p, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
+      }
     for (const e of T.liveEnemies(m))
       if (m.board.nodes[e.pos].hazard && !hazardImmune(e) && !e.boss) {
         T.damage(m, null, e, R().HAZARD_DMG, { kind: 'true', trueDmg: true, label: 'floods over' });
@@ -3060,7 +3220,7 @@
     // Fields spring on whoever ends the round in them
     fieldsAtRoundEnd(m);
     // Wounds bite, then drop by 1
-    for (const u of T.liveEnemies(m).concat(T.liveHeroes(m))) {
+    for (const u of T.liveEnemies(m).concat(T.liveHeroes(m), T.livePets(m))) {
       const w = st(u).Wound;
       if (!w) continue;
       const owner = unitBy(m, w.owner);
@@ -3151,6 +3311,7 @@
       }
     };
     m.heroes.forEach(tick);
+    T.livePets(m).forEach(tick);
     m.enemies
       .filter((e) => e.alive)
       .forEach((e) => {

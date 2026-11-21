@@ -12,7 +12,8 @@
 
   /* ───────────────────────────── TARGET HELPERS ───────────────────────────── */
   function candidates(m) {
-    return T.liveHeroes(m).concat(m.decoys);
+    // a pet on its own pilot's node is out of reach (src/data/pets.js)
+    return T.liveHeroes(m).concat(m.decoys, T.exposedPets(m));
   }
   function dist(m, a, b) {
     return B.dist(m.board, a, b, true);
@@ -36,7 +37,9 @@
     return hs.slice().sort((a, b) => a.hp - b.hp)[0];
   }
   function zoneTargets(m, e) {
-    return candidates(m).filter((c) => B.los(m.board, e.pos, c.pos) && !(c.kind === 'hero' && T.isHidden(c)));
+    return candidates(m).filter(
+      (c) => B.los(m.board, e.pos, c.pos) && !((c.kind === 'hero' || c.kind === 'pet') && T.isHidden(c)),
+    );
   }
   function adjacentTargets(m, e) {
     return candidates(m).filter((c) => B.adjacent(m.board, e.pos, c.pos));
@@ -199,6 +202,7 @@
           .concat(
             T.liveHeroes(m).map((h) => h.pos),
             m.decoys.map((d) => d.pos),
+            T.livePets(m).map((p) => p.pos),
           ),
       );
       const p = B.path(m.board, e.pos, targetNode, blocked);
@@ -245,7 +249,12 @@
     if (dist(m, best, from.pos) > dist(m, e.pos, from.pos)) T.moveEntity(m, e, best, 'walk');
   }
   function findTarget(m, uid) {
-    return T.liveHeroes(m).find((h) => h.uid === uid) || m.decoys.find((d) => d.uid === uid) || null;
+    return (
+      T.liveHeroes(m).find((h) => h.uid === uid) ||
+      m.decoys.find((d) => d.uid === uid) ||
+      T.exposedPets(m).find((p) => p.uid === uid) ||
+      null
+    );
   }
   function hit(m, e, ab, t, opts) {
     const d = dmgOf(e, ab);
@@ -254,7 +263,7 @@
       opts || {},
     );
     const dealt = T.damage(m, e, t, d, o);
-    if (t.kind === 'hero' && !t.downed) {
+    if ((t.kind === 'hero' && !t.downed) || (t.kind === 'pet' && !t.dead)) {
       if (ab.push) T.pushAway(m, e, t, ab.push);
       if (ab.anchor) {
         if (!st(t).StatusImmune) {
@@ -477,9 +486,11 @@
         m.board.ramp ||
         h.cards.some(
           (c) =>
-            T.CARD[c].E.fx.some(
-              (x) => (x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
-            ) || T.CARD[c].P.fx.some((x) => (x.v === 'move' && x.climb) || x.v === 'hover'),
+            (!T.isPetCard(h, c) &&
+              T.CARD[c].E.fx.some(
+                (x) => (x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
+              )) ||
+            T.CARD[c].P.fx.some((x) => (x.v === 'move' && x.climb) || x.v === 'hover'),
         ) ||
         h.gear.some((g) => ['phasebrace', 'climbrig'].includes(g.id));
       return canReach ? { node: ob.node, needOn: true } : { node: ob.leverNode, needOn: false };
@@ -499,7 +510,8 @@
     if (cur === 0 || (!goal.needOn && cur <= 1)) return false;
     let best = null;
     for (const cid of h.cards)
-      for (const fk of ['P', 'E']) {
+      for (const fk of T.faceKeys(cid)) {
+        if (T.isPetCard(h, cid)) continue; // a pet's step moves the pet, not the pilot
         const card = T.CARD[cid],
           face = card[fk];
         const mv = face.fx.find((x) => ['move', 'blink'].includes(x.v));
@@ -662,7 +674,7 @@
         // 4. best face
         let best = null;
         for (const cid of h.cards) {
-          for (const fk of ['P', 'E']) {
+          for (const fk of T.faceKeys(cid)) {
             const chk = T.canPlay(m, h, cid, fk);
             if (!chk.ok) continue;
             const card = T.CARD[cid],
