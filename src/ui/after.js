@@ -516,7 +516,7 @@
       ]);
     return `<div class="am am-fallen">${backdrop(stopArt(run, here(run)), 'grey')}${topbar(null)}${endTabs('end')}
       <div class="am-grid">
-        <div class="am-col am-fallmain"><span class="am-eye red">No lifelines left · stop ${reached} of ${rows}</span><h1 class="am-h xl">The expedition ends here</h1><p class="am-sub">${esc(T.fillTokens(T.FLAVOR.lose[0], { THREAT: T.threatName(run) }))}</p><p class="dim">${esc(names(run))} came ${reached} stop${reached === 1 ? '' : 's'} down the route${run.stats.lifelineUsed ? ', with the lifeline spent on the way' : ''}. What you found stays found.</p>
+        <div class="am-col am-fallmain"><span class="am-eye red">${run.stats.wiped ? 'The whole squad fell' : 'No lifelines left'} · stop ${reached} of ${rows}</span><h1 class="am-h xl">The expedition ends here</h1><p class="am-sub">${esc(T.fillTokens(T.FLAVOR.lose[0], { THREAT: T.threatName(run) }))}</p><p class="dim">${esc(names(run))} came ${reached} stop${reached === 1 ? '' : 's'} down the route${run.stats.lifelineUsed ? ', with the lifeline spent on the way' : ''}. What you found stays found.</p>
           ${routeTiles(path)}
           <div class="am-foot left">${endButtons(false)}</div></div>
         <div class="panel am-col"><div class="am-lab gold">What carries over</div>${carry.length ? carry.map(([i, t]) => `<div class="am-carry"><span class="am-ci">${i}</span><span>${t}</span></div>`).join('') : '<div class="small dim">This squad came from the pre-made pilots: build your own on the title screen and it keeps what it grows.</div>'}</div>

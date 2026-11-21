@@ -137,7 +137,7 @@
       t: 'Downed is not dead',
       p: [
         'At 0 vitality a pilot is downed. An ally beside them can <b>Rally</b> them for 2 AP.',
-        'If the whole squad is down the mission is lost. Lose a mission that is not the Heart and your one <b>lifeline</b> lets you carry on.',
+        'If the whole squad is down, the expedition ends; your pilots are whole again for the next one. Lose a mission that is not the Heart any other way (its clock runs out) and your one <b>lifeline</b> lets you carry on.',
       ],
       s: 'That is everything. The Codex has every word, foe and die.',
       pic: () => board({ hero: [1, 1], ally: [2, 1], foes: [[4, 1]] }),
