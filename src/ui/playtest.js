@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.109.0',
+    version: '2.114.0',
     items: [
+      {
+        text: 'Dice as AP: a banked Omni, or any two banked etherions (the same or different), now make 1 AP, at no cost and as often as you like. Press ◇→AP (it stands beside the four basic actions when spare dice would pay for a card you hold), then click an Omni or two element dice: they go back to the pool and you gain 1 AP for this turn. A face you could pay for this way says ◇→AP to pay. Folding one each of M, C, S and T into an Omni still works. Did you ever end a turn with an element you could not use? Was spending it as AP a real choice against saving it for an Ethereal face or an Overcharge?',
+      },
       {
         text: 'Pocket pets are here. A haven may have a stray: a hybrid of three clades (never human) with one card that holds a Physical face from each of them. Adopt it for 4 ◇ (two pets at most); its card is a card like any other, in your kit or your reserve, and the pet only sets out when its card flies. A pet on your node rides with you in any vehicle. Any one of its three faces sends the whole card to your track, and the face acts from the pet: its reach, its strike, its steps. Heel (1 AP) walks it up to 3. Did playing a card through the pet read clearly on the board?',
       },

@@ -1,7 +1,7 @@
 /* ============================================================================
    TUMULT v2.0 — ENGINE (pure; no DOM)
    The canonical rules, implemented once:
-     • 15-die economy (pool + banked = 15, roll 3, mint, draw, anti-brick valve)
+     • 15-die economy (pool + banked = 15, roll 4, mint, draw, anti-brick valve, dice as AP)
      • 6-column track (duration → cooldown → hand), hasten, freecast
      • P/E grammar: every magnitude is a function (P,E)
      • Verbs: strike/move/force/reveal/hidden/shield/anchor/mark/engine/... (51)
@@ -666,6 +666,72 @@
     bank(h, 'O', T.drawKind(h, 'O') || 'plain');
     say(m, `${h.name} folds one of each etherion into an Omni.`, 'sys');
     return true;
+  };
+  /**
+   * Dice as AP (2.114; Garrett, 2026-11-21: "make any two or any omni work as an AP"): one banked Omni, or any
+   * two banked etherions (the same or different), become 1 AP. At the table: put the dice back in the pool and
+   * mint 1 AP (it evaporates with the hero phase, like any minted die). No AP to do it, as often as the bank
+   * allows, so a rolled element is never dead weight: unused, it still walks, strikes or works an objective.
+   */
+  T.AS_AP = ['M', 'C', 'S', 'T'];
+  T.canSpendAsAP = function (h, idx) {
+    if (!h || h.downed || !Array.isArray(idx)) return false;
+    if (idx.length === 1) return h.held[idx[0]] === 'O';
+    return idx.length === 2 && idx[0] !== idx[1] && idx.every((i) => T.AS_AP.includes(h.held[i]));
+  };
+  /** The ways a pilot could turn dice into AP now, each different one once: [i] for an Omni, [i, j] for a pair. */
+  T.apSpends = function (h) {
+    const out = [];
+    const o = h.held.indexOf('O');
+    if (o >= 0) out.push([o]);
+    const seen = new Set();
+    h.held.forEach((a, i) =>
+      h.held.forEach((b, j) => {
+        if (j <= i || !T.canSpendAsAP(h, [i, j])) return;
+        const key = [a, b].sort().join('');
+        if (!seen.has(key)) (seen.add(key), out.push([i, j]));
+      }),
+    );
+    return out;
+  };
+  /** Turn the banked dice at idx into 1 minted AP (T.canSpendAsAP). m may be null for a planner's sketch. */
+  T.spendAsAP = function (m, h, idx) {
+    if (!T.canSpendAsAP(h, idx)) return { ok: false, why: 'needs one banked Omni or two banked etherions' };
+    const faces = idx.map((i) => h.held[i]);
+    idx
+      .slice()
+      .sort((a, b) => b - a)
+      .forEach((i) => {
+        unbank(h, i);
+        h.pool++;
+      });
+    T.mint(h, 'AP', 1);
+    if (h.pool + h.held.length !== R().POOL) throw new Error('dice invariant broken (as AP) for ' + h.name);
+    const nm = (f) => (f === 'O' ? 'an Omni' : T.ETHERIONS[f].name);
+    if (m)
+      say(
+        m,
+        `${h.name} spends ${faces.length === 1 ? nm(faces[0]) : faces[0] === faces[1] ? 'two ' + nm(faces[0]) : nm(faces[0]) + ' and ' + nm(faces[1])} as 1 AP.`,
+        'sys',
+      );
+    return { ok: true };
+  };
+  /**
+   * Could this cost be paid once spare dice are spent as AP? The etherions it needs are its own first, then
+   * Omni; what is left over (Omni 1 AP each, any other etherions 1 AP a pair) makes up the AP it is short.
+   */
+  T.payableAsAP = function (h, ap, elt, eln) {
+    if (T.canPay(h, ap, elt, eln)) return false;
+    const all = h.held.concat(h.temp);
+    const count = (f) => all.filter((x) => x === f).length;
+    const own = elt ? count(elt) : 0;
+    const useOwn = Math.min(own, eln || 0);
+    const useO = (eln || 0) - useOwn;
+    if (useO > count('O')) return false;
+    const spareO = h.held.filter((x) => x === 'O').length - Math.max(0, useO - h.temp.filter((x) => x === 'O').length);
+    const fromHeld = Math.max(0, useOwn - h.temp.filter((x) => x === elt).length); // a cost takes minted dice first
+    const spareEl = h.held.filter((f) => T.AS_AP.includes(f)).length - fromHeld;
+    return T.apValue(h) + spareO + Math.floor(Math.max(0, spareEl) / 2) >= (ap || 0);
   };
   T.dump = function (m, h, idx) {
     if (idx < 0 || idx >= h.held.length) return false;

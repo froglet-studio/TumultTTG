@@ -21,6 +21,7 @@
     'interact',
     'rally',
     'valve',
+    'asAPMode',
     'dumpMode',
     'die',
     'train',

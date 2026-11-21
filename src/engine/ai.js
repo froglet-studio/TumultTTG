@@ -622,6 +622,40 @@
   };
   const pickAll = (m) => m.heroes.forEach((h) => !m.over && T.autoRollPick(m, h));
 
+  /**
+   * The weak player's use of dice as AP (T.spendAsAP): when a face in hand is short only of AP, and spare Omni or
+   * etherion pairs would make it up, spend one of them (an etherion pair first, keeping Omni) and look again.
+   */
+  function asAPForFace(m, h) {
+    for (const cid of h.cards) {
+      if (!T.inHand(h, cid)) continue;
+      for (const fk of T.faceKeys(cid)) {
+        const card = T.CARD[cid];
+        const f = card[fk];
+        if (fk === 'E' && T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) continue;
+        const elt = f.elt || card.el;
+        const eln = fk === 'E' ? f.el || 0 : 0;
+        if (!T.payableAsAP(h, f.ap, elt, eln)) continue;
+        // sketch it on a copy: spend until the face is paid for, and only if it then has something to do
+        const c = T.clone(h);
+        let first = null;
+        for (let g = 0; g < 8 && !T.canPay(c, f.ap, elt, eln); g++) {
+          const dice = T.apSpends(c)
+            .sort((x, y) => y.length - x.length)
+            .find((d) => {
+              const t = T.clone(c);
+              T.spendAsAP(null, t, d);
+              return T.canPay(t, f.ap, elt, eln) || T.payableAsAP(t, f.ap, elt, eln);
+            });
+          if (!dice) break;
+          T.spendAsAP(null, c, dice);
+          first = first || dice;
+        }
+        if (first && T.canPlay(m, c, cid, fk).ok) return T.spendAsAP(m, h, first).ok;
+      }
+    }
+    return false;
+  }
   T.autoHeroPhase = function (m) {
     for (const h of m.heroes) {
       if (h.downed || m.over) continue;
@@ -666,6 +700,8 @@
         if (goal && (m.clock || (ob && ob.kind === 'find')) && (!adjFoe || h.carrying)) {
           if (tryMoveToward(m, h, goal)) continue;
         }
+        // 3b. spare dice as AP, when that pays for a face in hand the bank cannot pay for yet
+        if (asAPForFace(m, h)) continue;
         // 4. best face
         let best = null;
         for (const cid of h.cards) {

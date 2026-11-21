@@ -163,6 +163,37 @@ test('Calm: one menu, one conditions chip, the story box and More on request', {
   }
 });
 
+test('Dice as AP: an Omni, or two etherions clicked in turn, make 1 AP', { skip, timeout: 60_000 }, async () => {
+  const { dom, d, U, click } = await open();
+  try {
+    toMission(click);
+    const m = U.run.mission;
+    const i = U.ms.heroIdx;
+    const h = m.heroes[i];
+    const n = h.held.length;
+    h.held = ['M', 'S', 'O'];
+    h.heldDie = ['plain', 'plain', 'plain'];
+    h.pool += n - 3;
+    h.temp = [];
+    U.updateMission();
+    assert.ok(d.querySelector('#mdock [data-act="asAPMode"]'));
+    click('#mdock [data-act="asAPMode"]');
+    assert.equal(U.ms.mode, 'asAP');
+    click(`#mdock [data-act="die"][data-arg="${i}|2"]`);
+    assert.deepEqual(h.held, ['M', 'S']);
+    assert.deepEqual(h.temp, ['AP']);
+    assert.equal(U.ms.mode, 'idle');
+    click('#mdock [data-act="asAPMode"]');
+    click(`#mdock [data-act="die"][data-arg="${i}|0"]`);
+    click(`#mdock [data-act="die"][data-arg="${i}|1"]`);
+    assert.deepEqual(h.held, []);
+    assert.deepEqual(h.temp, ['AP', 'AP']);
+    assert.equal(h.pool + h.held.length, 15);
+  } finally {
+    dom.window.close();
+  }
+});
+
 test(
   'Motion: a walk plays out node by node and ends where the engine put the pilot',
   { skip, timeout: 60_000 },

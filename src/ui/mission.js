@@ -35,6 +35,7 @@
       pending: null,
       rerollLeft: 0,
       rerollPicked: [],
+      asAPPicked: [],
       fxDone: 0,
       built: false,
       overShown: false,
@@ -701,6 +702,10 @@
     else if (ms.mode === 'reroll') txt = `<b>Reroll</b> — click up to ${ms.rerollLeft} banked dice, then confirm.`;
     else if (ms.mode === 'freeMove') txt = `<b>Free step</b> — click a highlighted node (up to ${ms.freeN}).`;
     else if (ms.mode === 'dump') txt = `<b>Return a die</b> — click a banked die to send it back to the pool.`;
+    else if (ms.mode === 'asAP')
+      txt = (ms.asAPPicked || []).length
+        ? `<b>Dice as AP</b> — now click a second etherion: the two make 1 AP.`
+        : `<b>Dice as AP</b> — click an Omni (1 AP), or two etherions, the same or different (1 AP together).`;
     el.innerHTML = `<div class="targeting">${txt}<span class="right row">${allyBtns}${ms.mode === 'choice' ? '<button class="sm primary" data-act="choice" data-arg="push">Push</button><button class="sm primary" data-act="choice" data-arg="pull">Pull</button>' : ''}${ms.mode === 'reroll' ? '<button class="sm primary" data-act="rerollConfirm">Confirm</button>' : ''}<button class="sm ghost" data-act="cancelMode">${ms.mode === 'freeMove' || ms.mode === 'reroll' ? 'Skip' : 'Cancel'}</button></span></div>`;
   }
   function hintText(m) {
@@ -729,6 +734,7 @@
     'rally',
     'heel',
     'valve',
+    'asAP',
     'dump',
     'walk',
     'board',
@@ -775,6 +781,7 @@
         interact: 'Interact',
         rally: 'Rally',
         valve: 'fold to Omni',
+        asAP: 'dice as AP',
         dump: 'returned die',
         board: 'getting in',
         leave: 'getting out',
@@ -1071,6 +1078,7 @@
       )
       .join('');
     const canPickDie = U.ms.mode === 'reroll' || U.ms.mode === 'dump';
+    const asAPing = U.ms.mode === 'asAP' && sel;
     const poolTip = (x) => {
       const left = T.poolDice(x);
       const n = (k) => left.filter((d) => d === k).length;
@@ -1108,7 +1116,10 @@
         .map((f, di) =>
           U.dieHTML(
             f,
-            (canPickDie && sel ? 'pick' : '') + (U.ms.rerollPicked.includes(di) && sel ? ' rolled' : ''),
+            ((canPickDie && sel) || (asAPing && (f === 'O' || T.AS_AP.includes(f))) ? 'pick' : '') +
+              ((U.ms.rerollPicked.includes(di) || (asAPing && (U.ms.asAPPicked || []).includes(di))) && sel
+                ? ' rolled'
+                : ''),
             T.heldKind(h, di),
             `data-act="die" data-arg="${i}|${di}" ${tilt(di)}`,
           ),
@@ -1140,7 +1151,7 @@
           if (onTrack)
             return `<div class="fbtn ${fk === 'E' ? 'E' : 'P'} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
-          return `<button class="fbtn ${fk === 'E' ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}</button>`;
+          return `<button class="fbtn ${fk === 'E' ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}${!chk.ok && chk.why === 'cannot pay' && T.payableAsAP(h, f.ap, elt, fk === 'E' ? f.el || 0 : 0) ? `<span class="fwhy" data-tip="Spend spare dice as AP (◇→AP: an Omni, or two etherions, for 1 AP each) to pay for this">◇→AP to pay</span>` : ''}</button>`;
         };
         if (onTrack) {
           const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
@@ -1201,6 +1212,7 @@
     const down = T.downedAllyOf(m, h);
     const canRally = !h.downed && down && down.downed && B.adjacent(m.board, h.pos, down.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
+    const canAsAP = !m.over && T.apSpends(h).length > 0;
     // the four basic actions used most stay in view; the rest (and the channelled ones) wait behind More
     const MAIN = ['strike', 'brace', 'shove', 'spot'];
     const basicBtn = (b) => {
@@ -1230,6 +1242,21 @@
         `<button class="sm" data-act="heel" data-arg="${i}|${p.uid}" ${ok ? '' : 'disabled'} data-tip="${esc(`Heel (${T.PET.HEEL_AP} AP): ${esc(p.name)} walks up to ${T.PET.SPEED}. On your node it cannot be hurt.`)}">🐾 Heel ${esc(p.name)} <span class="acost">${T.PET.HEEL_AP}</span></button>`,
       );
     }
+    // Dice as AP stands beside the four while a face in hand needs it to be paid for; under More otherwise
+    const asAPNeeded =
+      canAsAP &&
+      h.cards.some(
+        (cid) =>
+          T.inHand(h, cid) &&
+          T.faceKeys(cid).some((fk) => {
+            const c = T.CARD[cid];
+            const f = c[fk];
+            if (fk === 'E' && T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) return false;
+            return T.payableAsAP(h, f.ap, f.elt || c.el, fk === 'E' ? f.el || 0 : 0);
+          }),
+      );
+    const asAPB = `<button class="sm${U.ms.mode === 'asAP' && sel ? ' primary' : ''}" data-act="asAPMode" data-arg="${i}" ${canAsAP ? '' : 'disabled'} data-tip="${esc('Dice as AP (no cost): one banked Omni, or any two banked etherions (the same or different), become 1 AP. Click an Omni, or two element dice: they go back to the pool and you gain 1 AP until the end of this turn. As often as you like.')}">◇→AP</button>`;
+    (asAPNeeded ? main : more).push(asAPB);
     more.push(
       `<button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>`,
       `<button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>`,
@@ -2746,6 +2773,13 @@
         afterAction();
         return true;
       }
+      case 'asAPMode': {
+        ms.heroIdx = +arg;
+        ms.mode = ms.mode === 'asAP' ? 'idle' : 'asAP';
+        ms.asAPPicked = [];
+        U.updateMission();
+        return true;
+      }
       case 'dumpMode': {
         ms.heroIdx = +arg;
         ms.mode = ms.mode === 'dump' ? 'idle' : 'dump';
@@ -2760,6 +2794,25 @@
           U.exec({ op: 'dump', hero: i, di });
           ms.mode = 'idle';
           afterAction();
+        } else if (ms.mode === 'asAP') {
+          const f = h.held[di];
+          const picked = ms.asAPPicked || [];
+          let dice = null;
+          if (f === 'O' && !picked.length) dice = [di];
+          else if (!T.AS_AP.includes(f)) return true;
+          else if (picked[0] === di) ms.asAPPicked = [];
+          else if (!picked.length) ms.asAPPicked = [di];
+          else dice = [picked[0], di];
+          if (dice) {
+            const r = U.exec({ op: 'asAP', hero: i, dice });
+            if (r && r.ok === false) U.toast(r.why);
+            else U.sfx.click();
+            ms.asAPPicked = [];
+            ms.mode = 'idle';
+            afterAction();
+            return true;
+          }
+          U.updateMission();
         } else if (ms.mode === 'reroll') {
           if (ms.rerollPicked.includes(di)) ms.rerollPicked = ms.rerollPicked.filter((x) => x !== di);
           else if (ms.rerollPicked.length < ms.rerollLeft) ms.rerollPicked.push(di);
@@ -2784,6 +2837,7 @@
         ms.mode = 'idle';
         ms.pending = null;
         ms.rerollPicked = [];
+        ms.asAPPicked = [];
         U.updateMission();
         return true;
       case 'endRound': {
