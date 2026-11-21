@@ -3115,6 +3115,7 @@ html.calm .combo-mark {
 }
 /* the next roll's dice, chosen from the pool (2.82) */
 .nextroll {
+  --c: var(--AP);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -3135,17 +3136,17 @@ html.calm .combo-mark {
   gap: 3px;
   padding: 2px 5px;
 }
-.nextroll button svg.dbody {
+.nextroll svg.dbody {
   width: 20px;
   height: 20px;
   overflow: visible;
 }
-.nextroll button svg.dbody .o {
+.nextroll svg.dbody .o {
   fill: color-mix(in srgb, var(--c) 16%, #121b2e);
   stroke: color-mix(in srgb, var(--c) 80%, #fff);
   stroke-width: 2;
 }
-.nextroll button svg.dbody .l {
+.nextroll svg.dbody .l {
   fill: none;
   stroke: currentColor;
   stroke-width: 1;
