@@ -371,8 +371,8 @@
       fx:[{v:'hidden', dur:(P,E)=>1+h(P), party:true, radius:1},{v:'weaken', val:1, dur:1, area:'adj'}],
       txt:(P,E)=>`Haze your node and its neighbours: heroes there are Hidden ${1+h(P)}, and foes adjacent to you are Weakened 1.` },
     { n:'Smoke Step', ap:1, el:1, cd:2, dur:0, tgt:'node_tele',
-      fx:[{v:'hidden', dur:1},{v:'teleport', reach:(P,E)=>1+E}],
-      txt:(P,E)=>`Vanish into the cloud and re-emerge anywhere within ${1+E}.` },
+      fx:[{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Vanish into the cloud and re-emerge anywhere within ${1+E}, Hidden 1.` },
     'Blocks line of sight.');
   C('octopus','oct_squeeze','Boneless Squeeze','M',0,
     { n:'Squeeze', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
@@ -438,7 +438,7 @@
       txt:(P,E)=>`Drop a thrashing tail (decoy ${1+h(P)}), escape every hold, step 1.` },
     { n:'Blink', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'decoy', dur:2, here:true},{v:'teleport', reach:(P,E)=>1+E},{v:'hidden', dur:1}],
-      txt:(P,E)=>`The discarded "you" stays put as a decoy while you blink ${1+E} and go Hidden.` },
+      txt:(P,E)=>`The discarded "you" stays put as a decoy for 2 rounds while you blink ${1+E} and go Hidden 1.` },
     'Leave a wriggling distraction.');
   C('gecko','gec_forensic','Forensic Vision','C',0,
     { n:'UV', ap:1, el:0, cd:1, dur:0, tgt:'self',

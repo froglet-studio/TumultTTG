@@ -233,7 +233,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | Distributed Arms — Parallel (Eth) | staple | The clock | 0/1 (0.00) |  |
 | Chemo-Suckers — Taste (Phys) | staple | One tough foe, The unseen | 9/8 (1.13) |  |
 | Chemo-Suckers — Cling-Read (Eth) | staple | One tough foe, The unseen, One big telegraphed hit | 0/2 (0.00) |  |
-| Paralytic Bite — Bite (Phys) | staple | One tough foe, One big telegraphed hit | 7/6 (1.17) |  |
+| Paralytic Bite — Bite (Phys) | staple | One tough foe, One big telegraphed hit | 8/6 (1.33) |  |
 | Paralytic Bite — Neurotoxin (Eth) | staple | One tough foe, One big telegraphed hit | 2/6 (0.33) |  |
 | Adaptive Intellect — Study (Phys) | staple | One tough foe | 18/4 (4.50) |  |
 | Adaptive Intellect — Counter-Model (Eth) | staple | One big telegraphed hit | 0/1 (0.00) |  |
@@ -859,7 +859,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 
 | Face | Class | Answers | plays/held | Notes |
 |---|---|---|---|---|
-| Curl Up — Curl (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 5/6 (0.83) |  |
+| Curl Up — Curl (Phys) | staple | A crowd, Hazards and being dragged, One big telegraphed hit, Control on you | 6/6 (1.00) |  |
 | Curl Up — Ball (Eth) | staple | One big telegraphed hit, Control on you | 0/2 (0.00) |  |
 | Dig Claws — Rip (Phys) | staple | One tough foe, Shields | 1/5 (0.20) |  |
 | Dig Claws — Dig Down (Eth) | staple | The clock, One big telegraphed hit | 1/5 (0.20) |  |
@@ -1088,7 +1088,7 @@ The look-ahead player needs no rule for a face: every legal action is tried on a
 | One-Leg Rest — Long Rest (Eth) | staple | One big telegraphed hit, Attrition | 0/4 (0.00) |  |
 | Filter Feed — Filter (Phys) | staple | The clock, Attrition | 1/3 (0.33) |  |
 | Filter Feed — Strain the Lake (Eth) | staple | The clock, Hazards and being dragged, Attrition | 2/3 (0.67) |  |
-| Flock March — March (Phys) | staple | A crowd, The clock, One big telegraphed hit | 8/8 (1.00) |  |
+| Flock March — March (Phys) | staple | A crowd, The clock, One big telegraphed hit | 7/8 (0.88) |  |
 | Flock March — Massed March (Eth) | staple | One tough foe, A crowd, One big telegraphed hit | 1/3 (0.33) |  |
 | Salt Flats — Salt Feet (Phys) | staple | Hazards and being dragged, One big telegraphed hit | 7/5 (1.40) |  |
 | Salt Flats — Caustic Lake (Eth) | staple | One tough foe, A crowd, Hazards and being dragged | 1/3 (0.33) |  |

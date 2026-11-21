@@ -58,7 +58,8 @@
           for (const r of resolutions(chk.tg, T.CARD[card][face]))
             out.push(Object.assign({ t: 'face', hero, card, face }, r));
         }
-      const steps = Math.min(3, Math.floor(ap / R().MOVE_AP) + (h.freeMove || 0));
+      // up to 3 paid steps, plus every free step a face has granted (a free move of 4 or 5 is walked in full)
+      const steps = Math.min(3, Math.floor(ap / R().MOVE_AP)) + (h.freeMove || 0);
       if (steps > 0 && !h.states.Rooted && !h.states.SlowSelf)
         for (const node of T.reachableWalk(m, h, steps, false)) out.push({ t: 'walk', hero, node });
       for (const node of [h.pos].concat(B.walkNeighbors(m.board, h.pos))) {
