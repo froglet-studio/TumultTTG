@@ -99,6 +99,9 @@ test(
       url: 'https://tumult.froglet.games/',
       setup: catcher(sent),
       after: async (w) => {
+        // T.Analytics.track queues through a promise (T.Backend.use), so the last event (run_ended) may not be in the
+        // queue yet when the run ends: let it land before flushing, or it leaves by sendBeacon at pagehide instead
+        await new Promise((res) => setTimeout(res, 50));
         for (let i = 0; i < 20 && w.T.Analytics.queued(); i++) {
           await w.T.Analytics.flush(false);
           await new Promise((res) => setTimeout(res, 5));
