@@ -1,0 +1,144 @@
+- id: m.swarm
+  parent: mission
+  at: 1
+  name: 'Swarm: hold the beacon'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: hold
+  is: 'Waves arrive; a pilot near the beacon at round end counts a round held.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: m.vault
+  parent: mission
+  at: 1
+  name: 'Vault: break in'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: vault
+  is: 'A seal on a ledge, a lever and a ramp; height is the problem.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: m.sought
+  parent: mission
+  at: 1
+  name: 'The Sought: find it'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: find
+  is: 'Hidden caches, one real, and Lurkers that ambush from Hidden.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: m.cascade
+  parent: mission
+  at: 1
+  name: 'Cascade: close the valve'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: valve
+  is: 'A flood spreads every round; channel the valve before the clock ends.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: m.salvage
+  parent: mission
+  at: 1
+  name: 'Salvage: carry it home'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: carry
+  is: 'Crates across the page, a round trip each.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: m.survey
+  parent: mission
+  at: 1
+  name: 'Survey: tag the marks'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: tag
+  is: 'Marks spread over the page; tag them all before the clock.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: m.elite
+  parent: mission
+  at: 1
+  name: 'An elite'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: fight
+  is: 'One tough foe with escorts; it offers a boon (gear, proposed) when beaten.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: m.heart
+  parent: mission
+  at: 1
+  name: 'The Heart'
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  kit: fight
+  is: 'Two phases; its shield is fed by Spawners, and at half the vault begins to drown.'
+  phases:
+  - n: Briefing
+  - n: Rounds
+  - n: Objective met or lost
+  drivers: [goal, solve]
+  now:
+    s: built
+  src:
+  - docs/reference/MISSIONS_AND_BESTIARY.md

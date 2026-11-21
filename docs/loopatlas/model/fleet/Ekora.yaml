@@ -1,0 +1,139 @@
+# Tumult Loop Atlas: pilot Ekora (generated from the pre-made hero; combos invented).
+{
+ "label": "Ekora, the Tidewarden",
+ "verbs": {
+  "Charge": {
+   "ability": "Electric Discharge: Tesla Cascade",
+   "does": "Strip 3 of the target's Shield and strike it for 5; the arc chains to 2 more foes within 1 of it for 5 each.",
+   "trigger": "Ethereal face: 3 AP + 1 Charge (Physical Jolt: Lane strike for 3.)",
+   "scales": "At E 3: Strip 4 of the target's Shield and strike it for 5; the arc chains to 3 more foes within 1 of it for 6 each.",
+   "source": "src/data/ (card eel_discharge)",
+   "arch": "burst",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Space": {
+   "ability": "Tool Use: Reach Rig",
+   "does": "Interact with an objective up to 2 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 1 less.",
+   "trigger": "Ethereal face: 1 AP + 1 Space (Physical Improvise: Your next strike this turn deals +2.)",
+   "scales": "At E 3: Interact with an objective up to 4 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 3 less.",
+   "source": "src/data/ (card hum_tool)",
+   "arch": "ward",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Time": {
+   "ability": "Kelp Anchor: Kelp Bed",
+   "does": "Neither hero can be pushed or pulled for 2 rounds, and both heal 1.",
+   "trigger": "Ethereal face: 1 AP + 1 Time (Physical Wrap: Wrap yourself in place: nothing can push or pull you for 1 round; Shield 1 and heal 1.)",
+   "scales": "At E 3: Neither hero can be pushed or pulled for 4 rounds, and both heal 1.",
+   "source": "src/data/ (card ott_kelp)",
+   "arch": "setup",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Omni": {
+   "ability": "Channel",
+   "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+   "trigger": "A banked etherion or Omni",
+   "scales": "",
+   "source": "src/data/world.js BASIC",
+   "arch": "omni",
+   "t": [
+    2,
+    10
+   ]
+  }
+ },
+ "board": {},
+ "missing": "",
+ "arenas": [
+  "Swarm",
+  "Cascade"
+ ],
+ "games": {
+  "Mass": [],
+  "Charge": [
+   "Electric Discharge",
+   "Musk"
+  ],
+  "Space": [
+   "Electroreception",
+   "Tool Use"
+  ],
+  "Time": [
+   "Kelp Anchor",
+   "Persistence"
+  ]
+ },
+ "excused": [],
+ "lean": "controller",
+ "leanWhy": "Chains, weakens and holds the squad in the current.",
+ "combos": [
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Strip and cascade",
+   "t": [
+    20,
+    60
+   ],
+   "is": "Weaken the crowd, then chain lightning through it.",
+   "chain": [
+    [
+     "Charge",
+     "Reek: foes within 2 Weakened for 3"
+    ],
+    [
+     "",
+     "They bunch toward you"
+    ],
+    [
+     "Charge",
+     "Tesla Cascade: strip Shield, strike 5, chain to 2 more"
+    ]
+   ],
+   "drivers": [
+    "break",
+    "solve"
+   ],
+   "feel": "Watching the arc jump."
+  },
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Hold the current",
+   "t": [
+    20,
+    90
+   ],
+   "is": "Anchor the squad in place, then regenerate while the flood or the wind pushes.",
+   "chain": [
+    [
+     "Time",
+     "Kelp Bed: neither pilot moved for 2"
+    ],
+    [
+     "Time",
+     "Second Wind: regenerate 3 a turn"
+    ],
+    [
+     "",
+     "Stand on the beacon or the valve"
+    ]
+   ],
+   "drivers": [
+    "crew",
+    "stake"
+   ],
+   "feel": "Not moving an inch."
+  }
+ ],
+ "doc": "src/data/world.js PREBUILTS"
+}

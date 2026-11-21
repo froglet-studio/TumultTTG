@@ -1,0 +1,183 @@
+# Tumult Loop Atlas: kit. What every pilot's kit shares: its round in each kind of mission, the pulse, the face shapes.
+roles:
+  free:
+    name: Trying the kit
+    t: [60, 300]
+    is: No objective. The Codex and the playtest jump, where a kit is tried for its own sake.
+    phases:
+    - n: Read the faces
+    - n: Play one on a foe or the board
+    - n: See what it did
+    drivers: [toy, find]
+    reps: null
+    repsOf: plays per look
+  hold:
+    name: A round holding the beacon
+    t: [60, 300]
+    is: 'Swarm: the kit spent keeping a pilot near the beacon while waves arrive. Area, Push and Shield pay here.'
+    phases:
+    - n: Read the waves' intents
+    - n: Choose who holds the beacon
+    - n: Thin, shove or shield
+    - n: Foes act
+    - n: The beacon counts
+    drivers: [solve, crew, goal]
+    reps: 8-12
+    repsOf: rounds per Swarm
+  vault:
+    name: A round breaking in
+    t: [60, 300]
+    is: 'Vault: the kit spent getting onto the ledge and working the lever. Height, Blink and Climb pay here.'
+    phases:
+    - n: Find the way up
+    - n: Climb, Blink or take the ramp
+    - n: Interact with the seal
+    - n: Foes act
+    - n: The seal gives
+    drivers: [solve, goal, toy]
+    reps: 8-12
+    repsOf: rounds per Vault
+  find:
+    name: A round searching
+    t: [60, 300]
+    is: 'Sought: the kit spent finding the real cache among the false ones while Lurkers wait. Reveal and Hidden pay here.'
+    phases:
+    - n: Choose where to look
+    - n: Reveal or step in
+    - n: Dig a cache
+    - n: Lurkers spring or are found
+    - n: One fewer place to look
+    drivers: [find, solve, stake]
+    reps: 8-12
+    repsOf: rounds per Sought
+  valve:
+    name: A round against the flood
+    t: [60, 300]
+    is: 'Cascade: the kit spent reaching the valve and channelling it while the flood spreads. Hover, Haste and Cleanse
+      pay here.'
+    phases:
+    - n: See where the flood goes next
+    - n: Reach the valve
+    - n: Channel it
+    - n: The flood spreads
+    - n: The clock ticks
+    drivers: [solve, goal, stake]
+    reps: 8-12
+    repsOf: rounds per Cascade
+  carry:
+    name: A round of salvage
+    t: [60, 300]
+    is: 'Salvage: the kit spent carrying crates home, a round trip each. Move, Blink and Anchor (against the wind) pay here.'
+    phases:
+    - n: Pick a crate
+    - n: Go out
+    - n: Pick it up
+    - n: Bring it home
+    drivers: [solve, goal, crew]
+    reps: 8-12
+    repsOf: rounds per Salvage
+  tag:
+    name: A round of survey
+    t: [60, 300]
+    is: 'Survey: the kit spent tagging marks across the page. Reach, Move and Reveal pay here.'
+    phases:
+    - n: Plan a line through the marks
+    - n: Move along it
+    - n: Tag
+    - n: Foes act
+    drivers: [solve, goal]
+    reps: 8-12
+    repsOf: rounds per Survey
+  fight:
+    name: A round of battle
+    t: [60, 300]
+    is: 'Elite and the Heart: the kit spent on one tough foe and its escort. Mark, Empower, Pierce and Weaken pay here.'
+    phases:
+    - n: Read the big telegraph
+    - n: Get out of it, or brace
+    - n: Set up the hit
+    - n: Land it
+    - n: It answers
+    drivers: [break, solve, stake]
+    reps: 8-14
+    repsOf: rounds per Elite or Heart
+roleHoles:
+- 'on': np
+  q: Nothing measures which faces carry each kind of mission. The audit says where a face was played, not which round
+    it decided.
+  fill: Add to tools/audit.js a count of the round each face moved the objective in, per mission kind, and show it on
+    the pilot's Codex page.
+kit:
+  is: 'A pilot''s nine traits at most, each with a Physical face (AP, scales with P) and an Ethereal face (AP and etherions,
+    scales with E, played once the card has E 1), plus two gear. Shown here: the pre-made pilot''s six.'
+  holes:
+  - 'on': np
+    q: No pilot's combos are written down, so nothing checks that a kit teaches them or that a mission rewards them.
+    fill: 'Each pilot names two combos: a feeder into a spender, and one that crosses two elements. The ones shown here
+      are invented from the card texts for Garrett to correct.'
+pulse:
+  name: Hover and see
+  t: [0.5, 5]
+  is: Hover a face, a die, a token or an intent and the game answers with exact numbers and a preview on the board. The
+    forecast says what ending the round now would cost.
+  phases:
+  - n: Point at it
+  - n: The tooltip and the preview answer
+  - n: Commit or look elsewhere
+  drivers: [solve]
+  holes:
+  - 'on': np
+    q: On a phone there is no hover, so the pulse is missing there (roadmap P1).
+    fill: A long press is the hover; the preview stays until the face is played or cancelled.
+verbHole:
+  'on': np
+  q: This face's loop is written as what it does, not as steps, and the feeling it should give, and at which step, is
+    not written.
+  fillPrefix: 'Invented from the face: '
+archetypes:
+  setup:
+    match: mark|weaken|anchor|reveal|locate|expose
+    phases: [Read the board, Pay for the setup, The state lands on the foe, You or your ally cash it in, It wears off]
+    feel: Laying the ground the big hit will stand on.
+    at: 3
+  burst:
+    match: strike|melee|lane|burst
+    phases: [Line it up, Pay, It lands, The numbers fly, Back on the track]
+    feel: A clean hit, exactly as large as promised.
+    at: 2
+  reposition:
+    match: move|blink|teleport|push|pull|shove
+    phases: [See the space that matters, Pay, Something moves, The intent arrows change, Back on the track]
+    feel: Changing the puzzle instead of answering it.
+    at: 3
+  ward:
+    match: shield|hidden|heal|stasis|pre-empt
+    phases: [See the telegraph, Pay, The ward is up, The hit arrives smaller or not at all, It fades]
+    feel: Watching a promised hit come to nothing.
+    at: 3
+  tempo:
+    match: engine|hasten|mint|track|reroll
+    phases: [Spend now, The engine starts, Each turn it pays, It runs out]
+    feel: Getting ahead of the round.
+    at: 2
+  omni:
+    match: channel
+    phases: [A crystal no card wants, Channel it, A small sure effect, Nothing wasted]
+    feel: No die is ever dead.
+    at: 2
+  'off':
+    match: switched off
+    phases: [Switched off]
+    feel: ''
+    at: 0
+  tap:
+    match: tap
+    phases: [Spot the moment, Pay, The payoff, The track runs, Home again]
+    feel: A clean decision, answered at once.
+    at: 2
+elementDrivers:
+  Mass: [break, toy]
+  Charge: [solve, crew]
+  Space: [toy, find]
+  Time: [mastery, stake]
+  Omni: [solve]

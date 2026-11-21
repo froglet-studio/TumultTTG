@@ -1,0 +1,171 @@
+- id: mission
+  parent: expedition
+  at: 2
+  core: true
+  name: A mission
+  tier: 4
+  kind: loop
+  t: [600, 1800]
+  is: One objective on one atlas page. Every page names fifteen spaces, so every mission works on every page.
+  phases:
+  - n: Briefing
+    d: The page, its gravity and weather, the objective and clock.
+  - n: Play rounds
+    d: Usually 8 to 14.
+  - n: The objective moves
+    d: A gold card on the board says what was done and how far along it is.
+  - n: Won or lost
+    d: Bonus goals counted; a loss spends the Lifeline.
+  - n: Bind wounds
+    d: Plus 25% vitality; a canon question about the page.
+  drivers: [goal, solve, stake]
+  reps: 5-6
+  repsOf: missions per expedition
+  now:
+    s: built
+  holes:
+  - 'on': np
+    q: 'With no cards at all a squad still wins most missions, but kill missions are all but unwinnable (audit Pass C:
+      the Heart 0%).'
+    fill: The basic Strike is the floor; under P2 a basic action may also Mark or Push, so a kill is never impossible.
+  src:
+  - docs/reference/ATLAS.md
+  - docs/reference/MISSIONS_AND_BESTIARY.md
+- id: round
+  parent: mission
+  at: 1
+  core: true
+  name: A round
+  tier: 3
+  kind: loop
+  t: [60, 300]
+  is: The puzzle. Foes have already said what they will do; the squad answers.
+  phases:
+  - n: Intents
+    d: Each foe declares, drawn as arrows and labels.
+  - n: Roll
+    d: Track slides, engines fire, 4 dice into the bank (3 AP and 1 chosen element, planned).
+  - n: Act
+    d: Both pilots, interleaved, or one player at a time in Take turns.
+  - n: Foes carry it out
+    d: A foe out of range closes instead; Hidden pilots leave afterimages.
+  - n: Round end
+    d: Hazards, wind, Wounds, the clock, the objective.
+  drivers: [solve, crew, toy]
+  reps: 8-14
+  repsOf: rounds per mission
+  now:
+    s: built
+    note: 'The forecast says exactly what ending the round now costs (T.forecast).'
+  plan:
+    note: 'Dice rework: 3 AP dice and 1 element die of the player''s choice each turn (Garrett, 2026-11-21).'
+  holes:
+  - 'on': np
+    q: Two turns in five gave a pilot no real choice at 2.28 (41%, tools/turns.js). It has not been measured since four
+      dice and the 2.73 balance pass.
+    fill: Run node tools/turns.js 10 before and after the dice rework, and aim under 20% idle or forced turns.
+  src:
+  - docs/reference/RUN_AND_ECONOMY.md The round
+  - docs/design/10-dice.md
+- id: turn
+  parent: round
+  at: 2
+  core: true
+  name: A pilot's turn
+  tier: 2
+  kind: loop
+  t: [20, 120]
+  is: Spending one pilot's AP and etherions on faces, steps, basic actions, gear and duets.
+  phases:
+  - n: Read the bank
+    d: AP, etherions, what is home on the track.
+  - n: Find the chain
+    d: A setup and its payoff, yours or your partner's.
+  - n: Play faces in order
+  - n: Spend what is left
+    d: Channel a crystal, Brace, step.
+  - n: End the turn
+  drivers: [solve, toy, mastery]
+  reps: 1-2
+  repsOf: turns per round per player
+  now:
+    s: built
+  prop:
+    s: change
+    note: 'With 22 keywords (P2), every chain a turn can build is a pair of keywords from section 2 of the review doc;
+      the hint bar can name the pair it sees.'
+  src:
+  - docs/reference/OVERVIEW.md
+- id: duet
+  parent: turn
+  at: 1
+  name: A duet
+  tier: 2
+  kind: loop
+  t: [20, 120]
+  is: One pilot sets up, the other cashes in. Spot, Leg up, Lend, and every face that buffs an ally.
+  phases:
+  - n: Pilot A sets up
+    d: Mark, Weaken, Pull into range, a Field.
+  - n: Pilot B sees it
+  - n: Pilot B cashes in
+  - n: Both see it land
+  drivers: [crew, toy, break]
+  now:
+    s: built
+    note: Duet moves since 2.28. Deterministic for the acting player, so a turn never waits on the partner.
+  prop:
+    s: change
+    note: Link (P2) is the duet keyword that reaches across the board.
+  src:
+  - docs/design/two-player memory, 2026-11-14
+  - src/data/world.js BASIC
+- id: face
+  parent: turn
+  at: 2
+  core: true
+  name: A face played
+  tier: 1
+  kind: loop
+  t: [5, 30]
+  is: One card face, from choice to its card coming home.
+  phases:
+  - n: Choose the face
+  - n: Pay
+    d: AP, plus etherions for an Ethereal face.
+  - n: Target
+  - n: It resolves
+    d: Deterministic; the numbers are the tooltip's.
+  - n: The card rides the track
+    d: Duration, then cooldown, then home. Once a turn at most.
+  drivers: [toy, break, solve]
+  now:
+    s: built
+  prop:
+    s: change
+    note: Every face says which line it is (body, magic, tech) by its keywords alone (P3).
+  src:
+  - docs/reference/CARDS.md
+- id: pulse
+  parent: face
+  at: 0
+  core: true
+  name: Hover and see
+  tier: 0
+  kind: loop
+  t: [0.5, 5]
+  is: Point at a face, die, token or intent; the game answers with numbers and a preview.
+  phases:
+  - n: Point
+  - n: The tooltip and the preview answer
+  - n: Commit or look elsewhere
+  drivers: [solve]
+  now:
+    s: built
+    note: Keyword chips with icons and one-sentence tips (src/ui/keywords.js), 29 of them.
+  holes:
+  - 'on': npx
+    q: No hover on a phone.
+    fill: A long press is the hover.
+  src:
+  - src/ui/keywords.js

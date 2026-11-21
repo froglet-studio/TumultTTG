@@ -1,0 +1,79 @@
+# Tumult Loop Atlas: vocabulary. The same ladder as Cosmic Shore's, with Tumult's words for each rung.
+layers:
+- id: now
+  letter: n
+  name: Now
+  is: What the game on main (2.82.0) does today. A loop the plan has and the game lacks shows as a ghost.
+- id: plan
+  letter: p
+  name: Planned
+  is: 'What Garrett has decided and the roadmap or design docs settle: the dice rework (3 AP and 1 chosen element), the
+    atlas journey, three-pilot squads, the dossier. Where the plan says nothing, it is a hole.'
+- id: prop
+  letter: x
+  name: Proposed
+  is: The plan plus this review's proposals (the 22 keywords, the three lines, combos per pilot). Every hole is filled
+    with an invention, marked as one, for Garrett and Shombith to accept, change or throw out.
+tiers:
+- id: 0
+  term: Pulse
+  span: [0.5, 5]
+  is: 'One touch and the game''s answer: hover a face and see its numbers, pick a die, watch an intent arrow.'
+  ask: Does the board answer before I commit?
+- id: 1
+  term: Verb
+  span: [5, 30]
+  is: One face played, from choosing it to its card going onto the track and coming home.
+  ask: Is the payoff worth the AP and the etherion, and do I see it land?
+- id: 2
+  term: Combo
+  span: [20, 120]
+  is: Faces chained in one turn, or across two pilots (a duet). The loops a kit has baked in.
+  ask: Does one face set up the next?
+- id: 3
+  term: Round
+  span: [60, 300]
+  is: 'One round: intents shown, dice rolled, both pilots act, foes carry out what they said, the round ends. The kit
+    pointed at the objective.'
+  ask: Is the round a puzzle I can read and solve?
+- id: 4
+  term: Mission
+  span: [600, 1800]
+  is: One objective on one atlas page, about 8 to 14 rounds, won or lost.
+  ask: Can I tell who is winning and why, and was the page part of it?
+- id: 5
+  term: Expedition
+  span: [1800, 5400]
+  is: 'A run: draft, the route of seven rows, havens and events, the Heart at the end. One or more sittings.'
+  ask: Do I want one more stop, and do I care where the route goes?
+- id: 6
+  term: Arc
+  span: [86400, 2592000]
+  is: 'What a person keeps between expeditions: made pilots and their growth, canon notes, friends to play with.'
+  ask: What do I have tomorrow that I did not have today?
+- id: 7
+  term: Era
+  span: [1209600, 15552000]
+  is: 'What changes without you: new releases, new atlas pages, approved canon, storytellers, the way on to Cosmic Shore.'
+  ask: Why come back next month?
+drivers:
+- {id: solve, code: So, name: Puzzle, kind: inner, is: 'Reading the telegraphed board and finding the answer: the Into-the-Breach pleasure.'}
+- {id: mastery, code: Ma, name: Mastery, kind: inner, is: 'Getting better: a cleaner turn, a harder wind, a bonus goal.'}
+- {id: toy, code: To, name: Toys, kind: inner, is: 'Combining keywords into something neither does alone: a push into a Field, a Link onto a Brute.'}
+- {id: break, code: Br, name: Big hit, kind: inner, is: The release of a payoff that took setting up.}
+- {id: crew, code: Cr, name: Fellowship, kind: inner, is: 'Playing with and for a partner: duets, one pilot each, the table.'}
+- {id: find, code: Fi, name: Discovery, kind: inner, is: 'Something new: a trait, a page, a foe, a stop you have not seen.'}
+- {id: own, code: Ow, name: Collection, kind: inner, is: 'Having it: made pilots, their traits, gear.'}
+- {id: stake, code: St, name: Stakes, kind: inner, is: 'Something can be lost: a pilot downed, the Lifeline, the run.'}
+- {id: story, code: Sy, name: Story, kind: inner, is: 'A pilot''s voice, a place''s field notes, the Terminal''s log, canon you wrote.'}
+- {id: make, code: Mk, name: Authorship, kind: inner, is: 'Making something that stays: a pilot, a backstory, a canon note.'}
+- {id: goal, code: Go, name: Objective, kind: outer, is: 'The objective, the clock and the bonus goals a mission lays out.'}
+- {id: reward, code: Re, name: Reward, kind: outer, is: 'Upgrade points, crystals, a trait offer: what a stop hands over.'}
+handoffs:
+- {id: fill, name: Bank full, is: 'Etherions or points were banked, so you go and spend them one tier up: a big face, a Train.'}
+- {id: done, name: Objective met, is: The loop's goal is reached and the tier above takes its next step.}
+- {id: fail, name: Loss, is: 'A pilot is downed, a mission lost, a run ended: the tier above resets or sends you home.'}
+- {id: spend, name: Reward to spend, is: 'You hold something only useful in another loop: points, crystals, a trait offer.'}
+- {id: new, name: Something new, is: 'A new trait, page, foe or release opens a loop you have not run.'}
+- {id: pull, name: A friend, is: An online game in the lobby or a friend at the table moves you to where they are.}
+- {id: tired, name: Enough of this, is: The loop has stopped paying and you look for another at the same tier.}

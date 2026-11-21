@@ -1,0 +1,152 @@
+# Tumult Loop Atlas: pilot Slingshot (generated from the pre-made hero; combos invented).
+{
+ "label": "Slingshot, the Catapult",
+ "verbs": {
+  "Mass": {
+   "ability": "Smasher Punch: Cavitation",
+   "does": "Punch so fast the water boils: melee 5, then the shock hits every foe beside you for 2.",
+   "trigger": "Ethereal face: 1 AP + 1 Mass (Physical Punch: Club it faster than a bullet: melee 4.)",
+   "scales": "At E 3: Punch so fast the water boils: melee 6, then the shock hits every foe beside you for 2.",
+   "source": "src/data/ (card msh_punch)",
+   "arch": "burst",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Charge": {
+   "ability": "Sixteen Colours: Weak Spot",
+   "does": "Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +2.",
+   "trigger": "Ethereal face: 1 AP + 1 Charge (Physical See It: See in colours no one else can: see within 3, and Mark the nearest foe (the next hit on it deals +2).)",
+   "scales": "At E 3: Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +4.",
+   "source": "src/data/ (card msh_colours)",
+   "arch": "setup",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Space": {
+   "ability": "Spearer Arms: Ambush Spear",
+   "does": "From the burrow, spear a foe within 2 for 3, hidden or not, and drag it 1 toward you.",
+   "trigger": "Ethereal face: 1 AP + 1 Space (Physical Spear: Shoot out a barbed arm at a foe within 2 for 2.)",
+   "scales": "At E 3: From the burrow, spear a foe within 2 for 5, hidden or not, and drag it 1 toward you.",
+   "source": "src/data/ (card msh_spear)",
+   "arch": "reposition",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Time": {
+   "ability": "Salt Flats: Caustic Lake",
+   "does": "Stir the bitter lake at a node within 2: every foe on or beside it takes 1 at the start of its next 2 turns; both heroes ignore hazards this round.",
+   "trigger": "Ethereal face: 1 AP + 1 Time (Physical Salt Feet: Ignore hazards for 2 rounds, and hold Shield 2 this round.)",
+   "scales": "At E 3: Stir the bitter lake at a node within 2: every foe on or beside it takes 2 at the start of its next 2 turns; both heroes ignore hazards this round.",
+   "source": "src/data/ (card fla_salt)",
+   "arch": "tap",
+   "t": [
+    5,
+    30
+   ]
+  },
+  "Omni": {
+   "ability": "Channel",
+   "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+   "trigger": "A banked etherion or Omni",
+   "scales": "",
+   "source": "src/data/world.js BASIC",
+   "arch": "omni",
+   "t": [
+    2,
+    10
+   ]
+  }
+ },
+ "board": {},
+ "missing": "",
+ "arenas": [
+  "Elite and the Heart",
+  "Swarm"
+ ],
+ "games": {
+  "Mass": [
+   "Smasher Punch",
+   "Throwing Arm"
+  ],
+  "Charge": [
+   "Sixteen Colours"
+  ],
+  "Space": [
+   "Spearer Arms",
+   "Flock March"
+  ],
+  "Time": [
+   "Salt Flats"
+  ]
+ },
+ "excused": [],
+ "lean": "burst",
+ "leanWhy": "Hits twice at once and salts the ground.",
+ "combos": [
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Find the flaw",
+   "t": [
+    20,
+    60
+   ],
+   "is": "Mark the flaw, then punch through it.",
+   "chain": [
+    [
+     "Charge",
+     "Weak Spot: the next hit ignores Shield, +2"
+    ],
+    [
+     "Space",
+     "Ambush Spear: drag the foe 1 toward you"
+    ],
+    [
+     "Mass",
+     "Cavitation: melee 5, then 2 to every foe beside you"
+    ]
+   ],
+   "drivers": [
+    "break",
+    "solve"
+   ],
+   "feel": "One perfect punch."
+  },
+  {
+   "in": "x",
+   "src": "invented from the card texts for review",
+   "name": "Salt the flats",
+   "t": [
+    20,
+    90
+   ],
+   "is": "Lay caustic ground, then march the flock to push foes into it.",
+   "chain": [
+    [
+     "Time",
+     "Caustic Lake: foes on or beside a node take 1 for 2 turns"
+    ],
+    [
+     "Space",
+     "Massed March: foes beside you fall back 1"
+    ],
+    [
+     "",
+     "They fall back into the lake"
+    ]
+   ],
+   "drivers": [
+    "toy",
+    "solve"
+   ],
+   "feel": "The ground does the work."
+  }
+ ],
+ "doc": "src/data/world.js PREBUILTS"
+}

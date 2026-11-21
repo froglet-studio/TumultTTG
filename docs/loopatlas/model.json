@@ -1,0 +1,3016 @@
+{
+ "schema": 1,
+ "updated": "2026-11-21",
+ "layers": [
+  {
+   "id": "now",
+   "letter": "n",
+   "name": "Now",
+   "is": "What the game on main (2.82.0) does today. A loop the plan has and the game lacks shows as a ghost."
+  },
+  {
+   "id": "plan",
+   "letter": "p",
+   "name": "Planned",
+   "is": "What Garrett has decided and the roadmap or design docs settle: the dice rework (3 AP and 1 chosen element), the atlas journey, three-pilot squads, the dossier. Where the plan says nothing, it is a hole."
+  },
+  {
+   "id": "prop",
+   "letter": "x",
+   "name": "Proposed",
+   "is": "The plan plus this review's proposals (the 22 keywords, the three lines, combos per pilot). Every hole is filled with an invention, marked as one, for Garrett and Shombith to accept, change or throw out."
+  }
+ ],
+ "tiers": [
+  {
+   "id": 0,
+   "term": "Pulse",
+   "span": [
+    0.5,
+    5
+   ],
+   "is": "One touch and the game's answer: hover a face and see its numbers, pick a die, watch an intent arrow.",
+   "ask": "Does the board answer before I commit?"
+  },
+  {
+   "id": 1,
+   "term": "Verb",
+   "span": [
+    5,
+    30
+   ],
+   "is": "One face played, from choosing it to its card going onto the track and coming home.",
+   "ask": "Is the payoff worth the AP and the etherion, and do I see it land?"
+  },
+  {
+   "id": 2,
+   "term": "Combo",
+   "span": [
+    20,
+    120
+   ],
+   "is": "Faces chained in one turn, or across two pilots (a duet). The loops a kit has baked in.",
+   "ask": "Does one face set up the next?"
+  },
+  {
+   "id": 3,
+   "term": "Round",
+   "span": [
+    60,
+    300
+   ],
+   "is": "One round: intents shown, dice rolled, both pilots act, foes carry out what they said, the round ends. The kit pointed at the objective.",
+   "ask": "Is the round a puzzle I can read and solve?"
+  },
+  {
+   "id": 4,
+   "term": "Mission",
+   "span": [
+    600,
+    1800
+   ],
+   "is": "One objective on one atlas page, about 8 to 14 rounds, won or lost.",
+   "ask": "Can I tell who is winning and why, and was the page part of it?"
+  },
+  {
+   "id": 5,
+   "term": "Expedition",
+   "span": [
+    1800,
+    5400
+   ],
+   "is": "A run: draft, the route of seven rows, havens and events, the Heart at the end. One or more sittings.",
+   "ask": "Do I want one more stop, and do I care where the route goes?"
+  },
+  {
+   "id": 6,
+   "term": "Arc",
+   "span": [
+    86400,
+    2592000
+   ],
+   "is": "What a person keeps between expeditions: made pilots and their growth, canon notes, friends to play with.",
+   "ask": "What do I have tomorrow that I did not have today?"
+  },
+  {
+   "id": 7,
+   "term": "Era",
+   "span": [
+    1209600,
+    15552000
+   ],
+   "is": "What changes without you: new releases, new atlas pages, approved canon, storytellers, the way on to Cosmic Shore.",
+   "ask": "Why come back next month?"
+  }
+ ],
+ "drivers": [
+  {
+   "id": "solve",
+   "code": "So",
+   "name": "Puzzle",
+   "kind": "inner",
+   "is": "Reading the telegraphed board and finding the answer: the Into-the-Breach pleasure."
+  },
+  {
+   "id": "mastery",
+   "code": "Ma",
+   "name": "Mastery",
+   "kind": "inner",
+   "is": "Getting better: a cleaner turn, a harder wind, a bonus goal."
+  },
+  {
+   "id": "toy",
+   "code": "To",
+   "name": "Toys",
+   "kind": "inner",
+   "is": "Combining keywords into something neither does alone: a push into a Field, a Link onto a Brute."
+  },
+  {
+   "id": "break",
+   "code": "Br",
+   "name": "Big hit",
+   "kind": "inner",
+   "is": "The release of a payoff that took setting up."
+  },
+  {
+   "id": "crew",
+   "code": "Cr",
+   "name": "Fellowship",
+   "kind": "inner",
+   "is": "Playing with and for a partner: duets, one pilot each, the table."
+  },
+  {
+   "id": "find",
+   "code": "Fi",
+   "name": "Discovery",
+   "kind": "inner",
+   "is": "Something new: a trait, a page, a foe, a stop you have not seen."
+  },
+  {
+   "id": "own",
+   "code": "Ow",
+   "name": "Collection",
+   "kind": "inner",
+   "is": "Having it: made pilots, their traits, gear."
+  },
+  {
+   "id": "stake",
+   "code": "St",
+   "name": "Stakes",
+   "kind": "inner",
+   "is": "Something can be lost: a pilot downed, the Lifeline, the run."
+  },
+  {
+   "id": "story",
+   "code": "Sy",
+   "name": "Story",
+   "kind": "inner",
+   "is": "A pilot's voice, a place's field notes, the Terminal's log, canon you wrote."
+  },
+  {
+   "id": "make",
+   "code": "Mk",
+   "name": "Authorship",
+   "kind": "inner",
+   "is": "Making something that stays: a pilot, a backstory, a canon note."
+  },
+  {
+   "id": "goal",
+   "code": "Go",
+   "name": "Objective",
+   "kind": "outer",
+   "is": "The objective, the clock and the bonus goals a mission lays out."
+  },
+  {
+   "id": "reward",
+   "code": "Re",
+   "name": "Reward",
+   "kind": "outer",
+   "is": "Upgrade points, crystals, a trait offer: what a stop hands over."
+  }
+ ],
+ "handoffs": [
+  {
+   "id": "fill",
+   "name": "Bank full",
+   "is": "Etherions or points were banked, so you go and spend them one tier up: a big face, a Train."
+  },
+  {
+   "id": "done",
+   "name": "Objective met",
+   "is": "The loop's goal is reached and the tier above takes its next step."
+  },
+  {
+   "id": "fail",
+   "name": "Loss",
+   "is": "A pilot is downed, a mission lost, a run ended: the tier above resets or sends you home."
+  },
+  {
+   "id": "spend",
+   "name": "Reward to spend",
+   "is": "You hold something only useful in another loop: points, crystals, a trait offer."
+  },
+  {
+   "id": "new",
+   "name": "Something new",
+   "is": "A new trait, page, foe or release opens a loop you have not run."
+  },
+  {
+   "id": "pull",
+   "name": "A friend",
+   "is": "An online game in the lobby or a friend at the table moves you to where they are."
+  },
+  {
+   "id": "tired",
+   "name": "Enough of this",
+   "is": "The loop has stopped paying and you look for another at the same tier."
+  }
+ ],
+ "nodes": [
+  {
+   "id": "era",
+   "name": "The long game",
+   "tier": 7,
+   "kind": "loop",
+   "t": [
+    1209600,
+    15552000
+   ],
+   "is": "Everything Tumult offers a person over months. Both jobs live here; a good game to replay, and a workshop where Froglet's pilots and their stories get made.",
+   "phases": [
+    {
+     "n": "Come back",
+     "d": "Something pulled you in: a friend in the lobby, a new release, a pilot you made last week."
+    },
+    {
+     "n": "Open a sitting",
+     "d": "The title screen offers a new expedition, Continue, games to join, the Atlas and your pilots."
+    },
+    {
+     "n": "Fly an expedition",
+     "d": "Draft or bring a pilot, ride the route, face the Heart."
+    },
+    {
+     "n": "Keep what it gave",
+     "d": "The pilot's traits and level, canon notes written, the pages you saw."
+    },
+    {
+     "n": "The world moves on",
+     "d": "A release changes the rules, new pages and traits arrive, approved canon goes to the storytellers."
+    }
+   ],
+   "drivers": [
+    "find",
+    "own",
+    "story",
+    "crew",
+    "make"
+   ],
+   "now": {
+    "s": "part",
+    "note": "Releases come often (2.82.0 on 2026-11-20) and made pilots keep their growth since 2.76, but nothing in the game tells a returning player what changed or what is waiting for them."
+   },
+   "plan": {
+    "note": "A run becomes a journey across atlas pages joined by a story; the web game gathers canon for AI storytellers; a finished dossier is a pilot ready for Cosmic Shore."
+   },
+   "prop": {
+    "s": "change",
+    "note": "Give the last phase a voice. The title shows what changed since you last flew, in keywords you already know."
+   },
+   "holes": [
+    {
+     "on": "np",
+     "q": "How often a person comes back, and how many expeditions they fly a week, is not measured.",
+     "fill": "Count expeditions started and finished per device and per online game (Froglet Analytics, web build only)."
+    }
+   ],
+   "src": [
+    "docs/design/00-pillars.md",
+    "docs/design/01-frame-and-campaign.md",
+    "docs/HANDOFF.md"
+   ]
+  },
+  {
+   "id": "sitting",
+   "parent": "era",
+   "at": 1,
+   "core": true,
+   "name": "A sitting",
+   "tier": 5,
+   "kind": "hub",
+   "t": [
+    900,
+    5400
+   ],
+   "is": "One time you open the page. The title screen is the hub, and every change of place passes through it.",
+   "phases": [
+    {
+     "n": "Title",
+     "d": "New expedition, Continue, the lobby, Atlas, Codex, Canon."
+    },
+    {
+     "n": "Choose who flies",
+     "d": "One to five players; pre-made, made or drafted pilots."
+    },
+    {
+     "n": "Fly",
+     "d": "The expedition, to the Heart or to a loss."
+    },
+    {
+     "n": "The ending",
+     "d": "Win or lose text, the pilot comes home with what it earned."
+    },
+    {
+     "n": "Again, or leave"
+    }
+   ],
+   "drivers": [
+    "crew",
+    "goal",
+    "find"
+   ],
+   "reps": null,
+   "repsOf": "sittings per month",
+   "now": {
+    "s": "built",
+    "note": "Title, Continue mid-round, online lobby (2.80), Atlas, Codex and canon marks are all in."
+   },
+   "holes": [
+    {
+     "on": "np",
+     "q": "The ending sends you back to the title. Nothing offers the next step that fits what just happened.",
+     "fill": "The breath (new loop): after an expedition, one offered next step chosen from it: fly the same pilot again on the Gale, open the page it lost on in the Atlas, answer one canon question about that pilot."
+    }
+   ],
+   "src": [
+    "docs/reference/OVERVIEW.md"
+   ]
+  },
+  {
+   "id": "breath",
+   "parent": "sitting",
+   "at": 3,
+   "in": "x",
+   "name": "The breath",
+   "tier": 3,
+   "kind": "loop",
+   "t": [
+    20,
+    90
+   ],
+   "is": "Proposed. The pause after an expedition, treated as a loop of its own, where the game hands you up, down or across.",
+   "phases": [
+    {
+     "n": "See what you did",
+     "d": "Stops cleared, the faces that decided them, what the pilot gained."
+    },
+    {
+     "n": "One question",
+     "d": "A canon prompt about the moment that mattered, never a blank form."
+    },
+    {
+     "n": "One offered next step",
+     "d": "The same pilot on a harder wind, or the page it lost on."
+    },
+    {
+     "n": "Take it or go to the title"
+    }
+   ],
+   "drivers": [
+    "story",
+    "make",
+    "mastery"
+   ],
+   "reps": "1",
+   "repsOf": "per expedition",
+   "prop": {
+    "s": "add",
+    "note": "Proposal P6. The canon prompts and the playtest report already know what happened; this adds the hand-off."
+   },
+   "src": [
+    "proposal"
+   ]
+  },
+  {
+   "id": "expedition",
+   "parent": "sitting",
+   "at": 2,
+   "core": true,
+   "name": "An expedition",
+   "tier": 5,
+   "kind": "place",
+   "t": [
+    1800,
+    5400
+   ],
+   "is": "A run: a squad of guides crosses land, sea and air along one route to the Heart. Saved at every node and every action, so it can span sittings.",
+   "phases": [
+    {
+     "n": "Squad",
+     "d": "Draft a pilot, or bring a pre-made or made one."
+    },
+    {
+     "n": "Choose the next stop",
+     "d": "Stop cards show the objective, clock, foes, gravity and weather."
+    },
+    {
+     "n": "Play the stop",
+     "d": "A mission, an elite, a haven or an event."
+    },
+    {
+     "n": "Grow",
+     "d": "Points, a trait offer, crystals, gear at a haven."
+    },
+    {
+     "n": "The Heart",
+     "d": "The last row; win, or Tumult keeps the expedition."
+    }
+   ],
+   "drivers": [
+    "goal",
+    "stake",
+    "find",
+    "crew"
+   ],
+   "reps": "7",
+   "repsOf": "rows per expedition",
+   "now": {
+    "s": "built",
+    "note": "Seven rows in three acts, six mission kinds plus Elite and the Heart, havens, twelve events, a Lifeline, two tides."
+   },
+   "plan": {
+    "note": "The atlas plan: a run is a random journey from one atlas page to another, joined by a story, with a tell-your-own mode later."
+   },
+   "prop": {
+    "s": "change",
+    "note": "Havens sell only gear (boons and consumables fold into it, P3), and the gear passives are the build-arounds the boons were."
+   },
+   "holes": [
+    {
+     "on": "np",
+     "q": "Win rates sit near 100% on most tier 1 and 2 missions for the look-ahead player, with the Heart at 25%, so the middle of an expedition carries little stake.",
+     "fill": "Tune the middle rows against the Gale and the Heart together, from node tools/sim.js 40, before adding content."
+    }
+   ],
+   "src": [
+    "docs/reference/RUN_AND_ECONOMY.md",
+    "docs/reference/ABILITY_AUDIT.md Pass C",
+    "docs/design/01-frame-and-campaign.md"
+   ]
+  },
+  {
+   "id": "draft",
+   "parent": "expedition",
+   "at": 0,
+   "name": "The draft",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    180,
+    600
+   ],
+   "is": "Make a pilot from human and two clades. The character workshop's first step.",
+   "phases": [
+    {
+     "n": "Pick two clades"
+    },
+    {
+     "n": "Pick 1 of 4, six times",
+     "d": "Packs drawn from the three pools; a trait you hold is never offered again."
+    },
+    {
+     "n": "Spend 6 upgrade points",
+     "d": "Two cards awakened at least."
+    },
+    {
+     "n": "Name and confirm",
+     "d": "The pilot is kept on the device and, online, shared."
+    }
+   ],
+   "drivers": [
+    "make",
+    "own",
+    "find"
+   ],
+   "reps": "1",
+   "repsOf": "per new pilot",
+   "now": {
+    "s": "built",
+    "note": "Draft, Quick Build of six pre-mades, made pilots kept and shared since 2.72; a canon question about the painted pilot."
+   },
+   "plan": {
+    "note": "The dossier (design/06) asks for a backstory as the pilot is made."
+   },
+   "holes": [
+    {
+     "on": "npx",
+     "q": "A draft shows card texts with up to 31 different state words, so a new player cannot see what a kit is for.",
+     "fill": "With 22 keywords (P2) the draft can show a pilot's keyword profile: three to five chips that say what it does."
+    }
+   ],
+   "src": [
+    "docs/reference/RUN_AND_ECONOMY.md",
+    "docs/design/06-pilots-and-backstory.md"
+   ]
+  },
+  {
+   "id": "route",
+   "parent": "expedition",
+   "at": 1,
+   "name": "The route",
+   "tier": 3,
+   "kind": "loop",
+   "t": [
+    10,
+    60
+   ],
+   "is": "Choosing the next stop from the cards side by side.",
+   "phases": [
+    {
+     "n": "Read the stop cards"
+    },
+    {
+     "n": "Weigh the squad against them"
+    },
+    {
+     "n": "Choose"
+    }
+   ],
+   "drivers": [
+    "solve",
+    "goal"
+   ],
+   "reps": "7",
+   "repsOf": "choices per expedition",
+   "now": {
+    "s": "built",
+    "note": "Stop cards since 2.70 (objective, clock, foes, gravity, weather, bonus goals)."
+   },
+   "src": [
+    "docs/reference/RUN_AND_ECONOMY.md The route"
+   ]
+  },
+  {
+   "id": "haven",
+   "parent": "expedition",
+   "at": 2,
+   "name": "A haven",
+   "tier": 3,
+   "kind": "loop",
+   "t": [
+    30,
+    180
+   ],
+   "is": "Rest, repair, buy and sell gear and consumables, train.",
+   "phases": [
+    {
+     "n": "Rest or repair"
+    },
+    {
+     "n": "Shop"
+    },
+    {
+     "n": "Train"
+    },
+    {
+     "n": "Leave"
+    }
+   ],
+   "drivers": [
+    "own",
+    "reward"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "prop": {
+    "s": "change",
+    "note": "Gear only. Each piece has two actives and one passive, so the shop is the build-around choice boons were."
+   },
+   "src": [
+    "docs/reference/RUN_AND_ECONOMY.md Omnicrystals and gear"
+   ]
+  },
+  {
+   "id": "event",
+   "parent": "expedition",
+   "at": 2,
+   "name": "An event",
+   "tier": 3,
+   "kind": "loop",
+   "t": [
+    20,
+    90
+   ],
+   "is": "A narrative fork with two or three choices, costs and risks.",
+   "phases": [
+    {
+     "n": "Read the scene"
+    },
+    {
+     "n": "Choose"
+    },
+    {
+     "n": "The result"
+    }
+   ],
+   "drivers": [
+    "story",
+    "stake"
+   ],
+   "now": {
+    "s": "built",
+    "note": "Twelve events; none repeats in a run."
+   },
+   "prop": {
+    "s": "change",
+    "note": "The Etherion Storm and Shrine hand out Affinities and boons today; they would hand out a gear passive or a trait instead."
+   },
+   "src": [
+    "src/data/world.js EVENTS"
+   ]
+  },
+  {
+   "id": "reward",
+   "parent": "expedition",
+   "at": 3,
+   "name": "Reward and train",
+   "tier": 3,
+   "kind": "loop",
+   "t": [
+    30,
+    180
+   ],
+   "is": "After a won mission. Points, crystals, a trait for each pilot, a boon from an elite.",
+   "phases": [
+    {
+     "n": "Take the points and crystals"
+    },
+    {
+     "n": "Take a trait, or swap one in, or skip"
+    },
+    {
+     "n": "Spend points on P or E"
+    }
+   ],
+   "drivers": [
+    "reward",
+    "own",
+    "make"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "prop": {
+    "s": "change",
+    "note": "Elites offer gear instead of a boon. A trait offer shows its keyword chips beside the pilot's, so a swap reads as a change of toys."
+   },
+   "src": [
+    "docs/reference/RUN_AND_ECONOMY.md Rewards"
+   ]
+  },
+  {
+   "id": "mission",
+   "parent": "expedition",
+   "at": 2,
+   "core": true,
+   "name": "A mission",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "is": "One objective on one atlas page. Every page names fifteen spaces, so every mission works on every page.",
+   "phases": [
+    {
+     "n": "Briefing",
+     "d": "The page, its gravity and weather, the objective and clock."
+    },
+    {
+     "n": "Play rounds",
+     "d": "Usually 8 to 14."
+    },
+    {
+     "n": "The objective moves",
+     "d": "A gold card on the board says what was done and how far along it is."
+    },
+    {
+     "n": "Won or lost",
+     "d": "Bonus goals counted; a loss spends the Lifeline."
+    },
+    {
+     "n": "Bind wounds",
+     "d": "Plus 25% vitality; a canon question about the page."
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve",
+    "stake"
+   ],
+   "reps": "5-6",
+   "repsOf": "missions per expedition",
+   "now": {
+    "s": "built"
+   },
+   "holes": [
+    {
+     "on": "np",
+     "q": "With no cards at all a squad still wins most missions, but kill missions are all but unwinnable (audit Pass C: the Heart 0%).",
+     "fill": "The basic Strike is the floor; under P2 a basic action may also Mark or Push, so a kill is never impossible."
+    }
+   ],
+   "src": [
+    "docs/reference/ATLAS.md",
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "round",
+   "parent": "mission",
+   "at": 1,
+   "core": true,
+   "name": "A round",
+   "tier": 3,
+   "kind": "loop",
+   "t": [
+    60,
+    300
+   ],
+   "is": "The puzzle. Foes have already said what they will do; the squad answers.",
+   "phases": [
+    {
+     "n": "Intents",
+     "d": "Each foe declares, drawn as arrows and labels."
+    },
+    {
+     "n": "Roll",
+     "d": "Track slides, engines fire, 4 dice into the bank (3 AP and 1 chosen element, planned)."
+    },
+    {
+     "n": "Act",
+     "d": "Both pilots, interleaved, or one player at a time in Take turns."
+    },
+    {
+     "n": "Foes carry it out",
+     "d": "A foe out of range closes instead; Hidden pilots leave afterimages."
+    },
+    {
+     "n": "Round end",
+     "d": "Hazards, wind, Wounds, the clock, the objective."
+    }
+   ],
+   "drivers": [
+    "solve",
+    "crew",
+    "toy"
+   ],
+   "reps": "8-14",
+   "repsOf": "rounds per mission",
+   "now": {
+    "s": "built",
+    "note": "The forecast says exactly what ending the round now costs (T.forecast)."
+   },
+   "plan": {
+    "note": "Dice rework: 3 AP dice and 1 element die of the player's choice each turn (Garrett, 2026-11-21)."
+   },
+   "holes": [
+    {
+     "on": "np",
+     "q": "Two turns in five gave a pilot no real choice at 2.28 (41%, tools/turns.js). It has not been measured since four dice and the 2.73 balance pass.",
+     "fill": "Run node tools/turns.js 10 before and after the dice rework, and aim under 20% idle or forced turns."
+    }
+   ],
+   "src": [
+    "docs/reference/RUN_AND_ECONOMY.md The round",
+    "docs/design/10-dice.md"
+   ]
+  },
+  {
+   "id": "turn",
+   "parent": "round",
+   "at": 2,
+   "core": true,
+   "name": "A pilot's turn",
+   "tier": 2,
+   "kind": "loop",
+   "t": [
+    20,
+    120
+   ],
+   "is": "Spending one pilot's AP and etherions on faces, steps, basic actions, gear and duets.",
+   "phases": [
+    {
+     "n": "Read the bank",
+     "d": "AP, etherions, what is home on the track."
+    },
+    {
+     "n": "Find the chain",
+     "d": "A setup and its payoff, yours or your partner's."
+    },
+    {
+     "n": "Play faces in order"
+    },
+    {
+     "n": "Spend what is left",
+     "d": "Channel a crystal, Brace, step."
+    },
+    {
+     "n": "End the turn"
+    }
+   ],
+   "drivers": [
+    "solve",
+    "toy",
+    "mastery"
+   ],
+   "reps": "1-2",
+   "repsOf": "turns per round per player",
+   "now": {
+    "s": "built"
+   },
+   "prop": {
+    "s": "change",
+    "note": "With 22 keywords (P2), every chain a turn can build is a pair of keywords from section 2 of the review doc; the hint bar can name the pair it sees."
+   },
+   "src": [
+    "docs/reference/OVERVIEW.md"
+   ]
+  },
+  {
+   "id": "duet",
+   "parent": "turn",
+   "at": 1,
+   "name": "A duet",
+   "tier": 2,
+   "kind": "loop",
+   "t": [
+    20,
+    120
+   ],
+   "is": "One pilot sets up, the other cashes in. Spot, Leg up, Lend, and every face that buffs an ally.",
+   "phases": [
+    {
+     "n": "Pilot A sets up",
+     "d": "Mark, Weaken, Pull into range, a Field."
+    },
+    {
+     "n": "Pilot B sees it"
+    },
+    {
+     "n": "Pilot B cashes in"
+    },
+    {
+     "n": "Both see it land"
+    }
+   ],
+   "drivers": [
+    "crew",
+    "toy",
+    "break"
+   ],
+   "now": {
+    "s": "built",
+    "note": "Duet moves since 2.28. Deterministic for the acting player, so a turn never waits on the partner."
+   },
+   "prop": {
+    "s": "change",
+    "note": "Link (P2) is the duet keyword that reaches across the board."
+   },
+   "src": [
+    "docs/design/two-player memory, 2026-11-14",
+    "src/data/world.js BASIC"
+   ]
+  },
+  {
+   "id": "face",
+   "parent": "turn",
+   "at": 2,
+   "core": true,
+   "name": "A face played",
+   "tier": 1,
+   "kind": "loop",
+   "t": [
+    5,
+    30
+   ],
+   "is": "One card face, from choice to its card coming home.",
+   "phases": [
+    {
+     "n": "Choose the face"
+    },
+    {
+     "n": "Pay",
+     "d": "AP, plus etherions for an Ethereal face."
+    },
+    {
+     "n": "Target"
+    },
+    {
+     "n": "It resolves",
+     "d": "Deterministic; the numbers are the tooltip's."
+    },
+    {
+     "n": "The card rides the track",
+     "d": "Duration, then cooldown, then home. Once a turn at most."
+    }
+   ],
+   "drivers": [
+    "toy",
+    "break",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "prop": {
+    "s": "change",
+    "note": "Every face says which line it is (body, magic, tech) by its keywords alone (P3)."
+   },
+   "src": [
+    "docs/reference/CARDS.md"
+   ]
+  },
+  {
+   "id": "pulse",
+   "parent": "face",
+   "at": 0,
+   "core": true,
+   "name": "Hover and see",
+   "tier": 0,
+   "kind": "loop",
+   "t": [
+    0.5,
+    5
+   ],
+   "is": "Point at a face, die, token or intent; the game answers with numbers and a preview.",
+   "phases": [
+    {
+     "n": "Point"
+    },
+    {
+     "n": "The tooltip and the preview answer"
+    },
+    {
+     "n": "Commit or look elsewhere"
+    }
+   ],
+   "drivers": [
+    "solve"
+   ],
+   "now": {
+    "s": "built",
+    "note": "Keyword chips with icons and one-sentence tips (src/ui/keywords.js), 29 of them."
+   },
+   "holes": [
+    {
+     "on": "npx",
+     "q": "No hover on a phone.",
+     "fill": "A long press is the hover."
+    }
+   ],
+   "src": [
+    "src/ui/keywords.js"
+   ]
+  },
+  {
+   "id": "m.swarm",
+   "parent": "mission",
+   "at": 1,
+   "name": "Swarm: hold the beacon",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "hold",
+   "is": "Waves arrive; a pilot near the beacon at round end counts a round held.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "m.vault",
+   "parent": "mission",
+   "at": 1,
+   "name": "Vault: break in",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "vault",
+   "is": "A seal on a ledge, a lever and a ramp; height is the problem.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "m.sought",
+   "parent": "mission",
+   "at": 1,
+   "name": "The Sought: find it",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "find",
+   "is": "Hidden caches, one real, and Lurkers that ambush from Hidden.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "m.cascade",
+   "parent": "mission",
+   "at": 1,
+   "name": "Cascade: close the valve",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "valve",
+   "is": "A flood spreads every round; channel the valve before the clock ends.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "m.salvage",
+   "parent": "mission",
+   "at": 1,
+   "name": "Salvage: carry it home",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "carry",
+   "is": "Crates across the page, a round trip each.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "m.survey",
+   "parent": "mission",
+   "at": 1,
+   "name": "Survey: tag the marks",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "tag",
+   "is": "Marks spread over the page; tag them all before the clock.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "m.elite",
+   "parent": "mission",
+   "at": 1,
+   "name": "An elite",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "fight",
+   "is": "One tough foe with escorts; it offers a boon (gear, proposed) when beaten.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "m.heart",
+   "parent": "mission",
+   "at": 1,
+   "name": "The Heart",
+   "tier": 4,
+   "kind": "loop",
+   "t": [
+    600,
+    1800
+   ],
+   "kit": "fight",
+   "is": "Two phases; its shield is fed by Spawners, and at half the vault begins to drown.",
+   "phases": [
+    {
+     "n": "Briefing"
+    },
+    {
+     "n": "Rounds"
+    },
+    {
+     "n": "Objective met or lost"
+    }
+   ],
+   "drivers": [
+    "goal",
+    "solve"
+   ],
+   "now": {
+    "s": "built"
+   },
+   "src": [
+    "docs/reference/MISSIONS_AND_BESTIARY.md"
+   ]
+  },
+  {
+   "id": "arc.pilot",
+   "parent": "era",
+   "at": 3,
+   "core": true,
+   "name": "A pilot grows",
+   "tier": 6,
+   "kind": "loop",
+   "t": [
+    86400,
+    2592000
+   ],
+   "is": "A made pilot comes home with its traits, points and level, and sets out again as it came home.",
+   "phases": [
+    {
+     "n": "Make or choose the pilot"
+    },
+    {
+     "n": "Fly an expedition"
+    },
+    {
+     "n": "Come home with traits and points"
+    },
+    {
+     "n": "Swap traits past nine"
+    },
+    {
+     "n": "Choose it again"
+    }
+   ],
+   "drivers": [
+    "own",
+    "mastery",
+    "make"
+   ],
+   "now": {
+    "s": "built",
+    "note": "Since 2.76; missions scale to the pilot's level (docs/reference/SCALING.md)."
+   },
+   "plan": {
+    "note": "Design/06: the dossier records who the pilot is and what it did; three-pilot squads."
+   },
+   "holes": [
+    {
+     "on": "np",
+     "q": "The pilot keeps cards and points but nothing of what it did, so the workshop job stops at the build.",
+     "fill": "The dossier (P7): each expedition writes one line about the pilot from the faces it played and the canon its player wrote."
+    }
+   ],
+   "src": [
+    "docs/reference/RUN_AND_ECONOMY.md Pilots keep their growth",
+    "docs/design/06-pilots-and-backstory.md"
+   ]
+  },
+  {
+   "id": "arc.canon",
+   "parent": "era",
+   "at": 3,
+   "name": "Canon from play",
+   "tier": 6,
+   "kind": "loop",
+   "t": [
+    3600,
+    2592000
+   ],
+   "is": "Players add or correct details of places, pilots, foes and events; each answer becomes a canon record for approval.",
+   "phases": [
+    {
+     "n": "A question at a pause, or a mark on a text"
+    },
+    {
+     "n": "The player answers or corrects"
+    },
+    {
+     "n": "A record is proposed"
+    },
+    {
+     "n": "The lore lead approves"
+    },
+    {
+     "n": "It reaches the storyteller pack"
+    }
+   ],
+   "drivers": [
+    "make",
+    "story"
+   ],
+   "now": {
+    "s": "built",
+    "note": "Marks on atlas, codex and events; questions after the draft and after a mission (docs/reference/CANON.md)."
+   },
+   "prop": {
+    "s": "change",
+    "note": "A question names a keyword moment: \"Your Pull dragged the Brute into the flood. What did the crowd shout?\""
+   },
+   "src": [
+    "docs/reference/CANON.md"
+   ]
+  },
+  {
+   "id": "arc.friends",
+   "parent": "era",
+   "at": 2,
+   "name": "Playing with friends",
+   "tier": 6,
+   "kind": "loop",
+   "t": [
+    3600,
+    1209600
+   ],
+   "is": "The lobby, a code, or one screen at the table; one to five players, each flying their own pilot.",
+   "phases": [
+    {
+     "n": "See who is playing"
+    },
+    {
+     "n": "Join or host"
+    },
+    {
+     "n": "Bring your pilot"
+    },
+    {
+     "n": "Fly together"
+    },
+    {
+     "n": "Join again mid-route"
+    }
+   ],
+   "drivers": [
+    "crew"
+   ],
+   "now": {
+    "s": "built",
+    "note": "Lobby since 2.80, Take turns since 2.81, joining mid-route since 2.79."
+   },
+   "src": [
+    "docs/reference/OVERVIEW.md Players"
+   ]
+  },
+  {
+   "id": "arc.fleet",
+   "parent": "era",
+   "at": 3,
+   "name": "The pilots' kits",
+   "tier": 6,
+   "kind": "fleet",
+   "t": [
+    86400,
+    2592000
+   ],
+   "is": "The six pre-made pilots, each with its own loops. Pick one to make it the pilot shown everywhere in the atlas.",
+   "phases": [],
+   "drivers": [
+    "find",
+    "own",
+    "mastery"
+   ],
+   "now": {
+    "s": "part"
+   },
+   "src": [
+    "src/data/world.js PREBUILTS"
+   ]
+  },
+  {
+   "id": "era.release",
+   "parent": "era",
+   "at": 4,
+   "name": "Releases",
+   "tier": 7,
+   "kind": "loop",
+   "t": [
+    86400,
+    1209600
+   ],
+   "is": "bleeding-edge to development (testers, the playtest page) to main (players). Rules and content change here.",
+   "phases": [
+    {
+     "n": "A change merges"
+    },
+    {
+     "n": "Testers fly it"
+    },
+    {
+     "n": "Promoted to players"
+    }
+   ],
+   "drivers": [
+    "find"
+   ],
+   "now": {
+    "s": "built",
+    "note": "Version bumps with every change; playtest NOTES rewritten each release."
+   },
+   "holes": [
+    {
+     "on": "npx",
+     "q": "A player meeting a release learns of a new rule only by meeting it in play.",
+     "fill": "The title names what changed in keywords: \"New: Link. Stasis now also stops movement.\""
+    }
+   ],
+   "src": [
+    "CONTRIBUTING.md"
+   ]
+  },
+  {
+   "id": "era.atlas",
+   "parent": "era",
+   "at": 4,
+   "name": "The atlas grows",
+   "tier": 7,
+   "kind": "loop",
+   "t": [
+    604800,
+    7776000
+   ],
+   "is": "New pages of Tumult places, each grown from a Cosmic Shore pilot scene, each with its rules and field notes.",
+   "phases": [
+    {
+     "n": "A planetside scene is painted"
+    },
+    {
+     "n": "It becomes a page"
+    },
+    {
+     "n": "Players meet it on the route"
+    },
+    {
+     "n": "Field notes gather canon"
+    }
+   ],
+   "drivers": [
+    "find",
+    "story"
+   ],
+   "now": {
+    "s": "part",
+    "note": "Nine pages (docs/reference/ATLAS.md); about 38 planetside scenes exist."
+   },
+   "plan": {
+    "note": "Phases 2.18 to 2.23: zones, pages, gravity and weather, journey, tell your own, the full atlas in print."
+   },
+   "src": [
+    "docs/reference/ATLAS.md"
+   ]
+  },
+  {
+   "id": "era.shore",
+   "parent": "era",
+   "at": 4,
+   "in": "px",
+   "name": "On to the Cosmic Shore",
+   "tier": 7,
+   "kind": "loop",
+   "t": [
+    2592000,
+    15552000
+   ],
+   "is": "A finished dossier is a pilot ready for the Hypersea; the fourth way onward is to leave Tumult.",
+   "phases": [
+    {
+     "n": "A dossier is finished"
+    },
+    {
+     "n": "The pilot leaves Tumult"
+    },
+    {
+     "n": "It flies in Cosmic Shore"
+    }
+   ],
+   "drivers": [
+    "story",
+    "own"
+   ],
+   "plan": {
+    "note": "The proposed campaign ends where the Hypersea begins (design/01)."
+   },
+   "src": [
+    "docs/design/01-frame-and-campaign.md",
+    "docs/LORE.md Guides"
+   ]
+  }
+ ],
+ "edges": [
+  {
+   "from": "m.swarm",
+   "to": "m.heart",
+   "kind": "train",
+   "why": "Holding against waves trains for the Heart's called swarm."
+  },
+  {
+   "from": "m.elite",
+   "to": "m.heart",
+   "kind": "train",
+   "why": "An elite is a small Heart: one big telegraph to read."
+  },
+  {
+   "from": "m.vault",
+   "to": "m.heart",
+   "kind": "train",
+   "why": "The Heart's second phase drowns the vault."
+  },
+  {
+   "from": "expedition",
+   "to": "arc.pilot",
+   "kind": "feed",
+   "why": "A made pilot comes home with its traits and points.",
+   "handoff": "done"
+  },
+  {
+   "from": "mission",
+   "to": "arc.canon",
+   "kind": "feed",
+   "why": "A question about the page after each mission.",
+   "handoff": "done"
+  },
+  {
+   "from": "draft",
+   "to": "arc.canon",
+   "kind": "feed",
+   "why": "A question about the painted pilot while it is made.",
+   "handoff": "new"
+  },
+  {
+   "from": "arc.friends",
+   "to": "sitting",
+   "kind": "cross",
+   "why": "A game in the lobby pulls you into a sitting.",
+   "handoff": "pull"
+  },
+  {
+   "from": "era.release",
+   "to": "sitting",
+   "kind": "cross",
+   "why": "A release brings new traits and pages.",
+   "handoff": "new"
+  },
+  {
+   "from": "breath",
+   "to": "expedition",
+   "kind": "cross",
+   "why": "The same pilot, a harder wind.",
+   "handoff": "done",
+   "in": "x"
+  },
+  {
+   "from": "reward",
+   "to": "arc.pilot",
+   "kind": "feed",
+   "why": "Points spent on P and E stay with a made pilot.",
+   "handoff": "spend"
+  },
+  {
+   "from": "arc.canon",
+   "to": "era.atlas",
+   "kind": "feed",
+   "why": "Approved canon becomes field notes and the storyteller pack."
+  }
+ ],
+ "roles": {
+  "free": {
+   "name": "Trying the kit",
+   "t": [
+    60,
+    300
+   ],
+   "is": "No objective. The Codex and the playtest jump, where a kit is tried for its own sake.",
+   "phases": [
+    {
+     "n": "Read the faces"
+    },
+    {
+     "n": "Play one on a foe or the board"
+    },
+    {
+     "n": "See what it did"
+    }
+   ],
+   "drivers": [
+    "toy",
+    "find"
+   ],
+   "reps": null,
+   "repsOf": "plays per look"
+  },
+  "hold": {
+   "name": "A round holding the beacon",
+   "t": [
+    60,
+    300
+   ],
+   "is": "Swarm: the kit spent keeping a pilot near the beacon while waves arrive. Area, Push and Shield pay here.",
+   "phases": [
+    {
+     "n": "Read the waves' intents"
+    },
+    {
+     "n": "Choose who holds the beacon"
+    },
+    {
+     "n": "Thin, shove or shield"
+    },
+    {
+     "n": "Foes act"
+    },
+    {
+     "n": "The beacon counts"
+    }
+   ],
+   "drivers": [
+    "solve",
+    "crew",
+    "goal"
+   ],
+   "reps": "8-12",
+   "repsOf": "rounds per Swarm"
+  },
+  "vault": {
+   "name": "A round breaking in",
+   "t": [
+    60,
+    300
+   ],
+   "is": "Vault: the kit spent getting onto the ledge and working the lever. Height, Blink and Climb pay here.",
+   "phases": [
+    {
+     "n": "Find the way up"
+    },
+    {
+     "n": "Climb, Blink or take the ramp"
+    },
+    {
+     "n": "Interact with the seal"
+    },
+    {
+     "n": "Foes act"
+    },
+    {
+     "n": "The seal gives"
+    }
+   ],
+   "drivers": [
+    "solve",
+    "goal",
+    "toy"
+   ],
+   "reps": "8-12",
+   "repsOf": "rounds per Vault"
+  },
+  "find": {
+   "name": "A round searching",
+   "t": [
+    60,
+    300
+   ],
+   "is": "Sought: the kit spent finding the real cache among the false ones while Lurkers wait. Reveal and Hidden pay here.",
+   "phases": [
+    {
+     "n": "Choose where to look"
+    },
+    {
+     "n": "Reveal or step in"
+    },
+    {
+     "n": "Dig a cache"
+    },
+    {
+     "n": "Lurkers spring or are found"
+    },
+    {
+     "n": "One fewer place to look"
+    }
+   ],
+   "drivers": [
+    "find",
+    "solve",
+    "stake"
+   ],
+   "reps": "8-12",
+   "repsOf": "rounds per Sought"
+  },
+  "valve": {
+   "name": "A round against the flood",
+   "t": [
+    60,
+    300
+   ],
+   "is": "Cascade: the kit spent reaching the valve and channelling it while the flood spreads. Hover, Haste and Cleanse pay here.",
+   "phases": [
+    {
+     "n": "See where the flood goes next"
+    },
+    {
+     "n": "Reach the valve"
+    },
+    {
+     "n": "Channel it"
+    },
+    {
+     "n": "The flood spreads"
+    },
+    {
+     "n": "The clock ticks"
+    }
+   ],
+   "drivers": [
+    "solve",
+    "goal",
+    "stake"
+   ],
+   "reps": "8-12",
+   "repsOf": "rounds per Cascade"
+  },
+  "carry": {
+   "name": "A round of salvage",
+   "t": [
+    60,
+    300
+   ],
+   "is": "Salvage: the kit spent carrying crates home, a round trip each. Move, Blink and Anchor (against the wind) pay here.",
+   "phases": [
+    {
+     "n": "Pick a crate"
+    },
+    {
+     "n": "Go out"
+    },
+    {
+     "n": "Pick it up"
+    },
+    {
+     "n": "Bring it home"
+    }
+   ],
+   "drivers": [
+    "solve",
+    "goal",
+    "crew"
+   ],
+   "reps": "8-12",
+   "repsOf": "rounds per Salvage"
+  },
+  "tag": {
+   "name": "A round of survey",
+   "t": [
+    60,
+    300
+   ],
+   "is": "Survey: the kit spent tagging marks across the page. Reach, Move and Reveal pay here.",
+   "phases": [
+    {
+     "n": "Plan a line through the marks"
+    },
+    {
+     "n": "Move along it"
+    },
+    {
+     "n": "Tag"
+    },
+    {
+     "n": "Foes act"
+    }
+   ],
+   "drivers": [
+    "solve",
+    "goal"
+   ],
+   "reps": "8-12",
+   "repsOf": "rounds per Survey"
+  },
+  "fight": {
+   "name": "A round of battle",
+   "t": [
+    60,
+    300
+   ],
+   "is": "Elite and the Heart: the kit spent on one tough foe and its escort. Mark, Empower, Pierce and Weaken pay here.",
+   "phases": [
+    {
+     "n": "Read the big telegraph"
+    },
+    {
+     "n": "Get out of it, or brace"
+    },
+    {
+     "n": "Set up the hit"
+    },
+    {
+     "n": "Land it"
+    },
+    {
+     "n": "It answers"
+    }
+   ],
+   "drivers": [
+    "break",
+    "solve",
+    "stake"
+   ],
+   "reps": "8-14",
+   "repsOf": "rounds per Elite or Heart"
+  }
+ },
+ "roleHoles": [
+  {
+   "on": "np",
+   "q": "Nothing measures which faces carry each kind of mission. The audit says where a face was played, not which round it decided.",
+   "fill": "Add to tools/audit.js a count of the round each face moved the objective in, per mission kind, and show it on the pilot's Codex page."
+  }
+ ],
+ "kit": {
+  "is": "A pilot's nine traits at most, each with a Physical face (AP, scales with P) and an Ethereal face (AP and etherions, scales with E, played once the card has E 1), plus two gear. Shown here: the pre-made pilot's six.",
+  "holes": [
+   {
+    "on": "np",
+    "q": "No pilot's combos are written down, so nothing checks that a kit teaches them or that a mission rewards them.",
+    "fill": "Each pilot names two combos: a feeder into a spender, and one that crosses two elements. The ones shown here are invented from the card texts for Garrett to correct."
+   }
+  ]
+ },
+ "pulse": {
+  "name": "Hover and see",
+  "t": [
+   0.5,
+   5
+  ],
+  "is": "Hover a face, a die, a token or an intent and the game answers with exact numbers and a preview on the board. The forecast says what ending the round now would cost.",
+  "phases": [
+   {
+    "n": "Point at it"
+   },
+   {
+    "n": "The tooltip and the preview answer"
+   },
+   {
+    "n": "Commit or look elsewhere"
+   }
+  ],
+  "drivers": [
+   "solve"
+  ],
+  "holes": [
+   {
+    "on": "np",
+    "q": "On a phone there is no hover, so the pulse is missing there (roadmap P1).",
+    "fill": "A long press is the hover; the preview stays until the face is played or cancelled."
+   }
+  ]
+ },
+ "verbHole": {
+  "on": "np",
+  "q": "This face's loop is written as what it does, not as steps, and the feeling it should give, and at which step, is not written.",
+  "fillPrefix": "Invented from the face: "
+ },
+ "archetypes": {
+  "setup": {
+   "match": "mark|weaken|anchor|reveal|locate|expose",
+   "phases": [
+    "Read the board",
+    "Pay for the setup",
+    "The state lands on the foe",
+    "You or your ally cash it in",
+    "It wears off"
+   ],
+   "feel": "Laying the ground the big hit will stand on.",
+   "at": 3
+  },
+  "burst": {
+   "match": "strike|melee|lane|burst",
+   "phases": [
+    "Line it up",
+    "Pay",
+    "It lands",
+    "The numbers fly",
+    "Back on the track"
+   ],
+   "feel": "A clean hit, exactly as large as promised.",
+   "at": 2
+  },
+  "reposition": {
+   "match": "move|blink|teleport|push|pull|shove",
+   "phases": [
+    "See the space that matters",
+    "Pay",
+    "Something moves",
+    "The intent arrows change",
+    "Back on the track"
+   ],
+   "feel": "Changing the puzzle instead of answering it.",
+   "at": 3
+  },
+  "ward": {
+   "match": "shield|hidden|heal|stasis|pre-empt",
+   "phases": [
+    "See the telegraph",
+    "Pay",
+    "The ward is up",
+    "The hit arrives smaller or not at all",
+    "It fades"
+   ],
+   "feel": "Watching a promised hit come to nothing.",
+   "at": 3
+  },
+  "tempo": {
+   "match": "engine|hasten|mint|track|reroll",
+   "phases": [
+    "Spend now",
+    "The engine starts",
+    "Each turn it pays",
+    "It runs out"
+   ],
+   "feel": "Getting ahead of the round.",
+   "at": 2
+  },
+  "omni": {
+   "match": "channel",
+   "phases": [
+    "A crystal no card wants",
+    "Channel it",
+    "A small sure effect",
+    "Nothing wasted"
+   ],
+   "feel": "No die is ever dead.",
+   "at": 2
+  },
+  "off": {
+   "match": "switched off",
+   "phases": [
+    "Switched off"
+   ],
+   "feel": "",
+   "at": 0
+  },
+  "tap": {
+   "match": "tap",
+   "phases": [
+    "Spot the moment",
+    "Pay",
+    "The payoff",
+    "The track runs",
+    "Home again"
+   ],
+   "feel": "A clean decision, answered at once.",
+   "at": 2
+  }
+ },
+ "elementDrivers": {
+  "Mass": [
+   "break",
+   "toy"
+  ],
+  "Charge": [
+   "solve",
+   "crew"
+  ],
+  "Space": [
+   "toy",
+   "find"
+  ],
+  "Time": [
+   "mastery",
+   "stake"
+  ],
+  "Omni": [
+   "solve"
+  ]
+ },
+ "proposals": [
+  {
+   "id": "P1",
+   "title": "One ladder of words",
+   "what": "Use the eight tier terms (Pulse, Verb, Combo, Round, Mission, Expedition, Arc, Era) in Tumult's design docs and reviews, the same ladder Cosmic Shore uses, so a problem is placed before it is argued.",
+   "touches": [
+    "era"
+   ]
+  },
+  {
+   "id": "P2",
+   "title": "Twenty-two keywords",
+   "what": "Cut about 85 words of art to 22 keywords and a grammar of range and timing words. Field and Link are new; Wound and Hover reshaped; the rest merged. Every tooltip one sentence a player resolves by hand.",
+   "touches": [
+    "face",
+    "pulse",
+    "turn",
+    "duet",
+    "draft"
+   ],
+   "stage": "planned"
+  },
+  {
+   "id": "P3",
+   "title": "Body, magic, tech",
+   "what": "Biophysical (Physical faces: you and beside you, now), bioethereal (Ethereal faces: any unit, at range, for N rounds) and ethereal technology (gear: spaces, dice, clock, the downed). Boons and consumables fold into gear passives and actives.",
+   "touches": [
+    "face",
+    "haven",
+    "reward",
+    "event",
+    "expedition"
+   ],
+   "stage": "planned"
+  },
+  {
+   "id": "P4",
+   "title": "Every pilot names two combos",
+   "what": "A feeder into a spender, and one that crosses two elements. The Codex and the hint bar teach them; the audit checks a mission rewards them.",
+   "touches": [
+    "turn",
+    "duet"
+   ]
+  },
+  {
+   "id": "P5",
+   "title": "Three AP and one chosen element",
+   "what": "Each turn a pilot rolls 3 AP and picks 1 element; weak and refunding Ethereal faces cost 0 AP; stronger faces cost 2 or 3 etherions. Being built in its own thread.",
+   "touches": [
+    "round",
+    "face"
+   ],
+   "stage": "planned"
+  },
+  {
+   "id": "P6",
+   "title": "The breath after an expedition",
+   "what": "One question about the moment that mattered and one offered next step, instead of a return to the title.",
+   "touches": [
+    "breath",
+    "sitting"
+   ]
+  },
+  {
+   "id": "P7",
+   "title": "The dossier writes itself",
+   "what": "Each expedition adds one line to a made pilot's dossier, from the faces it played and the canon its player wrote.",
+   "touches": [
+    "arc.pilot",
+    "arc.canon"
+   ]
+  },
+  {
+   "id": "P8",
+   "title": "Canon questions name a keyword moment",
+   "what": "The game remembers the play that decided a mission (a Pull into a Field, a Link that felled two) and asks about that, so the player embellishes something the game gave.",
+   "touches": [
+    "arc.canon",
+    "mission"
+   ]
+  }
+ ],
+ "fleet": {
+  "Rosh": {
+   "label": "Rosh, the Brawler-in-the-Cloud",
+   "verbs": {
+    "Mass": {
+     "ability": "Jet Propulsion: Recoil Slam",
+     "does": "Melee 3, shove the foe 1, and recoil 1 node.",
+     "trigger": "Ethereal face: 2 AP + 1 Mass (Physical Jet: Burst 2 in any direction.)",
+     "scales": "At E 3: Melee 3, shove the foe 3, and recoil 1 node.",
+     "source": "src/data/ (card oct_jet)",
+     "arch": "reposition",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Charge": {
+     "ability": "Mob: Call the Mob",
+     "does": "Point the mob at a foe within 3: it is Marked, your hits on it deal +1, and both heroes' next hit deals +1.",
+     "trigger": "Ethereal face: 1 AP + 1 Charge (Physical Harry: Harry a foe within 2: it takes 3 and is Weakened 1 this round, and your ally's next hit deals +1.)",
+     "scales": "At E 3: Point the mob at a foe within 3: it is Marked, your hits on it deal +2, and both heroes' next hit deals +2.",
+     "source": "src/data/ (card rav_mob)",
+     "arch": "setup",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Space": {
+     "ability": "Carrion Wing: Pick the Weak",
+     "does": "Drop beside a foe within 3 and peck it for 3; if that leaves it at 2 hp or less, it falls.",
+     "trigger": "Ethereal face: 1 AP + 1 Space (Physical Circle Down: Circle down 2, over foes, and see everything beside where you land.)",
+     "scales": "At E 3: Drop beside a foe within 5 and peck it for 5; if that leaves it at 4 hp or less, it falls.",
+     "source": "src/data/ (card rav_carrion)",
+     "arch": "reposition",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Time": {
+     "ability": "Theory of Mind: Pre-empt",
+     "does": "Pre-arm: the next hit on you is reduced by 3. Dur 2.",
+     "trigger": "Ethereal face: 2 AP + 1 Time (Physical Read: Mark a foe: the next hit on it deals +2.)",
+     "scales": "At E 3: Pre-arm: the next hit on you is reduced by 7 and reflects 3 back. Dur 2.",
+     "source": "src/data/ (card hum_mind)",
+     "arch": "ward",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Omni": {
+     "ability": "Channel",
+     "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+     "trigger": "A banked etherion or Omni",
+     "scales": "",
+     "source": "src/data/world.js BASIC",
+     "arch": "omni",
+     "t": [
+      2,
+      10
+     ]
+    }
+   },
+   "board": {},
+   "missing": "",
+   "arenas": [
+    "Elite and the Heart",
+    "The Sought"
+   ],
+   "games": {
+    "Mass": [
+     "Jet Propulsion",
+     "Throwing Arm"
+    ],
+    "Charge": [
+     "Chromatic Cloak",
+     "Mob"
+    ],
+    "Space": [
+     "Carrion Wing"
+    ],
+    "Time": [
+     "Theory of Mind"
+    ]
+   },
+   "excused": [],
+   "lean": "striker",
+   "leanWhy": "Closes through cover and drops on whatever is weakest.",
+   "combos": [
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Mob and drop",
+     "t": [
+      20,
+      60
+     ],
+     "is": "Mark from range, then fall on the marked foe and finish it.",
+     "chain": [
+      [
+       "Charge",
+       "Call the Mob: Mark a foe within 3, both pilots +1"
+      ],
+      [
+       "Space",
+       "Pick the Weak: drop beside it and peck"
+      ],
+      [
+       "",
+       "If it is low, it falls"
+      ]
+     ],
+     "drivers": [
+      "break",
+      "crew"
+     ],
+     "feel": "Picking the moment the crowd turns."
+    },
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Vanish and slam",
+     "t": [
+      20,
+      90
+     ],
+     "is": "Hidden through the zone, then a melee that shoves the foe out of the fight.",
+     "chain": [
+      [
+       "Charge",
+       "Vanish: Hidden 2, moving"
+      ],
+      [
+       "",
+       "Walk up unseen"
+      ],
+      [
+       "Mass",
+       "Recoil Slam: melee 3, shove 1, recoil 1"
+      ]
+     ],
+     "drivers": [
+      "toy",
+      "solve"
+     ],
+     "feel": "Arriving from nowhere and leaving the same way."
+    }
+   ],
+   "doc": "src/data/world.js PREBUILTS"
+  },
+  "Ekora": {
+   "label": "Ekora, the Tidewarden",
+   "verbs": {
+    "Charge": {
+     "ability": "Electric Discharge: Tesla Cascade",
+     "does": "Strip 3 of the target's Shield and strike it for 5; the arc chains to 2 more foes within 1 of it for 5 each.",
+     "trigger": "Ethereal face: 3 AP + 1 Charge (Physical Jolt: Lane strike for 3.)",
+     "scales": "At E 3: Strip 4 of the target's Shield and strike it for 5; the arc chains to 3 more foes within 1 of it for 6 each.",
+     "source": "src/data/ (card eel_discharge)",
+     "arch": "burst",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Space": {
+     "ability": "Tool Use: Reach Rig",
+     "does": "Interact with an objective up to 2 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 1 less.",
+     "trigger": "Ethereal face: 1 AP + 1 Space (Physical Improvise: Your next strike this turn deals +2.)",
+     "scales": "At E 3: Interact with an objective up to 4 nodes away (not one up on a ledge), and brace behind the rig: the next hit on you is 3 less.",
+     "source": "src/data/ (card hum_tool)",
+     "arch": "ward",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Time": {
+     "ability": "Kelp Anchor: Kelp Bed",
+     "does": "Neither hero can be pushed or pulled for 2 rounds, and both heal 1.",
+     "trigger": "Ethereal face: 1 AP + 1 Time (Physical Wrap: Wrap yourself in place: nothing can push or pull you for 1 round; Shield 1 and heal 1.)",
+     "scales": "At E 3: Neither hero can be pushed or pulled for 4 rounds, and both heal 1.",
+     "source": "src/data/ (card ott_kelp)",
+     "arch": "setup",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Omni": {
+     "ability": "Channel",
+     "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+     "trigger": "A banked etherion or Omni",
+     "scales": "",
+     "source": "src/data/world.js BASIC",
+     "arch": "omni",
+     "t": [
+      2,
+      10
+     ]
+    }
+   },
+   "board": {},
+   "missing": "",
+   "arenas": [
+    "Swarm",
+    "Cascade"
+   ],
+   "games": {
+    "Mass": [],
+    "Charge": [
+     "Electric Discharge",
+     "Musk"
+    ],
+    "Space": [
+     "Electroreception",
+     "Tool Use"
+    ],
+    "Time": [
+     "Kelp Anchor",
+     "Persistence"
+    ]
+   },
+   "excused": [],
+   "lean": "controller",
+   "leanWhy": "Chains, weakens and holds the squad in the current.",
+   "combos": [
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Strip and cascade",
+     "t": [
+      20,
+      60
+     ],
+     "is": "Weaken the crowd, then chain lightning through it.",
+     "chain": [
+      [
+       "Charge",
+       "Reek: foes within 2 Weakened for 3"
+      ],
+      [
+       "",
+       "They bunch toward you"
+      ],
+      [
+       "Charge",
+       "Tesla Cascade: strip Shield, strike 5, chain to 2 more"
+      ]
+     ],
+     "drivers": [
+      "break",
+      "solve"
+     ],
+     "feel": "Watching the arc jump."
+    },
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Hold the current",
+     "t": [
+      20,
+      90
+     ],
+     "is": "Anchor the squad in place, then regenerate while the flood or the wind pushes.",
+     "chain": [
+      [
+       "Time",
+       "Kelp Bed: neither pilot moved for 2"
+      ],
+      [
+       "Time",
+       "Second Wind: regenerate 3 a turn"
+      ],
+      [
+       "",
+       "Stand on the beacon or the valve"
+      ]
+     ],
+     "drivers": [
+      "crew",
+      "stake"
+     ],
+     "feel": "Not moving an inch."
+    }
+   ],
+   "doc": "src/data/world.js PREBUILTS"
+  },
+  "Nedira": {
+   "label": "Nedira, the Bulwark",
+   "verbs": {
+    "Mass": {
+     "ability": "Shell: House on Your Back",
+     "does": "Shield 5 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 3 and is pushed 1.",
+     "trigger": "Ethereal face: 1 AP + 1 Mass (Physical Shell Up: Shield 3 this round, and you can't be Weakened or Rooted.)",
+     "scales": "At E 3: Shield 6 for 2 rounds; an ally beside you holds Shield 1 this round, and the next foe to hit you in melee takes 4 and is pushed 1.",
+     "source": "src/data/ (card tor_shell)",
+     "arch": "ward",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Time": {
+     "ability": "Persistence: Second Wind",
+     "does": "Engine: regenerate 3 vitality at the start of each of your turns. Dur 4.",
+     "trigger": "Ethereal face: 2 AP + 1 Time (Physical Pace: Shrug off Anchored/Weakened, then move 2.)",
+     "scales": "At E 3: Engine: regenerate 5 vitality at the start of each of your turns. Dur 4.",
+     "source": "src/data/ (card hum_persist)",
+     "arch": "tempo",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Omni": {
+     "ability": "Channel",
+     "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+     "trigger": "A banked etherion or Omni",
+     "scales": "",
+     "source": "src/data/world.js BASIC",
+     "arch": "omni",
+     "t": [
+      2,
+      10
+     ]
+    }
+   },
+   "board": {},
+   "missing": "",
+   "arenas": [
+    "Swarm",
+    "Elite and the Heart"
+   ],
+   "games": {
+    "Mass": [
+     "Shell",
+     "Beak Snap",
+     "Spines",
+     "Spine Burst",
+     "Opposable Grip"
+    ],
+    "Charge": [],
+    "Space": [],
+    "Time": [
+     "Persistence"
+    ]
+   },
+   "excused": [],
+   "lean": "bulwark",
+   "leanWhy": "Shells up, bristles, and keeps foes on itself.",
+   "combos": [
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Shell and spines",
+     "t": [
+      20,
+      90
+     ],
+     "is": "Invite the melee hit, then pay it back.",
+     "chain": [
+      [
+       "Mass",
+       "House on Your Back: Shield 5, the next melee hitter takes 3"
+      ],
+      [
+       "Mass",
+       "Bristling Ball: melee hitters take 3 for 2"
+      ],
+      [
+       "",
+       "The foe hits anyway, and pays"
+      ]
+     ],
+     "drivers": [
+      "solve",
+      "toy"
+     ],
+     "feel": "Being the wall they break on."
+    },
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Grip and pop",
+     "t": [
+      20,
+      60
+     ],
+     "is": "Anchor one foe beside you, then burst everything around you.",
+     "chain": [
+      [
+       "Mass",
+       "Leverage: melee 2, Anchor 2"
+      ],
+      [
+       "",
+       "Others close in"
+      ],
+      [
+       "Mass",
+       "Pop: every foe beside you takes 3, pushed 1"
+      ]
+     ],
+     "drivers": [
+      "break",
+      "toy"
+     ],
+     "feel": "Holding the door and slamming it."
+    }
+   ],
+   "doc": "src/data/world.js PREBUILTS"
+  },
+  "Echo": {
+   "label": "Echo, the Nightwing",
+   "verbs": {
+    "Mass": {
+     "ability": "Talon Strike: Pin",
+     "does": "Melee 4 and pin: Anchored 2; prey left at 8 hp or less is also Weakened 2.",
+     "trigger": "Ethereal face: 2 AP + 1 Mass (Physical Grip: Melee 3 and Weaken 1.)",
+     "scales": "At E 3: Melee 4 and pin: Anchored 4; prey left at 8 hp or less is also Weakened 2.",
+     "source": "src/data/ (card owl_talon)",
+     "arch": "setup",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Space": {
+     "ability": "Silent Flight: Dampen",
+     "does": "Erase your presence: blink 2 and stay Hidden for 2 rounds even while moving.",
+     "trigger": "Ethereal face: 1 AP + 1 Space (Physical Glide: Move 2 without triggering traps; your next strike this turn deals +2 (surprise).)",
+     "scales": "At E 3: Erase your presence: blink 4 and stay Hidden for 4 rounds even while moving.",
+     "source": "src/data/ (card owl_silent)",
+     "arch": "reposition",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Time": {
+     "ability": "Tiny Target: Too Small to See",
+     "does": "Hidden 3 even if you move, and the next hit on you is 2 less.",
+     "trigger": "Ethereal face: 1 AP + 1 Time (Physical Duck: The next hit on you is 2 less, and you dodge a step from it.)",
+     "scales": "At E 3: Hidden 4 even if you move, and the next hit on you is 2 less.",
+     "source": "src/data/ (card mou_tiny)",
+     "arch": "ward",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Omni": {
+     "ability": "Channel",
+     "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+     "trigger": "A banked etherion or Omni",
+     "scales": "",
+     "source": "src/data/world.js BASIC",
+     "arch": "omni",
+     "t": [
+      2,
+      10
+     ]
+    }
+   },
+   "board": {},
+   "missing": "",
+   "arenas": [
+    "The Sought",
+    "Survey"
+   ],
+   "games": {
+    "Mass": [
+     "Talon Strike"
+    ],
+    "Charge": [],
+    "Space": [
+     "Silent Flight",
+     "Sound Mapping",
+     "Scurry",
+     "Pattern Recognition"
+    ],
+    "Time": [
+     "Tiny Target"
+    ]
+   },
+   "excused": [],
+   "lean": "scout",
+   "leanWhy": "Sees everything, is nowhere, strikes from surprise.",
+   "combos": [
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Map and expose",
+     "t": [
+      20,
+      60
+     ],
+     "is": "Find everything, then make one hit ignore its Shield.",
+     "chain": [
+      [
+       "Space",
+       "Acoustic Map: everything within 3 pinpointed"
+      ],
+      [
+       "Space",
+       "Weak Point: the next hit ignores Shield, +1"
+      ],
+      [
+       "Mass",
+       "Pin: melee 4, Anchored 2"
+      ]
+     ],
+     "drivers": [
+      "find",
+      "break"
+     ],
+     "feel": "Knowing exactly where it hurts."
+    },
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Ghost run",
+     "t": [
+      20,
+      90
+     ],
+     "is": "Blink unseen past the line, then strike from surprise.",
+     "chain": [
+      [
+       "Space",
+       "Dampen: blink 2, Hidden 2 while moving"
+      ],
+      [
+       "Space",
+       "Glide: move 2 past traps, next strike +2"
+      ],
+      [
+       "Mass",
+       "Grip: melee 3, Weaken 1"
+      ]
+     ],
+     "drivers": [
+      "toy",
+      "mastery"
+     ],
+     "feel": "Nobody saw it coming."
+    }
+   ],
+   "doc": "src/data/world.js PREBUILTS"
+  },
+  "Karenth": {
+   "label": "Karenth, the Network",
+   "verbs": {
+    "Mass": {
+     "ability": "Powerful Tail: Momentum Wave",
+     "does": "A wave of thrust: every adjacent foe takes 3 and is knocked back 1.",
+     "trigger": "Ethereal face: 2 AP + 1 Mass (Physical Lunge: Lunge 1 toward a foe, melee 3, and shove it 1.)",
+     "scales": "At E 3: A wave of thrust: every adjacent foe takes 3 and is knocked back 3.",
+     "source": "src/data/ (card axo_tail)",
+     "arch": "reposition",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Charge": {
+     "ability": "Gold Gleam: Lucky Fish",
+     "does": "For luck: your ally gains 1 AP next turn, you reroll up to 2 banked dice, and both heroes' next hit deals +1.",
+     "trigger": "Ethereal face: 1 AP + 1 Charge (Physical Gleam: Catch the light: your ally's next hit deals +1, and both heroes hold Shield 1 this round.)",
+     "scales": "At E 3: For luck: your ally gains 1 AP next turn, you reroll up to 2 banked dice, and both heroes' next hit deals +1.",
+     "source": "src/data/ (card koi_gold)",
+     "arch": "tempo",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Time": {
+     "ability": "Regeneration: Regrow",
+     "does": "Engine for 3 rounds: regenerate 3 each turn.",
+     "trigger": "Ethereal face: 2 AP + 1 Time (Physical Knit: Knit a wound: heal 3.)",
+     "scales": "At E 3: Engine for 3 rounds: regenerate 5 each turn and shed every hold and dot.",
+     "source": "src/data/ (card axo_regen)",
+     "arch": "tempo",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Omni": {
+     "ability": "Channel",
+     "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+     "trigger": "A banked etherion or Omni",
+     "scales": "",
+     "source": "src/data/world.js BASIC",
+     "arch": "omni",
+     "t": [
+      2,
+      10
+     ]
+    }
+   },
+   "board": {},
+   "missing": "",
+   "arenas": [
+    "Salvage",
+    "Cascade"
+   ],
+   "games": {
+    "Mass": [
+     "Powerful Tail"
+    ],
+    "Charge": [
+     "Gold Gleam",
+     "Cooperative Instinct",
+     "Language"
+    ],
+    "Space": [],
+    "Time": [
+     "Regeneration",
+     "Pond Calm"
+    ]
+   },
+   "excused": [],
+   "lean": "support",
+   "leanWhy": "Feeds the partner AP and heals over time.",
+   "combos": [
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Unity",
+     "t": [
+      20,
+      60
+     ],
+     "is": "Hand the partner a whole extra turn of AP and buff the hit.",
+     "chain": [
+      [
+       "Charge",
+       "Assist: ally next strike +3"
+      ],
+      [
+       "Charge",
+       "Unity: ally mints 3 AP"
+      ],
+      [
+       "",
+       "The partner plays two more faces"
+      ]
+     ],
+     "drivers": [
+      "crew",
+      "break"
+     ],
+     "feel": "Winning your partner the round."
+    },
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Calm water",
+     "t": [
+      20,
+      90
+     ],
+     "is": "Shake off holds and regrow while the squad pushes the objective.",
+     "chain": [
+      [
+       "Time",
+       "Garden Pond: both shake off Anchored and Weakened for 2"
+      ],
+      [
+       "Time",
+       "Regrow: regenerate 3 for 3"
+      ],
+      [
+       "Mass",
+       "Momentum Wave: adjacent foes take 3, knocked back 1"
+      ]
+     ],
+     "drivers": [
+      "crew",
+      "stake"
+     ],
+     "feel": "Nothing sticks to us."
+    }
+   ],
+   "doc": "src/data/world.js PREBUILTS"
+  },
+  "Slingshot": {
+   "label": "Slingshot, the Catapult",
+   "verbs": {
+    "Mass": {
+     "ability": "Smasher Punch: Cavitation",
+     "does": "Punch so fast the water boils: melee 5, then the shock hits every foe beside you for 2.",
+     "trigger": "Ethereal face: 1 AP + 1 Mass (Physical Punch: Club it faster than a bullet: melee 4.)",
+     "scales": "At E 3: Punch so fast the water boils: melee 6, then the shock hits every foe beside you for 2.",
+     "source": "src/data/ (card msh_punch)",
+     "arch": "burst",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Charge": {
+     "ability": "Sixteen Colours: Weak Spot",
+     "does": "Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +2.",
+     "trigger": "Ethereal face: 1 AP + 1 Charge (Physical See It: See in colours no one else can: see within 3, and Mark the nearest foe (the next hit on it deals +2).)",
+     "scales": "At E 3: Find the flaw: it can't Hide for 2 rounds, and the next hit on it ignores Shield and deals +4.",
+     "source": "src/data/ (card msh_colours)",
+     "arch": "setup",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Space": {
+     "ability": "Spearer Arms: Ambush Spear",
+     "does": "From the burrow, spear a foe within 2 for 3, hidden or not, and drag it 1 toward you.",
+     "trigger": "Ethereal face: 1 AP + 1 Space (Physical Spear: Shoot out a barbed arm at a foe within 2 for 2.)",
+     "scales": "At E 3: From the burrow, spear a foe within 2 for 5, hidden or not, and drag it 1 toward you.",
+     "source": "src/data/ (card msh_spear)",
+     "arch": "reposition",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Time": {
+     "ability": "Salt Flats: Caustic Lake",
+     "does": "Stir the bitter lake at a node within 2: every foe on or beside it takes 1 at the start of its next 2 turns; both heroes ignore hazards this round.",
+     "trigger": "Ethereal face: 1 AP + 1 Time (Physical Salt Feet: Ignore hazards for 2 rounds, and hold Shield 2 this round.)",
+     "scales": "At E 3: Stir the bitter lake at a node within 2: every foe on or beside it takes 2 at the start of its next 2 turns; both heroes ignore hazards this round.",
+     "source": "src/data/ (card fla_salt)",
+     "arch": "tap",
+     "t": [
+      5,
+      30
+     ]
+    },
+    "Omni": {
+     "ability": "Channel",
+     "does": "A banked etherion no card wants becomes a basic action with no AP: Mass Strike or Shove, Charge Arc, Space Scramble, Time Brace.",
+     "trigger": "A banked etherion or Omni",
+     "scales": "",
+     "source": "src/data/world.js BASIC",
+     "arch": "omni",
+     "t": [
+      2,
+      10
+     ]
+    }
+   },
+   "board": {},
+   "missing": "",
+   "arenas": [
+    "Elite and the Heart",
+    "Swarm"
+   ],
+   "games": {
+    "Mass": [
+     "Smasher Punch",
+     "Throwing Arm"
+    ],
+    "Charge": [
+     "Sixteen Colours"
+    ],
+    "Space": [
+     "Spearer Arms",
+     "Flock March"
+    ],
+    "Time": [
+     "Salt Flats"
+    ]
+   },
+   "excused": [],
+   "lean": "burst",
+   "leanWhy": "Hits twice at once and salts the ground.",
+   "combos": [
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Find the flaw",
+     "t": [
+      20,
+      60
+     ],
+     "is": "Mark the flaw, then punch through it.",
+     "chain": [
+      [
+       "Charge",
+       "Weak Spot: the next hit ignores Shield, +2"
+      ],
+      [
+       "Space",
+       "Ambush Spear: drag the foe 1 toward you"
+      ],
+      [
+       "Mass",
+       "Cavitation: melee 5, then 2 to every foe beside you"
+      ]
+     ],
+     "drivers": [
+      "break",
+      "solve"
+     ],
+     "feel": "One perfect punch."
+    },
+    {
+     "in": "x",
+     "src": "invented from the card texts for review",
+     "name": "Salt the flats",
+     "t": [
+      20,
+      90
+     ],
+     "is": "Lay caustic ground, then march the flock to push foes into it.",
+     "chain": [
+      [
+       "Time",
+       "Caustic Lake: foes on or beside a node take 1 for 2 turns"
+      ],
+      [
+       "Space",
+       "Massed March: foes beside you fall back 1"
+      ],
+      [
+       "",
+       "They fall back into the lake"
+      ]
+     ],
+     "drivers": [
+      "toy",
+      "solve"
+     ],
+     "feel": "The ground does the work."
+    }
+   ],
+   "doc": "src/data/world.js PREBUILTS"
+  }
+ },
+ "fleetOrder": [
+  "Rosh",
+  "Ekora",
+  "Nedira",
+  "Echo",
+  "Karenth",
+  "Slingshot"
+ ],
+ "defaultVessel": "Rosh",
+ "artifact": "https://claude.ai/artifact/BJc3vHJ8PUtjFwcLmbmM2T",
+ "areas": [
+  {
+   "id": "game",
+   "name": "Game",
+   "is": "Rules, content and balance that are not one loop on the map yet."
+  },
+  {
+   "id": "ui",
+   "name": "Interface",
+   "is": "Screens, tooltips, the dock, phones."
+  },
+  {
+   "id": "tooling",
+   "name": "Tooling",
+   "is": "Simulators, the audit, the census, this atlas."
+  }
+ ],
+ "items": [
+  {
+   "id": "kw-migration",
+   "name": "Keyword migration plan",
+   "area": "game",
+   "is": "If P2 is accepted: rename verbs in cards.js in one pass (like the C1 rename), keep save ids, regenerate CARDS.md and the audit.",
+   "loops": [
+    "face"
+   ],
+   "in": "x",
+   "prop": {
+    "s": "add",
+    "note": "One PR per keyword family, each with before and after numbers from tools/sim.js 40."
+   },
+   "src": [
+    "proposal"
+   ]
+  },
+  {
+   "id": "atlas-in-repo",
+   "name": "This atlas in the repository",
+   "area": "tooling",
+   "is": "Copy Cosmic Shore's loop_atlas.py and the model folder into docs/loopatlas/, so the map is checked in CI like Cosmic Shore's.",
+   "in": "px",
+   "src": [
+    "proposal"
+   ],
+   "plan": {
+    "s": "decided",
+    "note": "Garrett 2026-11-21: yes, in the repo, with Cosmic Shore's inspect-everything and advance-anything Board."
+   },
+   "build": {
+    "s": "building",
+    "what": "Garrett 2026-11-21: yes, in the repo, with Cosmic Shore's inspect-everything and advance-anything Board.",
+    "by": "Garrett",
+    "at": "2026-11-21",
+    "branch": "claude/project-thread-g4abr1"
+   }
+  }
+ ]
+}
