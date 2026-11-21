@@ -531,4 +531,4 @@ The look-ahead player hardly ever Overcharges: its beam keeps two lines, and an 
 
 ## 2.116 — dice as AP
 
-A banked Omni, or any two banked etherions, can be spent as 1 AP (Garrett, 2026-11-21). It made full runs easier: `node tools/sim.js 120 runs --player strong`, 2.109.0 → 2.116.0 at 150%: 61 → 80 of 120, mostly at the Heart. So every foe has **157%** of its listed vitality (was 150%): 57 of 120 (155%: 69; 158%: 56; 160%: 51). Not easier for a careful squad.
+A banked Omni, or any two banked etherions, can be spent as 1 AP (Garrett, 2026-11-21). It made full runs easier: `node tools/sim.js 120 runs --player strong`, 2.109.0 → with dice as AP at 150%: 61 → 80 of 120, mostly at the Heart (155%: 69; 157%: 57; 160%: 51). Measured again on top of 2.115.0, `200 runs --player strong`: 85 of 200 before; with dice as AP at 160%, 82 (163%: 62). So every foe has **160%** of its listed vitality (was 150%). Not easier for a careful squad.
