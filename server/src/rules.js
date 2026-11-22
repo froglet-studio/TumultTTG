@@ -109,7 +109,7 @@ function validListing(data, code, by) {
   };
 }
 
-const ART_KEY = /^[a-z0-9_-]{1,40}$/;
+const ART_KEY = /^[A-Za-z0-9_-]{1,40}$/; // the game's painting keys are upper case (BANDIT)
 const count = (v) => Math.max(0, Math.min(1e6, Math.floor(+v) || 0));
 function validProfile(data) {
   const d = data || {};
@@ -119,8 +119,10 @@ function validProfile(data) {
         .map((p) => ({ name: str(p && p.name, 30), art: ART_KEY.test(p && p.art) ? p.art : '' }))
         .filter((p) => p.name)
     : [];
+  const av = String(d.avatar || '');
   return {
     name: str(d.name, 24),
+    avatar: ['google', 'discord', 'initials'].includes(av) || /^p:[A-Za-z0-9][A-Za-z0-9_-]{0,47}$/.test(av) ? av : '',
     pilots,
     runs: count(d.runs),
     wins: count(d.wins),

@@ -116,8 +116,11 @@ test('a guest links Google and comes back signed in to the same account', async 
 
 test('the account box offers what the server has, and escapes names', async () => {
   const w = await world();
-  await w.A.ensure();
-  await w.A.rename('<i>Wren</i>');
+  const g = await w.A.ensure();
+  await assert.rejects(w.A.rename('<i>Wren</i>'), /letters, numbers/, 'the server refuses markup in a name');
+  // a name stored before that rule still reaches the screen escaped
+  w.env.DB.raw.prepare('UPDATE users SET name = ? WHERE id = ?').run('<i>Wren</i>', g.id);
+  await w.A.refresh();
   w.U.askSignIn('Sign in to host a game.');
   await new Promise((r) => setTimeout(r, 20));
   const html = w.U.modal.html;
