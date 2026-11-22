@@ -2279,3 +2279,8 @@ button.linkish {
     width: 100%;
   }
 }
+
+/* the Route tab before there is a route */
+.route-wait {
+  padding-top: 8vh;
+}
