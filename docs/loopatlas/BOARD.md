@@ -17,15 +17,19 @@ How work moves: `docs/loopatlas/PROCESS.md`.
 | P3 | proposal | Body, magic, tech |
 | P5 | proposal | Three AP and one chosen element |
 
-## Brainstorm: proposed (13)
+## Brainstorm: proposed (17)
 
 | Loop or item | Tier or area | The proposal |
 | --- | --- | --- |
 | era | Era | Give the last phase a voice. The title shows what changed since you last flew, in keywords you already know. |
 | breath | Round | Proposal P6. The canon prompts and the playtest report already know what happened; this adds the hand-off. |
+| expedition | Expedition | Steward 2026-11-22, from docs/reference/SCALING.md (2.110, PR #151) and FOE 180% (2.122): missions are sized by squad power and a full wipe ends the expedition. The stake hole's near-100% numbers predate both; re-measure with tools/sim.js 40 before tuning. |
+| draft | Mission | Steward 2026-11-22, from PR #158 (2.122): every clade now has an instinct, one always-on rule. The draft can show a pilot's instincts beside its keyword chips, so a two-clade pick reads as two animals before any card. |
+| haven | Round | Steward 2026-11-22, from docs/reference/PETS.md and RUN_AND_ECONOMY.md (2.107-2.119): a haven now offers strays, gear cards paid in banked Omni and the nine-of-the-collection loadout; Now still says gear only since 2.89. |
 | reward | Round | A trait offer shows its keyword chips beside the pilot's, so a swap reads as a change of toys. |
+| mission | Mission | Steward 2026-11-22, from docs/reference/VEHICLES.md (2.104, PR #147): the Crossing, the big-map mission with pocket vehicles, is the one mission kind with no loop beside m.swarm..m.heart. Add m.crossing. |
 | turn | Combo | With 22 keywords (P2), every chain a turn can build is a pair of keywords from section 2 of the review doc; the hint bar can name the pair it sees. |
-| face | Verb | Every face says which line it is (body, magic, tech) by its keywords alone (P3). |
+| face | Verb | Steward 2026-11-22, from KEYWORDS.md and PRs #143-#156: Now says twelve keywords landed at 2.98; since then Hover, Move/Guide, Trample, Aimed, Pre-empt, At dusk, Flanked, Resonance and Burn have too. Refresh Now and count what of P2 is left. |
 | arc.canon | Arc | A question names a keyword moment: "Your Pull dragged the Brute into the flood. What did the crowd shout?" |
 | P1 | proposal | One ladder of words: Use the eight tier terms (Pulse, Verb, Combo, Round, Mission, Expedition, Arc, Era) in Tumult's design docs and reviews, the same ladder Cosmic Shore uses, so a problem is placed before it is argued. |
 | P4 | proposal | Every pilot names two combos: A feeder into a spender, and one that crosses two elements. The Codex and the hint bar teach them; the audit checks a mission rewards them. |
@@ -49,10 +53,15 @@ How work moves: `docs/loopatlas/PROCESS.md`.
 | arc.pilot | 0 | The pilot keeps cards and points but nothing of what it did, so the workshop job stops at the build. | The dossier (P7): each expedition writes one line about the pilot from the faces it played and the canon its player wrote. |
 | era.release | 0 | A player meeting a release learns of a new rule only by meeting it in play. | The title names what changed in keywords: "New: Link. Stasis now also stops movement." |
 
-## Recent moves (6)
+## Recent moves (11)
 
 | Date | Step | Loop or item | By | What |
 | --- | --- | --- | --- | --- |
+| 2026-11-22 | propose | draft | Claude | Steward 2026-11-22, from PR #158 (2.122): every clade now has an instinct, one always-on rule. The draft can show a pilot's instincts beside its keyword chips, so a two-clade pick reads as two animals before any card. |
+| 2026-11-22 | propose | expedition | Claude | Steward 2026-11-22, from docs/reference/SCALING.md (2.110, PR #151) and FOE 180% (2.122): missions are sized by squad power and a full wipe ends the expedition. The stake hole's near-100% numbers predate both; re-measure with tools/sim.js 40 before tuning. |
+| 2026-11-22 | propose | haven | Claude | Steward 2026-11-22, from docs/reference/PETS.md and RUN_AND_ECONOMY.md (2.107-2.119): a haven now offers strays, gear cards paid in banked Omni and the nine-of-the-collection loadout; Now still says gear only since 2.89. |
+| 2026-11-22 | propose | mission | Claude | Steward 2026-11-22, from docs/reference/VEHICLES.md (2.104, PR #147): the Crossing, the big-map mission with pocket vehicles, is the one mission kind with no loop beside m.swarm..m.heart. Add m.crossing. |
+| 2026-11-22 | propose | face | Claude | Steward 2026-11-22, from KEYWORDS.md and PRs #143-#156: Now says twelve keywords landed at 2.98; since then Hover, Move/Guide, Trample, Aimed, Pre-empt, At dusk, Flanked, Resonance and Burn have too. Refresh Now and count what of P2 is left. |
 | 2026-11-21 | idea | card-previews | Claude | Pictures in the inspection window: A card's Code node shows a preview of the card in an inspection window, drawn from its data; pilots, places and foes show their art, and the art rolls up to the loops above. |
 | 2026-11-21 | start | atlas-in-repo | Claude |  |
 | 2026-11-21 | develop | atlas-in-repo | Garrett | Garrett 2026-11-21: yes, in the repo, with Cosmic Shore's inspect-everything and advance-anything Board. |

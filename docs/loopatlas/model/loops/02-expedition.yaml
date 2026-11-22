@@ -6,8 +6,8 @@
   tier: 5
   kind: place
   t: [1800, 5400]
-  is: 'A run: a squad of guides crosses land, sea and air along one route to the Heart. Saved at every node and every
-    action, so it can span sittings.'
+  is: 'A run: a squad of guides crosses land, sea and air along one route to the Heart. Saved at every node and every action,
+    so it can span sittings.'
   phases:
   - n: Squad
     d: Draft a pilot, or bring a pre-made or made one.
@@ -24,7 +24,7 @@
   repsOf: rows per expedition
   now:
     s: built
-    note: 'Seven rows in three acts, six mission kinds plus Elite and the Heart, havens, twelve events, a Lifeline, two tides.'
+    note: Seven rows in three acts, six mission kinds plus Elite and the Heart, havens, twelve events, a Lifeline, two tides.
   plan:
     note: 'The atlas plan: a run is a random journey from one atlas page to another, joined by a story, with a tell-your-own
       mode later.'
@@ -37,6 +37,11 @@
   - docs/reference/RUN_AND_ECONOMY.md
   - docs/reference/ABILITY_AUDIT.md Pass C
   - docs/design/01-frame-and-campaign.md
+  prop:
+    s: change
+    note: 'Steward 2026-11-22, from docs/reference/SCALING.md (2.110, PR #151) and FOE 180% (2.122): missions are sized
+      by squad power and a full wipe ends the expedition. The stake hole''s near-100% numbers predate both; re-measure with
+      tools/sim.js 40 before tuning.'
 - id: draft
   parent: expedition
   at: 0
@@ -58,7 +63,8 @@
   repsOf: per new pilot
   now:
     s: built
-    note: Draft, Quick Build of six pre-mades, made pilots kept and shared since 2.72; a canon question about the painted pilot.
+    note: Draft, Quick Build of six pre-mades, made pilots kept and shared since 2.72; a canon question about the painted
+      pilot.
   plan:
     note: The dossier (design/06) asks for a backstory as the pilot is made.
   holes:
@@ -68,6 +74,10 @@
   src:
   - docs/reference/RUN_AND_ECONOMY.md
   - docs/design/06-pilots-and-backstory.md
+  prop:
+    s: change
+    note: 'Steward 2026-11-22, from PR #158 (2.122): every clade now has an instinct, one always-on rule. The draft can
+      show a pilot''s instincts beside its keyword chips, so a two-clade pick reads as two animals before any card.'
 - id: route
   parent: expedition
   at: 1
@@ -108,6 +118,10 @@
       crystals (the jobs consumables did).'
   src:
   - docs/reference/RUN_AND_ECONOMY.md Omnicrystals and gear
+  prop:
+    s: change
+    note: 'Steward 2026-11-22, from docs/reference/PETS.md and RUN_AND_ECONOMY.md (2.107-2.119): a haven now offers strays,
+      gear cards paid in banked Omni and the nine-of-the-collection loadout; Now still says gear only since 2.89.'
 - id: event
   parent: expedition
   at: 2
@@ -124,8 +138,7 @@
   now:
     s: built
     note: Twelve events; none repeats in a run.
-  src:
-  - src/data/world.js EVENTS
+  src: [src/data/world.js EVENTS]
 - id: reward
   parent: expedition
   at: 3
@@ -143,6 +156,6 @@
     s: built
   prop:
     s: change
-    note: 'A trait offer shows its keyword chips beside the pilot''s, so a swap reads as a change of toys.'
+    note: A trait offer shows its keyword chips beside the pilot's, so a swap reads as a change of toys.
   src:
   - docs/reference/RUN_AND_ECONOMY.md Rewards
