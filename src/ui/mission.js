@@ -327,6 +327,8 @@
     U.ms.built = true;
     U.ms.g = g;
     U.ms.svg = svg;
+    // drag and wheel move the view on a PC; − / % / + anywhere (src/ui/show.js)
+    if (U.cameraOn) U.cameraOn(host, svg, g.W, g.H);
   }
   function tipFor(id) {
     const m = M();
@@ -460,6 +462,7 @@
     U.ms.trackRound = m.round;
     scheduleCombos();
     playFx(m);
+    if (U.showRemember) U.showRemember(m);
     if (U.feelUpdate) U.feelUpdate(m);
     if (m.over && !U.ms.overShown) {
       U.ms.overShown = true;
@@ -834,8 +837,9 @@
     const intents =
       live
         .map(
-          (e) =>
-            `<div class="intent" data-tipid="e${e.uid}" data-tip=""><span class="g">${U.icEnemy(e.type, e.glyph)}</span><span class="who"><b>${esc(e.name)}</b> <span class="dim mono small">${Math.max(0, e.hp)}hp${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span><i class="ehp"><i style="width:${Math.round((100 * Math.max(0, e.hp)) / (e.maxHp || 1))}%"></i></i></span><span class="right small">${U.kw(esc(e.intent.label))}</span></div>`,
+          // The Stack (Frogma, In-game B): the foes' plans as cards, numbered in the order they act at round end
+          (e, i) =>
+            `<div class="intent stk" data-tipid="e${e.uid}" data-tip=""><span class="no">${i + 1}</span><span class="g">${U.foeArt ? U.foeArt(e, 62) : U.icEnemy(e.type, e.glyph)}</span><span class="who"><span class="nm"><b>${esc(e.name)}</b><span class="dim mono small">${Math.max(0, e.hp)}/${e.maxHp}${e.shield ? ' ' + U.ic('enemy.bulwark', '🛡', 'tiny') + e.shield : ''}</span></span><span class="what">${U.kw(esc(e.intent.label))}</span><i class="ehp"><i style="width:${Math.round((100 * Math.max(0, e.hp)) / (e.maxHp || 1))}%"></i></i></span></div>`,
         )
         .join('') || '<span class="dim small">No foes standing.</span>';
     const open = U.layout.intents;
@@ -1652,12 +1656,11 @@
           el.setAttribute('data-act', 'tgtEnemy');
           el.setAttribute('data-arg', String(e.uid));
           el.setAttribute('data-tipid', 'e' + e.uid);
-          svgEl('circle', { r: e.boss ? 24 : 18, class: 'body' }, el);
-          const ps = U.iconPaths('enemy.' + e.type);
-          if (ps) {
-            const k = e.boss ? 1.25 : 0.9;
-            const g = svgEl('g', { class: 'glyph-ic', transform: `translate(${-12 * k},${-12 * k}) scale(${k})` }, el);
-            ps.forEach((d) => svgEl('path', { d }, g));
+          // the foe's body (src/ui/fauna.js) over a soft disc that keeps it easy to click
+          svgEl('ellipse', { rx: e.boss ? 30 : 22, ry: e.boss ? 14 : 10, cy: 14, class: 'body' }, el);
+          if (U.foeArt) {
+            const cw = svgEl('g', { class: 'crw' }, el);
+            cw.innerHTML = U.foeArt(e, U.foeWidth(e), { x: 0, y: -4 });
           } else svgEl('text', { y: 6, class: 'glyph' }, el).textContent = e.glyph;
           svgEl('rect', { x: -16, y: 22, width: 32, height: 4, rx: 2, class: 'hpb' }, el);
           svgEl('rect', { x: -16, y: 22, width: 32, height: 4, rx: 2, class: 'hpf enemy' }, el);
@@ -1668,6 +1671,14 @@
           el.querySelector('.hpf').setAttribute('width', (32 * Math.max(0, e.hp)) / e.maxHp);
           el.querySelector('.hp').textContent = e.hp;
           stateBadges(el, e, e.boss ? 24 : 18);
+          // a creature faces what it means to hit; its heart leads
+          const cw = el.querySelector('.crw');
+          const tg =
+            e.intent && e.intent.target != null
+              ? m.heroes.find((h) => h.uid === e.intent.target) || m.decoys.find((d) => d.uid === e.intent.target)
+              : null;
+          const aim = e.intent && e.intent.aim != null ? N[e.intent.aim] : tg ? N[tg.pos] : null;
+          if (cw && aim && N[e.pos]) cw.setAttribute('transform', aim.x > N[e.pos].x ? 'scale(-1,1)' : '');
           el.setAttribute('data-tip', tipFor('e' + e.uid));
         },
       );
@@ -2268,10 +2279,12 @@
         if (took && delay < 4000) delay += Math.min(took, 1500);
       }
       if (U.feelFx) U.feelFx(m, f, ent, node, delay);
+      // the show (src/ui/show.js) may hold what follows back, so each blow is seen before the next
+      if (U.showFx) delay = U.showFx(m, f, ent, node, delay);
       switch (f.t) {
         case 'dmg':
           lunge(m, f, delay);
-          if (node != null) floater(node, '−' + f.amount, 'dmg', delay);
+          if (node != null) floater(node, '−' + f.amount, 'dmg big' + (f.amount >= 4 ? ' huge' : ''), delay);
           hitSound = true;
           delay += 160;
           break;
@@ -2299,14 +2312,14 @@
           if (node != null) floater(node, '✕', 'miss', delay);
           break;
         case 'down':
-          banner('DOWNED');
+          if (!U.showBand) banner('DOWNED');
           break;
         case 'revive':
-          banner('RISES');
+          if (!U.showBand) banner('RISES');
           if (U.sound) U.sfx.heal();
           break;
         case 'phase2':
-          banner('THE HEART CRACKS');
+          if (!U.showBand) banner('THE HEART CRACKS');
           break;
         case 'flood':
           break;
@@ -2600,6 +2613,10 @@
     if ((act === 'face' || act === 'basic' || act === 'gear') && previewFirst(act, arg, el)) return true;
     if (act !== 'mmenu' && ms.menu) ms.menu = false;
     switch (act) {
+      // the board's view: zoom in or out, or show the whole board (src/ui/show.js)
+      case 'cam':
+        if (U.cameraZoom) U.cameraZoom(arg === 'in' ? 1.25 : arg === 'out' ? 0.8 : 0);
+        return true;
       // the screen's own folds: they change only what is shown on this screen
       case 'mmenu':
       case 'conds':

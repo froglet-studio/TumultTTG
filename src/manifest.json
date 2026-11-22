@@ -32,8 +32,10 @@
     "ui/party.js",
     "ui/pilots.js",
     "ui/after.js",
+    "ui/fauna.js",
     "ui/mission.js",
     "ui/feel.js",
+    "ui/show.js",
     "ui/atlas.js",
     "ui/canon.js",
     "ui/welcome.js",
@@ -59,6 +61,8 @@
     "ui/welcome.css",
     "ui/sea.css",
     "ui/hud.css",
+    "ui/fauna.css",
+    "ui/show.css",
     "ui/journey.css",
     "ui/after.css",
     "ui/shell.css",
@@ -89,6 +93,11 @@
         "family": "Chakra Petch",
         "weight": 600,
         "file": "assets/fonts/ChakraPetch-SemiBold.woff2"
+      },
+      {
+        "family": "Cinzel",
+        "weight": 700,
+        "file": "assets/fonts/Cinzel-Bold.woff2"
       }
     ]
   }
