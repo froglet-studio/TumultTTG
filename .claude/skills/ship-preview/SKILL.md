@@ -43,4 +43,4 @@ Reply in one message: what shipped, the PR link, and the review link (https://tu
 
 ## 6. If the backend changed
 
-Anything under `server/` is not deployed by a merge. Tell the person to run `npx wrangler@4.42.0 deploy` from `server/` (and `npx wrangler@4.42.0 d1 migrations apply tumult --remote` for a new migration), or run it where the session is signed in to Cloudflare. Check `<worker>/api/health` afterwards (the address is in `server/address.json`).
+Nothing to deploy by hand. Only when this PR changed `server/`, `src/engine/`, `src/data/`, `src/manifest.json` or `tools/build-server.mjs` (`git diff --name-only origin/bleeding-edge...HEAD`), add one line to the reply: the game server updates itself when this reaches `main` with `/ship-launch` (**Deploy game server**, `.github/workflows/worker.yml`), and until then https://tumult.pages.dev still talks to the server that is live. Otherwise say nothing about the server.

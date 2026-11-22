@@ -1,0 +1,74 @@
+# Deploys Tumult's online backend (server/, a Cloudflare Worker, docs/reference/BACKEND.md) when a
+# change that reaches it lands on main, so nobody runs `npx wrangler deploy` by hand. The Worker
+# also carries the game's engine (tools/build-server.mjs builds server/src/engine.gen.js from
+# src/engine and src/data), so a rules change redeploys it too. New D1 migrations are applied
+# first; wrangler applies only the ones the database has not had. "Run workflow" on the Actions
+# tab redeploys main.
+#
+# Only main deploys: the preview (https://tumult.pages.dev) and the live game share this one
+# Worker, so a server change reaches it when it is released (/ship-launch), not on bleeding-edge.
+#
+# Admin setup, once (docs/reference/HOSTING.md, "The game server"): a Cloudflare API token that can
+# edit Workers and D1 on Froglet's account, saved in this repo's environment "worker" as
+# CLOUDFLARE_WORKERS_TOKEN, with that environment limited to main. CLOUDFLARE_ACCOUNT_ID is the
+# repository secret the Preview workflow already uses. Until the token exists the job tests,
+# skips the deploy and passes.
+name: Deploy game server
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'server/**'
+      - 'src/engine/**'
+      - 'src/data/**'
+      - 'src/manifest.json'
+      - 'tools/build-server.mjs'
+      - '.github/workflows/worker.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: worker
+      url: https://tumult-api.bitter-dew-611f.workers.dev/api/health
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+      - run: npm ci
+      - run: npm test
+      - name: Deploy the Worker
+        working-directory: server
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "CLOUDFLARE_WORKERS_TOKEN or CLOUDFLARE_ACCOUNT_ID is not set; tested, not deployed." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          # wrangler is pinned to an exact version; bump it deliberately (preview.yml uses the same one).
+          npx --yes wrangler@4.42.0 d1 migrations apply tumult --remote
+          npx --yes wrangler@4.42.0 deploy
+          url=$(node -p "require('./address.json').url")
+          for i in 1 2 3 4 5; do
+            if curl -fsS "$url/api/health" | tee health.json | grep -q '"ok":true'; then
+              echo "Deployed the game server ${GITHUB_SHA::7}: $url/api/health answers ok." >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep $((i * 3))
+          done
+          echo "Deployed, but $url/api/health did not answer ok." >> "$GITHUB_STEP_SUMMARY"
+          exit 1

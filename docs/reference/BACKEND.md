@@ -78,6 +78,8 @@ Admin steps, for Shombith (one time, about 15 minutes), from `server/`:
 7. Put that address in `server/address.json` (`"url"`) and commit it on a branch into `bleeding-edge`: the web version is built with it, and the sign-in callbacks use the same host (`docs/reference/ACCOUNTS.md`). While the file is empty the web version plays solo only.
 8. Once sign-in is live, put the lore lead's user id in `CANON_LEADS` (and reviewers in `CANON_REVIEWERS`) and deploy.
 
+After that first time, deploys are automatic: a push to `main` that changes `server/` or the engine runs **Deploy game server** (`.github/workflows/worker.yml`), which applies new migrations and deploys. Its token: `docs/reference/HOSTING.md`, "The game server". `npx wrangler deploy` by hand still works, for a fix that cannot wait for a release.
+
 ### A custom address later
 
 `froglet.games` is on Google Cloud DNS, not Cloudflare, so the Worker launches on its workers.dev address. To serve it at `https://api.tumult.froglet.games` instead: move the `froglet.games` DNS zone to Cloudflare (GitHub Pages keeps working: its records move with the zone), add `routes = [{ pattern = "api.tumult.froglet.games", custom_domain = true }]` to `server/wrangler.toml` and deploy, then change `server/address.json` and the Google and Discord redirect URIs to the new host. Players' sessions carry over: they are bearer tokens, not cookies tied to a host.
