@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.129.2',
+    version: '2.130.1',
     items: [
+      {
+        text: "Sound: Cosmic Shore's soundtrack and effects are in. The music follows the screen (calm in menus, the draft and the route, harder in a mission, the outro after a win), and blows, kills, shields, cards and menus have Cosmic Shore's sounds. Open Settings, Audio studio: a mixer (master, music, effects, each with a mute), the player, every track (play one now, untick one to leave it out) and a pad for every effect. Does any sound feel wrong for its moment, or too loud? The offline file carries the effects and one music loop; the web version has all eleven tracks.",
+      },
       {
         text: "The board now lies tilted on the table in front of the scene, like a game board seen from your seat. The 2D button at the board's right edge lays it flat again (and 3D tilts it back); your choice is kept. On a phone, pinch with two fingers to zoom and move the board, and drag with one finger once zoomed. Is the tilted board easier or harder to read? Did a tap ever hit the wrong node?",
       },
