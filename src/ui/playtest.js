@@ -19,8 +19,14 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.126.0',
+    version: '2.127.0',
     items: [
+      {
+        text: 'The Lobby is new ("Drawer plus"): open it from the Lobby chip at the top. Games lets you take an open seat with no code or ask to join a table mid-mission; People lets you find a player, add them as a friend or invite them to your table; Requests holds what others sent you. Click a person to see their card. Try it with a friend on two accounts: did a request or an invite reach them at once?',
+      },
+      {
+        text: 'Sign-in is new ("Split hero"): a captain on the left, the reasons and the sign-in buttons on the right. A guest with a saved expedition also sees "Saved in this browser only" under Continue. Is it clear why to sign in?',
+      },
       {
         text: 'Home in motion: open New expedition and pick a few options (it should stay open now), and run the pointer over the tabs, the setup and the rows below it. Does anything feel slow, jumpy or too busy?',
       },

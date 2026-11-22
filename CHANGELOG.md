@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased — sign-in and the Lobby
+## 2.127.0 — 2026-11-22 — Sign in and the Lobby
 
 - **A guest is told where their save lives.** Under Continue, a player who is not signed in reads "Saved in this browser only" with a button to sign in and keep it on any device.
 - **The sign-in window rebuilt as "Split hero"** (Shombith's pick from the Frogma board): the captain behind Home on the left with a line said on the Ark, and on the right the reasons to sign in and a row for each sign-in, which lifts and glows under the pointer. It scrolls on a small phone.
