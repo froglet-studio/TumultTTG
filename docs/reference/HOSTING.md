@@ -70,7 +70,7 @@ The **Deploy game server** workflow (`.github/workflows/worker.yml`) deploys `se
 2. **Environment:** TumultTTG → Settings → Environments → New environment `worker` → Deployment branches and tags: **Selected branches and tags** → add `main`. Then Add environment secret `CLOUDFLARE_WORKERS_TOKEN` = the token. `CLOUDFLARE_ACCOUNT_ID` is the repository secret from step 2 above.
 3. **First deploy:** Actions → Deploy game server → Run workflow (branch `main`). Its summary should say the server's `/api/health` answers ok.
 
-Until the token exists the job runs the tests, skips the deploy, and passes. Secrets the Worker itself reads (`INVITE_SECRET`, the sign-in ones) stay in Cloudflare and are not touched by a deploy. Only `main` deploys, because the preview and the live game use this one Worker.
+Until the token exists the job skips the deploy and passes. It runs no tests of its own: CI already ran them on the pull request. Secrets the Worker itself reads (`INVITE_SECRET`, the sign-in ones) stay in Cloudflare and are not touched by a deploy. Only `main` deploys, because the preview and the live game use this one Worker.
 
 ### 3. The fallback address (optional)
 

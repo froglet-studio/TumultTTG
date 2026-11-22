@@ -3,7 +3,8 @@
 # also carries the game's engine (tools/build-server.mjs builds server/src/engine.gen.js from
 # src/engine and src/data), so a rules change redeploys it too. New D1 migrations are applied
 # first; wrangler applies only the ones the database has not had. "Run workflow" on the Actions
-# tab redeploys main.
+# tab redeploys main. It runs no tests: every change reached main through a pull request whose
+# CI ran them, and promotions only fast-forward to that same tested commit.
 #
 # Only main deploys: the preview (https://tumult.pages.dev) and the live game share this one
 # Worker, so a server change reaches it when it is released (/ship-launch), not on bleeding-edge.
@@ -11,8 +12,8 @@
 # Admin setup, once (docs/reference/HOSTING.md, "The game server"): a Cloudflare API token that can
 # edit Workers and D1 on Froglet's account, saved in this repo's environment "worker" as
 # CLOUDFLARE_WORKERS_TOKEN, with that environment limited to main. CLOUDFLARE_ACCOUNT_ID is the
-# repository secret the Preview workflow already uses. Until the token exists the job tests,
-# skips the deploy and passes.
+# repository secret the Preview workflow already uses. Until the token exists the job skips
+# the deploy and passes.
 name: Deploy game server
 
 on:
@@ -47,8 +48,6 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 22
-      - run: npm ci
-      - run: npm test
       - name: Deploy the Worker
         working-directory: server
         env:
@@ -56,7 +55,7 @@ jobs:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
-            echo "CLOUDFLARE_WORKERS_TOKEN or CLOUDFLARE_ACCOUNT_ID is not set; tested, not deployed." >> "$GITHUB_STEP_SUMMARY"
+            echo "CLOUDFLARE_WORKERS_TOKEN or CLOUDFLARE_ACCOUNT_ID is not set; not deployed." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           # wrangler is pinned to an exact version; bump it deliberately (preview.yml uses the same one).
