@@ -257,21 +257,24 @@
   /** What this squad's power asks of its missions (T.scaleFor), as a pill on the route; nothing for two new pilots. */
   U.scalePill = function (run) {
     const sc = T.scaleFor(run);
-    if (!sc.over) return '';
-    const who = `power ${sc.power}` + (sc.size ? `, a squad of ${sc.size + 2}` : '');
+    if (!sc.over && !sc.under) return '';
+    const n = T.squadSize(run);
+    const who = `power ${sc.power}` + (n !== 2 ? `, a squad of ${n}` : '');
     const what = [
       `foes have ${sc.hp}% vitality`,
       sc.foes ? `${sc.foes} more foe${sc.foes > 1 ? 's' : ''} where a mission has room` : '',
-      sc.need ? `objectives ask ${sc.need} more` : '',
-      sc.swarm ? `swarms grow ${sc.swarm} larger` : '',
+      sc.fewer ? `${sc.fewer} fewer foe${sc.fewer > 1 ? 's' : ''}` : '',
+      sc.need > 0 ? `objectives ask ${sc.need} more` : sc.need < 0 ? `objectives ask ${-sc.need} less` : '',
+      sc.swarm > 0 ? `swarms grow ${sc.swarm} larger` : sc.swarm < 0 ? `swarms are ${-sc.swarm} smaller` : '',
+      sc.clock ? `clocks run ${sc.clock} round${sc.clock > 1 ? 's' : ''} longer` : '',
     ].filter(Boolean);
     const how = `Each pilot brings power ${T.SCALING.PILOT}, and 1 more for every level past 1; missions are written for two new pilots (${2 * T.SCALING.PILOT}). A pilot that grows faster than the route expects (about 3 points a row) brings 1 more for every 6 points ahead.`;
     return `<span class="pill" data-tip="${esc(`<b>The missions answer ${who}</b><div>${what.join('; ')}. The Heart keeps its rules and grows only in its fight.</div><div class="dim">${how}</div>`)}">⚖ ${esc(who)}</span>`;
   };
 
   /* ───────────── DRAFT ───────────── */
-  /** How many pilots this run's squad drafts: two for one player, one each for two to five (T.pilotsFor). */
-  const squadOf = (run) => (run && run.party ? run.party.owner.length : 2);
+  /** How many pilots this run's squad drafts: one a player (T.pilotsFor; a run saved before 2.124 keeps its two). */
+  const squadOf = (run) => (run && run.party ? run.party.owner.length : 1);
   const NAMES = ['Sable', 'Quill', 'Marrow', 'Tessel', 'Orin', 'Pell', 'Wren', 'Casque', 'Lumen', 'Hale'];
   /** A pre-made hero's banner: their pilot in their world, with the portrait over it. */
   function premadeArt(pb) {

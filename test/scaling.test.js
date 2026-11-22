@@ -18,17 +18,66 @@ const squad = (seed, n) => {
 
 test('two new pilots: nothing scales', () => {
   const run = squad(4, 2);
-  assert.deepEqual(T.scaleFor(run), { size: 0, power: 20, over: 0, hp: 100, foes: 0, need: 0, swarm: 0 });
+  assert.deepEqual(T.scaleFor(run), {
+    size: 0,
+    power: 20,
+    over: 0,
+    under: 0,
+    hp: 100,
+    foes: 0,
+    fewer: 0,
+    need: 0,
+    swarm: 0,
+    clock: 0,
+  });
   // and the spec is the one the mission's own generator writes
   const saved = JSON.parse(JSON.stringify(T.SCALING));
   for (const arch of ARCHETYPES) {
     const a = JSON.stringify(T.missionSpec(run, arch, 3, null, null).spec);
-    for (const k of ['power', 'boss']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 7;
+    for (const k of ['power', 'boss', 'under']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 7;
     const b = JSON.stringify(T.missionSpec(squad(4, 2), arch, 3, null, null).spec);
-    Object.assign(T.SCALING.power, saved.power);
-    Object.assign(T.SCALING.boss, saved.boss);
+    for (const k of ['power', 'boss', 'under']) Object.assign(T.SCALING[k], saved[k]);
     assert.equal(a, b, arch);
   }
+});
+
+test('a lone pilot (2.124): weaker foes, fewer of them, less to do, longer clocks, on the same board', () => {
+  const S = T.SCALING;
+  const solo = squad(3, 1);
+  assert.equal(T.squadSize(solo), 1);
+  const sc = T.scaleFor(solo);
+  assert.equal(sc.power, S.PILOT);
+  assert.equal(sc.under, S.PILOT);
+  assert.equal(sc.hp, Math.round(100 * (1 - S.PILOT * S.under.hp)));
+  assert.equal(sc.fewer, Math.round(S.PILOT * S.under.foes));
+  assert.equal(sc.need, -Math.round(S.PILOT * S.under.need));
+  assert.equal(sc.clock, Math.round(S.PILOT * S.under.clock));
+  assert.ok(sc.fewer >= 1 && sc.need <= -1 && sc.clock >= 1 && sc.hp < 100);
+  for (const arch of ARCHETYPES) {
+    for (let seed = 1; seed <= 4; seed++) {
+      const two = T.missionSpec(squad(seed, 2), arch, 2, null, null).spec;
+      const run = squad(seed, 1);
+      const { spec } = T.missionSpec(run, arch, 2, null, null);
+      assert.deepEqual(spec.board.edges, two.board.edges, `${arch}: the same walks`);
+      const hp = spec.isBoss ? sc.hp - Math.round(100 * sc.under * S.boss.under) : sc.hp;
+      assert.equal(spec.foeHp, hp, `${arch}: foes' vitality`);
+      assert.ok(spec.enemies.length >= 1, `${arch}: a foe stays on the board`);
+      // (a Salvage with a crate less has room for a crew its full ledge turns away; the last foe always stays)
+      assert.ok(spec.enemies.length <= Math.max(1, two.enemies.length), `${arch}: no more foes than two meet`);
+      const kept = (e) => T.ENEMIES[e.type].boss || T.ENEMIES[e.type].elite || ['spawner', 'heart'].includes(e.type);
+      assert.equal(spec.enemies.filter(kept).length, two.enemies.filter(kept).length, `${arch}: bosses, elites stay`);
+      if (two.clock && spec.clock && two.clock.onZero === 'lose')
+        assert.ok(spec.clock.value >= two.clock.value, `${arch}: no shorter clock`);
+      T.launchMission(run, arch, 2);
+      assert.equal(run.mission.heroes.length, 1);
+    }
+  }
+  // a seasoned lone pilot gets back less: at two new pilots' power, nothing
+  const vet = squad(3, 1);
+  H.addLevel(vet, 6);
+  assert.ok(T.scaleFor(vet).hp > sc.hp);
+  H.addLevel(vet, 11);
+  assert.equal(T.scaleFor(vet).under, 0);
 });
 
 test('a bigger squad: a start each, tougher foes, more of them, more to do, on the same board', () => {

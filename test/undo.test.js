@@ -95,8 +95,6 @@ test(
       click('[data-act="newRun"]');
       click('[data-act="prebuilt"][data-arg="cavitt"]');
       click('[data-act="confirmHero"]');
-      click('[data-act="prebuilt"][data-arg="kess"]');
-      click('[data-act="confirmHero"]');
       click('.mnode.avail');
       assert.ok(d.getElementById('mfc').textContent.includes('End the round now'), 'the forecast has a strip');
       const undo = () => d.querySelector('[data-act="undo"]');

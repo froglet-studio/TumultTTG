@@ -88,7 +88,8 @@ test(
       assert.equal(U.screen, 'map', 'Play now goes straight to the route');
       assert.deepEqual(
         U.run.heroes.map((h) => h.name),
-        U.welcome.FIRST_SQUAD.map((id) => T.PREBUILTS.find((pb) => pb.id === id).name),
+        U.welcome.FIRST_SQUAD.slice(0, 1).map((id) => T.PREBUILTS.find((pb) => pb.id === id).name),
+        'a lone player flies one pilot',
       );
       for (const h of U.run.heroes)
         assert.ok(h.cards.filter((c) => T.heroE(h, c) >= 1).length >= T.RULES.START_AWAKE, 'awakened as the draft');

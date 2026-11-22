@@ -9,6 +9,12 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.124.0 — 2026-11-22 — solo is one pilot
+
+- **A lone player flies one pilot** (Garrett: "solo only needs one character. Then if people want to play more they can use the hotseat"). Solo drafts one pilot, and Play now sets out with one. A player who wants to fly more picks that many players and plays every seat at one screen. A run saved with two pilots keeps them.
+- **Scaling below two pilots.** For every point of squad power short of two new pilots' 20, a mission gives some back (rounded to the nearest, `T.SCALING.under`): foes lose 4% vitality, ⅕ fewer rank-and-file foes, objectives and swarms ⅒ less, clocks ⅒ round longer; the Heart's foes another 1.5%. A lone new pilot meets foes at 60% (the Heart 45%), 2 fewer foes, 1 less to do, a swarm 1 smaller and clocks 1 round longer; a seasoned one less, down to nothing at level 11. Two to five pilots meet byte-identical missions.
+- Sims (40 a cell, all 25 cells): one new pilot wins 69.4% (heuristic) and 91.5% (look-ahead) of missions, against 77.4% and 91.4% for two (28.5% and 65.2% unscaled). Full runs: 5/80 and 25/80 won solo against 0/80 and 31/80 for two (`docs/reference/SCALING.md`).
+
 ## 2.123.0 — 2026-11-22 — crews 13 to 17
 
 - **Ninety more painted pilots.** Cosmic Shore's crews 13 to 17 (the next 90 of its painted roster) join the pilot art. A pilot whose two clades match one of their pairs, in either order, now wears that painting instead of a stand-in; 71 of the 90 pairs can be drafted today. Their portraits and scenes come from Cosmic Shore as before (`assets/README.md`). Art only: no rule changes.
