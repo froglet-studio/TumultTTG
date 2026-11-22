@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.128.1',
+    version: '2.129.0',
     items: [
+      {
+        text: 'Signed in on the web version, the button at the top right with your initials (or face) opens your new Profile page: pick an avatar from any pilot painting, your Google or Discord picture, or initials, and set your display name. Does the name check make sense as you type? Does your new face show in the Lobby?',
+      },
       {
         text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. Before, Continue did nothing. Did Continue ever leave you stuck?',
       },

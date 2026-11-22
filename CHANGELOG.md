@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.129.0 — 2026-11-22 — Your profile
+
+- **A Profile page** (Shombith's pick from the Frogma board, "Profile page"). The account button at the top right now shows your avatar and opens it: your card as others see it on the left, your display name and avatar on the right, your sign-ins below. On a phone it is one column with Save kept in reach, and also under More.
+- **Pick your avatar**: any pilot painting in the game (your own pilots first), your Google or Discord picture, or your initials. The picture comes through Tumult's own server. It shows on the account button, in the Lobby and on your profile card. Uploading your own picture is not offered yet.
+- **Display names have rules**: 3 to 20 characters, one account's alone (case and spaces ignored), Tumult's own words reserved, and a word filter. The page checks as you type; an account renames once a day.
+- **Server**: migration `0003_profile.sql`, `PATCH /auth/me` takes an avatar, `GET /auth/name` and `GET /auth/picture/<id>`, and the Lobby carries avatars. Profile cards keep their pilots' paintings again (the server dropped them). The game server updates with the next launch. No rule changes.
+
 ## 2.128.1 — 2026-11-22 — Continue a draft
 
 - **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
