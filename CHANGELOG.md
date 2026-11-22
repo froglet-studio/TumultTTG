@@ -1,8 +1,15 @@
 # Changelog
 
-## 2.127.1 — 2026-11-22 — Continue a draft
+## 2.128.1 — 2026-11-22 — Continue a draft
 
 - **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
+
+## 2.128.0 — 2026-11-22 — The Stack
+
+- **The mission screen rebuilt as "The Stack"** (Shombith's pick from the Frogma board, inspired by card-battle arenas). Enemy plans are a numbered stack in the order the foes act, each with its creature, health and what it will do.
+- **Creatures instead of blobs.** Every foe kind is drawn in Cosmic Shore's fauna language (a crystal heart, braided spindles, teal health prisms, one red sting), in one of four forms (Mass, Charge, Space, Time) that changes its shape, never its colour. The form is looks only; no rule reads it. They idle, lunge to attack, flinch when hit, turn to face their target and wither when they die (`src/ui/fauna.js`).
+- **Every blow is shown.** A cast card for each card a pilot plays and each foe's move, a beam or a slash, big Cinzel damage numbers, toasts, banners for a fall, a rise and a new round, and a round summary (dealt, taken, blocked, felled) with a feat when one is earned: Multi-fell, Untouched, Shield wall, Onslaught (`src/ui/show.js`). Motion Off or Reduced keeps the words and numbers and drops the motion.
+- **A board you can move.** On PC the wheel zooms around the pointer, dragging pans, and buttons at the board's right edge zoom and reset. No rule changes.
 
 ## 2.127.0 — 2026-11-22 — Sign in and the Lobby
 
