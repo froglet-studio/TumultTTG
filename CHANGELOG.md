@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.129.2 — 2026-11-22 — The Route page before the route
+
+- **Route always opens the Route page, under the top tabs.** While the squad is still being picked it says how many pilots are picked, with a button to pick the next; with no expedition it says how to start one. Before, Route jumped into the draft and the tabs went away.
+
 ## 2.129.1 — 2026-11-22 — The Route tab after a reload
 
 - **The Route tab finds the saved expedition.** After a reload it said "No expedition on its route yet" even with one saved; it now opens it where it stopped, and carries on the draft when the expedition is still drafting.
