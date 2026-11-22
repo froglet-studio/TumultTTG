@@ -7,6 +7,10 @@
 - **Display names have rules**: 3 to 20 characters, one account's alone (case and spaces ignored), Tumult's own words reserved, and a word filter. The page checks as you type; an account renames once a day.
 - **Server**: migration `0003_profile.sql`, `PATCH /auth/me` takes an avatar, `GET /auth/name` and `GET /auth/picture/<id>`, and the Lobby carries avatars. Profile cards keep their pilots' paintings again (the server dropped them). The game server updates with the next launch. No rule changes.
 
+## 2.130.1 — 2026-11-22 — The Route page before the route
+
+- **Route always opens the Route page, under the top tabs.** While the squad is still being picked it says how many pilots are picked, with a button to pick the next; with no expedition it says how to start one. Before, Route jumped into the draft and the tabs went away.
+
 ## 2.130.0 — 2026-11-22 — Cosmic Shore's sound
 
 - **Music.** Cosmic Shore's eleven soundtrack tracks play in Tumult and follow the screen: calm tracks in the menus, the draft and on the route, harder ones in a mission, the outro after a win. They stream on the web version, crossfade from one to the next, and start with the first tap (browsers allow no sound before it). The offline file carries one loop, so it stays about 17 MB.
