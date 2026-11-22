@@ -166,22 +166,100 @@
     return `<div class="home ${cls || ''}"><header class="hm-bar"><span class="hm-brand">TUMULT</span><nav class="hm-nav"><button class="hm-link" data-act="help">How to play</button><button class="hm-link" data-act="atlas">Atlas</button><button class="hm-link" data-act="codex">Codex</button><button class="hm-link" data-act="canonList">Canon</button><button class="hm-link" data-act="look" aria-label="Look: the sea, its accent and motion">Look</button><button class="hm-link" data-act="toggleSound" aria-label="Sound">${U.sound ? '🔊' : '🔇'}</button></nav><span class="hm-right">${rightSide()}</span></header>${inner}</div>`;
   }
 
-  /* ───────────── the scene behind Home ───────────── */
-  function backdrop(meta) {
-    const art = U.PILOT_ART || [];
-    if (!art.length || !U.sceneSrc) return '';
-    const who = art[(meta.runs || 0) % art.length];
-    const scene = U.sceneSrc(who);
-    if (!scene) return '';
-    const cap = `<div class="title-cap"><b>${esc(who.name)}</b> · ${esc(U.callsignOf(who))} · ${esc(who.clades.join(' · '))} ${U.canonMark ? U.canonMark('pilot:' + who.key, `${who.name}, callsign ${U.callsignOf(who)}: ${who.clades.join(' and ')}`, 'title:caption') : ''}</div>`;
-    return `<div class="hm-scene" aria-hidden="true"><div class="hm-scene-img" style="background-image:url(${scene})"></div></div><div class="hm-veil" aria-hidden="true"></div>${cap}`;
+  /* ───────────── the scene behind Home (Home 4, "Fog prow") ───────────── */
+  // A captain stands behind Home: a pilot's painting, named on a plate at the bottom left. Every
+  // ROTATE_MS a different one, drawn at random, fades in over the last (not with motion Off, and not
+  // while the page is hidden). The choice lives here, not in a save, so a re-render keeps the same one.
+  const ROTATE_MS = 10000;
+  const FADE_MS = 1400;
+  let capKey = null;
+  const paintings = () => (U.PILOT_ART || []).filter((a) => U.sceneSrc && U.sceneSrc(a));
+  function pickCaptain(except) {
+    const all = paintings().filter((a) => a.key !== except);
+    return all.length ? all[Math.floor(Math.random() * all.length)] : null; // the UI's own choice, not the game's dice
   }
+  function captain() {
+    const all = paintings();
+    let who = capKey && all.find((a) => a.key === capKey);
+    if (!who) who = pickCaptain();
+    capKey = who ? who.key : null;
+    return who;
+  }
+  function plateHTML(who) {
+    const face = U.portraitSrc ? U.portraitSrc(who) : null;
+    const mark = U.canonMark
+      ? U.canonMark(
+          'pilot:' + who.key,
+          `${who.name}, callsign ${U.callsignOf(who)}: ${who.clades.join(' and ')}`,
+          'title:caption',
+        )
+      : '';
+    return `${face ? `<img class="hm-plate-face" src="${face}" alt="" draggable="false">` : ''}<div class="hm-plate-txt"><span class="hm-plate-lab">Captain · ${esc(U.callsignOf(who))}</span><b class="hm-plate-name">${esc(who.name)}</b><span class="hm-plate-sub">${esc(who.clades.map((c) => c[0].toUpperCase() + c.slice(1)).join(' and '))} ${mark}</span></div>`;
+  }
+  function backdrop() {
+    if (!U.sceneSrc) return '';
+    const who = captain();
+    if (!who) return '';
+    return `<div class="hm-scene" aria-hidden="true"><div class="hm-scene-img on" style="background-image:url(${U.sceneSrc(who)})"></div><div class="hm-scene-img"></div></div><div class="hm-veil" aria-hidden="true"></div><div class="hm-motes" aria-hidden="true">${'<i></i>'.repeat(12)}</div><div class="hm-plate">${plateHTML(who)}</div>`;
+  }
+  const still = () =>
+    typeof document === 'undefined' ||
+    document.hidden ||
+    document.documentElement.getAttribute('data-motion') === 'off' ||
+    (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  /** One turn of the rotation: the next captain's painting loads, then fades in over the last. */
+  U.homeRotate = function () {
+    if (U.screen !== 'title' || U.modal || still()) return false;
+    const scene = document.querySelector('.home .hm-scene');
+    const plate = document.querySelector('.home .hm-plate');
+    if (!scene || !plate) return false;
+    const who = pickCaptain(capKey);
+    if (!who) return false;
+    const src = U.sceneSrc(who);
+    const show = () => {
+      if (U.screen !== 'title' || !scene.isConnected) return;
+      const [a, b] = scene.querySelectorAll('.hm-scene-img');
+      const on = a.classList.contains('on') ? a : b;
+      const next = on === a ? b : a;
+      next.style.backgroundImage = `url(${src})`;
+      void next.offsetWidth;
+      next.classList.add('on');
+      on.classList.remove('on');
+      plate.classList.add('out');
+      setTimeout(() => {
+        if (!plate.isConnected) return;
+        plate.innerHTML = plateHTML(who);
+        plate.classList.remove('out');
+      }, FADE_MS / 2);
+      capKey = who.key;
+    };
+    if (typeof Image === 'function' && !/^data:/.test(src)) {
+      const img = new Image();
+      img.onload = show;
+      img.src = src;
+    } else show();
+    return true;
+  };
+  // not in a page with no screen (jsdom, in the tests): a timer there would keep Node running
+  if (typeof window !== 'undefined' && !/jsdom/i.test((window.navigator && window.navigator.userAgent) || ''))
+    setInterval(U.homeRotate, ROTATE_MS);
 
+  /** The route so far as a row of marks: stops passed, the one ahead (Home 4). */
+  const pips = (w) =>
+    w.stops
+      ? `<div class="hm-pips" aria-label="Stop ${w.stop} of ${w.stops}">${Array.from({ length: w.stops }, (x, i) => `<i class="${i < w.stop - 1 ? 'done' : i === w.stop - 1 ? 'now' : ''}"></i>`).join('')}</div>`
+      : '';
+  const ICON = {
+    host: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M5 12a7 7 0 0114 0M2 12a10 10 0 0120 0"/></svg>',
+    join: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="6" width="18" height="12"/><path d="M7 10h2M11 10h2M15 10h2M8 14h8"/></svg>',
+    make: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/><path d="M19 3v4M17 5h4"/></svg>',
+    back: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 14l-5-5 5-5"/><path d="M4 9h11a5 5 0 010 10h-3"/></svg>',
+  };
   /** The way back into an online game this screen was in (net.js remembers it). */
   const rejoinTile = () => {
     const m = net() && net().remembered && net().remembered();
     return m
-      ? `<button class="hm-act hm-back" data-act="netRejoin"><b>Rejoin game ${esc(m.code)}${m.role === 'host' ? ' as host' : ''}</b><span>${m.role === 'host' ? 'Your table' : 'The game you were in'}</span></button>`
+      ? `<button class="hm-act hm-back" data-act="netRejoin">${ICON.back}<span class="hm-act-t"><b>Rejoin game ${esc(m.code)}${m.role === 'host' ? ' as host' : ''}</b><span>${m.role === 'host' ? 'Your table' : 'The game you were in'}</span></span></button>`
       : '';
   };
 
@@ -193,7 +271,7 @@
       : '';
     return framed(
       'play',
-      `${backdrop(meta)}<section class="hm-hero hm-land">
+      `${backdrop()}<section class="hm-hero hm-land">
         <span class="hm-eyebrow">A tabletop RPG on the tide</span>
         <h1 class="hm-display">Your squad.<br>One tide.<br>No second try.</h1>
         <p class="hm-lede">Draft a squad of pilots, cross Tumult by land, sea and air to the Heart, and write the world as you play. In your browser, on your own or with friends at the table.</p>
@@ -223,6 +301,8 @@
       const act = T.actOf(Math.max(0, row));
       const place = run.map.actNames ? run.map.actNames[act] : '';
       out.kick = `Continue · stop ${Math.min(rows, row + 2)} of ${rows}`;
+      out.stop = Math.min(rows, row + 2);
+      out.stops = rows;
       out.title = place || 'On the route';
       if (run.phase === 'mission') out.kick = `Continue · in a mission · stop ${row + 1} of ${rows}`;
     } else out.kick = 'Continue · drafting';
@@ -287,19 +367,19 @@
     const w = run ? whereNow(run) : null;
     const games = liveGames();
     const hero = w
-      ? `<span class="hm-eyebrow">${esc(w.kick)}</span><h1 class="hm-display hm-place">${esc(w.title)}</h1>${w.line ? `<p class="hm-lede">${esc(w.line)}</p>` : ''}<div class="hm-ctas"><button class="primary hm-cta" data-act="continueRun">Continue ▶</button></div>`
-      : `<span class="hm-eyebrow">An expedition on Tumult</span><h1 class="hm-display">Tumult</h1><p class="hm-lede">Draft a squad of pilots from Tumult's bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</p>`;
+      ? `<div class="hm-panel"><span class="hm-eyebrow">${esc(w.kick)}</span><h1 class="hm-display hm-place">${esc(w.title)}</h1>${pips(w)}${w.line ? `<p class="hm-lede">${esc(w.line)}</p>` : ''}<div class="hm-ctas"><button class="primary hm-cta" data-act="continueRun">Continue ▶</button></div></div>`
+      : `<div class="hm-panel"><span class="hm-eyebrow">An expedition on Tumult</span><h1 class="hm-display">Tumult</h1><p class="hm-lede">Draft a squad of pilots from Tumult's bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</p></div>`;
     const tiles = [];
     if (online()) {
       tiles.push(
-        `<button class="hm-act" data-act="hostOpen"><b>Host a table</b><span>Online, with a code</span></button>`,
+        `<button class="hm-act" data-act="hostOpen">${ICON.host}<span class="hm-act-t"><b>Host a table</b><span>Online, with a code</span></span></button>`,
       );
       tiles.push(
-        `<button class="hm-act" data-act="joinOpen"><b>Join a game</b><span data-games-count>${games.length ? `${games.length} being played now` : 'With a code'}</span></button>`,
+        `<button class="hm-act" data-act="joinOpen">${ICON.join}<span class="hm-act-t"><b>Join a game</b><span data-games-count>${games.length ? `${games.length} being played now` : 'With a code'}</span></span></button>`,
       );
     }
     tiles.push(
-      `<button class="hm-act" data-act="makePilot"><b>Make a pilot</b><span>Bring your own to the draft</span></button>`,
+      `<button class="hm-act" data-act="makePilot">${ICON.make}<span class="hm-act-t"><b>Make a pilot</b><span>Bring your own to the draft</span></span></button>`,
     );
     const back = rejoinTile();
     const squad =
@@ -315,7 +395,7 @@
     const stats = `<div class="hm-stats mute small">Expeditions: ${meta.runs || 0} · Hearts ended: ${meta.wins || 0} · Furthest stop: ${meta.bestRow || 0}/6</div>`;
     return framed(
       'play',
-      `${backdrop(meta)}<section class="hm-hero">${invited()}${hero}${setupPanel(meta, !run)}<div class="hm-acts">${back}${tiles.join('')}</div>
+      `${backdrop()}<section class="hm-hero">${invited()}${hero}${setupPanel(meta, !run)}<div class="hm-acts">${back}${tiles.join('')}</div>
         ${stats}${U.privacyLine ? U.privacyLine() : ''}
         <div class="mute small hm-flavor">${esc(T.FLAVOR.terminalIntro[(meta.runs || 0) % T.FLAVOR.terminalIntro.length])}</div>
         ${U.titleExtra ? U.titleExtra() : ''}</section>${squad}${U.lobbyOpen ? lobbyPanelHTML() : ''}`,

@@ -64,6 +64,20 @@ test('a first visit lands on Play now; the setup is kept and starts the expediti
   p.U.render();
   assert.ok(p.d.querySelector('[data-act="continueRun"]'), 'Continue on Home');
   assert.equal(p.d.querySelector('.is-landing'), null, 'no landing once something is saved');
+  // a captain stands behind Home, and every few seconds another fades in over them
+  const name = () => p.d.querySelector('.hm-plate-name').textContent;
+  const first = name();
+  const shown = () => p.d.querySelector('.hm-scene-img.on').style.backgroundImage;
+  const was = shown();
+  assert.ok(p.U.homeRotate(), 'Home turns to the next captain');
+  assert.notEqual(shown(), was, 'a new painting fades in');
+  await new Promise((r) => setTimeout(r, 900));
+  assert.notEqual(name(), first, 'and the plate names the new captain');
+  p.U.render();
+  assert.equal(name(), p.d.querySelector('.hm-plate-name').textContent, 'a re-render keeps the same captain');
+  p.d.documentElement.setAttribute('data-motion', 'off');
+  assert.equal(p.U.homeRotate(), false, 'with motion Off the captain stays');
+  p.d.documentElement.removeAttribute('data-motion');
   // Make a pilot opens the Pilots tab's maker, not a new draft
   p.act('makePilot');
   assert.equal(p.U.screen, 'maker');
