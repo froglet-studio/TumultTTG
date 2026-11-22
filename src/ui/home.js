@@ -241,6 +241,18 @@
     return true;
   };
   // not in a page with no screen (jsdom, in the tests): a timer there would keep Node running
+  // the setup's fold is the player's: remember it across renders, and let a fresh open play its animation
+  if (typeof document !== 'undefined')
+    document.addEventListener(
+      'toggle',
+      (e) => {
+        const d = e.target;
+        if (!d || !d.classList || !d.classList.contains('hm-setup')) return;
+        U.setupOpen = d.open;
+        if (!d.open) d.classList.remove('hm-quiet');
+      },
+      true,
+    );
   if (typeof window !== 'undefined' && !/jsdom/i.test((window.navigator && window.navigator.userAgent) || ''))
     setInterval(U.homeRotate, ROTATE_MS);
 
@@ -358,7 +370,10 @@
       ),
     ].join('');
     const go = s.where === 'online' && !solo ? 'hostOpen' : 'newRun';
-    return `<details class="hm-setup"${open ? ' open' : ''}><summary><span class="hm-setup-h">New expedition</span><span class="hm-setup-sum">${esc(short(s))}</span></summary>
+    // a choice re-renders Home: the setup stays as the player left it, and does not replay its opening
+    const kept = U.setupOpen != null;
+    if (kept) open = U.setupOpen;
+    return `<details class="hm-setup${kept && open ? ' hm-quiet' : ''}"${open ? ' open' : ''}><summary><span class="hm-setup-h">New expedition</span><span class="hm-setup-sum">${esc(short(s))}</span></summary>
       <div class="hm-setup-body">${again}${rows}
         <div class="hs-foot"><p class="hs-line">${esc(setupLine(s))}${s.players > 2 ? ' A bigger squad meets bigger missions.' : ''}</p><button class="primary hm-cta" data-act="${go}">${go === 'hostOpen' ? 'Host it ▶' : 'Start ▶'}</button></div>
       </div></details>`;

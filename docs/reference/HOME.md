@@ -32,6 +32,10 @@ Shombith picked Home 4 from the board's *Home screen (Nov 22)* page. The landing
 - **HyperSea's colours** (Cosmic Shore's UI style guide): deep indigo, cyan for what is chosen or hovered, lime for
   the one button to press (a breathing glow and a sweeping shine). Corners are cut, never rounded.
 - On a phone the column fills the width and the plate is left out.
+- **Motion**: the setup unfolds with its rows rising in turn, and stays as the player left it while they pick
+  (`U.setupOpen`; a re-render does not replay the opening). Everything pressable answers the pointer: a tab's
+  underline grows from its middle, the gear turns, rows and tiles lift and glow cyan, a choice glows when picked.
+  All of it stops with motion Off or Reduced.
 
 ## The new-expedition setup
 

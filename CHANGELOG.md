@@ -9,6 +9,11 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.126.0 — 2026-11-22 — Home in motion
+
+- **The setup stays open while you pick.** Choosing the players, where, the rounds or the wind no longer folds the new-expedition setup away. Opening it now unfolds it, with its rows and Start rising one after another.
+- **Modern hovers.** The tabs grow a glowing underline, the logo glows, the gear turns, the setup's choices light up and the picked one glows, and Host, Join and Make a pilot lift and glow. Other screens' buttons ease into a soft cyan shadow. All of it stops with motion Off or Reduced. No rule changes.
+
 ## 2.125.0 — 2026-11-22 — Fog prow Home
 
 - **Home rebuilt as "Fog prow"** (Shombith's pick from the Frogma board). A command column on the right holds Continue (with a light running round its border and the route as a row of marks), the setup, and Host, Join and Make a pilot as bordered rows. A captain plate at the bottom left names the pilot in the painting. HyperSea colours, cut corners, a lime Play button that breathes. Every 10 seconds a random captain fades in over the last; it holds still with motion Off or Reduced (`src/ui/home.js`, `docs/reference/HOME.md`).
