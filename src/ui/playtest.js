@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.125.0',
+    version: '2.126.0',
     items: [
+      {
+        text: 'Home in motion: open New expedition and pick a few options (it should stay open now), and run the pointer over the tabs, the setup and the rows below it. Does anything feel slow, jumpy or too busy?',
+      },
       {
         text: 'Home is new ("Fog prow"): the buttons sit in a column on the right, a captain plate names the pilot in the painting, and every 10 seconds a random captain fades in. The paintings are sharper on the web version. Also try the browser\'s Back button: through the tabs, out of a mission (Forward should resume it) and with a window open. Did Back ever leave the game or lose your place?',
       },
