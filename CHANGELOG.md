@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.128.2 — 2026-11-22 — The Route tab after a reload
+
+- **The Route tab finds the saved expedition.** After a reload it said "No expedition on its route yet" even with one saved; it now opens it where it stopped, and carries on the draft when the expedition is still drafting.
+
 ## 2.128.1 — 2026-11-22 — Continue a draft
 
 - **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
