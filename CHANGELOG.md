@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.127.1 — 2026-11-22 — Continue a draft
+
+- **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
+
 ## 2.127.0 — 2026-11-22 — Sign in and the Lobby
 
 - **A guest is told where their save lives.** Under Continue, a player who is not signed in reads "Saved in this browser only" with a button to sign in and keep it on any device.

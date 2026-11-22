@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.127.0',
+    version: '2.127.1',
     items: [
+      {
+        text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. Before, Continue did nothing. Did Continue ever leave you stuck?',
+      },
       {
         text: 'The Lobby is new ("Drawer plus"): open it from the Lobby chip at the top. Games lets you take an open seat with no code or ask to join a table mid-mission; People lets you find a player, add them as a friend or invite them to your table; Requests holds what others sent you. Click a person to see their card. Try it with a friend on two accounts: did a request or an invite reach them at once?',
       },

@@ -49,7 +49,10 @@
     U.run = r;
     if (r.phase === 'summary') return 'summary';
     if (r.over) return 'title';
-    if (r.phase === 'draft') return U.draft ? 'draft' : 'title';
+    if (r.phase === 'draft') {
+      if (!U.draft && U.resumeDraft) U.resumeDraft(r); // the draft's own state is not saved: start the next pilot
+      return r.phase !== 'draft' ? 'map' : U.draft ? 'draft' : 'title';
+    }
     if (r.phase === 'mission' && r.mission) return 'mission';
     if (['reward', 'haven', 'event', 'garage'].includes(r.phase)) return r.phase;
     return 'map';
