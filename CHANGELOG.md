@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.135.0 — 2026-11-22 — Rival pilots
+
+- **Rival pilots** (Garrett, 2026-11-22: "you can also put the players up against other Non player characters"). An elite stop may be held by a rival pilot, one of four elites now: human and two clades, with a name, and a hybrid card of one trait from each, so it plays a human trait as your pilots do. It awakens as a pilot does (E = level − 1). Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest in its zone; vitality 15/18/22, speed 2. Objective: Defeat the rival pilot.
+- Measured over 240 elite missions a tier (heuristic player): tier 3 won 80% with 38% vitality left, between the Bulwark (35% / 24%) and the Harrier (98% / 58%) and Tidecaller (100% / 75%).
+
 ## 2.134.0 — 2026-11-22 — Hybrid foes
 
 - **Every foe is a triple hybrid** (Garrett, 2026-11-22), like a pet: three clades, none human, and a hybrid card of one trait from each, rolled as it spawns. Its role (Biter, Brute, Warden, ...) is still its body. When the card is back and a face has something to do, the foe telegraphs that face, named with its clade, then the card cools for the face's cooldown and a round more. Spawners and the Heart stay as they are.
