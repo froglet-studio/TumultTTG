@@ -28,7 +28,7 @@ And the working agreements in `CLAUDE.md`: a rules change has a test; a balance 
 - Commits: `type(scope): summary`, imperative, about 72 characters, one logical change each, with the `Co-Authored-By:` and `Claude-Session:` trailers.
 - `git push -u origin <branch>`.
 - Open the pull request into **`bleeding-edge`**: what changed, why, the gate results, any sim numbers, and "Affects: <person>'s <area>" when it touches someone else's work. Changes under `.github/` need a code owner's review; say so and stop at the PR.
-- Subscribe to the PR's activity and wait for CI (`build + test (Node 22)`, `build + test (Node 24)`, `preview`), the way **Waiting without stalling** below says. Red is yours to fix: find the cause, push the fix; never skip a test.
+- Subscribe to the PR's activity and wait for CI (`build + test (Node 22)` and `preview`; a change to only Markdown or skills passes at once), the way **Waiting without stalling** below says. Red is yours to fix: find the cause, push the fix; never skip a test.
 
 ### Waiting without stalling
 

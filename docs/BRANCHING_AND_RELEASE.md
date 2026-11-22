@@ -103,7 +103,7 @@ Release from `development`, not `bleeding-edge`: `development` is what testers h
 These are set on GitHub by a repository admin (Shombith). Nothing in the repository can set them.
 
 1. **Default branch:** Settings → General → Default branch → `bleeding-edge`. New pull requests then target it.
-2. **A ruleset on `bleeding-edge`**: require a pull request, require the CI checks `build + test (Node 22)` and `build + test (Node 24)`, require review from Code Owners (it only bites on `.github/`), block force pushes and deletion. Allow squash and merge commits.
+2. **A ruleset on `bleeding-edge`**: require a pull request, require the CI check `build + test (Node 22)` (pull requests are tested on Node 22 alone since 2026-11-22; Node 24 runs on pushes to the three branches, and a change to only Markdown or `.claude/` skips the build and tests but still passes the check), require review from Code Owners (it only bites on `.github/`), block force pushes and deletion. Allow squash and merge commits.
 3. **A ruleset on `development` and `main`**: block force pushes and deletion, require the CI checks, and leave **Require linear history** unticked so a promotion's merge commit is allowed. Add the two co-owners (or the admin role) to the bypass list for pushes, so the `--ff-only` promotions above can be pushed directly; everyone else goes through a pull request.
 4. **Merging:** Settings → General → Pull Requests: allow squash merging (the default for feature branches) and merge commits (for promotions); turn off rebase merging.
 5. **Actions → Fork pull request workflows:** require approval for all external contributors.
