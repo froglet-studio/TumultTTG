@@ -92,7 +92,12 @@ test(
       await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
       const U = w.T.UI;
       const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+      // a fixed seed: an expedition's seed is the clock, and about 2 in 100 seeds roll the pilot no AP to step with
+      const now = w.Date.now;
+      w.Date.now = () => 1000;
       click('[data-act="newRun"]');
+      w.Date.now = now;
+      assert.equal(U.run.seed, 1000);
       click('[data-act="prebuilt"][data-arg="cavitt"]');
       click('[data-act="confirmHero"]');
       click('.mnode.avail');
