@@ -140,7 +140,7 @@
     const tok = p.get('tumult_session');
     const err = p.get('tumult_auth_error');
     try {
-      history.replaceState(null, '', location.href.split('#')[0]); // keep the token out of history and screenshots
+      history.replaceState(history.state, '', location.href.split('#')[0]); // keep the token out of history and screenshots
     } catch {}
     if (err) return { error: err };
     if (!tok || !/^[A-Za-z0-9_-]{20,100}$/.test(tok)) return null;

@@ -40,6 +40,7 @@
     "ui/telemetry.js",
     "ui/account.js",
     "ui/shell.js",
+    "ui/nav.js",
     "ui/settings.js",
     "ui/crew.js",
     "ui/binder.js",
