@@ -1,8 +1,14 @@
 # Changelog
 
-## 2.128.2 — 2026-11-22 — The Route tab after a reload
+## 2.129.1 — 2026-11-22 — The Route tab after a reload
 
 - **The Route tab finds the saved expedition.** After a reload it said "No expedition on its route yet" even with one saved; it now opens it where it stopped, and carries on the draft when the expedition is still drafting.
+
+## 2.129.0 — 2026-11-22 — The tilted board
+
+- **The board lies on the table.** The mission board is tilted in perspective in front of the scene, as in the Stack mockup on the Frogma board. A 2D button at the board's right edge lays it flat (and 3D tilts it back), kept for this browser in `tumult_v2_ui`. A phone gets a gentler tilt.
+- **Pinch on phones.** Two fingers zoom and move the board; one finger drags it once zoomed, and a drag is never taken as a tap.
+- **Numbers land on their target through the camera.** The floating damage and heal numbers now follow the zoom and the tilt. No rule changes.
 
 ## 2.128.1 — 2026-11-22 — Continue a draft
 

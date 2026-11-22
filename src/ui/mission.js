@@ -61,6 +61,7 @@
       full: false,
       noHand: false,
       noPlans: false,
+      flat: false,
       tab: 'hand',
       peek: {},
     };
@@ -70,10 +71,11 @@
       return base;
     }
   })();
+  U.saveLayout = () => saveLayout();
   function saveLayout() {
     try {
-      const { log, intents, obj, full, noHand, noPlans, tab } = U.layout;
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj, full, noHand, noPlans, tab }));
+      const { log, intents, obj, full, noHand, noPlans, flat, tab } = U.layout;
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj, full, noHand, noPlans, flat, tab }));
     } catch {
       /* no storage: the choice lasts for this page */
     }
@@ -2128,14 +2130,21 @@
     const host = $('#board');
     const svg = U.ms.svg;
     if (!host || !svg || !svg.viewBox || !svg.viewBox.baseVal) return;
-    const r = svg.getBoundingClientRect();
-    const hr = host.getBoundingClientRect();
-    const vb = svg.viewBox.baseVal;
-    const sc = Math.min(r.width / vb.width, r.height / vb.height);
-    const ox = (r.width - vb.width * sc) / 2 + (r.left - hr.left),
-      oy = (r.height - vb.height * sc) / 2 + (r.top - hr.top);
-    const x = ox + g.px(n) * sc,
-      y = oy + g.py(n) * sc - 10;
+    let x, y;
+    const at = U.boardToHost && U.boardToHost(g.px(n), g.py(n));
+    if (at) {
+      x = at[0];
+      y = at[1] - 10;
+    } else {
+      const r = svg.getBoundingClientRect();
+      const hr = host.getBoundingClientRect();
+      const vb = svg.viewBox.baseVal;
+      const sc = Math.min(r.width / vb.width, r.height / vb.height);
+      const ox = (r.width - vb.width * sc) / 2 + (r.left - hr.left),
+        oy = (r.height - vb.height * sc) / 2 + (r.top - hr.top);
+      x = ox + (g.px(n) - vb.x) * sc;
+      y = oy + (g.py(n) - vb.y) * sc - 10;
+    }
     setTimeout(() => {
       const d = document.createElement('div');
       d.className = 'floater ' + cls;
@@ -2615,7 +2624,11 @@
     switch (act) {
       // the board's view: zoom in or out, or show the whole board (src/ui/show.js)
       case 'cam':
-        if (U.cameraZoom) U.cameraZoom(arg === 'in' ? 1.25 : arg === 'out' ? 0.8 : 0);
+        if (arg === 'tilt') {
+          U.layout.flat = !U.layout.flat;
+          saveLayout();
+          if (U.cameraTilt) U.cameraTilt();
+        } else if (U.cameraZoom) U.cameraZoom(arg === 'in' ? 1.25 : arg === 'out' ? 0.8 : 0);
         return true;
       // the screen's own folds: they change only what is shown on this screen
       case 'mmenu':
