@@ -30,7 +30,7 @@ If `--ff-only` refuses, stop (section 1). A session that may push only its own b
 1. The push to `main` runs **Publish to froglet.games** (`.github/workflows/site.yml`). Wait for it, then read its summary: it must not say `TUMULT_SITE_DEPLOY_KEY is not set`.
 2. The website (froglet-studio/Cosmic-Shore-landing-page) gets a `chore(tumult): publish Tumult <version>` commit in `tumult/play/`; GitHub Pages serves it a minute or two later.
 3. Confirm https://www.froglet.games/tumult/play/ loads the new version (ask the person to open it if the session cannot reach froglet.games), and that `_data/tumult.yml` in the website has `live: true` so the Play button on https://www.froglet.games/tumult/ leads there.
-4. Anything under `server/` is not deployed by this: `npx wrangler@4.42.0 deploy` from `server/` (and `d1 migrations apply tumult --remote` for a new migration), then check `<worker>/api/health`.
+4. The game server deploys itself: when the promotion changed `server/`, `src/engine/`, `src/data/`, `src/manifest.json` or `tools/build-server.mjs`, the push to `main` also runs **Deploy game server** (`.github/workflows/worker.yml`), which applies new D1 migrations and deploys. Read its summary: it must say `/api/health` answers ok, not that `CLOUDFLARE_WORKERS_TOKEN` is not set (then the token setup in `docs/reference/HOSTING.md`, "The game server", is still to do, and the person deploys by hand with `npx wrangler@4.42.0 deploy` from `server/`). When none of those paths changed, no run starts; say nothing about the server.
 
 ## 4. The playtest page
 
