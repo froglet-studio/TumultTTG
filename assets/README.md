@@ -8,6 +8,7 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 |---|---|---|---|
 | `pilots/` | a pilot's portrait, 160 px square, JPEG | `pilot/<CALLSIGN>` | ~8 KB each |
 | `scenes/` | the same pilot in their world, 768×432, WebP | `scene/<CALLSIGN>` | ~40–50 KB each |
+| `scenes-hd/` | the same scenes at full size, 1536×864, WebP q74; the web version sends these in place of `scenes/` (`buildWeb` in `tools/build.mjs`), the single file keeps the small ones | (as `scene/`) | ~100 KB each |
 | `portraits/` | painted clade heads, 128 px tiles four to a row, WebP | `portrait/sheet-<N>` | ~17–61 KB a sheet |
 | `fonts/` | Chakra Petch SemiBold, Latin subset, WOFF2 | `@font-face` | 8 KB |
 
@@ -42,6 +43,7 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 ## Adding a pilot
 
 1. Resize their avatar to 160×160 (JPEG, quality 80) as `pilots/<CALLSIGN>.jpg` and their scene to 768×432
-   (WebP, quality 58–62) as `scenes/<CALLSIGN>.webp`.
+   (WebP, quality 58–62) as `scenes/<CALLSIGN>.webp`; save the scene at its full 1536×864 (WebP, quality 74) as
+   `scenes-hd/<CALLSIGN>.webp`.
 2. Add a row to `U.PILOTS` in `src/ui/pilots.js`: callsign, name, and the two animals after human.
 3. `npm run check`: `test/build.test.js` holds every pilot to having both pictures.

@@ -82,6 +82,11 @@ test('every pilot has a portrait and a scene in the build, and every pre-made he
     assert.match(ART['pilot/' + a.key] || '', /^data:image\/jpeg;base64,/, `${a.key} has a portrait`);
     assert.match(ART['scene/' + a.key] || '', /^data:image\/(jpeg|webp);base64,/, `${a.key} has a scene`);
     assert.equal(a.clades.length, 2, `${a.key} is a pair of clades`);
+    // the web version sends the full-size scene (assets/scenes-hd); the single file keeps the small one
+    assert.ok(
+      require('node:fs').existsSync(path.join(root, 'assets', 'scenes-hd', a.key + '.webp')),
+      `${a.key} has a full-size scene for the web version`,
+    );
   }
   // art follows the clade pair: an exact pair beats a stand-in that shares one clade, and the head clade counts
   const pair = (a, b) => ({ id: a + b, species: ['human', a, b] });
