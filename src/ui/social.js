@@ -218,8 +218,10 @@
         return { name: h.name || '', art: a ? a.key : '' };
       })
       .filter((p) => p.name);
+    const u = me();
     return {
-      name: myName,
+      name: (u && u.name) || myName,
+      avatar: (u && u.avatar) || '',
       pilots,
       runs: meta.runs || 0,
       wins: meta.wins || 0,
@@ -305,6 +307,15 @@
     return prevExtra ? prevExtra(act, arg, el, e) : false;
   };
 
-  if (T.Account && typeof T.Account.onChange === 'function') T.Account.onChange(() => start());
+  if (T.Account && typeof T.Account.onChange === 'function')
+    T.Account.onChange(() => {
+      const u = me();
+      // the same player with a new name or avatar (src/ui/profile.js): their card says so at once
+      if (u && u.id === uid && (u.name !== myName || (cards.get(uid) || {}).avatar !== (u.avatar || ''))) {
+        myName = u.name || '';
+        S.publish(true);
+      }
+      start();
+    });
   window.addEventListener('load', () => setTimeout(start, 0));
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

@@ -164,7 +164,7 @@
     const who = !A
       ? ''
       : signedIn()
-        ? `<button class="hm-me" data-act="account" data-tip="${esc(u.name || 'Your account')}" aria-label="Your account">${face(u.name)}</button>`
+        ? `<button class="hm-me" data-act="account" data-tip="${esc(u.name || 'Your profile')}" aria-label="Your profile">${U.myAvatarHTML ? U.myAvatarHTML('hm-av') : face(u.name)}</button>`
         : `<button class="ghost sm hm-signin" data-act="signIn">Sign in</button>`;
     return lobby + who;
   }
@@ -640,13 +640,22 @@
     return st.where === 'game' ? 'In an online game' : st.where === 'solo' ? 'Playing solo' : 'On Home';
   }
   const dotOf = (p) => (stOf(p).where === 'solo' ? 'away' : 'on');
-  /** A player's face in the Lobby: their first pilot's portrait when their card has one, else their initials. */
+  /**
+   * A player's face in the Lobby: the avatar they chose on their profile (src/ui/profile.js), else their
+   * first pilot's portrait when their card has one, else their initials.
+   */
   function lobbyFace(id, name, cls) {
     const S = SOC();
     const card = S && id ? S.card(id) : null;
-    const art = card && card.pilots && card.pilots.find((x) => x.art);
-    const a = art && (U.PILOT_ART || []).find((x) => x.key === art.art);
-    const src = a && U.portraitSrc ? U.portraitSrc(a) : null;
+    const row = id ? (U.lobbyPeople || []).find((x) => x.id === id) : null;
+    const avatar = (row && row.avatar) || (card && card.avatar) || '';
+    let src = null;
+    if (U.avatarSrc) src = U.avatarSrc({ id, name, avatar }, card);
+    else {
+      const art = card && card.pilots && card.pilots.find((x) => x.art);
+      const a = art && (U.PILOT_ART || []).find((x) => x.key === art.art);
+      src = a && U.portraitSrc ? U.portraitSrc(a) : null;
+    }
     return src
       ? `<img class="lb-face ${cls || ''}" src="${src}" alt="" draggable="false">`
       : face(name, null, `lb-face ${cls || ''}`);
@@ -984,7 +993,8 @@
         else if (acct() && T.Account.signIn) T.Account.signIn('google');
         return true;
       case 'account':
-        if (U.askSignIn) U.askSignIn('');
+        if (U.openProfile) U.openProfile();
+        else if (U.askSignIn) U.askSignIn('');
         return true;
       case 'netHost':
       case 'netJoin':
