@@ -42,11 +42,12 @@ test(
       assert.ok(el, `nothing to click: ${a} ${arg || ''}`);
       el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true }));
     };
+    // wait for the popstate itself: jsdom fires it later, and how much later depends on the machine, so
+    // polling for its effects could pass before it ran (with no window open, "no window" is already true)
     const back = async () => {
-      const at = U.screen;
-      const len = w.history.length;
+      const landed = new Promise((r) => w.addEventListener('popstate', () => setTimeout(r, 0), { once: true }));
       w.history.back();
-      await until(() => U.screen !== at || U.modal == null || w.history.length !== len, 'Back to land');
+      await Promise.race([landed, new Promise((_, no) => setTimeout(() => no(new Error('Back never landed')), 5000))]);
       await new Promise((r) => setTimeout(r, 30));
     };
     const start = w.history.length;
