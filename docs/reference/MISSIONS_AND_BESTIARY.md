@@ -58,6 +58,15 @@ Garrett, 2026-11-22: "make them triple hybrids like the pets. but have the highe
 
 **Measured** (`node tools/sim.js 40`, with `--rule HYBRID_FOES=0` for before). Mean over the 25 mission cells: heuristic 77.4% → 77.2% won, vitality left 72.5% → 70.9%; look-ahead 91.4% → 91.0%, 95.9% → 95.2%. Full runs: heuristic 0/40 both, mission win 66% → 67%; look-ahead 15/40 → 17/40 (within noise at 40 runs), mission win 84% → 87%. Missions are no easier; the foes now differ from one to the next.
 
+## Rival pilots (2.135)
+
+Garrett, 2026-11-22: "you can also put the players up against other Non player characters." An elite stop may be held by a **rival pilot** (`rival`, one of the four elites the Elite archetype draws from): another pilot on the same stretch, on orders of its own. Its objective reads *Defeat the rival pilot*.
+
+- **What a pilot is**: human and two clades (`e.clades[0]` is `human`), with a hybrid card of one trait from each, so it plays a human trait as the squad's pilots do. It flies under a name (`T.RIVAL_NAMES`).
+- **It awakens as a pilot does**: E = level − 1 (a creature's is level − 2), so even at tier 1 it has an Ethereal face awake, and from level 4 all three.
+- **Its own moves**: Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest pilot in its zone, else it closes in. Vitality 15/18/22, speed 2, no Shield, never Hidden on its own.
+- **Measured** (240 elite missions a tier, heuristic player, by elite): tier 2 won 97% with 58% vitality left (Bulwark 60% / 35%, Harrier 100% / 71%, Tidecaller 100% / 82%); tier 3 won 80% with 38% left (Bulwark 35% / 24%, Harrier 98% / 58%, Tidecaller 100% / 75%). It sits between the Bulwark and the others.
+
 Biters called by Spawners and by the Heart are one tier lower than the mission (fodder stays fodder). Swarm waves arrive at the mission's own tier and cap at 3/3/4 live.
 
 ## The DM voice

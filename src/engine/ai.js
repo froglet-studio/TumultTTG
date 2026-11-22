@@ -161,6 +161,18 @@
           else setI('surge', t, `(${dmgOf(e, A.surge)} zone, Weakens)`);
           break;
         }
+        case 'rival': {
+          // a pilot: its blade on whoever is beside it, its sidearm on the weakest in its zone, else it closes in
+          const adj = adjacentTargets(m, e);
+          const lt = zoneTargets(m, e);
+          if (adj.length) setI('blade', adj.sort((a, b) => a.hp - b.hp)[0], `(${dmgOf(e, A.blade)})`);
+          else if (lt.length) setI('shot', lt.sort((a, b) => a.hp - b.hp)[0], `(${dmgOf(e, A.shot)} zone)`);
+          else {
+            const t = nearestTarget(m, e);
+            if (t) setI('blade', t, `(${dmgOf(e, A.blade)}, closing)`);
+          }
+          break;
+        }
         case 'heart': {
           if (e.phase === 1) {
             const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero');

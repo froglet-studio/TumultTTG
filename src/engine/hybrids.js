@@ -31,6 +31,21 @@
     REST: 1, // rounds the card cools past the face's own cooldown
   };
   T.HYBRID_FACES = ['P', 'P2', 'P3', 'E', 'E2', 'E3'];
+  /** Names a rival pilot flies under (drawn from the mission's 'hybrid' stream). */
+  T.RIVAL_NAMES = [
+    'Vesk',
+    'Orrin',
+    'Tamsa',
+    'Kell',
+    'Brisa',
+    'Dorn',
+    'Ilka',
+    'Sevrin',
+    'Mako',
+    'Ytta',
+    'Corran',
+    'Lune',
+  ];
   const num = (v, P, E) => (typeof v === 'function' ? v(P, E) : v || 0);
   const FOE_TGT = (t) => typeof t === 'string' && t.startsWith('foe');
 
@@ -91,7 +106,11 @@
   T.hybridize = function (m, e) {
     if (!R().HYBRID_FOES || !m.rngs || m.rngs.hybrid == null || T.HYBRID.NOT.includes(e.type)) return;
     const rng = T.stream(m.rngs, 'hybrid');
-    const species = rng.shuffle(T.SPECIES_ORDER.filter((sp) => sp !== 'human')).slice(0, 3);
+    const rival = !!T.ENEMIES[e.type].rival;
+    // a rival pilot is what a pilot is: human and two clades (2.135; Garrett: "you can also put the players up against other Non player characters")
+    const species = rival
+      ? ['human'].concat(rng.shuffle(T.SPECIES_ORDER.filter((sp) => sp !== 'human')).slice(0, 2))
+      : rng.shuffle(T.SPECIES_ORDER.filter((sp) => sp !== 'human')).slice(0, 3);
     const traits = [];
     for (const sp of species) {
       const pool = T.cardsOf(sp).filter((c) => !traits.includes(c.id) && usable(c));
@@ -104,9 +123,14 @@
       traits,
       level: L,
       P: Math.max(0, Math.min(R().P_CAP, L - 1)),
-      E: Math.max(0, Math.min(R().E_CAP, L - 2)),
+      // a rival pilot awakens as a pilot does, a face sooner than a creature
+      E: Math.max(0, Math.min(R().E_CAP, L - (rival ? 1 : 2))),
       cd: 0,
     };
+    if (rival) {
+      e.rival = true;
+      e.name = 'Rival ' + rng.pick(T.RIVAL_NAMES);
+    }
   };
   /** The trait behind face `fk` of a foe's hybrid card. */
   const traitOf = (e, fk) => T.CARD[e.hy.traits[T.HYBRID_FACES.indexOf(fk) % 3]];

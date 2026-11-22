@@ -123,3 +123,21 @@ test('a hybrid foe plays faces of its card in a mission, and the card cools befo
   }
   assert.ok(used > 0, 'foes used their hybrid cards');
 });
+
+test('a rival pilot is human and two clades, plays its card as a pilot would, and holds an elite stop', () => {
+  let found = null;
+  for (let seed = 1; seed <= 60 && !found; seed++) {
+    const m = mission(seed, 'elite', 3);
+    const r = m.enemies.find((e) => e.rival);
+    if (r) found = { m, r };
+  }
+  assert.ok(found, 'some elite stop is held by a rival pilot');
+  const { m, r } = found;
+  assert.equal(r.clades[0], 'human');
+  assert.equal(r.clades.length, 3);
+  assert.ok(!r.clades.slice(1).includes('human'));
+  assert.ok(r.name.startsWith('Rival '));
+  assert.equal(m.objective.target, 'rival');
+  assert.equal(r.hy.E, Math.min(3, r.hy.level - 1), 'it awakens as a pilot does, a face sooner than a creature');
+  assert.ok(T.CARD[r.hy.traits[0]].clades.includes('human'));
+});
