@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.128.1',
+    version: '2.129.0',
     items: [
+      {
+        text: "The board now lies tilted on the table in front of the scene, like a game board seen from your seat. The 2D button at the board's right edge lays it flat again (and 3D tilts it back); your choice is kept. On a phone, pinch with two fingers to zoom and move the board, and drag with one finger once zoomed. Is the tilted board easier or harder to read? Did a tap ever hit the wrong node?",
+      },
       {
         text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. Before, Continue did nothing. Did Continue ever leave you stuck?',
       },
