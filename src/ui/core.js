@@ -345,6 +345,16 @@
     U.beginDraft(0);
     U.render();
   };
+  /** Carry on a saved expedition that is still in its draft: the next pilot to draft, or the route once all are. */
+  U.resumeDraft = function (run) {
+    U.run = run;
+    if ((run.heroes || []).length < squadOf(run)) U.beginDraft(run.heroes.length);
+    else {
+      T.startMap(run);
+      T.saveRun(run);
+      U.screen = 'map';
+    }
+  };
   /** Begin drafting hero i (a guest playing online drafts their own while the host drafts theirs). */
   U.beginDraft = function (i) {
     U.draft = {
@@ -1259,7 +1269,10 @@
         const r = T.loadRun();
         if (!r) return;
         U.run = r;
-        if (r.phase === 'mission' && r.mission) {
+        if (r.phase === 'draft') {
+          // saved partway through the draft (Back out of it, or a reload): pick up at the next pilot to draft
+          U.resumeDraft(r);
+        } else if (r.phase === 'mission' && r.mission) {
           // a mission in progress is part of the save: carry on in the middle of the round
           U.screen = 'mission';
           U.enterMission();

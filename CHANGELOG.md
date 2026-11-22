@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.128.1 — 2026-11-22 — Continue a draft
+
+- **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
+
 ## 2.128.0 — 2026-11-22 — The Stack
 
 - **The mission screen rebuilt as "The Stack"** (Shombith's pick from the Frogma board, inspired by card-battle arenas). Enemy plans are a numbered stack in the order the foes act, each with its creature, health and what it will do.
