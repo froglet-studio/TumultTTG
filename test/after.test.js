@@ -38,8 +38,6 @@ function toReward({ T, U, click }, won) {
   click('[data-act="newRun"]');
   click('[data-act="prebuilt"][data-arg="cavitt"]');
   click('[data-act="confirmHero"]');
-  click('[data-act="prebuilt"][data-arg="kess"]');
-  click('[data-act="confirmHero"]');
   const run = U.run;
   const id = run.available.find((i) => !['haven', 'event'].includes(run.map.all[i].type));
   T.chooseNode(run, id);
@@ -60,7 +58,7 @@ test('After a mission: victory picks a trait per pilot with the old commands', {
     const run = toReward(ctx, true);
     assert.equal(U.screen, 'reward');
     assert.match(d.querySelector('.am-big').textContent, /Victory/);
-    assert.equal(d.querySelectorAll('.am-tab').length, 2, 'a tab for each pilot');
+    assert.equal(d.querySelectorAll('.am-tab').length, 0, 'one pilot needs no tabs');
     // pick the second offered trait, then take it
     const second = run.lastReward.offers[0][1];
     click(`[data-act="amRwCard"][data-arg="0|${second}"]`);
@@ -68,8 +66,6 @@ test('After a mission: victory picks a trait per pilot with the old commands', {
     assert.ok(d.querySelector('[data-act="rewardDone"]').disabled, 'onward waits for every pilot');
     click('[data-act="takeCard"]');
     assert.ok(run.heroes[0].cards.includes(second), 'the picked trait joins the kit');
-    click('[data-act="amRwHero"][data-arg="1"]');
-    click('[data-act="skipCard"][data-arg="1"]');
     click('[data-act="rewardDone"]');
     assert.equal(U.screen, 'map');
   } finally {
@@ -83,8 +79,6 @@ test('After a mission: a full kit exchanges a trait through the swap view', { sk
   try {
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
-    click('[data-act="confirmHero"]');
-    click('[data-act="prebuilt"][data-arg="kess"]');
     click('[data-act="confirmHero"]');
     const run = U.run;
     const h = run.heroes[0];

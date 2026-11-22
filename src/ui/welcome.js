@@ -76,6 +76,7 @@
 
   /* ───────────── Play now ───────────── */
   // A striker and a shield-bearer: a pair that forgives a first try. Pre-made pilots, as the draft offers them.
+  // A lone player flies the first (T.pilotsFor); a second seat would fly the other.
   W.FIRST_SQUAD = ['cavitt', 'ossa'];
   U.playNow = function () {
     U.playingNow = true; // read by run_started (src/ui/telemetry.js)
@@ -85,7 +86,7 @@
       U.playingNow = false;
     }
     const run = U.run;
-    W.FIRST_SQUAD.forEach((id) => {
+    W.FIRST_SQUAD.slice(0, run.party ? run.party.owner.length : 1).forEach((id) => {
       const pb = T.PREBUILTS.find((p) => p.id === id);
       const h = T.heroFromPrebuilt(run, pb);
       T.awaken(h);

@@ -19,10 +19,10 @@ try {
 }
 const skip = hasJsdom ? false : 'jsdom is not installed (run `npm install`)';
 
-test('a new run has one player who plays both heroes', () => {
+test('a new run has one player who flies one pilot (2.124)', () => {
   const run = T.newRun(1);
   assert.equal(T.playerCount(run), 1);
-  assert.deepEqual(run.party.owner, [0, 0]);
+  assert.deepEqual(run.party.owner, [0]);
   assert.deepEqual(H.plainProblems(run), []);
 });
 

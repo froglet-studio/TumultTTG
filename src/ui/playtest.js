@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.123.0',
+    version: '2.124.0',
     items: [
+      {
+        text: 'Solo is one pilot now. Pick Solo and you draft and fly a single pilot; its missions give back to meet it: foes at 60% vitality (the Heart 45%), 2 fewer rank-and-file foes, objectives ask 1 less, swarms 1 smaller, and clocks run 1 round longer. To fly two or more yourself, pick that many players and play every seat at one screen. Did a mission feel fair with one pilot? Which felt too easy or too hard?',
+      },
       {
         text: 'Ninety more painted pilots from Cosmic Shore (crews 13 to 17). Draft a pair one of them has, such as koi and orangutan, bison and hedgehog, or eel and axolotl, in either order, and your pilot wears that painting instead of a stand-in. Did your pilot get their own face more often?',
       },

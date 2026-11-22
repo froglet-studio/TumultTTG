@@ -36,8 +36,6 @@ function toMission(click) {
   click('[data-act="newRun"]');
   click('[data-act="prebuilt"][data-arg="cavitt"]');
   click('[data-act="confirmHero"]');
-  click('[data-act="prebuilt"][data-arg="kess"]');
-  click('[data-act="confirmHero"]');
   click('.mnode.avail');
 }
 
