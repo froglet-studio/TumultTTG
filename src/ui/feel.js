@@ -412,6 +412,7 @@
         for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
       }
       if (ctx.state === 'suspended') ctx.resume();
+      master.gain.value = 0.9 * (U.fxGain ? U.fxGain() : 1); // the mixer in Settings (src/ui/audio.js)
       return ctx;
     } catch (e) {
       return null;

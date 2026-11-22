@@ -237,11 +237,13 @@
           later(d, () => {
             flashTok(f.by, 'atk', 720);
             beam(m, by.pos, node, byFoe ? 'foe' : 'hero', melee);
+            if (U.cue) U.cue(melee ? 'melee' : byFoe ? 'foeAttack' : 'attack'); // src/ui/audio.js
           });
           d += 300;
         }
         later(d, () => {
           impact(m, node, byFoe ? 'foe' : 'hero');
+          if (U.cue && !U.cue(f.amount >= 4 ? 'heavy' : 'impact') && U.sfx.hitSynth) U.sfx.hitSynth();
           flashTok(f.ent, 'hit', 520);
           if (full()) shake(f.amount >= 4);
           if (by) toast(`${nameOf(m, f.by)} · ${f.amount}`, `hits ${nameOf(m, f.ent)}.`, byFoe ? 'rd' : 'cy');

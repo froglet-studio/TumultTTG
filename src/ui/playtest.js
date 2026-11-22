@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.128.0',
+    version: '2.129.0',
     items: [
+      {
+        text: "Sound: Cosmic Shore's soundtrack and effects are in. The music follows the screen (calm in menus, the draft and the route, harder in a mission, the outro after a win), and blows, kills, shields, cards and menus have Cosmic Shore's sounds. Open Settings, Audio studio: a mixer (master, music, effects, each with a mute), the player, every track (play one now, untick one to leave it out) and a pad for every effect. Does any sound feel wrong for its moment, or too loud? The offline file carries the effects and one music loop; the web version has all eleven tracks.",
+      },
       {
         text: 'The mission screen is new ("The Stack"): every foe is a creature now (Biters, Stingers, Kiters and the rest, each in one of four forms), enemy plans are a numbered stack in the order they act, and every blow plays out: a cast card, a beam or a slash, a big number, a toast, a round summary with a feat, and a wither when a foe dies. On PC drag and wheel-zoom the board, or use the buttons at its right edge. Is every attack easy to follow? Does any of it hide something you needed to see?',
       },

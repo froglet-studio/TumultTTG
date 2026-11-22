@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.129.0 — 2026-11-22 — Cosmic Shore's sound
+
+- **Music.** Cosmic Shore's eleven soundtrack tracks play in Tumult and follow the screen: calm tracks in the menus, the draft and on the route, harder ones in a mission, the outro after a win. They stream on the web version, crossfade from one to the next, and start with the first tap (browsers allow no sound before it). The offline file carries one loop, so it stays about 17 MB.
+- **Effects.** Fifty of Cosmic Shore's effects, taken from its FMOD project, answer Tumult's moments: buttons, taking and skipping a card, training, buying, setting out, each Ethereal face in its element's sound, a pilot's strike and a foe's in time with the show's beam, impacts, kills, shields, traps, reveals, a pilot going down and rising again, rewards, a won and a lost mission. The dice keep their own clatter. Where a file has not loaded yet the old synth answers, so the game never waits for a sound.
+- **The Audio studio** (Settings, Audio studio): master, music and effects levels, each with a mute, kept between visits; the player with back, pause and skip; every track with play now and a tick for the rotation, and Follow the game, Shuffle all or Repeat one; a pad for every effect to hear it. The quick panel in a mission has the player and the three levels. No rule changes.
+
 ## 2.128.0 — 2026-11-22 — The Stack
 
 - **The mission screen rebuilt as "The Stack"** (Shombith's pick from the Frogma board, inspired by card-battle arenas). Enemy plans are a numbered stack in the order the foes act, each with its creature, health and what it will do.

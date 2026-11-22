@@ -43,6 +43,27 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
   slow serif of the mission's banners and blows (a foe felled, a new round, a big hit). The Latin subset Google
   Fonts serves (`fonts.gstatic.com/s/cinzel/v26`, weight 700).
 
+## Sound
+
+| Folder | What | Key in `T.AUDIO` | Size |
+|---|---|---|---|
+| `audio/music/` | Cosmic Shore's soundtrack, eleven tracks, 96 kbps stereo MP3, loudness-normalised | `music/<name>` | 0.9–3.8 MB each, 27 MB in all |
+| `audio/sfx/` | fifty of Cosmic Shore's effects, 96 kbps mono MP3, trimmed and peak-normalised | `sfx/<name>` | 2–120 KB each, 1.2 MB in all |
+
+Both are Cosmic Shore's (`froglet-studio/cosmic-shore`, MIT, © Froglet Inc.; Shombith asked for them on
+2026-11-22; Garrett, 2026-11-14: Froglet's Hypersea games share their resources freely). The music is
+`Assets/_Audio/Music/` (the full-quality MP3s where there are some, the WAV masters otherwise), titled as Cosmic
+Shore's `Soundtrack` asset titles them. The effects are the files Cosmic Shore's FMOD project (`Cosmic Shore/`)
+plays for its Menu and Gameplay events, plus Cosmic Shore's menu hover (`Assets/_Audio/Sounds/Hover.ogg`) and
+its six creature-death layers (`Assets/_Audio/Sounds/MiguelSFX/`). Left out on purpose: the vessel engine and
+tadpole loops (long hums made for flight), the third-party library samples the FMOD project layers under them
+(the `S6k` recordings, `VGMSampColl`, the drum hits, a spring reverb impulse) and the haptic samples.
+`tools/audio-import.sh` rebuilds every file from a Cosmic Shore checkout; which Tumult moment plays which file is
+`src/ui/audio.js` (`docs/reference/AUDIO.md`).
+
+The offline file inlines every effect and only the music named in `manifest.audio.offline` (one 2-minute loop,
+1.6 MB), so it grows by about 3.5 MB rather than 40. The web version sends every file under a content-hashed name.
+
 ## Adding a pilot
 
 1. Resize their avatar to 160×160 (JPEG, quality 80) as `pilots/<CALLSIGN>.jpg` and their scene to 768×432
