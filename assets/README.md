@@ -10,7 +10,7 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 | `scenes/` | the same pilot in their world, 768×432, WebP | `scene/<CALLSIGN>` | ~40–50 KB each |
 | `scenes-hd/` | the same scenes at full size, 1536×864, WebP q74; the web version sends these in place of `scenes/` (`buildWeb` in `tools/build.mjs`), the single file keeps the small ones | (as `scene/`) | ~100 KB each |
 | `portraits/` | painted clade heads, 128 px tiles four to a row, WebP | `portrait/sheet-<N>` | ~17–61 KB a sheet |
-| `fonts/` | Chakra Petch SemiBold, Latin subset, WOFF2 | `@font-face` | 8 KB |
+| `fonts/` | Chakra Petch SemiBold and Cinzel Bold, Latin subsets, WOFF2 | `@font-face` | 8 KB + 15 KB |
 
 ## Where it comes from, and its licence
 
@@ -39,6 +39,9 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 - **Chakra Petch** is © 2018 The Chakra Petch Project Authors, under the SIL Open Font License 1.1
   (`fonts/OFL.txt`). It is Cosmic Shore's display face. Subset with
   `pyftsubset ChakraPetch-SemiBold.ttf --unicodes=U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201D,U+2026,U+2022,U+2190-2193,U+00D7 --flavor=woff2`.
+- **Cinzel** is © 2020 The Cinzel Project Authors, under the SIL Open Font License 1.1 (`fonts/OFL-Cinzel.txt`). It is the
+  slow serif of the mission's banners and blows (a foe felled, a new round, a big hit). The Latin subset Google
+  Fonts serves (`fonts.gstatic.com/s/cinzel/v26`, weight 700).
 
 ## Adding a pilot
 
