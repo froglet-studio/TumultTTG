@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.122.0',
+    version: '2.123.0',
     items: [
+      {
+        text: 'Ninety more painted pilots from Cosmic Shore (crews 13 to 17). Draft a pair one of them has, such as koi and orangutan, bison and hedgehog, or eel and axolotl, in either order, and your pilot wears that painting instead of a stand-in. Did your pilot get their own face more often?',
+      },
       {
         text: "Instincts: each clade now brings one always-on rule (a ✦ on the pilot sheet). The octopus cannot be pulled, the tortoise's Shields are 1 bigger, the koi starts with an Omni banked, the mantis shrimp hits 1 harder in melee, and so on for the pre-made pilots' twelve clades. Does yours make your pilot play differently?",
       },
