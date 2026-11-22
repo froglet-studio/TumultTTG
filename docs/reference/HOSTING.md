@@ -66,6 +66,6 @@ Only if the website cannot be used: TumultTTG → Settings → Pages → Source 
 
 The playtest artifact is published from `development` by a Claude session, never by GitHub: run `/playtest-publish` (`.claude/skills/playtest-publish/SKILL.md`). It republishes the same artifact so its link and its shared store (the online games in progress) are kept. The session must be signed in as someone with edit access to the artifact.
 
-Playtest page: _(not recorded yet: add the artifact's claude.ai link here)_
+Playtest page: https://claude.ai/artifact/T1baDAi6CRMzGz5NhUjPAT (titled "Tumult Online"; the build's `<title>Tumult Playtest</title>` is changed to `Tumult Online` before publishing)
 
 The `Playtest build` workflow also builds `TUMULT.playtest.html` on every push to `development` and keeps it on the run for 90 days, for anyone who wants the file without building it.
