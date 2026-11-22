@@ -48,6 +48,7 @@
     "ui/binder.js",
     "ui/guide.js",
     "ui/home.js",
+    "ui/profile.js",
     "ui/vehicles.js",
     "ui/audio.js"
   ],
@@ -68,6 +69,7 @@
     "ui/after.css",
     "ui/shell.css",
     "ui/home.css",
+    "ui/profile.css",
     "ui/audio.css"
   ],
   "playtest": {

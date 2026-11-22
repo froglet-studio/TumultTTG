@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.130.1',
+    version: '2.131.0',
     items: [
+      {
+        text: 'Signed in on the web version, the button at the top right with your initials (or face) opens your new Profile page: pick an avatar from any pilot painting, your Google or Discord picture, or initials, and set your display name. Does the name check make sense as you type? Does your new face show in the Lobby?',
+      },
       {
         text: "Sound: Cosmic Shore's soundtrack and effects are in. The music follows the screen (calm in menus, the draft and the route, harder in a mission, the outro after a win), and blows, kills, shields, cards and menus have Cosmic Shore's sounds. Open Settings, Audio studio: a mixer (master, music, effects, each with a mute), the player, every track (play one now, untick one to leave it out) and a pad for every effect. Does any sound feel wrong for its moment, or too loud? The offline file carries the effects and one music loop; the web version has all eleven tracks.",
       },
