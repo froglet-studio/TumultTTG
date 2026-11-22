@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.129.0 — 2026-11-22 — The tilted board
+
+- **The board lies on the table.** The mission board is tilted in perspective in front of the scene, as in the Stack mockup on the Frogma board. A 2D button at the board's right edge lays it flat (and 3D tilts it back), kept for this browser in `tumult_v2_ui`. A phone gets a gentler tilt.
+- **Pinch on phones.** Two fingers zoom and move the board; one finger drags it once zoomed, and a drag is never taken as a tap.
+- **Numbers land on their target through the camera.** The floating damage and heal numbers now follow the zoom and the tilt. No rule changes.
+
 ## 2.128.1 — 2026-11-22 — Continue a draft
 
 - **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
