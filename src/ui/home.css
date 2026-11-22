@@ -759,11 +759,445 @@
   border-radius: 12px;
 }
 
+/* ---------- Home 4, "Fog prow" (Frogma - Tumult, Home screen (Nov 22)) ----------
+   HyperSea's colours (Cosmic Shore's style guide): deep indigo, cyan for what is chosen, lime for the
+   one thing to press. The painting keeps the left of the screen; the command column stands on the
+   right; the captain is named on a plate at the bottom left. Corners are cut, never rounded. */
+.home {
+  --hs-ground: #00041f;
+  --hs-line: #434c89;
+  --hs-cyan: #00d4ff;
+  --hs-lime: #99ff80;
+  --hs-violet: #a600ff;
+  --hs-text: #e6e9ff;
+  --hs-soft: #9aa0cc;
+  --hs-cut: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  --hs-cut-s: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.home .hm-eyebrow {
+  color: var(--hs-cyan);
+  letter-spacing: 0.34em;
+}
+.home .hm-scene-img {
+  opacity: 0;
+  filter: blur(8px) brightness(0.55) saturate(1.2);
+  transition:
+    opacity 1.4s ease,
+    filter 1.4s ease;
+}
+.home .hm-scene-img.on {
+  opacity: 1;
+  filter: none;
+}
+.home:not(.is-page) .hm-veil {
+  background:
+    linear-gradient(270deg, rgba(0, 4, 31, 0.95) 0%, rgba(0, 4, 31, 0.72) 32%, rgba(0, 4, 31, 0) 60%),
+    linear-gradient(0deg, rgba(0, 4, 31, 0.75), transparent 32%);
+}
+.home:not(.is-page) .hm-hero {
+  margin-left: auto;
+  width: min(540px, 46vw);
+  max-width: none;
+  box-sizing: border-box;
+  padding: clamp(20px, 6vh, 72px) var(--hm-pad) 48px 0;
+}
+/* the panel that leads: a light runs round its border */
+@property --hm-a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.hm-panel {
+  position: relative;
+  padding: 28px 30px 26px;
+  margin-bottom: 4px;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.8);
+  backdrop-filter: blur(12px);
+  isolation: isolate;
+}
+.hm-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: conic-gradient(
+    from var(--hm-a),
+    rgba(67, 76, 137, 0.9) 0deg,
+    rgba(0, 212, 255, 0.95) 40deg,
+    rgba(166, 0, 255, 0.85) 80deg,
+    rgba(67, 76, 137, 0.9) 130deg,
+    rgba(67, 76, 137, 0.9) 360deg
+  );
+  animation: hm-spin 5s linear infinite;
+}
+.hm-panel::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.9);
+}
+@keyframes hm-spin {
+  to {
+    --hm-a: 360deg;
+  }
+}
+.home .hm-panel .hm-display {
+  margin: 10px 0 14px;
+  font-size: clamp(36px, 4vw, 58px);
+}
+.home .hm-panel .hm-lede {
+  color: #c3c8ee;
+  font-size: 16px;
+}
+.hm-pips {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+.hm-pips i {
+  width: 26px;
+  height: 6px;
+  background: #222645;
+}
+.hm-pips i.done {
+  background: var(--hs-cyan);
+  box-shadow: 0 0 8px var(--hs-cyan);
+}
+.hm-pips i.now {
+  background: var(--hs-lime);
+  box-shadow: 0 0 10px var(--hs-lime);
+  animation: hm-blink 1.6s ease-in-out infinite;
+}
+@keyframes hm-blink {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+/* the one thing to press: lime, a glow that breathes and a shine that sweeps across */
+.home button.hm-cta,
+.home button.primary.hm-cta {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  background: var(--hs-lime);
+  color: var(--hs-ground);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  animation: hm-glow 2.6s ease-in-out infinite;
+}
+.home .hm-panel .hm-ctas > .hm-cta {
+  flex: 1 1 100%;
+}
+.home button.hm-cta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  left: -80px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: skewX(-20deg);
+  animation: hm-sweep 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.home button.hm-cta:hover {
+  filter: brightness(1.08);
+}
+@keyframes hm-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 16px rgba(153, 255, 128, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 34px rgba(153, 255, 128, 0.7);
+  }
+}
+@keyframes hm-sweep {
+  0%,
+  55% {
+    left: -80px;
+  }
+  100% {
+    left: 120%;
+  }
+}
+/* the setup and the other ways in: bordered, cut, cyan when chosen */
+.home .hm-setup {
+  border: 1px solid var(--hs-line);
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.66);
+  backdrop-filter: blur(10px);
+}
+.home .hm-setup[open] {
+  border-color: var(--hs-cyan);
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.18);
+}
+.home .hs-seg {
+  border-radius: 0;
+  border-color: var(--hs-line);
+}
+.home .hs-opt.on {
+  background: var(--hs-cyan);
+  color: var(--hs-ground);
+}
+.home .hm-acts {
+  flex-direction: column;
+}
+.home .hm-act {
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  min-height: 62px;
+  padding: 12px 18px;
+  border: 1px solid var(--hs-line);
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.62);
+  backdrop-filter: blur(10px);
+  color: var(--hs-text);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.home .hm-act:hover,
+.home .hm-act:focus-visible {
+  border-color: var(--hs-cyan);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 212, 255, 0.35),
+    0 0 24px rgba(0, 212, 255, 0.22);
+  transform: translateX(-3px);
+}
+.home .hm-act.hm-back {
+  border-color: var(--hs-lime);
+}
+.hm-act-t {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.home .hm-act-t > span {
+  color: var(--hs-soft);
+}
+.hm-ic {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  color: var(--hs-cyan);
+}
+/* the captain's plate */
+.hm-plate {
+  position: fixed;
+  left: var(--hm-pad);
+  bottom: 40px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 40vw;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.hm-plate.out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.hm-plate-face {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  clip-path: var(--hs-cut);
+  border: 1px solid var(--hs-cyan);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.35);
+}
+.hm-plate-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+.hm-plate-lab {
+  font-family: var(--serif);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--hs-cyan);
+}
+.hm-plate-name {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.hm-plate-sub {
+  font-size: 13px;
+  color: #c3c8ee;
+}
+/* motes drifting up through the painting */
+.hm-motes {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hm-motes i {
+  position: absolute;
+  bottom: -10px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--hs-text);
+  box-shadow: 0 0 8px var(--hs-cyan);
+  opacity: 0;
+  animation: hm-mote 13s linear infinite;
+}
+.hm-motes i:nth-child(1) {
+  left: 3%;
+  animation-delay: 0s;
+  animation-duration: 11s;
+}
+.hm-motes i:nth-child(2) {
+  left: 11%;
+  animation-delay: 1.1s;
+  animation-duration: 12.6s;
+}
+.hm-motes i:nth-child(3) {
+  left: 19%;
+  animation-delay: 2.2s;
+  animation-duration: 14.2s;
+}
+.hm-motes i:nth-child(4) {
+  left: 27%;
+  animation-delay: 3.3s;
+  animation-duration: 15.8s;
+}
+.hm-motes i:nth-child(5) {
+  left: 35%;
+  animation-delay: 4.4s;
+  animation-duration: 17.4s;
+}
+.hm-motes i:nth-child(6) {
+  left: 43%;
+  animation-delay: 5.5s;
+  animation-duration: 11s;
+}
+.hm-motes i:nth-child(7) {
+  left: 51%;
+  animation-delay: 6.6s;
+  animation-duration: 12.6s;
+}
+.hm-motes i:nth-child(8) {
+  left: 59%;
+  animation-delay: 7.7s;
+  animation-duration: 14.2s;
+}
+.hm-motes i:nth-child(9) {
+  left: 67%;
+  animation-delay: 8.8s;
+  animation-duration: 15.8s;
+}
+.hm-motes i:nth-child(10) {
+  left: 75%;
+  animation-delay: 9.9s;
+  animation-duration: 17.4s;
+}
+.hm-motes i:nth-child(11) {
+  left: 83%;
+  animation-delay: 11s;
+  animation-duration: 11s;
+}
+.hm-motes i:nth-child(12) {
+  left: 91%;
+  animation-delay: 12.1s;
+  animation-duration: 12.6s;
+}
+@keyframes hm-mote {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-70vh);
+    opacity: 0;
+  }
+}
+.home .title-cap,
+.home .hm-squad,
+.home.has-run .hm-squad {
+  display: none;
+}
+.home.is-landing .hm-display {
+  font-size: clamp(38px, 4.2vw, 62px);
+}
+.home button.hm-big,
+.home .hm-ctas > button.ghost {
+  border: 1px solid var(--hs-line);
+  border-radius: 0;
+  clip-path: var(--hs-cut-s);
+  background: rgba(0, 4, 31, 0.6);
+  color: var(--hs-text);
+  min-height: 54px;
+}
+.home button.hm-big:hover {
+  border-color: var(--hs-cyan);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+}
+.home .hm-tile {
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  border-color: var(--hs-line);
+  background: rgba(0, 4, 31, 0.66);
+}
+.home .hm-tile b {
+  color: var(--hs-text);
+}
+.home.is-landing .hm-tiles {
+  right: auto;
+  left: var(--hm-pad);
+  bottom: 150px;
+  position: fixed;
+}
+@media (max-width: 1199px) {
+  .home.is-landing .hm-tiles {
+    display: none;
+  }
+}
+
 /* ---------- motion settings ---------- */
 :root[data-motion='off'] .hm-scene-img,
 :root[data-motion='off'] .hm-av.open,
-:root[data-motion='off'] .hm-lobby {
+:root[data-motion='off'] .hm-lobby,
+:root[data-motion='off'] .hm-panel::before,
+:root[data-motion='off'] .home .hm-cta,
+:root[data-motion='off'] .home .hm-cta::after,
+:root[data-motion='off'] .hm-pips i,
+:root[data-motion='off'] .hm-motes {
   animation: none;
+}
+:root[data-motion='off'] .hm-motes {
+  display: none;
 }
 :root[data-motion='reduced'] .hm-scene-img {
   animation: none;
@@ -771,7 +1205,11 @@
 @media (prefers-reduced-motion: reduce) {
   .hm-scene-img,
   .hm-av.open,
-  .hm-lobby {
+  .hm-lobby,
+  .hm-panel::before,
+  .home .hm-cta,
+  .home .hm-cta::after,
+  .hm-motes i {
     animation: none;
   }
 }
@@ -869,7 +1307,55 @@
   .hm-lobby {
     width: 100%;
   }
-  .home .title-cap {
+  .home .title-cap,
+  .hm-plate {
     display: none;
   }
+  .home:not(.is-page) .hm-hero {
+    width: auto;
+    margin-left: 0;
+    padding: 24vh var(--hm-pad) 32px;
+  }
+  .home.has-run:not(.is-page) .hm-hero {
+    padding-top: 16vh;
+  }
+  .home:not(.is-page) .hm-veil {
+    background: linear-gradient(0deg, rgba(0, 4, 31, 0.97) 40%, rgba(0, 4, 31, 0.3) 85%);
+  }
+  .hm-panel {
+    padding: 22px 20px;
+  }
+}
+
+/* the cut corners keep their border: a hairline drawn along each diagonal */
+.home .hm-act,
+.home .hm-setup,
+.home .hm-tile,
+.home button.hm-big,
+.home .hm-ctas > button.ghost {
+  --hs-edge: var(--hs-line);
+  background:
+    linear-gradient(135deg, transparent 9.3px, var(--hs-edge) 9.3px 10.7px, transparent 10.7px) top left / 14px 14px
+      no-repeat,
+    linear-gradient(135deg, transparent 9.3px, var(--hs-edge) 9.3px 10.7px, transparent 10.7px) bottom right / 14px 14px
+      no-repeat,
+    rgba(0, 4, 31, 0.64);
+}
+.home button.hm-big,
+.home .hm-ctas > button.ghost {
+  background:
+    linear-gradient(135deg, transparent 6.4px, var(--hs-edge) 6.4px 7.8px, transparent 7.8px) top left / 10px 10px
+      no-repeat,
+    linear-gradient(135deg, transparent 6.4px, var(--hs-edge) 6.4px 7.8px, transparent 7.8px) bottom right / 10px 10px
+      no-repeat,
+    rgba(0, 4, 31, 0.6);
+}
+.home .hm-act:hover,
+.home .hm-act:focus-visible,
+.home .hm-setup[open],
+.home button.hm-big:hover {
+  --hs-edge: var(--hs-cyan);
+}
+.home .hm-act.hm-back {
+  --hs-edge: var(--hs-lime);
 }

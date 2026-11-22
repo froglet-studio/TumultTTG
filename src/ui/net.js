@@ -1135,7 +1135,7 @@
     if (q.get('invite') && db && typeof db.useInvite === 'function') db.useInvite(code, q.get('invite'));
     N.linked = code;
     try {
-      history.replaceState(null, '', location.pathname); // the code is in the box; the link need not stay in the bar
+      history.replaceState(history.state, '', location.pathname); // the code is in the box; the link need not stay in the bar
     } catch (e) {
       /* the bar keeps it */
     }

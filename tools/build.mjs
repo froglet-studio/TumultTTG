@@ -148,7 +148,10 @@ export function buildWeb({ playtest = false } = {}) {
   const put = (path, body) => (files.set(path, body), path);
   // art and fonts: copied as they are, under a content-hashed name; the script and stylesheet name them
   const inlined = art(s.manifest, (file, kind) => {
-    const body = readFileSync(file);
+    // a scene has a full-size twin in assets/scenes-hd (1536×864); the web version fetches each painting
+    // only when a screen shows it, so it sends that one, and the single file keeps the small copy
+    const hd = file.replace(/([\\/])scenes([\\/])/, '$1scenes-hd$2');
+    const body = readFileSync(hd !== file && existsSync(hd) ? hd : file);
     const name = hashed(file.split(/[\\/]/).pop(), body);
     if (kind === 'font') return put(`assets/${name}`, body).slice('assets/'.length); // relative to the stylesheet
     const dir = file.split(/[\\/]/).slice(-2, -1)[0];

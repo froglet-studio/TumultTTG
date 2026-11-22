@@ -146,6 +146,8 @@ test(
       else {
         assert.match(once, /keepSquad/);
         assert.equal(U.missionOverExtra({ won: true }), '');
+        // the seed is the clock's, so the mission may be lost: show the card the next win would bring
+        modal.insertAdjacentHTML('beforeend', once);
       }
       assert.equal(U.missionOverExtra({ won: false }), '');
 

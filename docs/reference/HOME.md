@@ -18,6 +18,21 @@ it to the phone layout.
 | Lobby panel              | a drawer on any screen | Games (being played, with Join or Rejoin) and People (who is online, signed in). Opened from the Lobby chip in the top bar.                                                          |
 | Waiting during the draft | `draft`, step `wait`   | A player whose pilot is ready while others draft: every seat and whether its pilot is ready.                                                                                         |
 
+## The look: Home 4, "Fog prow" (2026-11-22)
+
+Shombith picked Home 4 from the board's *Home screen (Nov 22)* page. The landing and Home share it:
+
+- **A captain stands behind the screen**: a pilot's painting, full size in the web version (`assets/scenes-hd`,
+  1536×864), named on a plate at the bottom left (callsign, name, clades). Every 10 seconds another pilot, drawn at
+  random, fades in over the last: the new painting comes in from a blur while the old one fades out, and the plate
+  fades and rises with it (`U.homeRotate`). It stands still with motion Off or Reduced, and while the page is hidden.
+  The choice is the screen's own, not the game's, so it is not seeded.
+- **The command column on the right**: the Continue panel (a light runs round its border; the route as a row of
+  marks), the setup, then Host a table, Join a game and Make a pilot as bordered rows with an icon.
+- **HyperSea's colours** (Cosmic Shore's UI style guide): deep indigo, cyan for what is chosen or hovered, lime for
+  the one button to press (a breathing glow and a sweeping shine). Corners are cut, never rounded.
+- On a phone the column fills the width and the plate is left out.
+
 ## The new-expedition setup
 
 Four rows of choices and Start, unfolding in place on Home:

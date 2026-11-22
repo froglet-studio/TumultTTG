@@ -347,7 +347,7 @@
     W.invite = code;
     try {
       const clean = location.pathname + location.search.replace(/([?&])join=[^&]*&?/, '$1').replace(/[?&]$/, '');
-      history.replaceState(null, '', clean + (/join=/.test(location.hash) ? '' : location.hash));
+      history.replaceState(history.state, '', clean + (/join=/.test(location.hash) ? '' : location.hash));
     } catch (e) {}
     // online play answers within a few seconds or not at all (a page that cannot reach it)
     setTimeout(() => {

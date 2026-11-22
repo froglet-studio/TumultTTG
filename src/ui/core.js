@@ -1214,6 +1214,7 @@
     if (U.seaApply) U.seaApply();
     if (U.prefsApply) U.prefsApply();
     if (U.noteSeen) U.noteSeen();
+    if (U.navNote) U.navNote(); // the browser's Back button (src/ui/nav.js)
   };
 
   /* ───────────── ACTION DISPATCH (event delegation) ───────────── */

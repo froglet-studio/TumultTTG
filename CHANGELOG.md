@@ -9,6 +9,12 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.125.0 — 2026-11-22 — Fog prow Home
+
+- **Home rebuilt as "Fog prow"** (Shombith's pick from the Frogma board). A command column on the right holds Continue (with a light running round its border and the route as a row of marks), the setup, and Host, Join and Make a pilot as bordered rows. A captain plate at the bottom left names the pilot in the painting. HyperSea colours, cut corners, a lime Play button that breathes. Every 10 seconds a random captain fades in over the last; it holds still with motion Off or Reduced (`src/ui/home.js`, `docs/reference/HOME.md`).
+- **Sharper paintings on the web.** The web version now sends every scene at 1536×864 instead of 768×432, still fetched only when a screen shows it (`assets/scenes-hd`). The offline file keeps the small ones.
+- **The browser's Back button stays in the game.** Each screen the player chooses is a history entry; an expedition's steps are one entry, so Back from a mission returns to where the player came from with the run saved, and Forward resumes it. Back with a window open closes the window (`src/ui/nav.js`, `docs/reference/NAVIGATION.md`). No rule changes.
+
 ## 2.124.0 — 2026-11-22 — solo is one pilot
 
 - **A lone player flies one pilot** (Garrett: "solo only needs one character. Then if people want to play more they can use the hotseat"). Solo drafts one pilot, and Play now sets out with one. A player who wants to fly more picks that many players and plays every seat at one screen. A run saved with two pilots keeps them.
