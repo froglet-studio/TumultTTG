@@ -9,6 +9,10 @@
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
 
+## 2.123.0 — 2026-11-22 — crews 13 to 17
+
+- **Ninety more painted pilots.** Cosmic Shore's crews 13 to 17 (the next 90 of its painted roster) join the pilot art. A pilot whose two clades match one of their pairs, in either order, now wears that painting instead of a stand-in; 71 of the 90 pairs can be drafted today. Their portraits and scenes come from Cosmic Shore as before (`assets/README.md`). Art only: no rule changes.
+
 ## 2.122.0 — 2026-11-21 — clade instincts
 
 - **Instincts** (the shortlist's third pick). Each clade brings one always-on rule to every pilot of it. An instinct is one line on the pilot sheet, not a card, so a pilot has at most two. Each one bends a keyword a little, so the same board reads differently to each pilot. The first twelve cover the pre-made pilots' clades:
