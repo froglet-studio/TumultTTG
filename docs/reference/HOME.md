@@ -15,7 +15,7 @@ it to the phone layout.
 | Your table               | `lobby` (host)         | The open table: its choices (still changeable), the code and invite link, the seats, people online to invite, and Start.                                                             |
 | Waiting room             | `lobby` (guest)        | A guest at a table, before the host starts.                                                                                                                                          |
 | Join a game              | `join`                 | A code box, the player's name, sign in, and the games being played.                                                                                                                  |
-| Lobby panel              | a drawer on any screen | Games (being played, with Join or Rejoin) and People (who is online, signed in). Opened from the Lobby chip in the top bar.                                                          |
+| Lobby panel              | a drawer on any screen | "Drawer plus" (Shombith's pick, Frogma, 2026-11-22): a drawer with a glowing edge and three tabs. Games: tables being played, with Join on an open seat, Ask to join on one mid-mission, Rejoin on yours. People: who is online, a find box, friends first, with Join, Invite and Add. Requests: friend requests, asks to join your table and invites, with Accept and ✕. A person's row opens their card beside the drawer: their pilots, expeditions, hearts and canon notes, and the ways to play with them. |
 | Waiting during the draft | `draft`, step `wait`   | A player whose pilot is ready while others draft: every seat and whether its pilot is ready.                                                                                         |
 
 ## The look: Home 4, "Fog prow" (2026-11-22)
@@ -66,8 +66,11 @@ Every online piece is optional, so the offline file is still a whole game:
 - `U.net` (`src/ui/net.js`): hosting, joining, the games list. Without it, Host and Join are not shown.
 - The backend's `lobby` capability (`T.Backend.use('lobby')`, `src/web/backend-worker.js`): the People
   tab, the online count on the Lobby chip, and inviting from the table.
+- `U.social` (`src/ui/social.js`, web only): friends, requests, invites and profile cards. Without it
+  the Lobby shows the games and who is online, and asks for a sign-in for the rest.
 - `T.Account` (`src/ui/account.js`): Sign in in the top bar and on Join; a signed-in player's name is
-  used at the table. `U.askSignIn` opens the sign-in sheet.
+  used at the table. `U.askSignIn` opens the sign-in window, "Split hero" (Shombith's pick, 2026-11-22):
+  the captain behind Home on the left, the reasons and the sign-in buttons on the right.
 - `U.shell(tab, html)` (`src/ui/shell.js`): the shared top bar and phone tabs. Home puts the Lobby chip
   and the player's avatar in its right side through `U.shellRight`. Without the shell, Home draws a bar
   of its own.

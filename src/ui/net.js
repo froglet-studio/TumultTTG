@@ -305,6 +305,7 @@
         open: !!g.open,
         over: !!g.over,
         at,
+        by: str(g.by, 64), // the host's account (the Lobby's Ask to join writes to it)
       });
     }
     N.games = out.sort((a, b) => b.at - a.at);

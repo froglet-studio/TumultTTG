@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased — sign-in and the Lobby
+
+- **A guest is told where their save lives.** Under Continue, a player who is not signed in reads "Saved in this browser only" with a button to sign in and keep it on any device.
+- **The sign-in window rebuilt as "Split hero"** (Shombith's pick from the Frogma board): the captain behind Home on the left with a line said on the Ark, and on the right the reasons to sign in and a row for each sign-in, which lifts and glows under the pointer. It scrolls on a small phone.
+- **The Lobby rebuilt as "Drawer plus"**, with a glowing edge and three tabs. Games: Join an open seat without a code, Ask to join a table mid-mission, Rejoin yours. People: who is online, a find box, friends first, with Join, Invite and Add friend. Requests: friend requests, asks to join your table and invites, with Accept or ✕; they also arrive as a toast at once. A person's row opens their card: their pilots, expeditions, hearts and canon notes. The Lobby now opens over the first-visit page too.
+- **Friends, requests and profiles on the server.** New store paths `profile/<user>`, `friends/<user>` and `inbox/<to>/from/<from>`, checked by the Worker, and a nudge on the Lobby's socket so a note arrives at once (`docs/reference/BACKEND.md`). Accounts only; guests are asked to sign in. No rule changes.
+
 ## Unreleased — the web version
 
 - **A web version for froglet.games.** `npm run build:web` writes `dist/web/`: a 2 KB page that loads the game's script, stylesheet, font and each painting as separate files named by their content. A first visit downloads about 300 KB before the title screen draws, against 8 MB for the single file; a painting is fetched when a screen shows it; a returning player downloads only what changed. A service worker keeps the files for offline play. The offline single file is unchanged.

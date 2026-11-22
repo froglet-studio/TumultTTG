@@ -10,6 +10,13 @@
      saves/<user>                     { run, meta, at }         only the player, guests too
      lobby/<CODE>                     { code, host, names, … }  the list of games being played (2.80): anyone
                                                                 reads; the host's account writes its own
+     profile/<user>                   { name, pilots, runs, … } a player's card in the Lobby: anyone reads; the
+                                                                player's account writes its own
+     friends/<user>                   { list: [user id…] }      only the player
+     inbox/<to>/from/<from>           { kind, code, name, at }  one note from one player to another: a friend
+                                                                request or its answer, an ask to join a table or
+                                                                its answer, an invite. The sender writes it; the
+                                                                two of them read it; either one deletes it
 
    Writing anything others can read (pilots, canon notes) needs an account; a guest may keep a save.
    Every document others will read is rebuilt by the game's own rules before it is kept: a pilot by
@@ -102,6 +109,40 @@ function validListing(data, code, by) {
   };
 }
 
+const ART_KEY = /^[a-z0-9_-]{1,40}$/;
+const count = (v) => Math.max(0, Math.min(1e6, Math.floor(+v) || 0));
+function validProfile(data) {
+  const d = data || {};
+  const pilots = Array.isArray(d.pilots)
+    ? d.pilots
+        .slice(0, 6)
+        .map((p) => ({ name: str(p && p.name, 30), art: ART_KEY.test(p && p.art) ? p.art : '' }))
+        .filter((p) => p.name)
+    : [];
+  return {
+    name: str(d.name, 24),
+    pilots,
+    runs: count(d.runs),
+    wins: count(d.wins),
+    canon: count(d.canon),
+    best: count(d.best),
+    at: Date.now(),
+  };
+}
+function validFriends(data) {
+  const d = data || {};
+  const ids = Array.isArray(d.list) ? d.list.filter((x) => typeof x === 'string' && ID.test(x)) : [];
+  return { list: [...new Set(ids)].slice(0, 300), at: Date.now() };
+}
+const NOTE_KINDS = ['friend', 'friend-ok', 'join', 'join-ok', 'join-no', 'invite'];
+function validInboxNote(data, from) {
+  const d = data || {};
+  if (!NOTE_KINDS.includes(d.kind)) refuse(400, 'invalid-argument', 'unknown kind of note');
+  const code = /^[A-Z]{4}$/.test(d.code) ? d.code : '';
+  if (['join-ok', 'invite'].includes(d.kind) && !code) refuse(400, 'invalid-argument', 'this note needs a game code');
+  return { kind: d.kind, code, name: str(d.name, 24), from, at: Date.now() };
+}
+
 function validSave(data) {
   const d = data || {};
   let run = null;
@@ -135,6 +176,7 @@ export function ruleFor(path, kind, user, env) {
     if (p.length === 1 && (top === 'heroes' || top === 'lobby')) return { read: true };
     if (p.length === 1 && (top === 'canon' || top === 'canonReview')) return { read: reviewer };
     if (p.length === 3 && top === 'canon' && p[2] === 'notes') return { read: own(p[1]) || reviewer };
+    if (p.length === 3 && top === 'inbox' && p[2] === 'from') return { read: own(p[1]) && hasAccount(user) };
     refuse(404, 'not-found', 'no such collection');
   }
   const max = MAX_BYTES[top];
@@ -169,6 +211,26 @@ export function ruleFor(path, kind, user, env) {
       owner: me,
       max: 4 * 1024,
       validate: (d) => validListing(d, p[1], me),
+    };
+  // the Lobby's social side: a player's card, their friends, and the notes players send each other
+  if (top === 'profile' && p.length === 2)
+    return { read: true, write: own(p[1]) && hasAccount(user), owner: p[1], max: 4 * 1024, validate: validProfile };
+  if (top === 'friends' && p.length === 2)
+    return {
+      read: own(p[1]),
+      write: own(p[1]) && hasAccount(user),
+      owner: p[1],
+      max: 16 * 1024,
+      validate: validFriends,
+    };
+  if (top === 'inbox' && p.length === 4 && p[2] === 'from')
+    return {
+      read: (own(p[1]) || own(p[3])) && hasAccount(user),
+      write: own(p[3]) && hasAccount(user) && p[1] !== p[3],
+      deleteIf: () => (own(p[1]) || own(p[3])) && hasAccount(user),
+      owner: p[3],
+      max: 1024,
+      validate: (d) => validInboxNote(d, p[3]),
     };
   if (top === 'saves' && p.length === 2)
     return { read: own(p[1]), write: own(p[1]), owner: p[1], max, validate: validSave };

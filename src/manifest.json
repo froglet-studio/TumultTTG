@@ -76,6 +76,7 @@
       "ui/net.js",
       "ui/canon-net.js",
       "ui/heroes-net.js",
+      "ui/social.js",
       "web/analytics.js"
     ],
     "css": ["ui/net.css"]

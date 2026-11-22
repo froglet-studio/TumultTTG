@@ -255,6 +255,54 @@ test('room: a day without play forgets the game', async () => {
   assert.equal(ctx.store.size, 0);
 });
 
+test('store: profiles, friends and the notes players send each other', async () => {
+  const docs = S.store.memoryDocs();
+  const { setDoc, getDoc, listDocs, deleteDoc } = S.store;
+  const card = await setDoc(
+    docs,
+    'profile/u_ana',
+    {
+      name: 'Ana',
+      pilots: [
+        { name: 'Rosh', art: 'cavitt' },
+        { name: 'X', art: 'no good!' },
+      ],
+      runs: 4.7,
+      wins: -2,
+    },
+    ANA,
+    ENV,
+    100,
+  );
+  assert.deepEqual(card.pilots, [
+    { name: 'Rosh', art: 'cavitt' },
+    { name: 'X', art: '' },
+  ]);
+  assert.deepEqual([card.runs, card.wins], [4, 0], 'counts are whole and never negative');
+  assert.equal((await getDoc(docs, 'profile/u_ana', null, ENV)).data.name, 'Ana', 'anyone reads a profile');
+  await refusedWith(setDoc(docs, 'profile/u_ana', { name: 'Not Ana' }, BO, ENV, 10), 'permission-denied');
+  await refusedWith(setDoc(docs, 'profile/g_cy', { name: 'Guest' }, GUEST, ENV, 10), 'permission-denied');
+  // friends: only the player reads and writes their list
+  const f = await setDoc(docs, 'friends/u_ana', { list: ['u_bo', 'u_bo', 'bad id!'] }, ANA, ENV, 50);
+  assert.deepEqual(f.list, ['u_bo']);
+  await refusedWith(getDoc(docs, 'friends/u_ana', BO, ENV), 'permission-denied');
+  // a note goes from its sender into the other player's inbox; the two of them read it, either deletes it
+  await setDoc(docs, 'inbox/u_bo/from/u_ana', { kind: 'friend', name: 'Ana' }, ANA, ENV, 50);
+  assert.deepEqual(
+    (await listDocs(docs, 'inbox/u_bo/from', BO, ENV)).map((d) => [d.id, d.data.kind, d.data.from]),
+    [['u_ana', 'friend', 'u_ana']],
+  );
+  await refusedWith(listDocs(docs, 'inbox/u_bo/from', ANA, ENV), 'permission-denied');
+  await refusedWith(setDoc(docs, 'inbox/u_bo/from/u_ana', { kind: 'friend' }, BO, ENV, 50), 'permission-denied');
+  await refusedWith(setDoc(docs, 'inbox/u_ana/from/u_ana', { kind: 'friend' }, ANA, ENV, 50), 'permission-denied');
+  await refusedWith(setDoc(docs, 'inbox/u_bo/from/g_cy', { kind: 'join' }, GUEST, ENV, 50), 'permission-denied');
+  await refusedWith(setDoc(docs, 'inbox/u_bo/from/u_ana', { kind: 'spam' }, ANA, ENV, 50), 'invalid-argument');
+  await refusedWith(setDoc(docs, 'inbox/u_bo/from/u_ana', { kind: 'invite' }, ANA, ENV, 50), 'invalid-argument');
+  await refusedWith(deleteDoc(docs, 'inbox/u_bo/from/u_ana', LEAD, ENV), 'permission-denied');
+  await deleteDoc(docs, 'inbox/u_bo/from/u_ana', BO, ENV);
+  assert.equal((await listDocs(docs, 'inbox/u_bo/from', BO, ENV)).length, 0);
+});
+
 test('lobby: who is online, one row a player, a game code only when its host opens it', async () => {
   const { cleanStatus, listOf } = S.presence;
   assert.deepEqual(cleanStatus({ where: 'game', open: { code: 'ABCD', players: 9, max: 9 } }), {
@@ -296,6 +344,12 @@ test('lobby: who is online, one row a player, a game code only when its host ope
     ['Ana', 'Bo'],
   );
   assert.deepEqual(seen.players[1].open, { code: 'ABCD', players: 1, max: 2 });
+  // a nudge reaches only the player it names
+  const before = b.got.length;
+  a.end.send(JSON.stringify({ op: 'nudge', to: 'u_bo' }));
+  await pause(50);
+  assert.deepEqual(b.got.slice(before).pop(), { type: 'nudge', from: 'u_ana' });
+  assert.ok(!a.got.some((m) => m.type === 'nudge'), 'the sender hears no nudge of their own');
   b.end.close();
   await pause(600);
   assert.deepEqual(

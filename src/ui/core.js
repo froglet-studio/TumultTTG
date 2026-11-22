@@ -69,7 +69,8 @@
     document.body.appendChild(t);
     setTimeout(() => t.remove(), ms || 2200);
   };
-  /** Open a modal; `opts.sheet` slides it up from the bottom (a phone's More), `opts.side` in from the right. */
+  /** Open a modal; `opts.sheet` slides it up from the bottom (a phone's More), `opts.side` in from the right,
+   *  `opts.cls` names a look of its own (the window gets that class, its backdrop the class plus "-bg"). */
   U.openModal = function (html, onMount, opts) {
     U.modal = Object.assign({ html, onMount }, opts || {});
     U.render();
@@ -1192,7 +1193,7 @@
           break;
       }
     if (U.modal)
-      html += `<div class="modal-bg${U.modal.sheet ? ' sheet' : ''}${U.modal.side ? ' side' : ''}" data-act="closeModalBg"><div class="modal">${U.modal.html}</div></div>`;
+      html += `<div class="modal-bg${U.modal.sheet ? ' sheet' : ''}${U.modal.side ? ' side' : ''}${U.modal.cls ? ' ' + U.modal.cls + '-bg' : ''}" data-act="closeModalBg"><div class="modal${U.modal.cls ? ' ' + U.modal.cls : ''}">${U.modal.html}</div></div>`;
     html += tutorialHTML();
     // the web version lays the loading screen over a mission until its paintings are here (src/ui/shell.js)
     if (U.loadingGate) html += U.loadingGate() || '';
