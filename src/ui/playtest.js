@@ -19,13 +19,13 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.129.0',
+    version: '2.129.1',
     items: [
       {
         text: "The board now lies tilted on the table in front of the scene, like a game board seen from your seat. The 2D button at the board's right edge lays it flat again (and 3D tilts it back); your choice is kept. On a phone, pinch with two fingers to zoom and move the board, and drag with one finger once zoomed. Is the tilted board easier or harder to read? Did a tap ever hit the wrong node?",
       },
       {
-        text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. Before, Continue did nothing. Did Continue ever leave you stuck?',
+        text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. The Route tab does the same, and after a reload it finds the saved expedition. Before, Continue did nothing and the Route tab said there was no expedition. Did Continue or the Route tab ever leave you stuck?',
       },
       {
         text: 'The mission screen is new ("The Stack"): every foe is a creature now (Biters, Stingers, Kiters and the rest, each in one of four forms), enemy plans are a numbered stack in the order they act, and every blow plays out: a cast card, a beam or a slash, a big number, a toast, a round summary with a feat, and a wither when a foe dies. On PC drag and wheel-zoom the board, or use the buttons at its right edge. Is every attack easy to follow? Does any of it hide something you needed to see?',
