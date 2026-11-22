@@ -17,6 +17,7 @@
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
     FOE_HP: 180,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 in 2.108: weapons; 160 in 2.119: gear runs on Omni; 166 in 2.120: dice as AP; 180 since 2.122: instincts)
+    HYBRID_FOES: 1,          // 2.134: every foe but the Spawners and the Heart is a hybrid of three clades with a hybrid card (src/engine/hybrids.js); 0 turns it off
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally

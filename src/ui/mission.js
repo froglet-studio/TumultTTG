@@ -332,6 +332,21 @@
     // drag and wheel move the view on a PC; − / % / + anywhere (src/ui/show.js)
     if (U.cameraOn) U.cameraOn(host, svg, g.W, g.H);
   }
+  /** A hybrid foe's clades and the faces of its card it can play (src/engine/hybrids.js). */
+  function hybridTip(e) {
+    if (!e.hy || !e.clades) return '';
+    const kin = e.clades.map((sp) => (T.SPECIES[sp] ? T.SPECIES[sp].name : sp)).join(' · ');
+    const faces = T.foeHybridFaces(e)
+      .slice()
+      .reverse()
+      .map(
+        ({ fk, ab }) =>
+          `<div class="small">${fk[0] === 'E' ? '◆' : '•'} <b>${esc(ab.n)}</b> <span class="dim">${esc(ab.kind)}${ab.dmg ? ' ' + ab.dmg : ab.ward ? ' ' + ab.ward : ab.heal ? ' ' + ab.heal : ''}</span></div>`,
+      )
+      .join('');
+    const cd = e.hy.cd > 0 ? ` · card back in ${e.hy.cd}` : ' · card ready';
+    return `<div style="margin-top:4px" class="small"><b>Hybrid</b> ${esc(kin)} <span class="dim mono">· level ${e.hy.level} (P${e.hy.P} E${e.hy.E})${cd}</span></div>${faces}`;
+  }
   function tipFor(id) {
     const m = M();
     if (id.startsWith('e')) {
@@ -342,7 +357,7 @@
         .filter((k) => k !== 'Anchored' || !e.anchoredPerm)
         .map((k) => `<span class="state">${U.stateName(k)}</span>`)
         .join(' ');
-      return `<b>${U.icEnemy(e.type, e.glyph)} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}<div class="flavor">${esc(d.flavor)}</div>`;
+      return `<b>${U.icEnemy(e.type, e.glyph)} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}${hybridTip(e)}<div class="flavor">${esc(d.flavor)}</div>`;
     }
     if (id.startsWith('h')) {
       const h = m.heroes.find((x) => x.uid === +id.slice(1));

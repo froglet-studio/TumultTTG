@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.133.0',
+    version: '2.134.0',
     items: [
+      {
+        text: 'Foes are hybrids now: every foe but the Spawners and the Heart has three clades and a hybrid card of their traits, like a pet. Hover a foe to see its clades, its level and the faces it can play; its intent names the face and the clade it comes from. Higher-level foes (tier 3, elites, bigger squads) also play Ethereal faces. Does each foe feel different? Can you read what a hybrid face will do before it lands?',
+      },
       {
         text: 'Pets awaken: on the Upgrade screen a pet card now has an Ethereal button. Each point you spend there awakens one more of its three Ethereal faces (one from each of its clades), and the awake ones show on the pet card in a mission. Is it clear which face wakes next? Is a pet with awake faces worth the points you would have spent on a trait?',
       },
