@@ -1,10 +1,24 @@
 # Changelog
 
-## 2.129.0 — 2026-11-22 — Cosmic Shore's sound
+## 2.130.0 — 2026-11-22 — Cosmic Shore's sound
 
 - **Music.** Cosmic Shore's eleven soundtrack tracks play in Tumult and follow the screen: calm tracks in the menus, the draft and on the route, harder ones in a mission, the outro after a win. They stream on the web version, crossfade from one to the next, and start with the first tap (browsers allow no sound before it). The offline file carries one loop, so it stays about 17 MB.
 - **Effects.** Fifty of Cosmic Shore's effects, taken from its FMOD project, answer Tumult's moments: buttons, taking and skipping a card, training, buying, setting out, each Ethereal face in its element's sound, a pilot's strike and a foe's in time with the show's beam, impacts, kills, shields, traps, reveals, a pilot going down and rising again, rewards, a won and a lost mission. The dice keep their own clatter. Where a file has not loaded yet the old synth answers, so the game never waits for a sound.
 - **The Audio studio** (Settings, Audio studio): master, music and effects levels, each with a mute, kept between visits; the player with back, pause and skip; every track with play now and a tick for the rotation, and Follow the game, Shuffle all or Repeat one; a pad for every effect to hear it. The quick panel in a mission has the player and the three levels. No rule changes.
+
+## 2.129.1 — 2026-11-22 — The Route tab after a reload
+
+- **The Route tab finds the saved expedition.** After a reload it said "No expedition on its route yet" even with one saved; it now opens it where it stopped, and carries on the draft when the expedition is still drafting.
+
+## 2.129.0 — 2026-11-22 — The tilted board
+
+- **The board lies on the table.** The mission board is tilted in perspective in front of the scene, as in the Stack mockup on the Frogma board. A 2D button at the board's right edge lays it flat (and 3D tilts it back), kept for this browser in `tumult_v2_ui`. A phone gets a gentler tilt.
+- **Pinch on phones.** Two fingers zoom and move the board; one finger drags it once zoomed, and a drag is never taken as a tap.
+- **Numbers land on their target through the camera.** The floating damage and heal numbers now follow the zoom and the tilt. No rule changes.
+
+## 2.128.1 — 2026-11-22 — Continue a draft
+
+- **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
 
 ## 2.128.0 — 2026-11-22 — The Stack
 

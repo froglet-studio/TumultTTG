@@ -321,6 +321,34 @@
    * The board's view, as a part of its full drawing: zoom 1 is the whole board. It changes the SVG's viewBox,
    * so everything drawn on the board, and everything placed over it from the viewBox, follows.
    */
+  /**
+   * Where a point of the board's drawing sits in the board's box, in CSS pixels, through the camera and
+   * the tilt. For things laid over the board (the floating numbers), so they land on what they name.
+   */
+  U.boardToHost = function (bx, by) {
+    const host = $('#board'),
+      svg = U.ms && U.ms.svg;
+    if (!host || !svg || !svg.viewBox || !svg.viewBox.baseVal || typeof getComputedStyle !== 'function') return null;
+    const cs = getComputedStyle(svg),
+      hs = getComputedStyle(host);
+    const w = parseFloat(cs.width),
+      h = parseFloat(cs.height);
+    if (!(w > 0 && h > 0)) return null;
+    const vb = svg.viewBox.baseVal;
+    const sc = Math.min(w / vb.width, h / vb.height);
+    let x = (w - vb.width * sc) / 2 + (bx - vb.x) * sc,
+      y = (h - vb.height * sc) / 2 + (by - vb.y) * sc;
+    if (cs.transform && cs.transform !== 'none' && typeof DOMMatrix === 'function') {
+      const o = (cs.transformOrigin || '').split(' ').map(parseFloat);
+      const ox = o[0] || 0,
+        oy = o[1] || 0;
+      const p = new DOMMatrix(cs.transform).transformPoint(new DOMPoint(x - ox, y - oy, 0, 1));
+      x = p.x / (p.w || 1) + ox;
+      y = p.y / (p.w || 1) + oy;
+    }
+    return [x + (parseFloat(hs.paddingLeft) || 0), y + (parseFloat(hs.paddingTop) || 0)];
+  };
+
   U.cameraOn = function (host, svg, W, H) {
     if (!host || !svg) return;
     const cam = (U.ms.cam = U.ms.cam && U.ms.cam.W === W && U.ms.cam.H === H ? U.ms.cam : { x: 0, y: 0, z: 1, W, H });
@@ -357,6 +385,16 @@
       cam.z = z;
       apply();
     };
+    const tilt = () => {
+      const on = !(U.layout && U.layout.flat);
+      host.classList.toggle('tilt', on);
+      const b = host.querySelector('.camz .tl');
+      if (b) {
+        b.textContent = on ? '2D' : '3D';
+        b.setAttribute('aria-label', on ? 'Lay the board flat' : 'Tilt the board');
+      }
+    };
+    U.cameraTilt = tilt;
     U.cameraZoom = (k) => {
       const r = svg.getBoundingClientRect();
       if (k === 0) cam.z = 1;
@@ -367,10 +405,11 @@
       const z = document.createElement('div');
       z.className = 'camz';
       z.innerHTML =
-        '<button class="ghost" data-act="cam" data-arg="out" aria-label="Zoom out">−</button><button class="ghost pc" data-act="cam" data-arg="reset" aria-label="Show the whole board">100%</button><button class="ghost" data-act="cam" data-arg="in" aria-label="Zoom in">+</button>';
+        '<button class="ghost" data-act="cam" data-arg="out" aria-label="Zoom out">−</button><button class="ghost pc" data-act="cam" data-arg="reset" aria-label="Show the whole board">100%</button><button class="ghost" data-act="cam" data-arg="in" aria-label="Zoom in">+</button><button class="ghost tl" data-act="cam" data-arg="tilt"></button>';
       host.appendChild(z);
     }
     apply();
+    tilt();
     if (host._camWired) return;
     host._camWired = true;
     host.addEventListener(
@@ -409,6 +448,56 @@
     };
     host.addEventListener('pointerup', end);
     host.addEventListener('pointerleave', end);
+    // phones: two fingers pinch to zoom and move the board; one finger moves it once zoomed
+    let touch = null;
+    const mid = (t) => [(t[0].clientX + t[1].clientX) / 2, (t[0].clientY + t[1].clientY) / 2];
+    const span = (t) => Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) || 1;
+    host.addEventListener(
+      'touchstart',
+      (e) => {
+        const t = e.touches;
+        if (t.length === 2) touch = { two: true, m: mid(t), d: span(t), moved: true };
+        else if (t.length === 1)
+          touch = { two: false, x: t[0].clientX, y: t[0].clientY, cx: cam.x, cy: cam.y, moved: false };
+      },
+      { passive: true },
+    );
+    host.addEventListener(
+      'touchmove',
+      (e) => {
+        if (!touch) return;
+        const t = e.touches;
+        if (t.length === 2 && touch.two) {
+          e.preventDefault();
+          const mm = mid(t),
+            d = span(t);
+          const s = toBoard(0, 0)[2];
+          cam.x -= (mm[0] - touch.m[0]) / s;
+          cam.y -= (mm[1] - touch.m[1]) / s;
+          zoomAt(mm[0], mm[1], d / touch.d);
+          touch.m = mm;
+          touch.d = d;
+        } else if (t.length === 1 && !touch.two && cam.z > 1.001) {
+          const dx = t[0].clientX - touch.x,
+            dy = t[0].clientY - touch.y;
+          if (!touch.moved && Math.hypot(dx, dy) < 8) return;
+          e.preventDefault();
+          touch.moved = true;
+          const s = toBoard(0, 0)[2];
+          cam.x = touch.cx - dx / s;
+          cam.y = touch.cy - dy / s;
+          apply();
+        }
+      },
+      { passive: false },
+    );
+    host.addEventListener('touchend', (e) => {
+      if (!touch) return;
+      if (touch.moved) host._dragged = true;
+      if (!e.touches.length) touch = null;
+      else if (touch.two)
+        touch = { two: false, x: e.touches[0].clientX, y: e.touches[0].clientY, cx: cam.x, cy: cam.y, moved: true };
+    });
     // a drag is not a click on whatever it ended over
     host.addEventListener(
       'click',

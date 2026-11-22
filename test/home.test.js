@@ -146,3 +146,28 @@ test('the Lobby drawer: open tables to join, tables to ask into, and requests to
   assert.deepEqual(p.errors, []);
   p.close();
 });
+
+test('Continue on an expedition saved in its draft carries on drafting', { skip }, async () => {
+  const { build } = await import(pathToFileURL(path.join(__dirname, '..', 'tools', 'build.mjs')).href);
+  const p = await boot(build().html);
+  p.act('newRun');
+  assert.equal(p.U.screen, 'draft');
+  p.T.saveRun(p.U.run); // Back out of the draft keeps the expedition, in phase 'draft', without the draft's own state
+  p.U.run = null;
+  p.U.draft = null;
+  p.U.screen = 'title';
+  p.U.render();
+  assert.match(p.d.querySelector('.hm-panel').textContent, /Draft/i, 'Home offers to carry on drafting');
+  p.act('continueRun');
+  assert.equal(p.U.screen, 'draft', 'Continue opens the draft');
+  assert.ok(p.U.draft && p.U.draft.heroIdx === 0, 'at the first pilot still to draft');
+  // and the Route tab after a reload does the same, instead of saying there is no expedition
+  p.U.run = null;
+  p.U.draft = null;
+  p.U.screen = 'title';
+  p.U.render();
+  p.act('tab', 'route');
+  assert.equal(p.U.screen, 'draft', 'the Route tab carries on drafting');
+  assert.deepEqual(p.errors, []);
+  p.close();
+});

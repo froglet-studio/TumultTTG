@@ -1,6 +1,6 @@
 # Sound
 
-Tumult plays Cosmic Shore's soundtrack and effects (2.129, Shombith 2026-11-22). Where the files come from and their
+Tumult plays Cosmic Shore's soundtrack and effects (2.130, Shombith 2026-11-22). Where the files come from and their
 licence: `assets/README.md`. The code: `src/ui/audio.js` (browser only; the engine never makes a sound).
 
 ## How a file reaches the page
