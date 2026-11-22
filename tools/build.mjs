@@ -139,7 +139,9 @@ function sources({ playtest = false, web = false } = {}) {
 export function build({ playtest = false, fragment = false } = {}) {
   const s = sources({ playtest });
   const inlined = art(s.manifest);
-  const js = s.stamp + inlined.js + audio(s.manifest) + s.js;
+  // the claude.ai playtest page holds 16 MB at most: it carries the effects but no music
+  const sound = audio(playtest ? { ...s.manifest, audio: { ...s.manifest.audio, offline: [] } } : s.manifest);
+  const js = s.stamp + inlined.js + sound + s.js;
   const css = inlined.css + '\n' + s.css;
   if (js.includes('</script'))
     throw new Error('A source file contains "</script" — it would end the inline script early.');

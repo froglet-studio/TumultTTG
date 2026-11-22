@@ -7,11 +7,11 @@ licence: `assets/README.md`. The code: `src/ui/audio.js` (browser only; the engi
 
 `tools/build.mjs` fills `T.AUDIO` from `manifest.audio`: `T.AUDIO['sfx/<name>']` and `T.AUDIO['music/<name>']`.
 
-| | Offline file | Web version |
-|---|---|---|
-| Effects | all, as data URIs (~1.6 MB) | all, `assets/audio/sfx/<name>.<hash>.mp3` |
-| Music | only `manifest.audio.offline` (one loop) | all eleven, `assets/audio/music/<name>.<hash>.mp3` |
-| Fetched | already in the page | an effect after the first tap or key; a track when it starts, streamed |
+|         | Offline file                                                                                                  | Web version                                                            |
+| ------- | ------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Effects | all, as data URIs (~1.6 MB)                                                                                   | all, `assets/audio/sfx/<name>.<hash>.mp3`                              |
+| Music   | only `manifest.audio.offline` (one loop); none in the playtest file, whose claude.ai page holds 16 MB at most | all eleven, `assets/audio/music/<name>.<hash>.mp3`                     |
+| Fetched | already in the page                                                                                           | an effect after the first tap or key; a track when it starts, streamed |
 
 The service worker leaves music and any Range request to the browser's own cache (a cache cannot store a partial
 response); effects are cached like every other asset. MP3 plays in every browser Tumult supports, Safari included.
@@ -21,13 +21,13 @@ response); effects are cached like every other asset. MP3 plays in every browser
 One `<audio>` element at a time, crossfaded over 1.4 s. Nothing plays before the first tap or key (browsers
 forbid it). After every render the screen names a mood:
 
-| Screen | Mood |
-|---|---|
-| Home, Settings, Codex, Atlas, Pilots, Cards, Canon, the Lobby, Host, Join | Menus |
-| The draft | Draft |
-| The route, a reward, a haven, an event | Route |
-| A mission | Mission |
-| A won mission, a won expedition | Victory (the outro, once) |
+| Screen                                                                    | Mood                      |
+| ------------------------------------------------------------------------- | ------------------------- |
+| Home, Settings, Codex, Atlas, Pilots, Cards, Canon, the Lobby, Host, Join | Menus                     |
+| The draft                                                                 | Draft                     |
+| The route, a reward, a haven, an event                                    | Route                     |
+| A mission                                                                 | Mission                   |
+| A won mission, a won expedition                                           | Victory (the outro, once) |
 
 Each track lists the moods it suits (`TRACKS`). A new mood changes the track only when the one playing does not
 suit it, so walking from the route into a reward keeps the music going. A track played from the Audio studio plays
