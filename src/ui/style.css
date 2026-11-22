@@ -58,13 +58,16 @@ button {
   padding: 7px 12px;
   cursor: pointer;
   transition:
-    transform 0.08s,
-    background 0.15s,
-    border-color 0.15s;
+    transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1),
+    background 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s,
+    color 0.2s;
 }
 button:hover:not(:disabled) {
-  background: #1a2440;
+  background: #16203a;
   border-color: var(--cyan);
+  box-shadow: 0 6px 18px -8px rgba(0, 212, 255, 0.55);
   transform: translateY(-1px);
 }
 button:active:not(:disabled) {

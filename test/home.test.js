@@ -78,6 +78,16 @@ test('a first visit lands on Play now; the setup is kept and starts the expediti
   p.d.documentElement.setAttribute('data-motion', 'off');
   assert.equal(p.U.homeRotate(), false, 'with motion Off the captain stays');
   p.d.documentElement.removeAttribute('data-motion');
+  // the setup stays open while the player picks: a choice re-renders Home but does not fold it away
+  const setup = () => p.d.querySelector('.hm-setup');
+  assert.equal(setup().open, false, 'with an expedition saved the setup starts folded');
+  setup().open = true;
+  await until(() => p.U.setupOpen === true, 'the setup remembers it was opened');
+  p.act('pickTide', 'rising');
+  assert.equal(setup().open, true, 'picking the wind keeps the setup open');
+  assert.ok(setup().classList.contains('hm-quiet'), 'and does not replay its opening');
+  p.act('pickPlayers', 2);
+  assert.equal(setup().open, true, 'so does picking the players');
   // Make a pilot opens the Pilots tab's maker, not a new draft
   p.act('makePilot');
   assert.equal(p.U.screen, 'maker');
