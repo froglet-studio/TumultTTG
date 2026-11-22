@@ -468,7 +468,7 @@
   // UP allocation
   T.adjustUp = function (h, cardId, which, delta) {
     const i = which === 'E' ? 1 : 0;
-    // a gear card is bought as it is, never trained (2.119); a pet's E awakens its Ethereal faces one a point (2.132)
+    // a gear card is bought as it is, never trained (2.119); a pet's E awakens its Ethereal faces one a point (2.133)
     const c = T.CARD[cardId];
     const cap = c && c.gear ? 0 : which === 'E' ? R().E_CAP : R().P_CAP;
     const cur = h.up[cardId] || [0, 0];

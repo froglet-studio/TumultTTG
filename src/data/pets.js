@@ -15,7 +15,7 @@
      physical abilities. the whole card goes on cooldown when one is used"). One trait is drawn from each of
      its clades, and the pet card carries the three Physical faces, as faces P, P2 and P3. It sits in the
      pilot's kit, counts toward the nine, and grows with P like any Physical face.
-   • Awakening a pet (2.132; Garrett, 2026-11-22: "let players spend their upgrade points awakening ethereal
+   • Awakening a pet (2.133; Garrett, 2026-11-22: "let players spend their upgrade points awakening ethereal
      abilities in their pets"). The card also holds the three traits' Ethereal faces, as E, E2 and E3, asleep.
      Each upgrade point spent on the pet's E awakens one more of them, in its traits' order: E 1 wakes E, E 2
      wakes E2 as well, E 3 all three. Every awake one grows with the card's E like any Ethereal face, and costs

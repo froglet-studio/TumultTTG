@@ -278,7 +278,7 @@
     const cap = fk === 'P' ? capP : capE;
     const pts = h.upUnspent + T.boundLeft(h, cid);
     const can = lv < cap && pts > 0;
-    // a pet's E awakens its Ethereal faces one a point (2.132): its E shows the next to wake, or the last at E 3
+    // a pet's E awakens its Ethereal faces one a point (2.133): its E shows the next to wake, or the last at E 3
     const petEth = (e) => T.PET_ETH[Math.min(e, T.PET_ETH.length - 1)];
     const shown = c.pet && fk === 'E' ? petEth(E) : fk;
     const asleep = fk === 'E' && E < T.faceNeedE(cid, shown);

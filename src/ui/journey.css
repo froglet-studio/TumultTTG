@@ -1,9 +1,8 @@
 /* ============================================================================
    TUMULT — THE DRAFT AND THE ROUTE (Frogma "Finalised UI": D-Draft-v2, Route 3,
    G-JoinRoute). The draft keeps today's cards and flow in a frosted panel with
-   the kit filling up along its foot. The route reads like a climb: the Heart at
-   the top, the legs to come as bands, the next stops as big art cards, the stops
-   passed below. The chart of the whole route stays, folded, underneath.
+   the kit filling up along its foot. The route is a map of Tumult (overworld.js
+   and overworld.css) with the next stops as big art cards beneath it.
    ========================================================================== */
 
 /* ---------- the draft ---------- */
@@ -104,7 +103,7 @@
   gap: 8px;
 }
 
-/* ---------- the route: a journey column ---------- */
+/* ---------- the route: the squad beside the map ---------- */
 .route3 {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
@@ -134,97 +133,6 @@
   gap: 10px;
   max-width: 900px;
 }
-.j-heart {
-  position: relative;
-  height: 84px;
-  border: 1px solid #ff6b7a;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 14px;
-  background-color: #12050a;
-  background-size: cover;
-  background-position: center;
-  overflow: hidden;
-  box-shadow: 0 0 22px rgba(255, 107, 122, 0.45);
-  animation: heartGlow 1.8s ease-in-out infinite;
-}
-.j-heart::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(90, 13, 26, 0.75), rgba(18, 5, 10, 0.92));
-}
-.j-heart > * {
-  position: relative;
-}
-.j-heart-t {
-  font-family: var(--serif);
-  font-size: 22px;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: #ffb3bc;
-}
-.j-heart .small {
-  color: #ff8f9b;
-}
-@keyframes heartGlow {
-  0%,
-  100% {
-    box-shadow: 0 0 18px rgba(255, 107, 122, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 36px rgba(255, 107, 122, 0.8);
-  }
-}
-.j-leg,
-.j-past {
-  position: relative;
-  border: 1px solid var(--line2);
-  border-radius: 12px;
-  overflow: hidden;
-  background-color: var(--panel2);
-  background-size: cover;
-  background-position: center;
-}
-.j-leg {
-  height: 70px;
-  opacity: 0.7;
-  filter: grayscale(0.45);
-}
-.j-past {
-  height: 52px;
-}
-.j-shade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, rgba(5, 10, 20, 0.92), rgba(5, 10, 20, 0.55));
-}
-.j-leg-t,
-.j-past-t {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  right: 16px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.j-leg-t b,
-.j-past-t b {
-  font-family: var(--serif);
-  font-weight: 600;
-}
-.j-past-t .ok {
-  color: var(--gold);
-  margin-right: 4px;
-}
-.j-start {
-  border-style: dashed;
-  background: none;
-}
 .j-now {
   padding: 8px 0 0;
 }
@@ -253,25 +161,6 @@
       0 0 22px color-mix(in srgb, var(--glow) 60%, transparent);
   }
 }
-.route-panel > summary {
-  cursor: pointer;
-  list-style: none;
-}
-.route-panel > summary::-webkit-details-marker {
-  display: none;
-}
-.route-panel > summary::before {
-  content: '▸';
-  margin-right: 6px;
-  color: var(--dim);
-}
-.route-panel[open] > summary::before {
-  content: '▾';
-}
-.route-panel[open] > summary {
-  margin-bottom: 8px;
-}
-
 /* ---------- joining on the route ---------- */
 .joincard {
   clip-path: none;
@@ -313,9 +202,7 @@
   }
 }
 
-html[data-motion='reduced'] .j-heart,
 html[data-motion='reduced'] .journey .stopcard,
-html[data-motion='off'] .j-heart,
 html[data-motion='off'] .journey .stopcard,
 html[data-motion='off'] .pulse-t,
 html[data-motion='off'] .kit-slot.full {
@@ -328,12 +215,6 @@ html[data-motion='off'] .kit-slot.full {
   }
   .r3-squad {
     order: 2;
-  }
-  .j-heart {
-    height: 64px;
-  }
-  .j-heart-t {
-    font-size: 17px;
   }
   .draft2 .d2-acts {
     margin-left: 0;
