@@ -337,6 +337,7 @@
     // a bigger or more seasoned squad meets tougher foes (T.scaleFor): m.foeHp is that, in percent
     if (m.foeHp && m.foeHp !== 100) e.hp = e.maxHp = Math.round((e.maxHp * m.foeHp) / 100);
     e.uid = nextUid(m);
+    T.hybridize(m, e); // three clades and a hybrid card (src/engine/hybrids.js)
     m.enemies.push(e);
     return e;
   };
@@ -373,8 +374,7 @@
     return e;
   }
   T.enemyAbility = (e, key) => {
-    const ab = T.ENEMIES[e.type].abilities[key];
-    return ab;
+    return T.foeAbilityByKey(e, key);
   };
   T.enemyDmg = (e, ab) => (Array.isArray(ab.dmg) ? ab.dmg[e.ti] : ab.dmg || 0);
 
@@ -389,7 +389,7 @@
     B.build(spec.board);
     const m = {
       seed,
-      rngs: { dice: T.subSeed(seed, 'dice'), foes: T.subSeed(seed, 'foes') },
+      rngs: { dice: T.subSeed(seed, 'dice'), foes: T.subSeed(seed, 'foes'), hybrid: T.subSeed(seed, 'hybrid') },
       uids: 0,
       archetype,
       tier,
@@ -426,6 +426,7 @@
       spawnedCount: 0,
     };
     if (spec.foeHp && spec.foeHp !== 100) m.foeHp = spec.foeHp; // only when it scales: a two-pilot save is unchanged
+    if (spec.foeLv) m.foeLv = spec.foeLv; // the squad's power in foe levels (src/engine/hybrids.js)
     m.heroes.forEach((h) => (h.uid = nextUid(m)));
     spec.enemies.forEach((en) => T.spawnEnemy(m, en.type, tier, en.node));
     m.heroes.forEach((h, i) => {

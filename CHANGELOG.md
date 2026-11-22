@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.134.0 — 2026-11-22 — Hybrid foes
+
+- **Every foe is a triple hybrid** (Garrett, 2026-11-22), like a pet: three clades, none human, and a hybrid card of one trait from each, rolled as it spawns. Its role (Biter, Brute, Warden, ...) is still its body. When the card is back and a face has something to do, the foe telegraphs that face, named with its clade, then the card cools for the face's cooldown and a round more. Spawners and the Heart stay as they are.
+- **Foes have levels**: tier, one more for an elite, and a level for every 10 squad power past two new pilots' (one less for every 10 short). The card plays at P = level − 1 and E = level − 2; higher-level foes also play their Ethereal faces, one awake a point.
+- Faces become foe moves through the verbs foes already use (melee, zone, area, pushes, pulls, roots, Weaken, drain, plus a ward, a mend and a veil on itself). A hybrid attack hits at least as hard as the role's own. Hover a foe for its clades, level and faces.
+- Balance (`tools/sim.js 40`): mission win rates within half a point of before (heuristic 77.4 → 77.2, look-ahead 91.4 → 91.0), a little less vitality left; no easier.
+
 ## 2.133.0 — 2026-11-22 — Pets awaken
 
 - **Spend upgrade points to awaken a pet** (Garrett, 2026-11-22). A pet card now holds its three traits' Ethereal faces as well as their Physical ones. Each point on its E awakens one more, in order (E 1, E 2, E 3); an awake face shows on the pet card in hand, acts from the pet, costs its own trait's etherion and grows with the card's E. An awake pet card swaps a plain die for its element's d8, as any awakened card does. The Upgrade screen has a Physical and an Ethereal button for a pet. Simulated runs adopt no pets, so the balance tables are unchanged.

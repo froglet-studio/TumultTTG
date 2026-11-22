@@ -211,6 +211,7 @@ test('a Harrier that is Anchored cannot blink — and still lances a hero beside
     const e = T.spawnEnemy(m, 'harrier', 1, beside ? near : far);
     m.enemies = [e];
     m.spawns = [];
+    if (e.hy) e.hy.cd = 9; // the role's lance, not a face of its hybrid card (src/engine/hybrids.js)
     Object.assign(e.states, state);
     T.chooseIntents(m);
     assert.equal(e.intent.key, 'lance');

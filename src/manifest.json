@@ -13,6 +13,7 @@
     "data/canon.js",
     "engine/generators.js",
     "engine/engine.js",
+    "engine/hybrids.js",
     "engine/vehicles.js",
     "engine/ai.js",
     "engine/lookahead.js",

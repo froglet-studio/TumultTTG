@@ -40,6 +40,8 @@ Before 2.110 the squad's size and its *average* level were two separate numbers;
 
 The route shows the squad's power as a ⚖ pill, and every stop card shows the numbers it will be played with.
 
+**Foe levels (2.134).** The squad's power also levels its foes' hybrid cards: a level for every 10 points past 20, one less for every 10 short (`spec.foeLv`, `docs/reference/MISSIONS_AND_BESTIARY.md`, Hybrid foes).
+
 ## A lone pilot (2.124)
 
 A squad short of two new pilots' power gets some of the mission back. For every point of power short of 20 (`T.SCALING.under`), rounded to the nearest:
