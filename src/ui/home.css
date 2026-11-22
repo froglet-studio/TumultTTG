@@ -1430,6 +1430,34 @@
   }
 }
 
+.hm-keep {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--hs-soft, #9aa0cc);
+}
+.home button.hm-keep-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--hs-cyan);
+  cursor: pointer;
+  background-image: linear-gradient(var(--hs-cyan), var(--hs-cyan));
+  background-size: 0 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.25s ease;
+}
+.home button.hm-keep-btn:hover:not(:disabled) {
+  background: none;
+  background-image: linear-gradient(var(--hs-cyan), var(--hs-cyan));
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  box-shadow: none;
+  transform: none;
+}
+
 /* ---------- motion settings ---------- */
 :root[data-motion='off'] .hm-scene-img,
 :root[data-motion='off'] .hm-av.open,

@@ -64,6 +64,16 @@ test('a first visit lands on Play now; the setup is kept and starts the expediti
   p.U.render();
   assert.ok(p.d.querySelector('[data-act="continueRun"]'), 'Continue on Home');
   assert.equal(p.d.querySelector('.is-landing'), null, 'no landing once something is saved');
+  assert.equal(p.d.querySelector('.hm-keep'), null, 'the offline file has no accounts, so no sign-in line');
+  const keepA = p.T.Account;
+  p.T.Account = { available: () => true, user: () => ({ id: 'g1', guest: true }) };
+  p.U.render();
+  assert.match(p.d.querySelector('.hm-keep').textContent, /this browser only/, 'a guest is told where the save lives');
+  p.T.Account = { available: () => true, user: () => ({ id: 'u1', guest: false, name: 'Sho' }) };
+  p.U.render();
+  assert.equal(p.d.querySelector('.hm-keep'), null, 'a signed-in player is not asked');
+  p.T.Account = keepA;
+  p.U.render();
   // a captain stands behind Home, and every few seconds another fades in over them
   const name = () => p.d.querySelector('.hm-plate-name').textContent;
   const first = name();

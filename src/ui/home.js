@@ -378,11 +378,16 @@
         <div class="hs-foot"><p class="hs-line">${esc(setupLine(s))}${s.players > 2 ? ' A bigger squad meets bigger missions.' : ''}</p><button class="primary hm-cta" data-act="${go}">${go === 'hostOpen' ? 'Host it ▶' : 'Start ▶'}</button></div>
       </div></details>`;
   }
+  /** One quiet line under Continue for a player who is not signed in: the expedition lives in this browser only. */
+  function keepNudge() {
+    if (!acct() || signedIn()) return '';
+    return `<p class="hm-keep">Saved in this browser only. <button class="hm-keep-btn" data-act="signIn" data-arg="Sign in to keep your expedition, pilots and saves on any device.">Sign in to keep it on any device</button></p>`;
+  }
   function home(meta, run) {
     const w = run ? whereNow(run) : null;
     const games = liveGames();
     const hero = w
-      ? `<div class="hm-panel"><span class="hm-eyebrow">${esc(w.kick)}</span><h1 class="hm-display hm-place">${esc(w.title)}</h1>${pips(w)}${w.line ? `<p class="hm-lede">${esc(w.line)}</p>` : ''}<div class="hm-ctas"><button class="primary hm-cta" data-act="continueRun">Continue ▶</button></div></div>`
+      ? `<div class="hm-panel"><span class="hm-eyebrow">${esc(w.kick)}</span><h1 class="hm-display hm-place">${esc(w.title)}</h1>${pips(w)}${w.line ? `<p class="hm-lede">${esc(w.line)}</p>` : ''}<div class="hm-ctas"><button class="primary hm-cta" data-act="continueRun">Continue ▶</button></div>${keepNudge()}</div>`
       : `<div class="hm-panel"><span class="hm-eyebrow">An expedition on Tumult</span><h1 class="hm-display">Tumult</h1><p class="hm-lede">Draft a squad of pilots from Tumult's bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</p></div>`;
     const tiles = [];
     if (online()) {
