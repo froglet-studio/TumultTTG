@@ -52,3 +52,15 @@ test('the service worker leaves streamed music to the browser', () => {
   const sw = fs.readFileSync(path.join(root, 'src', 'web', 'sw.js'), 'utf8');
   assert.match(sw, /\/assets\/audio\/music\/'\) \|\| req\.headers\.has\('range'\)\) return;/);
 });
+
+test('the playtest file stays under the claude.ai page limit: effects, no music', async () => {
+  const { build } = await load();
+  const { html, js } = build({ playtest: true });
+  const sound = JSON.parse(js.match(/window\.T\.AUDIO = (\{[^\n]*\});/)[1]);
+  assert.ok(!Object.keys(sound).some((k) => k.startsWith('music/')), 'no music');
+  assert.ok(
+    Object.keys(sound).some((k) => k.startsWith('sfx/')),
+    'the effects',
+  );
+  assert.ok(Buffer.byteLength(html) < 16 * 1024 * 1024, `${(Buffer.byteLength(html) / 1048576).toFixed(1)} MB`);
+});
