@@ -22,14 +22,34 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [22, 24]
+        # a pull request is tested on Node 22 alone; pushes to the three branches add Node 24 (Shombith,
+        # 2026-11-22: CI was too slow)
+        node: ${{ github.event_name == 'pull_request' && fromJSON('[22]') || fromJSON('[22, 24]') }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          fetch-depth: 0
+      # a change to nothing but notes (Markdown, the Claude skills) skips the build and tests; the job
+      # still runs and passes, so a required check is never left waiting
+      - name: anything to build?
+        id: what
+        env:
+          BASE: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE" ] || ! git cat-file -e "$BASE^{commit}" 2>/dev/null; then echo "code=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          changed=$(git diff --name-only "$BASE" HEAD | grep -Ev '\.md$|^\.claude/' || true)
+          if [ -n "$changed" ]; then echo "code=true" >> "$GITHUB_OUTPUT"; else echo "code=false" >> "$GITHUB_OUTPUT"; echo "Only notes changed: no build or tests." >> "$GITHUB_STEP_SUMMARY"; fi
+      - if: steps.what.outputs.code == 'true'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: ${{ matrix.node }}
-      - run: npm ci
-      - run: npm run format:check
-      - run: npm run build
-      - run: npm run build:web
-      - run: npm test
+      - if: steps.what.outputs.code == 'true'
+        run: npm ci
+      - if: steps.what.outputs.code == 'true'
+        run: npm run format:check
+      - if: steps.what.outputs.code == 'true'
+        run: npm run build
+      - if: steps.what.outputs.code == 'true'
+        run: npm run build:web
+      - if: steps.what.outputs.code == 'true'
+        run: npm test
