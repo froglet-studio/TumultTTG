@@ -317,7 +317,7 @@
       switch (f.t) {
         case 'play': {
           const c = T.CARD && T.CARD[f.card];
-          lastEl = c && f.face === 'E' ? (c.E && c.E.elt) || c.el : null;
+          lastEl = c && T.isEthFace(f.face) ? (c[f.face] && c[f.face].elt) || c.el : null;
           helped = 0;
           break;
         }

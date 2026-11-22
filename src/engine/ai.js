@@ -535,7 +535,7 @@
         h.cards.some((c) =>
           T.faceKeys(c).some((fk) =>
             T.CARD[c][fk].fx.some(
-              (x) => (fk === 'E' && x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
+              (x) => (T.isEthFace(fk) && x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
             ),
           ),
         ) ||
@@ -574,7 +574,7 @@
           .sort((a, b) => B.dist(m.board, a, goal.node, true) - B.dist(m.board, b, goal.node, true))[0];
         const gain = cur - B.dist(m.board, node, goal.node, true);
         if (gain <= 0) continue;
-        const score = gain * 2 - face.ap - (fk === 'E' ? 1 : 0) + (node === goal.node && goal.needOn ? 5 : 0);
+        const score = gain * 2 - face.ap - (T.isEthFace(fk) ? 1 : 0) + (node === goal.node && goal.needOn ? 5 : 0);
         if (!best || score > best.score) best = { cid, fk, ctx: { node }, score };
       }
     if (best && best.score > 0) {
@@ -688,7 +688,7 @@
       for (const fk of T.faceKeys(cid)) {
         const card = T.CARD[cid];
         const f = card[fk];
-        if (fk === 'E' && T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) continue;
+        if (!T.faceAwake(h, cid, fk)) continue;
         const elt = f.elt || card.el;
         const eln = f.el || 0;
         if (!T.payableAsAP(h, f.ap, elt, eln)) continue;
@@ -799,7 +799,7 @@
                 score = dmg * n * 2;
               } else continue;
               score -= face.ap;
-              if (fk === 'E') score -= 1;
+              if (T.isEthFace(fk)) score -= 1;
             } else if (face.fx.some((x) => x.v === 'shield' || (x.v === 'thorns' && x.next) || x.v === 'stasis')) {
               if (threat >= 4) score = threat;
               else continue;

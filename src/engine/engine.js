@@ -1913,7 +1913,8 @@
       E = T.heroE(h, cardId);
     const elt = face.elt || card.el;
     const eln = face.el || 0;
-    if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
+    if (!face) return { ok: false, why: 'no such face' };
+    if (!T.faceAwake(h, cardId, faceKey)) return { ok: false, why: 'needs E ' + T.faceNeedE(cardId, faceKey) };
     // a pet's card acts from the pet (src/data/pets.js): no pet on the board, no play
     const body = T.isPetCard(h, cardId) ? T.petFor(m, h, cardId) : h;
     if (!body) return { ok: false, why: 'your pet is not here' };
@@ -1941,7 +1942,7 @@
     const body = chk.body;
     say(
       m,
-      `${h.name} plays ${card.name} — ${face.n}${faceKey === 'E' ? ' (' + T.ETHERIONS[elt].name + ')' : ''}${body !== h ? ', through ' + body.name : ''}.`,
+      `${h.name} plays ${card.name} — ${face.n}${T.isEthFace(faceKey) ? ' (' + T.ETHERIONS[elt].name + ')' : ''}${body !== h ? ', through ' + body.name : ''}.`,
       'hero',
     );
     fx(m, { t: 'play', hero: h.uid, card: cardId, face: faceKey });
@@ -1969,7 +1970,7 @@
       say(m, `${body.name} waits for dusk.`, 'hero');
     } else T.runEffects(m, body, face.fx, rctx);
     // Resonance (2.118): an Ethereal face leaves its element in the air, after it has drawn on what was there
-    if (faceKey === 'E' && T.AIR_ELS.includes(elt)) T.leaveInAir(m, elt);
+    if (T.isEthFace(faceKey) && T.AIR_ELS.includes(elt)) T.leaveInAir(m, elt);
     if (body !== h) delete rctx.pendingFreeMove; // a free step a pet's face grants is the pet's, and it has taken it
     T.afterAction(m);
     return { ok: true, ctx: rctx };

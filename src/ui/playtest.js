@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.131.0',
+    version: '2.132.0',
     items: [
+      {
+        text: 'Pets awaken: on the Upgrade screen a pet card now has an Ethereal button. Each point you spend there awakens one more of its three Ethereal faces (one from each of its clades), and the awake ones show on the pet card in a mission. Is it clear which face wakes next? Is a pet with awake faces worth the points you would have spent on a trait?',
+      },
       {
         text: 'Signed in on the web version, the button at the top right with your initials (or face) opens your new Profile page: pick an avatar from any pilot painting, your Google or Discord picture, or initials, and set your display name. Does the name check make sense as you type? Does your new face show in the Lobby?',
       },

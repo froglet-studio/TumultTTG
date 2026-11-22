@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.132.0 — 2026-11-22 — Pets awaken
+
+- **Spend upgrade points to awaken a pet** (Garrett, 2026-11-22). A pet card now holds its three traits' Ethereal faces as well as their Physical ones. Each point on its E awakens one more, in order (E 1, E 2, E 3); an awake face shows on the pet card in hand, acts from the pet, costs its own trait's etherion and grows with the card's E. An awake pet card swaps a plain die for its element's d8, as any awakened card does. The Upgrade screen has a Physical and an Ethereal button for a pet. Simulated runs adopt no pets, so the balance tables are unchanged.
+
 ## 2.131.0 — 2026-11-22 — Your profile
 
 - **A Profile page** (Shombith's pick from the Frogma board, "Profile page"). The account button at the top right now shows your avatar and opens it: your card as others see it on the left, your display name and avatar on the right, your sign-ins below. On a phone it is one column with Save kept in reach, and also under More.
