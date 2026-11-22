@@ -273,6 +273,7 @@ test(
   { skip, timeout: 60_000 },
   async () => {
     const { d, click, errors, records } = await page();
+    click('[data-act="pickPlayers"][data-arg="2"]'); // two pilots to draft: the second skips the question
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
     assert.ok(d.querySelector('.canon-ask .canon-detail'), 'the question sits under the upgrades');

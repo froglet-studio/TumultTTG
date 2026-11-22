@@ -62,7 +62,7 @@
   /** What a setup says in a sentence, for the line under the choices and for "Same as last time". */
   function setupLine(s) {
     const wind = T.TIDES[s.tide].n;
-    if (s.players === 1) return `Solo: you draft and fly the whole squad. ${wind}.`;
+    if (s.players === 1) return `Solo: you draft and fly one pilot, and the missions answer a squad of one. ${wind}.`;
     const where = s.where === 'online' ? 'online, a screen each' : 'one screen';
     const how = s.rounds === 'live' ? 'you all play each round at once' : 'you take turns';
     const pass = s.where === 'online' ? '' : ', passing it round';

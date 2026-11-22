@@ -15,7 +15,8 @@ function createHarness(T = loadTumult()) {
     run.heroes.forEach((h) => T.autoAllocate(h));
   }
   /** A squad of n pre-made heroes, starting from index i (n = 2 is prebuiltSquad(run, i, i + 2)). */
-  const squadIds = (i, n) => (n === 2 ? [i % 6, (i + 2) % 6] : Array.from({ length: n }, (x, k) => (i + k) % 6));
+  const squadIds = (i, n) =>
+    n === 1 ? [i % 6] : n === 2 ? [i % 6, (i + 2) % 6] : Array.from({ length: n }, (x, k) => (i + k) % 6);
 
   /** Two heroes drafted at random from packs (random bloodlines, random picks). */
   function draftedSquad(run, n = 2) {

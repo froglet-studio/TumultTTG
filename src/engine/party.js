@@ -10,8 +10,12 @@
 (function (T) {
   T.MAX_PLAYERS = 5; // Garrett, 2026-11-20 (2 until 2.76)
 
-  /** How many pilots a party of n players flies: two at least (one player flies both), else one each. */
-  T.pilotsFor = (n) => Math.max(2, n | 0);
+  /**
+   * How many pilots a party of n players flies: one each, so a lone player flies one pilot (2.124; Garrett,
+   * 2026-11-22: "solo only needs one character", and a player who wants more plays the seats of a hot-seat table).
+   * Until 2.124 a lone player flew two; a run saved then keeps its two.
+   */
+  T.pilotsFor = (n) => Math.max(1, n | 0);
   /** A new party: n players; its pilots (T.pilotsFor) are dealt to seats in turn (pilot i → seat i mod n). */
   T.newParty = function (n, names) {
     n = Math.max(1, Math.min(T.MAX_PLAYERS, n | 0 || 1));

@@ -29,11 +29,20 @@
     CARD_UP: 2, // a trait past the first six counts as this many points
     power: { hp: 0.05, foes: 0.2, need: 0.1, swarm: 0.1 },
     // the Heart: its chamber has no objective to grow, so a stronger squad meets more of the fight itself. Per point
-    // of power, the Heart's foes take this much more vitality on top of `power.hp`, and its extras are `foes` of the usual.
-    boss: { hp: 0.02, foes: 0.5 },
+    // of power, the Heart's foes take this much more vitality on top of `power.hp`, and its extras are `foes` of the usual;
+    // per point short of two new pilots, `under` less on top of `under.hp`.
+    boss: { hp: 0.02, foes: 0.5, under: 0.015 },
+    // a squad weaker than two new pilots (a lone pilot: Garrett, 2026-11-22, "solo only needs one character"). For
+    // every point of power short of two new pilots' the mission gives back, rounded to the nearest:
+    //  - hp:    each foe's vitality shrinks by this share.
+    //  - foes:  fewer foes: the mission's own rank and file, the last placed first (never its boss, elite or spawner).
+    //  - need:  less to do (never under 1); swarm: a swarm's cap shrinks; clock: rounds more on every clock the tide
+    //           shortens (not a hold's).
+    // A lone new pilot is 10 short: 60% vitality, 2 fewer foes, 1 less to do, a swarm 1 smaller, a clock 1 round longer.
+    under: { hp: 0.04, foes: 0.2, need: 0.1, swarm: 0.1, clock: 0.1 },
   };
 
-  /** How many pilots fly in this run (a squad is two to five). */
+  /** How many pilots fly in this run (a squad is one to five). */
   T.squadSize = (run) => Math.max(run.heroes.length, run.party ? run.party.owner.length : 0, 1);
   /**
    * A pilot's power for a mission. As it sets out: PILOT, and one more for every level past 1 it came with
@@ -66,33 +75,42 @@
     return Math.floor(sum / hs.length);
   };
   /**
-   * What the squad adds to a mission at `at` ({ tier, row }): { size, power, over, hp (percent), foes, need, swarm }.
-   * `over` is the squad's power past two new pilots'. Two new pilots add nothing: hp 100, and zero of everything
-   * else. With no tier, what it adds as the expedition sets out.
+   * What the squad adds to a mission at `at` ({ tier, row }):
+   * { size, power, over, under, hp (percent), foes, fewer, need, swarm, clock }.
+   * `over` is the squad's power past two new pilots', `under` how far short of it a smaller squad falls. Past it
+   * the mission grows (foes, need and swarm, rounded down); short of it, it gives back (fewer foes, need and swarm
+   * below zero, clocks a round longer, rounded to the nearest). Two new pilots add nothing: hp 100, and zero of
+   * everything else. With no tier, what it adds as the expedition sets out.
    */
   T.scaleFor = function (run, at) {
     const S = T.SCALING;
     const size = Math.max(0, T.squadSize(run) - S.BASE_SQUAD);
     const power = T.squadPower(run, at);
     const over = Math.max(0, power - S.BASE_SQUAD * S.PILOT);
+    const under = Math.max(0, S.BASE_SQUAD * S.PILOT - power);
     const add = (k) => Math.floor(over * S.power[k] + 1e-9);
+    const back = (k) => Math.round(under * S.under[k] + 1e-9);
     return {
       size,
       power,
       over,
-      hp: Math.round(100 * (1 + over * S.power.hp)),
+      under,
+      hp: Math.round(100 * (1 + over * S.power.hp - under * S.under.hp)),
       foes: add('foes'),
-      need: add('need'),
-      swarm: add('swarm'),
+      fewer: back('foes'),
+      need: add('need') - back('need'),
+      swarm: add('swarm') - back('swarm'),
+      clock: back('clock'),
     };
   };
   /** A tide with the squad's additions folded in: the missions read need and swarm from their tide. */
   T.scaledTide = function (tide, sc) {
-    if (!sc.need && !sc.swarm) return tide;
+    if (!sc.need && !sc.swarm && !sc.clock) return tide;
     return Object.assign({}, tide, {
-      squadNeed: sc.need, // what the squad adds, for a mission whose room caps it (the Vault's ledge)
+      squadNeed: Math.max(0, sc.need), // what the squad adds, for a mission whose room caps it (the Vault's ledge)
       need: tide.need.map((v) => v + sc.need),
       swarm: tide.swarm.map((v) => v + sc.swarm),
+      clock: tide.clock.map((v) => v - (sc.clock || 0)),
     });
   };
   /** The foes that may come as extras: the mission's own rank and file, never its boss, elite or spawner. */
@@ -126,7 +144,16 @@
         .concat(ids.filter((id) => !taken.has(id) && !free(id) && free(id, true)).sort(order));
       spec.starts = spec.starts.concat(near.slice(0, pilots - spec.starts.length));
     }
-    const hp = spec.isBoss ? sc.hp + Math.round(100 * sc.over * T.SCALING.boss.hp) : sc.hp;
+    // a smaller squad meets fewer foes: the mission's rank and file, the last placed first (the escorts, then the
+    // crew), and never the last foe on the board
+    for (let k = 0; k < (sc.fewer || 0) && spec.enemies.length > 1; k++) {
+      let j = spec.enemies.length - 1;
+      while (j >= 0 && !RANK(spec.enemies[j].type)) j--;
+      if (j < 0) break;
+      spec.enemies.splice(j, 1);
+    }
+    const B = T.SCALING.boss;
+    const hp = spec.isBoss ? sc.hp + Math.round(100 * (sc.over * B.hp - sc.under * B.under)) : sc.hp;
     if (hp !== 100) spec.foeHp = hp;
     // the Heart's chamber takes half as many extras, from its own spawn: its fight is the Heart and its Spawners
     const extras = spec.isBoss ? Math.floor(sc.foes * T.SCALING.boss.foes + 1e-9) : sc.foes;

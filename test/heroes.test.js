@@ -204,6 +204,7 @@ test(
 
     // Tess drafts a pilot from packs
     const A = await open(fakeUser('u_tess'));
+    A.act('pickPlayers', 2); // two pilots to draft on one screen: one made, one pre-made
     A.act('newRun');
     A.act('draftMode', 'draft');
     A.act('pickSpecies', 'owl');
