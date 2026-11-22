@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.132.0 — 2026-11-22 — A map of Tumult
+
+- **The route is a map of Tumult** (Garrett: "a tumult map between missions instead of a little ladder ... the big boss far away, and branching paths to get there across a landscape"). The squad sets out from a camp on the left; the threat at the end of the route stands far off on the right, drawn big over its own ground (a turning storm, a sunken engine, a reef, a hive, a beacon, a knot of winds). Each leg in between is a stretch of country of its ground: land with quarry pits and windbreaks, sea with islands and kelp, high air with peaks and cloud shelves, the wind over all of it. Every road is drawn: gold behind the squad, glowing where it can go now, mist over the country more than a leg ahead. Stops keep their paintings and tips, and a stop passed says how it went.
+- Under the map: the leg the squad is on, what its guides say of the ground, how many stops away the end is, and the next stops as cards to compare, as before. The folded seven-row chart is gone (the map is the chart). On a phone the map scrolls sideways to the squad.
+- Drawing only: the route itself, its rules and saves are unchanged. The Crossing stop's icon shows again on its card.
+
 ## 2.131.0 — 2026-11-22 — Your profile
 
 - **A Profile page** (Shombith's pick from the Frogma board, "Profile page"). The account button at the top right now shows your avatar and opens it: your card as others see it on the left, your display name and avatar on the right, your sign-ins below. On a phone it is one column with Save kept in reach, and also under More.

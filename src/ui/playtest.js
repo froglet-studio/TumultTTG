@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.131.0',
+    version: '2.132.0',
     items: [
+      {
+        text: 'The route is a map of Tumult now: the squad sets out from a camp on the left, each leg is a stretch of land, sea or high air, and what waits at the end stands far off on the right over its own ground. Glowing roads are the ones open now; gold is the road taken. Can you tell at a glance where you are, where you can go, and how far the end is? Does the map read on a phone (it scrolls sideways)?',
+      },
       {
         text: 'Signed in on the web version, the button at the top right with your initials (or face) opens your new Profile page: pick an avatar from any pilot painting, your Google or Discord picture, or initials, and set your display name. Does the name check make sense as you type? Does your new face show in the Lobby?',
       },

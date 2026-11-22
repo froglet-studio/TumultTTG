@@ -1,0 +1,345 @@
+/* ============================================================================
+   TUMULT — THE OVERWORLD (src/ui/overworld.js). The route as a map of the
+   ground the expedition crosses: country of each leg's ground, roads between
+   the stops, what waits at the end far off on the right.
+   ========================================================================== */
+.ow-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 14px;
+  scrollbar-width: thin;
+}
+.route.overworld {
+  --gut: 0%;
+  position: relative;
+  margin-top: 0;
+  aspect-ratio: 1000 / 470;
+  min-width: 720px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #142030;
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 200, 120, 0.22),
+    0 10px 30px rgba(0, 0, 0, 0.35);
+}
+.ow-land {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* the country */
+.ow-contour {
+  fill: none;
+  stroke: rgba(222, 196, 140, 0.13);
+  stroke-width: 1.2;
+}
+.ow-pit ellipse {
+  fill: rgba(20, 16, 8, 0.25);
+  stroke: rgba(222, 196, 140, 0.28);
+  stroke-width: 1;
+}
+.ow-break {
+  stroke: rgba(240, 222, 180, 0.42);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 2 5;
+}
+.ow-rock {
+  fill: rgba(16, 14, 8, 0.45);
+}
+.ow-wave {
+  fill: none;
+  stroke: rgba(159, 228, 255, 0.22);
+  stroke-width: 1.1;
+}
+.ow-isle {
+  fill: #3a3a26;
+  stroke: rgba(240, 222, 170, 0.55);
+  stroke-width: 2;
+}
+.ow-kelp {
+  fill: none;
+  stroke: rgba(110, 190, 140, 0.32);
+  stroke-width: 1.4;
+}
+.ow-peak path {
+  fill: #1f2a40;
+  stroke: rgba(207, 222, 240, 0.25);
+  stroke-width: 1;
+}
+.ow-peak .cap {
+  fill: rgba(235, 242, 252, 0.75);
+  stroke: none;
+}
+.ow-cloud {
+  fill: rgba(225, 235, 248, 0.16);
+}
+.ow-wind {
+  fill: none;
+  stroke: rgba(230, 240, 255, 0.18);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-dasharray: 26 10 4 10;
+  animation: ow-wind 9s linear infinite;
+}
+@keyframes ow-wind {
+  to {
+    stroke-dashoffset: -200;
+  }
+}
+.ow-seam {
+  fill: none;
+  stroke: rgba(240, 225, 180, 0.4);
+  stroke-width: 2.2;
+  filter: drop-shadow(0 0 4px rgba(255, 240, 200, 0.35));
+}
+/* far off: the country darkens toward what waits there */
+.ow-far {
+  fill: rgba(30, 6, 18, 0.32);
+}
+.ow-mist {
+  pointer-events: none;
+}
+
+/* what waits at the end of the route */
+.lm path,
+.lm ellipse {
+  fill: rgba(40, 8, 20, 0.7);
+  stroke: #ff7a66;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 8px rgba(255, 90, 74, 0.6));
+}
+.lm-storm ellipse,
+.lm-knot path {
+  fill: none;
+}
+.lm-storm {
+  animation: ow-turn 26s linear infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.lm .eye {
+  fill: #ffd1a0;
+  stroke: #ff5a4a;
+  stroke-width: 2;
+  filter: drop-shadow(0 0 10px #ff5a4a);
+  animation: ow-pulse 2.6s ease-in-out infinite;
+}
+.lm .water {
+  fill: none;
+  stroke: rgba(159, 228, 255, 0.5);
+}
+.lm .beam {
+  fill: rgba(255, 210, 150, 0.12);
+  stroke: none;
+  filter: none;
+}
+@keyframes ow-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes ow-pulse {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+/* the roads */
+.ow-bed {
+  fill: none;
+  stroke: rgba(8, 10, 16, 0.55);
+  stroke-width: 7;
+  stroke-linecap: round;
+}
+.ow-road {
+  fill: none;
+  stroke: rgba(240, 228, 196, 0.55);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 6 6;
+}
+.ow-road.far,
+.ow-bed.far {
+  opacity: 0.45;
+}
+.ow-road.gone,
+.ow-bed.gone {
+  opacity: 0.18;
+}
+.ow-road.taken {
+  stroke: var(--gold);
+  stroke-dasharray: none;
+  stroke-width: 3;
+  filter: drop-shadow(0 0 4px rgba(232, 200, 120, 0.7));
+}
+.ow-road.open {
+  stroke: var(--cyan);
+  stroke-width: 3;
+  stroke-dasharray: 7 6;
+  filter: drop-shadow(0 0 5px rgba(127, 227, 240, 0.7));
+  animation: current-flow 1.2s linear infinite;
+}
+.ow-camp path {
+  fill: #2a2418;
+  stroke: var(--gold);
+  stroke-width: 1.6;
+}
+.ow-camp .door {
+  fill: #ffcf7a;
+  stroke: none;
+}
+.ow-camp .ground {
+  fill: none;
+  stroke: rgba(240, 222, 180, 0.5);
+}
+.ow-rose circle {
+  fill: rgba(8, 14, 26, 0.5);
+  stroke: rgba(232, 200, 120, 0.5);
+}
+.ow-rose path {
+  fill: rgba(232, 200, 120, 0.8);
+}
+.ow-rose .minor {
+  fill: rgba(232, 200, 120, 0.4);
+}
+.ow-rose text {
+  fill: rgba(232, 200, 120, 0.8);
+  font: 600 8px var(--mono, monospace);
+  letter-spacing: 0.1em;
+}
+
+/* each leg named over its country */
+.overworld .leg {
+  position: absolute;
+  top: 10px;
+  bottom: auto;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  pointer-events: none;
+  overflow: visible;
+  border: 0;
+}
+.overworld .leg + .leg {
+  border-top: 0;
+}
+.overworld .leg::after {
+  display: none;
+}
+.overworld .leg .leg-kick {
+  font-family: var(--serif);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  text-shadow: 0 1px 3px #000;
+}
+.overworld .leg .actlabel {
+  font-size: 12px;
+  color: #e8eef6;
+  text-shadow:
+    0 1px 3px #000,
+    0 0 10px #000;
+}
+.overworld .leg.passed {
+  opacity: 0.55;
+}
+.overworld .leg.finale .leg-kick {
+  color: #ff9a86;
+}
+.overworld .leg.finale .actlabel {
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffd9cc;
+}
+
+/* the stops, smaller on the map than on the chart */
+.overworld .mnode {
+  width: 108px;
+}
+.overworld .mnode .medal {
+  width: 50px;
+  height: 50px;
+}
+.overworld .mnode .t .nm {
+  font-size: 11px;
+}
+.overworld .mnode.boss {
+  width: 150px;
+}
+.overworld .mnode.boss .medal {
+  width: 74px;
+  height: 74px;
+  --ring: #ff7a66;
+  box-shadow: none;
+  filter: drop-shadow(0 0 14px rgba(255, 90, 74, 0.7));
+}
+.overworld .mnode.boss .t {
+  margin-top: 48px;
+}
+.overworld .mnode.boss .t .nm {
+  font-family: var(--serif);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffd9cc;
+}
+.ow-tick {
+  position: absolute;
+  left: 3px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 10px;
+  background: var(--gold);
+  color: #1a1205;
+}
+.overworld .squad-mark {
+  z-index: 6;
+}
+
+/* the line under the map: where the squad stands, and what its guides say */
+.journey .j-now .row {
+  align-items: baseline;
+}
+.j-far {
+  color: #ffb4a4;
+}
+.j-guides {
+  margin-top: 4px;
+  font-family: var(--mono, monospace);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--dim);
+}
+
+html[data-motion='reduced'] .ow-wind,
+html[data-motion='reduced'] .lm-storm,
+html[data-motion='reduced'] .lm .eye,
+html[data-motion='off'] .ow-wind,
+html[data-motion='off'] .lm-storm,
+html[data-motion='off'] .lm .eye,
+html[data-motion='off'] .ow-road.open {
+  animation: none;
+}
+.overworld .leg.finale {
+  top: auto;
+  bottom: 12px;
+}
+.overworld .squad-mark {
+  transform: translate(-50%, -50%) translateY(-44px);
+}
+.overworld .squad-mark.start {
+  transform: translate(-50%, -50%) translate(36px, -34px);
+}
