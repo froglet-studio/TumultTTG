@@ -23,7 +23,7 @@ npm run check
 npm run build:playtest        # → dist/TUMULT.playtest.html
 ```
 
-Stop and report if `npm run check` fails: testers must not get a broken build.
+Stop and report if `npm run check` fails: testers must not get a broken build. In a fast `/ship-launch` (its section 1), skip `npm run check` when this session already passed it on the same tree (`git diff --quiet <checked commit> origin/development` exits 0); `npm ci` and `npm run build:playtest` still run.
 
 Check the playtest panel's NOTES (`src/ui/playtest.js`) describe this version (`package.json`). If they are stale, say so to the person; they are rewritten on `bleeding-edge` and promoted, never edited on `development`.
 
