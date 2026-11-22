@@ -95,7 +95,15 @@
       case 'play':
         U.screen = 'title';
         break;
-      case 'route':
+      case 'route': {
+        // the saved expedition, when this screen has not opened it yet (after a reload)
+        const saved = !U.run && T.loadRun ? T.loadRun() : null;
+        if (saved && !saved.over) U.run = saved;
+        // an expedition still in its draft has no route yet: carry on drafting it
+        if (U.run && !U.run.over && U.run.phase === 'draft' && U.resumeDraft) {
+          U.resumeDraft(U.run);
+          break;
+        }
         if (!hasRoute()) {
           U.toast('No expedition on its route yet. Start one from Play.');
           return true;
@@ -105,7 +113,9 @@
           : U.run.mission
             ? 'mission'
             : 'map';
+        if (U.screen === 'mission' && !U.ms && U.enterMission) U.enterMission(); // opened from a reload
         break;
+      }
       case 'pilots':
         U.crew = Object.assign(U.crew || {}, { open: null });
         U.screen = 'pilots';

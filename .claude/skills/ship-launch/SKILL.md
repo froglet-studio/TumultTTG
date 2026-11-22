@@ -9,9 +9,11 @@ description: Launch Tumult to players - promote bleeding-edge to development and
 
 ## 1. Ready to launch?
 
+First ask the person once whether to **wait for CI** or go **fast, on the local check** (`/ship-preview` section 2.5; skip the question when the command already said, as in `/ship-launch fast`). Fast changes three steps below: this session's pull request merges without waiting for its checks; the promotion does not wait for the CI run on `bleeding-edge` (the local `npm run check` on that same tree stands in for it); and `/playtest-publish` skips its own `npm run check` when `development`'s tree is the one checked here (`git diff --quiet <checked commit> origin/development`). Publish to froglet.games is still waited for: it is the launch. Read the skipped CI runs once afterwards and fix forward if one went red.
+
 - `git fetch origin`. `git rev-list --count origin/bleeding-edge..origin/main` and `..origin/development` must both be 0. Not 0 means someone committed straight to that branch: stop, tell the person, and offer a catch-up (merge it into a branch from `bleeding-edge`, PR with **Create a merge commit**, never squash). A launch cannot fast-forward until it is merged.
-- The latest **CI** run on `bleeding-edge` is green, and https://tumult.pages.dev (the same code) has been looked at.
-- This session's own pull request, when it has one, is merged into `bleeding-edge` first: green CI, then squash and merge in the same turn (`/ship-preview` sections 3 and 4, and its "Waiting without stalling").
+- The latest **CI** run on `bleeding-edge` is green (fast: the local `npm run check` on the same tree instead), and https://tumult.pages.dev (the same code) has been looked at.
+- This session's own pull request, when it has one, is merged into `bleeding-edge` first: green CI (fast: at once), then squash and merge in the same turn (`/ship-preview` sections 3 and 4, and its "Waiting without stalling").
 - The version in `package.json` is higher than the one live, with a `CHANGELOG.md` entry and playtest NOTES for it. If not, bump them on `bleeding-edge` through `/ship-preview` first; never edit `development` or `main`.
 
 ## 2. Promote

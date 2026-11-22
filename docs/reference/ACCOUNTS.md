@@ -10,7 +10,7 @@ Status: built (2026-11-20), wave 3 of the launch plan. Needs the admin setup bel
 - **Online rules** (enforced by the Worker's routes, `server/src/index.js`): joining a game needs a session (a guest is enough) and the host's invite link or code; hosting, sharing pilots and sending canon notes need a linked account. The online screens call `T.UI.askSignIn(reason)` when the Worker answers `needs_account`.
 - **The account box** also renames the account (the name other players see), signs out on this device, and deletes the account with everything it holds (two presses, no browser dialog).
 
-## Your profile (2.129.0)
+## Your profile (2.131.0)
 
 Frogma - Tumult, page "Profile (Nov 22)", Profile 1 "Profile page" (Shombith's pick). A signed-in player's account button (top right) shows their avatar and opens the **Profile** page (`src/ui/profile.js`, `profile.css`; on a phone also under More). On the left, their card as others see it, updating as they edit; on the right, the display name and the avatar; below, the sign-ins, Sign out and Delete account. A guest who reaches it is asked to sign in.
 
