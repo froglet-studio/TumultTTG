@@ -172,10 +172,6 @@
     const u = A.user();
     const full = u && !u.guest;
     const o = ui.offer;
-    const btn = (p) =>
-      o[p] && !(u && (u.links || []).includes(p))
-        ? `<button data-act="acctProvider" data-arg="${p}" ${ui.busy ? 'disabled' : ''}>${full ? 'Add' : 'Continue with'} ${LABEL[p]}</button>`
-        : '';
     const email = o.email
       ? ui.codeSent
         ? `<div class="acct-row"><span class="small">We sent a code to ${esc(ui.email)}.</span><input id="acctCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6 digits" style="width:7em"><button class="primary" data-act="acctEmailVerify" ${ui.busy ? 'disabled' : ''}>${full ? 'Add email' : 'Sign in'}</button><button class="ghost sm" data-act="acctEmailBack">Another address</button></div>`
@@ -183,9 +179,6 @@
       : '';
     const none =
       !o.google && !o.discord && !o.email ? '<p class="mute small">Sign-in isn\'t set up on this server yet.</p>' : '';
-    const intro = full
-      ? `<p>Signed in as <b>${esc(u.name)}</b> with ${esc(linksText(u))}. Your pilots and saves follow this account to any device.</p>`
-      : `<p>${u ? `You're playing as <b>${esc(u.name)}</b>, a guest on this device.` : "You're playing as a guest."} Sign in to keep your account, pilots and saves on any device and to host games online. Solo play never needs an account.</p>`;
     const name = u
       ? `<div class="acct-row"><span class="dim small">Name other players see</span><input id="acctName" maxlength="24" value="${esc(u.name)}"><button class="sm" data-act="acctRename" ${ui.busy ? 'disabled' : ''}>Save</button></div>`
       : '';
@@ -200,12 +193,33 @@
         : u
           ? `<div class="acct-row acct-end"><button class="ghost sm" data-act="acctDelete">Delete guest account…</button></div>`
           : '';
-    return `<div class="acct"><div class="row"><h3>Account</h3><button class="sm right" data-act="closeModal">Close</button></div>
-      ${ui.reason ? `<p class="acct-reason">${esc(ui.reason)}</p>` : ''}${intro}
-      <div class="acct-row">${btn('google')}${btn('discord')}</div>${email}${none}
-      ${ui.msg ? `<p class="acct-msg small">${esc(ui.msg)}</p>` : ''}${name}${end}</div>`;
+    // Sign in 5, "Split hero" (Frogma - Tumult, Sign in + Lobby (Nov 22)): the captain behind Home on the
+    // left, the sign-in on the right
+    const cap = U.homeCaptain ? U.homeCaptain() : null;
+    const scene = cap && U.sceneSrc ? U.sceneSrc(cap) : null;
+    const left = `<div class="si-art"><div class="si-paint"${scene ? ` style="background-image:url(${scene})"` : ''}></div><div class="si-art-txt"><p>“A pilot who leaves no name leaves no story.”</p><span>Said on the Ark</span>${cap ? `<em>Captain · ${esc(U.callsignOf ? U.callsignOf(cap) : '')} · ${esc(cap.name)}</em>` : ''}</div></div>`;
+    const ben = (t) => `<div class="si-chk"><i aria-hidden="true">✓</i><span>${t}</span></div>`;
+    const head = full
+      ? `<span class="si-eye">Your account</span><h2 class="si-title">${esc(u.name)}</h2><p class="si-lede">Signed in with ${esc(linksText(u))}. Your pilots and saves follow this account to any device.</p>`
+      : `<span class="si-eye">Sign in to Tumult</span><h2 class="si-title">Put your name<br>on the route</h2>${ui.reason ? `<p class="si-reason">${esc(ui.reason)}</p>` : ''}<div class="si-bens">${ben('Your pilots and saves on any device')}${ben('Host tables others can find')}${ben('Friends, invites and your canon notes, credited to you')}</div>`;
+    const ICON = {
+      google:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/></svg>',
+      discord:
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/></svg>',
+    };
+    const row = (p) =>
+      o[p] && !(u && (u.links || []).includes(p))
+        ? `<button class="si-btn" data-act="acctProvider" data-arg="${p}" ${ui.busy ? 'disabled' : ''}>${ICON[p]}<span>${full ? 'Add' : 'Continue with'} ${LABEL[p]}</span><i aria-hidden="true">→</i></button>`
+        : '';
+    const fine = full
+      ? ''
+      : '<p class="si-fine">Solo play never needs an account. We keep no password, and no email address in the clear.</p>';
+    return `<div class="si">${left}<div class="si-main"><button class="si-x" data-act="closeModal" aria-label="Close">✕</button>${head}
+      <div class="si-btns">${row('google')}${row('discord')}</div>${email}${none}
+      ${ui.msg ? `<p class="acct-msg small">${esc(ui.msg)}</p>` : ''}${name}${end}${fine}</div></div>`;
   }
-  const show = () => U.openModal(modalHtml());
+  const show = () => U.openModal(modalHtml(), null, { cls: 'si-modal' });
 
   /** Open the account box, saying why sign-in is needed (the online screens use it on a 403). */
   U.askSignIn = function (reason) {
@@ -213,7 +227,7 @@
     show();
     A.providers().then((o) => {
       ui.offer = o || {};
-      if (U.modal && U.modal.html.includes('class="acct"')) show();
+      if (U.modal && U.modal.html.includes('class="si"')) show();
     });
   };
 

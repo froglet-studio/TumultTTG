@@ -8,7 +8,8 @@
            that code's room; everything else (pilots, canon notes, saves) is plain HTTPS to the store.
      room  join('tumult-<CODE>'): the same socket's live channel between the game's screens.
      user  id(), can(), canEdit(), isOwner(), profiles(ids), from the sign-in module (T.Account).
-     lobby watch(fn) → stop: who is online in Tumult now (the game's Lobby panel), while signed in.
+     lobby watch(fn) → stop: who is online in Tumult now (the game's Lobby panel), while signed in;
+           nudge(to) and onNudge(fn): "a note is waiting", so the Lobby's requests arrive at once.
 
    It also keeps a signed-in player's run in the cloud (saves/<user id>), so it follows them to another
    device. Who is signed in comes from T.Account (the sign-in module); a session is made only when
@@ -358,6 +359,7 @@
     let tries = 0;
     let wanted = false;
     const fns = new Set();
+    const nudged = new Set();
     const status = () => {
       const N = T.UI && T.UI.net;
       if (N && N.online && N.online()) {
@@ -388,6 +390,7 @@
       sock.onmessage = (e) => {
         try {
           const m = JSON.parse(e.data);
+          if (m.type === 'nudge') return nudged.forEach((fn) => fn(m.from));
           if (m.type !== 'online') return;
           players = m.players || [];
           fns.forEach((fn) => fn(players));
@@ -411,6 +414,15 @@
         return () => fns.delete(fn);
       },
       players: () => players.slice(),
+      /** Tell another player's screens that a note is waiting for them (src/ui/social.js). */
+      nudge(to) {
+        if (ws && ws.readyState === 1) ws.send(JSON.stringify({ op: 'nudge', to }));
+      },
+      /** Hear that someone left this player a note: fn(fromId). Returns a function that stops it. */
+      onNudge(fn) {
+        nudged.add(fn);
+        return () => nudged.delete(fn);
+      },
       /** Signed in: be in the lobby. Signed out: leave it. */
       follow() {
         wanted = !!token();

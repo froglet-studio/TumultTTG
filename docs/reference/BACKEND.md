@@ -32,7 +32,7 @@ Protocol, one WebSocket per screen at `/api/room/<CODE>?session=<token>[&invite=
 
 ## The Lobby: who is online
 
-Like Cosmic Shore's online list, shown in the game as "Lobby", not "Friends". Every page with a session keeps a socket at `/api/lobby` and says what it is doing: in the menu, playing solo, or in an online game, with the game's code only when its host has seats free. Everyone hears the list (display name, guest or not, where, open game), at most twice a second. In the game: `T.Backend.use('lobby')` gives `watch(fn(players)) → stop`. The Lobby panel itself is part of the screen redesign.
+Like Cosmic Shore's online list, shown in the game as "Lobby", not "Friends". Every page with a session keeps a socket at `/api/lobby` and says what it is doing: in the menu, playing solo, or in an online game, with the game's code only when its host has seats free. Everyone hears the list (display name, guest or not, where, open game), at most twice a second. In the game: `T.Backend.use('lobby')` gives `watch(fn(players)) → stop`, `nudge(to)` and `onNudge(fn) → stop`. A nudge (`{ op: 'nudge', to }` on the socket) tells one signed-in player that a note is waiting in their inbox, so a friend request or an invite shows at once; the lobby forwards it only between accounts, at most 20 a minute a socket, and carries nothing but who sent it.
 
 ## The store
 
@@ -43,6 +43,11 @@ Like Cosmic Shore's online list, shown in the game as "Lobby", not "Friends". Ev
 | `canonReview/<id>` | reviewers | lore leads | a decision: status, public, claim, note |
 | `saves/<user>` | that player | that player, guests too | `{ run, meta, at }`; a run the game cannot load is refused |
 | `lobby/<CODE>` | anyone | the host's account; anyone, once quiet for two days | the list of games being played (2.80): names, stage, open seats, stamped with the server's time; a daily cron tidies stale ones |
+| `profile/<user>` | anyone | that player, with an account | a player's card in the Lobby: name, up to six pilots (name and portrait key), expeditions, hearts, canon notes |
+| `friends/<user>` | that player | that player, with an account | `{ list: [user id…] }`, at most 300 |
+| `inbox/<to>/from/<from>` | the two of them, with accounts | the sender (`from`), with an account; either one deletes | one note: `friend` or `friend-ok`, `join`, `join-ok` (with the code) or `join-no`, `invite` (with the code); stamped with the server's time and the sender's id |
+
+**The Lobby's social side** (`src/ui/social.js`, web only). A player sends a note by writing it into the other's inbox and nudging them; requests (friend, ask to join, invite) wait in the Lobby's Requests tab until answered, answers are shown once and deleted. Friends are a list each player keeps for themselves: accepting a request adds the sender, and the sender's screen adds the friend when it reads the `friend-ok`. Each signed-in screen writes its own card (`profile/<user>`) at most once a minute. Guests see who is online and the games, and are asked to sign in for the rest.
 
 The server checks pilots and notes with the game's own engine: `tools/build-server.mjs` turns the engine files in `src/manifest.json` into one module (`server/src/engine.gen.js`, generated, not committed) before every `wrangler dev` and `deploy`. Lore leads and reviewers are user ids in `CANON_LEADS` and `CANON_REVIEWERS` (`server/wrangler.toml`).
 

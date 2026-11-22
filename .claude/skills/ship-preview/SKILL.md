@@ -28,7 +28,17 @@ And the working agreements in `CLAUDE.md`: a rules change has a test; a balance 
 - Commits: `type(scope): summary`, imperative, about 72 characters, one logical change each, with the `Co-Authored-By:` and `Claude-Session:` trailers.
 - `git push -u origin <branch>`.
 - Open the pull request into **`bleeding-edge`**: what changed, why, the gate results, any sim numbers, and "Affects: <person>'s <area>" when it touches someone else's work. Changes under `.github/` need a code owner's review; say so and stop at the PR.
-- Subscribe to the PR's activity and wait for CI (`build + test (Node 22)`, `build + test (Node 24)`, `preview`). Red is yours to fix: find the cause, push the fix; never skip a test.
+- Subscribe to the PR's activity and wait for CI (`build + test (Node 22)`, `build + test (Node 24)`, `preview`), the way **Waiting without stalling** below says. Red is yours to fix: find the cause, push the fix; never skip a test.
+
+### Waiting without stalling
+
+A session that ends its turn "waiting for CI" and counts on a PR event to wake it can sit there until the person writes again: an event can be late, lost, or about an older commit. The person should never have to nudge a ship along. So:
+
+- **Never end a turn with nothing set to wake you.** CI takes about 5 minutes. In a cloud session, start a background wait first (Bash with `run_in_background`, `sleep 360`), then end the turn; the wait's end wakes you. On a computer with `gh`, `gh pr checks <n> --watch --fail-fast` blocks until CI ends instead.
+- **On every wake, read the checks yourself** for the PR's current head (the GitHub check runs, or `gh pr checks <n>`), never only the event. A "check suite completed" event names a `head_sha`: if it is not the head you pushed last, it is about an older commit and proves nothing.
+- **Still running:** start another wait and end the turn. **All green:** merge at once, in the same turn. **Red:** fix it now.
+- After three waits with CI still not done, tell the person what is stuck (the run's link), and keep one wait going.
+- The same goes for every workflow `/ship-launch` waits on (Publish to froglet.games, Deploy game server, Preview).
 
 ## 4. Merge
 
