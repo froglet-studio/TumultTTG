@@ -163,8 +163,8 @@
   }
   const elOfPlay = (f) => {
     const c = T.CARD && T.CARD[f.card];
-    if (!c || f.face !== 'E') return null;
-    return (c.E && c.E.elt) || c.el;
+    if (!c || !T.isEthFace(f.face)) return null;
+    return (c[f.face] && c[f.face].elt) || c.el;
   };
   /**
    * Answer one effect from the queue with a flash and a sound. Called by the mission screen for each effect as

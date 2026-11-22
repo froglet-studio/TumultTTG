@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.133.0 — 2026-11-22 — Pets awaken
+
+- **Spend upgrade points to awaken a pet** (Garrett, 2026-11-22). A pet card now holds its three traits' Ethereal faces as well as their Physical ones. Each point on its E awakens one more, in order (E 1, E 2, E 3); an awake face shows on the pet card in hand, acts from the pet, costs its own trait's etherion and grows with the card's E. An awake pet card swaps a plain die for its element's d8, as any awakened card does. The Upgrade screen has a Physical and an Ethereal button for a pet. Simulated runs adopt no pets, so the balance tables are unchanged.
+
 ## 2.132.0 — 2026-11-22 — A map of Tumult
 
 - **The route is a map of Tumult** (Garrett: "a tumult map between missions instead of a little ladder ... the big boss far away, and branching paths to get there across a landscape"). The squad sets out from a camp on the left; the threat at the end of the route stands far off on the right, drawn big over its own ground (a turning storm, a sunken engine, a reef, a hive, a beacon, a knot of winds). Each leg in between is a stretch of country of its ground: land with quarry pits and windbreaks, sea with islands and kelp, high air with peaks and cloud shelves, the wind over all of it. Every road is drawn: gold behind the squad, glowing where it can go now, mist over the country more than a leg ahead. Stops keep their paintings and tips, and a stop passed says how it went.

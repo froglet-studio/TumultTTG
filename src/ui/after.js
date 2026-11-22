@@ -56,7 +56,7 @@
         ? `gear · ${esc(T.gearCostText({ omni: Math.max(...T.faceKeys(cid).map((k) => c[k].el || 0)) }))}`
         : o.P != null
           ? c.pet
-            ? `P${o.P} · pet`
+            ? `P${o.P}${o.E ? ' · E' + o.E : ''} · pet`
             : `P${o.P} · E${o.E}`
           : `${c.sig >= 2 ? '★ ' : ''}${esc(EL[elOf(c)].name)}`;
     const inner = `<span class="am-gem" style="--el:${EL[elOf(c)].color}"></span>${U.cardArt(c, false, sp)}<span class="am-tn">${esc(c.name)}</span><span class="am-tc">${c.gear ? U.icGear(c.gear) : U.icClade(sp)} ${esc(c.kin || T.SPECIES[sp].name)}</span><span class="am-tl">${lv}</span>${o.out ? '<span class="am-x" aria-hidden="true">✕</span>' : ''}`;
@@ -66,7 +66,7 @@
       : c.pet || c.gear
         ? ` data-tip="${esc(
             T.faceKeys(cid)
-              .map((k) => U.faceTipHTML(c, k, o.P || 0, 0))
+              .map((k) => U.faceTipHTML(c, k, o.P || 0, Math.max(o.E || 0, T.faceNeedE(cid, k))))
               .join('<hr>'),
           )}"`
         : ` data-tip="${esc(U.faceTipHTML(c, 'P', o.P || 0, o.E || 0) + '<hr>' + U.faceTipHTML(c, 'E', o.P || 0, Math.max(o.E || 0, T.RULES.ETHEREAL_MIN_E)))}"`;
@@ -78,7 +78,7 @@
     const c = T.CARD[cid];
     const f = (fk) => {
       const face = c[fk];
-      return `<div class="am-face ${fk}"><b>${esc(face.n)}</b> <span class="mono dim">${face.ap} AP${face.el ? ` + ${face.el}<span class="el-${face.elt || c.el}">◆</span>` : ''}</span><span>${U.kw(esc(face.txt(P || 0, Math.max(E || 0, fk === 'E' ? T.RULES.ETHEREAL_MIN_E : 0))))}</span></div>`;
+      return `<div class="am-face ${fk}"><b>${esc(face.n)}</b> <span class="mono dim">${face.ap} AP${face.el ? ` + ${face.el}<span class="el-${face.elt || c.el}">◆</span>` : ''}</span><span>${U.kw(esc(face.txt(P || 0, Math.max(E || 0, T.faceNeedE(cid, fk)))))}</span></div>`;
     };
     return `<div class="am-faces">${T.faceKeys(cid).map(f).join('')}</div>`;
   }
@@ -273,25 +273,32 @@
     const E = T.heroE(h, cid);
     const capP = T.RULES.P_CAP;
     const capE = T.RULES.E_CAP;
-    const fk = c.pet ? 'P' : am.up.face; // a pet's card grows with P alone
+    const fk = am.up.face === 'E' ? 'E' : 'P';
     const lv = fk === 'P' ? P : E;
     const cap = fk === 'P' ? capP : capE;
     const pts = h.upUnspent + T.boundLeft(h, cid);
     const can = lv < cap && pts > 0;
-    const asleep = fk === 'E' && E < T.RULES.ETHEREAL_MIN_E;
-    const face = c[fk];
+    // a pet's E awakens its Ethereal faces one a point (2.133): its E shows the next to wake, or the last at E 3
+    const petEth = (e) => T.PET_ETH[Math.min(e, T.PET_ETH.length - 1)];
+    const shown = c.pet && fk === 'E' ? petEth(E) : fk;
+    const asleep = fk === 'E' && E < T.faceNeedE(cid, shown);
+    const face = c[shown];
     const before = asleep ? 'Asleep: this face cannot be played yet.' : face.txt(P, E);
     const after = lv >= cap ? null : fk === 'P' ? face.txt(P + 1, E) : face.txt(P, E + 1);
     const flash = am.flash && am.flash.card === cid && Date.now() - am.flash.at < 1500 ? ' am-grown' : '';
     const others = run.heroes.map((x, k) => ({ x, k })).filter(({ k }) => U.own(k) && k !== i);
     const faceBtn = (k) => {
-      const f = c[k];
+      const f = c[c.pet && k === 'E' ? petEth(E) : k];
       const l = k === 'P' ? P : E;
       const cp = k === 'P' ? capP : capE;
       const label =
-        k === 'E' && E < T.RULES.ETHEREAL_MIN_E
-          ? `Awaken ${esc(f.n)}`
-          : `${esc(f.n)} ${k}${l} → ${l >= cp ? 'max' : k + (l + 1)}`;
+        c.pet && k === 'E' && E < cp
+          ? `Awaken ${esc(f.n)} · E${E} → E${E + 1}`
+          : c.pet
+            ? `${k === 'P' ? 'Physical' : 'Ethereal'} ${k}${l} → ${l >= cp ? 'max' : k + (l + 1)}`
+            : k === 'E' && E < T.RULES.ETHEREAL_MIN_E
+              ? `Awaken ${esc(f.n)}`
+              : `${esc(f.n)} ${k}${l} → ${l >= cp ? 'max' : k + (l + 1)}`;
       return `<button class="am-fbtn${fk === k ? ' on' : ''}" data-act="amUpFace" data-arg="${k}" aria-pressed="${fk === k}">${label}</button>`;
     };
     U.openModal(`<div class="am-sheet am-up" role="dialog" aria-label="Grow one card">
@@ -310,7 +317,7 @@
               E: ke,
               clades: h.species,
               cls: T.CARD[k].pet
-                ? kp >= capP
+                ? kp >= capP && ke >= capE
                   ? 'maxed'
                   : ''
                 : ke < T.RULES.ETHEREAL_MIN_E
@@ -323,10 +330,10 @@
           .join('')}</div>
         <div class="am-upcard${flash}"><div class="am-spark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>${U.cardHTML(cid, { P, E, showUp: true, flavor: false, clades: h.species, bound: T.boundLeft(h, cid) })}</div>
         <div class="panel am-upside">
-          <div class="am-fbtns">${c.pet ? faceBtn('P') : faceBtn('P') + faceBtn('E')}</div>
+          <div class="am-fbtns">${faceBtn('P') + faceBtn('E')}</div>
           <div class="am-lab">${esc(face.n)}, ${asleep ? 'now' : 'before'}</div><div class="am-before">${U.kw(esc(before))}</div>
           ${after != null ? `<div class="am-lab gold">${esc(face.n)}, ${asleep ? 'awake' : 'after'}</div><div class="am-after">${U.kw(esc(after))}</div>` : `<div class="am-lab gold">At its height</div><div class="am-after dim">${esc(face.n)} is at ${fk} ${cap}, as far as it grows.</div>`}
-          <p class="small dim">${fk === 'P' ? 'Physical costs AP only and grows with P.' : `Ethereal unlocks at E ${T.RULES.ETHEREAL_MIN_E} and grows with E.`} Caps: P ${capP}, E ${capE}.</p>
+          <p class="small dim">${fk === 'P' ? (c.pet ? "A pet card's three Physical faces cost AP only and grow with P together." : 'Physical costs AP only and grows with P.') : c.pet ? "Each point of E awakens one more of the pet's Ethereal faces, in order; every awake one grows with E." : `Ethereal unlocks at E ${T.RULES.ETHEREAL_MIN_E} and grows with E.`} Caps: P ${capP}, E ${capE}.</p>
           <button class="primary am-cta wide" data-act="upRun" data-hero="${i}" data-arg="${cid}|${fk}|1" ${can ? '' : 'disabled'}>${asleep ? 'Awaken it ▶' : 'Grow it ▶'}</button>
           ${lv > 0 ? `<button class="ghost am-ghost sm wide" data-act="upRun" data-hero="${i}" data-arg="${cid}|${fk}|-1">↶ Take a point back</button>` : ''}
         </div>

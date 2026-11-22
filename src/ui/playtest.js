@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.132.0',
+    version: '2.133.0',
     items: [
+      {
+        text: 'Pets awaken: on the Upgrade screen a pet card now has an Ethereal button. Each point you spend there awakens one more of its three Ethereal faces (one from each of its clades), and the awake ones show on the pet card in a mission. Is it clear which face wakes next? Is a pet with awake faces worth the points you would have spent on a trait?',
+      },
       {
         text: 'The route is a map of Tumult now: the squad sets out from a camp on the left, each leg is a stretch of land, sea or high air, and what waits at the end stands far off on the right over its own ground. Glowing roads are the ones open now; gold is the road taken. Can you tell at a glance where you are, where you can go, and how far the end is? Does the map read on a phone (it scrolls sideways)?',
       },
