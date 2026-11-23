@@ -320,7 +320,85 @@
     for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) >>> 0;
     return 'MCST'[h % 4];
   };
-  U.foeArt = (e, w, o) => U.creature(e.type, U.formOf(e), w, o);
+  /**
+   * A foe of Tumult (2.132): a beast born on the planet, not a creature of the void. A foe with clades
+   * (e.clades, three of them since foes became triple hybrids) shows its lead clade's painted head in a ring the
+   * colour of danger, its other two heads beside it; a foe without them shows the painting of its role
+   * (assets/foe-art) when the page has it, else the old wireframe body. The classes .bd and .live keep the
+   * blow, the hit and the wither of every other foe. Only a look: no rule reads it.
+   */
+  const ring = (e) => (e.boss ? '#FFD36B' : e.rival ? '#C58BFF' : e.elite ? '#FFB347' : RED);
+  function headAt(sp, cx, cy, r, id) {
+    const p = U.portraitOf && U.portraitOf(sp);
+    const href = p && T.ART && T.ART['portrait/sheet-' + p.sheet];
+    if (!href) {
+      const ic = (T.SPECIES[sp] && T.SPECIES[sp].icon) || '?';
+      return `<circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r)}" fill="${DARK}"/><text x="${f1(cx)}" y="${f1(cy + r * 0.36)}" font-size="${f1(r * 1.1)}" text-anchor="middle">${ic}</text>`;
+    }
+    const rows = Math.ceil(p.n / 4);
+    const col = p.i % 4,
+      row = Math.floor(p.i / 4);
+    return (
+      `<clipPath id="${id}"><circle cx="${f1(cx)}" cy="${f1(cy)}" r="${f1(r)}"/></clipPath>` +
+      `<g clip-path="url(#${id})"><svg x="${f1(cx - r)}" y="${f1(cy - r)}" width="${f1(2 * r)}" height="${f1(2 * r)}" viewBox="${col * 128 + 6} ${row * 128 + 6} 116 116"><image href="${href}" width="512" height="${rows * 128}"/></svg></g>`
+    );
+  }
+  let beastN = 0;
+  function beast(e, clades, w, o) {
+    const h = w * 0.86;
+    const pos = o.x != null ? ` x="${f1(o.x - w / 2)}" y="${f1(o.y - h / 2)}"` : '';
+    const n = ++beastN;
+    const R = 34,
+      r = 15,
+      col = ring(e);
+    const [lead, ...rest] = clades;
+    const sides = rest.slice(0, 2).map((sp, i) => {
+      const cx = i ? 82 : 18,
+        cy = 62;
+      return `<circle cx="${cx}" cy="${cy}" r="${r + 2.5}" fill="${DARK}" stroke="${col}" stroke-width="2"/>${headAt(sp, cx, cy, r, `bh${n}s${i}`)}`;
+    });
+    // a rival pilot (e.rival) leads with the painted pilot of its two clades, as a pilot of the squad would
+    const pilot = e.rival && U.artForPair && U.artForPair(rest.slice(0, 2), new Set());
+    const face = pilot && T.ART && T.ART['pilot/' + pilot.key];
+    const leadImg = face
+      ? `<clipPath id="bh${n}m"><circle cx="50" cy="40" r="${R}"/></clipPath><image href="${face}" x="${50 - R}" y="${40 - R}" width="${2 * R}" height="${2 * R}" clip-path="url(#bh${n}m)" preserveAspectRatio="xMidYMid slice"/>`
+      : headAt(lead, 50, 40, R, `bh${n}m`);
+    const live =
+      `<circle cx="50" cy="40" r="${R + 4}" fill="${DARK}" stroke="${col}" stroke-width="3.2"/>` +
+      leadImg +
+      `<circle cx="50" cy="40" r="${R}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width="1"/>` +
+      sides.join('');
+    return (
+      `<svg class="cr cr-beast${e.boss ? ' boss' : ''}${o.cls ? ' ' + o.cls : ''}"${pos} width="${f1(w)}" height="${f1(h)}" viewBox="0 0 100 86" overflow="visible" aria-hidden="true">` +
+      `<g class="bd" style="transform-origin:50px 40px"><g class="live">${live}</g></g></svg>`
+    );
+  }
+  function rolePainting(e, w, o) {
+    const href = T.ART && T.ART['foe-art/' + e.type];
+    if (!href) return '';
+    const h = w * 0.86;
+    const pos = o.x != null ? ` x="${f1(o.x - w / 2)}" y="${f1(o.y - h / 2)}"` : '';
+    const id = 'fr' + ++beastN;
+    return (
+      `<svg class="cr cr-beast cr-role${o.cls ? ' ' + o.cls : ''}"${pos} width="${f1(w)}" height="${f1(h)}" viewBox="0 0 100 86" overflow="visible" aria-hidden="true">` +
+      `<g class="bd" style="transform-origin:50px 43px"><g class="live"><clipPath id="${id}"><circle cx="50" cy="43" r="40"/></clipPath>` +
+      `<circle cx="50" cy="43" r="43" fill="${DARK}" stroke="${ring(e)}" stroke-width="3.2"/>` +
+      `<image href="${href}" x="10" y="3" width="80" height="80" clip-path="url(#${id})" preserveAspectRatio="xMidYMid slice"/></g></g></svg>`
+    );
+  }
+  /** The clades a foe is drawn from: its own (e.clades), painted ones first in their order, never an empty list. */
+  U.foeClades = (e) => (Array.isArray(e && e.clades) ? e.clades.filter((sp) => T.SPECIES[sp]) : []);
+  U.foeArt = (e, w, o = {}) => {
+    const cl = U.foeClades(e);
+    if (cl.length && T.ART) {
+      // a rival pilot's human third shows beside the beasts' heads, never as the lead
+      const lead = e.rival
+        ? cl.filter((sp) => sp === 'human').concat(cl.filter((sp) => sp !== 'human'))
+        : cl.filter((sp) => sp !== 'human').concat(cl.filter((sp) => sp === 'human'));
+      return beast(e, lead, w, o);
+    }
+    return rolePainting(e, w, o) || U.creature(e.type, U.formOf(e), w, o);
+  };
   /** How wide a foe's body is drawn on the board, in board units (a node's cell is 118). */
   U.foeWidth = (e) =>
     e.boss ? 190 : e.elite ? 140 : { brute: 132, warden: 120, spawner: 110, kiter: 124 }[e.type] || 112;

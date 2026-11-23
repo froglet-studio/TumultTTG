@@ -136,3 +136,39 @@ test('every clade but human has a painted head on a portrait sheet in the build'
   });
   for (const sp of T.SPECIES_ORDER) if (sp !== 'human') assert.ok(seen.has(sp), `${sp} has a painted head`);
 });
+
+test('every trait face has one cell on an ability sheet, and every painted sheet is in the build', async () => {
+  const { art } = await import(pathToFileURL(path.join(root, 'tools', 'build.mjs')).href);
+  const manifest = require(path.join(root, 'src', 'manifest.json'));
+  const sandbox = { window: { T: {} } };
+  vm.runInNewContext(art(manifest).js, sandbox);
+  const ART = sandbox.window.T.ART;
+  const T = require(path.join(root, 'tools', 'load.js'))();
+  const g = { T: { UI: {} } };
+  vm.runInNewContext(require('node:fs').readFileSync(path.join(root, 'src', 'ui', 'ability-art.js'), 'utf8'), {
+    window: g,
+  });
+  const sheets = g.T.UI.ABILITY_SHEETS;
+  const seen = new Set();
+  sheets.forEach((keys, s) => {
+    assert.ok(keys.length <= 9, `sheet ${s + 1} holds at most nine faces`);
+    for (const k of keys) {
+      const [id, fk] = k.split('.');
+      assert.ok(T.CARD[id] && T.CARD[id][fk], `${k} is a face`);
+      assert.ok(!seen.has(k), `${k} has one cell`);
+      seen.add(k);
+    }
+  });
+  for (const c of T.CARDS)
+    for (const fk of T.faceKeys(c.id)) assert.ok(seen.has(c.id + '.' + fk), `${c.id}.${fk} has a cell`);
+  const dir = path.join(root, 'assets', 'ability-art');
+  for (const f of require('node:fs').readdirSync(dir)) {
+    const n = Number((f.match(/^sheet-(\d{3})\.webp$/) || [])[1]);
+    assert.ok(n >= 1 && n <= sheets.length, `${f} is a sheet in the plan`);
+    assert.match(
+      ART['ability-art/sheet-' + String(n).padStart(3, '0')] || '',
+      /^data:image\/webp;base64,/,
+      `${f} is in the build`,
+    );
+  }
+});

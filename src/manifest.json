@@ -27,6 +27,7 @@
   "ui": [
     "ui/backend.js",
     "ui/icons.js",
+    "ui/ability-art.js",
     "ui/keywords.js",
     "ui/core.js",
     "ui/overworld.js",
@@ -104,7 +105,8 @@
   },
   "art": {
     "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",
-    "images": ["assets/pilots", "assets/scenes", "assets/portraits"],
+    "images": ["assets/pilots", "assets/scenes", "assets/portraits", "assets/ability-art"],
+    "notInPlaytest": ["assets/ability-art"],
     "fonts": [
       {
         "family": "Chakra Petch",

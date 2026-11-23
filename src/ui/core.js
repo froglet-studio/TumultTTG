@@ -116,7 +116,8 @@
   };
   U.faceTipHTML = function (card, fk, P, E) {
     const face = card[fk];
-    return `<b>${esc(card.name)} — ${esc(face.n)}</b> <span class="dim">(${!T.isEthFace(fk) ? (card.pet ? 'Physical face, played through the pet' : card.gear ? 'Gear face: ' + T.gearCostText({ omni: face.el }) + ', never trained' : 'Physical') : EL[face.elt || card.el].name + ' face' + (card.pet ? ', played through the pet' : '')}${card.pet || card.gear ? '' : !T.isEthFace(fk) ? ' face' : ''})</span><div style="margin:4px 0" class="mono small">${costStr(card, face, fk)}</div><div>${esc(face.txt(P, E))}</div>${U.kwGloss(face.txt(P, E))}${T.isEthFace(fk) ? `<div class="mute small" style="margin-top:4px">E unlocks and scales this capability; P ${face.txt(1, 0) !== face.txt(0, 0) ? 'also scales a physical sub-part' : 'does not substitute for it'}.</div>` : ''}`;
+    const a = U.abilityArt && U.abilityArt(card.id, fk);
+    return `${a ? `<span class="tip-art ${a.cls}" style="${a.style}"></span>` : ''}<b>${esc(card.name)} — ${esc(face.n)}</b> <span class="dim">(${!T.isEthFace(fk) ? (card.pet ? 'Physical face, played through the pet' : card.gear ? 'Gear face: ' + T.gearCostText({ omni: face.el }) + ', never trained' : 'Physical') : EL[face.elt || card.el].name + ' face' + (card.pet ? ', played through the pet' : '')}${card.pet || card.gear ? '' : !T.isEthFace(fk) ? ' face' : ''})</span><div style="margin:4px 0" class="mono small">${costStr(card, face, fk)}</div><div>${esc(face.txt(P, E))}</div>${U.kwGloss(face.txt(P, E))}${T.isEthFace(fk) ? `<div class="mute small" style="margin-top:4px">E unlocks and scales this capability; P ${face.txt(1, 0) !== face.txt(0, 0) ? 'also scales a physical sub-part' : 'does not substitute for it'}.</div>` : ''}`;
   };
   /** The clade a pilot with these clades carries card `c` through: its own bloodline first, else a clade that shares it. */
   U.cladeIn = (c, clades) =>
@@ -182,7 +183,11 @@
    */
   U.cardArt = (c, asleep, sp) => {
     const elt = (c.E && c.E.elt) || c.el;
-    return `<div class="hart${asleep ? ' asleep' : ''}" style="--c:${EL[elt].color}" aria-hidden="true"><i class="clade">${c.gear ? U.icGear(c.gear) : U.icClade(sp || c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E || c.P2, c.el)}</i></div>`;
+    // a painting of each face in action where one exists (src/ui/ability-art.js), each on its own side of the cut
+    const pp = U.abilityArt && U.abilityArt(c.id, 'P'),
+      pe = U.abilityArt && U.abilityArt(c.id, c.E ? 'E' : 'P2');
+    const paint = (a, side) => (a ? `<b class="pa ${side}"><span class="${a.cls}" style="${a.style}"></span></b>` : '');
+    return `<div class="hart${asleep ? ' asleep' : ''}${pp || pe ? ' painted' : ''}" style="--c:${EL[elt].color}" aria-hidden="true">${paint(pp, 'pa-p')}${paint(pe, 'pa-e')}<i class="clade">${c.gear ? U.icGear(c.gear) : U.icClade(sp || c.sp)}</i><i class="vp">${U.icFace(c.P, c.el)}</i><i class="ve">${U.icFace(c.E || c.P2, c.el)}</i></div>`;
   };
   /**
    * A die showing face `f`. `kind` is a key of T.DICE (the plain die when left out); `attrs` adds attributes to

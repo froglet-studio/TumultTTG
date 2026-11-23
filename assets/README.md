@@ -4,13 +4,13 @@ Everything here is inlined into the single-file build as data URIs by `tools/bui
 `src/manifest.json`), so the game still makes no network requests. A key the UI asks for and cannot find
 falls back to drawn art (an initial on a disc), so the game never ships with a hole.
 
-| Folder | What | Key in `T.ART` | Size |
-|---|---|---|---|
-| `pilots/` | a pilot's portrait, 160 px square, JPEG | `pilot/<CALLSIGN>` | ~8 KB each |
-| `scenes/` | the same pilot in their world, 768×432, WebP | `scene/<CALLSIGN>` | ~40–50 KB each |
-| `scenes-hd/` | the same scenes at full size, 1536×864, WebP q74; the web version sends these in place of `scenes/` (`buildWeb` in `tools/build.mjs`), the single file keeps the small ones | (as `scene/`) | ~100 KB each |
-| `portraits/` | painted clade heads, 128 px tiles four to a row, WebP | `portrait/sheet-<N>` | ~17–61 KB a sheet |
-| `fonts/` | Chakra Petch SemiBold and Cinzel Bold, Latin subsets, WOFF2 | `@font-face` | 8 KB + 15 KB |
+| Folder       | What                                                                                                                                                                        | Key in `T.ART`       | Size              |
+| ------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- | ----------------- |
+| `pilots/`    | a pilot's portrait, 160 px square, JPEG                                                                                                                                     | `pilot/<CALLSIGN>`   | ~8 KB each        |
+| `scenes/`    | the same pilot in their world, 768×432, WebP                                                                                                                                | `scene/<CALLSIGN>`   | ~40–50 KB each    |
+| `scenes-hd/` | the same scenes at full size, 1536×864, WebP q74; the web version sends these in place of `scenes/` (`buildWeb` in `tools/build.mjs`), the single file keeps the small ones | (as `scene/`)        | ~100 KB each      |
+| `portraits/` | painted clade heads, 128 px tiles four to a row, WebP                                                                                                                       | `portrait/sheet-<N>` | ~17–61 KB a sheet |
+| `fonts/`     | Chakra Petch SemiBold and Cinzel Bold, Latin subsets, WOFF2                                                                                                                 | `@font-face`         | 8 KB + 15 KB      |
 
 ## Where it comes from, and its licence
 
@@ -36,6 +36,12 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
   sheets for clade art (2026-11-17). Each 2048 px sheet was cut into equal cells, trimmed 2.5% a side to drop the
   grid lines, resized to 128 px and repacked four to a row; the scorpion was a single 1024 px image. Which clade
   sits in which tile is `U.PORTRAIT_SHEETS` in `src/ui/icons.js`.
+- **Ability paintings** (`ability-art/sheet-NNN.webp`) were generated for this repository in Figma Weave in Garrett's
+  workspace (2026-11-22/23): the first two sheets with Nano Banana Pro, the rest with Nano Banana 2 Lite, which Garrett
+  chose for the full set. Garrett set the direction (abstract close-ups of the trait in motion, no whole animals, no
+  faces) and approved test sheets before the run. Each 1024 px sheet is a 3×3 grid; `node tools/ability-art.js cut`
+  finds its gutters, trims 2% a cell, resizes to 144 px and repacks it. Which face sits in which tile is
+  `U.ABILITY_SHEETS` in `src/ui/ability-art.js`; `tools/ability-art.js prompt N` prints the prompt a sheet was made from.
 - **Chakra Petch** is © 2018 The Chakra Petch Project Authors, under the SIL Open Font License 1.1
   (`fonts/OFL.txt`). It is Cosmic Shore's display face. Subset with
   `pyftsubset ChakraPetch-SemiBold.ttf --unicodes=U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201D,U+2026,U+2022,U+2190-2193,U+00D7 --flavor=woff2`.
@@ -45,10 +51,10 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 
 ## Sound
 
-| Folder | What | Key in `T.AUDIO` | Size |
-|---|---|---|---|
-| `audio/music/` | Cosmic Shore's soundtrack, eleven tracks, 96 kbps stereo MP3, loudness-normalised | `music/<name>` | 0.9–3.8 MB each, 27 MB in all |
-| `audio/sfx/` | fifty of Cosmic Shore's effects, 96 kbps mono MP3, trimmed and peak-normalised | `sfx/<name>` | 2–120 KB each, 1.2 MB in all |
+| Folder         | What                                                                              | Key in `T.AUDIO` | Size                          |
+| -------------- | --------------------------------------------------------------------------------- | ---------------- | ----------------------------- |
+| `audio/music/` | Cosmic Shore's soundtrack, eleven tracks, 96 kbps stereo MP3, loudness-normalised | `music/<name>`   | 0.9–3.8 MB each, 27 MB in all |
+| `audio/sfx/`   | fifty of Cosmic Shore's effects, 96 kbps mono MP3, trimmed and peak-normalised    | `sfx/<name>`     | 2–120 KB each, 1.2 MB in all  |
 
 Both are Cosmic Shore's (`froglet-studio/cosmic-shore`, MIT, © Froglet Inc.; Shombith asked for them on
 2026-11-22; Garrett, 2026-11-14: Froglet's Hypersea games share their resources freely). The music is
