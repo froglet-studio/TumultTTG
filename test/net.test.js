@@ -801,11 +801,13 @@ test('online: a host alone sets out with the AI filling the empty seats', { skip
   );
   assert.ok(run().heroes[2], "the AI's pilot is drafted at once");
   await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
-  A.act('spotPilot', 'cavitt');
-  A.act('prebuilt', 'cavitt');
+  // the AI drafts a random pre-made pilot as the game opens, so each person picks one it did not take
+  const free = A.T.PREBUILTS.filter((p) => p.name !== run().heroes[2].name).map((p) => p.id);
+  A.act('spotPilot', free[0]);
+  A.act('prebuilt', free[0]);
   A.act('confirmHero');
-  B.act('spotPilot', B.T.PREBUILTS.find((p) => p.id !== 'cavitt' && p.name !== run().heroes[2].name).id);
-  B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt' && p.name !== run().heroes[2].name).id);
+  B.act('spotPilot', free[1]);
+  B.act('prebuilt', free[1]);
   B.act('confirmHero');
   await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);
   assert.equal(run().map.rows.length, 5, 'a Short route');

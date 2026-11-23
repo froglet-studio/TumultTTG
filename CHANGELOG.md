@@ -1,11 +1,18 @@
 # Changelog
 
-## 2.137.0 — 2026-11-23 — Ability paintings, beasts of Tumult
+## 2.138.0 — 2026-11-23 — Ability paintings, beasts of Tumult
 
 - **Every trait face has a painting** (Garrett, 2026-11-22: "top notch art that depicts each abilities actions"). The art strip on a card shows the face in action: an abstract close-up of the trait itself (stripes, claws, quills, a tail) in motion, never a whole earth animal, since every creature of Tumult is a triple hybrid (Garrett, 2026-11-23). The strip is split as before, the Physical face's painting on one side and the Ethereal face's, lit in its element's colour, on the other; an asleep face stays grey. The painting also heads each face's tip.
 - 1,013 of the 1,058 faces painted so far (109 of 118 sheets of nine), generated in Figma Weave in Garrett's workspace (`tools/ability-art.js` plans, prompts and cuts them; `assets/README.md`). A face without a painting keeps its drawn verb. The paintings ride in the offline file and the web version; the claude.ai playtest page leaves them out to stay under its size limit.
 - **Foes look like beasts of Tumult**, not Cosmic Shore space creatures (Garrett: "space creatures that do not belong on the planet surface"). A hybrid foe is drawn as the painted heads of its three clades in a ring coloured by its danger (red, amber for an elite, violet for a rival, gold for the threat at the end); a rival pilot leads with its pilot portrait. A foe without clades (Spawners, the Heart) keeps its old body.
 - Drawing only: no rules, balance or saves change.
+
+## 2.137.0 — 2026-11-23 — A new draft
+
+- **The rest of the draft is redesigned** (Shombith, 2026-11-22, "Gallery, then a closer look" from the Frogma board): Bloodlines, Packs and Upgrade each lay out everything at once in the HyperSea look, and tapping any card or bloodline opens it big in a closer look.
+- **Bloodlines**: all 85 heads in a grid with an element filter; Your pilot shows the name, the pair's painting and the signature traits you could draft.
+- **Packs and Upgrade**: calm cards (painting, two faces, bold keywords). On Upgrade each face has level bars you tap to set P or E, and a line shows what the next point buys. Auto and Reset stay.
+- **Phones** get their own layout: two-up grids, a fixed button at the bottom, and the closer look as a sheet.
 
 ## 2.136.0 — 2026-11-23 — Choose your pilot
 

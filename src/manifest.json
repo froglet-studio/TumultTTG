@@ -49,6 +49,7 @@
     "ui/settings.js",
     "ui/crew.js",
     "ui/pick.js",
+    "ui/draft.js",
     "ui/binder.js",
     "ui/guide.js",
     "ui/home.js",
@@ -76,7 +77,8 @@
     "ui/home.css",
     "ui/profile.css",
     "ui/audio.css",
-    "ui/pick.css"
+    "ui/pick.css",
+    "ui/draft.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
