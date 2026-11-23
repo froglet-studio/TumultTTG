@@ -221,9 +221,11 @@ test('online: two screens draft, fly and ready up in one game', { skip, timeout:
     ['Ana', 'Bo'],
     'the players are named',
   );
+  A.act('spotPilot', 'cavitt');
   A.act('prebuilt', 'cavitt');
   A.act('confirmHero');
   assert.equal(A.U.draft.step, 'wait', 'the host waits for the guest');
+  B.act('spotPilot', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
   B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
   B.act('confirmHero');
   await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map');
@@ -305,8 +307,10 @@ async function toGuestTurn(db, rooms) {
   A.U.run.rngs = {};
   A.U.net.publish();
   await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
+  A.act('spotPilot', 'cavitt');
   A.act('prebuilt', 'cavitt');
   A.act('confirmHero');
+  B.act('spotPilot', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
   B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
   B.act('confirmHero');
   await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);
@@ -503,12 +507,15 @@ test('online: three screens join one game, draft a pilot each and set out', { sk
   assert.equal(A.U.run.party.owner.length, 3, 'three players fly three pilots');
   await until(() => C.U.screen === 'draft' && C.U.draft && C.U.draft.heroIdx === 2, "the second guest's draft");
   const ids = A.T.PREBUILTS.map((p) => p.id);
+  A.act('spotPilot', ids[0]);
   A.act('prebuilt', ids[0]);
   A.act('confirmHero');
+  B.act('spotPilot', ids[1]);
   B.act('prebuilt', ids[1]);
   B.act('confirmHero');
   await new Promise((r) => setTimeout(r, 50));
   assert.equal(A.U.screen, 'draft', 'the map waits for every pilot');
+  C.act('spotPilot', ids[2]);
   C.act('prebuilt', ids[2]);
   C.act('confirmHero');
   await until(() => [A, B, C].every((P) => P.U.screen === 'map'), 'every screen on the map');
@@ -524,6 +531,7 @@ test('online: three screens join one game, draft a pilot each and set out', { sk
   assert.equal(A.U.run.party.owner.length, 4, 'the newcomer brings a pilot of its own');
   await until(() => D.U.screen === 'draft' && D.U.draft && D.U.draft.heroIdx === 3, "the newcomer's draft");
   assert.equal(A.T.chooseNode(A.U.run, A.U.run.available[0]).ok, false, 'the route waits for its pilot');
+  D.act('spotPilot', ids[3]);
   D.act('prebuilt', ids[3]);
   D.act('confirmHero');
   await until(() => A.U.run.heroes.length === 4 && D.U.screen === 'map', 'the newcomer on the route');
@@ -634,8 +642,10 @@ test(
     assert.equal(entry().open, false, 'nobody new can join mid-draft');
     const ids = A.T.PREBUILTS.map((p) => p.id);
     await until(() => B.U.screen === 'draft', "the guest's draft");
+    A.act('spotPilot', ids[0]);
     A.act('prebuilt', ids[0]);
     A.act('confirmHero');
+    B.act('spotPilot', ids[1]);
     B.act('prebuilt', ids[1]);
     B.act('confirmHero');
     await until(() => A.U.screen === 'map', 'the route');
@@ -675,8 +685,10 @@ test(
     A.U.net.publish();
     await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
     assert.equal(A.U.run.party.rounds, 'live', "the host's way to play");
+    A.act('spotPilot', 'cavitt');
     A.act('prebuilt', 'cavitt');
     A.act('confirmHero');
+    B.act('spotPilot', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
     B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
     B.act('confirmHero');
     await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);
@@ -787,8 +799,10 @@ test('online: a host alone sets out with the AI filling the empty seats', { skip
   );
   assert.ok(run().heroes[2], "the AI's pilot is drafted at once");
   await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft");
+  A.act('spotPilot', 'cavitt');
   A.act('prebuilt', 'cavitt');
   A.act('confirmHero');
+  B.act('spotPilot', B.T.PREBUILTS.find((p) => p.id !== 'cavitt' && p.name !== run().heroes[2].name).id);
   B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt' && p.name !== run().heroes[2].name).id);
   B.act('confirmHero');
   await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);
