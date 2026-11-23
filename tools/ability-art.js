@@ -77,7 +77,18 @@ function plan() {
   const sheets = readPlan();
   const placed = new Set(sheets.flat());
   const want = allFaces();
-  const fresh = want.filter((k) => !placed.has(k));
+  // new faces fill in most-played first: the pre-made pilots' kits, then the rest of their clades, then the rest
+  const kit = new Set(T.PREBUILTS.flatMap((p) => p.cards));
+  const kin = new Set(T.PREBUILTS.flatMap((p) => p.species));
+  const rank = (k) => {
+    const id = k.split('.')[0];
+    return kit.has(id) ? 0 : kin.has(T.CARD[id].sp) ? 1 : 2;
+  };
+  const fresh = want
+    .filter((k) => !placed.has(k))
+    .map((k, i) => [rank(k), i, k])
+    .sort((a, b) => a[0] - b[0] || a[1] - b[1])
+    .map((x) => x[2]);
   let last = sheets[sheets.length - 1];
   for (const k of fresh) {
     if (!last || last.length >= PER) sheets.push((last = []));
@@ -88,7 +99,7 @@ function plan() {
 }
 
 /** A face as a picture: the animal and what it is doing, without the numbers. */
-function describe(key) {
+function describe(key, short) {
   const [id, fk] = key.split('.');
   const c = T.CARD[id];
   const face = c[fk];
@@ -102,11 +113,11 @@ function describe(key) {
     .replace(/\(\s*\)/g, '')
     .replace(/\s+([,.;:])/g, '$1')
     .replace(/\s{2,}/g, ' ');
-  const glow =
-    fk === 'E'
-      ? ` Ethereal: the trait is charged with ${glowOf(face.elt || c.el)} light that streams off it.`
-      : ' Physical: no glow, raw texture, speed and force.';
-  return `the trait "${c.name}" from ${whose} body, doing "${face.n}" (${txt}). Show only the trait itself, so close it fills the frame: its pattern, texture and the motion of the move.${glow}`;
+  const glow = fk === 'E' ? ` Ethereal: ${glowOf(face.elt || c.el)} light streams off it.` : ' Physical: no glow.';
+  // no names in quotes: a lighter model letters quoted words onto the painting as captions
+  // short: only the first clause of the face text, for sheets where the lighter model lettered the rules onto the art
+  const act = short ? txt.split(/[:.;]/)[0].trim() : txt.replace(/\.$/, '');
+  return `${whose} ${c.name.toLowerCase()}, in action: ${act}.${glow}`;
 }
 
 function glowOf(el) {
@@ -114,40 +125,103 @@ function glowOf(el) {
 }
 
 const STYLE =
-  'A 3x3 grid of nine square painted card illustrations, separated by thin dark navy gutters. ' +
+  'A 3x3 grid of exactly nine equal square painted card illustrations in three even rows of three, separated by thin dark navy gutters. ' +
   'Each cell is an abstract, extreme close-up of one animal trait in action, the way a trading card shows a power: ' +
   'never a whole animal, never eyes, a mouth, a face or a head, never a recognisable earth creature; only the trait itself (stripes, claws, ' +
   'scales, feathers, tail, plates, skin, light) cropped tight, with motion blur, speed lines of dust, sparks or water and a hint of the ' +
   'alien planet Tumult behind (dark rock, glowing crystal veins). The creatures of Tumult are hybrids of three animals, so the ' +
   'trait should read as a part of something larger and stranger. Rich semi-realistic painting, dramatic rim light, deep shadow; ' +
   'the action sits in a wide band across the middle of the cell so it still reads when cropped to a short strip. ' +
-  'No text, letters, numbers, frames or UI anywhere. Cells, left to right, top to bottom:';
+  'Show only the trait, so close it fills the frame: its pattern, texture and the motion of the move. ' +
+  'Absolutely no text, captions, titles, labels, letters, numbers, frames or UI anywhere in the image; do not number the cells. Every row holds exactly three cells, never four. Cells, left to right, top to bottom:';
 
-function prompt(n) {
+function prompt(n, short) {
   const s = readPlan()[n - 1];
   if (!s) throw new Error(`no sheet ${n}`);
-  return STYLE + '\n' + s.map((k, i) => `(${i + 1}) ${describe(k)}`).join('\n');
+  const cells = s.map((k, i) => `(${i + 1}) ${describe(k, short)}`);
+  // a short last sheet still asks for nine cells, so the grid stays 3×3; the spare cells are never shown
+  for (let i = s.length; i < 9; i++) cells.push(`(${i + 1}) dark rock with faint glowing crystal veins, nothing else.`);
+  return STYLE + '\n' + cells.join('\n');
+}
+
+/**
+ * Where the gutters of a generated 3×3 sheet fall along one axis. Models don't always split the square in equal
+ * thirds, so each line of pixels across the sheet is scored by how much of it is gutter-dark (a dark navy with
+ * little colour), and the cells lie between the runs of gutter lines. Falls back to equal thirds.
+ */
+function bands(rgb, w, h, axis) {
+  const len = axis === 'x' ? w : h,
+    other = axis === 'x' ? h : w;
+  const score = new Float64Array(len);
+  for (let i = 0; i < len; i++) {
+    let dark = 0;
+    for (let j = 0; j < other; j += 2) {
+      const o = 3 * (axis === 'x' ? j * w + i : i * w + j);
+      const r = rgb[o],
+        g = rgb[o + 1],
+        bl = rgb[o + 2];
+      if (Math.max(r, g, bl) < 70 && bl >= r) dark++;
+    }
+    score[i] = dark / Math.ceil(other / 2);
+  }
+  const isG = (i) => score[i] > 0.85;
+  // the outer border, if any
+  let lo = 0,
+    hi = len - 1;
+  while (lo < len / 10 && isG(lo)) lo++;
+  while (hi > len - len / 10 && isG(hi)) hi--;
+  const cuts = [];
+  for (const [f0, f1] of [
+    [0.22, 0.45],
+    [0.55, 0.78],
+  ]) {
+    let best = null;
+    for (let i = Math.floor(len * f0); i < len * f1; i++) {
+      if (!isG(i)) continue;
+      let j = i;
+      while (j + 1 < len && isG(j + 1)) j++;
+      if (!best || j - i > best[1] - best[0]) best = [i, j];
+      i = j;
+    }
+    cuts.push(best);
+  }
+  if (cuts.some((c) => !c)) {
+    const t = (hi - lo) / 3;
+    return [0, 1, 2].map((k) => [lo + k * t, lo + (k + 1) * t]);
+  }
+  return [
+    [lo, cuts[0][0]],
+    [cuts[0][1] + 1, cuts[1][0]],
+    [cuts[1][1] + 1, hi + 1],
+  ];
 }
 
 function cut(n, file) {
   fs.mkdirSync(OUT, { recursive: true });
   const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'abil-'));
   const [w, h] = execFileSync('identify', ['-format', '%w %h', file + '[0]'], { encoding: 'utf8' }).split(' ').map(Number);
-  const cw = w / 3,
-    ch = h / 3,
-    trim = 0.03;
+  const rgb = execFileSync('convert', [file + '[0]', '-depth', '8', 'rgb:-'], { maxBuffer: 1 << 28 });
+  const xs = bands(rgb, w, h, 'x'),
+    ys = bands(rgb, w, h, 'y');
   const cells = [];
   for (let i = 0; i < 9; i++) {
-    const x = (i % 3) * cw + cw * trim,
-      y = Math.floor(i / 3) * ch + ch * trim;
+    const [x0, x1] = xs[i % 3],
+      [y0, y1] = ys[Math.floor(i / 3)];
+    // a hair inside the cell, so no gutter or soft edge shows
+    const ix = (x1 - x0) * 0.02,
+      iy = (y1 - y0) * 0.02;
     const out = path.join(tmp, `c${i}.png`);
     execFileSync('convert', [
       file + '[0]',
       '-crop',
-      `${Math.round(cw * (1 - 2 * trim))}x${Math.round(ch * (1 - 2 * trim))}+${Math.round(x)}+${Math.round(y)}`,
+      `${Math.round(x1 - x0 - 2 * ix)}x${Math.round(y1 - y0 - 2 * iy)}+${Math.round(x0 + ix)}+${Math.round(y0 + iy)}`,
       '+repage',
       '-resize',
-      `${CELL}x${CELL}!`,
+      `${CELL}x${CELL}^`,
+      '-gravity',
+      'center',
+      '-extent',
+      `${CELL}x${CELL}`,
       out,
     ]);
     cells.push(out);
@@ -156,12 +230,12 @@ function cut(n, file) {
   execFileSync('montage', [...cells, '-tile', '3x3', '-geometry', `${CELL}x${CELL}+0+0`, '-background', '#0d1424', path.join(tmp, 'm.png')]);
   execFileSync('convert', [path.join(tmp, 'm.png'), '-quality', '66', '-define', 'webp:method=6', dest]);
   fs.rmSync(tmp, { recursive: true, force: true });
-  console.log(`${dest} (${fs.statSync(dest).size} bytes)`);
+  console.log(`${dest} (${fs.statSync(dest).size} bytes) cols ${xs.map((c) => c.map(Math.round).join('-')).join(' ')} rows ${ys.map((c) => c.map(Math.round).join('-')).join(' ')}`);
 }
 
 const [cmd, a, b] = process.argv.slice(2);
 if (cmd === 'plan') plan();
-else if (cmd === 'prompt') console.log(prompt(Number(a)));
+else if (cmd === 'prompt') console.log(prompt(Number(a), b === 'short'));
 else if (cmd === 'keys')
   console.log(STYLE + '\n' + process.argv.slice(3).map((k, i) => `(${i + 1}) ${describe(k)}`).join('\n'));
 else if (cmd === 'cut') cut(Number(a), b);
