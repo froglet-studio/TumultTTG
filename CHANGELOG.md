@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.136.0 — 2026-11-23 — A new draft
+
+- **The draft is redesigned** (Shombith, 2026-11-22, "Gallery, then a closer look" from the Frogma board): every step lays out everything at once in the HyperSea look, and tapping any card, bloodline or pilot opens it big in a closer look.
+- **Pilot**: Draft from packs, or a ready-made or player-made pilot, each with its painting; tap one for its traits, Fly to take it as it is.
+- **Bloodlines**: all 85 heads in a grid with an element filter; Your pilot shows the name, the pair's painting and the signature traits you could draft.
+- **Packs and Upgrade**: calm cards (painting, two faces, bold keywords). On Upgrade each face has level bars you tap to set P or E, and a line shows what the next point buys. Auto and Reset stay.
+- **Phones** get their own layout: two-up grids, a fixed button at the bottom, and the closer look as a sheet.
+
 ## 2.135.0 — 2026-11-22 — Rival pilots
 
 - **Rival pilots** (Garrett, 2026-11-22: "you can also put the players up against other Non player characters"). An elite stop may be held by a rival pilot, one of four elites now: human and two clades, with a name, and a hybrid card of one trait from each, so it plays a human trait as your pilots do. It awakens as a pilot does (E = level − 1). Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest in its zone; vitality 15/18/22, speed 2. Objective: Defeat the rival pilot.

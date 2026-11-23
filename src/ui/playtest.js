@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.135.0',
+    version: '2.136.0',
     items: [
+      {
+        text: 'The draft is new: each step shows everything at once, and tapping a card, a bloodline or a pilot opens it big. On Upgrade, tap a face\u2019s bars to set its level; the line under it says what the next point buys. Is each step clear without reading much? Does it work on a phone?',
+      },
       {
         text: 'Rival pilots: an elite stop may now be held by a rival pilot, human and two clades like your own, with a name and a hybrid card of one trait from each (a human one among them), awake as a pilot is. Its objective reads Defeat the rival pilot. Does it feel like another pilot rather than a creature? Is it about as hard as the other elites?',
       },
