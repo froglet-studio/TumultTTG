@@ -156,7 +156,9 @@ function fakeRooms() {
 }
 
 const windows = [];
-test.after(() => windows.forEach((w) => w.close())); // their timers would keep the run alive
+// close each test's pages when it ends: their timers would keep the run alive, and a dozen pages of the
+// playtest build at once run CI out of memory
+test.afterEach(() => windows.splice(0).forEach((w) => w.close()));
 
 async function open(html, db, rooms) {
   const { JSDOM } = require('jsdom');
