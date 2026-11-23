@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.135.0 — 2026-11-22 — Rival pilots
+
+- **Rival pilots** (Garrett, 2026-11-22: "you can also put the players up against other Non player characters"). An elite stop may be held by a rival pilot, one of four elites now: human and two clades, with a name, and a hybrid card of one trait from each, so it plays a human trait as your pilots do. It awakens as a pilot does (E = level − 1). Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest in its zone; vitality 15/18/22, speed 2. Objective: Defeat the rival pilot.
+- Measured over 240 elite missions a tier (heuristic player): tier 3 won 80% with 38% vitality left, between the Bulwark (35% / 24%) and the Harrier (98% / 58%) and Tidecaller (100% / 75%).
+
+## 2.134.0 — 2026-11-22 — Hybrid foes
+
+- **Every foe is a triple hybrid** (Garrett, 2026-11-22), like a pet: three clades, none human, and a hybrid card of one trait from each, rolled as it spawns. Its role (Biter, Brute, Warden, ...) is still its body. When the card is back and a face has something to do, the foe telegraphs that face, named with its clade, then the card cools for the face's cooldown and a round more. Spawners and the Heart stay as they are.
+- **Foes have levels**: tier, one more for an elite, and a level for every 10 squad power past two new pilots' (one less for every 10 short). The card plays at P = level − 1 and E = level − 2; higher-level foes also play their Ethereal faces, one awake a point.
+- Faces become foe moves through the verbs foes already use (melee, zone, area, pushes, pulls, roots, Weaken, drain, plus a ward, a mend and a veil on itself). A hybrid attack hits at least as hard as the role's own. Hover a foe for its clades, level and faces.
+- Balance (`tools/sim.js 40`): mission win rates within half a point of before (heuristic 77.4 → 77.2, look-ahead 91.4 → 91.0), a little less vitality left; no easier.
+
+## 2.133.0 — 2026-11-22 — Pets awaken
+
+- **Spend upgrade points to awaken a pet** (Garrett, 2026-11-22). A pet card now holds its three traits' Ethereal faces as well as their Physical ones. Each point on its E awakens one more, in order (E 1, E 2, E 3); an awake face shows on the pet card in hand, acts from the pet, costs its own trait's etherion and grows with the card's E. An awake pet card swaps a plain die for its element's d8, as any awakened card does. The Upgrade screen has a Physical and an Ethereal button for a pet. Simulated runs adopt no pets, so the balance tables are unchanged.
+
+## 2.132.0 — 2026-11-22 — A map of Tumult
+
+- **The route is a map of Tumult** (Garrett: "a tumult map between missions instead of a little ladder ... the big boss far away, and branching paths to get there across a landscape"). The squad sets out from a camp on the left; the threat at the end of the route stands far off on the right, drawn big over its own ground (a turning storm, a sunken engine, a reef, a hive, a beacon, a knot of winds). Each leg in between is a stretch of country of its ground: land with quarry pits and windbreaks, sea with islands and kelp, high air with peaks and cloud shelves, the wind over all of it. Every road is drawn: gold behind the squad, glowing where it can go now, mist over the country more than a leg ahead. Stops keep their paintings and tips, and a stop passed says how it went.
+- Under the map: the leg the squad is on, what its guides say of the ground, how many stops away the end is, and the next stops as cards to compare, as before. The folded seven-row chart is gone (the map is the chart). On a phone the map scrolls sideways to the squad.
+- Drawing only: the route itself, its rules and saves are unchanged. The Crossing stop's icon shows again on its card.
+
 ## 2.131.0 — 2026-11-22 — Your profile
 
 - **A Profile page** (Shombith's pick from the Frogma board, "Profile page"). The account button at the top right now shows your avatar and opens it: your card as others see it on the left, your display name and avatar on the right, your sign-ins below. On a phone it is one column with Save kept in reach, and also under More.

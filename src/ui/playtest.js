@@ -19,8 +19,20 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.131.0',
+    version: '2.135.0',
     items: [
+      {
+        text: 'Rival pilots: an elite stop may now be held by a rival pilot, human and two clades like your own, with a name and a hybrid card of one trait from each (a human one among them), awake as a pilot is. Its objective reads Defeat the rival pilot. Does it feel like another pilot rather than a creature? Is it about as hard as the other elites?',
+      },
+      {
+        text: 'Foes are hybrids now: every foe but the Spawners and the Heart has three clades and a hybrid card of their traits, like a pet. Hover a foe to see its clades, its level and the faces it can play; its intent names the face and the clade it comes from. Higher-level foes (tier 3, elites, bigger squads) also play Ethereal faces. Does each foe feel different? Can you read what a hybrid face will do before it lands?',
+      },
+      {
+        text: 'Pets awaken: on the Upgrade screen a pet card now has an Ethereal button. Each point you spend there awakens one more of its three Ethereal faces (one from each of its clades), and the awake ones show on the pet card in a mission. Is it clear which face wakes next? Is a pet with awake faces worth the points you would have spent on a trait?',
+      },
+      {
+        text: 'The route is a map of Tumult now: the squad sets out from a camp on the left, each leg is a stretch of land, sea or high air, and what waits at the end stands far off on the right over its own ground. Glowing roads are the ones open now; gold is the road taken. Can you tell at a glance where you are, where you can go, and how far the end is? Does the map read on a phone (it scrolls sideways)?',
+      },
       {
         text: 'Signed in on the web version, the button at the top right with your initials (or face) opens your new Profile page: pick an avatar from any pilot painting, your Google or Discord picture, or initials, and set your display name. Does the name check make sense as you type? Does your new face show in the Lobby?',
       },

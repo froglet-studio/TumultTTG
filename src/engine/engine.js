@@ -337,6 +337,7 @@
     // a bigger or more seasoned squad meets tougher foes (T.scaleFor): m.foeHp is that, in percent
     if (m.foeHp && m.foeHp !== 100) e.hp = e.maxHp = Math.round((e.maxHp * m.foeHp) / 100);
     e.uid = nextUid(m);
+    T.hybridize(m, e); // three clades and a hybrid card (src/engine/hybrids.js)
     m.enemies.push(e);
     return e;
   };
@@ -373,8 +374,7 @@
     return e;
   }
   T.enemyAbility = (e, key) => {
-    const ab = T.ENEMIES[e.type].abilities[key];
-    return ab;
+    return T.foeAbilityByKey(e, key);
   };
   T.enemyDmg = (e, ab) => (Array.isArray(ab.dmg) ? ab.dmg[e.ti] : ab.dmg || 0);
 
@@ -389,7 +389,7 @@
     B.build(spec.board);
     const m = {
       seed,
-      rngs: { dice: T.subSeed(seed, 'dice'), foes: T.subSeed(seed, 'foes') },
+      rngs: { dice: T.subSeed(seed, 'dice'), foes: T.subSeed(seed, 'foes'), hybrid: T.subSeed(seed, 'hybrid') },
       uids: 0,
       archetype,
       tier,
@@ -426,6 +426,7 @@
       spawnedCount: 0,
     };
     if (spec.foeHp && spec.foeHp !== 100) m.foeHp = spec.foeHp; // only when it scales: a two-pilot save is unchanged
+    if (spec.foeLv) m.foeLv = spec.foeLv; // the squad's power in foe levels (src/engine/hybrids.js)
     m.heroes.forEach((h) => (h.uid = nextUid(m)));
     spec.enemies.forEach((en) => T.spawnEnemy(m, en.type, tier, en.node));
     m.heroes.forEach((h, i) => {
@@ -1913,7 +1914,8 @@
       E = T.heroE(h, cardId);
     const elt = face.elt || card.el;
     const eln = face.el || 0;
-    if (faceKey === 'E' && E < R().ETHEREAL_MIN_E) return { ok: false, why: 'needs E ' + R().ETHEREAL_MIN_E };
+    if (!face) return { ok: false, why: 'no such face' };
+    if (!T.faceAwake(h, cardId, faceKey)) return { ok: false, why: 'needs E ' + T.faceNeedE(cardId, faceKey) };
     // a pet's card acts from the pet (src/data/pets.js): no pet on the board, no play
     const body = T.isPetCard(h, cardId) ? T.petFor(m, h, cardId) : h;
     if (!body) return { ok: false, why: 'your pet is not here' };
@@ -1941,7 +1943,7 @@
     const body = chk.body;
     say(
       m,
-      `${h.name} plays ${card.name} — ${face.n}${faceKey === 'E' ? ' (' + T.ETHERIONS[elt].name + ')' : ''}${body !== h ? ', through ' + body.name : ''}.`,
+      `${h.name} plays ${card.name} — ${face.n}${T.isEthFace(faceKey) ? ' (' + T.ETHERIONS[elt].name + ')' : ''}${body !== h ? ', through ' + body.name : ''}.`,
       'hero',
     );
     fx(m, { t: 'play', hero: h.uid, card: cardId, face: faceKey });
@@ -1969,7 +1971,7 @@
       say(m, `${body.name} waits for dusk.`, 'hero');
     } else T.runEffects(m, body, face.fx, rctx);
     // Resonance (2.118): an Ethereal face leaves its element in the air, after it has drawn on what was there
-    if (faceKey === 'E' && T.AIR_ELS.includes(elt)) T.leaveInAir(m, elt);
+    if (T.isEthFace(faceKey) && T.AIR_ELS.includes(elt)) T.leaveInAir(m, elt);
     if (body !== h) delete rctx.pendingFreeMove; // a free step a pet's face grants is the pet's, and it has taken it
     T.afterAction(m);
     return { ok: true, ctx: rctx };

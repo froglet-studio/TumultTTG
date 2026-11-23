@@ -20,7 +20,7 @@ function withPet(seed = 11, type = 'swarm') {
   return { run, m: run.mission, h, rec, pet: run.mission.pets[0] };
 }
 
-test('a found pet is three clades, none human, with one card of their three Physical faces', () => {
+test('a found pet is three clades, none human, with one card of their three Physical and three Ethereal faces', () => {
   const run = T.newRun(3);
   for (let k = 0; k < 20; k++) {
     const rec = T.newPet(run);
@@ -31,14 +31,18 @@ test('a found pet is three clades, none human, with one card of their three Phys
       assert.ok(T.CARD[id].clades.includes(rec.species[i]), `${id} is a ${rec.species[i]} trait`),
     );
     const c = T.CARD[rec.card];
-    assert.deepEqual(T.faceKeys(rec.card), ['P', 'P2', 'P3']);
+    assert.deepEqual(T.faceKeys(rec.card), ['P', 'P2', 'P3', 'E', 'E2', 'E3']);
     T.PET_FACES.forEach((k, i) => assert.equal(c[k].n, T.CARD[rec.traits[i]].P.n));
-    assert.equal(c.E, null, 'a pet card has no Ethereal face');
+    T.PET_ETH.forEach((k, i) => {
+      const tr = T.CARD[rec.traits[i]];
+      assert.equal(c[k].n, tr.E.n);
+      assert.equal(c[k].elt, tr.E.elt || tr.el, 'each Ethereal face pays its own trait’s etherion');
+    });
     assert.ok(!T.CARDS.includes(c), 'not in the clades’ catalog');
   }
 });
 
-test('the pet card counts toward the nine, at most two pets, E never goes on it, and a full kit sends a card to the reserve', () => {
+test('the pet card counts toward the nine, at most two pets, E goes up to the cap, and a full kit sends a card to the reserve', () => {
   const run = T.newRun(4);
   H.prebuiltSquad(run, 1, 3);
   const h = run.heroes[0];
@@ -49,7 +53,9 @@ test('the pet card counts toward the nine, at most two pets, E never goes on it,
   assert.equal(T.canAdopt(h, T.newPet(run)).ok, false, 'a third pet is refused');
   const card = h.pets[0].card;
   h.upUnspent = 5;
-  assert.equal(T.adjustUp(h, card, 'E', 1).ok, false);
+  assert.ok(T.adjustUp(h, card, 'E', 3).ok);
+  assert.equal(T.adjustUp(h, card, 'E', 1).ok, false, 'E stops at its cap');
+  assert.ok(T.adjustUp(h, card, 'E', -3).ok);
   assert.ok(T.adjustUp(h, card, 'P', 1).ok);
   // a full kit: the pet's card waits in reserve, or flies in place of a card that does; nothing is refunded
   const g = T.makeHero({ id: 'g', name: 'Full', species: h.species, cards: h.cards.filter((c) => !T.isPetCard(h, c)) });
@@ -244,4 +250,49 @@ test('a pet on its pilot’s node rides with them, even in a one-seater, and pla
   const out = T.leaveOptions(m, h)[0];
   assert.ok(T.leave(m, h, out).ok);
   assert.equal(pet.pos, h.pos, 'and got out with them');
+});
+
+test('upgrade points awaken a pet’s Ethereal faces one a point, and an awake one plays from the pet at the card’s E', () => {
+  const { m, h, rec } = withPet(12);
+  const cid = rec.card;
+  assert.deepEqual(T.handFaces(h, cid), ['P', 'P2', 'P3'], 'asleep, the Ethereal faces stay out of the hand');
+  T.PET_ETH.forEach((fk) => assert.equal(T.faceAwake(h, cid, fk), false));
+  const why = T.canPlay(m, h, cid, 'E').why;
+  assert.equal(why, 'needs E 1');
+  h.upUnspent += 3;
+  for (let e = 1; e <= 3; e++) {
+    assert.ok(T.adjustUp(h, cid, 'E', 1).ok);
+    assert.deepEqual(
+      T.PET_ETH.map((fk) => T.faceAwake(h, cid, fk)),
+      [0, 1, 2].map((i) => i < e),
+      `E ${e} awakens ${e} face${e > 1 ? 's' : ''}`,
+    );
+    assert.equal(T.handFaces(h, cid).length, 3 + e);
+  }
+  assert.equal(T.faceNeedE(cid, 'E3'), 3);
+  assert.equal(
+    T.faceNeedE(
+      h.cards.find((c) => !T.isKinless(c)),
+      'E',
+    ),
+    T.RULES.ETHEREAL_MIN_E,
+  );
+  // awake, a face is held back only by what any face is: dice, targets, the pet being on the board
+  T.PET_ETH.forEach((fk) => assert.notEqual(T.canPlay(m, h, cid, fk).why, `needs E ${T.faceNeedE(cid, fk)}`));
+  // with dice enough, some awake face plays, through the pet, and the whole card goes on the track
+  h.held = ['AP', 'AP', 'AP', 'AP', 'AP', 'O', 'O', 'O', 'M', 'C', 'S', 'T'];
+  h.heldDie = h.held.map(() => 'plain');
+  h.temp = [];
+  h.pool = T.RULES.POOL - h.held.length;
+  const fk = T.PET_ETH.find((k) => T.canPlay(m, h, cid, k).ok);
+  assert.ok(fk, 'an awake Ethereal face can be played');
+  const opts = T.canPlay(m, h, cid, fk).tg;
+  const ctx = opts.need === 'foe' ? { target: opts.options[0] } : opts.need === 'node' ? { node: opts.options[0] } : {};
+  const r = T.playFace(m, h, cid, fk, ctx);
+  assert.ok(r.ok, r.why);
+  assert.ok(
+    m.log.some((l) => /through/.test(l.text || l)),
+    'played through the pet',
+  );
+  assert.ok(!T.inHand(h, cid), 'the whole card cools');
 });

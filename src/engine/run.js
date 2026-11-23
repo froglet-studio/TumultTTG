@@ -468,9 +468,9 @@
   // UP allocation
   T.adjustUp = function (h, cardId, which, delta) {
     const i = which === 'E' ? 1 : 0;
-    // a pet's card has no Ethereal face; a gear card is bought as it is, never trained (2.119)
+    // a gear card is bought as it is, never trained (2.119); a pet's E awakens its Ethereal faces one a point (2.133)
     const c = T.CARD[cardId];
-    const cap = c && c.gear ? 0 : which === 'E' ? (c && c.pet ? 0 : R().E_CAP) : R().P_CAP;
+    const cap = c && c.gear ? 0 : which === 'E' ? R().E_CAP : R().P_CAP;
     const cur = h.up[cardId] || [0, 0];
     // a point bound to this card (a trait taken twice) is spent before a free one, and comes back last
     if (delta > 0) {

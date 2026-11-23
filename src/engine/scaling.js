@@ -155,6 +155,9 @@
     const B = T.SCALING.boss;
     const hp = spec.isBoss ? sc.hp + Math.round(100 * (sc.over * B.hp - sc.under * B.under)) : sc.hp;
     if (hp !== 100) spec.foeHp = hp;
+    // foes level up with the squad's power, a level for every new pilot's worth past two (src/engine/hybrids.js)
+    const lv = Math.floor(sc.over / T.HYBRID.LEVEL_POWER + 1e-9) - Math.round(sc.under / T.HYBRID.LEVEL_POWER + 1e-9);
+    if (lv) spec.foeLv = lv;
     // the Heart's chamber takes half as many extras, from its own spawn: its fight is the Heart and its Spawners
     const extras = spec.isBoss ? Math.floor(sc.foes * T.SCALING.boss.foes + 1e-9) : sc.foes;
     if (extras > 0) {

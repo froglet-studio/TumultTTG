@@ -229,11 +229,11 @@
     if (op === 'face') {
       const k = cmd.card + ':' + cmd.fk;
       c.faces[k] = (c.faces[k] || 0) + 1;
-      c[cmd.fk === 'E' ? 'E' : 'P']++;
+      c[T.isEthFace(cmd.fk) ? 'E' : 'P']++;
       const h = m.heroes[cmd.hero];
-      const e0 = cmd.fk === 'E' && h && T.heroE && T.heroE(h, cmd.card) === 0;
+      const e0 = T.isEthFace(cmd.fk) && h && T.heroE && T.heroE(h, cmd.card) === 0;
       if (e0) c.E0++;
-      undo = { face: k, fk: cmd.fk === 'E' ? 'E' : 'P', e0 };
+      undo = { face: k, fk: T.isEthFace(cmd.fk) ? 'E' : 'P', e0 };
     } else if (op === 'gear') undo = (c.gear++, { n: 'gear' });
     else if (op === 'basic') undo = (c.basic++, { n: 'basic' });
     else if (op === 'item') undo = (c.items++, { n: 'items' });
