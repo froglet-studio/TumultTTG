@@ -368,29 +368,36 @@
   T.PREBUILTS = [
     // Each pre-made hero is a painted pilot (src/ui/pilots.js): that pilot's name and pair of clades, head clade first.
     // The ids are the heroes' old names, kept because saved canon notes are keyed on them (`hero:<id>`).
+    // role and line are what the draft's first screen shows (src/ui/pick.js); blurb is the longer note.
     { id:'cavitt', name:'Rosh', title:'the Brawler-in-the-Cloud', species:['human','octopus','raven'],
       cards:['oct_cloak','oct_jet','rav_mob','rav_carrion','hum_throw','hum_mind'],
       up:{ rav_mob:[2,0], rav_carrion:[1,1], oct_cloak:[0,1], oct_jet:[1,0] },
+      role:'Striker', line:'Closes through cover and drops on the weakest.',
       blurb:'P-leaning striker. Closes through cover, vanishes, drops on whatever is weakest.' },
     { id:'marish', name:'Ekora', title:'the Tidewarden', species:['human','otter','eel'],
       cards:['eel_discharge','eel_electro','wea_musk','ott_kelp','hum_persist','hum_tool'],
       up:{ eel_discharge:[0,2], wea_musk:[0,2], ott_kelp:[0,1], hum_tool:[1,0] },
+      role:'Controller', line:'Chains, weakens and anchors foes in the current.',
       blurb:'E-leaning controller. Chains, weakens, anchors the party in the current.' },
     { id:'ossa', name:'Nedira', title:'the Bulwark', species:['human','hedgehog','tortoise'],
       cards:['tor_shell','tor_beak','heh_spines','heh_burst','hum_grip','hum_persist'],
       up:{ tor_shell:[1,2], heh_spines:[1,1], tor_beak:[1,0] },
+      role:'Bulwark', line:'Shells up and holds a shield over the squad.',
       blurb:'Immovable. Shells up, bristles, and holds a shield over the party.' },
     { id:'veil', name:'Echo', title:'the Nightwing', species:['human','mouse','owl'],
       cards:['owl_silent','owl_sound','owl_talon','mou_scurry','mou_tiny','hum_pattern'],
       up:{ owl_silent:[1,1], mou_tiny:[0,2], owl_talon:[1,0], owl_sound:[1,0] },
+      role:'Scout', line:'Sees everything, is nowhere, strikes from surprise.',
       blurb:'Scout-skirmisher. Sees everything, is nowhere, strikes from surprise.' },
     { id:'mycel', name:'Karenth', title:'the Network', species:['human','axolotl','koi'],
       cards:['axo_regen','axo_tail','koi_calm','koi_gold','hum_coop','hum_lang'],
       up:{ koi_gold:[0,2], axo_regen:[1,1], koi_calm:[1,0], axo_tail:[1,0] },
+      role:'Support', line:'Feeds the squad dice and luck, regrows anything.',
       blurb:'Support-sustain. Feeds the party dice and luck, calms the water, regrows anything.' },
     { id:'kess', name:'Slingshot', title:'the Catapult', species:['human','flamingo','mantis_shrimp'],
       cards:['msh_punch','msh_spear','msh_colours','fla_salt','fla_march','hum_throw'],
       up:{ msh_punch:[1,2], fla_salt:[0,1], msh_spear:[1,0], fla_march:[1,0] },
+      role:'Burst', line:'Punches twice at once and salts the shallows.',
       blurb:'Burst and area. Punches twice at once, salts the shallows, marches the flock.' },
   ];
 

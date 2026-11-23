@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.135.0',
+    version: '2.136.0',
     items: [
+      {
+        text: 'Choosing a pilot is new ("Spotlight"): start a new expedition and the first screen shows one pilot full screen in their own painting, with a strip along the bottom: Draft your own, then the ready pilots, then the crew. Tap a pilot to look at them, then Fly. On a phone the painting sits on top and Fly is at the bottom. Is it clear how to draft your own instead?',
+      },
       {
         text: 'Rival pilots: an elite stop may now be held by a rival pilot, human and two clades like your own, with a name and a hybrid card of one trait from each (a human one among them), awake as a pilot is. Its objective reads Defeat the rival pilot. Does it feel like another pilot rather than a creature? Is it about as hard as the other elites?',
       },

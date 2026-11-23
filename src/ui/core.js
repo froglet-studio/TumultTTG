@@ -372,6 +372,8 @@
     U.screen = 'draft';
   };
   /** The draft's first step leads back: to the title, to the first pilot, or out of an online game. */
+  U.draftOut = (d) => draftOut(d);
+  U.squadOf = (run) => squadOf(run);
   function draftOut(d) {
     if (U.net && U.net.online()) return `<button class="ghost right" data-act="netLeave">Leave game</button>`;
     const prev = d.heroIdx > 0 ? U.run.heroes[d.heroIdx - 1] : null;
@@ -385,6 +387,8 @@
     const n = d.heroIdx + 1;
     const who = U.seatTag ? U.seatTag(d.heroIdx) : '';
     let body = '';
+    // the first step is its own full screen, the Spotlight (src/ui/pick.js); the old list stays as the fallback
+    if (d.step === 'mode' && U.renderPick) return U.renderPick(d, run);
     if (d.step === 'mode') {
       const free = (pb) => !run.heroes.some((h) => h && h.name === pb.name);
       const made = U.madeHeroes().filter((x) => free(x.rec));
@@ -459,6 +463,8 @@
     const run = U.run;
     if (act === 'draftMode') {
       d.step = 'species';
+    } else if (act === 'spotPilot') {
+      d.spot = arg; // the pilot in the Spotlight (src/ui/pick.js); Fly takes them
     } else if (act === 'prebuilt') {
       const c = choiceById(arg);
       if (!c) return;

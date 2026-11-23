@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.136.0 — 2026-11-23 — Choose your pilot
+
+- **The draft's first screen rebuilt as the "Spotlight"** (Shombith's pick from the Frogma board, page "Choose your pilot"). The pilot in the spotlight fills the screen in their own painting with their role, their two animals, one line on how they fly and their six cards; Fly takes them. A strip along the foot picks another: Draft your own first, then the ready pilots, then the crew players made. The long rules note sits behind "How pilots work". On a phone the painting is on top, the strip is a rail and Fly is under the thumb (`src/ui/pick.js`). No rule changes.
+
 ## 2.135.0 — 2026-11-22 — Rival pilots
 
 - **Rival pilots** (Garrett, 2026-11-22: "you can also put the players up against other Non player characters"). An elite stop may be held by a rival pilot, one of four elites now: human and two clades, with a name, and a hybrid card of one trait from each, so it plays a human trait as your pilots do. It awakens as a pilot does (E = level − 1). Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest in its zone; vitality 15/18/22, speed 2. Objective: Defeat the rival pilot.

@@ -50,6 +50,7 @@
   ]);
   const DRAFT = new Set([
     'draftMode',
+    'spotPilot',
     'prebuilt',
     'pickSpecies',
     'draftBack',
