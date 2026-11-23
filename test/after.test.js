@@ -145,6 +145,40 @@ test('After a mission: the upgrade view grows and awakens a card', { skip, timeo
   }
 });
 
+test(
+  'After a mission: the upgrade view awakens a pet’s Ethereal faces one a point',
+  { skip, timeout: 60_000 },
+  async () => {
+    const ctx = await open();
+    const { d, T, U, click } = ctx;
+    try {
+      const run = toReward(ctx, true);
+      const h = run.heroes[0];
+      const rec = T.newPet(run);
+      assert.ok(T.givePet(h, rec, h.cards.length >= T.RULES.MAX_CARDS ? h.cards[0] : undefined).ok);
+      h.upUnspent = Math.max(h.upUnspent, 2);
+      click('[data-act="train"][data-arg="0"]');
+      click(`[data-act="amUpCard"][data-arg="0|${rec.card}"]`);
+      click('[data-act="amUpFace"][data-arg="E"]');
+      const first = T.CARD[rec.card].E.n;
+      assert.match(
+        d.querySelector('.am-upside').textContent,
+        new RegExp('Awaken ' + first.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+      );
+      click('.am-up [data-act="upRun"][data-arg$="|E|1"]');
+      assert.equal(T.heroE(h, rec.card), 1, 'E 1 on the pet card');
+      assert.ok(T.faceAwake(h, rec.card, 'E') && !T.faceAwake(h, rec.card, 'E2'), 'one face awake');
+      assert.match(
+        d.querySelector('.am-upside').textContent,
+        new RegExp('Awaken ' + T.CARD[rec.card].E2.n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+      );
+      click('[data-act="closeModal"]');
+    } finally {
+      ctx.dom.window.close();
+    }
+  },
+);
+
 test('After a mission: a loss the lifeline carries, then the end screens', { skip, timeout: 60_000 }, async () => {
   const ctx = await open();
   const { d, U, click } = ctx;

@@ -61,6 +61,7 @@
       full: false,
       noHand: false,
       noPlans: false,
+      flat: false,
       tab: 'hand',
       peek: {},
     };
@@ -70,10 +71,11 @@
       return base;
     }
   })();
+  U.saveLayout = () => saveLayout();
   function saveLayout() {
     try {
-      const { log, intents, obj, full, noHand, noPlans, tab } = U.layout;
-      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj, full, noHand, noPlans, tab }));
+      const { log, intents, obj, full, noHand, noPlans, flat, tab } = U.layout;
+      localStorage.setItem(LAYOUT_KEY, JSON.stringify({ log, intents, obj, full, noHand, noPlans, flat, tab }));
     } catch {
       /* no storage: the choice lasts for this page */
     }
@@ -330,6 +332,21 @@
     // drag and wheel move the view on a PC; − / % / + anywhere (src/ui/show.js)
     if (U.cameraOn) U.cameraOn(host, svg, g.W, g.H);
   }
+  /** A hybrid foe's clades and the faces of its card it can play (src/engine/hybrids.js). */
+  function hybridTip(e) {
+    if (!e.hy || !e.clades) return '';
+    const kin = e.clades.map((sp) => (T.SPECIES[sp] ? T.SPECIES[sp].name : sp)).join(' · ');
+    const faces = T.foeHybridFaces(e)
+      .slice()
+      .reverse()
+      .map(
+        ({ fk, ab }) =>
+          `<div class="small">${fk[0] === 'E' ? '◆' : '•'} <b>${esc(ab.n)}</b> <span class="dim">${esc(ab.kind)}${ab.dmg ? ' ' + ab.dmg : ab.ward ? ' ' + ab.ward : ab.heal ? ' ' + ab.heal : ''}</span></div>`,
+      )
+      .join('');
+    const cd = e.hy.cd > 0 ? ` · card back in ${e.hy.cd}` : ' · card ready';
+    return `<div style="margin-top:4px" class="small"><b>Hybrid</b> ${esc(kin)} <span class="dim mono">· level ${e.hy.level} (P${e.hy.P} E${e.hy.E})${cd}</span></div>${faces}`;
+  }
   function tipFor(id) {
     const m = M();
     if (id.startsWith('e')) {
@@ -340,7 +357,7 @@
         .filter((k) => k !== 'Anchored' || !e.anchoredPerm)
         .map((k) => `<span class="state">${U.stateName(k)}</span>`)
         .join(' ');
-      return `<b>${U.icEnemy(e.type, e.glyph)} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}<div class="flavor">${esc(d.flavor)}</div>`;
+      return `<b>${U.icEnemy(e.type, e.glyph)} ${esc(e.name)}</b> <span class="dim">tier ${e.tier}${e.elite ? ' · elite' : ''}</span><div class="mono small">hp ${e.hp}/${e.maxHp}${e.shield ? ' · Shield ' + e.shield : ''} · speed ${e.speed}</div>${e.intent ? `<div style="color:#ffb3c7">Intent: ${esc(e.intent.label)}</div>` : ''}${states ? `<div style="margin-top:4px">${states}</div>` : ''}${hybridTip(e)}<div class="flavor">${esc(d.flavor)}</div>`;
     }
     if (id.startsWith('h')) {
       const h = m.heroes.find((x) => x.uid === +id.slice(1));
@@ -1150,30 +1167,31 @@
           E = T.heroE(h, cid);
         const onTrack = h.track.find((t) => t.card === cid);
         const asleep = !T.isKinless(cid) && E < T.RULES.ETHEREAL_MIN_E;
+        const faces = T.handFaces(h, cid); // a pet's Ethereal faces join its card as they awaken
         const elC = EL[(c.E && c.E.elt) || c.el].color;
         const title = `<div class="hn">${c.pet ? '<span class="petmark" data-tip="A pet\'s card: its faces act from the pet">🐾</span> ' : ''}${esc(c.name)}${c.sig >= 2 ? ' <span class="star">★</span>' : ''}${c.gear ? '<span class="pe" data-tip="A gear card: free or paid in Omni, never trained">gear</span>' : `<span class="pe">P${P}${c.pet ? '' : ' E' + E}</span>`}</div>`;
         const fb = (fk) => {
           const f = c[fk];
           const elt = f.elt || c.el;
           const cost = `${f.ap}AP${f.el ? ' +' + f.el + '<span style="color:' + EL[elt].color + '">◆</span>' : ''}${f.cd ? ' cd' + f.cd : ''}`;
-          const body = `<span class="fic" style="color:${fk === 'E' ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>`;
+          const body = `<span class="fic" style="color:${T.isEthFace(fk) ? EL[elt].color : 'var(--txt)'}">${U.icFace(f, c.el)}</span><span>${esc(f.n)}</span><span class="fcost">${cost}</span>`;
           const tip = U.faceTipHTML(c, fk, P, E).replace(/"/g, '&quot;');
           // a card on the track still reads in full: its faces stay at full strength, only not pressable
           if (onTrack)
-            return `<div class="fbtn ${fk === 'E' ? 'E' : 'P'} cool el-${fk === 'E' ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
+            return `<div class="fbtn ${T.isEthFace(fk) ? 'E' : 'P'} cool el-${T.isEthFace(fk) ? elt : 'AP'}" data-tip="${tip}">${body}</div>`;
           const chk = !m.over && !h.downed ? T.canPlay(m, h, cid, fk) : { ok: false, why: '' };
-          return `<button class="fbtn ${fk === 'E' ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${fk === 'E' ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}${!chk.ok && chk.why === 'cannot pay' && T.payableAsAP(h, f.ap, elt, f.el || 0) ? `<span class="fwhy" data-tip="Spend spare dice as AP (◇→AP: an Omni, or two etherions, for 1 AP each) to pay for this">◇→AP to pay</span>` : ''}</button>`;
+          return `<button class="fbtn ${T.isEthFace(fk) ? 'E' : 'P'} ${chk.ok ? 'ok' : ''} el-${T.isEthFace(fk) ? elt : 'AP'}" data-act="face" data-arg="${i}|${cid}|${fk}" data-tip="${tip}" ${chk.ok ? '' : 'disabled'}>${body}${!chk.ok && chk.why && chk.why !== 'cannot pay' ? `<span class="fwhy">${esc(chk.why)}</span>` : ''}${!chk.ok && chk.why === 'cannot pay' && T.payableAsAP(h, f.ap, elt, f.el || 0) ? `<span class="fwhy" data-tip="Spend spare dice as AP (◇→AP: an Omni, or two etherions, for 1 AP each) to pay for this">◇→AP to pay</span>` : ''}</button>`;
         };
         if (onTrack && onTrack.phase === 'burnt')
-          return `<div class="hcard cooling burnt${c.pet ? ' petcard' : ''}" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is burnt: it is gone until this mission ends, and nothing brings it back sooner.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">🔥 burnt</span></div>${title}${T.faceKeys(cid).map(fb).join('')}</div>`;
+          return `<div class="hcard cooling burnt${c.pet ? ' petcard' : ''}" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is burnt: it is gone until this mission ends, and nothing brings it back sooner.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">🔥 burnt</span></div>${title}${faces.map(fb).join('')}</div>`;
         if (onTrack) {
           const back = onTrack.left + (onTrack.phase === 'dur' ? onTrack.cd : 0);
           const what = onTrack.phase === 'dur' ? 'active, then cooling' : 'cooling';
-          return `<div class="hcard cooling${c.pet ? ' petcard' : ''}" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is on the track (${what}): back in hand in ${back}. Its faces read as usual.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">${onTrack.phase === 'dur' ? '●' : '○'} back in ${back}</span></div>${title}${T.faceKeys(cid).map(fb).join('')}</div>`;
+          return `<div class="hcard cooling${c.pet ? ' petcard' : ''}" style="--c:${elC}" data-tip="${esc(`${esc(c.name)} is on the track (${what}): back in hand in ${back}. Its faces read as usual.`)}"><div class="artwrap">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}<span class="cdband">${onTrack.phase === 'dur' ? '●' : '○'} back in ${back}</span></div>${title}${faces.map(fb).join('')}</div>`;
         }
         // a card with nothing it can do now folds small; hovering it brings it back
         const idle = m.over || h.downed || !T.faceKeys(cid).some((fk) => T.canPlay(m, h, cid, fk).ok) ? ' idle' : '';
-        return `<div class="hcard${idle}${c.pet ? ' petcard' : ''}" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${T.faceKeys(cid).map(fb).join('')}</div>`;
+        return `<div class="hcard${idle}${c.pet ? ' petcard' : ''}" style="--c:${elC}">${U.cardArt(c, asleep, U.cladeIn(c, h.species))}${title}${faces.map(fb).join('')}</div>`;
       })
       .join('');
     const gear = h.gear
@@ -1270,7 +1288,7 @@
           T.faceKeys(cid).some((fk) => {
             const c = T.CARD[cid];
             const f = c[fk];
-            if (fk === 'E' && T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) return false;
+            if (!T.faceAwake(h, cid, fk)) return false;
             return T.payableAsAP(h, f.ap, f.elt || c.el, f.el || 0);
           }),
       );
@@ -2128,14 +2146,21 @@
     const host = $('#board');
     const svg = U.ms.svg;
     if (!host || !svg || !svg.viewBox || !svg.viewBox.baseVal) return;
-    const r = svg.getBoundingClientRect();
-    const hr = host.getBoundingClientRect();
-    const vb = svg.viewBox.baseVal;
-    const sc = Math.min(r.width / vb.width, r.height / vb.height);
-    const ox = (r.width - vb.width * sc) / 2 + (r.left - hr.left),
-      oy = (r.height - vb.height * sc) / 2 + (r.top - hr.top);
-    const x = ox + g.px(n) * sc,
-      y = oy + g.py(n) * sc - 10;
+    let x, y;
+    const at = U.boardToHost && U.boardToHost(g.px(n), g.py(n));
+    if (at) {
+      x = at[0];
+      y = at[1] - 10;
+    } else {
+      const r = svg.getBoundingClientRect();
+      const hr = host.getBoundingClientRect();
+      const vb = svg.viewBox.baseVal;
+      const sc = Math.min(r.width / vb.width, r.height / vb.height);
+      const ox = (r.width - vb.width * sc) / 2 + (r.left - hr.left),
+        oy = (r.height - vb.height * sc) / 2 + (r.top - hr.top);
+      x = ox + (g.px(n) - vb.x) * sc;
+      y = oy + (g.py(n) - vb.y) * sc - 10;
+    }
     setTimeout(() => {
       const d = document.createElement('div');
       d.className = 'floater ' + cls;
@@ -2615,7 +2640,11 @@
     switch (act) {
       // the board's view: zoom in or out, or show the whole board (src/ui/show.js)
       case 'cam':
-        if (U.cameraZoom) U.cameraZoom(arg === 'in' ? 1.25 : arg === 'out' ? 0.8 : 0);
+        if (arg === 'tilt') {
+          U.layout.flat = !U.layout.flat;
+          saveLayout();
+          if (U.cameraTilt) U.cameraTilt();
+        } else if (U.cameraZoom) U.cameraZoom(arg === 'in' ? 1.25 : arg === 'out' ? 0.8 : 0);
         return true;
       // the screen's own folds: they change only what is shown on this screen
       case 'mmenu':

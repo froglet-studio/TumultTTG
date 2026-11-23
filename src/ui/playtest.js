@@ -19,13 +19,34 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.129.0',
+    version: '2.136.0',
     items: [
       {
         text: 'Choosing a pilot is new ("Spotlight"): start a new expedition and the first screen shows one pilot full screen in their own painting, with a strip along the bottom: Draft your own, then the ready pilots, then the crew. Tap a pilot to look at them, then Fly. On a phone the painting sits on top and Fly is at the bottom. Is it clear how to draft your own instead?',
       },
       {
-        text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. Before, Continue did nothing. Did Continue ever leave you stuck?',
+        text: 'Rival pilots: an elite stop may now be held by a rival pilot, human and two clades like your own, with a name and a hybrid card of one trait from each (a human one among them), awake as a pilot is. Its objective reads Defeat the rival pilot. Does it feel like another pilot rather than a creature? Is it about as hard as the other elites?',
+      },
+      {
+        text: 'Foes are hybrids now: every foe but the Spawners and the Heart has three clades and a hybrid card of their traits, like a pet. Hover a foe to see its clades, its level and the faces it can play; its intent names the face and the clade it comes from. Higher-level foes (tier 3, elites, bigger squads) also play Ethereal faces. Does each foe feel different? Can you read what a hybrid face will do before it lands?',
+      },
+      {
+        text: 'Pets awaken: on the Upgrade screen a pet card now has an Ethereal button. Each point you spend there awakens one more of its three Ethereal faces (one from each of its clades), and the awake ones show on the pet card in a mission. Is it clear which face wakes next? Is a pet with awake faces worth the points you would have spent on a trait?',
+      },
+      {
+        text: 'The route is a map of Tumult now: the squad sets out from a camp on the left, each leg is a stretch of land, sea or high air, and what waits at the end stands far off on the right over its own ground. Glowing roads are the ones open now; gold is the road taken. Can you tell at a glance where you are, where you can go, and how far the end is? Does the map read on a phone (it scrolls sideways)?',
+      },
+      {
+        text: 'Signed in on the web version, the button at the top right with your initials (or face) opens your new Profile page: pick an avatar from any pilot painting, your Google or Discord picture, or initials, and set your display name. Does the name check make sense as you type? Does your new face show in the Lobby?',
+      },
+      {
+        text: "Sound: Cosmic Shore's soundtrack and effects are in. The music follows the screen (calm in menus, the draft and the route, harder in a mission, the outro after a win), and blows, kills, shields, cards and menus have Cosmic Shore's sounds. Open Settings, Audio studio: a mixer (master, music, effects, each with a mute), the player, every track (play one now, untick one to leave it out) and a pad for every effect. Does any sound feel wrong for its moment, or too loud? The offline file carries the effects and one music loop; the web version has all eleven tracks.",
+      },
+      {
+        text: "The board now lies tilted on the table in front of the scene, like a game board seen from your seat. The 2D button at the board's right edge lays it flat again (and 3D tilts it back); your choice is kept. On a phone, pinch with two fingers to zoom and move the board, and drag with one finger once zoomed. Is the tilted board easier or harder to read? Did a tap ever hit the wrong node?",
+      },
+      {
+        text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. The Route tab now always opens the Route page with the top tabs: while pilots are still to be picked it says so, with a button to pick them. Did Continue or the Route tab ever leave you stuck?',
       },
       {
         text: 'The mission screen is new ("The Stack"): every foe is a creature now (Biters, Stingers, Kiters and the rest, each in one of four forms), enemy plans are a numbered stack in the order they act, and every blow plays out: a cast card, a beam or a slash, a big number, a toast, a round summary with a feat, and a wither when a foe dies. On PC drag and wheel-zoom the board, or use the buttons at its right edge. Is every attack easy to follow? Does any of it hide something you needed to see?',

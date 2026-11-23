@@ -161,6 +161,27 @@ test('Continue on an expedition saved in its draft carries on drafting', { skip 
   p.act('continueRun');
   assert.equal(p.U.screen, 'draft', 'Continue opens the draft');
   assert.ok(p.U.draft && p.U.draft.heroIdx === 0, 'at the first pilot still to draft');
+  // and the Route tab after a reload does the same, instead of saying there is no expedition
+  p.U.run = null;
+  p.U.draft = null;
+  p.U.screen = 'title';
+  p.U.render();
+  p.act('tab', 'route');
+  assert.equal(p.U.screen, 'routeWait', 'the Route tab stays on the Route page');
+  const page = p.w.document.querySelector('#app').innerHTML;
+  assert.match(page, /sh-tabs/, 'with the top tabs');
+  assert.match(page, /Pick your pilots/, 'and a prompt to pick the pilots');
+  p.act('continueRun');
+  assert.equal(p.U.screen, 'draft', 'which carries on drafting');
+  // with no expedition at all, the Route page says how to start one
+  p.U.run = null;
+  p.U.draft = null;
+  p.w.localStorage.removeItem('tumult_v2_run');
+  p.U.screen = 'title';
+  p.U.render();
+  p.act('tab', 'route');
+  assert.equal(p.U.screen, 'routeWait');
+  assert.match(p.w.document.querySelector('#app').innerHTML, /Start an expedition/);
   assert.deepEqual(p.errors, []);
   p.close();
 });

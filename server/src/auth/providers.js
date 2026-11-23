@@ -1,5 +1,6 @@
 /* Google and Discord sign-in: OAuth 2.0 authorization code with PKCE. Each provider gives us its stable
-   account number and a display name; we ask for nothing else (no email, no friends, no servers). */
+   account number, a display name and the address of their picture; we ask for nothing else (no email,
+   no friends, no servers). The picture is shown only if the player picks it as their avatar. */
 
 const trim = (v) => String(v || '').trim(); // pasted settings often carry a stray space or line break
 
@@ -32,7 +33,7 @@ export const PROVIDERS = {
       });
       const me = await bearer('https://openidconnect.googleapis.com/v1/userinfo', tok.access_token);
       if (!me.sub) throw new Error('Google did not say who you are');
-      return { subject: String(me.sub), name: me.given_name || me.name || '' };
+      return { subject: String(me.sub), name: me.given_name || me.name || '', picture: me.picture || null };
     },
   },
   discord: {
@@ -63,7 +64,10 @@ export const PROVIDERS = {
       });
       const me = await bearer('https://discord.com/api/users/@me', tok.access_token);
       if (!me.id) throw new Error('Discord did not say who you are');
-      return { subject: String(me.id), name: me.global_name || me.username || '' };
+      const picture = /^[a-z0-9_]{1,64}$/i.test(me.avatar || '')
+        ? `https://cdn.discordapp.com/avatars/${me.id}/${me.avatar}.png?size=128`
+        : null;
+      return { subject: String(me.id), name: me.global_name || me.username || '', picture };
     },
   },
 };

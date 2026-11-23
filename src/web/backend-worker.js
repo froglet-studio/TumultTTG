@@ -9,6 +9,7 @@
      room  join('tumult-<CODE>'): the same socket's live channel between the game's screens.
      user  id(), can(), canEdit(), isOwner(), profiles(ids), from the sign-in module (T.Account).
      lobby watch(fn) → stop: who is online in Tumult now (the game's Lobby panel), while signed in;
+           refreshMe() after a profile change;
            nudge(to) and onNudge(fn): "a note is waiting", so the Lobby's requests arrive at once.
 
    It also keeps a signed-in player's run in the cloud (saves/<user id>), so it follows them to another
@@ -417,6 +418,10 @@
       /** Tell another player's screens that a note is waiting for them (src/ui/social.js). */
       nudge(to) {
         if (ws && ws.readyState === 1) ws.send(JSON.stringify({ op: 'nudge', to }));
+      },
+      /** This player changed their name or avatar: the lobby reads them again (src/ui/profile.js). */
+      refreshMe() {
+        if (ws && ws.readyState === 1) ws.send(JSON.stringify({ op: 'me' }));
       },
       /** Hear that someone left this player a note: fn(fromId). Returns a function that stops it. */
       onNudge(fn) {

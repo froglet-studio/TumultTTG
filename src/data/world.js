@@ -17,6 +17,7 @@
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
     FOE_HP: 180,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 in 2.108: weapons; 160 in 2.119: gear runs on Omni; 166 in 2.120: dice as AP; 180 since 2.122: instincts)
+    HYBRID_FOES: 1,          // 2.134: every foe but the Spawners and the Heart is a hybrid of three clades with a hybrid card (src/engine/hybrids.js); 0 turns it off
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
     RALLY_AP: 2, RALLY_HP: 8,  // revive a downed adjacent ally
@@ -276,6 +277,9 @@
     tidecaller:{ name:'Tidecaller', glyph:'🌊', role:'elite', elite:true, hp:[12,14,16], speed:1, policy:'tidecaller',
       abilities:{ undertow:{ n:'Undertow', kind:'los', dmg:[2,3,3], pull:2 }, surge:{ n:'Surge', kind:'los', dmg:[4,5,6], weaken:1 } },
       flavor:'An elite. Drags you toward the hazard. Anchor yourself.' },
+    rival:    { name:'Rival Pilot', glyph:'🧑‍🚀', role:'elite', elite:true, rival:true, hp:[15,18,22], speed:2, policy:'rival',
+      abilities:{ shot:{ n:'Sidearm', kind:'los', dmg:[3,4,5] }, blade:{ n:'Close In', kind:'melee', dmg:[5,6,7] } },
+      flavor:'Another pilot on the same stretch, human and two clades like you, on orders of its own. It plays its traits as you play yours.' },
     heart:    { name:'The Heart', glyph:'🫀', role:'boss', boss:true, hp:[50,61,86], speed:0, policy:'heart', anchored:true, shield:[4,4,4],
       abilities:{ lance:{ n:'Lance', kind:'los', dmg:[3,4,5] }, crush:{ n:'Crush', kind:'melee', dmg:[7,8,9], pull:2 }, call:{ n:'Call the Swarm', kind:'summon' } },
       flavor:'What waits at the end of the route. Its shield is fed by its Spawners. When it is half-dead, the Vault begins to drown.' },

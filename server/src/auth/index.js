@@ -19,7 +19,9 @@
      GET    /auth/providers                which sign-ins this server offers { google, discord, email }
      POST   /auth/guest     { name? }      → { token, user }   a new guest account
      GET    /auth/me                       → { user }
-     PATCH  /auth/me        { name }       → { user }
+     PATCH  /auth/me   { name?, avatar? }  → { user }   names follow names.js; an account renames once a day
+     GET    /auth/name?name=…              → { ok, problem }   can I take this name (live check while typing)
+     GET    /auth/picture/<user id>        the Google or Discord picture a player chose as their avatar
      DELETE /auth/me                       deletes the account and everything it owns
      POST   /auth/signout                  ends this session
      POST   /auth/start/<google|discord> { return } → { url }   link (with a session) or sign in (without)
@@ -31,6 +33,7 @@
    ========================================================================== */
 import { randomToken, newUserId, sixDigits, sha256, challengeOf, hmac, same } from './crypto.js';
 import { PROVIDERS } from './providers.js';
+import { nameProblem, nameKey, cleanAvatar, pictureUrl, PICTURE_FROM, RENAME_GAP_MS } from './names.js';
 
 const DAY = 86400000;
 const SESSION_MS = 400 * DAY; // sliding: refreshed on use, so a player who keeps playing never loses a guest account
@@ -145,6 +148,27 @@ export function cleanName(v) {
     .slice(0, 24);
 }
 const guestName = () => 'Guest ' + sixDigits().slice(0, 4);
+const GUEST_NAME = /^Guest \d{4}$/;
+
+/** Is this account name someone else's? */
+async function nameTaken(env, name, id) {
+  const r = await env.DB.prepare('SELECT id FROM users WHERE name_key = ? AND id <> ?')
+    .bind(nameKey(name), id || '')
+    .first();
+  return !!r;
+}
+/** The name an account becomes: the one wanted when it is allowed and free, else that name with digits,
+ *  else "Pilot" with digits. */
+async function freeName(env, wanted, id) {
+  const w = cleanName(wanted);
+  if (w && !nameProblem(w) && !(await nameTaken(env, w, id))) return w;
+  const stem = w && !nameProblem(w.slice(0, 14).trim() || 'x') ? w.slice(0, 14).trim() : 'Pilot';
+  for (let i = 0; i < 6; i++) {
+    const n = stem + ' ' + sixDigits().slice(0, 4);
+    if (!(await nameTaken(env, n, id))) return n;
+  }
+  return 'Pilot ' + sixDigits();
+}
 
 async function limited(env, request, what) {
   if (!env.AUTH_LIMITER || typeof env.AUTH_LIMITER.limit !== 'function') return false;
@@ -159,17 +183,27 @@ async function limited(env, request, what) {
 
 /* ───────────── accounts ───────────── */
 async function userJson(env, id) {
-  const u = await env.DB.prepare('SELECT id, name, guest, created_at FROM users WHERE id = ?').bind(id).first();
+  const u = await env.DB.prepare('SELECT id, name, guest, created_at, avatar, renamed_at FROM users WHERE id = ?')
+    .bind(id)
+    .first();
   if (!u) return null;
-  const { results } = await env.DB.prepare('SELECT provider FROM identities WHERE user_id = ? ORDER BY created_at')
+  const { results } = await env.DB.prepare(
+    'SELECT provider, picture FROM identities WHERE user_id = ? ORDER BY created_at',
+  )
     .bind(id)
     .all();
+  const rows = results || [];
   return {
     id: u.id,
     name: u.name,
     guest: !!u.guest,
-    links: (results || []).map((r) => r.provider),
+    links: rows.map((r) => r.provider),
     created: u.created_at,
+    avatar: u.avatar || '',
+    // the sign-ins that gave a picture, which the player may show as their avatar
+    pictures: rows.filter((r) => PICTURE_FROM.includes(r.provider) && pictureUrl(r.picture)).map((r) => r.provider),
+    // when an account may next choose a new name (0: now)
+    renameAt: !u.guest && u.renamed_at ? u.renamed_at + RENAME_GAP_MS : 0,
   };
 }
 
@@ -185,8 +219,9 @@ async function newSession(env, userId) {
 async function createUser(env, name, guest) {
   const id = newUserId();
   const now = Date.now();
-  await env.DB.prepare('INSERT INTO users (id, name, guest, created_at, seen_at) VALUES (?, ?, ?, ?, ?)')
-    .bind(id, name, guest ? 1 : 0, now, now)
+  if (!guest) name = await freeName(env, name, id);
+  await env.DB.prepare('INSERT INTO users (id, name, guest, created_at, seen_at, name_key) VALUES (?, ?, ?, ?, ?, ?)')
+    .bind(id, name, guest ? 1 : 0, now, now, guest ? null : nameKey(name))
     .run();
   return id;
 }
@@ -208,11 +243,15 @@ async function deleteUserRows(env, id) {
  *   that is refused, and they can sign out and sign in with the other one.
  * Returns { userId } or { error, message }.
  */
-async function resolveIdentity(env, hooks, provider, subject, profileName, current) {
+async function resolveIdentity(env, hooks, provider, subject, profileName, current, picture) {
   const owner = await env.DB.prepare('SELECT user_id FROM identities WHERE provider = ? AND subject = ?')
     .bind(provider, subject)
     .first();
   const label = provider === 'email' ? 'That email address' : `That ${PROVIDERS[provider].label} account`;
+  if (owner && picture !== undefined)
+    await env.DB.prepare('UPDATE identities SET picture = ? WHERE provider = ? AND subject = ?')
+      .bind(pictureUrl(picture), provider, subject)
+      .run();
   if (owner) {
     if (!current || current.userId === owner.user_id) return { userId: owner.user_id };
     if (!current.guest)
@@ -231,22 +270,28 @@ async function resolveIdentity(env, hooks, provider, subject, profileName, curre
       .first();
     if (has && provider !== 'email')
       return { error: 'already_linked', message: `This account already has a ${PROVIDERS[provider].label} sign-in.` };
-    const name =
-      current.guest && /^Guest \d{4}$/.test(current.name) && cleanName(profileName) ? cleanName(profileName) : null;
+    // a guest becoming an account takes the sign-in's name if it still had the one it was given, and
+    // the account's name must then follow the rules and be its own
+    const wanted =
+      current.guest && GUEST_NAME.test(current.name) && cleanName(profileName) ? profileName : current.name;
+    const name = current.guest ? await freeName(env, wanted, current.userId) : current.name;
     await env.DB.batch([
-      env.DB.prepare('INSERT INTO identities (provider, subject, user_id, created_at) VALUES (?, ?, ?, ?)').bind(
-        provider,
-        subject,
+      env.DB.prepare(
+        'INSERT INTO identities (provider, subject, user_id, created_at, picture) VALUES (?, ?, ?, ?, ?)',
+      ).bind(provider, subject, current.userId, now, pictureUrl(picture)),
+      env.DB.prepare('UPDATE users SET guest = 0, name = ?, name_key = ? WHERE id = ?').bind(
+        name,
+        nameKey(name),
         current.userId,
-        now,
       ),
-      env.DB.prepare('UPDATE users SET guest = 0, name = COALESCE(?, name) WHERE id = ?').bind(name, current.userId),
     ]);
     return { userId: current.userId };
   }
-  const id = await createUser(env, cleanName(profileName) || guestName(), false);
-  await env.DB.prepare('INSERT INTO identities (provider, subject, user_id, created_at) VALUES (?, ?, ?, ?)')
-    .bind(provider, subject, id, now)
+  const id = await createUser(env, cleanName(profileName) || 'Pilot', false);
+  await env.DB.prepare(
+    'INSERT INTO identities (provider, subject, user_id, created_at, picture) VALUES (?, ?, ?, ?, ?)',
+  )
+    .bind(provider, subject, id, now, pictureUrl(picture))
     .run();
   return { userId: id };
 }
@@ -267,7 +312,7 @@ export async function authenticate(request, env) {
   const hash = await sha256(token);
   const now = Date.now();
   const row = await env.DB.prepare(
-    'SELECT s.user_id, s.expires_at, u.name, u.guest, u.seen_at FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ?',
+    'SELECT s.user_id, s.expires_at, u.name, u.guest, u.seen_at, u.avatar FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ?',
   )
     .bind(hash)
     .first();
@@ -277,7 +322,7 @@ export async function authenticate(request, env) {
       env.DB.prepare('UPDATE users SET seen_at = ? WHERE id = ?').bind(now, row.user_id),
       env.DB.prepare('UPDATE sessions SET expires_at = ? WHERE token_hash = ?').bind(now + SESSION_MS, hash),
     ]);
-  return { userId: row.user_id, guest: !!row.guest, name: row.name, tokenHash: hash };
+  return { userId: row.user_id, guest: !!row.guest, name: row.name, avatar: row.avatar || '', tokenHash: hash };
 }
 
 /** null when `user` may do what only a full account may (host, share pilots, send canon notes). */
@@ -364,9 +409,9 @@ export async function handleAuth(request, env, ctx, hooks = {}) {
       if (!me) return fail(request, env, 401, 'signed_out', 'Your sign-in has ended.');
       if (m === 'GET') return json(request, env, { user: await userJson(env, me.userId) });
       if (m === 'PATCH') {
-        const name = cleanName((await body(request)).name);
-        if (!name) return fail(request, env, 400, 'bad_name', 'A name needs at least one letter.');
-        await env.DB.prepare('UPDATE users SET name = ? WHERE id = ?').bind(name, me.userId).run();
+        const b = await body(request);
+        const r = await updateProfile(env, me, b);
+        if (r) return fail(request, env, r.status, r.error, r.message);
         return json(request, env, { user: await userJson(env, me.userId) });
       }
       if (m === 'DELETE') {
@@ -375,6 +420,17 @@ export async function handleAuth(request, env, ctx, hooks = {}) {
         return json(request, env, { deleted: true });
       }
     }
+
+    if (path === '/auth/name' && m === 'GET') {
+      const me = await authenticate(request, env);
+      if (!me) return fail(request, env, 401, 'signed_out', 'Your sign-in has ended.');
+      const name = cleanName(url.searchParams.get('name'));
+      const problem = nameRule(name, me) || (!me.guest && (await nameTaken(env, name, me.userId)) ? taken(name) : '');
+      return json(request, env, { ok: !problem, problem });
+    }
+
+    const pic = /^\/auth\/picture\/([A-Za-z0-9_-]{1,64})$/.exec(path);
+    if (pic && m === 'GET') return picture(env, pic[1]);
 
     if (path === '/auth/signout' && m === 'POST') {
       const me = await authenticate(request, env);
@@ -491,9 +547,121 @@ async function callback(request, url, env, hooks, provider) {
     const u = await env.DB.prepare('SELECT id, name, guest FROM users WHERE id = ?').bind(row.user_id).first();
     if (u) current = { userId: u.id, name: u.name, guest: !!u.guest };
   }
-  const r = await resolveIdentity(env, hooks, provider, who.subject, who.name, current);
+  const r = await resolveIdentity(env, hooks, provider, who.subject, who.name, current, who.picture || null);
   if (r.error) return backTo(back, 'tumult_auth_error', r.message);
   return backTo(back, 'tumult_session', await newSession(env, r.userId));
+}
+
+/* ───────────── your profile: name and avatar ───────────── */
+const taken = (name) => `Someone already flies as ${name}. Pick another.`;
+/** Why this player may not take this (cleaned) name: the full rules for an account; for a guest, the
+ *  word filter and length only, with the name it was given always allowed. */
+function nameRule(name, me) {
+  if (!name) return 'A name needs at least one letter.';
+  if (me.guest) {
+    if (GUEST_NAME.test(name)) return '';
+    const p = nameProblem(name);
+    return p.startsWith('That name is kept') ? '' : p;
+  }
+  return nameProblem(name);
+}
+
+/** PATCH /auth/me: a new name, a new avatar, or both. Returns null, or { status, error, message }. */
+async function updateProfile(env, me, b) {
+  const u = await env.DB.prepare('SELECT name, guest, avatar, renamed_at FROM users WHERE id = ?')
+    .bind(me.userId)
+    .first();
+  if (!u) return { status: 401, error: 'signed_out', message: 'Your sign-in has ended.' };
+  const sets = [];
+  const args = [];
+  if (b.name !== undefined) {
+    const name = cleanName(b.name);
+    if (name !== u.name) {
+      const problem = nameRule(name, me);
+      if (problem) return { status: 400, error: 'bad_name', message: problem };
+      const now = Date.now();
+      if (!u.guest) {
+        const sameKey = nameKey(name) === nameKey(u.name);
+        if (!sameKey && u.renamed_at && now - u.renamed_at < RENAME_GAP_MS) {
+          const h = Math.ceil((u.renamed_at + RENAME_GAP_MS - now) / 3600000);
+          return {
+            status: 429,
+            error: 'rename_wait',
+            message: `You can change your name once a day. Try again in ${h} hour${h === 1 ? '' : 's'}.`,
+          };
+        }
+        if (await nameTaken(env, name, me.userId)) return { status: 409, error: 'name_taken', message: taken(name) };
+        sets.push('name = ?', 'name_key = ?');
+        args.push(name, nameKey(name));
+        if (!sameKey) sets.push('renamed_at = ' + now);
+      } else {
+        sets.push('name = ?');
+        args.push(name);
+      }
+    }
+  }
+  if (b.avatar !== undefined) {
+    const a = cleanAvatar(b.avatar);
+    if (a === null) return { status: 400, error: 'bad_avatar', message: "That avatar isn't one Tumult knows." };
+    if (PICTURE_FROM.includes(a)) {
+      const id = await env.DB.prepare('SELECT picture FROM identities WHERE user_id = ? AND provider = ?')
+        .bind(me.userId, a)
+        .first();
+      if (!id || !pictureUrl(id.picture))
+        return {
+          status: 400,
+          error: 'no_picture',
+          message: `Sign in with ${PROVIDERS[a].label} again to bring its picture.`,
+        };
+    }
+    if (a !== u.avatar) {
+      sets.push('avatar = ?');
+      args.push(a);
+    }
+  }
+  if (!sets.length) return null;
+  try {
+    await env.DB.prepare(`UPDATE users SET ${sets.join(', ')} WHERE id = ?`)
+      .bind(...args, me.userId)
+      .run();
+  } catch (e) {
+    if (/UNIQUE/i.test(String(e && e.message)))
+      return { status: 409, error: 'name_taken', message: taken(cleanName(b.name)) };
+    throw e;
+  }
+  return null;
+}
+
+/** GET /auth/picture/<id>: the Google or Discord picture a player chose, fetched by us and cached, so
+ *  the game's pages never load anything from another company. */
+async function picture(env, id) {
+  const none = () => new Response('no picture', { status: 404, headers: { 'Cache-Control': 'public, max-age=300' } });
+  const u = await env.DB.prepare('SELECT avatar FROM users WHERE id = ?').bind(id).first();
+  if (!u || !PICTURE_FROM.includes(u.avatar)) return none();
+  const row = await env.DB.prepare('SELECT picture FROM identities WHERE user_id = ? AND provider = ?')
+    .bind(id, u.avatar)
+    .first();
+  const src = row && pictureUrl(row.picture);
+  if (!src) return none();
+  let res;
+  try {
+    res = await fetch(src, { cf: { cacheTtl: 86400, cacheEverything: true } });
+  } catch {
+    return none();
+  }
+  const type = res.headers.get('Content-Type') || '';
+  const size = +(res.headers.get('Content-Length') || 0);
+  if (!res.ok || !/^image\/(png|jpeg|webp|gif)/.test(type) || size > 2 * 1024 * 1024) return none();
+  const bytes = await res.arrayBuffer();
+  if (bytes.byteLength > 2 * 1024 * 1024) return none();
+  return new Response(bytes, {
+    headers: {
+      'Content-Type': type,
+      'Cache-Control': 'public, max-age=3600',
+      'Cross-Origin-Resource-Policy': 'cross-origin',
+      'X-Content-Type-Options': 'nosniff',
+    },
+  });
 }
 
 function check(url, env) {

@@ -17,6 +17,8 @@
      signIn(provider)       go to Google or Discord; comes back to this page signed in (linking the guest)
      emailStart(email) / emailVerify(email, code)
      rename(name), signOut(), remove()
+     update({ name?, avatar? }) your profile (src/ui/profile.js); checkName(name) → { ok, problem }
+     pictureUrl(user)       the address of the Google or Discord picture a player shows, or null
      onChange(fn)           called with the user whenever it changes
    Stored on the device under localStorage 'tumult_v2_account' = { token, user }.
    ========================================================================== */
@@ -124,6 +126,19 @@
     save({ token: A.token(), user: d.user });
     return d.user;
   };
+  /** Change the profile: a new display name, a new avatar, or both. Rejects with the server's reason. */
+  A.update = async function (fields) {
+    const d = await api('PATCH', '/auth/me', fields || {});
+    save({ token: A.token(), user: d.user });
+    return d.user;
+  };
+  /** Could this player take this name? { ok, problem } from the server (taken, filtered, reserved). */
+  A.checkName = (name) => api('GET', '/auth/name?name=' + encodeURIComponent(name || ''));
+  /** The picture a player shows (avatar 'google' or 'discord'), always through Tumult's own server. */
+  A.pictureUrl = (u) =>
+    base() && u && u.id && (u.avatar === 'google' || u.avatar === 'discord')
+      ? base() + '/auth/picture/' + encodeURIComponent(u.id) + '?v=' + u.avatar
+      : null;
   A.signOut = async function () {
     await api('POST', '/auth/signout').catch(() => {});
     save(null);

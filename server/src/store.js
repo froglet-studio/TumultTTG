@@ -6,7 +6,7 @@
      PUT    /api/doc/<path>     { data } → { ok: true, data }   (data as kept, after the rules rebuilt it)
      DELETE /api/doc/<path>     → { ok: true }
      GET    /api/docs/<path>    → { docs: [{ id, data }] }      a collection: the documents just under it
-     GET    /api/profiles?ids=a,b → { profiles: { a: { name } } }
+     GET    /api/profiles?ids=a,b → { profiles: { a: { name, avatar } } }
 
    The storage itself is an interface ({ get, put, del, list, byOwner }), D1 in the Worker and a Map in
    the tests, so every rule is tested without Cloudflare.
@@ -161,11 +161,11 @@ export async function profiles(env, ids) {
   const out = {};
   if (!ids.length || !env.DB) return out;
   try {
-    const q = `SELECT id, name FROM users WHERE id IN (${ids.map(() => '?').join(',')})`;
+    const q = `SELECT id, name, avatar FROM users WHERE id IN (${ids.map(() => '?').join(',')})`;
     const { results } = await env.DB.prepare(q)
       .bind(...ids)
       .all();
-    for (const r of results) out[r.id] = { name: String(r.name || '') };
+    for (const r of results) out[r.id] = { name: String(r.name || ''), avatar: String(r.avatar || '') };
   } catch {
     /* no users table yet: names stay blank, as on a page that cannot see profiles */
   }

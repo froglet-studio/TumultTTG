@@ -16,9 +16,24 @@
   /**
    * fx: how loud the sound effects are (0 to 100); text: 's', 'm', 'l' or 'xl'; hints: 'young' (the how-to
    * line in the first two missions), 'always' or 'never'; confirmEnd: ask before ending a round with 4+ AP
-   * banked; contrast: stronger lines and text.
+   * banked; contrast: stronger lines and text. The sound (src/ui/audio.js): sound is the master switch, master,
+   * music and fx the three levels (0 to 100), muteMusic and muteFx their mutes, musicMode what plays next
+   * ('game' follows the screen, 'shuffle', 'one' repeats), musicOff the tracks left out of the rotation.
    */
-  const BASE = { fx: 70, text: 'm', hints: 'young', confirmEnd: true, contrast: false };
+  const BASE = {
+    fx: 70,
+    text: 'm',
+    hints: 'young',
+    confirmEnd: true,
+    contrast: false,
+    sound: true,
+    master: 100,
+    music: 60,
+    muteMusic: false,
+    muteFx: false,
+    musicMode: 'game',
+    musicOff: [],
+  };
   U.prefs = (() => {
     try {
       const got = JSON.parse(localStorage.getItem(KEY) || '{}');
@@ -28,9 +43,14 @@
       if (['young', 'always', 'never'].includes(got.hints)) p.hints = got.hints;
       if (typeof got.confirmEnd === 'boolean') p.confirmEnd = got.confirmEnd;
       if (typeof got.contrast === 'boolean') p.contrast = got.contrast;
+      for (const k of ['master', 'music'])
+        if (Number.isFinite(got[k])) p[k] = Math.max(0, Math.min(100, Math.round(got[k])));
+      for (const k of ['sound', 'muteMusic', 'muteFx']) if (typeof got[k] === 'boolean') p[k] = got[k];
+      if (['game', 'shuffle', 'one'].includes(got.musicMode)) p.musicMode = got.musicMode;
+      if (Array.isArray(got.musicOff)) p.musicOff = got.musicOff.filter((x) => typeof x === 'string').slice(0, 50);
       return p;
     } catch {
-      return Object.assign({}, BASE);
+      return Object.assign({}, BASE, { musicOff: [] });
     }
   })();
   function savePrefs() {
@@ -40,6 +60,18 @@
       /* no storage: the settings last for this page */
     }
   }
+  U.savePrefs = savePrefs;
+  // the 🔊 buttons on every screen switch U.sound: it is the master switch, kept with the other settings
+  Object.defineProperty(U, 'sound', {
+    configurable: true,
+    enumerable: true,
+    get: () => U.prefs.sound !== false,
+    set: (v) => {
+      U.prefs.sound = !!v;
+      savePrefs();
+      if (U.audio) U.audio.sync();
+    },
+  });
   const TEXT = { s: 0.92, m: 1, l: 1.12, xl: 1.25 };
   /** Put the settings that change the page on it: the text size and contrast. Called after every render. */
   U.prefsApply = function () {
@@ -80,18 +112,20 @@
     `<div class="st-row"><span class="st-l"><b>Effects</b><small>Dice, hits and the rest</small></span><input type="range" min="0" max="100" step="5" value="${U.prefs.fx}" data-input="prefFx" aria-label="Effects volume"><span class="st-num">${U.prefs.fx}</span></div>`;
 
   const TABS = [
-    ['look', 'Look and sound'],
+    ['look', 'Look'],
+    ['audio', 'Audio studio'],
     ['play', 'Play'],
     ['access', 'Accessibility'],
     ['account', 'Account'],
     ['keys', 'Keys'],
   ];
   function tabBody(tab) {
+    if (tab === 'audio') return U.audioStudioHTML ? U.audioStudioHTML() : '';
     if (tab === 'look')
       return `<section class="st-card"><span class="lab gold">Theme</span>${themes()}</section>
         <section class="st-card"><span class="lab gold">Accent</span><div class="st-accents">${U.ACCENTS.map((a) => `<button class="${U.look.accent === a.id ? 'on' : ''}" style="--c:${a.c}" data-act="lookAccent" data-arg="${a.id}" aria-pressed="${U.look.accent === a.id}">${esc(a.name)}</button>`).join('')}</div><small class="dim">The colour of the one button that moves you on.</small></section>
         <section class="st-card"><span class="lab gold">Motion</span>${motionSeg()}<small class="dim">${esc(U.MOTIONS.find((m) => m.id === U.motion()).txt)}</small>${U.look.motion ? '<button class="linkish small" data-act="lookMotion" data-arg="system">Follow this device</button>' : ''}</section>
-        <section class="st-card"><span class="lab gold">Sound</span>${toggle('toggleSound', !!U.sound, 'Sound', U.sound ? 'On' : 'Off')}${fxSlider()}</section>`;
+        <section class="st-card"><span class="lab gold">Sound</span>${toggle('toggleSound', !!U.sound, 'Sound', U.sound ? 'On' : 'Off')}<div class="st-row"><span class="st-l"><b>Audio studio</b><small>The mixer, the soundtrack and every effect</small></span><button class="ghost" data-act="settingsTab" data-arg="audio">Open</button></div></section>`;
     if (tab === 'play') {
       const meta = T.loadMeta();
       return `<section class="st-card"><span class="lab gold">On the board</span><div class="st-row"><span class="st-l"><b>Hints on the map</b><small>The one-line help above the board</small></span>${seg(
@@ -148,7 +182,7 @@
     ).join('');
     return U.shell(
       '',
-      `<div class="page settings"><div class="pg-head"><h1>Settings</h1><div class="chips" role="group" aria-label="Section">${tabs}</div></div><div class="st-cols"><div class="st-left">${tabBody(tab)}</div>${preview()}</div></div>`,
+      `<div class="page settings"><div class="pg-head"><h1>Settings</h1><div class="chips" role="group" aria-label="Section">${tabs}</div></div>${tab === 'audio' ? tabBody(tab) : `<div class="st-cols"><div class="st-left">${tabBody(tab)}</div>${preview()}</div>`}</div>`,
     );
   };
 
@@ -163,7 +197,7 @@
     const inRun = U.run && U.run.mission && !U.run.mission.over;
     return `<div class="quick"><div class="qk-head"><h3>Quick settings</h3><button class="ghost" data-act="closeModal" aria-label="Close">✕</button></div>
       <span class="lab">Theme</span><div class="qk-themes"><button class="qk-sw auto${cur === 'auto' ? ' on' : ''}" data-act="lookTheme" data-arg="auto" aria-label="Follow the route" aria-pressed="${cur === 'auto'}" data-tip="Follow the route"></button>${sw}</div>
-      ${toggle('toggleSound', !!U.sound, 'Sound', U.sound ? 'On' : 'Off')}${fxSlider()}
+      ${U.audioLevelsHTML ? `<span class="lab">Sound</span>${U.audioNowHTML(true)}${U.audioLevelsHTML(true)}<button class="linkish small" data-act="settings" data-arg="audio">Open the Audio studio</button>` : toggle('toggleSound', !!U.sound, 'Sound', U.sound ? 'On' : 'Off') + fxSlider()}
       ${toggle('prefHintsQuick', U.showHints(U.run), 'Hints on the map', 'The one-line help above the board')}
       ${toggle('canonAsk', meta.askCanon !== false, 'Ask canon questions', 'A question when you draft a pilot (can be skipped)')}
       ${toggle('prefConfirm', U.prefs.confirmEnd, 'Confirm End Round', 'Only when a pilot still has AP')}
@@ -200,6 +234,7 @@
     switch (act) {
       case 'settings':
         if (U.modal) U.closeModal();
+        if (arg) U.settingsTab = arg;
         if (U.screen !== 'settings') U.settingsFrom = U.screen;
         U.screen = 'settings';
         U.render();
@@ -252,8 +287,11 @@
     if (U.screen === 'mission' && U.updateMission) U.updateMission();
     return true;
   };
-  /** The effects volume, 0 to 1, for the synth in core.js. */
-  U.fxGain = () => (U.prefs.fx / 70) * (U.prefs.fx > 0 ? 1 : 0);
+  /** The effects level for the synth in core.js and feel.js: master × effects, 1 at the defaults; 0 when muted. */
+  U.fxGain = () =>
+    U.prefs.sound === false || U.prefs.muteFx
+      ? 0
+      : (U.prefs.master / 100) * (U.prefs.fx / 70) * (U.prefs.fx > 0 ? 1 : 0);
   (U.ACTS = U.ACTS || []).push(U.settingsAct);
   (U.INPUTS = U.INPUTS || []).push(U.prefsInput);
   (U.SCREENS = U.SCREENS || {}).settings = U.renderSettings;
