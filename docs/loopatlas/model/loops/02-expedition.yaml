@@ -98,6 +98,11 @@
     note: Stop cards since 2.70 (objective, clock, foes, gravity, weather, bonus goals).
   src:
   - docs/reference/RUN_AND_ECONOMY.md The route
+  prop:
+    s: change
+    note: 'Steward 2026-11-23, from RUN_AND_ECONOMY.md (2.132, PR #179): the route is now a map of Tumult, camp on the left,
+      the threat far right, branching paths across a landscape. Now still says stop cards since 2.70; refresh it and ask
+      whether the map''s distance to the threat can carry the expedition''s stake.'
 - id: haven
   parent: expedition
   at: 2

@@ -6,7 +6,7 @@
   kind: loop
   t: [600, 1800]
   kit: hold
-  is: 'Waves arrive; a pilot near the beacon at round end counts a round held.'
+  is: Waves arrive; a pilot near the beacon at round end counts a round held.
   phases:
   - n: Briefing
   - n: Rounds
@@ -24,7 +24,7 @@
   kind: loop
   t: [600, 1800]
   kit: vault
-  is: 'A seal on a ledge, a lever and a ramp; height is the problem.'
+  is: A seal on a ledge, a lever and a ramp; height is the problem.
   phases:
   - n: Briefing
   - n: Rounds
@@ -42,7 +42,7 @@
   kind: loop
   t: [600, 1800]
   kit: find
-  is: 'Hidden caches, one real, and Lurkers that ambush from Hidden.'
+  is: Hidden caches, one real, and Lurkers that ambush from Hidden.
   phases:
   - n: Briefing
   - n: Rounds
@@ -60,7 +60,7 @@
   kind: loop
   t: [600, 1800]
   kit: valve
-  is: 'A flood spreads every round; channel the valve before the clock ends.'
+  is: A flood spreads every round; channel the valve before the clock ends.
   phases:
   - n: Briefing
   - n: Rounds
@@ -78,7 +78,7 @@
   kind: loop
   t: [600, 1800]
   kit: carry
-  is: 'Crates across the page, a round trip each.'
+  is: Crates across the page, a round trip each.
   phases:
   - n: Briefing
   - n: Rounds
@@ -96,7 +96,7 @@
   kind: loop
   t: [600, 1800]
   kit: tag
-  is: 'Marks spread over the page; tag them all before the clock.'
+  is: Marks spread over the page; tag them all before the clock.
   phases:
   - n: Briefing
   - n: Rounds
@@ -109,12 +109,12 @@
 - id: m.elite
   parent: mission
   at: 1
-  name: 'An elite'
+  name: An elite
   tier: 4
   kind: loop
   t: [600, 1800]
   kit: fight
-  is: 'One tough foe with escorts; beaten, it pays an extra UP and 4 crystals.'
+  is: One tough foe with escorts; beaten, it pays an extra UP and 4 crystals.
   phases:
   - n: Briefing
   - n: Rounds
@@ -124,15 +124,20 @@
     s: built
   src:
   - docs/reference/MISSIONS_AND_BESTIARY.md
+  prop:
+    s: change
+    note: 'Steward 2026-11-23, from MISSIONS_AND_BESTIARY.md (2.135, PR #181): an elite stop may be held by a rival pilot,
+      human and two clades, under a name. A rival is a character, so it can feed arc.canon: one question about who it was
+      and why it was on that stretch.'
 - id: m.heart
   parent: mission
   at: 1
-  name: 'The Heart'
+  name: The Heart
   tier: 4
   kind: loop
   t: [600, 1800]
   kit: fight
-  is: 'Two phases; its shield is fed by Spawners, and at half the vault begins to drown.'
+  is: Two phases; its shield is fed by Spawners, and at half the vault begins to drown.
   phases:
   - n: Briefing
   - n: Rounds

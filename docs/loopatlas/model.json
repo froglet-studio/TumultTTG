@@ -552,7 +552,11 @@
    },
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md The route"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from RUN_AND_ECONOMY.md (2.132, PR #179): the route is now a map of Tumult, camp on the left, the threat far right, branching paths across a landscape. Now still says stop cards since 2.70; refresh it and ask whether the map's distance to the threat can carry the expedition's stake."
+   }
   },
   {
    "id": "haven",
@@ -790,7 +794,11 @@
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md The round",
     "docs/design/10-dice.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from MISSIONS_AND_BESTIARY.md (2.134, PR #180): every foe is a triple hybrid with a hybrid card and a level, and telegraphs a face instead of its role's move. Now says only the forecast; the telegraph can name the face's keywords, so reading the round's intents is reading three animals."
+   }
   },
   {
    "id": "turn",
@@ -974,7 +982,11 @@
    ],
    "src": [
     "src/ui/keywords.js"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from AUDIO.md (2.130, PR #174): Cosmic Shore's music and effects are in, with an Audio studio. Now names only chips and tips; check that every keyword landing has a sound of its own, so a pulse reads by ear as well as by eye."
+   }
   },
   {
    "id": "m.swarm",
@@ -1219,7 +1231,11 @@
    },
    "src": [
     "docs/reference/MISSIONS_AND_BESTIARY.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from MISSIONS_AND_BESTIARY.md (2.135, PR #181): an elite stop may be held by a rival pilot, human and two clades, under a name. A rival is a character, so it can feed arc.canon: one question about who it was and why it was on that stretch."
+   }
   },
   {
    "id": "m.heart",
@@ -1308,7 +1324,11 @@
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md Pilots keep their growth",
     "docs/design/06-pilots-and-backstory.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from PETS.md (2.133, PR #178): upgrade points now also awaken a pet's Ethereal faces, so a pilot's growth is split between its traits and its pets. Measure how often the look-ahead player spends on the pet (tools/sim.js 40) before calling it a real choice."
+   }
   },
   {
    "id": "arc.canon",

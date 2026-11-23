@@ -16,7 +16,7 @@
   drivers: [own, mastery, make]
   now:
     s: built
-    note: 'Since 2.76; missions scale to the pilot''s level (docs/reference/SCALING.md).'
+    note: Since 2.76; missions scale to the pilot's level (docs/reference/SCALING.md).
   plan:
     note: 'Design/06: the dossier records who the pilot is and what it did; three-pilot squads.'
   holes:
@@ -27,6 +27,11 @@
   src:
   - docs/reference/RUN_AND_ECONOMY.md Pilots keep their growth
   - docs/design/06-pilots-and-backstory.md
+  prop:
+    s: change
+    note: 'Steward 2026-11-23, from PETS.md (2.133, PR #178): upgrade points now also awaken a pet''s Ethereal faces, so
+      a pilot''s growth is split between its traits and its pets. Measure how often the look-ahead player spends on the
+      pet (tools/sim.js 40) before calling it a real choice.'
 - id: arc.canon
   parent: era
   at: 3
@@ -48,8 +53,7 @@
   prop:
     s: change
     note: 'A question names a keyword moment: "Your Pull dragged the Brute into the flood. What did the crowd shout?"'
-  src:
-  - docs/reference/CANON.md
+  src: [docs/reference/CANON.md]
 - id: arc.friends
   parent: era
   at: 2
@@ -67,7 +71,7 @@
   drivers: [crew]
   now:
     s: built
-    note: 'Lobby since 2.80, Take turns since 2.81, joining mid-route since 2.79.'
+    note: Lobby since 2.80, Take turns since 2.81, joining mid-route since 2.79.
   src:
   - docs/reference/OVERVIEW.md Players
 - id: arc.fleet

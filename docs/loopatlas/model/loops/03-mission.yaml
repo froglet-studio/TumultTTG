@@ -71,6 +71,11 @@
   src:
   - docs/reference/RUN_AND_ECONOMY.md The round
   - docs/design/10-dice.md
+  prop:
+    s: change
+    note: 'Steward 2026-11-23, from MISSIONS_AND_BESTIARY.md (2.134, PR #180): every foe is a triple hybrid with a hybrid
+      card and a level, and telegraphs a face instead of its role''s move. Now says only the forecast; the telegraph can
+      name the face''s keywords, so reading the round''s intents is reading three animals.'
 - id: turn
   parent: round
   at: 2
@@ -173,3 +178,8 @@
     q: No hover on a phone.
     fill: A long press is the hover.
   src: [src/ui/keywords.js]
+  prop:
+    s: change
+    note: 'Steward 2026-11-23, from AUDIO.md (2.130, PR #174): Cosmic Shore''s music and effects are in, with an Audio studio.
+      Now names only chips and tips; check that every keyword landing has a sound of its own, so a pulse reads by ear as
+      well as by eye.'
