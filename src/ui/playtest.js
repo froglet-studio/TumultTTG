@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.136.0',
+    version: '2.137.0',
     items: [
+      {
+        text: 'After the first screen, the draft is new too: bloodlines, packs and upgrades show everything at once, and tapping a card or a bloodline opens it big. On Upgrade, tap a face\u2019s bars to set its level; the line under it says what the next point buys. Is each step clear without reading much? Does it work on a phone?',
+      },
       {
         text: 'Choosing a pilot is new ("Spotlight"): start a new expedition and the first screen shows one pilot full screen in their own painting, with a strip along the bottom: Draft your own, then the ready pilots, then the crew. Tap a pilot to look at them, then Fly. On a phone the painting sits on top and Fly is at the bottom. Is it clear how to draft your own instead?',
       },

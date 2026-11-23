@@ -381,86 +381,49 @@
       return `<button class="ghost right" data-act="draftPrev" data-tip="Back to ${esc(prev.name)}, the pilot before, as you left them.">Back to ${esc(prev.name)}</button>`;
     return `<button class="ghost right" data-act="draftQuit">Back to the title</button>`;
   }
+  /**
+   * The draft: its first step is the Spotlight (src/ui/pick.js, Frogma "Choose your pilot"); bloodlines, packs and
+   * upgrades are drawn by src/ui/draft.js (Frogma "Draft flow", Gallery then a closer look).
+   */
   function renderDraft() {
     const d = U.draft;
-    const run = U.run;
-    const n = d.heroIdx + 1;
-    const who = U.seatTag ? U.seatTag(d.heroIdx) : '';
-    let body = '';
-    // the first step is its own full screen, the Spotlight (src/ui/pick.js); the old list stays as the fallback
-    if (d.step === 'mode' && U.renderPick) return U.renderPick(d, run);
-    if (d.step === 'mode') {
-      const free = (pb) => !run.heroes.some((h) => h && h.name === pb.name);
-      const made = U.madeHeroes().filter((x) => free(x.rec));
-      body = `<div class="panel"><h3>Pilot ${n} ${who}· choose how to build</h3><p class="dim small">Every hero is Human plus two other bloodlines, six trait cards to start, six Upgrade Points to spend. You'll grow to nine cards over the run (never more than 3 of 9 from one bloodline).</p>
-        <div class="row" style="margin:10px 0"><button class="primary" data-act="draftMode" data-arg="draft">Draft from packs (recommended)</button><span class="dim small">Pick 1 of 4, six times — a real limited draft across your three pools.</span>${draftOut(d)}</div>
-        <h3 style="margin-top:14px">…or Quick Build a pre-made hero</h3>
-        <div class="prebuilt-grid">${T.PREBUILTS.filter(free)
-          .map((pb) => pilotCard(pb))
-          .join('')}</div>
-        ${made.length ? `<h3 style="margin-top:14px">…or play a pilot someone made</h3><p class="dim small">Every pilot built in the draft is kept here, ${U.heroesShared && U.heroesShared() ? 'for everyone who plays this page' : 'on this device'}, ready to fly again.</p><div class="prebuilt-grid">${made.map((x) => pilotCard(x.rec, x.who, x.mine)).join('')}</div>` : ''}</div>`;
-    } else if (d.step === 'species') {
-      body = `<div class="panel"><h3>Pilot ${n} ${who}: choose two bloodlines (Human is always the third)</h3>
-        <div class="row" style="margin:8px 0">${U.portrait({ name: d.name, species: ['human'].concat(d.species) }, 'lg')}<span class="small dim">The portrait follows the two bloodlines: a painting of that exact pair when one exists, else the nearest stand-in.</span></div>
-        <div class="row" style="margin:8px 0"><label class="small dim">Name</label><input id="heroName" value="${esc(d.name)}" style="background:#0b1222;border:1px solid var(--line2);color:var(--txt);padding:5px 8px;border-radius:6px"></div>
-        <div class="species-grid">${T.SPECIES_ORDER.filter((s) => s !== 'human')
-          .map((s) => {
-            const sp = T.SPECIES[s];
-            const sel = d.species.includes(s);
-            return `<div class="sp-card ${sel ? 'sel' : ''}" data-act="pickSpecies" data-arg="${s}"><div class="ic">${U.icClade(s)}</div><b>${esc(sp.name)}</b><div class="small dim">leans ${sp.lean}</div><div class="small" style="margin-top:4px">${esc(sp.tagline)}</div><div class="small mute" style="margin-top:4px">${T.cardsOf(
-              s,
-            )
-              .filter((c) => c.sig >= 2)
-              .map((c) => '★ ' + c.name)
-              .join(' · ')}</div></div>`;
-          })
-          .join('')}</div>
-        <div class="row" style="margin-top:12px"><button class="primary" data-act="openPacks" ${d.species.length === 2 ? '' : 'disabled'}>Open the first pack</button><button class="ghost" data-act="draftBack">Back</button></div></div>`;
-    } else if (d.step === 'packs') {
-      // the draft (Frogma "Finalised UI", D-Draft-v2): the pack across the middle, the kit filling up along the foot
-      const h = d.hero;
-      const slots = [];
-      for (let k = 0; k < T.RULES.START_CARDS; k++) {
-        const cid = h.cards[k];
-        slots.push(
-          cid
-            ? `<span class="kit-slot full" style="--c:${EL[(T.CARD[cid].E && T.CARD[cid].E.elt) || T.CARD[cid].el].color}" data-tip="${esc(T.CARD[cid].name)}">${esc(T.CARD[cid].name)}</span>`
-            : `<span class="kit-slot${k === h.cards.length ? ' next' : ''}">${k === h.cards.length ? 'pick ' + (k + 1) : ''}</span>`,
-        );
-      }
-      body = `<div class="panel draft2"><div class="d2-head"><h3>${esc(h.name)} · pick ${d.picks + 1} of ${T.RULES.START_CARDS}</h3><span class="d2-tab on">New pack · ${d.pack.length}</span><span class="right small dim">Kit ${h.cards.length}/${T.RULES.START_CARDS} · ${h.species.map((s) => `${U.icClade(s)}${T.cladeCount(h, s)}/3`).join(' · ')}</span></div>
-        <p class="dim small">This pack mixes your three bloodlines: click a card to take it, or pass the pack. ★ marks a bloodline's signature traits. Hover any face for exact numbers at your current P/E.</p>
-        <div class="pack">${d.pack.map((cid) => U.cardHTML(cid, { pickable: true, act: 'pickCard', clades: h.species })).join('')}</div>
-        <div class="d2-kit"><span class="lab">Kit</span>${slots.join('')}<span class="d2-acts"><button class="ghost" data-act="draftBack" data-arg="species" data-tip="Choose other bloodlines. The cards picked so far are put back.">Back to bloodlines</button><button class="ghost" data-act="rerollPack" title="Costs nothing in this version; use it if a pack has nothing for you">Pass this pack</button></span></div></div>`;
-    } else if (d.step === 'wait') {
-      const other = run.party.players.find((p, s) => !run.heroes[s]);
-      body = U.waitingRoom
-        ? U.waitingRoom(run)
-        : `<div class="panel"><h3>Your pilot is ready</h3><p class="dim">Waiting for ${esc(other ? other.name : 'the other player')} to finish drafting…</p></div>`;
-    } else if (d.step === 'up') {
-      const h = d.hero;
-      body = `<div class="panel"><div class="row"><h3>${esc(h.name)} — spend Upgrade Points</h3><span class="right pill">UP left: <b style="margin-left:4px">${h.upUnspent}</b></span><button class="sm" data-act="autoUp">Auto</button><button class="sm ghost" data-act="resetUp">Reset</button></div>
-        <p class="dim small">P deepens the physical face's numbers (reliable, AP-fed). E awakens the ethereal face — it cannot be played until its card has E 1 — and scales its <i>capability</i>, something P can never buy. Every hero sets out with at least ${T.RULES.START_AWAKE} cards awakened. Caps: P 3, E 3 per card.</p>
-        <div class="pack">${h.cards.map((cid) => U.cardHTML(cid, { P: T.heroP(h, cid), E: T.heroE(h, cid), up: true, bound: T.boundLeft(h, cid), clades: h.species })).join('')}</div>
-        ${U.pilotQuestion ? U.pilotQuestion(h, d) : ''}
-        <div class="row" style="margin-top:12px"><button class="primary" data-act="confirmHero">${d.heroIdx < squadOf(U.run) - 1 && !(U.net && U.net.online()) ? `Confirm — draft pilot ${d.heroIdx + 2}` : 'Confirm — set out'}</button><button class="ghost" data-act="draftBack" data-tip="Build this pilot another way: a different pre-made pilot, or a fresh draft.">Back</button></div></div>`;
-    }
-    return `<div class="wrap">${header('The Draft')}<div class="row small dim" style="margin-bottom:8px">${run.heroes
-      .filter(Boolean)
-      .map(
-        (h) =>
-          `<span class="pill">${U.portrait(h, 'xs')} ${esc(h.name)} — ${h.species
-            .slice(1)
-            .map((s) => U.icClade(s))
-            .join('')}</span>`,
-      )
-      .join('')}</div>${body}</div>`;
+    if (d.step === 'mode' && U.renderPick) return U.renderPick(d, U.run);
+    return U.renderDraftScreen();
   }
   /** The draft's actions, for the screens that start a draft with a pilot chosen (src/ui/crew.js). */
   U.draftAct = (act, arg) => draftAct(act, arg);
   function draftAct(act, arg) {
     const d = U.draft;
     const run = U.run;
+    // the closer look (src/ui/draft.js): any card, bloodline or pilot opened big; the filter of the bloodlines
+    const looks = {
+      cardLook: 1,
+      lookTo: 1,
+      lookStep: 1,
+      cladeLook: 1,
+      cladeStep: 1,
+      preLook: 1,
+      lookClose: 1,
+      draftFilter: 1,
+    };
+    if (looks[act]) {
+      const inp = $('#heroName');
+      if (inp && inp.value.trim()) d.name = inp.value.trim().slice(0, 24);
+      const n = d.step === 'packs' ? d.pack.length : d.hero ? d.hero.cards.length : 1;
+      if (act === 'cardLook' || act === 'lookTo') d.look = { kind: 'card', i: +arg || 0 };
+      else if (act === 'lookStep' && d.look) d.look = { kind: 'card', i: (d.look.i + +arg + n) % n };
+      else if (act === 'cladeLook') d.look = { kind: 'clade', id: arg };
+      else if (act === 'cladeStep' && d.look) {
+        const order = T.SPECIES_ORDER.filter((s) => s !== 'human');
+        const k = order.indexOf(d.look.id);
+        d.look = { kind: 'clade', id: order[(k + +arg + order.length) % order.length] };
+      } else if (act === 'preLook') d.look = { kind: 'pre', id: arg };
+      else if (act === 'draftFilter') d.filter = arg;
+      else d.look = null;
+      U.render();
+      return;
+    }
+    if (act !== 'up' && act !== 'pickSpecies' && act !== 'autoUp' && act !== 'resetUp') d.look = null;
     if (act === 'draftMode') {
       d.step = 'species';
     } else if (act === 'spotPilot') {
