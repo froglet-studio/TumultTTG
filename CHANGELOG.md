@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.136.0 — 2026-11-23 — Ability paintings, beasts of Tumult
+
+- **Every trait face has a painting** (Garrett, 2026-11-22: "top notch art that depicts each abilities actions"). The art strip on a card shows the face in action: an abstract close-up of the trait itself (stripes, claws, quills, a tail) in motion, never a whole earth animal, since every creature of Tumult is a triple hybrid (Garrett, 2026-11-23). The strip is split as before, the Physical face's painting on one side and the Ethereal face's, lit in its element's colour, on the other; an asleep face stays grey. The painting also heads each face's tip.
+- 1,058 faces on 118 sheets of nine, generated in Figma Weave in Garrett's workspace (`tools/ability-art.js` plans, prompts and cuts them; `assets/README.md`). A face without a painting keeps its drawn verb. The paintings ride in the offline file and the web version; the claude.ai playtest page leaves them out to stay under its size limit.
+- **Foes look like beasts of Tumult**, not Cosmic Shore space creatures (Garrett: "space creatures that do not belong on the planet surface"). A hybrid foe is drawn as the painted heads of its three clades in a ring coloured by its danger (red, amber for an elite, violet for a rival, gold for the threat at the end); a rival pilot leads with its pilot portrait. A foe without clades (Spawners, the Heart) keeps its old body.
+- Drawing only: no rules, balance or saves change.
+
 ## 2.135.0 — 2026-11-22 — Rival pilots
 
 - **Rival pilots** (Garrett, 2026-11-22: "you can also put the players up against other Non player characters"). An elite stop may be held by a rival pilot, one of four elites now: human and two clades, with a name, and a hybrid card of one trait from each, so it plays a human trait as your pilots do. It awakens as a pilot does (E = level − 1). Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest in its zone; vitality 15/18/22, speed 2. Objective: Defeat the rival pilot.

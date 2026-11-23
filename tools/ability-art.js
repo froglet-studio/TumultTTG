@@ -69,7 +69,9 @@ ${body},
 function allFaces() {
   return Object.values(T.CARDS)
     .filter((c) => !c.gear && !c.pet)
-    .sort((a, b) => (a.sp === b.sp ? (a.id < b.id ? -1 : 1) : T.SPECIES_ORDER.indexOf(a.sp) - T.SPECIES_ORDER.indexOf(b.sp)))
+    .sort((a, b) =>
+      a.sp === b.sp ? (a.id < b.id ? -1 : 1) : T.SPECIES_ORDER.indexOf(a.sp) - T.SPECIES_ORDER.indexOf(b.sp),
+    )
     .flatMap((c) => T.faceKeys(c.id).map((fk) => c.id + '.' + fk));
 }
 
@@ -121,7 +123,15 @@ function describe(key, short) {
 }
 
 function glowOf(el) {
-  return { M: 'heavy violet-red gravitational', C: 'crackling electric yellow', S: 'rippling cyan spatial', T: 'swirling green time', O: 'shimmering white omni' }[el] || 'faint crystal';
+  return (
+    {
+      M: 'heavy violet-red gravitational',
+      C: 'crackling electric yellow',
+      S: 'rippling cyan spatial',
+      T: 'swirling green time',
+      O: 'shimmering white omni',
+    }[el] || 'faint crystal'
+  );
 }
 
 const STYLE =
@@ -199,7 +209,9 @@ function bands(rgb, w, h, axis) {
 function cut(n, file) {
   fs.mkdirSync(OUT, { recursive: true });
   const tmp = fs.mkdtempSync(path.join(require('os').tmpdir(), 'abil-'));
-  const [w, h] = execFileSync('identify', ['-format', '%w %h', file + '[0]'], { encoding: 'utf8' }).split(' ').map(Number);
+  const [w, h] = execFileSync('identify', ['-format', '%w %h', file + '[0]'], { encoding: 'utf8' })
+    .split(' ')
+    .map(Number);
   const rgb = execFileSync('convert', [file + '[0]', '-depth', '8', 'rgb:-'], { maxBuffer: 1 << 28 });
   const xs = bands(rgb, w, h, 'x'),
     ys = bands(rgb, w, h, 'y');
@@ -227,17 +239,35 @@ function cut(n, file) {
     cells.push(out);
   }
   const dest = path.join(OUT, `sheet-${String(n).padStart(3, '0')}.webp`);
-  execFileSync('montage', [...cells, '-tile', '3x3', '-geometry', `${CELL}x${CELL}+0+0`, '-background', '#0d1424', path.join(tmp, 'm.png')]);
+  execFileSync('montage', [
+    ...cells,
+    '-tile',
+    '3x3',
+    '-geometry',
+    `${CELL}x${CELL}+0+0`,
+    '-background',
+    '#0d1424',
+    path.join(tmp, 'm.png'),
+  ]);
   execFileSync('convert', [path.join(tmp, 'm.png'), '-quality', '66', '-define', 'webp:method=6', dest]);
   fs.rmSync(tmp, { recursive: true, force: true });
-  console.log(`${dest} (${fs.statSync(dest).size} bytes) cols ${xs.map((c) => c.map(Math.round).join('-')).join(' ')} rows ${ys.map((c) => c.map(Math.round).join('-')).join(' ')}`);
+  console.log(
+    `${dest} (${fs.statSync(dest).size} bytes) cols ${xs.map((c) => c.map(Math.round).join('-')).join(' ')} rows ${ys.map((c) => c.map(Math.round).join('-')).join(' ')}`,
+  );
 }
 
 const [cmd, a, b] = process.argv.slice(2);
 if (cmd === 'plan') plan();
 else if (cmd === 'prompt') console.log(prompt(Number(a), b === 'short'));
 else if (cmd === 'keys')
-  console.log(STYLE + '\n' + process.argv.slice(3).map((k, i) => `(${i + 1}) ${describe(k)}`).join('\n'));
+  console.log(
+    STYLE +
+      '\n' +
+      process.argv
+        .slice(3)
+        .map((k, i) => `(${i + 1}) ${describe(k)}`)
+        .join('\n'),
+  );
 else if (cmd === 'cut') cut(Number(a), b);
 else if (cmd === 'missing') {
   const have = new Set(fs.existsSync(OUT) ? fs.readdirSync(OUT) : []);

@@ -137,6 +137,9 @@
     const a = AT[id + '.' + fk];
     const cls = a && U.artClass ? U.artClass('ability-art/sheet-' + String(a.sheet).padStart(3, '0')) : '';
     if (!cls) return null;
-    return { cls, style: `background-size:300% 300%;background-position:${(a.i % 3) * 50}% ${Math.floor(a.i / 3) * 50}%` };
+    return {
+      cls,
+      style: `background-size:300% 300%;background-position:${(a.i % 3) * 50}% ${Math.floor(a.i / 3) * 50}%`,
+    };
   };
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

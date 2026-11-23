@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.135.0',
+    version: '2.136.0',
     items: [
+      {
+        text: 'Foes look like beasts of Tumult now: each hybrid foe is drawn as the heads of its three clades in a ring coloured by how dangerous it is (red, amber elite, violet rival, gold for the threat at the end). Can you tell foes apart at a glance? (The new ability paintings on cards are in the offline file and the web version, not this page.)',
+      },
       {
         text: 'Rival pilots: an elite stop may now be held by a rival pilot, human and two clades like your own, with a name and a hybrid card of one trait from each (a human one among them), awake as a pilot is. Its objective reads Defeat the rival pilot. Does it feel like another pilot rather than a creature? Is it about as hard as the other elites?',
       },
