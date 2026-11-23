@@ -19,8 +19,56 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.123.0',
+    version: '2.137.0',
     items: [
+      {
+        text: 'After the first screen, the draft is new too: bloodlines, packs and upgrades show everything at once, and tapping a card or a bloodline opens it big. On Upgrade, tap a face\u2019s bars to set its level; the line under it says what the next point buys. Is each step clear without reading much? Does it work on a phone?',
+      },
+      {
+        text: 'Choosing a pilot is new ("Spotlight"): start a new expedition and the first screen shows one pilot full screen in their own painting, with a strip along the bottom: Draft your own, then the ready pilots, then the crew. Tap a pilot to look at them, then Fly. On a phone the painting sits on top and Fly is at the bottom. Is it clear how to draft your own instead?',
+      },
+      {
+        text: 'Rival pilots: an elite stop may now be held by a rival pilot, human and two clades like your own, with a name and a hybrid card of one trait from each (a human one among them), awake as a pilot is. Its objective reads Defeat the rival pilot. Does it feel like another pilot rather than a creature? Is it about as hard as the other elites?',
+      },
+      {
+        text: 'Foes are hybrids now: every foe but the Spawners and the Heart has three clades and a hybrid card of their traits, like a pet. Hover a foe to see its clades, its level and the faces it can play; its intent names the face and the clade it comes from. Higher-level foes (tier 3, elites, bigger squads) also play Ethereal faces. Does each foe feel different? Can you read what a hybrid face will do before it lands?',
+      },
+      {
+        text: 'Pets awaken: on the Upgrade screen a pet card now has an Ethereal button. Each point you spend there awakens one more of its three Ethereal faces (one from each of its clades), and the awake ones show on the pet card in a mission. Is it clear which face wakes next? Is a pet with awake faces worth the points you would have spent on a trait?',
+      },
+      {
+        text: 'The route is a map of Tumult now: the squad sets out from a camp on the left, each leg is a stretch of land, sea or high air, and what waits at the end stands far off on the right over its own ground. Glowing roads are the ones open now; gold is the road taken. Can you tell at a glance where you are, where you can go, and how far the end is? Does the map read on a phone (it scrolls sideways)?',
+      },
+      {
+        text: 'Signed in on the web version, the button at the top right with your initials (or face) opens your new Profile page: pick an avatar from any pilot painting, your Google or Discord picture, or initials, and set your display name. Does the name check make sense as you type? Does your new face show in the Lobby?',
+      },
+      {
+        text: "Sound: Cosmic Shore's soundtrack and effects are in. The music follows the screen (calm in menus, the draft and the route, harder in a mission, the outro after a win), and blows, kills, shields, cards and menus have Cosmic Shore's sounds. Open Settings, Audio studio: a mixer (master, music, effects, each with a mute), the player, every track (play one now, untick one to leave it out) and a pad for every effect. Does any sound feel wrong for its moment, or too loud? The offline file carries the effects and one music loop; the web version has all eleven tracks.",
+      },
+      {
+        text: "The board now lies tilted on the table in front of the scene, like a game board seen from your seat. The 2D button at the board's right edge lays it flat again (and 3D tilts it back); your choice is kept. On a phone, pinch with two fingers to zoom and move the board, and drag with one finger once zoomed. Is the tilted board easier or harder to read? Did a tap ever hit the wrong node?",
+      },
+      {
+        text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. The Route tab now always opens the Route page with the top tabs: while pilots are still to be picked it says so, with a button to pick them. Did Continue or the Route tab ever leave you stuck?',
+      },
+      {
+        text: 'The mission screen is new ("The Stack"): every foe is a creature now (Biters, Stingers, Kiters and the rest, each in one of four forms), enemy plans are a numbered stack in the order they act, and every blow plays out: a cast card, a beam or a slash, a big number, a toast, a round summary with a feat, and a wither when a foe dies. On PC drag and wheel-zoom the board, or use the buttons at its right edge. Is every attack easy to follow? Does any of it hide something you needed to see?',
+      },
+      {
+        text: 'The Lobby is new ("Drawer plus"): open it from the Lobby chip at the top. Games lets you take an open seat with no code or ask to join a table mid-mission; People lets you find a player, add them as a friend or invite them to your table; Requests holds what others sent you. Click a person to see their card. Try it with a friend on two accounts: did a request or an invite reach them at once?',
+      },
+      {
+        text: 'Sign-in is new ("Split hero"): a captain on the left, the reasons and the sign-in buttons on the right. A guest with a saved expedition also sees "Saved in this browser only" under Continue. Is it clear why to sign in?',
+      },
+      {
+        text: 'Home in motion: open New expedition and pick a few options (it should stay open now), and run the pointer over the tabs, the setup and the rows below it. Does anything feel slow, jumpy or too busy?',
+      },
+      {
+        text: 'Home is new ("Fog prow"): the buttons sit in a column on the right, a captain plate names the pilot in the painting, and every 10 seconds a random captain fades in. The paintings are sharper on the web version. Also try the browser\'s Back button: through the tabs, out of a mission (Forward should resume it) and with a window open. Did Back ever leave the game or lose your place?',
+      },
+      {
+        text: 'Solo is one pilot now. Pick Solo and you draft and fly a single pilot; its missions give back to meet it: foes at 60% vitality (the Heart 45%), 2 fewer rank-and-file foes, objectives ask 1 less, swarms 1 smaller, and clocks run 1 round longer. To fly two or more yourself, pick that many players and play every seat at one screen. Did a mission feel fair with one pilot? Which felt too easy or too hard?',
+      },
       {
         text: 'Ninety more painted pilots from Cosmic Shore (crews 13 to 17). Draft a pair one of them has, such as koi and orangutan, bison and hedgehog, or eel and axolotl, in either order, and your pilot wears that painting instead of a stand-in. Did your pilot get their own face more often?',
       },

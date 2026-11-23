@@ -58,6 +58,20 @@ The first publish happens on the next push to `main` (a promotion from `developm
 
 Until the two secrets exist, the Preview job builds and skips the deploy, and passes.
 
+### 2a. The game server
+
+The **Deploy game server** workflow (`.github/workflows/worker.yml`) deploys `server/` to Cloudflare whenever a push to `main` changes `server/`, `src/engine/`, `src/data/`, `src/manifest.json` or `tools/build-server.mjs` (the Worker carries the engine), applying any new D1 migration first. It needs one more token, kept apart from the Pages one so a preview job never holds Worker rights:
+
+1. **API token:** Cloudflare → My Profile → API Tokens → Create Token → **Edit Cloudflare Workers** → Use template.
+   - Name: `TumultTTG game server`
+   - Add one permission: **Account** → **D1** → **Edit**
+   - Account Resources: Include → Froglet's account (only that one). Zone Resources: All zones (the template asks; the Worker uses no zone).
+   - Continue to summary → Create Token, and copy it (it is shown once).
+2. **Environment:** TumultTTG → Settings → Environments → New environment `worker` → Deployment branches and tags: **Selected branches and tags** → add `main`. Then Add environment secret `CLOUDFLARE_WORKERS_TOKEN` = the token. `CLOUDFLARE_ACCOUNT_ID` is the repository secret from step 2 above.
+3. **First deploy:** Actions → Deploy game server → Run workflow (branch `main`). Its summary should say the server's `/api/health` answers ok.
+
+Until the token exists the job skips the deploy and passes. It runs no tests of its own: CI already ran them on the pull request. Secrets the Worker itself reads (`INVITE_SECRET`, the sign-in ones) stay in Cloudflare and are not touched by a deploy. Only `main` deploys, because the preview and the live game use this one Worker.
+
 ### 3. The fallback address (optional)
 
 Only if the website cannot be used: TumultTTG → Settings → Pages → Source **GitHub Actions** (no custom domain), then Settings → Environments → `github-pages` → Deployment branches and tags → add `main`. Actions → Publish fallback build → Run workflow on `main` publishes https://froglet-studio.github.io/TumultTTG/.

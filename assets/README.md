@@ -8,8 +8,9 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 |---|---|---|---|
 | `pilots/` | a pilot's portrait, 160 px square, JPEG | `pilot/<CALLSIGN>` | ~8 KB each |
 | `scenes/` | the same pilot in their world, 768×432, WebP | `scene/<CALLSIGN>` | ~40–50 KB each |
+| `scenes-hd/` | the same scenes at full size, 1536×864, WebP q74; the web version sends these in place of `scenes/` (`buildWeb` in `tools/build.mjs`), the single file keeps the small ones | (as `scene/`) | ~100 KB each |
 | `portraits/` | painted clade heads, 128 px tiles four to a row, WebP | `portrait/sheet-<N>` | ~17–61 KB a sheet |
-| `fonts/` | Chakra Petch SemiBold, Latin subset, WOFF2 | `@font-face` | 8 KB |
+| `fonts/` | Chakra Petch SemiBold and Cinzel Bold, Latin subsets, WOFF2 | `@font-face` | 8 KB + 15 KB |
 
 ## Where it comes from, and its licence
 
@@ -38,10 +39,35 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 - **Chakra Petch** is © 2018 The Chakra Petch Project Authors, under the SIL Open Font License 1.1
   (`fonts/OFL.txt`). It is Cosmic Shore's display face. Subset with
   `pyftsubset ChakraPetch-SemiBold.ttf --unicodes=U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201D,U+2026,U+2022,U+2190-2193,U+00D7 --flavor=woff2`.
+- **Cinzel** is © 2020 The Cinzel Project Authors, under the SIL Open Font License 1.1 (`fonts/OFL-Cinzel.txt`). It is the
+  slow serif of the mission's banners and blows (a foe felled, a new round, a big hit). The Latin subset Google
+  Fonts serves (`fonts.gstatic.com/s/cinzel/v26`, weight 700).
+
+## Sound
+
+| Folder | What | Key in `T.AUDIO` | Size |
+|---|---|---|---|
+| `audio/music/` | Cosmic Shore's soundtrack, eleven tracks, 96 kbps stereo MP3, loudness-normalised | `music/<name>` | 0.9–3.8 MB each, 27 MB in all |
+| `audio/sfx/` | fifty of Cosmic Shore's effects, 96 kbps mono MP3, trimmed and peak-normalised | `sfx/<name>` | 2–120 KB each, 1.2 MB in all |
+
+Both are Cosmic Shore's (`froglet-studio/cosmic-shore`, MIT, © Froglet Inc.; Shombith asked for them on
+2026-11-22; Garrett, 2026-11-14: Froglet's Hypersea games share their resources freely). The music is
+`Assets/_Audio/Music/` (the full-quality MP3s where there are some, the WAV masters otherwise), titled as Cosmic
+Shore's `Soundtrack` asset titles them. The effects are the files Cosmic Shore's FMOD project (`Cosmic Shore/`)
+plays for its Menu and Gameplay events, plus Cosmic Shore's menu hover (`Assets/_Audio/Sounds/Hover.ogg`) and
+its six creature-death layers (`Assets/_Audio/Sounds/MiguelSFX/`). Left out on purpose: the vessel engine and
+tadpole loops (long hums made for flight), the third-party library samples the FMOD project layers under them
+(the `S6k` recordings, `VGMSampColl`, the drum hits, a spring reverb impulse) and the haptic samples.
+`tools/audio-import.sh` rebuilds every file from a Cosmic Shore checkout; which Tumult moment plays which file is
+`src/ui/audio.js` (`docs/reference/AUDIO.md`).
+
+The offline file inlines every effect and only the music named in `manifest.audio.offline` (one 2-minute loop,
+1.6 MB), so it grows by about 3.5 MB rather than 40. The web version sends every file under a content-hashed name.
 
 ## Adding a pilot
 
 1. Resize their avatar to 160×160 (JPEG, quality 80) as `pilots/<CALLSIGN>.jpg` and their scene to 768×432
-   (WebP, quality 58–62) as `scenes/<CALLSIGN>.webp`.
+   (WebP, quality 58–62) as `scenes/<CALLSIGN>.webp`; save the scene at its full 1536×864 (WebP, quality 74) as
+   `scenes-hd/<CALLSIGN>.webp`.
 2. Add a row to `U.PILOTS` in `src/ui/pilots.js`: callsign, name, and the two animals after human.
 3. `npm run check`: `test/build.test.js` holds every pilot to having both pictures.

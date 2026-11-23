@@ -204,6 +204,7 @@ test(
 
     // Tess drafts a pilot from packs
     const A = await open(fakeUser('u_tess'));
+    A.act('pickPlayers', 2); // two pilots to draft on one screen: one made, one pre-made
     A.act('newRun');
     A.act('draftMode', 'draft');
     A.act('pickSpecies', 'owl');
@@ -217,6 +218,7 @@ test(
     assert.equal(JSON.parse(db.store.get('heroes/u_tess')).who, 'Tess', 'with the name of the player who made it');
     assert.equal(A.w.T.loadMade().length, 1, 'kept on the device too');
     // a pre-made hero is not kept again
+    A.act('spotPilot', 'cavitt');
     A.act('prebuilt', 'cavitt');
     A.act('confirmHero');
     assert.equal(A.w.T.loadMade().length, 1);
@@ -226,6 +228,7 @@ test(
     B.act('newRun');
     await until(() => B.d.body.textContent.includes('Made by Tess'), 'the shared pilot');
     const id = JSON.parse(db.store.get('heroes/u_tess')).list[0].id;
+    B.act('spotPilot', id);
     B.act('prebuilt', id);
     // the two screens are separate windows: compare as plain data
     const plain = (x) => JSON.parse(JSON.stringify(x));

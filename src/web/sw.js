@@ -31,6 +31,8 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // the online server, when there is one, is never cached
+  // music streams in pieces (Range requests), which a cache cannot store: the browser's own HTTP cache keeps it
+  if (url.pathname.includes('/assets/audio/music/') || req.headers.has('range')) return;
   if (url.pathname.includes('/assets/')) {
     e.respondWith(
       caches.match(req).then(

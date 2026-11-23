@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 
 /** The part of D1 the module uses, over node:sqlite. */
-export function fakeD1(migrations = ['0002_auth.sql']) {
+export function fakeD1(migrations = ['0002_auth.sql', '0003_profile.sql']) {
   const db = new DatabaseSync(':memory:');
   for (const m of migrations) db.exec(readFileSync(new URL('../migrations/' + m, import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({

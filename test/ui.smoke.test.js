@@ -56,13 +56,16 @@ test('UI: every draft step and run screen has a way back', { skip, timeout: 60_0
       el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true }));
     };
     const at = () => `${U.screen}:${U.draft ? U.draft.heroIdx + ':' + U.draft.step : ''}`;
+    act('pickPlayers', '2'); // two pilots to draft, so the second can lead back to the first (one player flies one)
     act('newRun');
     act('draftQuit');
     assert.equal(U.screen, 'title', 'the first draft step leads back to the title');
     act('newRun');
+    act('spotPilot', 'cavitt');
     act('prebuilt', 'cavitt');
     act('draftBack');
     assert.equal(at(), 'draft:0:mode', 'a pre-made pilot can be put back');
+    act('spotPilot', 'cavitt');
     act('prebuilt', 'cavitt');
     act('confirmHero');
     act('draftPrev');
@@ -80,6 +83,7 @@ test('UI: every draft step and run screen has a way back', { skip, timeout: 60_0
     for (let i = 0; i < w.T.RULES.START_CARDS; i++) act('pickCard');
     act('draftBack');
     assert.equal(at(), 'draft:1:mode', 'a drafted pilot can be started over');
+    act('spotPilot', 'veil');
     act('prebuilt', 'veil');
     act('confirmHero');
     assert.equal(U.screen, 'map');
@@ -126,9 +130,8 @@ test(
       click('[data-act="newRun"]');
       U.run.seed = 5;
       U.run.rngs = {};
+      click('[data-act="spotPilot"][data-arg="cavitt"]');
       click('[data-act="prebuilt"][data-arg="cavitt"]');
-      click('[data-act="confirmHero"]');
-      click('[data-act="prebuilt"][data-arg="kess"]');
       click('[data-act="confirmHero"]');
       click('.mnode.avail');
       const m = U.run.mission;
@@ -157,9 +160,8 @@ test('UI: the route paints each stop with the place it is played in', { skip, ti
     await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
     const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
     click('[data-act="newRun"]');
+    click('[data-act="spotPilot"][data-arg="cavitt"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
-    click('[data-act="confirmHero"]');
-    click('[data-act="prebuilt"][data-arg="kess"]');
     click('[data-act="confirmHero"]');
     const run = w.T.UI.run;
     const route = d.querySelector('.route');
@@ -176,7 +178,7 @@ test('UI: the route paints each stop with the place it is played in', { skip, ti
     // each leg says how it is travelled; the squad stands at the foot of the route
     assert.equal(d.querySelectorAll('.leg .leg-kick').length, 4);
     assert.match(route.textContent, /by (land|sea|air)/);
-    assert.equal(d.querySelectorAll('.squad-mark.start .pfp').length, 2);
+    assert.equal(d.querySelectorAll('.squad-mark.start .pfp').length, 1);
     assert.ok(d.querySelectorAll('.mnode.avail').length >= 2, 'the first stops glow');
   } finally {
     w.close();
@@ -202,9 +204,8 @@ test(
       const U = w.T.UI;
       const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
       click('[data-act="newRun"]');
+      click('[data-act="spotPilot"][data-arg="cavitt"]');
       click('[data-act="prebuilt"][data-arg="cavitt"]');
-      click('[data-act="confirmHero"]');
-      click('[data-act="prebuilt"][data-arg="kess"]');
       click('[data-act="confirmHero"]');
       click('.mnode.avail');
       const m = U.run.mission;
@@ -268,9 +269,8 @@ test(
       const U = T.UI;
       const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
       click('[data-act="newRun"]');
+      click('[data-act="spotPilot"][data-arg="cavitt"]');
       click('[data-act="prebuilt"][data-arg="cavitt"]');
-      click('[data-act="confirmHero"]');
-      click('[data-act="prebuilt"][data-arg="kess"]');
       click('[data-act="confirmHero"]');
       click('.mnode.avail');
       const m = U.run.mission;
@@ -320,9 +320,12 @@ test(
       await until(() => d.getElementById('app') && d.getElementById('app').innerHTML, 'the first render');
       const U = w.T.UI;
       const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
+      click('[data-act="pickPlayers"][data-arg="2"]'); // two players at one screen: a squad of two to fold
       click('[data-act="newRun"]');
+      click('[data-act="spotPilot"][data-arg="cavitt"]');
       click('[data-act="prebuilt"][data-arg="cavitt"]');
       click('[data-act="confirmHero"]');
+      click('[data-act="spotPilot"][data-arg="kess"]');
       click('[data-act="prebuilt"][data-arg="kess"]');
       click('[data-act="confirmHero"]');
       click('.mnode.avail');
@@ -524,9 +527,8 @@ test('UI: a card on the track still reads in full and says when it is back', { s
     const U = w.T.UI;
     const click = (sel) => d.querySelector(sel).dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
     click('[data-act="newRun"]');
+    click('[data-act="spotPilot"][data-arg="cavitt"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
-    click('[data-act="confirmHero"]');
-    click('[data-act="prebuilt"][data-arg="kess"]');
     click('[data-act="confirmHero"]');
     click('.mnode.avail');
     const m = U.run.mission;

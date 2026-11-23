@@ -69,9 +69,7 @@ async function driveRun(
     U.run.seed = seed;
     U.run.rngs = {};
 
-    // Hero 1: quick build. Hero 2: draft from packs.
-    act('prebuilt', 'cavitt');
-    act('confirmHero');
+    // One player flies one pilot (2.124), drafted from packs (the quick build has its own tests).
     act('draftMode', 'draft');
     act('pickSpecies', 'owl');
     act('pickSpecies', 'gecko');

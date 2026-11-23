@@ -53,6 +53,7 @@
   /* ───────────────────────────── INTENTS ───────────────────────────── */
   T.chooseIntents = function (m) {
     for (const e of T.liveEnemies(m)) {
+      if (e.hy && e.hy.cd > 0) e.hy.cd--; // a hybrid card cools a round at a time (src/engine/hybrids.js)
       // a Fixed foe repeats the intent it was fixed on (same move, same target)
       if (e.states.Fixed && e.states.Fixed.intent) {
         e.intent = JSON.parse(JSON.stringify(e.states.Fixed.intent));
@@ -160,6 +161,18 @@
           else setI('surge', t, `(${dmgOf(e, A.surge)} zone, Weakens)`);
           break;
         }
+        case 'rival': {
+          // a pilot: its blade on whoever is beside it, its sidearm on the weakest in its zone, else it closes in
+          const adj = adjacentTargets(m, e);
+          const lt = zoneTargets(m, e);
+          if (adj.length) setI('blade', adj.sort((a, b) => a.hp - b.hp)[0], `(${dmgOf(e, A.blade)})`);
+          else if (lt.length) setI('shot', lt.sort((a, b) => a.hp - b.hp)[0], `(${dmgOf(e, A.shot)} zone)`);
+          else {
+            const t = nearestTarget(m, e);
+            if (t) setI('blade', t, `(${dmgOf(e, A.blade)}, closing)`);
+          }
+          break;
+        }
         case 'heart': {
           if (e.phase === 1) {
             const lt = zoneTargets(m, e).filter((c) => c.kind === 'hero');
@@ -179,11 +192,65 @@
           break;
         }
       }
+      // a hybrid foe plays a face of its card when the card is back and a face has something to do
+      const hy = hybridIntent(m, e, intent);
+      if (hy) intent = hy;
       e.intent = intent;
       // an aimed ability strikes the space its target stands on now, whoever stands there when it lands
-      if (intent && A[intent.key].aimed) T.aimIntent(m, e);
+      if (intent && !intent.hy && A[intent.key].aimed) T.aimIntent(m, e);
     }
   };
+  /**
+   * A hybrid foe's intent (src/engine/hybrids.js): with its card back in hand, the first of its faces, Ethereal
+   * first, that has something to do now. An attack needs a target it can reach this round (a melee one within its
+   * speed and a step, a zone one in its zone, an area one beside it); a ward wants a pilot beside it or a wound, a
+   * mend a wound of at least what it heals, a veil a line to it. Null when none fits: the role's own intent stands.
+   */
+  function hybridIntent(m, e, base) {
+    if (!e.hy || e.hy.cd > 0) return null;
+    // a face on itself waits for a round its role has no blow to land, or for a foe at half its vitality
+    const busy = base && base.target != null && ['melee', 'los', 'area', 'teleStrike'].includes(base.kind);
+    const selfOk = !busy || e.hp <= e.maxHp / 2;
+    const near = (c) => dist(m, e.pos, c.pos);
+    const low = (list) => list.slice().sort((a, b) => a.hp - b.hp || a.uid - b.uid)[0];
+    for (const { key, ab, sp } of T.foeHybridFaces(e)) {
+      let t = null;
+      let ok = false;
+      if (ab.kind === 'melee') {
+        const adj = adjacentTargets(m, e);
+        t = adj.length ? low(adj) : T.isAnchored(e) ? null : nearestTarget(m, e);
+        ok = !!t && (adj.length > 0 || near(t) <= e.speed + 1);
+      } else if (ab.kind === 'los') {
+        const lt = zoneTargets(m, e);
+        t = lt.length ? low(lt) : null;
+        ok = !!t;
+      } else if (ab.kind === 'area') ok = adjacentTargets(m, e).length > 0;
+      else if (!selfOk) ok = false;
+      else if (ab.kind === 'ward') ok = !st(e).Shield && (heroesAdjacent(m, e).length > 0 || e.hp < e.maxHp * 0.75);
+      else if (ab.kind === 'mend') ok = e.maxHp - e.hp >= ab.heal;
+      else if (ab.kind === 'veil') ok = !T.isHidden(e) && zoneTargets(m, e).length > 0;
+      if (!ok) continue;
+      const kin = T.SPECIES[sp] ? T.SPECIES[sp].name : sp;
+      const extra =
+        ab.kind === 'ward'
+          ? `(Shield ${ab.ward})`
+          : ab.kind === 'mend'
+            ? `(heals ${ab.heal})`
+            : ab.kind === 'veil'
+              ? '(goes Hidden)'
+              : `(${ab.dmg}${ab.kind === 'los' ? ' zone' : ab.kind === 'area' ? ' to all adjacent' : ''}${ab.push ? ', push ' + ab.push : ''}${ab.pull ? ', pull ' + ab.pull : ''}${ab.anchor ? ', roots ' + ab.anchor : ''}${ab.weaken ? ', Weaken ' + ab.weaken : ''}${ab.heal ? ', heals ' + ab.heal : ''})`;
+      return {
+        key,
+        hy: true,
+        target: t ? t.uid : null,
+        targetName: t ? t.name : null,
+        label: `${ab.n} [${kin}]${t ? ' → ' + t.name : ''} ${extra}`,
+        dmg: ab.dmg || 0,
+        kind: ab.kind,
+      };
+    }
+    return null;
+  }
   /**
    * Aimed (2.103): the intent locks on the space its target stands on now. When it lands it strikes whoever
    * stands there then, pilot or foe; on an empty space it misses. Only a melee or zone attack can be aimed.
@@ -191,7 +258,7 @@
   T.aimIntent = function (m, e) {
     const I = e.intent;
     if (!I || I.aim != null || I.target == null) return false;
-    const ab = T.ENEMIES[e.type].abilities[I.key];
+    const ab = T.enemyAbility(e, I.key);
     if (!ab || (ab.kind !== 'melee' && ab.kind !== 'los')) return false;
     const t = findTarget(m, I.target);
     if (!t) return false;
@@ -332,8 +399,9 @@
       if (!e.alive || m.over) continue;
       const I = e.intent;
       if (!I) continue;
-      const A = T.ENEMIES[e.type].abilities;
-      const ab = A[I.key];
+      const ab = T.enemyAbility(e, I.key);
+      if (!ab) continue;
+      if (I.hy) e.hy.cd = ab.cdr; // the hybrid card goes away for its face's cooldown and a round more
       e.lastKey = I.key;
       e.bracedRecently = false;
       if (I.aim != null && (ab.kind === 'melee' || ab.kind === 'los')) {
@@ -447,6 +515,29 @@
           if (t) approach(m, e, t.pos, e.speed);
           break;
         }
+        // a hybrid card's faces on itself (src/engine/hybrids.js)
+        case 'ward': {
+          st(e).Shield = { v: ab.ward, t: 2, all: true };
+          T.say(m, `${e.name} uses ${ab.n}: Shield ${ab.ward}.`, 'enemy');
+          m.fx.push({ t: 'state', ent: e.uid, name: 'Shield' });
+          break;
+        }
+        case 'mend': {
+          const was = e.hp;
+          e.hp = Math.min(e.maxHp, e.hp + ab.heal);
+          T.say(m, `${e.name} uses ${ab.n} and heals ${e.hp - was}.`, 'enemy');
+          break;
+        }
+        case 'veil': {
+          if (st(e).Located) {
+            T.say(m, `${e.name} tries ${ab.n}, but it is Located.`, 'enemy');
+            break;
+          }
+          st(e).Hidden = { t: 2, canMove: true };
+          T.say(m, `${e.name} uses ${ab.n} and fades from sight.`, 'enemy');
+          m.fx.push({ t: 'state', ent: e.uid, name: 'Hidden' });
+          break;
+        }
       }
       // melee attacks also carry a pull (Heart's crush drags first)
       if (
@@ -535,7 +626,7 @@
         h.cards.some((c) =>
           T.faceKeys(c).some((fk) =>
             T.CARD[c][fk].fx.some(
-              (x) => (fk === 'E' && x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
+              (x) => (T.isEthFace(fk) && x.v === 'blink' && x.height) || (x.v === 'move' && x.climb) || x.v === 'hover',
             ),
           ),
         ) ||
@@ -574,7 +665,7 @@
           .sort((a, b) => B.dist(m.board, a, goal.node, true) - B.dist(m.board, b, goal.node, true))[0];
         const gain = cur - B.dist(m.board, node, goal.node, true);
         if (gain <= 0) continue;
-        const score = gain * 2 - face.ap - (fk === 'E' ? 1 : 0) + (node === goal.node && goal.needOn ? 5 : 0);
+        const score = gain * 2 - face.ap - (T.isEthFace(fk) ? 1 : 0) + (node === goal.node && goal.needOn ? 5 : 0);
         if (!best || score > best.score) best = { cid, fk, ctx: { node }, score };
       }
     if (best && best.score > 0) {
@@ -688,7 +779,7 @@
       for (const fk of T.faceKeys(cid)) {
         const card = T.CARD[cid];
         const f = card[fk];
-        if (fk === 'E' && T.heroE(h, cid) < T.RULES.ETHEREAL_MIN_E) continue;
+        if (!T.faceAwake(h, cid, fk)) continue;
         const elt = f.elt || card.el;
         const eln = f.el || 0;
         if (!T.payableAsAP(h, f.ap, elt, eln)) continue;
@@ -799,7 +890,7 @@
                 score = dmg * n * 2;
               } else continue;
               score -= face.ap;
-              if (fk === 'E') score -= 1;
+              if (T.isEthFace(fk)) score -= 1;
             } else if (face.fx.some((x) => x.v === 'shield' || (x.v === 'thorns' && x.next) || x.v === 'stasis')) {
               if (threat >= 4) score = threat;
               else continue;

@@ -4,8 +4,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { fakeD1 } from './d1.mjs';
 import { handleAuth, authenticate, requireAccount, sweepAuth, cors, cleanName } from '../src/auth/index.js';
+import { nameProblem, clean, cleanAvatar, pictureUrl } from '../src/auth/names.js';
 
-const MIGRATION_FILES = ['0002_auth.sql'];
+const MIGRATION_FILES = ['0002_auth.sql', '0003_profile.sql'];
 const API = 'https://api.tumult.froglet.games';
 const GAME = 'https://tumult.froglet.games/';
 
@@ -22,7 +23,11 @@ function setup(extra = {}) {
     ...extra,
   };
   const mail = [];
-  const people = { google: { sub: 'g-1', given_name: 'Ada' }, discord: { id: 'd-1', global_name: 'Bram' } };
+  const people = {
+    google: { sub: 'g-1', given_name: 'Ada', picture: 'https://lh3.googleusercontent.com/a/ada=s96-c' },
+    discord: { id: 'd-1', global_name: 'Bram', avatar: 'abc123' },
+  };
+  const pictures = [];
   globalThis.fetch = async (url, init = {}) => {
     const u = String(url);
     const ok = (b) => new Response(JSON.stringify(b), { status: 200, headers: { 'Content-Type': 'application/json' } });
@@ -33,6 +38,10 @@ function setup(extra = {}) {
     }
     if (u === 'https://openidconnect.googleapis.com/v1/userinfo') return ok(people.google);
     if (u === 'https://discord.com/api/users/@me') return ok(people.discord);
+    if (u.startsWith('https://lh3.googleusercontent.com/') || u.startsWith('https://cdn.discordapp.com/')) {
+      pictures.push(u);
+      return new Response(new Uint8Array([137, 80, 78, 71]), { status: 200, headers: { 'Content-Type': 'image/png' } });
+    }
     if (u === 'https://api.resend.com/emails') {
       mail.push(JSON.parse(init.body));
       return ok({ id: 'm1' });
@@ -76,7 +85,7 @@ function setup(extra = {}) {
     return { ...Object.fromEntries(new URLSearchParams(loc.hash.slice(1))), state };
   };
   const codeFromMail = () => /(\d{6})/.exec(mail.at(-1).subject)[1];
-  return { env, call, oauth, mail, people, merges, deletes, codeFromMail };
+  return { env, call, oauth, mail, people, merges, deletes, codeFromMail, pictures };
 }
 
 test('a guest gets a session; the database keeps only its hash', async () => {
@@ -86,7 +95,7 @@ test('a guest gets a session; the database keeps only its hash', async () => {
   assert.match(g.data.token, /^[A-Za-z0-9_-]{43}$/);
   assert.deepEqual(
     { ...g.data.user, id: 'x', created: 0 },
-    { id: 'x', name: 'Wren', guest: true, links: [], created: 0 },
+    { id: 'x', name: 'Wren', guest: true, links: [], created: 0, avatar: '', pictures: [], renameAt: 0 },
   );
   assert.equal(g.res.headers.get('Access-Control-Allow-Origin'), 'https://tumult.froglet.games');
   const stored = t.env.DB.raw.prepare('SELECT token_hash FROM sessions').all();
@@ -240,8 +249,10 @@ test('rename, sign out, delete, and the rule for online play', async () => {
   );
   assert.equal(requireAccount(null).status, 401);
   assert.equal(requireAccount(guest).status, 403);
-  const renamed = await t.call('PATCH', '/auth/me', { token: g.data.token, body: { name: '<b>Quill</b>' } });
-  assert.equal(renamed.data.user.name, '<b>Quill</b>', 'stored as typed; screens escape it');
+  const html = await t.call('PATCH', '/auth/me', { token: g.data.token, body: { name: '<b>Quill</b>' } });
+  assert.equal(html.res.status, 400, 'markup is not a name');
+  const renamed = await t.call('PATCH', '/auth/me', { token: g.data.token, body: { name: 'Quill' } });
+  assert.equal(renamed.data.user.name, 'Quill');
   assert.equal((await t.call('PATCH', '/auth/me', { token: g.data.token, body: { name: '   ' } })).res.status, 400);
   const back = await t.oauth('google', g.data.token);
   const full = await authenticate(
@@ -249,7 +260,7 @@ test('rename, sign out, delete, and the rule for online play', async () => {
     t.env,
   );
   assert.equal(requireAccount(full), null);
-  assert.equal(full.name, '<b>Quill</b>', 'a name the player chose is kept when linking');
+  assert.equal(full.name, 'Quill', 'a name the player chose is kept when linking');
   await t.call('POST', '/auth/signout', { token: g.data.token });
   assert.equal((await t.call('GET', '/auth/me', { token: g.data.token })).res.status, 401);
   assert.equal(
@@ -280,4 +291,106 @@ test('names are one printable line', () => {
   assert.equal(cleanName('a\nb\u202Ec  d'), 'abc d');
   assert.equal(cleanName('x'.repeat(40)).length, 24);
   assert.equal(cleanName(null), '');
+});
+
+test('display names: length, letters, the word filter and reserved words', () => {
+  for (const ok of ['Shombith', 'Cassidy', 'Grape', "Jo's Crew", 'Rosh-7', 'Dickens', 'Essex', 'Ñandú', 'Hancock'])
+    assert.equal(nameProblem(ok), '', ok);
+  for (const bad of [
+    'ab',
+    'x'.repeat(21),
+    '12345',
+    '<b>',
+    'Admin',
+    'TUMULT',
+    'Guest 1234',
+    'sh1t',
+    'Fuuuck',
+    'Big Dick',
+  ])
+    assert.notEqual(nameProblem(bad), '', bad);
+  assert.equal(clean('Ass Kicker'), false, 'a short word on its own');
+  assert.equal(clean('Classy'), true, 'inside another word it passes');
+  assert.equal(cleanAvatar('p:BANDIT'), 'p:BANDIT');
+  assert.equal(cleanAvatar('initials'), 'initials');
+  assert.equal(cleanAvatar('google'), 'google');
+  assert.equal(cleanAvatar(''), '');
+  assert.equal(cleanAvatar('p:../x'), null);
+  assert.equal(cleanAvatar('https://evil.example/x.png'), null);
+  assert.equal(pictureUrl('https://lh3.googleusercontent.com/a/x'), 'https://lh3.googleusercontent.com/a/x');
+  assert.equal(pictureUrl('http://lh3.googleusercontent.com/a/x'), null);
+  assert.equal(pictureUrl('https://evil.example/a.png'), null);
+});
+
+test("an account's name is its own, checked while typing, and changes once a day", async () => {
+  const t = setup();
+  const a = await t.oauth('google');
+  const b = await t.oauth('discord');
+  const ta = a.tumult_session;
+  const tb = b.tumult_session;
+  assert.equal((await t.call('GET', '/auth/me', { token: ta })).data.user.name, 'Ada');
+  const check = (token, name) => t.call('GET', '/auth/name?name=' + encodeURIComponent(name), { token });
+  assert.deepEqual((await check(tb, 'Moss')).data, { ok: true, problem: '' });
+  assert.equal((await check(tb, ' a D a ')).data.ok, false, 'case and spaces do not make a new name');
+  assert.equal((await check(ta, 'ADA')).data.ok, true, 'your own name is yours');
+  const taken = await t.call('PATCH', '/auth/me', { token: tb, body: { name: 'ada' } });
+  assert.equal(taken.res.status, 409);
+  assert.match(taken.data.message, /already flies as/);
+  const bad = await t.call('PATCH', '/auth/me', { token: tb, body: { name: 'sh1thead' } });
+  assert.equal(bad.res.status, 400);
+  const ok = await t.call('PATCH', '/auth/me', { token: tb, body: { name: 'Moss' } });
+  assert.equal(ok.data.user.name, 'Moss');
+  assert.ok(ok.data.user.renameAt > Date.now(), 'the next change waits a day');
+  const again = await t.call('PATCH', '/auth/me', { token: tb, body: { name: 'Wren' } });
+  assert.equal(again.res.status, 429);
+  const recase = await t.call('PATCH', '/auth/me', { token: tb, body: { name: 'MOSS' } });
+  assert.equal(recase.data.user.name, 'MOSS', 'a change of case is free');
+  // the database itself refuses two accounts with one name
+  assert.throws(() => t.env.DB.raw.prepare("UPDATE users SET name_key = 'ada' WHERE name = 'MOSS'").run());
+});
+
+test('a guest becoming an account takes a free, clean name', async () => {
+  const t = setup();
+  await t.oauth('google'); // Ada
+  const g = await t.call('POST', '/auth/guest', {});
+  const back = await t.oauth('google', g.data.token); // same Google: folds into Ada
+  assert.ok(back.tumult_session);
+  const g2 = await t.call('POST', '/auth/guest', {});
+  t.people.discord = { id: 'd-9', global_name: 'Ada' };
+  await t.oauth('discord', g2.data.token);
+  const u = (await t.call('GET', '/auth/me', { token: g2.data.token })).data.user;
+  assert.match(u.name, /^Ada \d{4}$/, 'a taken name gets digits');
+  const g3 = await t.call('POST', '/auth/guest', { body: { name: 'Twat' } });
+  t.people.discord = { id: 'd-10', global_name: 'Nice' };
+  await t.oauth('discord', g3.data.token);
+  assert.match((await t.call('GET', '/auth/me', { token: g3.data.token })).data.user.name, /^Pilot \d{4}$/);
+});
+
+test('avatars: a pilot painting, or the sign-in picture served through us', async () => {
+  const t = setup();
+  const a = await t.oauth('google');
+  const tok = a.tumult_session;
+  const me = (await t.call('GET', '/auth/me', { token: tok })).data.user;
+  assert.deepEqual(me.pictures, ['google']);
+  assert.equal(
+    (await t.call('PATCH', '/auth/me', { token: tok, body: { avatar: 'p:BANDIT' } })).data.user.avatar,
+    'p:BANDIT',
+  );
+  assert.equal((await t.call('PATCH', '/auth/me', { token: tok, body: { avatar: 'javascript:x' } })).res.status, 400);
+  const nope = await t.call('PATCH', '/auth/me', { token: tok, body: { avatar: 'discord' } });
+  assert.equal(nope.res.status, 400, 'no Discord picture to show');
+  assert.equal((await t.call('GET', '/auth/picture/' + me.id)).res.status, 404, 'a painting is not served here');
+  await t.call('PATCH', '/auth/me', { token: tok, body: { avatar: 'google' } });
+  const pic = await t.call('GET', '/auth/picture/' + me.id);
+  assert.equal(pic.res.status, 200);
+  assert.equal(pic.res.headers.get('Content-Type'), 'image/png');
+  assert.deepEqual(t.pictures, ['https://lh3.googleusercontent.com/a/ada=s96-c']);
+  const who = await authenticate(new Request(API + '/x', { headers: { Authorization: 'Bearer ' + tok } }), t.env);
+  assert.equal(who.avatar, 'google', 'the lobby hears the avatar');
+  await t.call('PATCH', '/auth/me', { token: tok, body: { avatar: '' } });
+  assert.equal((await t.call('GET', '/auth/picture/' + me.id)).res.status, 404, 'initials: nothing to serve');
+  const d = await t.oauth('discord', tok);
+  assert.ok(d.tumult_session);
+  const both = (await t.call('GET', '/auth/me', { token: tok })).data.user;
+  assert.deepEqual(both.pictures.sort(), ['discord', 'google']);
 });

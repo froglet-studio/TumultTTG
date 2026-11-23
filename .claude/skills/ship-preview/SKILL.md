@@ -23,12 +23,31 @@ npm run docs           only if cards, enemies or missions changed; commit what i
 
 And the working agreements in `CLAUDE.md`: a rules change has a test; a balance change has before/after numbers from `node tools/sim.js 40` for the PR; a change to the saved shape raises `T.SAVE_VERSION` with a migration and a fixture. A player-facing change bumps the version in `package.json` and `package-lock.json`, adds a `CHANGELOG.md` entry and rewrites the playtest NOTES (`src/ui/playtest.js`). After a failure, re-run only what failed while you fix it.
 
+## 2.5 CI or fast: ask the person once
+
+CI repeats what `npm run check` just did on this machine, and waiting for it is most of a ship's time (about 4 minutes on the pull request, and as long again on `bleeding-edge` before a launch). So before pushing, ask the person once, in one question (a decision card or a plain question, whichever the session has), unless they already said in the command (`/ship-preview fast`, "no CI", "skip CI", or "wait for CI"):
+
+- **Wait for CI** (the safe default): sections 3 to 5 as written.
+- **Fast, local check only**: the `npm run check` from section 2, on the very tree being merged, is the gate. Merge as soon as GitHub allows it, without waiting for the checks (an admin co-owner may merge past a pending check: the pull request shows `mergeable_state` `unstable`, not `blocked`). If GitHub refuses (`blocked`), turn on auto-merge for the pull request (squash) so it merges itself the moment CI passes, and go on. CI still runs: read it once on the next wake, and if it went red, fix forward at once and tell the person.
+
+Recommend **Fast** when the change is UI, content or docs and `npm run check` passed on the exact tree; recommend **Wait** when it touches `server/`, `.github/`, the saved shape (`T.SAVE_VERSION`) or the engine's rules, or when `bleeding-edge` moved and was merged in after the local check (then run `npm run check` again, or wait). Ask again on the next ship; an answer covers this ship only.
+
 ## 3. Commit, push, pull request
 
 - Commits: `type(scope): summary`, imperative, about 72 characters, one logical change each, with the `Co-Authored-By:` and `Claude-Session:` trailers.
 - `git push -u origin <branch>`.
 - Open the pull request into **`bleeding-edge`**: what changed, why, the gate results, any sim numbers, and "Affects: <person>'s <area>" when it touches someone else's work. Changes under `.github/` need a code owner's review; say so and stop at the PR.
-- Subscribe to the PR's activity and wait for CI (`build + test (Node 22)`, `build + test (Node 24)`, `preview`). Red is yours to fix: find the cause, push the fix; never skip a test.
+- **Fast** (section 2.5): merge now (section 4) and skip the wait below. **Wait for CI**: subscribe to the PR's activity and wait for CI (`build + test (Node 22)` and `preview`; a change to only Markdown or skills passes at once), the way **Waiting without stalling** below says. Red is yours to fix: find the cause, push the fix; never skip a test.
+
+### Waiting without stalling
+
+A session that ends its turn "waiting for CI" and counts on a PR event to wake it can sit there until the person writes again: an event can be late, lost, or about an older commit. The person should never have to nudge a ship along. So:
+
+- **Never end a turn with nothing set to wake you.** CI takes about 5 minutes. In a cloud session, start a background wait first (Bash with `run_in_background`, `sleep 360`), then end the turn; the wait's end wakes you. On a computer with `gh`, `gh pr checks <n> --watch --fail-fast` blocks until CI ends instead.
+- **On every wake, read the checks yourself** for the PR's current head (the GitHub check runs, or `gh pr checks <n>`), never only the event. A "check suite completed" event names a `head_sha`: if it is not the head you pushed last, it is about an older commit and proves nothing.
+- **Still running:** start another wait and end the turn. **All green:** merge at once, in the same turn. **Red:** fix it now.
+- After three waits with CI still not done, tell the person what is stuck (the run's link), and keep one wait going.
+- The same goes for every workflow `/ship-launch` waits on (Publish to froglet.games, Deploy game server, Preview).
 
 ## 4. Merge
 
@@ -43,4 +62,4 @@ Reply in one message: what shipped, the PR link, and the review link (https://tu
 
 ## 6. If the backend changed
 
-Anything under `server/` is not deployed by a merge. Tell the person to run `npx wrangler@4.42.0 deploy` from `server/` (and `npx wrangler@4.42.0 d1 migrations apply tumult --remote` for a new migration), or run it where the session is signed in to Cloudflare. Check `<worker>/api/health` afterwards (the address is in `server/address.json`).
+Nothing to deploy by hand. Only when this PR changed `server/`, `src/engine/`, `src/data/`, `src/manifest.json` or `tools/build-server.mjs` (`git diff --name-only origin/bleeding-edge...HEAD`), add one line to the reply: the game server updates itself when this reaches `main` with `/ship-launch` (**Deploy game server**, `.github/workflows/worker.yml`), and until then https://tumult.pages.dev still talks to the server that is live. Otherwise say nothing about the server.

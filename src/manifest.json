@@ -13,6 +13,7 @@
     "data/canon.js",
     "engine/generators.js",
     "engine/engine.js",
+    "engine/hybrids.js",
     "engine/vehicles.js",
     "engine/ai.js",
     "engine/lookahead.js",
@@ -28,24 +29,32 @@
     "ui/icons.js",
     "ui/keywords.js",
     "ui/core.js",
+    "ui/overworld.js",
     "ui/sea.js",
     "ui/party.js",
     "ui/pilots.js",
     "ui/after.js",
+    "ui/fauna.js",
     "ui/mission.js",
     "ui/feel.js",
+    "ui/show.js",
     "ui/atlas.js",
     "ui/canon.js",
     "ui/welcome.js",
     "ui/telemetry.js",
     "ui/account.js",
     "ui/shell.js",
+    "ui/nav.js",
     "ui/settings.js",
     "ui/crew.js",
+    "ui/pick.js",
+    "ui/draft.js",
     "ui/binder.js",
     "ui/guide.js",
     "ui/home.js",
-    "ui/vehicles.js"
+    "ui/profile.js",
+    "ui/vehicles.js",
+    "ui/audio.js"
   ],
   "css": [
     "ui/style.css",
@@ -58,10 +67,17 @@
     "ui/welcome.css",
     "ui/sea.css",
     "ui/hud.css",
+    "ui/fauna.css",
+    "ui/show.css",
     "ui/journey.css",
+    "ui/overworld.css",
     "ui/after.css",
     "ui/shell.css",
-    "ui/home.css"
+    "ui/home.css",
+    "ui/profile.css",
+    "ui/audio.css",
+    "ui/pick.css",
+    "ui/draft.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],
@@ -75,9 +91,16 @@
       "ui/net.js",
       "ui/canon-net.js",
       "ui/heroes-net.js",
+      "ui/social.js",
       "web/analytics.js"
     ],
     "css": ["ui/net.css"]
+  },
+  "audio": {
+    "comment": "Cosmic Shore's music and effects (assets/README.md). The web version names every file by its content and fetches each when it is first wanted; the offline file inlines every effect and only the music listed under offline, so it stays a reasonable size.",
+    "sfx": "assets/audio/sfx",
+    "music": "assets/audio/music",
+    "offline": ["cosmic-shore-3-loop"]
   },
   "art": {
     "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",
@@ -87,6 +110,11 @@
         "family": "Chakra Petch",
         "weight": 600,
         "file": "assets/fonts/ChakraPetch-SemiBold.woff2"
+      },
+      {
+        "family": "Cinzel",
+        "weight": 700,
+        "file": "assets/fonts/Cinzel-Bold.woff2"
       }
     ]
   }

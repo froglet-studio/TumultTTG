@@ -15,8 +15,27 @@ it to the phone layout.
 | Your table               | `lobby` (host)         | The open table: its choices (still changeable), the code and invite link, the seats, people online to invite, and Start.                                                             |
 | Waiting room             | `lobby` (guest)        | A guest at a table, before the host starts.                                                                                                                                          |
 | Join a game              | `join`                 | A code box, the player's name, sign in, and the games being played.                                                                                                                  |
-| Lobby panel              | a drawer on any screen | Games (being played, with Join or Rejoin) and People (who is online, signed in). Opened from the Lobby chip in the top bar.                                                          |
+| Lobby panel              | a drawer on any screen | "Drawer plus" (Shombith's pick, Frogma, 2026-11-22): a drawer with a glowing edge and three tabs. Games: tables being played, with Join on an open seat, Ask to join on one mid-mission, Rejoin on yours. People: who is online, a find box, friends first, with Join, Invite and Add. Requests: friend requests, asks to join your table and invites, with Accept and ✕. A person's row opens their card beside the drawer: their pilots, expeditions, hearts and canon notes, and the ways to play with them. |
 | Waiting during the draft | `draft`, step `wait`   | A player whose pilot is ready while others draft: every seat and whether its pilot is ready.                                                                                         |
+
+## The look: Home 4, "Fog prow" (2026-11-22)
+
+Shombith picked Home 4 from the board's *Home screen (Nov 22)* page. The landing and Home share it:
+
+- **A captain stands behind the screen**: a pilot's painting, full size in the web version (`assets/scenes-hd`,
+  1536×864), named on a plate at the bottom left (callsign, name, clades). Every 10 seconds another pilot, drawn at
+  random, fades in over the last: the new painting comes in from a blur while the old one fades out, and the plate
+  fades and rises with it (`U.homeRotate`). It stands still with motion Off or Reduced, and while the page is hidden.
+  The choice is the screen's own, not the game's, so it is not seeded.
+- **The command column on the right**: the Continue panel (a light runs round its border; the route as a row of
+  marks), the setup, then Host a table, Join a game and Make a pilot as bordered rows with an icon.
+- **HyperSea's colours** (Cosmic Shore's UI style guide): deep indigo, cyan for what is chosen or hovered, lime for
+  the one button to press (a breathing glow and a sweeping shine). Corners are cut, never rounded.
+- On a phone the column fills the width and the plate is left out.
+- **Motion**: the setup unfolds with its rows rising in turn, and stays as the player left it while they pick
+  (`U.setupOpen`; a re-render does not replay the opening). Everything pressable answers the pointer: a tab's
+  underline grows from its middle, the gear turns, rows and tiles lift and glow cyan, a choice glows when picked.
+  All of it stops with motion Off or Reduced.
 
 ## The new-expedition setup
 
@@ -47,8 +66,11 @@ Every online piece is optional, so the offline file is still a whole game:
 - `U.net` (`src/ui/net.js`): hosting, joining, the games list. Without it, Host and Join are not shown.
 - The backend's `lobby` capability (`T.Backend.use('lobby')`, `src/web/backend-worker.js`): the People
   tab, the online count on the Lobby chip, and inviting from the table.
+- `U.social` (`src/ui/social.js`, web only): friends, requests, invites and profile cards. Without it
+  the Lobby shows the games and who is online, and asks for a sign-in for the rest.
 - `T.Account` (`src/ui/account.js`): Sign in in the top bar and on Join; a signed-in player's name is
-  used at the table. `U.askSignIn` opens the sign-in sheet.
+  used at the table. `U.askSignIn` opens the sign-in window, "Split hero" (Shombith's pick, 2026-11-22):
+  the captain behind Home on the left, the reasons and the sign-in buttons on the right.
 - `U.shell(tab, html)` (`src/ui/shell.js`): the shared top bar and phone tabs. Home puts the Lobby chip
   and the player's avatar in its right side through `U.shellRight`. Without the shell, Home draws a bar
   of its own.

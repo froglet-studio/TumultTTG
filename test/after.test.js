@@ -36,9 +36,8 @@ async function open() {
 /** Start a run with two pre-made pilots and end the first mission as `won`, the way Continue on the mission does. */
 function toReward({ T, U, click }, won) {
   click('[data-act="newRun"]');
+  click('[data-act="spotPilot"][data-arg="cavitt"]');
   click('[data-act="prebuilt"][data-arg="cavitt"]');
-  click('[data-act="confirmHero"]');
-  click('[data-act="prebuilt"][data-arg="kess"]');
   click('[data-act="confirmHero"]');
   const run = U.run;
   const id = run.available.find((i) => !['haven', 'event'].includes(run.map.all[i].type));
@@ -60,7 +59,7 @@ test('After a mission: victory picks a trait per pilot with the old commands', {
     const run = toReward(ctx, true);
     assert.equal(U.screen, 'reward');
     assert.match(d.querySelector('.am-big').textContent, /Victory/);
-    assert.equal(d.querySelectorAll('.am-tab').length, 2, 'a tab for each pilot');
+    assert.equal(d.querySelectorAll('.am-tab').length, 0, 'one pilot needs no tabs');
     // pick the second offered trait, then take it
     const second = run.lastReward.offers[0][1];
     click(`[data-act="amRwCard"][data-arg="0|${second}"]`);
@@ -68,8 +67,6 @@ test('After a mission: victory picks a trait per pilot with the old commands', {
     assert.ok(d.querySelector('[data-act="rewardDone"]').disabled, 'onward waits for every pilot');
     click('[data-act="takeCard"]');
     assert.ok(run.heroes[0].cards.includes(second), 'the picked trait joins the kit');
-    click('[data-act="amRwHero"][data-arg="1"]');
-    click('[data-act="skipCard"][data-arg="1"]');
     click('[data-act="rewardDone"]');
     assert.equal(U.screen, 'map');
   } finally {
@@ -82,9 +79,8 @@ test('After a mission: a full kit exchanges a trait through the swap view', { sk
   const { d, T, U, click } = ctx;
   try {
     click('[data-act="newRun"]');
+    click('[data-act="spotPilot"][data-arg="cavitt"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
-    click('[data-act="confirmHero"]');
-    click('[data-act="prebuilt"][data-arg="kess"]');
     click('[data-act="confirmHero"]');
     const run = U.run;
     const h = run.heroes[0];
@@ -148,6 +144,40 @@ test('After a mission: the upgrade view grows and awakens a card', { skip, timeo
     ctx.dom.window.close();
   }
 });
+
+test(
+  'After a mission: the upgrade view awakens a pet’s Ethereal faces one a point',
+  { skip, timeout: 60_000 },
+  async () => {
+    const ctx = await open();
+    const { d, T, U, click } = ctx;
+    try {
+      const run = toReward(ctx, true);
+      const h = run.heroes[0];
+      const rec = T.newPet(run);
+      assert.ok(T.givePet(h, rec, h.cards.length >= T.RULES.MAX_CARDS ? h.cards[0] : undefined).ok);
+      h.upUnspent = Math.max(h.upUnspent, 2);
+      click('[data-act="train"][data-arg="0"]');
+      click(`[data-act="amUpCard"][data-arg="0|${rec.card}"]`);
+      click('[data-act="amUpFace"][data-arg="E"]');
+      const first = T.CARD[rec.card].E.n;
+      assert.match(
+        d.querySelector('.am-upside').textContent,
+        new RegExp('Awaken ' + first.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+      );
+      click('.am-up [data-act="upRun"][data-arg$="|E|1"]');
+      assert.equal(T.heroE(h, rec.card), 1, 'E 1 on the pet card');
+      assert.ok(T.faceAwake(h, rec.card, 'E') && !T.faceAwake(h, rec.card, 'E2'), 'one face awake');
+      assert.match(
+        d.querySelector('.am-upside').textContent,
+        new RegExp('Awaken ' + T.CARD[rec.card].E2.n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+      );
+      click('[data-act="closeModal"]');
+    } finally {
+      ctx.dom.window.close();
+    }
+  },
+);
 
 test('After a mission: a loss the lifeline carries, then the end screens', { skip, timeout: 60_000 }, async () => {
   const ctx = await open();

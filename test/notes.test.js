@@ -148,8 +148,6 @@ test('UI: the box beside End turn keeps a line of story in the log', { skip, tim
     click('[data-act="newRun"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
     click('[data-act="confirmHero"]');
-    click('[data-act="prebuilt"][data-arg="kess"]');
-    click('[data-act="confirmHero"]');
     click('.mnode.avail');
     const m = U.run.mission;
     const box = d.getElementById('turnNote');

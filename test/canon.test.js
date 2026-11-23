@@ -273,7 +273,9 @@ test(
   { skip, timeout: 60_000 },
   async () => {
     const { d, click, errors, records } = await page();
+    click('[data-act="pickPlayers"][data-arg="2"]'); // two pilots to draft: the second skips the question
     click('[data-act="newRun"]');
+    click('[data-act="spotPilot"][data-arg="cavitt"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
     assert.ok(d.querySelector('.canon-ask .canon-detail'), 'the question sits under the upgrades');
     const key = 'draft0';
@@ -296,6 +298,7 @@ test(
     assert.match(r.claim, /never speak of it\.$/);
     assert.ok(r.shown.endsWith('?'), 'the detail and the question travel with the answer');
     // skipping is answering nothing
+    click('[data-act="spotPilot"][data-arg="marish"]');
     click('[data-act="prebuilt"][data-arg="marish"]');
     click('[data-act="confirmHero"]');
     assert.equal(records().length, 1);
@@ -307,6 +310,7 @@ test(
     click('[data-act="canonAsk"]');
     click('[data-act="closeModal"]');
     d.defaultView.T.UI.startDraft(); // a new expedition's draft, however Home is laid out
+    click('[data-act="spotPilot"][data-arg="ossa"]');
     click('[data-act="prebuilt"][data-arg="ossa"]');
     assert.ok(!d.querySelector('.canon-ask'), 'no question once turned off');
     assert.deepEqual(errors, []);

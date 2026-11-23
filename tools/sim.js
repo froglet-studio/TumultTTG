@@ -19,7 +19,7 @@
  *             `--player weak` is the quick look.
  *   --tide    the run's difficulty, a key of T.TIDES (default rising).
  *   --length  how long a run's expedition is, a key of T.LENGTHS (default full; runs only).
- *   --pilots  the squad's size, 2 to 5 (default 2); the missions scale to it (src/engine/scaling.js).
+ *   --pilots  the squad's size, 1 to 5 (default 2); the missions scale to it (src/engine/scaling.js).
  *   --level   every pilot's level (default 1): what pilots bring back from earlier expeditions.
  *   --pets    every pilot has a pet (src/data/pets.js) in place of its last trait (missions only).
  *   --noscale the missions do not answer the squad's power (to see what the scaling buys).
@@ -71,7 +71,7 @@ for (let i = 0; i < argv.length; i++) {
     continue;
   }
   if (argv[i] === '--pilots') {
-    pilots = Math.max(2, Math.min(5, parseInt(argv[++i], 10) || 2));
+    pilots = Math.max(1, Math.min(5, parseInt(argv[++i], 10) || 2));
     console.log(`pilots ${pilots}`);
     continue;
   }
@@ -103,7 +103,7 @@ for (let i = 0; i < argv.length; i++) {
     continue;
   }
   if (argv[i] === '--noscale') {
-    for (const k of ['power', 'boss']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 0;
+    for (const k of ['power', 'boss', 'under']) for (const f of Object.keys(T.SCALING[k])) T.SCALING[k][f] = 0;
     console.log('no scaling');
     continue;
   }

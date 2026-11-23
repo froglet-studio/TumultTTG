@@ -390,7 +390,7 @@
       gen(rng, tier, tide, page) {
         const up = tideAt(tide, tier);
         const b = boardFor(rng, page, 4, 3, { corridors: 1 });
-        const kind = pick(rng, ['bulwark', 'harrier', 'tidecaller']);
+        const kind = pick(rng, ['bulwark', 'harrier', 'tidecaller', 'rival']);
         const starts = [b.at['0,1'], b.at['0,2']];
         const enemies = [
           { type: kind, node: b.at['3,1'] },
@@ -408,7 +408,11 @@
           starts,
           enemies,
           eliteKind: kind,
-          objective: { kind: 'kill', text: `Destroy the ${T.ENEMIES[kind].name}`, target: kind },
+          objective: {
+            kind: 'kill',
+            text: kind === 'rival' ? 'Defeat the rival pilot' : `Destroy the ${T.ENEMIES[kind].name}`,
+            target: kind,
+          },
           clock: null,
           spawns: [],
           bonus: [

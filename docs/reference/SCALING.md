@@ -1,6 +1,6 @@
 # Scaling: missions that answer the squad
 
-Since 2.76 a squad flies two to five pilots, and a pilot a player made keeps its growth from one expedition to the next (Garrett, 2026-11-20: "create formulas for scaling maps etc. based on the player's level and the size of their party… a new adventure can scale with their upgrades"). Every mission is still written for **two new pilots**; this page is how it grows when the squad is bigger or more seasoned. Code: `src/engine/scaling.js` (`T.SCALING`, `T.scaleFor`, `T.squadPower`, `T.scaleSpec`, `T.pilotLevel`).
+Since 2.76 a squad flies two to five pilots, and since 2.124 one: a lone player flies one pilot (Garrett, 2026-11-22: "solo only needs one character. Then if people want to play more they can use the hotseat"), and a pilot a player made keeps its growth from one expedition to the next (Garrett, 2026-11-20: "create formulas for scaling maps etc. based on the player's level and the size of their party… a new adventure can scale with their upgrades"). Every mission is still written for **two new pilots**; this page is how it grows when the squad is bigger or more seasoned, and how it gives back when the squad is a lone pilot. Code: `src/engine/scaling.js` (`T.SCALING`, `T.scaleFor`, `T.squadPower`, `T.scaleSpec`, `T.pilotLevel`).
 
 Everything here is a number a table can work out before the mission starts.
 
@@ -39,6 +39,40 @@ Before 2.110 the squad's size and its *average* level were two separate numbers;
 - **Two new pilots add nothing.** Their missions are byte-identical to 2.75's (`test/scaling.test.js`).
 
 The route shows the squad's power as a ⚖ pill, and every stop card shows the numbers it will be played with.
+
+**Foe levels (2.134).** The squad's power also levels its foes' hybrid cards: a level for every 10 points past 20, one less for every 10 short (`spec.foeLv`, `docs/reference/MISSIONS_AND_BESTIARY.md`, Hybrid foes).
+
+## A lone pilot (2.124)
+
+A squad short of two new pilots' power gets some of the mission back. For every point of power short of 20 (`T.SCALING.under`), rounded to the nearest:
+
+| | per point short of 20 | so a lone new pilot (10 short) |
+|---|---|---|
+| each foe's vitality | −4% | 60% |
+| fewer foes | ⅕ | 2 fewer |
+| objective (seals, rounds held, caches, valve turns, marks, kills) | −⅒ | 1 less |
+| a swarm's cap | −⅒ | 1 smaller |
+| every clock the tide shortens (not a hold's) | +⅒ round | 1 round longer |
+
+- **Fewer foes** are the mission's own rank and file, the last placed first (the tide's escorts, then the crew), never its boss, elite or Spawners, and never the last foe on the board.
+- **The Heart** has no objective to give back, so its foes lose another 1.5% vitality per point short (45% for a lone new pilot, `T.SCALING.boss.under`).
+- **A seasoned lone pilot** gets back less, a level at a time: at level 11 (power 20) it meets the missions two new pilots meet, and past it they grow as for anyone else. Rounding to the nearest means a lone pilot keeps the easier objective and clock up to level 5.
+- **Ally faces.** A face whose only target is "your ally" has no target with one pilot. It is still useful in any squad of two or more; a lone pilot simply plays its other face or another card.
+
+Solo play needs only one pilot; a player who wants to fly two or more picks that many players and plays every seat at one screen (hot-seat), and the missions scale for that squad as before.
+
+**Measured** (`node tools/sim.js 40 missions --pilots 1`; full runs `80 runs --pilots 1`). Mean win rate over the 25 mission cells, and full runs on the Steady wind:
+
+| | heuristic | look-ahead |
+|---|---|---|
+| two new pilots (unchanged, byte-identical) | 77.4% | 91.4% |
+| one new pilot, unscaled (2.123 rules) | 28.5% | 65.2% |
+| one new pilot, scaled | 69.4% | 91.5% |
+| the Heart: two / one unscaled / one scaled | 3% / 0% / 8% | 63% / 3% / 33% |
+| runs won: two / one | 0/80 / 5/80 | 31/80 / 25/80 |
+| missions won in runs: two / one | 68% / 69% | 85% / 83% |
+
+A lone pilot is about as likely to win a mission as two, and a little less likely to end the Heart; the heuristic player, a floor, finds solo harder at tier 3 (its swarms and Salvage), and the look-ahead player finds the Crossing a little easier. Two to five pilots meet exactly the missions they met before.
 
 ## Before and after 2.110 (power)
 
@@ -83,4 +117,5 @@ If every pilot is down when a mission ends, the expedition is over, whatever the
 
 - Whether a level should scale **the Heart's rules** (more Spawners, a faster flood) rather than only its vitality and spawn.
 - Whether **gear and boons** should come home with a pilot. Today only traits and points do.
+- Whether a lone pilot should get something for the faces that reach only an ally (today they have no target solo).
 - Bigger squads crowd a fifteen-space page. Larger pages for big squads would be an atlas change (pages are one fixed board each).

@@ -39,6 +39,7 @@
     help: 'play',
     codex: 'play',
     map: 'route',
+    routeWait: 'route',
     pilots: 'pilots',
     pilot: 'pilots',
     maker: 'pilots',
@@ -95,17 +96,23 @@
       case 'play':
         U.screen = 'title';
         break;
-      case 'route':
-        if (!hasRoute()) {
-          U.toast('No expedition on its route yet. Start one from Play.');
-          return true;
+      case 'route': {
+        // the saved expedition, when this screen has not opened it yet (after a reload)
+        const saved = !U.run && T.loadRun ? T.loadRun() : null;
+        if (saved && !saved.over) U.run = saved;
+        // no route to show yet (no expedition, or its squad still drafting): the Route page says so, under the tabs
+        if (!hasRoute() || U.run.phase === 'draft') {
+          U.screen = 'routeWait';
+          break;
         }
         U.screen = ['reward', 'haven', 'event', 'garage'].includes(U.run.phase)
           ? U.run.phase
           : U.run.mission
             ? 'mission'
             : 'map';
+        if (U.screen === 'mission' && !U.ms && U.enterMission) U.enterMission(); // opened from a reload
         break;
+      }
       case 'pilots':
         U.crew = Object.assign(U.crew || {}, { open: null });
         U.screen = 'pilots';
@@ -130,6 +137,34 @@
     U.render();
     return true;
   };
+
+  /** The Route tab before there is a route: an expedition still picking its pilots, or none at all. */
+  U.renderRouteWait = function () {
+    const drafting = U.run && !U.run.over && U.run.phase === 'draft';
+    const n = drafting ? (U.run.heroes || []).length : 0;
+    const body = drafting
+      ? U.emptyState({
+          icon: '⚑',
+          tone: 'gold',
+          title: n ? 'Your squad is still being picked' : 'Pick your pilots first',
+          text: n
+            ? `${n} pilot${n > 1 ? 's' : ''} picked so far. The route opens once every seat has a pilot.`
+            : 'This expedition has no pilots yet. Pick them and the route opens here.',
+          act: 'continueRun',
+          label: n ? 'Pick the next pilot' : 'Pick your pilots',
+        })
+      : U.emptyState({
+          icon: '⚑',
+          tone: 'cyan',
+          title: 'No expedition yet',
+          text: 'Start one from Play: pick your pilots and the route opens here.',
+          act: 'tab',
+          arg: 'play',
+          label: 'Start an expedition',
+        });
+    return U.shell('route', `<div class="route-wait">${body}</div>`);
+  };
+  (U.SCREENS = U.SCREENS || {}).routeWait = U.renderRouteWait;
 
   /* ───────────── empty states and errors: one look ───────────── */
   /**

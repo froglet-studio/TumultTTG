@@ -5,7 +5,10 @@
 
    GET /api/lobby?session=<token>  (WebSocket)
    Client → lobby  { op: 'status', status: { where: 'menu' | 'solo' | 'game', open: { code, players, max } | null } }
-   Lobby → client  { type: 'online', players: [{ id, name, guest, where, open }], at }
+   Client → lobby  { op: 'nudge', to: <user id> }   "I left you a note": that player's screens re-read their inbox
+   Client → lobby  { op: 'me' }   "I changed my name or avatar": the lobby reads them again from the accounts
+   Lobby → client  { type: 'online', players: [{ id, name, guest, avatar, where, open }], at }
+   Lobby → client  { type: 'nudge', from: <user id> }
 
    Only what a player chose to show is shown: their display name, whether they are in the menu, playing
    solo or in an online game, and a game's code only when its host opened it to the lobby. A screen
@@ -44,6 +47,7 @@ export function listOf(entries) {
       id: e.uid,
       name: e.name || (e.guest ? 'Guest' : 'Player'),
       guest: e.guest,
+      avatar: e.avatar || '',
       where: e.status.where,
       open: e.status.open,
     }));
@@ -70,6 +74,7 @@ export class Presence {
       uid: user.userId,
       name: String(user.name || '').slice(0, 24),
       guest: !!user.guest,
+      avatar: String(user.avatar || '').slice(0, 52),
       since: Date.now(),
       status: cleanStatus(null),
     });
@@ -83,6 +88,8 @@ export class Presence {
     } catch {
       return;
     }
+    if (m && m.op === 'nudge') return this.nudge(ws, m.to);
+    if (m && m.op === 'me') return this.reread(ws);
     if (!m || m.op !== 'status') return;
     const me = ws.deserializeAttachment();
     me.status = cleanStatus(m.status);
@@ -100,6 +107,52 @@ export class Presence {
   }
   async webSocketError() {
     this.soon();
+  }
+  /** Read a player's name and avatar again (they changed them), at most once every few seconds. */
+  async reread(ws) {
+    const me = ws.deserializeAttachment();
+    const now = Date.now();
+    if (!me || !this.env || !this.env.DB || now - (me.reread || 0) < 3000) return;
+    me.reread = now;
+    ws.serializeAttachment(me);
+    let row = null;
+    try {
+      row = await this.env.DB.prepare('SELECT name, avatar, guest FROM users WHERE id = ?').bind(me.uid).first();
+    } catch {
+      return;
+    }
+    if (!row) return;
+    for (const s of this.ctx.getWebSockets()) {
+      try {
+        const a = s.deserializeAttachment();
+        if (a.uid !== me.uid) continue;
+        a.name = String(row.name || '').slice(0, 24);
+        a.avatar = String(row.avatar || '').slice(0, 52);
+        a.guest = !!row.guest;
+        s.serializeAttachment(a);
+      } catch {
+        /* going */
+      }
+    }
+    this.soon();
+  }
+  /** Tell one player's screens that a note is waiting for them (an account may send a few a minute). */
+  nudge(ws, to) {
+    const me = ws.deserializeAttachment();
+    if (!me || me.guest || typeof to !== 'string' || to === me.uid) return;
+    const now = Date.now();
+    me.nudges = (me.nudges || []).filter((t) => now - t < 60000);
+    if (me.nudges.length >= 20) return;
+    me.nudges.push(now);
+    ws.serializeAttachment(me);
+    const text = JSON.stringify({ type: 'nudge', from: me.uid });
+    for (const s of this.ctx.getWebSockets()) {
+      try {
+        if (s.deserializeAttachment().uid === to) s.send(text);
+      } catch {
+        /* going */
+      }
+    }
   }
   /** Send the list soon: a burst of comings and goings makes one list. */
   soon() {

@@ -759,11 +759,1367 @@
   border-radius: 12px;
 }
 
+/* ---------- Home 4, "Fog prow" (Frogma - Tumult, Home screen (Nov 22)) ----------
+   HyperSea's colours (Cosmic Shore's style guide): deep indigo, cyan for what is chosen, lime for the
+   one thing to press. The painting keeps the left of the screen; the command column stands on the
+   right; the captain is named on a plate at the bottom left. Corners are cut, never rounded. */
+.home {
+  --hs-ground: #00041f;
+  --hs-line: #434c89;
+  --hs-cyan: #00d4ff;
+  --hs-lime: #99ff80;
+  --hs-violet: #a600ff;
+  --hs-text: #e6e9ff;
+  --hs-soft: #9aa0cc;
+  --hs-cut: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  --hs-cut-s: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+.home .hm-eyebrow {
+  color: var(--hs-cyan);
+  letter-spacing: 0.34em;
+}
+.home .hm-scene-img {
+  opacity: 0;
+  filter: blur(8px) brightness(0.55) saturate(1.2);
+  transition:
+    opacity 1.4s ease,
+    filter 1.4s ease;
+}
+.home .hm-scene-img.on {
+  opacity: 1;
+  filter: none;
+}
+.home:not(.is-page) .hm-veil {
+  background:
+    linear-gradient(270deg, rgba(0, 4, 31, 0.95) 0%, rgba(0, 4, 31, 0.72) 32%, rgba(0, 4, 31, 0) 60%),
+    linear-gradient(0deg, rgba(0, 4, 31, 0.75), transparent 32%);
+}
+.home:not(.is-page) .hm-hero {
+  margin-left: auto;
+  width: min(540px, 46vw);
+  max-width: none;
+  box-sizing: border-box;
+  padding: clamp(20px, 6vh, 72px) var(--hm-pad) 48px 0;
+}
+/* the panel that leads: a light runs round its border */
+@property --hm-a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+.hm-panel {
+  position: relative;
+  padding: 28px 30px 26px;
+  margin-bottom: 4px;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.8);
+  backdrop-filter: blur(12px);
+  isolation: isolate;
+}
+.hm-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: conic-gradient(
+    from var(--hm-a),
+    rgba(67, 76, 137, 0.9) 0deg,
+    rgba(0, 212, 255, 0.95) 40deg,
+    rgba(166, 0, 255, 0.85) 80deg,
+    rgba(67, 76, 137, 0.9) 130deg,
+    rgba(67, 76, 137, 0.9) 360deg
+  );
+  animation: hm-spin 5s linear infinite;
+}
+.hm-panel::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.9);
+}
+@keyframes hm-spin {
+  to {
+    --hm-a: 360deg;
+  }
+}
+.home .hm-panel .hm-display {
+  margin: 10px 0 14px;
+  font-size: clamp(36px, 4vw, 58px);
+}
+.home .hm-panel .hm-lede {
+  color: #c3c8ee;
+  font-size: 16px;
+}
+.hm-pips {
+  display: flex;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+.hm-pips i {
+  width: 26px;
+  height: 6px;
+  background: #222645;
+}
+.hm-pips i.done {
+  background: var(--hs-cyan);
+  box-shadow: 0 0 8px var(--hs-cyan);
+}
+.hm-pips i.now {
+  background: var(--hs-lime);
+  box-shadow: 0 0 10px var(--hs-lime);
+  animation: hm-blink 1.6s ease-in-out infinite;
+}
+@keyframes hm-blink {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+/* the one thing to press: lime, a glow that breathes and a shine that sweeps across */
+.home button.hm-cta,
+.home button.primary.hm-cta {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  background: var(--hs-lime);
+  color: var(--hs-ground);
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  animation: hm-glow 2.6s ease-in-out infinite;
+}
+.home .hm-panel .hm-ctas > .hm-cta {
+  flex: 1 1 100%;
+}
+.home button.hm-cta::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  left: -80px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+  transform: skewX(-20deg);
+  animation: hm-sweep 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+.home button.hm-cta:hover {
+  filter: brightness(1.08);
+}
+@keyframes hm-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 16px rgba(153, 255, 128, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 34px rgba(153, 255, 128, 0.7);
+  }
+}
+@keyframes hm-sweep {
+  0%,
+  55% {
+    left: -80px;
+  }
+  100% {
+    left: 120%;
+  }
+}
+/* the setup and the other ways in: bordered, cut, cyan when chosen */
+.home .hm-setup {
+  border: 1px solid var(--hs-line);
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.66);
+  backdrop-filter: blur(10px);
+}
+.home .hm-setup[open] {
+  border-color: var(--hs-cyan);
+  box-shadow: 0 0 24px rgba(0, 212, 255, 0.18);
+}
+.home .hs-seg {
+  border-radius: 0;
+  border-color: var(--hs-line);
+}
+.home .hs-opt.on {
+  background: var(--hs-cyan);
+  color: var(--hs-ground);
+}
+.home .hm-acts {
+  flex-direction: column;
+}
+.home .hm-act {
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  min-height: 62px;
+  padding: 12px 18px;
+  border: 1px solid var(--hs-line);
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  background: rgba(0, 4, 31, 0.62);
+  backdrop-filter: blur(10px);
+  color: var(--hs-text);
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.home .hm-act:hover,
+.home .hm-act:focus-visible {
+  border-color: var(--hs-cyan);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 212, 255, 0.35),
+    0 0 24px rgba(0, 212, 255, 0.22);
+  transform: translateX(-3px);
+}
+.home .hm-act.hm-back {
+  border-color: var(--hs-lime);
+}
+.hm-act-t {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.home .hm-act-t > span {
+  color: var(--hs-soft);
+}
+.hm-ic {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  color: var(--hs-cyan);
+}
+/* the captain's plate */
+.hm-plate {
+  position: fixed;
+  left: var(--hm-pad);
+  bottom: 40px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 40vw;
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s ease;
+}
+.hm-plate.out {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.hm-plate-face {
+  width: 84px;
+  height: 84px;
+  object-fit: cover;
+  clip-path: var(--hs-cut);
+  border: 1px solid var(--hs-cyan);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.35);
+}
+.hm-plate-txt {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.8);
+}
+.hm-plate-lab {
+  font-family: var(--serif);
+  font-size: 11px;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--hs-cyan);
+}
+.hm-plate-name {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+}
+.hm-plate-sub {
+  font-size: 13px;
+  color: #c3c8ee;
+}
+/* motes drifting up through the painting */
+.hm-motes {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hm-motes i {
+  position: absolute;
+  bottom: -10px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--hs-text);
+  box-shadow: 0 0 8px var(--hs-cyan);
+  opacity: 0;
+  animation: hm-mote 13s linear infinite;
+}
+.hm-motes i:nth-child(1) {
+  left: 3%;
+  animation-delay: 0s;
+  animation-duration: 11s;
+}
+.hm-motes i:nth-child(2) {
+  left: 11%;
+  animation-delay: 1.1s;
+  animation-duration: 12.6s;
+}
+.hm-motes i:nth-child(3) {
+  left: 19%;
+  animation-delay: 2.2s;
+  animation-duration: 14.2s;
+}
+.hm-motes i:nth-child(4) {
+  left: 27%;
+  animation-delay: 3.3s;
+  animation-duration: 15.8s;
+}
+.hm-motes i:nth-child(5) {
+  left: 35%;
+  animation-delay: 4.4s;
+  animation-duration: 17.4s;
+}
+.hm-motes i:nth-child(6) {
+  left: 43%;
+  animation-delay: 5.5s;
+  animation-duration: 11s;
+}
+.hm-motes i:nth-child(7) {
+  left: 51%;
+  animation-delay: 6.6s;
+  animation-duration: 12.6s;
+}
+.hm-motes i:nth-child(8) {
+  left: 59%;
+  animation-delay: 7.7s;
+  animation-duration: 14.2s;
+}
+.hm-motes i:nth-child(9) {
+  left: 67%;
+  animation-delay: 8.8s;
+  animation-duration: 15.8s;
+}
+.hm-motes i:nth-child(10) {
+  left: 75%;
+  animation-delay: 9.9s;
+  animation-duration: 17.4s;
+}
+.hm-motes i:nth-child(11) {
+  left: 83%;
+  animation-delay: 11s;
+  animation-duration: 11s;
+}
+.hm-motes i:nth-child(12) {
+  left: 91%;
+  animation-delay: 12.1s;
+  animation-duration: 12.6s;
+}
+@keyframes hm-mote {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(-70vh);
+    opacity: 0;
+  }
+}
+.home .title-cap,
+.home .hm-squad,
+.home.has-run .hm-squad {
+  display: none;
+}
+.home.is-landing .hm-display {
+  font-size: clamp(38px, 4.2vw, 62px);
+}
+.home button.hm-big,
+.home .hm-ctas > button.ghost {
+  border: 1px solid var(--hs-line);
+  border-radius: 0;
+  clip-path: var(--hs-cut-s);
+  background: rgba(0, 4, 31, 0.6);
+  color: var(--hs-text);
+  min-height: 54px;
+}
+.home button.hm-big:hover {
+  border-color: var(--hs-cyan);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+}
+.home .hm-tile {
+  border-radius: 0;
+  clip-path: var(--hs-cut);
+  border-color: var(--hs-line);
+  background: rgba(0, 4, 31, 0.66);
+}
+.home .hm-tile b {
+  color: var(--hs-text);
+}
+.home.is-landing .hm-tiles {
+  right: auto;
+  left: var(--hm-pad);
+  bottom: 150px;
+  position: fixed;
+}
+@media (max-width: 1199px) {
+  .home.is-landing .hm-tiles {
+    display: none;
+  }
+}
+
+/* ---------- motion: the setup unfolds, and everything you can press answers the pointer ---------- */
+.home .hm-setup[open]:not(.hm-quiet) .hm-setup-body {
+  animation: hm-unfold 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.home .hm-setup[open]:not(.hm-quiet) .hs-row,
+.home .hm-setup[open]:not(.hm-quiet) .hs-foot,
+.home .hm-setup[open]:not(.hm-quiet) .hs-again {
+  animation: hm-rise 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.home .hm-setup[open]:not(.hm-quiet) .hs-row:nth-of-type(1) {
+  animation-delay: 0.04s;
+}
+.home .hm-setup[open]:not(.hm-quiet) .hs-row:nth-of-type(2) {
+  animation-delay: 0.08s;
+}
+.home .hm-setup[open]:not(.hm-quiet) .hs-row:nth-of-type(3) {
+  animation-delay: 0.12s;
+}
+.home .hm-setup[open]:not(.hm-quiet) .hs-row:nth-of-type(4) {
+  animation-delay: 0.16s;
+}
+.home .hm-setup[open]:not(.hm-quiet) .hs-foot {
+  animation-delay: 0.22s;
+}
+@keyframes hm-unfold {
+  from {
+    clip-path: inset(0 0 100% 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+@keyframes hm-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.home .hm-setup {
+  transition:
+    border-color 0.25s,
+    box-shadow 0.25s;
+}
+.home .hm-setup > summary {
+  transition: background 0.2s;
+}
+.home .hm-setup > summary:hover {
+  background: rgba(0, 212, 255, 0.07);
+}
+.home .hm-setup:not([open]):hover {
+  --hs-edge: var(--hs-cyan);
+  border-color: var(--hs-cyan);
+  box-shadow: 0 0 22px rgba(0, 212, 255, 0.2);
+}
+.home .hm-setup > summary::after {
+  transition: transform 0.3s ease;
+}
+.home .hs-opt {
+  position: relative;
+  transition:
+    background 0.22s,
+    color 0.22s,
+    box-shadow 0.22s;
+}
+.home .hs-opt:not(.on):not(:disabled):hover {
+  background: rgba(0, 212, 255, 0.12);
+  color: #fff;
+  box-shadow: inset 0 -2px 0 var(--hs-cyan);
+}
+.home .hs-opt.on {
+  box-shadow: 0 0 16px rgba(0, 212, 255, 0.45);
+}
+.home .hs-opt:active:not(:disabled),
+.home .hm-act:active,
+.home button.hm-big:active {
+  transform: scale(0.97);
+}
+.home button.hm-cta {
+  transition:
+    transform 0.18s ease,
+    filter 0.18s;
+}
+.home button.hm-cta:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1) saturate(1.1);
+}
+.home button.hm-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+.home .hm-act .hm-ic {
+  transition:
+    transform 0.25s ease,
+    filter 0.25s;
+}
+.home .hm-act:hover .hm-ic {
+  transform: scale(1.12);
+  filter: drop-shadow(0 0 6px var(--hs-cyan));
+}
+.home .hs-again {
+  transition:
+    border-color 0.2s,
+    color 0.2s,
+    background 0.2s;
+}
+.home .hs-again:hover {
+  border-color: var(--hs-cyan);
+  color: #fff;
+  background: rgba(0, 212, 255, 0.08);
+}
+.home button.hm-big,
+.home .hm-tile {
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s;
+}
+.home button.hm-big:hover,
+.home .hm-tile:hover {
+  transform: translateY(-2px);
+}
+.home .hm-tile:hover {
+  --hs-edge: var(--hs-cyan);
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.22);
+}
+.home .hm-plate-face {
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
+}
+.home .hm-plate:hover .hm-plate-face {
+  transform: scale(1.05);
+  box-shadow: 0 0 26px rgba(0, 212, 255, 0.6);
+}
+/* the top bar: a tab's underline grows from its middle, the gear turns. None of them takes the
+   plain button's box on hover (style.css): the logo, the tabs and the setup's choices light up instead */
+.sh-logo:hover:not(:disabled),
+.sh-tab:hover:not(:disabled),
+.home .hm-link:hover:not(:disabled) {
+  background: none;
+  border-color: transparent;
+  box-shadow: none;
+  transform: none;
+}
+.sh-tab:hover:not(:disabled) {
+  color: #fff;
+  background: linear-gradient(0deg, rgba(0, 212, 255, 0.1), transparent 70%);
+}
+.home .hs-opt:hover:not(:disabled) {
+  transform: none;
+  border-color: var(--hs-line);
+}
+.home .hs-opt:last-child:hover {
+  border-color: transparent;
+}
+.sh-top .sh-logo:focus-visible,
+.sh-top .sh-tab:focus-visible {
+  outline: none;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(0, 212, 255, 0.8);
+}
+.sh-tab {
+  position: relative;
+  transition:
+    color 0.2s,
+    background 0.2s;
+}
+.sh-tab::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  height: 2px;
+  background: var(--cy);
+  box-shadow: 0 0 8px var(--cy);
+  transition:
+    left 0.25s ease,
+    right 0.25s ease;
+}
+.sh-tab:not(.on):hover::after,
+.sh-tab:not(.on):focus-visible::after {
+  left: 16px;
+  right: 16px;
+}
+.sh-logo {
+  transition:
+    text-shadow 0.25s,
+    color 0.25s;
+}
+.sh-logo:hover:not(:disabled) {
+  color: #fff;
+  text-shadow: 0 0 14px rgba(0, 212, 255, 0.7);
+}
+.sh-gear {
+  transition:
+    transform 0.4s ease,
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+.sh-gear:hover {
+  transform: rotate(60deg);
+  border-color: var(--cy);
+  box-shadow: 0 0 14px rgba(0, 212, 255, 0.35);
+}
+.sh-right > button:not(.sh-gear),
+.sh-right > a {
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s,
+    border-color 0.2s;
+}
+.sh-right > button:not(.sh-gear):hover,
+.sh-right > a:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 0 14px rgba(0, 212, 255, 0.3);
+}
+:root[data-motion='off'] .home .hm-setup-body,
+:root[data-motion='off'] .home .hs-row,
+:root[data-motion='off'] .home .hs-foot,
+:root[data-motion='off'] .home .hs-again {
+  animation: none !important;
+}
+:root[data-motion='off'] .home *,
+:root[data-motion='off'] .sh-top * {
+  transition-duration: 0s !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .home .hm-setup-body,
+  .home .hs-row,
+  .home .hs-foot,
+  .home .hs-again {
+    animation: none !important;
+  }
+  .home *,
+  .sh-top * {
+    transition-duration: 0s !important;
+  }
+}
+
+.hm-keep {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--hs-soft, #9aa0cc);
+}
+.home button.hm-keep-btn {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  color: var(--hs-cyan);
+  cursor: pointer;
+  background-image: linear-gradient(var(--hs-cyan), var(--hs-cyan));
+  background-size: 0 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.25s ease;
+}
+.home button.hm-keep-btn:hover:not(:disabled) {
+  background: none;
+  background-image: linear-gradient(var(--hs-cyan), var(--hs-cyan));
+  background-size: 100% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  box-shadow: none;
+  transform: none;
+}
+
+/* ---------- the Lobby, "Drawer plus" (Frogma - Tumult, Sign in + Lobby (Nov 22), Lobby 1) ----------
+   A drawer from the right with a glowing cyan edge; Games, People and Requests tabs with a lit underline;
+   rows that lift and glow on hover; a player's card flying out beside it. HyperSea colours, cut corners. */
+.lb-bg {
+  --lb-ground: #00041f;
+  --lb-line: #2f3670;
+  --lb-line2: #434c89;
+  --lb-cyan: #00d4ff;
+  --lb-lime: #99ff80;
+  --lb-violet: #a600ff;
+  --lb-text: #e6e9ff;
+  --lb-soft: #9aa0cc;
+  --lb-mute: #747bad;
+  --lb-cut: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  background: rgba(0, 2, 16, 0.5);
+  backdrop-filter: blur(2px);
+  animation: lb-fade 0.3s ease both;
+}
+@keyframes lb-fade {
+  from {
+    opacity: 0;
+  }
+}
+.hm-lobby.lb {
+  width: min(460px, 100%);
+  background: linear-gradient(180deg, rgba(0, 6, 40, 0.97), rgba(0, 2, 18, 0.98));
+  border-left: 1px solid var(--lb-cyan);
+  box-shadow:
+    -1px 0 24px rgba(0, 212, 255, 0.35),
+    -30px 0 60px rgba(0, 0, 0, 0.5);
+  color: var(--lb-text);
+  position: relative;
+  animation:
+    lb-in 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both,
+    lb-edge 3.2s ease-in-out infinite;
+}
+.hm-lobby.lb::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lb-cyan), transparent);
+}
+@keyframes lb-in {
+  from {
+    transform: translateX(60px);
+    opacity: 0;
+  }
+}
+@keyframes lb-edge {
+  0%,
+  100% {
+    box-shadow:
+      -1px 0 16px rgba(0, 212, 255, 0.25),
+      -30px 0 60px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    box-shadow:
+      -1px 0 34px rgba(0, 212, 255, 0.55),
+      -30px 0 60px rgba(0, 0, 0, 0.5);
+  }
+}
+.lb-still,
+.lb-still .hm-lobby.lb {
+  animation-name: none, lb-edge;
+}
+.lb-still {
+  animation: none;
+}
+.lb-h {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 24px 24px 14px;
+}
+.lb-h > b {
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-size: 24px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.lb-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 28px;
+  padding: 0 12px;
+  border: 1px solid rgba(153, 255, 128, 0.45);
+  color: var(--lb-lime);
+  font-size: 12px;
+}
+.lb-pill i,
+.lb-dot.on {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lb-lime);
+  box-shadow: 0 0 8px var(--lb-lime);
+  animation: lb-blink 1.8s ease-in-out infinite;
+}
+@keyframes lb-blink {
+  50% {
+    opacity: 0.4;
+  }
+}
+.lb-bg button.lb-x {
+  margin-left: auto;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--lb-line2);
+  border-radius: 0;
+  clip-path: var(--lb-cut);
+  background: rgba(0, 4, 31, 0.6);
+  color: var(--lb-soft);
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    transform 0.3s;
+}
+.lb-bg button.lb-x:hover:not(:disabled) {
+  color: #fff;
+  border-color: var(--lb-cyan);
+  background: rgba(0, 212, 255, 0.1);
+  box-shadow: none;
+  transform: rotate(90deg);
+}
+.lb-tabs {
+  display: flex;
+  margin: 0 24px;
+  border-bottom: 1px solid var(--lb-line);
+}
+.lb-tabs button {
+  position: relative;
+  flex: 1;
+  height: 44px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lb-mute);
+}
+.lb-tabs button::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  bottom: -1px;
+  height: 2px;
+  background: var(--lb-cyan);
+  box-shadow: 0 0 10px var(--lb-cyan);
+  transition:
+    left 0.3s ease,
+    right 0.3s ease;
+}
+.lb-tabs button.on {
+  color: #fff;
+}
+.lb-tabs button.on::after,
+.lb-tabs button:hover::after {
+  left: 14px;
+  right: 14px;
+}
+.lb-tabs button:hover:not(:disabled) {
+  background: linear-gradient(0deg, rgba(0, 212, 255, 0.08), transparent);
+  color: #fff;
+  border: 0;
+  box-shadow: none;
+  transform: none;
+}
+.lb-tabs em {
+  font-style: normal;
+  margin-left: 6px;
+  padding: 1px 6px;
+  font-size: 10px;
+  background: var(--lb-violet);
+  color: #fff;
+  box-shadow: 0 0 10px rgba(166, 0, 255, 0.7);
+  animation: lb-blink 1.8s ease-in-out infinite;
+}
+.lb-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lb-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.lb-find {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--lb-line2);
+  clip-path: var(--lb-cut);
+  background: rgba(0, 4, 31, 0.7);
+  color: var(--lb-mute);
+  transition: border-color 0.2s;
+}
+.lb-find:focus-within {
+  border-color: var(--lb-cyan);
+  box-shadow: inset 0 0 0 1px rgba(0, 212, 255, 0.3);
+}
+.lb-find input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--lb-text);
+  font-size: 14px;
+}
+.lb-person,
+.lb-req,
+.lb-game {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--lb-line);
+  clip-path: var(--lb-cut);
+  background: rgba(0, 4, 31, 0.72);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s,
+    transform 0.2s,
+    background 0.2s;
+  animation: lb-rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.lb-game {
+  flex-direction: column;
+  align-items: stretch;
+  cursor: default;
+}
+.lb-still .lb-person,
+.lb-still .lb-req,
+.lb-still .lb-game {
+  animation: none;
+}
+@keyframes lb-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.lb-person:hover,
+.lb-person:focus-visible,
+.lb-person.on,
+.lb-game:hover,
+.lb-req:hover {
+  border-color: var(--lb-cyan);
+  background: rgba(0, 18, 60, 0.8);
+  box-shadow:
+    inset 0 0 0 1px rgba(0, 212, 255, 0.25),
+    0 0 22px rgba(0, 212, 255, 0.22);
+  transform: translateX(-3px);
+  outline: none;
+}
+.lb-av {
+  position: relative;
+  flex: 0 0 auto;
+}
+.lb-face,
+.lb-av .hm-av,
+.lb-game-top .hm-av {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 0;
+  clip-path: var(--lb-cut);
+  border: 1px solid var(--lb-line2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.lb-dot {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  border: 2px solid var(--lb-ground);
+}
+.lb-dot.away {
+  background: #ffc94d;
+  box-shadow: 0 0 8px #ffc94d;
+}
+.lb-who {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.lb-who b {
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.lb-who > span {
+  font-size: 12px;
+  color: var(--lb-mute);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.lb-acts {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.lb-tag {
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border: 1px solid var(--lb-line2);
+  color: var(--lb-soft);
+}
+.lb-tag.cy {
+  border-color: var(--lb-cyan);
+  color: var(--lb-cyan);
+}
+.lb-tag.go {
+  border-color: var(--lb-lime);
+  color: var(--lb-lime);
+}
+.lb-tag.pu {
+  border-color: var(--lb-violet);
+  color: #d9a6ff;
+}
+.lb-bg button.lb-btn {
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--lb-line2);
+  border-radius: 0;
+  clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
+  background: rgba(0, 4, 31, 0.6);
+  color: var(--lb-text);
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    transform 0.18s,
+    box-shadow 0.2s,
+    background 0.2s,
+    border-color 0.2s;
+}
+.lb-bg button.lb-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--lb-cyan);
+  background: rgba(0, 212, 255, 0.12);
+  box-shadow: 0 0 14px rgba(0, 212, 255, 0.35);
+}
+.lb-bg button.lb-btn.go {
+  border: 0;
+  background: var(--lb-lime);
+  color: var(--lb-ground);
+  box-shadow: 0 0 14px rgba(153, 255, 128, 0.4);
+}
+.lb-bg button.lb-btn.go:hover:not(:disabled) {
+  background: #b5ffa3;
+  box-shadow: 0 0 24px rgba(153, 255, 128, 0.7);
+}
+.lb-bg button.lb-btn.cy {
+  border-color: var(--lb-cyan);
+  color: var(--lb-cyan);
+}
+.lb-bg button.lb-btn.pu {
+  border-color: var(--lb-violet);
+  color: #d9a6ff;
+}
+.lb-bg button.lb-btn.pu:hover:not(:disabled) {
+  background: rgba(166, 0, 255, 0.16);
+  box-shadow: 0 0 16px rgba(166, 0, 255, 0.45);
+}
+.lb-bg button.lb-btn.wide {
+  flex: 1;
+  height: 44px;
+}
+.lb-game-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.lb-seats {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+}
+.lb-seat {
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--lb-line2);
+  font-size: 10px;
+  color: var(--lb-soft);
+  background: rgba(0, 212, 255, 0.06);
+}
+.lb-seat.open {
+  border: 1px dashed var(--lb-lime);
+  color: var(--lb-lime);
+  background: none;
+  animation: lb-blink 2s ease-in-out infinite;
+}
+.lb-seatn {
+  margin-left: auto;
+  font-size: 11.5px;
+  color: var(--lb-mute);
+}
+.lb-note {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--lb-mute);
+}
+.lb-empty {
+  padding: 26px 18px;
+  border: 1px dashed var(--lb-line);
+  text-align: center;
+  color: var(--lb-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.lb-empty p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.lb-foot {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px 22px;
+  border-top: 1px solid var(--lb-line);
+}
+.lb-bg button.lb-host {
+  position: relative;
+  overflow: hidden;
+  flex: 1.2;
+  height: 44px;
+  border: 0;
+  border-radius: 0;
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+  background: var(--lb-lime);
+  color: var(--lb-ground);
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: hm-glow 2.6s ease-in-out infinite;
+}
+.lb-bg button.lb-host::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  left: -70px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+  transform: skewX(-20deg);
+  animation: hm-sweep 3.4s ease-in-out infinite;
+}
+.lb-bg button.lb-host:hover:not(:disabled) {
+  background: #b5ffa3;
+  transform: translateY(-2px);
+}
+/* the player's card, beside the drawer */
+.lb-card {
+  position: relative;
+  align-self: flex-start;
+  margin: 110px 20px 0 0;
+  width: min(360px, calc(100vw - 500px));
+  background: rgba(0, 4, 31, 0.97);
+  border: 1px solid var(--lb-cyan);
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+  animation: lb-edge 3.2s ease-in-out infinite;
+  overflow: hidden;
+  color: var(--lb-text);
+}
+.lb-card.fresh {
+  animation:
+    lb-pop 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.15) both,
+    lb-edge 3.2s ease-in-out infinite;
+}
+@keyframes lb-pop {
+  from {
+    opacity: 0;
+    transform: translateX(30px) scale(0.96);
+  }
+}
+.lb-card .lb-x {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  z-index: 2;
+}
+.lb-banner {
+  height: 110px;
+  background: linear-gradient(135deg, #0b1450, #2a0a52) center 30% / cover;
+  position: relative;
+}
+.lb-banner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(0deg, rgba(0, 4, 31, 1), rgba(0, 4, 31, 0.1));
+}
+.lb-card-in {
+  position: relative;
+  margin-top: -42px;
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.lb-card-who {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+}
+.lb-card-who b {
+  display: block;
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-size: 22px;
+}
+.lb-card-who span {
+  font-size: 12px;
+  color: var(--lb-mute);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.lb-card-who .lb-dot {
+  position: static;
+  border: 0;
+}
+.lb-face.big,
+.lb-card-who .hm-av {
+  width: 80px;
+  height: 80px;
+  border: 2px solid var(--lb-cyan);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.5);
+  font-size: 24px;
+  background: var(--lb-ground);
+}
+.lb-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--lb-line);
+}
+.lb-stat {
+  padding: 10px 12px;
+}
+.lb-stat b {
+  display: block;
+  font-family: var(--hd, 'Chakra Petch', sans-serif);
+  font-size: 22px;
+}
+.lb-stat span,
+.lb-lab {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--lb-mute);
+}
+.lb-pilots {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.lb-pilots img {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border: 1px solid var(--lb-line2);
+  transition:
+    transform 0.2s,
+    border-color 0.2s;
+}
+.lb-pilots img:hover {
+  transform: translateY(-2px) scale(1.05);
+  border-color: var(--lb-cyan);
+}
+.lb-card-acts {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+/* a toast with a choice in it (a friend request, an ask to join, an invite) */
+.toast .so-toast-btns {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+@media (max-width: 860px) {
+  .lb-card {
+    position: fixed;
+    inset: auto 12px 12px 12px;
+    width: auto;
+    margin: 0;
+    z-index: 2;
+  }
+}
+:root[data-motion='off'] .lb-bg,
+:root[data-motion='off'] .lb-bg *,
+:root[data-motion='off'] .lb-bg *::after {
+  animation: none !important;
+  transition-duration: 0s !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lb-bg,
+  .lb-bg *,
+  .lb-bg *::after {
+    animation: none !important;
+    transition-duration: 0s !important;
+  }
+}
+
 /* ---------- motion settings ---------- */
 :root[data-motion='off'] .hm-scene-img,
 :root[data-motion='off'] .hm-av.open,
-:root[data-motion='off'] .hm-lobby {
+:root[data-motion='off'] .hm-lobby,
+:root[data-motion='off'] .hm-panel::before,
+:root[data-motion='off'] .home .hm-cta,
+:root[data-motion='off'] .home .hm-cta::after,
+:root[data-motion='off'] .hm-pips i,
+:root[data-motion='off'] .hm-motes {
   animation: none;
+}
+:root[data-motion='off'] .hm-motes {
+  display: none;
 }
 :root[data-motion='reduced'] .hm-scene-img {
   animation: none;
@@ -771,7 +2127,11 @@
 @media (prefers-reduced-motion: reduce) {
   .hm-scene-img,
   .hm-av.open,
-  .hm-lobby {
+  .hm-lobby,
+  .hm-panel::before,
+  .home .hm-cta,
+  .home .hm-cta::after,
+  .hm-motes i {
     animation: none;
   }
 }
@@ -869,7 +2229,55 @@
   .hm-lobby {
     width: 100%;
   }
-  .home .title-cap {
+  .home .title-cap,
+  .hm-plate {
     display: none;
   }
+  .home:not(.is-page) .hm-hero {
+    width: auto;
+    margin-left: 0;
+    padding: 24vh var(--hm-pad) 32px;
+  }
+  .home.has-run:not(.is-page) .hm-hero {
+    padding-top: 16vh;
+  }
+  .home:not(.is-page) .hm-veil {
+    background: linear-gradient(0deg, rgba(0, 4, 31, 0.97) 40%, rgba(0, 4, 31, 0.3) 85%);
+  }
+  .hm-panel {
+    padding: 22px 20px;
+  }
+}
+
+/* the cut corners keep their border: a hairline drawn along each diagonal */
+.home .hm-act,
+.home .hm-setup,
+.home .hm-tile,
+.home button.hm-big,
+.home .hm-ctas > button.ghost {
+  --hs-edge: var(--hs-line);
+  background:
+    linear-gradient(135deg, transparent 9.3px, var(--hs-edge) 9.3px 10.7px, transparent 10.7px) top left / 14px 14px
+      no-repeat,
+    linear-gradient(135deg, transparent 9.3px, var(--hs-edge) 9.3px 10.7px, transparent 10.7px) bottom right / 14px 14px
+      no-repeat,
+    rgba(0, 4, 31, 0.64);
+}
+.home button.hm-big,
+.home .hm-ctas > button.ghost {
+  background:
+    linear-gradient(135deg, transparent 6.4px, var(--hs-edge) 6.4px 7.8px, transparent 7.8px) top left / 10px 10px
+      no-repeat,
+    linear-gradient(135deg, transparent 6.4px, var(--hs-edge) 6.4px 7.8px, transparent 7.8px) bottom right / 10px 10px
+      no-repeat,
+    rgba(0, 4, 31, 0.6);
+}
+.home .hm-act:hover,
+.home .hm-act:focus-visible,
+.home .hm-setup[open],
+.home button.hm-big:hover {
+  --hs-edge: var(--hs-cyan);
+}
+.home .hm-act.hm-back {
+  --hs-edge: var(--hs-lime);
 }

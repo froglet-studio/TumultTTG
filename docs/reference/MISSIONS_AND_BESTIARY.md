@@ -46,6 +46,27 @@ The HP column is the bestiary's own number. Since 2.29 (four dice a turn) every 
 | Tidecaller 🌊 | elite | 12/14/16 | 1 | Undertow 2/3/3 zone + pull 2 · Surge 4/5/6 zone + Weaken | Drags heroes toward hazards; alternate undertow/surge |
 | The Heart 🫀 | boss | 50/61/86 | 0 | Lance 3/4/5 zone · Crush 7/8/9 melee + pull 2 · Call the Swarm | Phase 1: lance its zone, call Biters when few remain. Phase 2: crush and drag, the flood rises |
 
+## Hybrid foes (2.134)
+
+Garrett, 2026-11-22: "make them triple hybrids like the pets. but have the higher level ones able to use both the physical and ethereal powers… Then the scaling formula can upgrade them like you would the player characters." Code: `src/engine/hybrids.js`.
+
+- **Three clades.** Every foe but the Spawners and the Heart comes onto the board as a hybrid of three clades, none human, drawn as it spawns from a stream of the mission's own (`hybrid`), so the board, its foes' kinds and places and the dice are what they were. The unit keeps them as `e.clades`. The role (the table above) is still its body: vitality, speed, policy and its own abilities.
+- **A hybrid card.** Like a pet's, one trait from each clade: their Physical faces (P, P2, P3) and Ethereal faces (E, E2, E3), as `e.hy.traits`. When the card is in hand and one of its faces has something to do this round, the foe telegraphs that face instead of its role's move, Ethereal faces first. Then the card cools for the face's cooldown and one round more, so the role's own move comes between.
+- **A level, as a pilot has one.** A foe's level is its tier, one more for an elite, plus the squad's power past two new pilots' at a level for every 10 (one less for every 10 short, so a lone new pilot meets foes a level lower; `T.foeLevel`, `spec.foeLv`). Its card plays at **P = level − 1** and **E = level − 2** (0 to 3 each), and, as on a pet, E is how many of its Ethereal faces are awake. A tier-1 foe plays Physical faces at P 0; a tier-3 foe has one Ethereal face; an elite at tier 3 two; a tier-3 foe against four pilots all three.
+- **What a face does for a foe** (`T.foeAbility`), in the verbs foes already had: a strike is a melee or zone attack, or an area attack on everyone beside it, and keeps the face's push, pull, root, Weaken and drain; it hits at least as hard as the role's own hardest blow. A face that only hinders (Weaken, a root, a shove) is a 1-damage hex that carries it. A Shield on itself is a **ward**, a heal on itself a **mend**, Hidden a **veil** (Hidden 2); those wait for a round the role has no blow to land, or for a foe at half vitality. Only traits whose Physical face is one of these are drawn; an Ethereal face that is none of them stays unplayed.
+- A table resolves it by hand: roll three clades, draw a trait from each, note the foe's level, and when its card is back, read the first face (Ethereal first) that has a target.
+
+**Measured** (`node tools/sim.js 40`, with `--rule HYBRID_FOES=0` for before). Mean over the 25 mission cells: heuristic 77.4% → 77.2% won, vitality left 72.5% → 70.9%; look-ahead 91.4% → 91.0%, 95.9% → 95.2%. Full runs: heuristic 0/40 both, mission win 66% → 67%; look-ahead 15/40 → 17/40 (within noise at 40 runs), mission win 84% → 87%. Missions are no easier; the foes now differ from one to the next.
+
+## Rival pilots (2.135)
+
+Garrett, 2026-11-22: "you can also put the players up against other Non player characters." An elite stop may be held by a **rival pilot** (`rival`, one of the four elites the Elite archetype draws from): another pilot on the same stretch, on orders of its own. Its objective reads *Defeat the rival pilot*.
+
+- **What a pilot is**: human and two clades (`e.clades[0]` is `human`), with a hybrid card of one trait from each, so it plays a human trait as the squad's pilots do. It flies under a name (`T.RIVAL_NAMES`).
+- **It awakens as a pilot does**: E = level − 1 (a creature's is level − 2), so even at tier 1 it has an Ethereal face awake, and from level 4 all three.
+- **Its own moves**: Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest pilot in its zone, else it closes in. Vitality 15/18/22, speed 2, no Shield, never Hidden on its own.
+- **Measured** (240 elite missions a tier, heuristic player, by elite): tier 2 won 97% with 58% vitality left (Bulwark 60% / 35%, Harrier 100% / 71%, Tidecaller 100% / 82%); tier 3 won 80% with 38% left (Bulwark 35% / 24%, Harrier 98% / 58%, Tidecaller 100% / 75%). It sits between the Bulwark and the others.
+
 Biters called by Spawners and by the Heart are one tier lower than the mission (fodder stays fodder). Swarm waves arrive at the mission's own tier and cap at 3/3/4 live.
 
 ## The DM voice

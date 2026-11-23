@@ -62,7 +62,7 @@
   /** What a setup says in a sentence, for the line under the choices and for "Same as last time". */
   function setupLine(s) {
     const wind = T.TIDES[s.tide].n;
-    if (s.players === 1) return `Solo: you draft and fly the whole squad. ${wind}.`;
+    if (s.players === 1) return `Solo: you draft and fly one pilot, and the missions answer a squad of one. ${wind}.`;
     const where = s.where === 'online' ? 'online, a screen each' : 'one screen';
     const how = s.rounds === 'live' ? 'you all play each round at once' : 'you take turns';
     const pass = s.where === 'online' ? '' : ', passing it round';
@@ -131,7 +131,19 @@
     if (typeof document === 'undefined') return;
     document.querySelectorAll('[data-lobby-count]').forEach((el) => (el.textContent = lobbyChipText()));
     const p = document.getElementById('lobbyPanel');
-    if (p) p.outerHTML = lobbyPanelHTML();
+    if (p) {
+      // while a name is being typed into Find, only the list changes
+      const typing = document.activeElement && document.activeElement.id === 'lobbyFind';
+      const tmp = document.createElement('div');
+      tmp.innerHTML = lobbyPanelHTML();
+      const fresh = tmp.firstChild;
+      fresh.classList.add('lb-still'); // already open: no slide-in again
+      if (typing) {
+        const list = fresh.querySelector('#lobbyList');
+        const here = document.getElementById('lobbyList');
+        if (list && here) here.outerHTML = list.outerHTML;
+      } else p.replaceWith(fresh);
+    }
     const ppl = document.getElementById('hostPeople');
     if (ppl) ppl.innerHTML = peopleRows(true);
   }
@@ -152,7 +164,7 @@
     const who = !A
       ? ''
       : signedIn()
-        ? `<button class="hm-me" data-act="account" data-tip="${esc(u.name || 'Your account')}" aria-label="Your account">${face(u.name)}</button>`
+        ? `<button class="hm-me" data-act="account" data-tip="${esc(u.name || 'Your profile')}" aria-label="Your profile">${U.myAvatarHTML ? U.myAvatarHTML('hm-av') : face(u.name)}</button>`
         : `<button class="ghost sm hm-signin" data-act="signIn">Sign in</button>`;
     return lobby + who;
   }
@@ -166,22 +178,113 @@
     return `<div class="home ${cls || ''}"><header class="hm-bar"><span class="hm-brand">TUMULT</span><nav class="hm-nav"><button class="hm-link" data-act="help">How to play</button><button class="hm-link" data-act="atlas">Atlas</button><button class="hm-link" data-act="codex">Codex</button><button class="hm-link" data-act="canonList">Canon</button><button class="hm-link" data-act="look" aria-label="Look: the sea, its accent and motion">Look</button><button class="hm-link" data-act="toggleSound" aria-label="Sound">${U.sound ? '🔊' : '🔇'}</button></nav><span class="hm-right">${rightSide()}</span></header>${inner}</div>`;
   }
 
-  /* ───────────── the scene behind Home ───────────── */
-  function backdrop(meta) {
-    const art = U.PILOT_ART || [];
-    if (!art.length || !U.sceneSrc) return '';
-    const who = art[(meta.runs || 0) % art.length];
-    const scene = U.sceneSrc(who);
-    if (!scene) return '';
-    const cap = `<div class="title-cap"><b>${esc(who.name)}</b> · ${esc(U.callsignOf(who))} · ${esc(who.clades.join(' · '))} ${U.canonMark ? U.canonMark('pilot:' + who.key, `${who.name}, callsign ${U.callsignOf(who)}: ${who.clades.join(' and ')}`, 'title:caption') : ''}</div>`;
-    return `<div class="hm-scene" aria-hidden="true"><div class="hm-scene-img" style="background-image:url(${scene})"></div></div><div class="hm-veil" aria-hidden="true"></div>${cap}`;
+  /* ───────────── the scene behind Home (Home 4, "Fog prow") ───────────── */
+  // A captain stands behind Home: a pilot's painting, named on a plate at the bottom left. Every
+  // ROTATE_MS a different one, drawn at random, fades in over the last (not with motion Off, and not
+  // while the page is hidden). The choice lives here, not in a save, so a re-render keeps the same one.
+  const ROTATE_MS = 10000;
+  const FADE_MS = 1400;
+  let capKey = null;
+  const paintings = () => (U.PILOT_ART || []).filter((a) => U.sceneSrc && U.sceneSrc(a));
+  function pickCaptain(except) {
+    const all = paintings().filter((a) => a.key !== except);
+    return all.length ? all[Math.floor(Math.random() * all.length)] : null; // the UI's own choice, not the game's dice
   }
+  function captain() {
+    const all = paintings();
+    let who = capKey && all.find((a) => a.key === capKey);
+    if (!who) who = pickCaptain();
+    capKey = who ? who.key : null;
+    return who;
+  }
+  U.homeCaptain = () => captain(); // the sign-in window shows the same captain (src/ui/account.js)
+  function plateHTML(who) {
+    const face = U.portraitSrc ? U.portraitSrc(who) : null;
+    const mark = U.canonMark
+      ? U.canonMark(
+          'pilot:' + who.key,
+          `${who.name}, callsign ${U.callsignOf(who)}: ${who.clades.join(' and ')}`,
+          'title:caption',
+        )
+      : '';
+    return `${face ? `<img class="hm-plate-face" src="${face}" alt="" draggable="false">` : ''}<div class="hm-plate-txt"><span class="hm-plate-lab">Captain · ${esc(U.callsignOf(who))}</span><b class="hm-plate-name">${esc(who.name)}</b><span class="hm-plate-sub">${esc(who.clades.map((c) => c[0].toUpperCase() + c.slice(1)).join(' and '))} ${mark}</span></div>`;
+  }
+  function backdrop() {
+    if (!U.sceneSrc) return '';
+    const who = captain();
+    if (!who) return '';
+    return `<div class="hm-scene" aria-hidden="true"><div class="hm-scene-img on" style="background-image:url(${U.sceneSrc(who)})"></div><div class="hm-scene-img"></div></div><div class="hm-veil" aria-hidden="true"></div><div class="hm-motes" aria-hidden="true">${'<i></i>'.repeat(12)}</div><div class="hm-plate">${plateHTML(who)}</div>`;
+  }
+  const still = () =>
+    typeof document === 'undefined' ||
+    document.hidden ||
+    document.documentElement.getAttribute('data-motion') === 'off' ||
+    (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  /** One turn of the rotation: the next captain's painting loads, then fades in over the last. */
+  U.homeRotate = function () {
+    if (U.screen !== 'title' || U.modal || still()) return false;
+    const scene = document.querySelector('.home .hm-scene');
+    const plate = document.querySelector('.home .hm-plate');
+    if (!scene || !plate) return false;
+    const who = pickCaptain(capKey);
+    if (!who) return false;
+    const src = U.sceneSrc(who);
+    const show = () => {
+      if (U.screen !== 'title' || !scene.isConnected) return;
+      const [a, b] = scene.querySelectorAll('.hm-scene-img');
+      const on = a.classList.contains('on') ? a : b;
+      const next = on === a ? b : a;
+      next.style.backgroundImage = `url(${src})`;
+      void next.offsetWidth;
+      next.classList.add('on');
+      on.classList.remove('on');
+      plate.classList.add('out');
+      setTimeout(() => {
+        if (!plate.isConnected) return;
+        plate.innerHTML = plateHTML(who);
+        plate.classList.remove('out');
+      }, FADE_MS / 2);
+      capKey = who.key;
+    };
+    if (typeof Image === 'function' && !/^data:/.test(src)) {
+      const img = new Image();
+      img.onload = show;
+      img.src = src;
+    } else show();
+    return true;
+  };
+  // not in a page with no screen (jsdom, in the tests): a timer there would keep Node running
+  // the setup's fold is the player's: remember it across renders, and let a fresh open play its animation
+  if (typeof document !== 'undefined')
+    document.addEventListener(
+      'toggle',
+      (e) => {
+        const d = e.target;
+        if (!d || !d.classList || !d.classList.contains('hm-setup')) return;
+        U.setupOpen = d.open;
+        if (!d.open) d.classList.remove('hm-quiet');
+      },
+      true,
+    );
+  if (typeof window !== 'undefined' && !/jsdom/i.test((window.navigator && window.navigator.userAgent) || ''))
+    setInterval(U.homeRotate, ROTATE_MS);
 
+  /** The route so far as a row of marks: stops passed, the one ahead (Home 4). */
+  const pips = (w) =>
+    w.stops
+      ? `<div class="hm-pips" aria-label="Stop ${w.stop} of ${w.stops}">${Array.from({ length: w.stops }, (x, i) => `<i class="${i < w.stop - 1 ? 'done' : i === w.stop - 1 ? 'now' : ''}"></i>`).join('')}</div>`
+      : '';
+  const ICON = {
+    host: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M5 12a7 7 0 0114 0M2 12a10 10 0 0120 0"/></svg>',
+    join: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="6" width="18" height="12"/><path d="M7 10h2M11 10h2M15 10h2M8 14h8"/></svg>',
+    make: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 5-7 8-7s7 2 8 7"/><path d="M19 3v4M17 5h4"/></svg>',
+    back: '<svg class="hm-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M9 14l-5-5 5-5"/><path d="M4 9h11a5 5 0 010 10h-3"/></svg>',
+  };
   /** The way back into an online game this screen was in (net.js remembers it). */
   const rejoinTile = () => {
     const m = net() && net().remembered && net().remembered();
     return m
-      ? `<button class="hm-act hm-back" data-act="netRejoin"><b>Rejoin game ${esc(m.code)}${m.role === 'host' ? ' as host' : ''}</b><span>${m.role === 'host' ? 'Your table' : 'The game you were in'}</span></button>`
+      ? `<button class="hm-act hm-back" data-act="netRejoin">${ICON.back}<span class="hm-act-t"><b>Rejoin game ${esc(m.code)}${m.role === 'host' ? ' as host' : ''}</b><span>${m.role === 'host' ? 'Your table' : 'The game you were in'}</span></span></button>`
       : '';
   };
 
@@ -193,7 +296,7 @@
       : '';
     return framed(
       'play',
-      `${backdrop(meta)}<section class="hm-hero hm-land">
+      `${backdrop()}<section class="hm-hero hm-land">
         <span class="hm-eyebrow">A tabletop RPG on the tide</span>
         <h1 class="hm-display">Your squad.<br>One tide.<br>No second try.</h1>
         <p class="hm-lede">Draft a squad of pilots, cross Tumult by land, sea and air to the Heart, and write the world as you play. In your browser, on your own or with friends at the table.</p>
@@ -205,7 +308,7 @@
         <div class="hm-tile"><b>◆ Cards with two faces</b><span>Physical and Ethereal, and they grow as you play</span></div>
         <div class="hm-tile"><b>⛵ A route to the Heart</b><span>Every board is different</span></div>
         <div class="hm-tile"><b>✎ Write the world</b><span>Your notes can become canon</span></div>
-      </aside>`,
+      </aside>${U.lobbyOpen ? lobbyPanelHTML() : ''}`,
       'is-landing',
     );
   }
@@ -223,6 +326,8 @@
       const act = T.actOf(Math.max(0, row));
       const place = run.map.actNames ? run.map.actNames[act] : '';
       out.kick = `Continue · stop ${Math.min(rows, row + 2)} of ${rows}`;
+      out.stop = Math.min(rows, row + 2);
+      out.stops = rows;
       out.title = place || 'On the route';
       if (run.phase === 'mission') out.kick = `Continue · in a mission · stop ${row + 1} of ${rows}`;
     } else out.kick = 'Continue · drafting';
@@ -278,28 +383,36 @@
       ),
     ].join('');
     const go = s.where === 'online' && !solo ? 'hostOpen' : 'newRun';
-    return `<details class="hm-setup"${open ? ' open' : ''}><summary><span class="hm-setup-h">New expedition</span><span class="hm-setup-sum">${esc(short(s))}</span></summary>
+    // a choice re-renders Home: the setup stays as the player left it, and does not replay its opening
+    const kept = U.setupOpen != null;
+    if (kept) open = U.setupOpen;
+    return `<details class="hm-setup${kept && open ? ' hm-quiet' : ''}"${open ? ' open' : ''}><summary><span class="hm-setup-h">New expedition</span><span class="hm-setup-sum">${esc(short(s))}</span></summary>
       <div class="hm-setup-body">${again}${rows}
         <div class="hs-foot"><p class="hs-line">${esc(setupLine(s))}${s.players > 2 ? ' A bigger squad meets bigger missions.' : ''}</p><button class="primary hm-cta" data-act="${go}">${go === 'hostOpen' ? 'Host it ▶' : 'Start ▶'}</button></div>
       </div></details>`;
+  }
+  /** One quiet line under Continue for a player who is not signed in: the expedition lives in this browser only. */
+  function keepNudge() {
+    if (!acct() || signedIn()) return '';
+    return `<p class="hm-keep">Saved in this browser only. <button class="hm-keep-btn" data-act="signIn" data-arg="Sign in to keep your expedition, pilots and saves on any device.">Sign in to keep it on any device</button></p>`;
   }
   function home(meta, run) {
     const w = run ? whereNow(run) : null;
     const games = liveGames();
     const hero = w
-      ? `<span class="hm-eyebrow">${esc(w.kick)}</span><h1 class="hm-display hm-place">${esc(w.title)}</h1>${w.line ? `<p class="hm-lede">${esc(w.line)}</p>` : ''}<div class="hm-ctas"><button class="primary hm-cta" data-act="continueRun">Continue ▶</button></div>`
-      : `<span class="hm-eyebrow">An expedition on Tumult</span><h1 class="hm-display">Tumult</h1><p class="hm-lede">Draft a squad of pilots from Tumult's bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</p>`;
+      ? `<div class="hm-panel"><span class="hm-eyebrow">${esc(w.kick)}</span><h1 class="hm-display hm-place">${esc(w.title)}</h1>${pips(w)}${w.line ? `<p class="hm-lede">${esc(w.line)}</p>` : ''}<div class="hm-ctas"><button class="primary hm-cta" data-act="continueRun">Continue ▶</button></div>${keepNudge()}</div>`
+      : `<div class="hm-panel"><span class="hm-eyebrow">An expedition on Tumult</span><h1 class="hm-display">Tumult</h1><p class="hm-lede">Draft a squad of pilots from Tumult's bloodlines and lead them down from the Ark, across Tumult by land, sea and air, to the Heart at the end of the route. Every turn is a puzzle: four dice, a six-column track, and enemies that tell you what they'll do.</p></div>`;
     const tiles = [];
     if (online()) {
       tiles.push(
-        `<button class="hm-act" data-act="hostOpen"><b>Host a table</b><span>Online, with a code</span></button>`,
+        `<button class="hm-act" data-act="hostOpen">${ICON.host}<span class="hm-act-t"><b>Host a table</b><span>Online, with a code</span></span></button>`,
       );
       tiles.push(
-        `<button class="hm-act" data-act="joinOpen"><b>Join a game</b><span data-games-count>${games.length ? `${games.length} being played now` : 'With a code'}</span></button>`,
+        `<button class="hm-act" data-act="joinOpen">${ICON.join}<span class="hm-act-t"><b>Join a game</b><span data-games-count>${games.length ? `${games.length} being played now` : 'With a code'}</span></span></button>`,
       );
     }
     tiles.push(
-      `<button class="hm-act" data-act="makePilot"><b>Make a pilot</b><span>Bring your own to the draft</span></button>`,
+      `<button class="hm-act" data-act="makePilot">${ICON.make}<span class="hm-act-t"><b>Make a pilot</b><span>Bring your own to the draft</span></span></button>`,
     );
     const back = rejoinTile();
     const squad =
@@ -315,7 +428,7 @@
     const stats = `<div class="hm-stats mute small">Expeditions: ${meta.runs || 0} · Hearts ended: ${meta.wins || 0} · Furthest stop: ${meta.bestRow || 0}/6</div>`;
     return framed(
       'play',
-      `${backdrop(meta)}<section class="hm-hero">${invited()}${hero}${setupPanel(meta, !run)}<div class="hm-acts">${back}${tiles.join('')}</div>
+      `${backdrop()}<section class="hm-hero">${invited()}${hero}${setupPanel(meta, !run)}<div class="hm-acts">${back}${tiles.join('')}</div>
         ${stats}${U.privacyLine ? U.privacyLine() : ''}
         <div class="mute small hm-flavor">${esc(T.FLAVOR.terminalIntro[(meta.runs || 0) % T.FLAVOR.terminalIntro.length])}</div>
         ${U.titleExtra ? U.titleExtra() : ''}</section>${squad}${U.lobbyOpen ? lobbyPanelHTML() : ''}`,
@@ -414,14 +527,14 @@
     if (!lobbyCap) return `<p class="mute small">Sign in to see who is online.</p>`;
     if (!list.length) return `<p class="mute small">Nobody else is online right now.</p>`;
     const where = (p) => {
-      const st = p.status || {};
+      const st = p.status || p;
       if (st.open) return `Hosting a table · ${st.open.players} of ${st.open.max}`;
       return st.where === 'game' ? 'In a game' : st.where === 'solo' ? 'Playing solo' : 'Online';
     };
     return list
       .slice(0, 40)
       .map((p) => {
-        const st = p.status || {};
+        const st = p.status || p;
         const btn =
           st.open && st.open.code && !host
             ? `<button class="sm primary" data-act="netJoinGame" data-arg="${esc(st.open.code)}">Join</button>`
@@ -514,18 +627,201 @@
     return framed('play', body, 'is-page');
   };
 
-  /* ───────────── the Lobby panel (Games, People) ───────────── */
-  function lobbyPanelHTML() {
-    const tab = U.lobbyTab === 'people' ? 'people' : 'games';
-    const g = liveGames().length;
-    const tabs = `<div class="hm-tabs" role="tablist"><button role="tab" class="${tab === 'games' ? 'on' : ''}" aria-selected="${tab === 'games'}" data-act="lobbyTab" data-arg="games">Games${g ? ' ' + g : ''}</button><button role="tab" class="${tab === 'people' ? 'on' : ''}" aria-selected="${tab === 'people'}" data-act="lobbyTab" data-arg="people">People${onlineCount() ? ' ' + onlineCount() : ''}</button></div>`;
-    const games = `<div class="net-games" id="${U.screen === 'join' ? 'netGamesPanel' : 'netGames'}">${U.gamesList ? U.gamesList() : '<p class="mute small">Online play needs the web version.</p>'}</div><p class="small mute">Join a game with an open seat without a code. Mid-mission, you join between missions: you land on the route and draft your pilot there. Your own games come back to you here if you closed the tab.</p>`;
-    const people = `<div class="hm-people-list">${peopleRows(false)}</div><p class="small mute">Everyone signed in and online shows here.</p>`;
-    const foot = online()
-      ? `<div class="hm-lobby-foot"><button class="ghost sm" data-act="joinOpen">Enter a code</button><button class="primary sm" data-act="hostOpen">Host a table</button></div>`
-      : '';
-    return `<div class="hm-lobby-bg" id="lobbyPanel" data-act="lobbyClose"><aside class="hm-lobby" role="dialog" aria-label="Lobby" data-stop="1"><div class="hm-lobby-h"><div><b>Lobby</b><div class="small dim">${onlineCount() ? `● ${onlineCount()} online` : ''}${g ? ` · ${g} game${g > 1 ? 's' : ''}` : ''}</div></div><button class="ghost sm" data-act="lobbyClose" aria-label="Close the Lobby">✕</button></div>${tabs}<div class="hm-lobby-body">${tab === 'games' ? games : people}</div>${foot}</aside></div>`;
+  /* ───────────── the Lobby panel (Lobby 1, "Drawer plus"; Frogma, Sign in + Lobby (Nov 22)) ─────────────
+     A drawer from the right with a glowing edge: Games (each table with its seats and a way in), People
+     (who is online, friends first, with Add, Invite and Join) and Requests (friend requests, asks to join,
+     invites, from src/ui/social.js). A person's row opens their card beside the drawer. */
+  const SOC = () => (U.social && U.social.on() ? U.social : null);
+  let cardFresh = false; // the card was just opened: it flies out (a redraw does not replay it)
+  const stOf = (p) => p.status || p; // the lobby sends { where, open } on the row itself
+  function whereLine(p) {
+    const st = stOf(p);
+    if (st.open) return `Hosting a table · ${st.open.players} of ${st.open.max}`;
+    return st.where === 'game' ? 'In an online game' : st.where === 'solo' ? 'Playing solo' : 'On Home';
   }
+  const dotOf = (p) => (stOf(p).where === 'solo' ? 'away' : 'on');
+  /**
+   * A player's face in the Lobby: the avatar they chose on their profile (src/ui/profile.js), else their
+   * first pilot's portrait when their card has one, else their initials.
+   */
+  function lobbyFace(id, name, cls) {
+    const S = SOC();
+    const card = S && id ? S.card(id) : null;
+    const row = id ? (U.lobbyPeople || []).find((x) => x.id === id) : null;
+    const avatar = (row && row.avatar) || (card && card.avatar) || '';
+    let src = null;
+    if (U.avatarSrc) src = U.avatarSrc({ id, name, avatar }, card);
+    else {
+      const art = card && card.pilots && card.pilots.find((x) => x.art);
+      const a = art && (U.PILOT_ART || []).find((x) => x.key === art.art);
+      src = a && U.portraitSrc ? U.portraitSrc(a) : null;
+    }
+    return src
+      ? `<img class="lb-face ${cls || ''}" src="${src}" alt="" draggable="false">`
+      : face(name, null, `lb-face ${cls || ''}`);
+  }
+  function personActions(p) {
+    const S = SOC();
+    const st = stOf(p);
+    const out = [];
+    if (st.open && st.open.code)
+      out.push(`<button class="lb-btn go" data-act="netJoinGame" data-arg="${esc(st.open.code)}">Join</button>`);
+    else if (S && net() && net().role === 'host' && net().code)
+      out.push(`<button class="lb-btn cy" data-act="socialInvite" data-arg="${esc(p.id)}">Invite</button>`);
+    if (S && !p.guest && p.id !== (me() || {}).id && !S.isFriend(p.id))
+      out.push(
+        S.sent(p.id) === 'friend'
+          ? `<span class="lb-tag pu">Requested</span>`
+          : `<button class="lb-btn" data-act="socialAdd" data-arg="${esc(p.id)}">+ Add</button>`,
+      );
+    return out.join('');
+  }
+  function personRow(p) {
+    const S = SOC();
+    const friend = S && S.isFriend(p.id);
+    return `<div class="lb-person${U.lobbyProfile === p.id ? ' on' : ''}" data-act="lobbyProfile" data-arg="${esc(p.id || '')}" role="button" tabindex="0"><span class="lb-av">${lobbyFace(p.id, p.name)}<i class="lb-dot ${dotOf(p)}"></i></span><span class="lb-who"><b>${esc(p.name || 'A player')}${friend ? ' <span class="lb-tag cy">Friend</span>' : ''}${p.guest ? ' <span class="lb-tag">Guest</span>' : ''}</b><span>${esc(whereLine(p))}</span></span><span class="lb-acts">${personActions(p)}</span></div>`;
+  }
+  function peopleTab() {
+    if (!lobbyCap)
+      return `<div class="lb-empty"><p>Sign in to see who is online, add friends and invite them to your table.</p>${acct() ? '<button class="lb-btn go" data-act="signIn">Sign in</button>' : ''}</div>`;
+    const S = SOC();
+    const q = (U.lobbyFind || '').trim().toLowerCase();
+    const mine = (me() || {}).id;
+    const list = (U.lobbyPeople || [])
+      .filter((p) => p.id !== mine)
+      .filter(
+        (p) =>
+          !q ||
+          String(p.name || '')
+            .toLowerCase()
+            .includes(q),
+      )
+      .sort((a, b) => (S ? S.isFriend(b.id) - S.isFriend(a.id) : 0));
+    const find = `<label class="lb-find"><span aria-hidden="true">⌕</span><input id="lobbyFind" placeholder="Find a player by name" value="${esc(U.lobbyFind || '')}" autocomplete="off"></label>`;
+    const rows = list.length
+      ? list.slice(0, 60).map(personRow).join('')
+      : `<p class="lb-note">${q ? 'Nobody online by that name.' : 'Nobody else is online right now.'}</p>`;
+    const nudge = S ? '' : `<p class="lb-note">Sign in to add friends and send requests.</p>`;
+    return `${find}<div class="lb-list" id="lobbyList">${rows}</div>${nudge}`;
+  }
+  function gameCard(g, i) {
+    const N = net();
+    const mine = N && N.remembered ? N.remembered() : null;
+    const S = SOC();
+    const names = g.names.filter(Boolean);
+    const seats =
+      names.map((n) => `<span class="lb-seat" title="${esc(n)}">${esc(n.slice(0, 1).toUpperCase())}</span>`).join('') +
+      (g.open ? '<span class="lb-seat open">+</span>' : '');
+    const back = mine && mine.code === g.code;
+    const btn = back
+      ? `<button class="lb-btn go" data-act="netRejoin">Rejoin</button>`
+      : g.open
+        ? `<button class="lb-btn go" data-act="netJoinGame" data-arg="${esc(g.code)}">Join ▶</button>`
+        : S && g.by && g.by !== (me() || {}).id
+          ? `<button class="lb-btn pu" data-act="socialAsk" data-arg="${esc(g.by)}">${S.sent(g.by) === 'join' ? 'Asked' : 'Ask to join'}</button>`
+          : '';
+    const tag = g.open
+      ? '<span class="lb-tag go">Open seat</span>'
+      : names.length >= T.MAX_PLAYERS
+        ? '<span class="lb-tag">Full</span>'
+        : '<span class="lb-tag pu">Mid-mission</span>';
+    return `<div class="lb-game" style="animation-delay:${(i * 0.06).toFixed(2)}s"><div class="lb-game-top">${lobbyFace(g.by, g.host || '?')}<span class="lb-who"><b>${esc(g.host || 'Someone')}’s table ${tag}</b><span>${esc(g.stage || '')}${g.pilots.length ? ' · flying ' + esc(g.pilots.slice(0, 3).join(', ')) : ''}</span></span>${btn}</div><div class="lb-seats">${seats}<span class="lb-seatn">${names.length} aboard · <span class="mono">${esc(g.code)}</span></span></div></div>`;
+  }
+  function gamesTab() {
+    const N = net();
+    if (!N) return '<p class="lb-note">Online play needs the web version.</p>';
+    const games = liveGames().filter((g) => g.code !== N.code);
+    const list = games.length
+      ? games.map(gameCard).join('')
+      : '<div class="lb-empty"><p>Nobody is playing online right now. Host a table and it shows here for others to join.</p></div>';
+    return `<div class="lb-list">${list}</div><p class="lb-note">Take an open seat without a code. A table mid-mission takes you between missions: ask its host, and you land on the route and draft your pilot there.</p>`;
+  }
+  function requestsTab() {
+    const S = SOC();
+    if (!S)
+      return `<div class="lb-empty"><p>Sign in and friend requests, asks to join your table and invites arrive here.</p>${acct() ? '<button class="lb-btn go" data-act="signIn">Sign in</button>' : ''}</div>`;
+    const list = S.waiting();
+    if (!list.length) return '<div class="lb-empty"><p>No requests right now.</p></div>';
+    const what = {
+      friend: 'wants to be friends',
+      join: 'asks to join your table',
+      invite: 'invites you to their table',
+    };
+    const yes = { friend: 'Accept', join: 'Let in', invite: 'Join' };
+    return `<div class="lb-list">${list
+      .map(
+        (n) =>
+          `<div class="lb-req"><span class="lb-av">${lobbyFace(n.from, n.name)}</span><span class="lb-who"><b>${esc(n.name || 'A player')}</b><span>${what[n.kind]}</span></span><span class="lb-acts"><button class="lb-btn go" data-act="socialAnswer" data-arg="${esc(n.from)}|1">${yes[n.kind]}</button><button class="lb-btn" data-act="socialAnswer" data-arg="${esc(n.from)}|0" aria-label="Decline">✕</button></span></div>`,
+      )
+      .join('')}</div>`;
+  }
+  /** The card that flies out beside the drawer: a player's pilots, record and the ways to play with them. */
+  function profileCard(id) {
+    const p = (U.lobbyPeople || []).find((x) => x.id === id) || { id, name: '' };
+    const S = SOC();
+    const card = S ? S.card(id) : null;
+    const name = (card && card.name) || p.name || 'A player';
+    const arts = ((card && card.pilots) || [])
+      .map((x) => ({ x, a: (U.PILOT_ART || []).find((a) => a.key === x.art) }))
+      .filter((o) => o.a);
+    const banner = arts.length && U.sceneSrc ? U.sceneSrc(arts[0].a) : null;
+    const pilots = arts
+      .slice(0, 4)
+      .map((o) => `<img src="${U.portraitSrc(o.a)}" alt="${esc(o.x.name)}" title="${esc(o.x.name)}" draggable="false">`)
+      .join('');
+    const stat = (n, l) => `<div class="lb-stat"><b>${n}</b><span>${l}</span></div>`;
+    const st = stOf(p);
+    const acts = [];
+    if (st.open && st.open.code)
+      acts.push(
+        `<button class="lb-btn go wide" data-act="netJoinGame" data-arg="${esc(st.open.code)}">Join their table ▶</button>`,
+      );
+    else if (S && st.where === 'game')
+      acts.push(
+        `<button class="lb-btn go wide" data-act="socialAsk" data-arg="${esc(id)}">${S.sent(id) === 'join' ? 'Asked to join' : 'Ask to join'}</button>`,
+      );
+    if (S && net() && net().role === 'host' && net().code)
+      acts.push(`<button class="lb-btn cy" data-act="socialInvite" data-arg="${esc(id)}">Invite</button>`);
+    if (S && !p.guest)
+      acts.push(
+        S.isFriend(id)
+          ? `<button class="lb-btn" data-act="socialUnfriend" data-arg="${esc(id)}" data-tip="Remove from your friends">✓ Friends</button>`
+          : S.sent(id) === 'friend'
+            ? `<span class="lb-tag pu">Request sent</span>`
+            : `<button class="lb-btn" data-act="socialAdd" data-arg="${esc(id)}">+ Add friend</button>`,
+      );
+    return `<div class="lb-card${cardFresh ? ' fresh' : ''}" role="dialog" aria-label="${esc(name)}" data-stop="1"><button class="lb-x" data-act="lobbyProfile" data-arg="" aria-label="Close">✕</button><div class="lb-banner"${banner ? ` style="background-image:url(${banner})"` : ''}></div><div class="lb-card-in"><div class="lb-card-who">${lobbyFace(id, name, 'big')}<div><b>${esc(name)}</b><span><i class="lb-dot ${dotOf(p)}"></i> ${esc(whereLine(p))}</span></div></div>${
+      card
+        ? `<div class="lb-stats">${stat(card.runs || 0, 'Expeditions')}${stat(card.wins || 0, 'Hearts')}${stat(card.canon || 0, 'Canon')}</div>${pilots ? `<div><div class="lb-lab">Pilots</div><div class="lb-pilots">${pilots}</div></div>` : ''}`
+        : `<p class="lb-note">${S ? 'Their card is on its way.' : p.guest ? 'A guest: no card yet.' : 'Sign in to see their card.'}</p>`
+    }<div class="lb-card-acts">${acts.join('')}</div></div></div>`;
+  }
+  function lobbyPanelHTML() {
+    const tabs = ['games', 'people', 'requests'];
+    const tab = tabs.includes(U.lobbyTab) ? U.lobbyTab : 'games';
+    const S = SOC();
+    const g = liveGames().length;
+    const reqs = S ? S.waiting().length : 0;
+    const label = {
+      games: `Games${g ? ' ' + g : ''}`,
+      people: `People${onlineCount() ? ' ' + onlineCount() : ''}`,
+      requests: 'Requests',
+    };
+    const bar = `<div class="lb-tabs" role="tablist">${tabs
+      .map(
+        (t) =>
+          `<button role="tab" class="${t === tab ? 'on' : ''}" aria-selected="${t === tab}" data-act="lobbyTab" data-arg="${t}">${label[t]}${t === 'requests' && reqs ? `<em>${reqs}</em>` : ''}</button>`,
+      )
+      .join('')}</div>`;
+    const body = tab === 'games' ? gamesTab() : tab === 'people' ? peopleTab() : requestsTab();
+    const foot = online()
+      ? `<div class="lb-foot"><button class="lb-btn wide" data-act="joinOpen">Enter a code</button><button class="lb-host" data-act="hostOpen">Host a table ▶</button></div>`
+      : '';
+    const pill = onlineCount() ? `<span class="lb-pill"><i></i>${onlineCount()} online</span>` : '';
+    const prof = U.lobbyProfile ? profileCard(U.lobbyProfile) : '';
+    return `<div class="hm-lobby-bg lb-bg" id="lobbyPanel" data-act="lobbyClose">${prof}<aside class="hm-lobby lb" role="dialog" aria-label="Lobby" data-stop="1"><div class="lb-h"><b>Lobby</b>${pill}<button class="lb-x" data-act="lobbyClose" aria-label="Close the Lobby">✕</button></div>${bar}<div class="lb-body" id="lobbyBody">${body}</div>${foot}</aside></div>`;
+  }
+  U.lobbyRedraw = () => redrawLobbyBits();
   U.lobbyPanelHTML = lobbyPanelHTML;
 
   /* ───────────── the waiting room during the draft ───────────── */
@@ -649,6 +945,7 @@
         return true;
       case 'lobbyOpen':
         U.lobbyOpen = true;
+        if (U.social && U.social.refresh) U.social.refresh();
         if (U.screen === 'title') U.render();
         else if (typeof document !== 'undefined') {
           const wrap = document.createElement('div');
@@ -659,14 +956,23 @@
       case 'lobbyClose':
         if (e && e.target && e.target.closest && e.target.closest('[data-stop]') && el.id === 'lobbyPanel') return true;
         U.lobbyOpen = false;
+        U.lobbyProfile = null;
         if (typeof document !== 'undefined') {
           const p = document.getElementById('lobbyPanel');
           if (p) p.remove();
         }
         return true;
       case 'lobbyTab':
-        U.lobbyTab = arg === 'people' ? 'people' : 'games';
+        U.lobbyTab = ['people', 'requests'].includes(arg) ? arg : 'games';
+        if (U.lobbyTab === 'requests' && U.social && U.social.refresh) U.social.refresh();
         redrawLobbyBits();
+        return true;
+      case 'lobbyProfile':
+        // a button inside the row (Add, Invite, Join) acts for itself; the row opens the card
+        U.lobbyProfile = arg && arg !== U.lobbyProfile ? arg : null;
+        cardFresh = !!U.lobbyProfile;
+        redrawLobbyBits();
+        cardFresh = false;
         return true;
       case 'copyInvite': {
         const link = inviteLink();
@@ -687,7 +993,8 @@
         else if (acct() && T.Account.signIn) T.Account.signIn('google');
         return true;
       case 'account':
-        if (U.askSignIn) U.askSignIn('');
+        if (U.openProfile) U.openProfile();
+        else if (U.askSignIn) U.askSignIn('');
         return true;
       case 'netHost':
       case 'netJoin':
@@ -697,6 +1004,18 @@
     }
     return prevExtra ? prevExtra(act, arg, el, e) : false;
   };
+  if (typeof document !== 'undefined')
+    document.addEventListener('input', (e) => {
+      if (!e.target || e.target.id !== 'lobbyFind') return;
+      U.lobbyFind = e.target.value;
+      const box = document.getElementById('lobbyBody');
+      if (!box) return;
+      const tmp = document.createElement('div');
+      tmp.innerHTML = peopleTab();
+      const list = tmp.querySelector('#lobbyList');
+      const here = document.getElementById('lobbyList');
+      if (list && here) here.outerHTML = list.outerHTML;
+    });
   if (typeof document !== 'undefined')
     document.addEventListener('change', (e) => {
       if (e.target && e.target.id === 'netName') keepName();

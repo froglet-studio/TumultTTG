@@ -25,7 +25,14 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const src = join(root, 'src');
 const read = (rel) => readFileSync(join(src, rel), 'utf8');
 
-const MIME = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp', woff2: 'font/woff2' };
+const MIME = {
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  png: 'image/png',
+  webp: 'image/webp',
+  woff2: 'font/woff2',
+  mp3: 'audio/mpeg',
+};
 const dataUri = (file) => `data:${MIME[file.split('.').pop()]};base64,${readFileSync(file).toString('base64')}`;
 
 /**
@@ -51,6 +58,28 @@ export function art(manifest, url = dataUri) {
     )
     .join('\n');
   return { js: `window.T.ART = ${JSON.stringify(img)};\n`, css };
+}
+
+/**
+ * The sound (assets/audio, manifest.audio): T.AUDIO['sfx/<name>'] and T.AUDIO['music/<name>'], each a data URI
+ * in the single file or a content-named file in the web version (src/ui/audio.js plays them). The single file
+ * carries every effect but only the music named under manifest.audio.offline: the whole soundtrack is ~27 MB.
+ */
+export function audio(manifest, url = dataUri, { offline = true } = {}) {
+  const a = manifest.audio;
+  const out = {};
+  if (a)
+    for (const kind of ['sfx', 'music']) {
+      const abs = join(root, a[kind] || '');
+      if (!a[kind] || !existsSync(abs)) continue;
+      for (const f of readdirSync(abs).sort()) {
+        if (!f.endsWith('.mp3')) continue;
+        const name = f.replace(/\.mp3$/, '');
+        if (kind === 'music' && offline && !(a.offline || []).includes(name)) continue;
+        out[`${kind}/${name}`] = url(join(abs, f), 'audio');
+      }
+    }
+  return `window.T.AUDIO = ${JSON.stringify(out)};\n`;
 }
 
 /** Where a variant is written, relative to the repository root. */
@@ -110,7 +139,9 @@ function sources({ playtest = false, web = false } = {}) {
 export function build({ playtest = false, fragment = false } = {}) {
   const s = sources({ playtest });
   const inlined = art(s.manifest);
-  const js = s.stamp + inlined.js + s.js;
+  // the claude.ai playtest page holds 16 MB at most: it carries the effects but no music
+  const sound = audio(playtest ? { ...s.manifest, audio: { ...s.manifest.audio, offline: [] } } : s.manifest);
+  const js = s.stamp + inlined.js + sound + s.js;
   const css = inlined.css + '\n' + s.css;
   if (js.includes('</script'))
     throw new Error('A source file contains "</script" — it would end the inline script early.');
@@ -148,14 +179,27 @@ export function buildWeb({ playtest = false } = {}) {
   const put = (path, body) => (files.set(path, body), path);
   // art and fonts: copied as they are, under a content-hashed name; the script and stylesheet name them
   const inlined = art(s.manifest, (file, kind) => {
-    const body = readFileSync(file);
+    // a scene has a full-size twin in assets/scenes-hd (1536×864); the web version fetches each painting
+    // only when a screen shows it, so it sends that one, and the single file keeps the small copy
+    const hd = file.replace(/([\\/])scenes([\\/])/, '$1scenes-hd$2');
+    const body = readFileSync(hd !== file && existsSync(hd) ? hd : file);
     const name = hashed(file.split(/[\\/]/).pop(), body);
     if (kind === 'font') return put(`assets/${name}`, body).slice('assets/'.length); // relative to the stylesheet
     const dir = file.split(/[\\/]/).slice(-2, -1)[0];
     return put(`assets/${dir}/${name}`, body); // relative to the page
   });
+  // the sound: every file, each under assets/audio/<sfx|music>/, fetched only when it is first played
+  const sound = audio(
+    s.manifest,
+    (file) => {
+      const body = readFileSync(file);
+      const dir = file.split(/[\\/]/).slice(-2, -1)[0];
+      return put(`assets/audio/${dir}/${hashed(file.split(/[\\/]/).pop(), body)}`, body);
+    },
+    { offline: false },
+  );
   const fonts = [...files.keys()].filter((p) => p.endsWith('.woff2'));
-  const js = s.stamp + inlined.js + s.js;
+  const js = s.stamp + inlined.js + sound + s.js;
   const css = inlined.css + '\n' + s.css;
   const jsPath = put(`assets/${hashed('tumult.js', js)}`, js);
   const cssPath = put(`assets/${hashed('tumult.css', css)}`, css);
@@ -202,7 +246,7 @@ if (isMain) {
       writeFileSync(join(dir, rel), body);
       bytes += Buffer.byteLength(body);
     }
-    const first = [...files].filter(([p]) => !/\/(pilots|scenes|portraits)\//.test(p));
+    const first = [...files].filter(([p]) => !/\/(pilots|scenes|portraits|audio)\//.test(p));
     const firstKB = first.reduce((n, [, b]) => n + Buffer.byteLength(b), 0) / 1024;
     console.log(
       `built ${webDir(variant)}/ — ${files.size} files, ${(bytes / 1024).toFixed(0)} KB in all, ` +

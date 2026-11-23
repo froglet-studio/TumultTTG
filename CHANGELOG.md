@@ -1,5 +1,83 @@
 # Changelog
 
+## 2.137.0 — 2026-11-23 — A new draft
+
+- **The rest of the draft is redesigned** (Shombith, 2026-11-22, "Gallery, then a closer look" from the Frogma board): Bloodlines, Packs and Upgrade each lay out everything at once in the HyperSea look, and tapping any card or bloodline opens it big in a closer look.
+- **Bloodlines**: all 85 heads in a grid with an element filter; Your pilot shows the name, the pair's painting and the signature traits you could draft.
+- **Packs and Upgrade**: calm cards (painting, two faces, bold keywords). On Upgrade each face has level bars you tap to set P or E, and a line shows what the next point buys. Auto and Reset stay.
+- **Phones** get their own layout: two-up grids, a fixed button at the bottom, and the closer look as a sheet.
+
+## 2.136.0 — 2026-11-23 — Choose your pilot
+
+- **The draft's first screen rebuilt as the "Spotlight"** (Shombith's pick from the Frogma board, page "Choose your pilot"). The pilot in the spotlight fills the screen in their own painting with their role, their two animals, one line on how they fly and their six cards; Fly takes them. A strip along the foot picks another: Draft your own first, then the ready pilots, then the crew players made. The long rules note sits behind "How pilots work". On a phone the painting is on top, the strip is a rail and Fly is under the thumb (`src/ui/pick.js`). No rule changes.
+
+## 2.135.0 — 2026-11-22 — Rival pilots
+
+- **Rival pilots** (Garrett, 2026-11-22: "you can also put the players up against other Non player characters"). An elite stop may be held by a rival pilot, one of four elites now: human and two clades, with a name, and a hybrid card of one trait from each, so it plays a human trait as your pilots do. It awakens as a pilot does (E = level − 1). Close In (melee 5/6/7) on whoever is beside it, else its Sidearm (zone 3/4/5) on the weakest in its zone; vitality 15/18/22, speed 2. Objective: Defeat the rival pilot.
+- Measured over 240 elite missions a tier (heuristic player): tier 3 won 80% with 38% vitality left, between the Bulwark (35% / 24%) and the Harrier (98% / 58%) and Tidecaller (100% / 75%).
+
+## 2.134.0 — 2026-11-22 — Hybrid foes
+
+- **Every foe is a triple hybrid** (Garrett, 2026-11-22), like a pet: three clades, none human, and a hybrid card of one trait from each, rolled as it spawns. Its role (Biter, Brute, Warden, ...) is still its body. When the card is back and a face has something to do, the foe telegraphs that face, named with its clade, then the card cools for the face's cooldown and a round more. Spawners and the Heart stay as they are.
+- **Foes have levels**: tier, one more for an elite, and a level for every 10 squad power past two new pilots' (one less for every 10 short). The card plays at P = level − 1 and E = level − 2; higher-level foes also play their Ethereal faces, one awake a point.
+- Faces become foe moves through the verbs foes already use (melee, zone, area, pushes, pulls, roots, Weaken, drain, plus a ward, a mend and a veil on itself). A hybrid attack hits at least as hard as the role's own. Hover a foe for its clades, level and faces.
+- Balance (`tools/sim.js 40`): mission win rates within half a point of before (heuristic 77.4 → 77.2, look-ahead 91.4 → 91.0), a little less vitality left; no easier.
+
+## 2.133.0 — 2026-11-22 — Pets awaken
+
+- **Spend upgrade points to awaken a pet** (Garrett, 2026-11-22). A pet card now holds its three traits' Ethereal faces as well as their Physical ones. Each point on its E awakens one more, in order (E 1, E 2, E 3); an awake face shows on the pet card in hand, acts from the pet, costs its own trait's etherion and grows with the card's E. An awake pet card swaps a plain die for its element's d8, as any awakened card does. The Upgrade screen has a Physical and an Ethereal button for a pet. Simulated runs adopt no pets, so the balance tables are unchanged.
+
+## 2.132.0 — 2026-11-22 — A map of Tumult
+
+- **The route is a map of Tumult** (Garrett: "a tumult map between missions instead of a little ladder ... the big boss far away, and branching paths to get there across a landscape"). The squad sets out from a camp on the left; the threat at the end of the route stands far off on the right, drawn big over its own ground (a turning storm, a sunken engine, a reef, a hive, a beacon, a knot of winds). Each leg in between is a stretch of country of its ground: land with quarry pits and windbreaks, sea with islands and kelp, high air with peaks and cloud shelves, the wind over all of it. Every road is drawn: gold behind the squad, glowing where it can go now, mist over the country more than a leg ahead. Stops keep their paintings and tips, and a stop passed says how it went.
+- Under the map: the leg the squad is on, what its guides say of the ground, how many stops away the end is, and the next stops as cards to compare, as before. The folded seven-row chart is gone (the map is the chart). On a phone the map scrolls sideways to the squad.
+- Drawing only: the route itself, its rules and saves are unchanged. The Crossing stop's icon shows again on its card.
+
+## 2.131.0 — 2026-11-22 — Your profile
+
+- **A Profile page** (Shombith's pick from the Frogma board, "Profile page"). The account button at the top right now shows your avatar and opens it: your card as others see it on the left, your display name and avatar on the right, your sign-ins below. On a phone it is one column with Save kept in reach, and also under More.
+- **Pick your avatar**: any pilot painting in the game (your own pilots first), your Google or Discord picture, or your initials. The picture comes through Tumult's own server. It shows on the account button, in the Lobby and on your profile card. Uploading your own picture is not offered yet.
+- **Display names have rules**: 3 to 20 characters, one account's alone (case and spaces ignored), Tumult's own words reserved, and a word filter. The page checks as you type; an account renames once a day.
+- **Server**: migration `0003_profile.sql`, `PATCH /auth/me` takes an avatar, `GET /auth/name` and `GET /auth/picture/<id>`, and the Lobby carries avatars. Profile cards keep their pilots' paintings again (the server dropped them). The game server updates with the next launch. No rule changes.
+
+## 2.130.1 — 2026-11-22 — The Route page before the route
+
+- **Route always opens the Route page, under the top tabs.** While the squad is still being picked it says how many pilots are picked, with a button to pick the next; with no expedition it says how to start one. Before, Route jumped into the draft and the tabs went away.
+
+## 2.130.0 — 2026-11-22 — Cosmic Shore's sound
+
+- **Music.** Cosmic Shore's eleven soundtrack tracks play in Tumult and follow the screen: calm tracks in the menus, the draft and on the route, harder ones in a mission, the outro after a win. They stream on the web version, crossfade from one to the next, and start with the first tap (browsers allow no sound before it). The offline file carries one loop, so it stays about 17 MB.
+- **Effects.** Fifty of Cosmic Shore's effects, taken from its FMOD project, answer Tumult's moments: buttons, taking and skipping a card, training, buying, setting out, each Ethereal face in its element's sound, a pilot's strike and a foe's in time with the show's beam, impacts, kills, shields, traps, reveals, a pilot going down and rising again, rewards, a won and a lost mission. The dice keep their own clatter. Where a file has not loaded yet the old synth answers, so the game never waits for a sound.
+- **The Audio studio** (Settings, Audio studio): master, music and effects levels, each with a mute, kept between visits; the player with back, pause and skip; every track with play now and a tick for the rotation, and Follow the game, Shuffle all or Repeat one; a pad for every effect to hear it. The quick panel in a mission has the player and the three levels. No rule changes.
+
+## 2.129.1 — 2026-11-22 — The Route tab after a reload
+
+- **The Route tab finds the saved expedition.** After a reload it said "No expedition on its route yet" even with one saved; it now opens it where it stopped, and carries on the draft when the expedition is still drafting.
+
+## 2.129.0 — 2026-11-22 — The tilted board
+
+- **The board lies on the table.** The mission board is tilted in perspective in front of the scene, as in the Stack mockup on the Frogma board. A 2D button at the board's right edge lays it flat (and 3D tilts it back), kept for this browser in `tumult_v2_ui`. A phone gets a gentler tilt.
+- **Pinch on phones.** Two fingers zoom and move the board; one finger drags it once zoomed, and a drag is never taken as a tap.
+- **Numbers land on their target through the camera.** The floating damage and heal numbers now follow the zoom and the tilt. No rule changes.
+
+## 2.128.1 — 2026-11-22 — Continue a draft
+
+- **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.
+
+## 2.128.0 — 2026-11-22 — The Stack
+
+- **The mission screen rebuilt as "The Stack"** (Shombith's pick from the Frogma board, inspired by card-battle arenas). Enemy plans are a numbered stack in the order the foes act, each with its creature, health and what it will do.
+- **Creatures instead of blobs.** Every foe kind is drawn in Cosmic Shore's fauna language (a crystal heart, braided spindles, teal health prisms, one red sting), in one of four forms (Mass, Charge, Space, Time) that changes its shape, never its colour. The form is looks only; no rule reads it. They idle, lunge to attack, flinch when hit, turn to face their target and wither when they die (`src/ui/fauna.js`).
+- **Every blow is shown.** A cast card for each card a pilot plays and each foe's move, a beam or a slash, big Cinzel damage numbers, toasts, banners for a fall, a rise and a new round, and a round summary (dealt, taken, blocked, felled) with a feat when one is earned: Multi-fell, Untouched, Shield wall, Onslaught (`src/ui/show.js`). Motion Off or Reduced keeps the words and numbers and drops the motion.
+- **A board you can move.** On PC the wheel zooms around the pointer, dragging pans, and buttons at the board's right edge zoom and reset. No rule changes.
+
+## 2.127.0 — 2026-11-22 — Sign in and the Lobby
+
+- **A guest is told where their save lives.** Under Continue, a player who is not signed in reads "Saved in this browser only" with a button to sign in and keep it on any device.
+- **The sign-in window rebuilt as "Split hero"** (Shombith's pick from the Frogma board): the captain behind Home on the left with a line said on the Ark, and on the right the reasons to sign in and a row for each sign-in, which lifts and glows under the pointer. It scrolls on a small phone.
+- **The Lobby rebuilt as "Drawer plus"**, with a glowing edge and three tabs. Games: Join an open seat without a code, Ask to join a table mid-mission, Rejoin yours. People: who is online, a find box, friends first, with Join, Invite and Add friend. Requests: friend requests, asks to join your table and invites, with Accept or ✕; they also arrive as a toast at once. A person's row opens their card: their pilots, expeditions, hearts and canon notes. The Lobby now opens over the first-visit page too.
+- **Friends, requests and profiles on the server.** New store paths `profile/<user>`, `friends/<user>` and `inbox/<to>/from/<from>`, checked by the Worker, and a nudge on the Lobby's socket so a note arrives at once (`docs/reference/BACKEND.md`). Accounts only; guests are asked to sign in. No rule changes.
+
 ## Unreleased — the web version
 
 - **A web version for froglet.games.** `npm run build:web` writes `dist/web/`: a 2 KB page that loads the game's script, stylesheet, font and each painting as separate files named by their content. A first visit downloads about 300 KB before the title screen draws, against 8 MB for the single file; a painting is fetched when a screen shows it; a returning player downloads only what changed. A service worker keeps the files for offline play. The offline single file is unchanged.
@@ -8,6 +86,23 @@
 - **Online play on Tumult's own server.** A Cloudflare Worker (`server/`, `docs/reference/BACKEND.md`) replaces claude.ai's page storage for the web version: a live room per game code (a Durable Object; up to five players; the room keeps the latest state, so a reload or a returning host catches up), a Lobby of who is online, and a store for shared pilots, canon notes and cloud saves, with pilots and notes checked by the game's own rules on the server. Hosting needs an account; a guest joins with the host's invite link. The online screens are now in the web version; the offline file still has none. Rules unchanged.
 - **One seam for the network.** The online screens reach a server through `T.Backend` instead of claude.ai's API directly, so a Cloudflare Workers backend can plug in later. Play on the claude.ai playtest page is unchanged.
 - **Home, the setup and tables.** A first visit lands on a page with Play now; every later visit opens Home: Continue with the saved expedition's stop and squad, a new-expedition setup that unfolds in place (players solo to five, this screen or online, take turns or all at once, the wind), Host a table (length, seats, AI for empty seats), Join a game with a code or from the games being played, a Lobby panel of games and people online, and a waiting room that shows each seat while the squad drafts. Desktop and phone, from the board's finalised picks (`src/ui/home.js`, `docs/reference/HOME.md`). No rule changes.
+
+## 2.126.0 — 2026-11-22 — Home in motion
+
+- **The setup stays open while you pick.** Choosing the players, where, the rounds or the wind no longer folds the new-expedition setup away. Opening it now unfolds it, with its rows and Start rising one after another.
+- **Modern hovers.** The tabs grow a glowing underline, the logo glows, the gear turns, the setup's choices light up and the picked one glows, and Host, Join and Make a pilot lift and glow. Other screens' buttons ease into a soft cyan shadow. All of it stops with motion Off or Reduced. No rule changes.
+
+## 2.125.0 — 2026-11-22 — Fog prow Home
+
+- **Home rebuilt as "Fog prow"** (Shombith's pick from the Frogma board). A command column on the right holds Continue (with a light running round its border and the route as a row of marks), the setup, and Host, Join and Make a pilot as bordered rows. A captain plate at the bottom left names the pilot in the painting. HyperSea colours, cut corners, a lime Play button that breathes. Every 10 seconds a random captain fades in over the last; it holds still with motion Off or Reduced (`src/ui/home.js`, `docs/reference/HOME.md`).
+- **Sharper paintings on the web.** The web version now sends every scene at 1536×864 instead of 768×432, still fetched only when a screen shows it (`assets/scenes-hd`). The offline file keeps the small ones.
+- **The browser's Back button stays in the game.** Each screen the player chooses is a history entry; an expedition's steps are one entry, so Back from a mission returns to where the player came from with the run saved, and Forward resumes it. Back with a window open closes the window (`src/ui/nav.js`, `docs/reference/NAVIGATION.md`). No rule changes.
+
+## 2.124.0 — 2026-11-22 — solo is one pilot
+
+- **A lone player flies one pilot** (Garrett: "solo only needs one character. Then if people want to play more they can use the hotseat"). Solo drafts one pilot, and Play now sets out with one. A player who wants to fly more picks that many players and plays every seat at one screen. A run saved with two pilots keeps them.
+- **Scaling below two pilots.** For every point of squad power short of two new pilots' 20, a mission gives some back (rounded to the nearest, `T.SCALING.under`): foes lose 4% vitality, ⅕ fewer rank-and-file foes, objectives and swarms ⅒ less, clocks ⅒ round longer; the Heart's foes another 1.5%. A lone new pilot meets foes at 60% (the Heart 45%), 2 fewer foes, 1 less to do, a swarm 1 smaller and clocks 1 round longer; a seasoned one less, down to nothing at level 11. Two to five pilots meet byte-identical missions.
+- Sims (40 a cell, all 25 cells): one new pilot wins 69.4% (heuristic) and 91.5% (look-ahead) of missions, against 77.4% and 91.4% for two (28.5% and 65.2% unscaled). Full runs: 5/80 and 25/80 won solo against 0/80 and 31/80 for two (`docs/reference/SCALING.md`).
 
 ## 2.123.0 — 2026-11-22 — crews 13 to 17
 
