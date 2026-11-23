@@ -138,8 +138,10 @@ function sources({ playtest = false, web = false } = {}) {
 
 export function build({ playtest = false, fragment = false } = {}) {
   const s = sources({ playtest });
-  const inlined = art(s.manifest);
-  // the claude.ai playtest page holds 16 MB at most: it carries the effects but no music
+  // the claude.ai playtest page holds 16 MB at most: it carries the effects but no music, and none of the
+  // folders under manifest.art.notInPlaytest (the ability paintings), whose faces keep their drawn verbs there
+  const skip = playtest ? (s.manifest.art && s.manifest.art.notInPlaytest) || [] : [];
+  const inlined = art({ ...s.manifest, art: { ...s.manifest.art, images: s.manifest.art.images.filter((d) => !skip.includes(d)) } });
   const sound = audio(playtest ? { ...s.manifest, audio: { ...s.manifest.audio, offline: [] } } : s.manifest);
   const js = s.stamp + inlined.js + sound + s.js;
   const css = inlined.css + '\n' + s.css;
