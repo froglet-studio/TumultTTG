@@ -36,6 +36,7 @@ async function open() {
 /** Start a run with two pre-made pilots and end the first mission as `won`, the way Continue on the mission does. */
 function toReward({ T, U, click }, won) {
   click('[data-act="newRun"]');
+  click('[data-act="spotPilot"][data-arg="cavitt"]');
   click('[data-act="prebuilt"][data-arg="cavitt"]');
   click('[data-act="confirmHero"]');
   const run = U.run;
@@ -78,6 +79,7 @@ test('After a mission: a full kit exchanges a trait through the swap view', { sk
   const { d, T, U, click } = ctx;
   try {
     click('[data-act="newRun"]');
+    click('[data-act="spotPilot"][data-arg="cavitt"]');
     click('[data-act="prebuilt"][data-arg="cavitt"]');
     click('[data-act="confirmHero"]');
     const run = U.run;

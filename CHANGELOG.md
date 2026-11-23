@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.129.0 — 2026-11-22 — Choose your pilot
+
+- **The draft's first screen rebuilt as the "Spotlight"** (Shombith's pick from the Frogma board, page "Choose your pilot"). The pilot in the spotlight fills the screen in their own painting with their role, their two animals, one line on how they fly and their six cards; Fly takes them. A strip along the foot picks another: Draft your own first, then the ready pilots, then the crew players made. The long rules note sits behind "How pilots work". On a phone the painting is on top, the strip is a rail and Fly is under the thumb (`src/ui/pick.js`). No rule changes.
+
 ## 2.128.1 — 2026-11-22 — Continue a draft
 
 - **Continue works on an expedition saved during its draft.** Going Back out of the draft (2.125.0) or closing the page kept the expedition in its draft, and Continue then did nothing. It now opens the draft at the next pilot to draft, and Forward does the same.

@@ -520,8 +520,10 @@ test(
     A.U.run.rngs = {};
     A.U.net.publish();
     await until(() => B.U.screen === 'draft' && B.U.draft && B.U.draft.heroIdx === 1, "the guest's draft", 5000);
+    A.act('spotPilot', 'cavitt');
     A.act('prebuilt', 'cavitt');
     A.act('confirmHero');
+    B.act('spotPilot', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
     B.act('prebuilt', B.T.PREBUILTS.find((p) => p.id !== 'cavitt').id);
     B.act('confirmHero');
     await until(() => A.U.screen === 'map' && B.U.screen === 'map', 'both screens on the map', 10000);

@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.128.1',
+    version: '2.129.0',
     items: [
+      {
+        text: 'Choosing a pilot is new ("Spotlight"): start a new expedition and the first screen shows one pilot full screen in their own painting, with a strip along the bottom: Draft your own, then the ready pilots, then the crew. Tap a pilot to look at them, then Fly. On a phone the painting sits on top and Fly is at the bottom. Is it clear how to draft your own instead?',
+      },
       {
         text: 'Continue now carries on an expedition that was saved partway through its draft (by going Back out of it, or closing the page): it opens the draft at the next pilot. Before, Continue did nothing. Did Continue ever leave you stuck?',
       },
