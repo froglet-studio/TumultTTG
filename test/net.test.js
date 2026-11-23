@@ -25,11 +25,17 @@ const { until } = require('../tools/ui-drive');
  * whether live delivery to listeners at that path has stopped, and `failWrite(path)` whether a write
  * there is refused as unavailable (once per call to it that says so).
  */
+// which test the fakes deliver for: a delivery due after its test closed the pages is dropped
+let live = 0;
+
 function fakeDb(opt = {}) {
   const store = new Map(); // path → JSON text
   const docSubs = new Map(); // path → Set(fn)
   const colSubs = []; // { path, fn, seen: Map(id → text), order }
-  const later = (f) => setTimeout(f, opt.lag || 1);
+  const later = (f) => {
+    const at = live;
+    setTimeout(() => at === live && f(), opt.lag || 1);
+  };
   const deaf = (p) => !!(opt.deaf && opt.deaf(p));
   const unavailable = () => Promise.reject({ code: 'unavailable', message: 'the store did not answer' });
   const parent = (p) => p.split('/').slice(0, -1).join('/');
@@ -136,10 +142,14 @@ function fakeRooms() {
           name,
           emit: async (topic, data) => {
             const text = JSON.stringify(data);
+            const at = live;
             if (text.length > 4096) throw { code: 'invalid_argument', message: 'over 4 KiB' };
             for (const other of named.get(name))
               for (const fn of other.get(topic) || [])
-                setTimeout(() => fn({ topic, data: JSON.parse(text), isMe: other === hs, sameTab: other === hs }), 1);
+                setTimeout(
+                  () => at === live && fn({ topic, data: JSON.parse(text), isMe: other === hs, sameTab: other === hs }),
+                  1,
+                );
           },
           on: (topic, fn) => {
             if (!hs.has(topic)) hs.set(topic, new Set());
@@ -158,7 +168,10 @@ function fakeRooms() {
 const windows = [];
 // close each test's pages when it ends: their timers would keep the run alive, and a dozen pages of the
 // playtest build at once run CI out of memory
-test.afterEach(() => windows.splice(0).forEach((w) => w.close()));
+test.afterEach(() => {
+  live++;
+  windows.splice(0).forEach((w) => w.close());
+});
 
 async function open(html, db, rooms) {
   const { JSDOM } = require('jsdom');
