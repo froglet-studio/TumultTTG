@@ -1,12 +1,15 @@
 # Changelog
 
-## 2.136.0 — 2026-11-23 — A new draft
+## 2.137.0 — 2026-11-23 — A new draft
 
-- **The draft is redesigned** (Shombith, 2026-11-22, "Gallery, then a closer look" from the Frogma board): every step lays out everything at once in the HyperSea look, and tapping any card, bloodline or pilot opens it big in a closer look.
-- **Pilot**: Draft from packs, or a ready-made or player-made pilot, each with its painting; tap one for its traits, Fly to take it as it is.
+- **The rest of the draft is redesigned** (Shombith, 2026-11-22, "Gallery, then a closer look" from the Frogma board): Bloodlines, Packs and Upgrade each lay out everything at once in the HyperSea look, and tapping any card or bloodline opens it big in a closer look.
 - **Bloodlines**: all 85 heads in a grid with an element filter; Your pilot shows the name, the pair's painting and the signature traits you could draft.
 - **Packs and Upgrade**: calm cards (painting, two faces, bold keywords). On Upgrade each face has level bars you tap to set P or E, and a line shows what the next point buys. Auto and Reset stay.
 - **Phones** get their own layout: two-up grids, a fixed button at the bottom, and the closer look as a sheet.
+
+## 2.136.0 — 2026-11-23 — Choose your pilot
+
+- **The draft's first screen rebuilt as the "Spotlight"** (Shombith's pick from the Frogma board, page "Choose your pilot"). The pilot in the spotlight fills the screen in their own painting with their role, their two animals, one line on how they fly and their six cards; Fly takes them. A strip along the foot picks another: Draft your own first, then the ready pilots, then the crew players made. The long rules note sits behind "How pilots work". On a phone the painting is on top, the strip is a rail and Fly is under the thumb (`src/ui/pick.js`). No rule changes.
 
 ## 2.135.0 — 2026-11-22 — Rival pilots
 

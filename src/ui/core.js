@@ -371,8 +371,23 @@
     };
     U.screen = 'draft';
   };
-  /** The draft screen is drawn by src/ui/draft.js (Frogma "Draft flow", Gallery then a closer look). */
+  /** The draft's first step leads back: to the title, to the first pilot, or out of an online game. */
+  U.draftOut = (d) => draftOut(d);
+  U.squadOf = (run) => squadOf(run);
+  function draftOut(d) {
+    if (U.net && U.net.online()) return `<button class="ghost right" data-act="netLeave">Leave game</button>`;
+    const prev = d.heroIdx > 0 ? U.run.heroes[d.heroIdx - 1] : null;
+    if (prev)
+      return `<button class="ghost right" data-act="draftPrev" data-tip="Back to ${esc(prev.name)}, the pilot before, as you left them.">Back to ${esc(prev.name)}</button>`;
+    return `<button class="ghost right" data-act="draftQuit">Back to the title</button>`;
+  }
+  /**
+   * The draft: its first step is the Spotlight (src/ui/pick.js, Frogma "Choose your pilot"); bloodlines, packs and
+   * upgrades are drawn by src/ui/draft.js (Frogma "Draft flow", Gallery then a closer look).
+   */
   function renderDraft() {
+    const d = U.draft;
+    if (d.step === 'mode' && U.renderPick) return U.renderPick(d, U.run);
     return U.renderDraftScreen();
   }
   /** The draft's actions, for the screens that start a draft with a pilot chosen (src/ui/crew.js). */
@@ -411,6 +426,8 @@
     if (act !== 'up' && act !== 'pickSpecies' && act !== 'autoUp' && act !== 'resetUp') d.look = null;
     if (act === 'draftMode') {
       d.step = 'species';
+    } else if (act === 'spotPilot') {
+      d.spot = arg; // the pilot in the Spotlight (src/ui/pick.js); Fly takes them
     } else if (act === 'prebuilt') {
       const c = choiceById(arg);
       if (!c) return;
