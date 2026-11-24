@@ -1,10 +1,16 @@
 # Changelog
 
-## 2.139.0 — 2026-11-24 — Grey wolf, raccoon, and the tree of life
+## 2.141.0 — 2026-11-24 — Grey wolf, raccoon, and the tree of life
 
 - **Two new clades** (Garrett, 2026-11-24: "please add racoons and grey wolfs as a supported animal"). The **Grey Wolf** is in the dog family: Keen Nose, Pack Howl, Long Trot and Pin Down, and its own Relay Chase, Test the Herd, Territory, Harry and Alpha Pair. The **Raccoon** is weasel kin: Dense Fur, Headfirst Descent and Scavenger's Luck, and its own Feeling Paws, Clever Latch, Bandit Mask, Quick Hands, Dousing and Climb Anything. Both have painted heads, painted ability faces, an icon and a voice for the passages between stops. The six crew pilots who already had a wolf in their pair can now be flown as painted.
 - **The clades sit on the tree of modern phylogeny** ("respect modern taxonomy better. e.g. label raptors as the group for owls and birds of prey. hyenas should be grouped with cats"; `docs/reference/TAXONOMY.md`). The pilot maker groups clades by real groups, each with its scientific name: Raptors (owls, hawks, eagles), cat-like carnivores (cats and the hyena), dog-like carnivores (the dog family, weasel kin, the raccoon, the walrus), hoofed mammals and whales, and so on. Traits shared by descent now name their group (Killing Bite is the cat-like carnivores'); traits shared by a way of life name it (pack runners, waders, seabirds, marine mammals).
 - No existing card, rule or save changes; clade ids are the same.
+
+## 2.139.0 — 2026-11-24 — Paintings in the draft and on Tumult Online
+
+- **The draft shows the ability paintings** (Garrett, 2026-11-24: "i am not seeing the new artwork on the selection screen"). Pack, Upgrade and kit cards drew a pilot painting or the clade's head; they now show each face in action, the Physical face's painting left of the cut and the other's right of it, as cards do in a mission. A card without paintings keeps the old art.
+- **Tumult Online gets the paintings too.** The claude.ai page holds 16 MB at most, so the playtest build no longer leaves them out: it names each sheet by a relative path, and `npm run build:playtest` writes the 118 sheets to `dist/ability-art/` to be published beside the page (`/playtest-publish`).
+- Drawing only: no rules, balance or saves change.
 
 ## 2.138.0 — 2026-11-23 — Ability paintings, beasts of Tumult
 

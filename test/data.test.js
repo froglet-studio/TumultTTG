@@ -44,7 +44,7 @@ test('primates carry some of Human’s traits, and no clade carries one from a b
   }
 });
 
-test('taxonomy: every clade sits on the tree of life, and every kin is a group or a way of life (2.139)', () => {
+test('taxonomy: every clade sits on the tree of life, and every kin is a group or a way of life (2.141)', () => {
   const names = new Set(Object.values(T.TAXA).map((x) => x.name));
   assert.equal(names.size, Object.keys(T.TAXA).length, 'every group has its own name');
   for (const sp of T.SPECIES_ORDER) {

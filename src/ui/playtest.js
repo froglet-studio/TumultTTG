@@ -19,11 +19,17 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.139.0',
+    version: '2.141.0',
     items: [
       {
         text: 'Two new clades: the Grey Wolf and the Raccoon. Draft your own pilot and look for them in the clade picker. The wolf runs with the pack (Relay Chase, Test the Herd, Territory, Harry, Alpha Pair); the raccoon has quick hands (Feeling Paws, Clever Latch, Bandit Mask, Quick Hands, Dousing, Climb Anything). Does each play like itself? Six crew pilots with wolf in their pair can now be flown.',
         cards: ['wol_relay', 'wol_test', 'rac_paws', 'rac_mask'],
+      },
+      {
+        text: 'Every card face has its own painting now, on this page too: an abstract close-up of the trait in action, the Physical face on the left of the cut and the Ethereal face on the right. You see them in the draft (packs, upgrades, your kit), in your hand and in each face\u2019s tip. Does the painting help you tell cards apart and remember what a face does?',
+      },
+      {
+        text: 'Foes look like beasts of Tumult now: each hybrid foe is drawn as the heads of its three clades in a ring coloured by how dangerous it is (red, amber elite, violet rival, gold for the threat at the end). Can you tell foes apart at a glance?',
       },
       {
         text: 'The pilot maker now groups clades by the real tree of life: hyenas with the cats, the walrus and the raccoon with the dogs and weasels, whales with the hoofed mammals, owls with the hawks and eagles as Raptors. Each group shows its scientific name too. Can you still find the clade you want quickly?',
