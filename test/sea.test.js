@@ -142,11 +142,17 @@ test('Calm: one menu, one conditions chip, the story box and More on request', {
     assert.ok(d.querySelector('#mtop .endgrp.note-open #turnNote'));
     // the enemy plans are a heading, no sentence
     assert.match(d.querySelector('#mside .intents-panel .fold-head b').textContent, /^Enemy plans$/);
-    // four basic actions in view, the rest behind More, all still there to click
+    // every action that can be taken now is in view; the ones that cannot wait behind the fold (2.143)
     const i = U.ms.heroIdx;
-    for (const id of ['strike', 'brace', 'shove', 'spot'])
-      assert.ok(!d.querySelector(`#mdock .more-acts [data-arg="${i}|${id}"]`), id + ' stays in view');
-    assert.ok(d.querySelector('#mdock .more-acts [data-act="valve"]'));
+    const acts = '#mdock .actions';
+    assert.ok(d.querySelectorAll(`${acts} > button:not(.more-btn):not([disabled])`).length, 'something to do');
+    assert.ok(!d.querySelector(`${acts} > button[disabled]`), 'nothing greyed out in view');
+    assert.ok(!d.querySelector(`${acts} .more-acts button:not([disabled])`), 'nothing doable folded away');
+    if (!dom.window.T.canUseBasic(m, m.heroes[i], 'strike').ok)
+      assert.ok(d.querySelector(`${acts} .more-acts [data-arg="${i}|strike"]`));
+    // one button for each action, however many ways it can be paid for
+    assert.equal(d.querySelectorAll(`#mdock [data-act="basic"][data-arg="${i}|strike_M"]`).length, 0);
+    assert.equal(d.querySelectorAll(`#mdock [data-act="basic"][data-arg="${i}|strike"]`).length, 1);
     assert.ok(!d.querySelector('#mdock .actions.more-open'));
     click('#mdock [data-act="moreActs"]');
     assert.ok(d.querySelector('#mdock .actions.more-open'));
@@ -177,12 +183,19 @@ test('Dice as AP: an Omni, or two etherions clicked in turn, make 1 AP', { skip,
     assert.ok(d.querySelector('#mdock [data-act="asAPMode"]'));
     click('#mdock [data-act="asAPMode"]');
     assert.equal(U.ms.mode, 'asAP');
+    // a die that can be clicked is marked as one, never with the pilot screen's full-page '.pick' (2.143)
+    assert.equal(d.querySelectorAll('#mdock .die.die-pick').length, 3);
+    assert.ok(!d.querySelector('#mdock .die.pick'));
     click(`#mdock [data-act="die"][data-arg="${i}|2"]`);
     assert.deepEqual(h.held, ['M', 'S']);
     assert.deepEqual(h.temp, ['AP']);
     assert.equal(U.ms.mode, 'idle');
     click('#mdock [data-act="asAPMode"]');
     click(`#mdock [data-act="die"][data-arg="${i}|0"]`);
+    assert.ok(
+      d.querySelector(`#mdock [data-act="die"][data-arg="${i}|0"]`).classList.contains('die-chosen'),
+      'the first stays marked',
+    );
     click(`#mdock [data-act="die"][data-arg="${i}|1"]`);
     assert.deepEqual(h.held, []);
     assert.deepEqual(h.temp, ['AP', 'AP']);
@@ -225,3 +238,45 @@ test(
     }
   },
 );
+
+test('One action, two ways to pay: one button, and the bar asks how', { skip, timeout: 60_000 }, async () => {
+  const { dom, d, U, click } = await open();
+  try {
+    toMission(click);
+    const T = dom.window.T;
+    const m = U.run.mission;
+    const i = U.ms.heroIdx;
+    const h = m.heroes[i];
+    const near = T.Board.walkNeighbors(m.board, h.pos).find((x) => !T.occupied(m, x));
+    m.enemies.find((e) => e.alive).pos = near;
+    const n = h.held.length;
+    h.held = ['M', 'AP', 'AP'];
+    h.heldDie = ['plain', 'plain', 'plain'];
+    h.pool += n - 3;
+    h.temp = [];
+    U.updateMission();
+    assert.ok(T.canUseBasic(m, h, 'strike').ok && T.canUseBasic(m, h, 'strike_M').ok);
+    const strikes = d.querySelectorAll(`#mdock [data-act="basic"][data-arg="${i}|strike"]`);
+    assert.equal(strikes.length, 1, 'one Strike button');
+    assert.ok(!strikes[0].disabled && !strikes[0].closest('.more-acts'), 'in view');
+    const before = JSON.stringify(m);
+    click(`#mdock [data-act="basic"][data-arg="${i}|strike"]`);
+    assert.equal(U.ms.mode, 'pay');
+    assert.equal(d.querySelectorAll('#mtarget [data-act="payWith"]').length, 2, 'AP, or a Mass');
+    assert.equal(JSON.stringify(m), before, 'nothing is paid yet');
+    click('#mtarget [data-act="payWith"][data-arg="strike_M"]');
+    assert.equal(U.ms.mode, 'target');
+    assert.equal(U.ms.pending.id, 'strike_M');
+    click('#mtarget [data-act="cancelMode"]');
+    // with only one way to pay, the button goes straight on
+    h.held = ['AP', 'AP'];
+    h.pool += 1;
+    h.heldDie = ['plain', 'plain'];
+    U.updateMission();
+    click(`#mdock [data-act="basic"][data-arg="${i}|strike"]`);
+    assert.equal(U.ms.mode, 'target');
+    assert.equal(U.ms.pending.id, 'strike');
+  } finally {
+    dom.window.close();
+  }
+});

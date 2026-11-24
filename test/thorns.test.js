@@ -16,6 +16,7 @@ function duel(seed = 3) {
   const e = T.liveEnemies(m)[0];
   m.enemies = [e];
   m.spawns = [];
+  m.place = Object.assign({}, m.place, { gravity: 'normal', g: 1 }); // a push that hurts is gravity's, not Thorns'
   Object.assign(e, { hp: 60, maxHp: 60, shield: 0, states: {} });
   e.pos = B.walkNeighbors(m.board, h.pos).find((n) => !T.occupied(m, n));
   return { run, m, h, e };

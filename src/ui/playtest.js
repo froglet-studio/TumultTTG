@@ -19,7 +19,7 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.141.0',
+    version: '2.145.0',
     items: [
       {
         text: 'Two new clades: the Grey Wolf and the Raccoon. Draft your own pilot and look for them in the clade picker. The wolf runs with the pack (Relay Chase, Test the Herd, Territory, Harry, Alpha Pair); the raccoon has quick hands (Feeling Paws, Clever Latch, Bandit Mask, Quick Hands, Dousing, Climb Anything). Does each play like itself? Six crew pilots with wolf in their pair can now be flown.',
@@ -29,10 +29,22 @@
         text: 'The pilot maker now groups clades by the real tree of life: hyenas with the cats, the walrus and the raccoon with the dogs and weasels, whales with the hoofed mammals, owls with the hawks and eagles as Raptors. Each group shows its scientific name too. Can you still find the clade you want quickly?',
       },
       {
+        text: 'Every creature is painted now as one beast: each kind of foe (Biter, Stinger, Brute, Kiter, Warden, Lurker, Binder and the three elites) is a single triple hybrid of three animals, always the same three for that kind, and the game never names them. Its hybrid card still draws different traits from those three each time. Look at a foe and at what it plays: can you work out what it is made of? Does each one look like its role?',
+      },
+      {
+        text: 'On a mission, every action you can take right now stands in view, and the ones you cannot take wait behind \u201cCan\u2019t do now\u201d (each one\u2019s tip says why). An action you can pay for two ways (Strike for 2 AP, or channelled with a Mass) is one button now: click it, then choose how to pay on the bar above the board. Picking dice (\u25c7\u2192AP, Return die, a reroll) no longer blanks the panel, and the die you picked first stays lifted. Is the action list easier to read?',
+      },
+      {
+        text: 'The expedition map is banded by gravity now: every mission along the top of the map is heavy (3 to 6 g: anything shoved or pulled takes 1 damage a space), the middle about 1 g, and the bottom light (0.1 to 0.3 g: a shove goes 1 space further). Each stop card shows its g. Did you pick a lane for its gravity? Does heavy or light country change how you play?',
+      },
+      {
+        text: 'Music starts off now. The small \u266a button beside \u2699 (and beside \u2630 on a mission) plays or pauses Cosmic Shore\u2019s soundtrack, and remembers your choice. Effects still play. Is the button easy to find when you want music?',
+      },
+      {
         text: 'Every card face has its own painting now, on this page too: an abstract close-up of the trait in action, the Physical face on the left of the cut and the Ethereal face on the right. You see them in the draft (packs, upgrades, your kit), in your hand and in each face\u2019s tip. Does the painting help you tell cards apart and remember what a face does?',
       },
       {
-        text: 'Foes look like beasts of Tumult now: each hybrid foe is drawn as the heads of its three clades in a ring coloured by how dangerous it is (red, amber elite, violet rival, gold for the threat at the end). Can you tell foes apart at a glance?',
+        text: 'Foes look like beasts of Tumult now: each foe is drawn in a ring coloured by how dangerous it is (red, amber elite, violet rival, gold for the threat at the end). Can you tell foes apart at a glance?',
       },
       {
         text: 'After the first screen, the draft is new too: bloodlines, packs and upgrades show everything at once, and tapping a card or a bloodline opens it big. On Upgrade, tap a face\u2019s bars to set its level; the line under it says what the next point buys. Is each step clear without reading much? Does it work on a phone?',
@@ -44,7 +56,7 @@
         text: 'Rival pilots: an elite stop may now be held by a rival pilot, human and two clades like your own, with a name and a hybrid card of one trait from each (a human one among them), awake as a pilot is. Its objective reads Defeat the rival pilot. Does it feel like another pilot rather than a creature? Is it about as hard as the other elites?',
       },
       {
-        text: 'Foes are hybrids now: every foe but the Spawners and the Heart has three clades and a hybrid card of their traits, like a pet. Hover a foe to see its clades, its level and the faces it can play; its intent names the face and the clade it comes from. Higher-level foes (tier 3, elites, bigger squads) also play Ethereal faces. Does each foe feel different? Can you read what a hybrid face will do before it lands?',
+        text: 'Foes are hybrids now: every foe but the Spawners and the Heart has three clades and a hybrid card of their traits, like a pet. Hover a foe to see its level and the faces it can play; its intent names the face. Higher-level foes (tier 3, elites, bigger squads) also play Ethereal faces. Does each foe feel different? Can you read what a hybrid face will do before it lands?',
       },
       {
         text: 'Pets awaken: on the Upgrade screen a pet card now has an Ethereal button. Each point you spend there awakens one more of its three Ethereal faces (one from each of its clades), and the awake ones show on the pet card in a mission. Is it clear which face wakes next? Is a pet with awake faces worth the points you would have spent on a trait?',

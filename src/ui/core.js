@@ -669,11 +669,13 @@
       const pg = nd.page && T.PAGE_BY[nd.page];
       const plate = type === 'boss' ? (ex ? ex.legs[2].scene : null) : pg ? pg.plate : null;
       const art = U.artClass(plate);
+      // the gravity of this visit: the stop's lane on the map (T.chartPages), or its page's own
+      const gv = pg ? (nd.g != null ? nd.g : pg.gravity) : null;
       const done = how[nd.id] ? `<div class="small ok" style="margin-top:4px">✓ ${esc(how[nd.id])}</div>` : '';
       const tip =
         (T.MISSIONS[type]
           ? (pg
-              ? `<div class="tip-plate ${art}"></div><b>${esc(pg.name)}</b> <span class="dim">· ${U.gravityText(pg.gravity)}</span><div>${esc(pg.blurb)}</div><div class="small" style="margin-top:4px"><b>${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}</b>${type === 'haven' || type === 'event' ? '' : ' · tier ' + nd.tier}: `
+              ? `<div class="tip-plate ${art}"></div><b>${esc(pg.name)}</b> <span class="dim">· ${U.gravityText(gv)}</span><div>${esc(pg.blurb)}</div><div class="small" style="margin-top:4px"><b>${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}</b>${type === 'haven' || type === 'event' ? '' : ' · tier ' + nd.tier}: `
               : `<b>${type === 'boss' ? esc(T.threatTitle(run)) : NODE_NAME[type]}</b> · tier ${nd.tier}<div class="small">`) +
             esc(T.MISSIONS[type].blurb) +
             '</div>' +
@@ -695,7 +697,7 @@
         tip,
         name,
         icon: NODE_ICON[type],
-        sub: sub || tier ? `${sub ? sub + ' ' : ''}${tier}${pg && type !== 'boss' ? pullTag(pg.gravity) : ''}` : '',
+        sub: sub || tier ? `${sub ? sub + ' ' : ''}${tier}${pg && type !== 'boss' ? pullTag(gv) : ''}` : '',
       };
     };
     return U.renderOverworld(run, { stop });
@@ -782,7 +784,7 @@
     const art = U.artClass(plate);
     const go = `<button class="primary sm sc-go" data-act="goNode" data-arg="${id}">${p.type === 'haven' ? 'Make camp' : p.type === 'event' ? 'Take this road' : 'Set out'} ▶</button>`;
     const name = p.type === 'boss' ? esc(T.threatTitle(run)) : pg ? esc(pg.name) : NODE_NAME[p.type];
-    const head = `<div class="sc-head"><span class="sc-ic">${NODE_ICON[p.type]}</span><span class="sc-nm"><b>${name}</b><span class="dim small">${NODE_NAME[p.type]}${T.MISSIONS[p.type] ? ` · tier <span class="tier">${'◆'.repeat(p.tier)}</span>` : ''}${pg ? ' · ' + U.gravityText(pg.gravity) : ''}</span></span></div>`;
+    const head = `<div class="sc-head"><span class="sc-ic">${NODE_ICON[p.type]}</span><span class="sc-nm"><b>${name}</b><span class="dim small">${NODE_NAME[p.type]}${T.MISSIONS[p.type] ? ` · tier <span class="tier">${'◆'.repeat(p.tier)}</span>` : ''}${pg ? ' · ' + U.gravityText(p.g != null ? p.g : pg.gravity) : ''}</span></span></div>`;
     if (!T.MISSIONS[p.type]) {
       const what =
         p.type === 'haven'

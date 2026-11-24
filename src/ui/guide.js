@@ -176,7 +176,7 @@
       .filter(([, e]) => !q || (e.name + ' ' + e.role + ' ' + e.flavor).toLowerCase().includes(q))
       .map(
         ([k, e]) =>
-          `<article class="cx-card cx-rose"><h3>${U.icEnemy(k, e.glyph)} ${esc(e.name)} <small class="dim">${esc(e.role)}${e.elite ? ' · elite' : ''}${e.boss ? ' · boss' : ''}</small></h3><p class="small mono dim">Vitality ${e.hp.join(' / ')} · speed ${e.speed}${e.shield ? ' · Shield ' + e.shield.join(' / ') : ''}${e.hidden ? ' · starts Hidden' : ''}</p>${Object.values(
+          `<article class="cx-card cx-rose">${U.foePainting && U.foePainting({ type: k }) ? `<div class="cx-foe">${U.foeArt({ type: k, elite: e.elite, boss: e.boss }, 96)}</div>` : ''}<h3>${U.icEnemy(k, e.glyph)} ${esc(e.name)} <small class="dim">${esc(e.role)}${e.elite ? ' · elite' : ''}${e.boss ? ' · boss' : ''}</small></h3><p class="small mono dim">Vitality ${e.hp.join(' / ')} · speed ${e.speed}${e.shield ? ' · Shield ' + e.shield.join(' / ') : ''}${e.hidden ? ' · starts Hidden' : ''}</p>${Object.values(
             e.abilities,
           )
             .map(

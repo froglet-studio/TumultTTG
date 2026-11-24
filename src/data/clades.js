@@ -3946,7 +3946,7 @@
       txt:(P,E)=>`Carry them on your back: for 2 rounds you and every ally within 2 hold Shield ${1+E}, and all heroes heal 1 at the start of each turn.` },
     'The young ride on their mother\'s back until their first molt.');
 
-  /* ───────────────────────── GREY WOLF AND RACCOON (2.141) ─────────────────────────
+  /* ───────────────────────── GREY WOLF AND RACCOON (2.145) ─────────────────────────
      Garrett, 2026-11-24. The grey wolf is in the dog family: it runs with the pack runners (Keen Nose, Pack
      Howl, Long Trot) and carries the dogs' Pin Down. The raccoon is weasel kin (Musteloidea): Dense Fur; it
      climbs down headfirst like the ocelot and red panda (Headfirst Descent), and scavenges like the jackal

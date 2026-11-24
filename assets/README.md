@@ -34,7 +34,7 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 - **Clade portraits** were generated for this repository in Figma Weave (Nano Banana Pro, Garrett's workspace,
   2026-11-17), styled on a test sheet he approved, and approved by him before going in. Garrett chose generated
   sheets for clade art (2026-11-17). Each 2048 px sheet was cut into equal cells, trimmed 2.5% a side to drop the
-  grid lines, resized to 128 px and repacked four to a row; the scorpion was a single 1024 px image, and the grey wolf and raccoon (2.141) came from one Nano Banana 2 Lite 2×2 sheet styled on sheet 2. Which clade
+  grid lines, resized to 128 px and repacked four to a row; the scorpion was a single 1024 px image, and the grey wolf and raccoon (2.145) came from one Nano Banana 2 Lite 2×2 sheet styled on sheet 2. Which clade
   sits in which tile is `U.PORTRAIT_SHEETS` in `src/ui/icons.js`.
 - **Ability paintings** (`ability-art/sheet-NNN.webp`) were generated for this repository in Figma Weave in Garrett's
   workspace (2026-11-22/23): the first two sheets with Nano Banana Pro, the rest with Nano Banana 2 Lite, which Garrett
@@ -42,6 +42,11 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
   faces) and approved test sheets before the run. Each 1024 px sheet is a 3×3 grid; `node tools/ability-art.js cut`
   finds its gutters, trims 2% a cell, resizes to 144 px and repacks it. Which face sits in which tile is
   `U.ABILITY_SHEETS` in `src/ui/ability-art.js`; `tools/ability-art.js prompt N` prints the prompt a sheet was made from.
+- **Foe paintings** (`foe-art/<type>.webp`, 2.144) were generated for this repository in Figma Weave in Garrett's
+  workspace (2026-11-24) with Nano Banana 2 at 512 px, one image per creature kind, resized to 256 px. Each is one
+  fused triple hybrid of its kind's three clades (`T.ENEMIES[type].clades` in `src/data/world.js`), posed for its
+  role; Garrett's direction: never show a foe's three animals side by side, since working them out is the puzzle.
+  The prompt for each is in `tools/foe-art.js` (`node tools/foe-art.js prompt brute`).
 - **Chakra Petch** is © 2018 The Chakra Petch Project Authors, under the SIL Open Font License 1.1
   (`fonts/OFL.txt`). It is Cosmic Shore's display face. Subset with
   `pyftsubset ChakraPetch-SemiBold.ttf --unicodes=U+0020-007E,U+00A0-00FF,U+2013-2014,U+2018-201D,U+2026,U+2022,U+2190-2193,U+00D7 --flavor=woff2`.

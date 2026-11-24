@@ -669,7 +669,9 @@
     T.scaleSpec(spec, sc, T.squadSize(run), T.makeRng(T.subSeed(seed, 'squad')));
     spec.page = pageId;
     // the day's weather has a stream of its own, so the board and its foes are the same whatever the sky
-    spec.place = T.placeConditions(T.PAGE_BY[pageId], T.makeRng(T.subSeed(seed, 'place')));
+    // the stop's lane on the route gives its gravity (T.chartPages); on its own the page keeps its own
+    const g = node && node.g != null && node.page === pageId ? node.g : null;
+    spec.place = T.placeConditions(T.PAGE_BY[pageId], T.makeRng(T.subSeed(seed, 'place')), g);
     spec.title = board.pick(gen.title);
     spec.blurb = gen.blurb;
     // the vehicles the players picked for it (T.pickVehicle), or the ones the table would pick by default
@@ -756,6 +758,7 @@
       type,
       tier,
       page: spec.page,
+      g: spec.place.g,
       elite,
       title: spec.title,
       blurb: spec.blurb,

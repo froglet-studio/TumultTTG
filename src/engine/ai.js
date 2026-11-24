@@ -213,7 +213,7 @@
     const selfOk = !busy || e.hp <= e.maxHp / 2;
     const near = (c) => dist(m, e.pos, c.pos);
     const low = (list) => list.slice().sort((a, b) => a.hp - b.hp || a.uid - b.uid)[0];
-    for (const { key, ab, sp } of T.foeHybridFaces(e)) {
+    for (const { key, ab } of T.foeHybridFaces(e)) {
       let t = null;
       let ok = false;
       if (ab.kind === 'melee') {
@@ -230,7 +230,6 @@
       else if (ab.kind === 'mend') ok = e.maxHp - e.hp >= ab.heal;
       else if (ab.kind === 'veil') ok = !T.isHidden(e) && zoneTargets(m, e).length > 0;
       if (!ok) continue;
-      const kin = T.SPECIES[sp] ? T.SPECIES[sp].name : sp;
       const extra =
         ab.kind === 'ward'
           ? `(Shield ${ab.ward})`
@@ -244,7 +243,7 @@
         hy: true,
         target: t ? t.uid : null,
         targetName: t ? t.name : null,
-        label: `${ab.n} [${kin}]${t ? ' → ' + t.name : ''} ${extra}`,
+        label: `${ab.n}${t ? ' → ' + t.name : ''} ${extra}`,
         dmg: ab.dmg || 0,
         kind: ab.kind,
       };

@@ -16,7 +16,7 @@
     TRACK: 6,                // track columns
     FACES: ['M','C','S','T','O','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP','AP'], // the plain die, a d20: each element once, 15 AP
     ELEMENT_DICE: 1,         // each card awakened (E 1+) puts one die of its element in the pool in place of a plain die (2.29)
-    FOE_HP: 180,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 in 2.108: weapons; 160 in 2.119: gear runs on Omni; 166 in 2.120: dice as AP; 180 since 2.122: instincts)
+    FOE_HP: 185,             // foes' vitality, percent of the bestiary's (140 in 2.83: the chosen element die; 145 in 2.85; 150 in 2.108: weapons; 160 in 2.119: gear runs on Omni; 166 in 2.120: dice as AP; 180 in 2.122: instincts; 185 since 2.144: fixed foe clades)
     HYBRID_FOES: 1,          // 2.134: every foe but the Spawners and the Heart is a hybrid of three clades with a hybrid card (src/engine/hybrids.js); 0 turns it off
     MOVE_AP: 1,              // AP per walk step
     INTERACT_AP: 2,
@@ -183,6 +183,14 @@
     { id: 'normal', max: 2.9,      name: 'Gravity',       text: '' },
     { id: 'heavy',  max: Infinity, name: 'Heavy gravity', text: 'Anything shoved or pulled takes 1 damage for each space it is moved.' },
   ];
+  /* The route's lanes are bands of gravity (Garrett, 2026-11-24): the top lane of the map is heavy country,
+     the middle about 1 g, the bottom light, 0.1 to 0.3 g. A stop keeps its page's own gravity when it fits
+     the lane, and otherwise is visited at one of the lane's `g`. Lane 0 is the top of the map. */
+  T.LANE_GRAVITY = [
+    { id: 'high', min: 3,   max: 6,   g: [3, 3.5, 4, 5, 6] },
+    { id: 'mid',  min: 0.8, max: 1.2, g: [0.8, 0.9, 1, 1.1, 1.2] },
+    { id: 'low',  min: 0.1, max: 0.3, g: [0.1, 0.2, 0.3] },
+  ];
   T.WEATHER = {
     calm: { name: 'Calm', text: '' },
     wind: { name: 'Wind', text: 'At the end of every round the wind moves every unit 1 space downwind, if a path leads there and the space is free. A shield, an anchor or a hover holds you; so does the Heart.' },
@@ -243,38 +251,40 @@
   /* ───────────────────────────── BESTIARY ───────────────────────────── */
   // Stats are indexed by tier [t1,t2,t3]. Intents are telegraphed at round start.
   // Enemies are built from the same verbs as heroes — no special rules.
+  // clades (2.144; Garrett, 2026-11-24): each creature is one kind of triple hybrid, always the same three clades, painted as one
+  // beast (assets/foe-art). The UI never names them: working out what a foe is from its painting and its moves is the puzzle.
   T.ENEMIES = {
-    biter:    { name:'Biter', glyph:'🦷', role:'swarm', hp:[3,4,5], speed:2, policy:'rush',
+    biter:    { name:'Biter', glyph:'🦷', role:'swarm', hp:[3,4,5], speed:2, policy:'rush', clades:['mouse','crocodile','beetle'],
       abilities:{ bite:{ n:'Bite', kind:'melee', dmg:[2,3,3] } },
       flavor:'Spawn of the Heart. One is nothing. Six are a swarm.' },
-    stinger:  { name:'Stinger', glyph:'🪡', role:'swarm', hp:[3,4,5], speed:1, policy:'shooter',
+    stinger:  { name:'Stinger', glyph:'🪡', role:'swarm', hp:[3,4,5], speed:1, policy:'shooter', clades:['scorpion','hummingbird','lionfish'],
       abilities:{ sting:{ n:'Sting', kind:'los', dmg:[2,3,3] } },
       flavor:'Keeps its zone and never closes.' },
-    brute:    { name:'Brute', glyph:'🦍', role:'bruiser', hp:[10,13,16], speed:1, policy:'brute',
+    brute:    { name:'Brute', glyph:'🦍', role:'bruiser', hp:[10,13,16], speed:1, policy:'brute', clades:['bison','walrus','mandrill'],
       abilities:{ slam:{ n:'Slam', kind:'melee', dmg:[5,6,7], push:1, aimed:true } },
       flavor:'Slow. Then not.' },
-    kiter:    { name:'Kiter', glyph:'🏹', role:'zoner', hp:[7,9,11], speed:2, policy:'kiter',
+    kiter:    { name:'Kiter', glyph:'🏹', role:'zoner', hp:[7,9,11], speed:2, policy:'kiter', clades:['cheetah','porcupine','mantis_shrimp'],
       abilities:{ shot:{ n:'Shot', kind:'los', dmg:[3,4,5] } },
       flavor:'Shoots, retreats, shoots. Deny it the zone.' },
-    warden:   { name:'Warden', glyph:'🗿', role:'guardian', hp:[12,15,18], speed:0, policy:'guardian', shield:[3,3,3], anchored:true,
+    warden:   { name:'Warden', glyph:'🗿', role:'guardian', hp:[12,15,18], speed:0, policy:'guardian', clades:['tortoise','pangolin','moose'], shield:[3,3,3], anchored:true,
       abilities:{ cleave:{ n:'Cleave', kind:'melee', dmg:[4,5,6] }, brace:{ n:'Brace', kind:'brace' } },
       flavor:'It does not move. You go around it or through it — Pierce or true damage; its shield stops area too.' },
-    lurker:   { name:'Lurker', glyph:'🫥', role:'ambusher', hp:[7,9,11], speed:2, policy:'lurker', hidden:true,
+    lurker:   { name:'Lurker', glyph:'🫥', role:'ambusher', hp:[7,9,11], speed:2, policy:'lurker', clades:['lynx','chameleon','octopus'], hidden:true,
       abilities:{ ambush:{ n:'Ambush', kind:'melee', dmg:[5,6,7], ambush:true }, creep:{ n:'Creep', kind:'move' } },
       flavor:'You will not see it until it is adjacent. Reveal it first.' },
-    binder:   { name:'Binder', glyph:'🕸️', role:'controller', hp:[7,9,11], speed:1, policy:'binder',
+    binder:   { name:'Binder', glyph:'🕸️', role:'controller', hp:[7,9,11], speed:1, policy:'binder', clades:['flytrap','eel','cordyceps'],
       abilities:{ bind:{ n:'Bind', kind:'los', dmg:[2,2,3], anchor:2 }, drain:{ n:'Drain', kind:'melee', dmg:[3,3,4], heal:2 } },
       flavor:'Roots you where it wants you. It still cannot stop you acting.' },
     spawner:  { name:'Spawner', glyph:'🫧', role:'structure', hp:[7,9,11], speed:0, policy:'spawner', anchored:true, spawnEvery:3, spawns:'biter',
       abilities:{ spawn:{ n:'Spawn', kind:'summon' } },
       flavor:'A node of the Heart. Kill it and the swarm thins.' },
-    bulwark:  { name:'Bulwark', glyph:'🛡️', role:'elite', elite:true, hp:[18,22,26], speed:1, policy:'bulwark', shield:[2,2,3],
+    bulwark:  { name:'Bulwark', glyph:'🛡️', role:'elite', elite:true, hp:[18,22,26], speed:1, policy:'bulwark', clades:['armadillo','ram','lobster'], shield:[2,2,3],
       abilities:{ crush:{ n:'Crush', kind:'melee', dmg:[5,6,7] }, quake:{ n:'Quake', kind:'area', dmg:[3,4,4] }, brace:{ n:'Brace', kind:'brace' } },
       flavor:'An elite. Its quake punishes clumping.' },
-    harrier:  { name:'Harrier', glyph:'🗡️', role:'elite', elite:true, hp:[12,15,18], speed:2, policy:'harrier', hidden:true,
+    harrier:  { name:'Harrier', glyph:'🗡️', role:'elite', elite:true, hp:[12,15,18], speed:2, policy:'harrier', clades:['narwhal','hawk','mantis'], hidden:true,
       abilities:{ lance:{ n:'Phase Lance', kind:'teleStrike', dmg:[5,6,7], reach:3 }, fade:{ n:'Fade', kind:'hide' } },
       flavor:'An elite. Blinks to your weakest hero. Anchor it or reveal it.' },
-    tidecaller:{ name:'Tidecaller', glyph:'🌊', role:'elite', elite:true, hp:[12,14,16], speed:1, policy:'tidecaller',
+    tidecaller:{ name:'Tidecaller', glyph:'🌊', role:'elite', elite:true, hp:[12,14,16], speed:1, policy:'tidecaller', clades:['orca','jellyfish','seahorse'],
       abilities:{ undertow:{ n:'Undertow', kind:'los', dmg:[2,3,3], pull:2 }, surge:{ n:'Surge', kind:'los', dmg:[4,5,6], weaken:1 } },
       flavor:'An elite. Drags you toward the hazard. Anchor yourself.' },
     rival:    { name:'Rival Pilot', glyph:'🧑‍🚀', role:'elite', elite:true, rival:true, hp:[15,18,22], speed:2, policy:'rival',

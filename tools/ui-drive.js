@@ -119,14 +119,17 @@ async function driveRun(
                 }
                 if (U.ms.mode === 'choice') act('choice', 'pull');
                 if (U.ms.mode === 'reroll') {
-                  click('.die.pick');
+                  click('.die.die-pick');
                   act('rerollConfirm');
                 }
                 if (U.ms.mode === 'freeMove' && !clickNode()) act('cancelMode');
                 if (U.ms.mode !== 'idle') act('cancelMode');
               }
               // a basic action, through its button and the target it asks for
-              if (click(`[data-act="basic"][data-arg^="${hi}|"]:not([disabled])`) && U.ms.mode === 'target') {
+              const basicHit = click(`[data-act="basic"][data-arg^="${hi}|"]:not([disabled])`);
+              // one button for an action paid in more than one way: the bar asks how; take the first
+              if (basicHit && U.ms.mode === 'pay') act('payWith', U.ms.pending.ways[0]);
+              if (basicHit && U.ms.mode === 'target') {
                 if (!click('#tokens .token.targetable')) act('cancelMode');
               }
               act('interact', String(hi));

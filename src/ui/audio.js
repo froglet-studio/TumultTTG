@@ -527,7 +527,7 @@
     const mood = moodNow();
     const was = M.mood;
     M.mood = mood;
-    if (!M.started || M.paused) return;
+    if (!M.started || M.paused || P().muteMusic) return; // music off: nothing streams
     const t = TRACKS.find((x) => x.id === M.cur);
     if (!M.el || !t) return next();
     if (mood !== was && !M.pinned && !fits(t, mood)) next();
@@ -544,6 +544,12 @@
       } catch (e) {}
     }
     if (M.started && !M.el && musicLevel() > 0) next();
+    else if (M.el && !M.el.paused && P().muteMusic)
+      M.el.pause(); // muted: stop streaming, resume on unmute
+    else if (M.el && M.el.paused && !M.paused && musicLevel() > 0) {
+      const go = M.el.play();
+      if (go && go.catch) go.catch(() => {});
+    }
   }
   /** The first tap or key: the browser now lets the page make sound. */
   function unlock() {
@@ -632,6 +638,12 @@
     return `<div class="au-now${n.playing ? ' playing' : ''}${compact ? ' compact' : ''}"><div class="au-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="au-np"><span class="au-kick">Now playing</span><b class="au-title">${esc(title)}</b><small class="au-sub">${esc(sub)}</small><div class="au-bar"><span class="au-fill" style="width:${pct.toFixed(1)}%"></span></div><span class="au-time"><span data-au-t>${clock(n.time)}</span><span>${n.dur ? clock(n.dur) : '–:––'}</span></span></div><div class="au-tps">${btn('auPrev', 'Back', '⏮')}${btn('auToggle', n.playing ? 'Pause' : 'Play', n.playing ? '❚❚' : '▶', ' main')}${btn('auNext', 'Skip', '⏭')}</div></div>`;
   }
   U.audioNowHTML = nowHTML;
+  /** The small ♪ play/pause beside ⚙: switches the music on or off (and the sound with it, if that was off). */
+  const musicPlaying = () => on() && !P().muteMusic && !M.paused;
+  U.musicBtnHTML = (cls) =>
+    available().length
+      ? `<button class="${cls || 'sh-music'}${musicPlaying() ? ' on' : ''}" data-act="musicToggle" aria-pressed="${musicPlaying()}" aria-label="${musicPlaying() ? 'Pause the music' : 'Play the music'}" data-tip="${musicPlaying() ? 'Pause the music' : 'Play the music'}">${musicPlaying() ? '❚❚' : '♪'}</button>`
+      : '';
   function tracksHTML() {
     const off = P().musicOff || [];
     const n = U.audio.now();
@@ -725,7 +737,27 @@
         M.started = true;
         play(arg, { pinned: true });
         return true;
+      case 'musicToggle':
+        if (musicPlaying()) {
+          P().muteMusic = true;
+          if (M.el) M.el.pause();
+        } else {
+          if (!on()) U.sound = true;
+          P().muteMusic = false;
+          M.started = true;
+          if (M.el && M.paused) toggle();
+          else {
+            M.paused = false;
+            if (!M.el) next();
+          }
+        }
+        save();
+        sync();
+        redraw();
+        if (U.screen === 'settings' || (U.modal && U.modal.side)) U.render();
+        return true;
       case 'auToggle':
+        P().muteMusic = false; // the studio's Play means music on
         M.started = true;
         toggle();
         return true;
