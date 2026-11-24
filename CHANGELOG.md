@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.143.0 — 2026-11-24 — Every creature painted as one triple hybrid
+
+- Each kind of foe is now one triple hybrid with three fixed clades (`T.ENEMIES[type].clades`): the Biter, Stinger,
+  Brute, Kiter, Warden, Lurker, Binder, Bulwark, Harrier and Tidecaller. Its hybrid card still draws one trait from
+  each clade per foe, from the mission's `hybrid` stream. Rivals keep a random pair, and Spawners and the Heart carry no card.
+- Each kind is painted as a single fused beast (`assets/foe-art/`, Figma Weave, `tools/foe-art.js`). The ring of three
+  clade heads is gone, and the foe tooltip and intent no longer name a foe's clades: working them out is the puzzle
+  (Garrett, 2026-11-24). The codex's foes tab shows each painting.
+
 ## 2.142.0 — 2026-11-24 — Gravity bands on the expedition map
 
 - **The map's lanes are bands of gravity** (Garrett, 2026-11-24: "the top row should all be higher gravity missions. the middle band should be approximately 1g. the lowest row ... circa .1-.3g"). Every mission in the top lane is heavy, 3 to 6 g, with the heavy rule (a shoved or pulled unit takes 1 damage a space); the middle lane is 0.8 to 1.2 g; the bottom lane is 0.1 to 0.3 g, with the light rule (a shove or pull goes 1 space further). The finale stands in the middle, at about 1 g.

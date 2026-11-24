@@ -141,3 +141,30 @@ test('a rival pilot is human and two clades, plays its card as a pilot would, an
   assert.equal(r.hy.E, Math.min(3, r.hy.level - 1), 'it awakens as a pilot does, a face sooner than a creature');
   assert.ok(T.CARD[r.hy.traits[0]].clades.includes('human'));
 });
+
+test('each creature kind is one triple hybrid: the same three clades every time, never named in its intent (2.143)', () => {
+  for (const [k, def] of Object.entries(T.ENEMIES)) {
+    if (T.HYBRID.NOT.includes(k) || def.rival) continue;
+    assert.equal(def.clades && def.clades.length, 3, `${k} has three clades`);
+    assert.equal(new Set(def.clades).size, 3);
+    def.clades.forEach((sp) => {
+      assert.ok(T.SPECIES[sp] && sp !== 'human', `${k}: ${sp} is a clade, not human`);
+      assert.ok(
+        T.cardsOf(sp).some((c) => T.foeAbility(c.P, 0, 0)),
+        `${k}: ${sp} has a trait a foe can play`,
+      );
+    });
+  }
+  const names = T.SPECIES_ORDER.map((sp) => T.SPECIES[sp].name);
+  for (const seed of [3, 5, 9]) {
+    for (const type of ['swarm', 'vault', 'elite']) {
+      const m = mission(seed, type, 3);
+      for (const e of m.enemies) {
+        const def = T.ENEMIES[e.type];
+        if (def.clades) assert.deepEqual(e.clades, def.clades, `every ${e.type} is the same hybrid`);
+        const label = (e.intent && e.intent.label) || '';
+        assert.ok(!names.some((n) => label.includes('[' + n + ']')), `${e.type}'s intent names no clade: ${label}`);
+      }
+    }
+  }
+});
