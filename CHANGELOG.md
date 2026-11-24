@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.140.0 — 2026-11-24 — Music starts off
+
+- **No music until you ask for it** (Garrett, 2026-11-24: "there should be no music on by default"). The soundtrack starts muted and nothing streams while it is off; sound effects still play. Settings saved before this release are switched off once too.
+- **A small ♪ play/pause button beside ⚙** in the top bar, and beside ☰ on a mission. It plays or pauses the music and remembers the choice (turning the master sound on if it was off). The Audio studio's mixer and player still work as before.
+- Sound only: no rules, balance or saves change.
+
 ## 2.139.0 — 2026-11-24 — Paintings in the draft and on Tumult Online
 
 - **The draft shows the ability paintings** (Garrett, 2026-11-24: "i am not seeing the new artwork on the selection screen"). Pack, Upgrade and kit cards drew a pilot painting or the clade's head; they now show each face in action, the Physical face's painting left of the cut and the other's right of it, as cards do in a mission. A card without paintings keeps the old art.

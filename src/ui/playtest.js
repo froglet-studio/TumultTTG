@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.139.0',
+    version: '2.140.0',
     items: [
+      {
+        text: 'Music starts off now. The small \u266a button beside \u2699 (and beside \u2630 on a mission) plays or pauses Cosmic Shore\u2019s soundtrack, and remembers your choice. Effects still play. Is the button easy to find when you want music?',
+      },
       {
         text: 'Every card face has its own painting now, on this page too: an abstract close-up of the trait in action, the Physical face on the left of the cut and the Ethereal face on the right. You see them in the draft (packs, upgrades, your kit), in your hand and in each face\u2019s tip. Does the painting help you tell cards apart and remember what a face does?',
       },
