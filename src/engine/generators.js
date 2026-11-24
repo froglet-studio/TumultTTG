@@ -178,13 +178,19 @@
   /**
    * What the place is like on this visit: its gravity band, and a weather drawn from the page's skies
    * (with the wind's direction: +1 blows toward the far edge, E; -1 toward where you arrive, A).
-   * Plain data, kept on the mission. A page without skies, or no page, is calm.
+   * Plain data, kept on the mission. A page without skies, or no page, is calm. `g` is the gravity of this
+   * visit in g: the route's lane gives it (T.LANE_GRAVITY), and a mission off the route has its page's own.
    */
-  T.placeConditions = function (page, rng) {
+  T.placeConditions = function (page, rng, g) {
     const weather = page && page.skies && page.skies.length ? rng.pick(page.skies) : 'calm';
     const wind = weather === 'wind' ? rng.pick([1, -1]) : 0;
-    return { gravity: page ? T.gravityBand(page.gravity) : 'normal', weather, wind };
+    if (g == null) g = page ? page.gravity : 1;
+    return { gravity: T.gravityBand(g), g, weather, wind };
   };
+  /** Which gravity lane (T.LANE_GRAVITY) the c-th of k stops in a route row stands in: 0 top, 1 middle, 2 bottom. */
+  T.laneOf = (c, k) => (k <= 1 ? 1 : Math.round((2 * c) / (k - 1)));
+  /** Whether g lies in a lane's band. */
+  T.fitsLane = (g, lane) => g >= T.LANE_GRAVITY[lane].min && g <= T.LANE_GRAVITY[lane].max;
   T.boardUtil = { gridBoard, addHeight, pick, shuffle, pageBoard, boardFor };
 
   /* ───────────────────────────── MISSION ARCHETYPES ───────────────────────────── */

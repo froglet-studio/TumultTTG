@@ -67,30 +67,41 @@
    * Give every stop that is played on a board its atlas page, from the ground of its leg (src/data/atlas.js),
    * drawn from a stream of its own ('atlas'): not the page of a stop that leads to it, nor of another stop in its
    * row, while the ground has another page to give (the arriving stops come first). Havens and events stay off the board.
+   * The map's lanes are bands of gravity (T.LANE_GRAVITY): a page whose own gravity fits the stop's lane is
+   * picked first, and a stop on a page that does not fit is visited at one of its lane's gravities (stream 'gravity').
+   * Each stop keeps its gravity in `g`.
    */
   T.chartPages = function (run) {
     const rng = T.runStream(run, 'atlas');
     const all = run.map.all;
+    const gOf = (n, lane) => {
+      const own = T.PAGE_BY[n.page].gravity;
+      n.g = T.fitsLane(own, lane) ? own : T.runStream(run, 'gravity').pick(T.LANE_GRAVITY[lane].g);
+    };
     run.map.rows.forEach((row, r) => {
       const ground = T.groundAt(run, r);
       const pages = T.ATLAS.filter((p) => !ground || p.ground === ground).map((p) => p.id);
       const used = [];
-      row.forEach((id) => {
+      row.forEach((id, c) => {
         const n = all[id];
         if (n.type === 'haven' || n.type === 'event') return;
+        const lane = T.laneOf(c, row.length);
+        const fits = (ids) => ids.filter((p) => T.fitsLane(T.PAGE_BY[p].gravity, lane));
         if (T.MISSIONS[n.type] && T.MISSIONS[n.type].big) {
           // a big-map mission goes on a big page, of the leg's ground if there is one, from a stream of its own
           const big = T.BIG_ATLAS.filter((p) => p.ground === ground);
           n.page = T.runStream(run, 'bigmap').pick((big.length ? big : T.BIG_ATLAS).map((p) => p.id));
-          return;
+          return gOf(n, lane);
         }
         const before = Object.values(all)
           .filter((m) => m.next.includes(id))
           .map((m) => m.page);
         const fresh = pages.filter((p) => !before.includes(p) && !used.includes(p));
         const notBefore = pages.filter((p) => !before.includes(p));
-        n.page = rng.pick(fresh.length ? fresh : notBefore.length ? notBefore : pages);
+        const choice = [fits(fresh), fresh, fits(notBefore), notBefore, pages].find((l) => l.length);
+        n.page = rng.pick(choice);
         used.push(n.page);
+        gOf(n, lane);
       });
     });
   };

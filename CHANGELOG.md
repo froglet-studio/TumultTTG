@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.142.0 — 2026-11-24 — Gravity bands on the expedition map
+
+- **The map's lanes are bands of gravity** (Garrett, 2026-11-24: "the top row should all be higher gravity missions. the middle band should be approximately 1g. the lowest row ... circa .1-.3g"). Every mission in the top lane is heavy, 3 to 6 g, with the heavy rule (a shoved or pulled unit takes 1 damage a space); the middle lane is 0.8 to 1.2 g; the bottom lane is 0.1 to 0.3 g, with the light rule (a shove or pull goes 1 space further). The finale stands in the middle, at about 1 g.
+- The route picks a page whose own gravity fits the lane when the leg's ground has one; otherwise the place is visited at one of the lane's gravities (no sea page is heavy or light). The stop card, the route tip and the mission's guide log show that visit's gravity; the atlas spread keeps the page's usual value (`T.LANE_GRAVITY`, `T.chartPages`).
+- Not easier: 120 full runs before → after, heuristic 4 → 2 run wins (mission win 68% → 69%), look-ahead 54 → 52 (87% → 85%). Missions played off the route (`node tools/sim.js 40 missions`) are unchanged. Saves: a stop or mission saved before keeps its page's gravity (the new `g` is optional; no save version change).
+
 ## 2.140.0 — 2026-11-24 — Music starts off
 
 - **No music until you ask for it** (Garrett, 2026-11-24: "there should be no music on by default"). The soundtrack starts muted and nothing streams while it is off; sound effects still play. Settings saved before this release are switched off once too.

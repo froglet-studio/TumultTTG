@@ -98,7 +98,10 @@
       const pg = m.page && T.PAGE_BY[m.page];
       const pl = m.place || {};
       const parts = [pg ? pg.name.toUpperCase() : (m.title || '').toUpperCase()];
-      if (pg) parts.push(pg.gravity + ' G' + (pg.gravity > 1.5 ? ' · UPHILL' : pg.gravity < 0.7 ? ' · DOWNHILL' : ''));
+      if (pg) {
+        const g = pl.g != null ? pl.g : pg.gravity;
+        parts.push(g + ' G' + (g > 1.5 ? ' · UPHILL' : g < 0.7 ? ' · DOWNHILL' : ''));
+      }
       if (pl.weather === 'wind') parts.push(pl.wind > 0 ? 'WIND → E' : 'WIND ← A');
       if (pl.weather === 'fog') parts.push('FOG');
       parts.push(d.name.toUpperCase());

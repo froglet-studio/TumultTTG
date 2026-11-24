@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.140.0',
+    version: '2.142.0',
     items: [
+      {
+        text: 'The expedition map is banded by gravity now: every mission along the top of the map is heavy (3 to 6 g: anything shoved or pulled takes 1 damage a space), the middle about 1 g, and the bottom light (0.1 to 0.3 g: a shove goes 1 space further). Each stop card shows its g. Did you pick a lane for its gravity? Does heavy or light country change how you play?',
+      },
       {
         text: 'Music starts off now. The small \u266a button beside \u2699 (and beside \u2630 on a mission) plays or pauses Cosmic Shore\u2019s soundtrack, and remembers your choice. Effects still play. Is the button easy to find when you want music?',
       },
