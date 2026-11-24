@@ -322,7 +322,7 @@
   };
   /**
    * A foe of Tumult (2.132): a beast born on the planet, not a creature of the void. Each kind of creature is one
-   * triple hybrid (T.ENEMIES[type].clades), painted as a single beast (assets/foe-art/<type>, 2.143) in a ring the
+   * triple hybrid (T.ENEMIES[type].clades), painted as a single beast (assets/foe-art/<type>, 2.144) in a ring the
    * colour of danger. Never its three clades side by side (Garrett, 2026-11-24: "that is like showing people the
    * solution and no puzzle"). A rival pilot (e.rival) shows the painted pilot nearest its pair, as a pilot of the
    * squad would; a foe with no painting shows the old wireframe body. The classes .bd and .live keep the blow, the

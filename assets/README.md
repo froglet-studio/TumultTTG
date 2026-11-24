@@ -42,7 +42,7 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
   faces) and approved test sheets before the run. Each 1024 px sheet is a 3×3 grid; `node tools/ability-art.js cut`
   finds its gutters, trims 2% a cell, resizes to 144 px and repacks it. Which face sits in which tile is
   `U.ABILITY_SHEETS` in `src/ui/ability-art.js`; `tools/ability-art.js prompt N` prints the prompt a sheet was made from.
-- **Foe paintings** (`foe-art/<type>.webp`, 2.143) were generated for this repository in Figma Weave in Garrett's
+- **Foe paintings** (`foe-art/<type>.webp`, 2.144) were generated for this repository in Figma Weave in Garrett's
   workspace (2026-11-24) with Nano Banana 2 at 512 px, one image per creature kind, resized to 256 px. Each is one
   fused triple hybrid of its kind's three clades (`T.ENEMIES[type].clades` in `src/data/world.js`), posed for its
   role; Garrett's direction: never show a foe's three animals side by side, since working them out is the puzzle.

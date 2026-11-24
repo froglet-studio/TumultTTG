@@ -19,10 +19,13 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.143.0',
+    version: '2.144.0',
     items: [
       {
         text: 'Every creature is painted now as one beast: each kind of foe (Biter, Stinger, Brute, Kiter, Warden, Lurker, Binder and the three elites) is a single triple hybrid of three animals, always the same three for that kind, and the game never names them. Its hybrid card still draws different traits from those three each time. Look at a foe and at what it plays: can you work out what it is made of? Does each one look like its role?',
+      },
+      {
+        text: 'On a mission, every action you can take right now stands in view, and the ones you cannot take wait behind \u201cCan\u2019t do now\u201d (each one\u2019s tip says why). An action you can pay for two ways (Strike for 2 AP, or channelled with a Mass) is one button now: click it, then choose how to pay on the bar above the board. Picking dice (\u25c7\u2192AP, Return die, a reroll) no longer blanks the panel, and the die you picked first stays lifted. Is the action list easier to read?',
       },
       {
         text: 'The expedition map is banded by gravity now: every mission along the top of the map is heavy (3 to 6 g: anything shoved or pulled takes 1 damage a space), the middle about 1 g, and the bottom light (0.1 to 0.3 g: a shove goes 1 space further). Each stop card shows its g. Did you pick a lane for its gravity? Does heavy or light country change how you play?',

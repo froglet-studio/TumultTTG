@@ -7,7 +7,7 @@
 
    • A foe is still its role (Biter, Brute, Warden, ...): its body, vitality, speed and the ability its
      policy plays. On top of that, each foe that comes onto the board is a hybrid of three clades, none
-     human: its kind's own three (T.ENEMIES[type].clades, since 2.143), and carries a hybrid card
+     human: its kind's own three (T.ENEMIES[type].clades, since 2.144), and carries a hybrid card
      like a pet's: one trait from each clade, drawn when it spawns from a stream of the mission's own ('hybrid'), the trait's Physical face (P, P2, P3) and its Ethereal face
      (E, E2, E3).
    • The foe plays a face of its card as an intent, telegraphed like any other, then the card cools:
@@ -108,7 +108,7 @@
     const rng = T.stream(m.rngs, 'hybrid');
     const rival = !!T.ENEMIES[e.type].rival;
     // a rival pilot is what a pilot is: human and two clades (2.135; Garrett: "you can also put the players up against other Non player characters")
-    // a creature is its kind's three clades (T.ENEMIES[type].clades, painted as one beast; 2.143), its traits drawn from them
+    // a creature is its kind's three clades (T.ENEMIES[type].clades, painted as one beast; 2.144), its traits drawn from them
     const kind = T.ENEMIES[e.type].clades;
     const species = rival
       ? ['human'].concat(rng.shuffle(T.SPECIES_ORDER.filter((sp) => sp !== 'human')).slice(0, 2))

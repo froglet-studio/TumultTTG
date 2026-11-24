@@ -142,7 +142,7 @@ test('a rival pilot is human and two clades, plays its card as a pilot would, an
   assert.ok(T.CARD[r.hy.traits[0]].clades.includes('human'));
 });
 
-test('each creature kind is one triple hybrid: the same three clades every time, never named in its intent (2.143)', () => {
+test('each creature kind is one triple hybrid: the same three clades every time, never named in its intent (2.144)', () => {
   for (const [k, def] of Object.entries(T.ENEMIES)) {
     if (T.HYBRID.NOT.includes(k) || def.rival) continue;
     assert.equal(def.clades && def.clades.length, 3, `${k} has three clades`);

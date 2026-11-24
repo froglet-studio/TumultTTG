@@ -728,6 +728,7 @@
       const a = m.heroes.find((x) => x.uid === tg.ally);
       txt += ` For ${esc(a ? a.name : 'your ally')}: click another pilot to choose them instead.`;
     } else if (ms.mode === 'choice') txt = `<b>${esc(ms.pending.label)}</b> — push or pull?`;
+    else if (ms.mode === 'pay') txt = `<b>${esc(ms.pending.label)}</b> — pay with what?`;
     else if (ms.mode === 'reroll') txt = `<b>Reroll</b> — click up to ${ms.rerollLeft} banked dice, then confirm.`;
     else if (ms.mode === 'freeMove') txt = `<b>Free step</b> — click a highlighted node (up to ${ms.freeN}).`;
     else if (ms.mode === 'dump') txt = `<b>Return a die</b> — click a banked die to send it back to the pool.`;
@@ -735,7 +736,32 @@
       txt = (ms.asAPPicked || []).length
         ? `<b>Dice as AP</b> — now click a second etherion: the two make 1 AP.`
         : `<b>Dice as AP</b> — click an Omni (1 AP), or two etherions, the same or different (1 AP together).`;
-    el.innerHTML = `<div class="targeting">${txt}<span class="right row">${allyBtns}${ms.mode === 'choice' ? '<button class="sm primary" data-act="choice" data-arg="push">Push</button><button class="sm primary" data-act="choice" data-arg="pull">Pull</button>' : ''}${ms.mode === 'reroll' ? '<button class="sm primary" data-act="rerollConfirm">Confirm</button>' : ''}<button class="sm ghost" data-act="cancelMode">${ms.mode === 'freeMove' || ms.mode === 'reroll' ? 'Skip' : 'Cancel'}</button></span></div>`;
+    el.innerHTML = `<div class="targeting">${txt}<span class="right row">${allyBtns}${ms.mode === 'choice' ? '<button class="sm primary" data-act="choice" data-arg="push">Push</button><button class="sm primary" data-act="choice" data-arg="pull">Pull</button>' : ''}${ms.mode === 'pay' ? payBtns(ms.pending) : ''}${ms.mode === 'reroll' ? '<button class="sm primary" data-act="rerollConfirm">Confirm</button>' : ''}<button class="sm ghost" data-act="cancelMode">${ms.mode === 'freeMove' || ms.mode === 'reroll' ? 'Skip' : 'Cancel'}</button></span></div>`;
+  }
+  /** The ways of paying for a merged basic action, as buttons: its AP, or the die it channels and what it adds. */
+  function payBtns(p) {
+    const heads = {};
+    p.ways.forEach((id) => {
+      const b = T.BASIC_BY[id];
+      if (!heads[b.n]) heads[b.n] = basicVariants(id)[0];
+    });
+    return p.ways
+      .map((id) => {
+        const b = T.BASIC_BY[id];
+        const head = heads[b.n];
+        const cost = b.el
+          ? `${U.ic('el.' + b.el, b.el)} ${EL[b.el].name} or Omni${b.ap ? ' + ' + b.ap + ' AP' : ''}`
+          : `${b.ap} AP`;
+        // what a way of paying adds beyond the action itself (Brace channelled with Time also Hastes)
+        const plain = (t) => t.replace(/^Channel \w+: /, '').replace(/\.$/, '');
+        const hp = plain(head.txt).toLowerCase();
+        const bp = plain(b.txt);
+        const rest =
+          b !== head && bp.toLowerCase().startsWith(hp) ? bp.slice(hp.length).replace(/^,?\s*(and\s+)?/, '') : '';
+        const extra = rest ? ` <span class="small">+ ${esc(rest.split(':')[0])}</span>` : '';
+        return `<button class="sm primary pay-way" data-act="payWith" data-arg="${id}" data-tip="${esc(b.txt)}">${cost}${extra}</button>`;
+      })
+      .join('');
   }
   function hintText(m) {
     const h = hero();
@@ -1146,9 +1172,9 @@
         .map((f, di) =>
           U.dieHTML(
             f,
-            ((canPickDie && sel) || (asAPing && (f === 'O' || T.AS_AP.includes(f))) ? 'pick' : '') +
+            ((canPickDie && sel) || (asAPing && (f === 'O' || T.AS_AP.includes(f))) ? 'die-pick' : '') +
               ((U.ms.rerollPicked.includes(di) || (asAPing && (U.ms.asAPPicked || []).includes(di))) && sel
-                ? ' rolled'
+                ? ' die-chosen'
                 : ''),
             T.heldKind(h, di),
             `data-act="die" data-arg="${i}|${di}" ${tilt(di)}`,
@@ -1252,59 +1278,71 @@
     const canRally = !h.downed && down && down.downed && B.adjacent(m.board, h.pos, down.pos) && T.apValue(h) >= 2;
     const canValve = !h.downed && ['M', 'C', 'S', 'T'].every((f) => h.held.includes(f));
     const canAsAP = !m.over && T.apSpends(h).length > 0;
-    // the four basic actions used most stay in view; the rest (and the channelled ones) wait behind More
-    const MAIN = ['strike', 'brace', 'shove', 'spot'];
-    const basicBtn = (b) => {
-      const ok = !m.over && T.canUseBasic(m, h, b.id).ok;
-      if (b.el && !ok) return ''; // a channelled action shows only while its etherion is in the bank
-      const tip = b.el
-        ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
-        : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`;
-      const mark = b.el ? ` <span style="color:${EL[b.el].color}">+◆</span>` : '';
-      return `<button class="sm" data-act="basic" data-arg="${i}|${b.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip) + U.kwGloss(b.txt))}">${U.icBasic(b)} ${esc(b.n)}${mark}${b.ap || !b.el ? ` <span class="acost">${b.ap}</span>` : ''}</button>`;
+    const canDump = !m.over && !h.downed && h.held.length > 0;
+    // every action this pilot can take now stands in view; what it cannot take waits behind the fold (2.143).
+    // One action paid for in more than one way (Strike for 2 AP, or channelled with a Mass) is one button: a
+    // second click on the bar above the board chooses the payment, the way push or pull is chosen.
+    const acts = []; // { html, ok }
+    const basicBtn = (head) => {
+      const vars = basicVariants(head.id);
+      const usable = vars.filter((b) => !m.over && T.canUseBasic(m, h, b.id).ok);
+      const ok = usable.length > 0;
+      const shown = ok ? usable : vars;
+      const costChip = (b) =>
+        b.el
+          ? `<span class="acost acost-el" style="--c:${EL[b.el].color}">${U.ic('el.' + b.el, b.el)}${b.ap ? '+' + b.ap : ''}</span>`
+          : `<span class="acost">${b.ap}</span>`;
+      const tip = vars
+        .map((b) =>
+          b.el
+            ? `${b.n}, channelled (${b.ap ? b.ap + ' AP + ' : ''}1 ${EL[b.el].name} or Omni${b.ap ? '' : ', no AP'}): ${b.txt}`
+            : `${b.n} (${b.ap} AP): ${b.txt} Anyone can do this, any number of times.`,
+        )
+        .join(' Or: ');
+      const more = usable.length > 1 ? ' Click, then choose how to pay.' : '';
+      acts.push({
+        ok,
+        html: `<button class="sm" data-act="basic" data-arg="${i}|${head.id}" ${ok ? '' : 'disabled'} data-tip="${esc(esc(tip + more) + U.kwGloss(head.txt))}">${U.icBasic(head)} ${esc(head.n)} ${shown.map(costChip).join('')}</button>`,
+      });
     };
     const interactB = `<button class="sm${canInteract ? ' goal-act' : ''}" data-act="interact" data-arg="${i}" ${canInteract ? '' : 'disabled'} data-tip="Interact with an adjacent objective (2 AP; a survey mark also takes a die of its element). Height objectives require standing on the node.">⚙ Interact <span class="acost">2</span></button>`;
     const rallyB = `<button class="sm" data-act="rally" data-arg="${i}" ${canRally ? '' : 'disabled'} data-tip="Revive a downed adjacent ally (2 AP, back at 8).">✚ Rally <span class="acost">2</span></button>`;
-    const main = h.ride != null ? [] : T.BASIC.filter((b) => MAIN.includes(b.id)).map(basicBtn);
     // a vehicle: inside, its moves and cards take the basic actions' place; beside one, a way in
-    if (m.vehicles) main.unshift(...vehicleBtns(m, h, i));
-    const more = T.BASIC.filter((b) => !MAIN.includes(b.id))
-      .map(basicBtn)
-      .filter(Boolean);
-    // Interact and Rally join the four when they can be used: they are what the moment is about
-    (canInteract ? main : more).push(interactB);
-    (canRally ? main : more).push(rallyB);
-    // Heel: one button per pet, beside the four (src/data/pets.js)
+    if (m.vehicles) acts.push(...vehicleBtns(m, h, i));
+    // what the moment is about comes first: an objective in reach, a partner to pick up
+    if (canInteract) acts.push({ ok: true, html: interactB });
+    if (canRally) acts.push({ ok: true, html: rallyB });
+    if (h.ride == null) basicHeads().forEach(basicBtn);
+    // Heel: one button per pet (src/data/pets.js)
     for (const p of T.petsOf(m, h)) {
       const ok = !m.over && T.canHeel(m, h, p.uid).ok;
-      main.push(
-        `<button class="sm" data-act="heel" data-arg="${i}|${p.uid}" ${ok ? '' : 'disabled'} data-tip="${esc(`Heel (${T.PET.HEEL_AP} AP): ${esc(p.name)} walks up to ${T.PET.SPEED}. On your node it cannot be hurt.`)}">🐾 Heel ${esc(p.name)} <span class="acost">${T.PET.HEEL_AP}</span></button>`,
-      );
+      acts.push({
+        ok,
+        html: `<button class="sm" data-act="heel" data-arg="${i}|${p.uid}" ${ok ? '' : 'disabled'} data-tip="${esc(`Heel (${T.PET.HEEL_AP} AP): ${esc(p.name)} walks up to ${T.PET.SPEED}. On your node it cannot be hurt.`)}">🐾 Heel ${esc(p.name)} <span class="acost">${T.PET.HEEL_AP}</span></button>`,
+      });
     }
-    // Dice as AP stands beside the four while a face in hand needs it to be paid for; under More otherwise
-    const asAPNeeded =
-      canAsAP &&
-      h.cards.some(
-        (cid) =>
-          T.inHand(h, cid) &&
-          T.faceKeys(cid).some((fk) => {
-            const c = T.CARD[cid];
-            const f = c[fk];
-            if (!T.faceAwake(h, cid, fk)) return false;
-            return T.payableAsAP(h, f.ap, f.elt || c.el, f.el || 0);
-          }),
-      );
-    const asAPB = `<button class="sm${U.ms.mode === 'asAP' && sel ? ' primary' : ''}" data-act="asAPMode" data-arg="${i}" ${canAsAP ? '' : 'disabled'} data-tip="${esc('Dice as AP (no cost): one banked Omni, or any two banked etherions (the same or different), become 1 AP. Click an Omni, or two element dice: they go back to the pool and you gain 1 AP until the end of this turn. As often as you like.')}">◇→AP</button>`;
-    (asAPNeeded ? main : more).push(asAPB);
-    more.push(
-      `<button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>`,
-      `<button class="sm ghost" data-act="dumpMode" data-arg="${i}" ${h.downed || !h.held.length ? 'disabled' : ''} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>`,
+    if (!canInteract) acts.push({ ok: false, html: interactB });
+    if (!canRally) acts.push({ ok: false, html: rallyB });
+    acts.push(
+      {
+        ok: canAsAP,
+        html: `<button class="sm${U.ms.mode === 'asAP' && sel ? ' primary' : ''}" data-act="asAPMode" data-arg="${i}" ${canAsAP ? '' : 'disabled'} data-tip="${esc('Dice as AP (no cost): one banked Omni, or any two banked etherions (the same or different), become 1 AP. Click an Omni, or two element dice: they go back to the pool and you gain 1 AP until the end of this turn. As often as you like.')}">◇→AP</button>`,
+      },
+      {
+        ok: canValve,
+        html: `<button class="sm" data-act="valve" data-arg="${i}" ${canValve ? '' : 'disabled'} data-tip="Anti-brick valve: fold one each of M, C, S, T into one Omni (3 dice return to the pool).">◇ Fold 4→Omni</button>`,
+      },
+      {
+        ok: canDump,
+        html: `<button class="sm${U.ms.mode === 'dump' && sel ? ' primary' : ''}" data-act="dumpMode" data-arg="${i}" ${canDump ? '' : 'disabled'} data-tip="Return a banked die to the pool (last resort when your bank is clogged).">↩ Return die</button>`,
+      },
     );
-    const channelled = T.BASIC.filter((b) => b.el && !m.over && T.canUseBasic(m, h, b.id).ok).length;
+    const main = acts.filter((a) => a.ok).map((a) => a.html);
+    const more = acts.filter((a) => !a.ok).map((a) => a.html);
     const moreOpen = !!U.ms.moreActs;
     const actions = `<div class="actions${moreOpen ? ' more-open' : ''}">
-        ${main.join('')}
-        <button class="sm ghost more-btn" data-act="moreActs" aria-expanded="${moreOpen}" data-tip="Every other basic action${channelled ? ', including ' + channelled + ' you can channel now' : ''}">${moreOpen ? 'Fewer actions ▴' : `More actions (${more.length})${channelled ? ' <span class="more-el">+◆</span>' : ''} ▾`}</button>
+        ${main.join('') || '<span class="dim small no-acts">Nothing you can do right now.</span>'}
+        ${more.length ? `<button class="sm ghost more-btn" data-act="moreActs" aria-expanded="${moreOpen}" data-tip="Actions you cannot take right now, and why in each one's tip">${moreOpen ? 'Hide what you can’t do ▴' : `Can’t do now (${more.length}) ▾`}</button>` : ''}
         <span class="more-acts">${more.join('')}</span>
       </div>`;
     const gearRow = gear || cons ? `<div class="gearrow">${gear}${cons}</div>` : '';
@@ -1344,38 +1382,57 @@
       ${gearRow}
     </div>`;
   }
+  /** The basic actions as the dock shows them: one per name, its first entry in T.BASIC standing for the rest. */
+  function basicHeads() {
+    const seen = new Set();
+    return T.BASIC.filter((b) => !seen.has(b.n) && seen.add(b.n));
+  }
+  /** Every way of taking the basic action this id names: the same action, paid for in AP or with an etherion. */
+  function basicVariants(id) {
+    const b = T.BASIC_BY[id];
+    return b ? T.BASIC.filter((x) => x.n === b.n) : [];
+  }
+  /** The ways of paying for it this pilot can use now. */
+  function usableVariants(m, h, id) {
+    return basicVariants(id).filter((b) => T.canUseBasic(m, h, b.id).ok);
+  }
   function vehicleBtns(m, h, i) {
     const out = [];
     const v = T.vehicleOf(m, h);
     if (v) {
       const d = T.vehicleDef(v);
-      out.push(
-        `<span class="veh-chip" data-tip="${esc(vehicleTip(m, v))}">${d.icon} ${esc(d.name)} <span class="mono">hull ${v.hull}/${d.hull}</span></span>`,
-      );
+      out.push({
+        ok: true,
+        html: `<span class="veh-chip" data-tip="${esc(vehicleTip(m, v))}">${d.icon} ${esc(d.name)} <span class="mono">hull ${v.hull}/${d.hull}</span></span>`,
+      });
       if (v.driver === h.uid) {
         const ok = !m.over && T.driveOptions(m, h).length;
-        out.push(
-          `<button class="sm" data-act="vdrive" data-arg="${i}" ${ok ? '' : 'disabled'} data-tip="${esc(`Drive (1 AP): move the ${d.name} up to ${d.speed} spaces over its ground, with everyone inside. Or click a highlighted space.`)}">➤ Drive <span class="acost">1</span></button>`,
-        );
+        out.push({
+          ok: !!ok,
+          html: `<button class="sm" data-act="vdrive" data-arg="${i}" ${ok ? '' : 'disabled'} data-tip="${esc(`Drive (1 AP): move the ${d.name} up to ${d.speed} spaces over its ground, with everyone inside. Or click a highlighted space.`)}">➤ Drive <span class="acost">1</span></button>`,
+        });
       }
       const outOk = !m.over && T.leaveOptions(m, h).length;
-      out.push(
-        `<button class="sm" data-act="vleave" data-arg="${i}" ${outOk ? '' : 'disabled'} data-tip="Get out (1 AP) onto a free space beside it that you could walk on.">⇲ Get out <span class="acost">1</span></button>`,
-      );
+      out.push({
+        ok: !!outOk,
+        html: `<button class="sm" data-act="vleave" data-arg="${i}" ${outOk ? '' : 'disabled'} data-tip="Get out (1 AP) onto a free space beside it that you could walk on.">⇲ Get out <span class="acost">1</span></button>`,
+      });
       for (const c of T.vehicleCards(m, h)) {
         const ok = !m.over && T.canUseVehicleCard(m, h, c.id).ok;
-        out.push(
-          `<button class="sm" data-act="vcard" data-arg="${i}|${c.id}" ${ok ? '' : 'disabled'} data-tip="${esc(`${c.n} (${c.ap} AP, the ${d.name}'s, once a round${c.seat === 'driver' ? ', the driver' : ', any seat'}): ${c.txt}`)}">${c.icon} ${esc(c.n)} <span class="acost">${c.ap}</span></button>`,
-        );
+        out.push({
+          ok: !!ok,
+          html: `<button class="sm" data-act="vcard" data-arg="${i}|${c.id}" ${ok ? '' : 'disabled'} data-tip="${esc(`${c.n} (${c.ap} AP, the ${d.name}'s, once a round${c.seat === 'driver' ? ', the driver' : ', any seat'}): ${c.txt}`)}">${c.icon} ${esc(c.n)} <span class="acost">${c.ap}</span></button>`,
+        });
       }
       return out;
     }
     for (const uid of h.downed || m.over ? [] : T.boardOptions(m, h)) {
       const w = m.vehicles.find((x) => x.uid === uid);
       const d = T.vehicleDef(w);
-      out.push(
-        `<button class="sm goal-act" data-act="vboard" data-arg="${i}|${uid}" data-tip="${esc(`Get in (1 AP). ${vehicleTip(m, w)}`)}">${d.icon} Get in <span class="acost">1</span></button>`,
-      );
+      out.push({
+        ok: true,
+        html: `<button class="sm goal-act" data-act="vboard" data-arg="${i}|${uid}" data-tip="${esc(`Get in (1 AP). ${vehicleTip(m, w)}`)}">${d.icon} Get in <span class="acost">1</span></button>`,
+      });
     }
     return out;
   }
@@ -2016,8 +2073,10 @@
       return chk.ok ? { p: { kind: 'card', cardId: parts[1], fk: parts[2] }, tg: chk.tg, i } : null;
     }
     if (act === 'basic') {
-      const chk = T.canUseBasic(m, h, parts[1]);
-      return chk.ok ? { p: { kind: 'basic', id: parts[1] }, tg: chk.tg, i } : null;
+      // a merged button previews the first way of paying for it that can be used
+      const b = usableVariants(m, h, parts[1])[0];
+      const chk = b && T.canUseBasic(m, h, b.id);
+      return chk && chk.ok ? { p: { kind: 'basic', id: b.id }, tg: chk.tg, i } : null;
     }
     if (act === 'gear') {
       const [gi, ai] = [+parts[1], +parts[2]];
@@ -2510,10 +2569,21 @@
       U.updateMission();
     }
   }
-  function beginBasic(i, id) {
+  function beginBasic(i, id, chosen) {
     const m = M();
     U.ms.heroIdx = i;
     const h = hero();
+    // one button, more than one way to pay: the bar above the board asks which, as push or pull is asked
+    if (!chosen) {
+      const ways = usableVariants(m, h, id);
+      if (ways.length > 1) {
+        U.ms.pending = { kind: 'pay', hero: i, ways: ways.map((b) => b.id), label: T.BASIC_BY[id].n };
+        U.ms.mode = 'pay';
+        U.updateMission();
+        return;
+      }
+      if (ways.length === 1) id = ways[0].id;
+    }
     const chk = T.canUseBasic(m, h, id);
     if (!chk.ok) {
       U.toast(chk.why || 'Cannot do that now.');
@@ -2786,6 +2856,15 @@
           ms.pending = null;
         }
         beginBasic(+i, id);
+        return true;
+      }
+      case 'payWith': {
+        // the payment chosen for a merged action: go on as if its own button had been clicked
+        const p = ms.pending;
+        if (ms.mode !== 'pay' || !p || !p.ways.includes(arg)) return true;
+        ms.mode = 'idle';
+        ms.pending = null;
+        beginBasic(p.hero, arg, true);
         return true;
       }
       case 'vdrive':
