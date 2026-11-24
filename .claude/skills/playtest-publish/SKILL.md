@@ -31,6 +31,8 @@ Check the playtest panel's NOTES (`src/ui/playtest.js`) describe this version (`
 
 Publish `dist/TUMULT.playtest.html` with the Artifact tool, `url` set to the playtest artifact, so it updates in place. Keep the artifact's capabilities (omit `capabilities`) so the shared store and sign-in keep working.
 
+The page names the ability paintings beside it instead of carrying them (it holds 16 MB at most): `npm run build:playtest` copies them to `dist/ability-art/`. Pass them with the page as `files`, each at the path the page names it by, with `root: "dist"`: `{"ability-art/sheet-001.webp": "ability-art/sheet-001.webp", …}` for every file in `dist/ability-art/` (118 today, well under one publish's 255 files and 64 MB). Without them the cards show their drawn verbs instead of the paintings.
+
 ## 4. Report
 
 One line to the person: the version and commit now on the playtest page, and its link.

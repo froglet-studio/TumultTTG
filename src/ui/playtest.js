@@ -19,10 +19,13 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.138.0',
+    version: '2.139.0',
     items: [
       {
-        text: 'Foes look like beasts of Tumult now: each hybrid foe is drawn as the heads of its three clades in a ring coloured by how dangerous it is (red, amber elite, violet rival, gold for the threat at the end). Can you tell foes apart at a glance? (The new ability paintings on cards are in the offline file and the web version, not this page.)',
+        text: 'Every card face has its own painting now, on this page too: an abstract close-up of the trait in action, the Physical face on the left of the cut and the Ethereal face on the right. You see them in the draft (packs, upgrades, your kit), in your hand and in each face\u2019s tip. Does the painting help you tell cards apart and remember what a face does?',
+      },
+      {
+        text: 'Foes look like beasts of Tumult now: each hybrid foe is drawn as the heads of its three clades in a ring coloured by how dangerous it is (red, amber elite, violet rival, gold for the threat at the end). Can you tell foes apart at a glance?',
       },
       {
         text: 'After the first screen, the draft is new too: bloodlines, packs and upgrades show everything at once, and tapping a card or a bloodline opens it big. On Upgrade, tap a face\u2019s bars to set its level; the line under it says what the next point buys. Is each step clear without reading much? Does it work on a phone?',

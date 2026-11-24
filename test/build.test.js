@@ -171,4 +171,12 @@ test('every trait face has one cell on an ability sheet, and every painted sheet
       `${f} is in the build`,
     );
   }
+  // the playtest page (16 MB at most) names each sheet beside it instead, and lists the file to publish with it
+  const { build } = await import(pathToFileURL(path.join(root, 'tools', 'build.mjs')).href);
+  const { html, beside } = build({ playtest: true });
+  assert.ok(!html.includes('"ability-art/sheet-001":"data:'), 'no sheet is inlined in the playtest page');
+  for (const f of require('node:fs').readdirSync(dir)) {
+    assert.ok(html.includes(JSON.stringify('ability-art/' + f)), `the playtest page names ${f}`);
+    assert.equal(beside.get('ability-art/' + f), path.join(dir, f), `${f} is published beside the playtest page`);
+  }
 });
