@@ -183,6 +183,14 @@
     { id: 'normal', max: 2.9,      name: 'Gravity',       text: '' },
     { id: 'heavy',  max: Infinity, name: 'Heavy gravity', text: 'Anything shoved or pulled takes 1 damage for each space it is moved.' },
   ];
+  /* The route's lanes are bands of gravity (Garrett, 2026-11-24): the top lane of the map is heavy country,
+     the middle about 1 g, the bottom light, 0.1 to 0.3 g. A stop keeps its page's own gravity when it fits
+     the lane, and otherwise is visited at one of the lane's `g`. Lane 0 is the top of the map. */
+  T.LANE_GRAVITY = [
+    { id: 'high', min: 3,   max: 6,   g: [3, 3.5, 4, 5, 6] },
+    { id: 'mid',  min: 0.8, max: 1.2, g: [0.8, 0.9, 1, 1.1, 1.2] },
+    { id: 'low',  min: 0.1, max: 0.3, g: [0.1, 0.2, 0.3] },
+  ];
   T.WEATHER = {
     calm: { name: 'Calm', text: '' },
     wind: { name: 'Wind', text: 'At the end of every round the wind moves every unit 1 space downwind, if a path leads there and the space is free. A shield, an anchor or a hover holds you; so does the Heart.' },

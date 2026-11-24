@@ -43,7 +43,7 @@ test('the weather is drawn from its own stream: the same seed, the same board un
     const b = T.quickMission({ seed, type: 'vault', tier: 2 }).mission;
     assert.deepEqual(a.place, b.place);
     const page = T.PAGE_BY[a.page];
-    assert.equal(a.place.gravity, T.gravityBand(page.gravity));
+    assert.equal(a.place.gravity, T.gravityBand(a.place.g));
     assert.ok(page.skies.includes(a.place.weather));
     assert.equal(a.place.wind !== 0, a.place.weather === 'wind');
     assert.equal(a.board.fog, a.place.weather === 'fog' ? T.FOG_RANGE : 0);
@@ -155,4 +155,36 @@ test('a save from 2.24 (mid-mission) loads with calm, normal rules and plays on'
   assert.ok(!run.mission.board.fog, 'no fog on a board from before fog');
   assert.equal(T.serializeRun(T.deserializeRun(T.serializeRun(run))), T.serializeRun(run));
   assert.ok(H.playMission(run.mission).over, 'the mission plays to its end');
+});
+
+test('the route is banded by gravity: heavy along the top, about 1 g in the middle, light along the bottom', () => {
+  const seen = [new Set(), new Set(), new Set()];
+  for (const length of ['full', 'short'])
+    for (let seed = 1; seed <= 12; seed++) {
+      const run = T.newRun(seed);
+      run.length = length;
+      H.prebuiltSquad(run, 0, 1);
+      T.startMap(run);
+      run.map.rows.forEach((row) =>
+        row.forEach((id, c) => {
+          const n = run.map.all[id];
+          if (!n.page) return assert.ok(n.type === 'haven' || n.type === 'event', `${n.type} has a page`);
+          const lane = T.laneOf(c, row.length);
+          assert.ok(T.fitsLane(n.g, lane), `seed ${seed} row ${n.row} lane ${lane}: ${n.g} g`);
+          seen[lane].add(n.g);
+          // the mission played there is played at that gravity, with its rule
+          const r = T.clone(run);
+          r.available = [id];
+          T.chooseNode(r, id);
+          if (r.phase === 'garage') r.garage.picks.forEach((x, i) => T.pickVehicle(r, i, T.vehiclePicks(r, n.page)[i]));
+          if (r.phase !== 'mission') return;
+          assert.equal(r.mission.place.g, n.g);
+          assert.equal(r.mission.place.gravity, ['heavy', 'normal', 'light'][lane]);
+        }),
+      );
+    }
+  assert.ok(
+    seen.every((s) => s.size > 1),
+    'each lane has more than one gravity',
+  );
 });
