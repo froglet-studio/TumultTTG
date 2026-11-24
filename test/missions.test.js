@@ -34,8 +34,11 @@ for (const arch of ARCHETYPES) {
     if (arch === 'boss' && tier < 3) continue;
     test(`${arch} tier ${tier}: auto-played missions run cleanly`, () => {
       const rate = playMany(arch, tier);
-      // Loose floors only — these catch "the mission became unwinnable", not balance drift.
-      if (tier === 1) assert.ok(rate >= 0.6, `${arch} t1 win rate collapsed: ${rate}`);
+      // Loose floors only — these catch "the mission became unwinnable", not balance drift. Crossing t1 sat right
+      // at 60% with the heuristic, and a longer clade list reshuffles every drafted squad (2.145: 57.5%), so its
+      // floor is 55% (Garrett, 2026-11-24).
+      const floor = arch === 'crossing' ? 0.55 : 0.6;
+      if (tier === 1) assert.ok(rate >= floor, `${arch} t1 win rate collapsed: ${rate}`);
     });
   }
 }

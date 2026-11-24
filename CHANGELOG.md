@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.145.0 — 2026-11-24 — Grey wolf, raccoon, and the tree of life
+
+- **Two new clades** (Garrett, 2026-11-24: "please add racoons and grey wolfs as a supported animal"). The **Grey Wolf** is in the dog family: Keen Nose, Pack Howl, Long Trot and Pin Down, and its own Relay Chase, Test the Herd, Territory, Harry and Alpha Pair. The **Raccoon** is weasel kin: Dense Fur, Headfirst Descent and Scavenger's Luck, and its own Feeling Paws, Clever Latch, Bandit Mask, Quick Hands, Dousing and Climb Anything. Both have painted heads, painted ability faces, an icon and a voice for the passages between stops. The six crew pilots who already had a wolf in their pair can now be flown as painted.
+- **The clades sit on the tree of modern phylogeny** ("respect modern taxonomy better. e.g. label raptors as the group for owls and birds of prey. hyenas should be grouped with cats"; `docs/reference/TAXONOMY.md`). The pilot maker groups clades by real groups, each with its scientific name: Raptors (owls, hawks, eagles), cat-like carnivores (cats and the hyena), dog-like carnivores (the dog family, weasel kin, the raccoon, the walrus), hoofed mammals and whales, and so on. Traits shared by descent now name their group (Killing Bite is the cat-like carnivores'); traits shared by a way of life name it (pack runners, waders, seabirds, marine mammals).
+- No existing card, rule or save changes; clade ids are the same.
 ## 2.144.0 — 2026-11-24 — Every creature painted as one triple hybrid
 
 - Each kind of foe is now one triple hybrid with three fixed clades (`T.ENEMIES[type].clades`): the Biter, Stinger,

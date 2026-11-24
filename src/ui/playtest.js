@@ -19,8 +19,15 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.144.0',
+    version: '2.145.0',
     items: [
+      {
+        text: 'Two new clades: the Grey Wolf and the Raccoon. Draft your own pilot and look for them in the clade picker. The wolf runs with the pack (Relay Chase, Test the Herd, Territory, Harry, Alpha Pair); the raccoon has quick hands (Feeling Paws, Clever Latch, Bandit Mask, Quick Hands, Dousing, Climb Anything). Does each play like itself? Six crew pilots with wolf in their pair can now be flown.',
+        cards: ['wol_relay', 'wol_test', 'rac_paws', 'rac_mask'],
+      },
+      {
+        text: 'The pilot maker now groups clades by the real tree of life: hyenas with the cats, the walrus and the raccoon with the dogs and weasels, whales with the hoofed mammals, owls with the hawks and eagles as Raptors. Each group shows its scientific name too. Can you still find the clade you want quickly?',
+      },
       {
         text: 'Every creature is painted now as one beast: each kind of foe (Biter, Stinger, Brute, Kiter, Warden, Lurker, Binder and the three elites) is a single triple hybrid of three animals, always the same three for that kind, and the game never names them. Its hybrid card still draws different traits from those three each time. Look at a foe and at what it plays: can you work out what it is made of? Does each one look like its role?',
       },

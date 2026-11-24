@@ -180,6 +180,12 @@
       'M3 3 7 7 17 7 21 3 22 13 12 20 2 13zM7.3 12 8.5 10.8 9.7 12 8.5 13.2zM14.3 12 15.5 10.8 16.7 12 15.5 13.2z',
       'M9 20 15 20 14 23 10 23z',
     ],
+    'clade.wolf':
+      'M3 22 4 13 6 7 6 1 9 5 11 4 13 0.5 14 6 17 8 23 11 22 13.5 16 14 14 22zM13.1 8.5 14 7.6 14.9 8.5 14 9.4z',
+    'clade.raccoon': [
+      'M2 3 7 4 9 6 15 6 17 4 22 3 21 11 14 18 12 19 10 18 3 11zM4.5 10 10 8.8 10.8 12.2 6 12.8zM19.5 10 14 8.8 13.2 12.2 18 12.8z',
+      'M10.5 19.5 13.5 19.5 12 21.5z',
+    ],
     'clade.walrus': [
       'M4 4 20 4 22 12 18 15 6 15 2 12zM6.8 8 8 6.8 9.2 8 8 9.2zM14.8 8 16 6.8 17.2 8 16 9.2z',
       'M8 14 10.5 14 9.5 23z',
@@ -517,7 +523,7 @@
       'lobster',
       'mantis_shrimp',
     ],
-    ['beetle', 'butterfly', 'firefly', 'mantis', 'scorpion'],
+    ['beetle', 'butterfly', 'firefly', 'mantis', 'scorpion', 'wolf', 'raccoon'],
   ];
   const PORTRAIT = {};
   U.PORTRAIT_SHEETS.forEach((ids, s) => ids.forEach((id, i) => (PORTRAIT[id] = { sheet: s + 1, i, n: ids.length })));

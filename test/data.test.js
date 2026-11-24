@@ -39,12 +39,33 @@ test('primates carry some of Human’s traits, and no clade carries one from a b
   }
   for (const c of T.CARDS) {
     if (!c.kin) continue;
-    for (const sp of c.clades.slice(1))
-      assert.ok(
-        T.SPECIES[sp].branch === c.kin || (T.SPECIES[sp].alsoKin || []).includes(c.kin) || T.SPECIES[sp].variant,
-        `${c.id} is written for ${c.kin}; ${sp} is not on it`,
-      );
+    for (const sp of c.clades)
+      assert.ok(T.inKin(sp, c.kin) || T.SPECIES[sp].variant, `${c.id} is written for ${c.kin}; ${sp} is not on it`);
   }
+});
+
+test('taxonomy: every clade sits on the tree of life, and every kin is a group or a way of life (2.145)', () => {
+  const names = new Set(Object.values(T.TAXA).map((x) => x.name));
+  assert.equal(names.size, Object.keys(T.TAXA).length, 'every group has its own name');
+  for (const sp of T.SPECIES_ORDER) {
+    const line = T.lineage(sp);
+    assert.ok(line.length > 1, `${sp} is placed on the tree`);
+    assert.equal(line[line.length - 1], 'life', `${sp} reaches the root`);
+    assert.ok(T.SPECIES[sp].branch, `${sp} has a branch to be shown under`);
+  }
+  for (const [g, x] of Object.entries(T.GUILDS)) {
+    assert.ok(!names.has(g), `${g} is a way of life, not a group's name`);
+    for (const sp of x.of) assert.ok(T.SPECIES[sp], `${g}: unknown clade ${sp}`);
+  }
+  for (const c of T.CARDS)
+    if (c.kin) assert.ok(names.has(c.kin) || T.GUILDS[c.kin], `${c.id}: ${c.kin} is on the tree or a way of life`);
+  // what Garrett named (2026-11-24): raptors hold the owls and the birds of prey; hyenas sit with the cats
+  assert.equal(T.SPECIES.owl.branch, 'Raptors');
+  assert.equal(T.SPECIES.eagle.branch, 'Raptors');
+  assert.equal(T.SPECIES.hyena.branch, T.SPECIES.tiger.branch);
+  assert.ok(T.lineage('orca').includes('artiodactyls'), 'whales are even-toed hoofed mammals');
+  assert.ok(T.lineage('eagle').includes('reptiles'), 'birds are reptiles');
+  assert.ok(T.lineage('raccoon').includes('musteloids') && T.lineage('wolf').includes('canids'));
 });
 
 test('every face is well-formed and its text resolves at every P/E level', () => {

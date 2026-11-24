@@ -4,6 +4,7 @@
     "data/cards.js",
     "data/pets.js",
     "data/clades.js",
+    "data/taxonomy.js",
     "data/instincts.js",
     "data/world.js",
     "data/story.js",
