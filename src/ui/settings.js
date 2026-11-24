@@ -29,10 +29,11 @@
     sound: true,
     master: 100,
     music: 60,
-    muteMusic: false,
+    muteMusic: true, // music starts off (Garrett, 2026-11-24): ♪ by ⚙ or the Audio studio turns it on
     muteFx: false,
     musicMode: 'game',
     musicOff: [],
+    musicOn: 1, // the settings know music starts off: older saves are switched off once (2026-11-24)
   };
   U.prefs = (() => {
     try {
@@ -46,11 +47,14 @@
       for (const k of ['master', 'music'])
         if (Number.isFinite(got[k])) p[k] = Math.max(0, Math.min(100, Math.round(got[k])));
       for (const k of ['sound', 'muteMusic', 'muteFx']) if (typeof got[k] === 'boolean') p[k] = got[k];
+      // settings saved before music started off kept muteMusic false without a choice: start them off too
+      if (got.musicOn !== 1) p.muteMusic = true;
+      p.musicOn = 1;
       if (['game', 'shuffle', 'one'].includes(got.musicMode)) p.musicMode = got.musicMode;
       if (Array.isArray(got.musicOff)) p.musicOff = got.musicOff.filter((x) => typeof x === 'string').slice(0, 50);
       return p;
     } catch {
-      return Object.assign({}, BASE, { musicOff: [] });
+      return Object.assign({}, BASE, { musicOff: [], musicOn: 1 });
     }
   })();
   function savePrefs() {

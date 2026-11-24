@@ -59,7 +59,7 @@
       return `<button class="sh-tab${t.id === tab ? ' on' : ''}" data-act="tab" data-arg="${t.id}"${t.id === tab ? ' aria-current="page"' : ''}${off ? ' data-tip="No expedition on its route yet. Start one from Play."' : ''}>${esc(t.name)}</button>`;
     }).join('');
     const right = U.shellRight ? U.shellRight() : '';
-    return `<header class="sh-top" role="navigation" aria-label="Main"><button class="sh-logo" data-act="tab" data-arg="play" aria-label="Tumult: home">TUMULT</button><nav class="sh-tabs">${tabs}</nav><span class="sh-right">${right}<button class="sh-gear${U.screen === 'settings' ? ' on' : ''}" data-act="settings" aria-label="Settings" data-tip="Settings">⚙</button></span></header>`;
+    return `<header class="sh-top" role="navigation" aria-label="Main"><button class="sh-logo" data-act="tab" data-arg="play" aria-label="Tumult: home">TUMULT</button><nav class="sh-tabs">${tabs}</nav><span class="sh-right">${right}${U.musicBtnHTML ? U.musicBtnHTML() : ''}<button class="sh-gear${U.screen === 'settings' ? ' on' : ''}" data-act="settings" aria-label="Settings" data-tip="Settings">⚙</button></span></header>`;
   }
   function phoneBar(tab) {
     const four = U.SHELL_TABS.filter((t) => t.phone);

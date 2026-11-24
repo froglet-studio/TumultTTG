@@ -57,7 +57,9 @@ They reach the game four ways, none of which changes a screen's code path:
 Kept in `tumult_v2_prefs` with the other settings (`src/ui/settings.js`): `sound` (the master switch, which every
 🔊 button toggles), `master`, `music`, `fx` (0 to 100), `muteMusic`, `muteFx`, `musicMode` and `musicOff` (the
 tracks left out). Effects are master × effects, scaled so the defaults match the old synth; music uses a square
-law so the slider's middle sounds like the middle. The Audio studio is Settings' Audio tab; the quick panel shows
+law so the slider's middle sounds like the middle. Music starts off (`muteMusic` true; Garrett, 2026-11-24):
+the small ♪ beside ⚙ (and beside ☰ on a mission) plays or pauses it, saving the choice, and nothing streams
+while it is off. Settings saved before then are switched off once (`musicOn` marks that). The Audio studio is Settings' Audio tab; the quick panel shows
 the player and the three levels.
 
 ## Adding a sound
