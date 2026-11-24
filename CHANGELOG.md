@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.143.0 — 2026-11-24 — What you can do, up top
+
+- **Every action you can take now is in view; what you cannot take is folded** (Garrett, 2026-11-24: "it should be all the things i can do up top. expand to see things i can't do"). The dock's action list no longer keeps four fixed basic actions in view with the rest under *More actions*: whatever can be taken right now (an objective in reach and a partner to pick up first, then the basic actions, Heel, ◇→AP, the Omni fold, Return die, a vehicle's moves) stands in view, and everything greyed out waits behind *Can't do now (n)*, each tip saying why.
+- **One action, one button, however it is paid** ("if the same action is two buttons because they take different resources, have it be one button and a second click for the different resources"). Strike and Shove (2 AP, or a Mass) and Brace (1 AP, or a Time, which also Hastes) are one button each, showing the costs that can be paid now. When more than one can, a click asks on the bar above the board, as push or pull is asked; with one way to pay it goes straight on. The engine's actions are unchanged (`strike`, `strike_M`, …).
+- **Fixed: picking dice blanked the panel** ("there is a visual bug when selecting resources"). A die that could be clicked (◇→AP, Return die, a reroll) carried the class `pick`, which the pilot-choice screen styles as a full-page panel, so each one became a tall dark slab over the dock. Clickable dice are `die-pick` now and glow; the first die picked for ◇→AP or a reroll stays lifted and gold (`die-chosen`) instead of only replaying its roll.
+
 ## 2.142.0 — 2026-11-24 — Gravity bands on the expedition map
 
 - **The map's lanes are bands of gravity** (Garrett, 2026-11-24: "the top row should all be higher gravity missions. the middle band should be approximately 1g. the lowest row ... circa .1-.3g"). Every mission in the top lane is heavy, 3 to 6 g, with the heavy rule (a shoved or pulled unit takes 1 damage a space); the middle lane is 0.8 to 1.2 g; the bottom lane is 0.1 to 0.3 g, with the light rule (a shove or pull goes 1 space further). The finale stands in the middle, at about 1 g.
