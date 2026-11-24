@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.144.0 — 2026-11-24 — Every creature painted as one triple hybrid
+
+- Each kind of foe is now one triple hybrid with three fixed clades (`T.ENEMIES[type].clades`): the Biter, Stinger,
+  Brute, Kiter, Warden, Lurker, Binder, Bulwark, Harrier and Tidecaller. Its hybrid card still draws one trait from
+  each clade per foe, from the mission's `hybrid` stream. Rivals keep a random pair, and Spawners and the Heart carry no card.
+- Each kind is painted as a single fused beast (`assets/foe-art/`, Figma Weave, `tools/foe-art.js`). The ring of three
+  clade heads is gone, and the foe tooltip and intent no longer name a foe's clades: working them out is the puzzle
+  (Garrett, 2026-11-24). The codex's foes tab shows each painting.
+- Foes' vitality 180 → 185% (`FOE_HP`): fixed clades made runs a shade easier for the look-ahead player (52 → 59 run wins of 120); at 185 it is 45, and the heuristic is unchanged.
 ## 2.143.0 — 2026-11-24 — What you can do, up top
 
 - **Every action you can take now is in view; what you cannot take is folded** (Garrett, 2026-11-24: "it should be all the things i can do up top. expand to see things i can't do"). The dock's action list no longer keeps four fixed basic actions in view with the rest under *More actions*: whatever can be taken right now (an objective in reach and a partner to pick up first, then the basic actions, Heel, ◇→AP, the Omni fold, Return die, a vehicle's moves) stands in view, and everything greyed out waits behind *Can't do now (n)*, each tip saying why.

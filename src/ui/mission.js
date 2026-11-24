@@ -332,10 +332,12 @@
     // drag and wheel move the view on a PC; − / % / + anywhere (src/ui/show.js)
     if (U.cameraOn) U.cameraOn(host, svg, g.W, g.H);
   }
-  /** A hybrid foe's clades and the faces of its card it can play (src/engine/hybrids.js). */
+  /**
+   * A hybrid foe's level and the faces of its card it can play (src/engine/hybrids.js). Never its clades (Garrett,
+   * 2026-11-24): what a foe is made of is for the player to work out from its painting and its moves.
+   */
   function hybridTip(e) {
     if (!e.hy || !e.clades) return '';
-    const kin = e.clades.map((sp) => (T.SPECIES[sp] ? T.SPECIES[sp].name : sp)).join(' · ');
     const faces = T.foeHybridFaces(e)
       .slice()
       .reverse()
@@ -345,7 +347,7 @@
       )
       .join('');
     const cd = e.hy.cd > 0 ? ` · card back in ${e.hy.cd}` : ' · card ready';
-    return `<div style="margin-top:4px" class="small"><b>Hybrid</b> ${esc(kin)} <span class="dim mono">· level ${e.hy.level} (P${e.hy.P} E${e.hy.E})${cd}</span></div>${faces}`;
+    return `<div style="margin-top:4px" class="small"><b>Triple hybrid</b> <span class="dim mono">· level ${e.hy.level} (P${e.hy.P} E${e.hy.E})${cd}</span></div>${faces}`;
   }
   function tipFor(id) {
     const m = M();
