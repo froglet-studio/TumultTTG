@@ -8,6 +8,7 @@
 - Each kind is painted as a single fused beast (`assets/foe-art/`, Figma Weave, `tools/foe-art.js`). The ring of three
   clade heads is gone, and the foe tooltip and intent no longer name a foe's clades: working them out is the puzzle
   (Garrett, 2026-11-24). The codex's foes tab shows each painting.
+- Foes' vitality 180 → 185% (`FOE_HP`): fixed clades made runs a shade easier for the look-ahead player (52 → 59 run wins of 120); at 185 it is 45, and the heuristic is unchanged.
 
 ## 2.142.0 — 2026-11-24 — Gravity bands on the expedition map
 
