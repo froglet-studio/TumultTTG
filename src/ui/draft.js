@@ -81,8 +81,19 @@
     if (own.length > 1 || (own.length && cand.length < 3)) cand = own;
     return cand.length ? cand[hash(c.name) % cand.length] : null;
   }
-  /** The art at the top of a calm card: a painting cropped its own way, else the clade's head. */
+  /**
+   * The art at the top of a calm card: its faces painted in action (src/ui/ability-art.js), the Physical
+   * face left of the cut and the other right of it; else a pilot painting cropped its own way, else the clade's head.
+   */
   function cardArt(c) {
+    const pp = U.abilityArt && U.abilityArt(c.id, 'P'),
+      pe = U.abilityArt && U.abilityArt(c.id, c.E ? 'E' : 'P2');
+    if (pp || pe) {
+      const side = (x, cls) =>
+        x ? `<b class="dr-fa ${cls}"><span class="${x.cls}" style="${x.style}"></span></b>` : '';
+      // one painted face fills the whole picture
+      return `<span class="dr-pic dr-painted${pp && pe ? '' : ' one'}">${side(pp, 'dr-fa-p')}${side(pe, 'dr-fa-e')}</span>`;
+    }
     const a = cardPainting(c);
     const src = a && U.sceneSrc ? U.sceneSrc(a) : null;
     if (src) {

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.139.0 — 2026-11-24 — Paintings in the draft and on Tumult Online
+
+- **The draft shows the ability paintings** (Garrett, 2026-11-24: "i am not seeing the new artwork on the selection screen"). Pack, Upgrade and kit cards drew a pilot painting or the clade's head; they now show each face in action, the Physical face's painting left of the cut and the other's right of it, as cards do in a mission. A card without paintings keeps the old art.
+- **Tumult Online gets the paintings too.** The claude.ai page holds 16 MB at most, so the playtest build no longer leaves them out: it names each sheet by a relative path, and `npm run build:playtest` writes the 118 sheets to `dist/ability-art/` to be published beside the page (`/playtest-publish`).
+- Drawing only: no rules, balance or saves change.
+
 ## 2.138.0 — 2026-11-23 — Ability paintings, beasts of Tumult
 
 - **Every trait face has a painting** (Garrett, 2026-11-22: "top notch art that depicts each abilities actions"). The art strip on a card shows the face in action: an abstract close-up of the trait itself (stripes, claws, quills, a tail) in motion, never a whole earth animal, since every creature of Tumult is a triple hybrid (Garrett, 2026-11-23). The strip is split as before, the Physical face's painting on one side and the Ethereal face's, lit in its element's colour, on the other; an asleep face stays grey. The painting also heads each face's tip.

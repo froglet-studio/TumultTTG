@@ -15,9 +15,18 @@
  * namespace (T); the build inlines them, in src/manifest.json order, into a
  * template together with the stylesheet.
  */
-import { readFileSync, writeFileSync, mkdirSync, readdirSync, existsSync, rmSync } from 'node:fs';
+import {
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  readdirSync,
+  existsSync,
+  rmSync,
+  copyFileSync,
+  statSync,
+} from 'node:fs';
 import { createHash } from 'node:crypto';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
 
@@ -138,13 +147,19 @@ function sources({ playtest = false, web = false } = {}) {
 
 export function build({ playtest = false, fragment = false } = {}) {
   const s = sources({ playtest });
-  // the claude.ai playtest page holds 16 MB at most: it carries the effects but no music, and none of the
-  // folders under manifest.art.notInPlaytest (the ability paintings), whose faces keep their drawn verbs there
-  const skip = playtest ? (s.manifest.art && s.manifest.art.notInPlaytest) || [] : [];
-  const inlined = art({
-    ...s.manifest,
-    art: { ...s.manifest.art, images: s.manifest.art.images.filter((d) => !skip.includes(d)) },
-  });
+  // the claude.ai playtest page holds 16 MB at most: it carries the effects but no music, and the folders under
+  // manifest.art.besidePlaytest (the ability paintings) are not inlined but published beside the page as files
+  // of their own (`beside`: published path → source file), which the page names by relative path
+  const besideDirs = playtest ? (s.manifest.art && s.manifest.art.besidePlaytest) || [] : [];
+  const beside = new Map();
+  const url = (file, kind) => {
+    const dir = besideDirs.find((d) => file.startsWith(join(root, d) + sep));
+    if (kind !== 'image' || !dir) return dataUri(file);
+    const rel = relative(join(root, 'assets'), file).split(sep).join('/');
+    beside.set(rel, file);
+    return rel;
+  };
+  const inlined = art(s.manifest, url);
   const sound = audio(playtest ? { ...s.manifest, audio: { ...s.manifest.audio, offline: [] } } : s.manifest);
   const js = s.stamp + inlined.js + sound + s.js;
   const css = inlined.css + '\n' + s.css;
@@ -158,7 +173,7 @@ export function build({ playtest = false, fragment = false } = {}) {
     .replace('__TITLE__', () => (playtest ? 'Tumult Playtest' : 'TUMULT'))
     .replace('/*__CSS__*/', () => css)
     .replace('/*__JS__*/', () => js);
-  return { html, js };
+  return { html, js, beside };
 }
 
 /** A file's name with the start of its content hash: `tumult.js` → `tumult.3f9a0c21be.js`. */
@@ -258,12 +273,23 @@ if (isMain) {
         `${firstKB.toFixed(0)} KB before the first painting`,
     );
   } else {
-    const { html, js } = build(variant);
+    const { html, js, beside } = build(variant);
     if (process.argv.includes('--check')) new vm.Script(js, { filename: 'TUMULT.inline.js' });
     const rel = outFile(variant);
     const out = join(root, rel);
     mkdirSync(dirname(out), { recursive: true });
     writeFileSync(out, html);
-    console.log(`built ${rel} — ${(Buffer.byteLength(html) / 1024).toFixed(0)} KB`);
+    // the files the playtest page names beside itself, at the paths it names them by (publish them with it)
+    if (beside.size) {
+      for (const [p, file] of beside) {
+        mkdirSync(dirname(join(root, 'dist', p)), { recursive: true });
+        copyFileSync(file, join(root, 'dist', p));
+      }
+    }
+    const kb = [...beside.values()].reduce((n, f) => n + statSync(f).size, 0) / 1024;
+    console.log(
+      `built ${rel} — ${(Buffer.byteLength(html) / 1024).toFixed(0)} KB` +
+        (beside.size ? `, and ${beside.size} files beside it in dist/ (${kb.toFixed(0)} KB)` : ''),
+    );
   }
 }

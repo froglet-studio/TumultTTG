@@ -104,9 +104,9 @@
     "offline": ["cosmic-shore-3-loop"]
   },
   "art": {
-    "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence).",
+    "comment": "Inlined by tools/build.mjs as data URIs (assets/README.md says where each piece comes from and its licence). The playtest page (16 MB at most) names the folders under besidePlaytest by relative path instead, and they are published beside it (dist/ability-art/).",
     "images": ["assets/pilots", "assets/scenes", "assets/portraits", "assets/ability-art"],
-    "notInPlaytest": ["assets/ability-art"],
+    "besidePlaytest": ["assets/ability-art"],
     "fonts": [
       {
         "family": "Chakra Petch",
