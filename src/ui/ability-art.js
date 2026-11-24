@@ -127,6 +127,9 @@
     ['man_flower.P', 'man_flower.E', 'man_head.P', 'man_head.E', 'man_still.P', 'man_still.E', 'man_strike.P', 'man_strike.E', 'man_sway.P'],
     ['man_sway.E', 'man_wings.P', 'man_wings.E', 'sco_brood.P', 'sco_brood.E', 'sco_burrow.P', 'sco_burrow.E', 'sco_glow.P', 'sco_glow.E'],
     ['sco_pincers.P', 'sco_pincers.E', 'sco_sense.P', 'sco_sense.E', 'sco_sting.E'],
+    ['wol_relay.P', 'wol_relay.E', 'wol_test.P', 'wol_test.E', 'wol_scent.P', 'wol_scent.E', 'wol_harry.P', 'wol_harry.E', 'wol_pair.P'],
+    ['wol_pair.E', 'rac_paws.P', 'rac_paws.E', 'rac_latch.P', 'rac_latch.E', 'rac_mask.P', 'rac_mask.E', 'rac_hands.P', 'rac_hands.E'],
+    ['rac_wash.P', 'rac_wash.E', 'rac_climb.P', 'rac_climb.E'],
   ];
   const AT = {};
   U.ABILITY_SHEETS.forEach((keys, s) => keys.forEach((k, i) => (AT[k] = { sheet: s + 1, i })));

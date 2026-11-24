@@ -29,11 +29,11 @@
   /* ───────────────────────── PRIMATES ─────────────────────────
      orangutan · ring-tailed lemur · mandrill. Each carries Human's Opposable Grip, and some of Human's other
      traits; Grooming is every primate's; Canopy Leap the climbers'; Troop Call the troop-livers'. */
-  S('orangutan', { name: 'Orangutan', lean: 'T/C', branch: 'Primates', icon: '🦧',
+  S('orangutan', { name: 'Orangutan', lean: 'T/C', icon: '🦧',
     tagline: 'Thoughtful canopy giant. Long arms, longer patience, clever hands.' });
-  S('lemur', { name: 'Ring-Tailed Lemur', lean: 'C/S', branch: 'Primates', icon: '🐒',
+  S('lemur', { name: 'Ring-Tailed Lemur', lean: 'C/S', icon: '🐒',
     tagline: 'Sun-lover and leaper. Fights with scent and with its troop.' });
-  S('mandrill', { name: 'Mandrill', lean: 'C/M', branch: 'Primates', icon: '🐒',
+  S('mandrill', { name: 'Mandrill', lean: 'C/M', icon: '🐒',
     tagline: 'Painted face, long fangs, the leader of a great troop.' });
   T.shareTrait('hum_grip', 'orangutan', 'lemur', 'mandrill');
   T.shareTrait('hum_tool', 'orangutan');
@@ -174,15 +174,15 @@
      Hyperspeed is the cheetah's alone: an exact run of four. */
   const CATS = ['lynx','caracal','ocelot','tiger','cheetah'];
   const CATS_CLAWED = ['lynx','caracal','ocelot','tiger'];
-  S('lynx', { name: 'Eurasian Lynx', lean: 'S/T', branch: 'Cats', icon: '🐈',
+  S('lynx', { name: 'Eurasian Lynx', lean: 'S/T', icon: '🐈',
     tagline: 'Snow-country ghost. Hears everything, leaves no track, strikes once.' });
-  S('caracal', { name: 'Caracal', lean: 'S/M', branch: 'Cats', icon: '🐈',
+  S('caracal', { name: 'Caracal', lean: 'S/M', icon: '🐈',
     tagline: 'Desert leaper. Swats birds out of the air from a standing jump.' });
-  S('ocelot', { name: 'Ocelot', lean: 'T/S', branch: 'Cats', icon: '🐆',
+  S('ocelot', { name: 'Ocelot', lean: 'T/S', icon: '🐆',
     tagline: 'Dappled night-walker of the forest floor and the branches over it.' });
-  S('tiger', { name: 'Tiger', lean: 'M/C', branch: 'Cats', icon: '🐅',
+  S('tiger', { name: 'Tiger', lean: 'M/C', icon: '🐅',
     tagline: 'The largest cat. Swims, stalks in stripes, and roars the field still.' });
-  S('cheetah', { name: 'Cheetah', lean: 'S/T', branch: 'Cats', icon: '🐆',
+  S('cheetah', { name: 'Cheetah', lean: 'S/T', icon: '🐆',
     tagline: 'The fastest runner alive. Claws like cleats, eyes for the long view.' });
 
   K(CATS,'cat_pounce','Pounce','M',0,
@@ -224,7 +224,7 @@
     { n:'Finish', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'execute', threshold:(P,E)=>3+E}],
       txt:(P,E)=>`Melee ${2+E}; if that leaves it at ${3+E} HP or less, it falls (not a boss).` },
-    'One bite, in the one place.', 'Cats');
+    'One bite, in the one place.', 'Cat-like carnivores');
   K(CATS,'cat_feet','Land on Your Feet','S',0,
     { n:'Twist', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>1+h(P), next:true},{v:'hazardImmune', dur:1}],
@@ -380,15 +380,15 @@
      Yip Chorus and Opportunist. The hyena is a cat's cousin, not a dog's: it also carries Killing Bite. */
   const DOGS = ['fennec','fox','jackal','coyote'];
   const DOG_KIN = DOGS.concat('hyena');
-  S('fennec', { name: 'Fennec Fox', lean: 'S/T', branch: 'Dogs and hyenas', icon: '🦊',
+  S('fennec', { name: 'Fennec Fox', lean: 'S/T', icon: '🦊',
     tagline: 'Tiny desert fox with enormous ears. Hears prey under the sand.' });
-  S('fox', { name: 'Red Fox', lean: 'S/C', branch: 'Dogs and hyenas', icon: '🦊',
+  S('fox', { name: 'Red Fox', lean: 'S/C', icon: '🦊',
     tagline: 'Clever, adaptable, and always one step to the side of where you looked.' });
-  S('jackal', { name: 'Golden Jackal', lean: 'C/T', branch: 'Dogs and hyenas', icon: '🐕',
+  S('jackal', { name: 'Golden Jackal', lean: 'C/T', icon: '🐕',
     tagline: 'Hunts in pairs, takes every chance, and is never as lost as it looks.' });
-  S('coyote', { name: 'Coyote', lean: 'T/S', branch: 'Dogs and hyenas', icon: '🐺',
+  S('coyote', { name: 'Coyote', lean: 'T/S', icon: '🐺',
     tagline: 'The trickster. Lives anywhere, sounds like ten of itself.' });
-  S('hyena', { name: 'Spotted Hyena', lean: 'M/C', branch: 'Dogs and hyenas', alsoKin: ['Cats'], icon: '🐕',
+  S('hyena', { name: 'Spotted Hyena', lean: 'M/C', icon: '🐕',
     tagline: 'Bone-cracking jaws, a matriarch\'s clan, and a laugh that carries for miles.' });
   T.shareTrait('cat_bite', 'hyena');
 
@@ -399,7 +399,7 @@
     { n:'Scent Lock', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'reveal', target:true, dur:(P,E)=>2+E},{v:'mark', n:(P,E)=>E, dur:3}],
       txt:(P,E)=>`Lock onto a foe's scent: Revealed for ${2+E} rounds, and it is Marked +${E} for 3 rounds.` },
-    'A thousand smells, and the one that matters.', 'Dogs and hyenas');
+    'A thousand smells, and the one that matters.', 'Pack runners');
   K(DOG_KIN,'dog_howl','Pack Howl','C',0,
     { n:'Howl', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'weaken', val:1, dur:1, area:'adj'},{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, target:'ally'}],
@@ -407,7 +407,7 @@
     { n:'Chorus', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true},{v:'empower', val:1, uses:1, dur:2, party:true}],
       txt:(P,E)=>`For ${1+E} rounds all heroes gain 1 AP at the start of each turn; all heroes' next strike deals +1.` },
-    'Where we are, and how many.', 'Dogs and hyenas');
+    'Where we are, and how many.', 'Pack runners');
   K(DOG_KIN,'dog_trot','Long Trot','T',0,
     { n:'Trot', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P}],
@@ -415,7 +415,7 @@
     { n:'Relay', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:2},{v:'haste', n:(P,E)=>1+E}],
       txt:(P,E)=>`Move 2; Haste: every card on your track returns ${1+E} columns sooner.` },
-    'Not fast. Just never stopping.', 'Dogs and hyenas');
+    'Not fast. Just never stopping.', 'Pack runners');
   K(DOGS,'dog_pin','Pin Down','M',0,
     { n:'Pin', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+P},{v:'anchor', who:'foe', dur:1}],
@@ -423,7 +423,7 @@
     { n:'Hold Down', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+E},{v:'anchor', who:'foe', dur:(P,E)=>1+h(E)},{v:'weaken', val:1, dur:(P,E)=>1+h(E)}],
       txt:(P,E)=>`Melee ${1+E}; hold it down: Anchored and Weakened 1, for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
-    'Paws on its back, all your weight behind them.', 'Dogs and hyenas');
+    'Paws on its back, all your weight behind them.', 'Dog family');
 
   // the two foxes
   K(['fennec','fox'],'fox_pounce','Mousing Pounce','M',0,
@@ -612,11 +612,11 @@
      badger's. The otter also uses tools (Human's Tool Use); the red panda has Human's Opposable Grip (a false
      thumb) and climbs down headfirst like the ocelot (Headfirst Descent). */
   const WEASEL = ['otter','badger','red_panda'];
-  S('otter', { name: 'Sea Otter', lean: 'C/M', branch: 'Weasel kin', icon: '🦦',
+  S('otter', { name: 'Sea Otter', lean: 'C/M', icon: '🦦',
     tagline: 'Floats on its back, cracks shells on a rock, holds hands while it sleeps.' });
-  S('badger', { name: 'Ratel', lean: 'M/T', branch: 'Weasel kin', icon: '🦡',
+  S('badger', { name: 'Ratel', lean: 'M/T', icon: '🦡',
     tagline: 'Loose skin, no fear, and a habit of eating things that sting.' });
-  S('red_panda', { name: 'Red Panda', lean: 'T/S', branch: 'Weasel kin', icon: '🐼',
+  S('red_panda', { name: 'Red Panda', lean: 'T/S', icon: '🐼',
     tagline: 'Treetop dweller in a thick red coat. Stands tall when it means it.' });
   T.shareTrait('hum_tool', 'otter');
   T.shareTrait('hum_grip', 'red_panda');
@@ -784,11 +784,11 @@
      walrus · orca · narwhal. All three carry Blubber and Breath Hold; the two whales Echolocation and
      Pod Song; the two tuskers Tusk. */
   const SEA = ['walrus','orca','narwhal'];
-  S('walrus', { name: 'Walrus', lean: 'M/T', branch: 'Sea mammals', icon: '🦭',
+  S('walrus', { name: 'Walrus', lean: 'M/T', icon: '🦭',
     tagline: 'A ton of whiskers, blubber and tusk. Loud, sociable, immovable.' });
-  S('orca', { name: 'Orca', lean: 'M/C', branch: 'Sea mammals', icon: '🐋',
+  S('orca', { name: 'Orca', lean: 'M/C', icon: '🐋',
     tagline: 'The ocean’s pack hunter. Clever, coordinated, and never alone.' });
-  S('narwhal', { name: 'Narwhal', lean: 'S/T', branch: 'Sea mammals', icon: '🐋',
+  S('narwhal', { name: 'Narwhal', lean: 'S/T', icon: '🐋',
     tagline: 'A pale whale of the ice, with a long spiral tusk that feels the water.' });
 
   K(SEA,'sea_blubber','Blubber','M',0,
@@ -798,7 +798,7 @@
     { n:'Thick Layer', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'cleanse', ward:1},{v:'shield', val:(P,E)=>2+E, dur:2}],
       txt:(P,E)=>`Shield ${2+E} for 2 rounds, and Cleanse, and you can't be Weakened or Anchored by a foe this round.` },
-    'Warm inside, whatever the water.', 'Sea mammals');
+    'Warm inside, whatever the water.', 'Marine mammals');
   K(SEA,'sea_breath','Breath Hold','T',0,
     { n:'Hold', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'hazardImmune', dur:2},{v:'heal', n:(P,E)=>1+h(P)}],
@@ -806,7 +806,7 @@
     { n:'Long Dive', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'hazardImmune', dur:(P,E)=>2+E},{v:'heal', n:(P,E)=>2+E},{v:'cleanse'}],
       txt:(P,E)=>`Ignore hazards for ${2+E} rounds, heal ${2+E}, and cleanse (Anchored, Weakened, Wounds).` },
-    'One breath, a long way down.', 'Sea mammals');
+    'One breath, a long way down.', 'Marine mammals');
   K(['orca','narwhal'],'sea_echo','Echolocation','S',0,
     { n:'Click', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
@@ -814,7 +814,7 @@
     { n:'Sound the Deep', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:2},{v:'mark', area:true, radius:(P,E)=>1+E}],
       txt:(P,E)=>`Reveal everything within ${1+E} for 2 rounds, and Mark every foe within ${1+E} (the next hit on each deals +2).` },
-    'The water answers in echoes.', 'Sea mammals');
+    'The water answers in echoes.', 'Whales');
   K(['orca','narwhal'],'sea_song','Pod Song','C',0,
     { n:'Call the Pod', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:2, party:true},{v:'heal', n:1, target:'ally'}],
@@ -822,7 +822,7 @@
     { n:'Chorus', ap:0, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'engine', kind:'ap', val:1, dur:(P,E)=>1+E, party:true}],
       txt:(P,E)=>`All heroes gain 1 AP at the start of each turn for ${1+E} ${1+E > 1 ? 'rounds' : 'round'}.` },
-    'Every pod sings its own dialect.', 'Sea mammals');
+    'Every pod sings its own dialect.', 'Whales');
   K(['walrus','narwhal'],'sea_tusk','Tusk','M',0,
     { n:'Hook', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'stripShield', amount:2},{v:'strike', kind:'melee', dmg:(P,E)=>2+P}],
@@ -830,7 +830,7 @@
     { n:'Spear', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>4+E, pierce:true},{v:'force', kind:'push', n:1}],
       txt:(P,E)=>`Melee ${4+E} that ignores Shield, and push it 1.` },
-    'A tooth grown long enough to lean on.', 'Sea mammals');
+    'A tooth grown long enough to lean on.', 'Marine mammals');
 
   // Walrus: blubber, breath, tusk, and these six
   K(['walrus'],'wal_haul','Haul Out','S',0,
@@ -963,19 +963,19 @@
   const HOOVED = ['yak','bison','oryx','ram','moose','deer','zebra'];
   const HORNED = ['yak','bison','oryx','ram'];
   const ANTLERED = ['moose','deer'];
-  S('yak', { name: 'Yak', lean: 'T/M', branch: 'Hoofed animals', icon: '🐂',
+  S('yak', { name: 'Yak', lean: 'T/M', icon: '🐂',
     tagline: 'A shaggy load-carrier of the high cold, steady where the air runs thin.' });
-  S('bison', { name: 'Bison', lean: 'M/T', branch: 'Hoofed animals', icon: '🦬',
+  S('bison', { name: 'Bison', lean: 'M/T', icon: '🦬',
     tagline: 'A ton of shoulder and fur that faces the storm head-on.' });
-  S('oryx', { name: 'Oryx', lean: 'S/T', branch: 'Hoofed animals', icon: '🐐',
+  S('oryx', { name: 'Oryx', lean: 'S/T', icon: '🐐',
     tagline: 'A desert antelope with horns like rapiers and water saved for later.' });
-  S('ram', { name: 'Bighorn Ram', lean: 'M/S', branch: 'Hoofed animals', icon: '🐏',
+  S('ram', { name: 'Bighorn Ram', lean: 'M/S', icon: '🐏',
     tagline: 'Cliff-walker with curled horns and a skull built for collisions.' });
-  S('moose', { name: 'Moose', lean: 'M/C', branch: 'Hoofed animals', icon: '🫎',
+  S('moose', { name: 'Moose', lean: 'M/C', icon: '🫎',
     tagline: 'Tall, solitary and wading. Gentle until it very suddenly is not.' });
-  S('deer', { name: 'Deer', lean: 'S/C', branch: 'Hoofed animals', icon: '🦌',
+  S('deer', { name: 'Deer', lean: 'S/C', icon: '🦌',
     tagline: 'All ears and spring. Gone before you knew it had seen you.' });
-  S('zebra', { name: 'Zebra', lean: 'C/S', branch: 'Hoofed animals', icon: '🦓',
+  S('zebra', { name: 'Zebra', lean: 'C/S', icon: '🦓',
     tagline: 'A herd in stripes that bites, kicks and never stands alone.' });
 
   K(HOOVED,'hoof_hooves','Hooves','S',0,
@@ -985,7 +985,7 @@
     { n:'Gallop', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>3+E, trample:1},{v:'hazardImmune', dur:1},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Move ${3+E}, trampling: each foe in your way is pushed 1 aside as you reach it. Ignore hazards this round, and your next hit this turn deals +1.` },
-    'Built for ground, and lots of it.', 'Hoofed animals');
+    'Built for ground, and lots of it.', 'Hoofed mammals and whales');
   K(HOOVED,'hoof_ring','Herd Ring','T',0,
     { n:'Close Ranks', ap:1, el:0, cd:1, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>2+h(P), dur:1, party:true, allyRange:1}],
@@ -993,7 +993,7 @@
     { n:'Ring of Horns', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>1+E, dur:1, party:true},{v:'thorns', val:(P,E)=>1+E, next:true, push:1, dur:1}],
       txt:(P,E)=>`All heroes hold Shield ${1+E} this round; Thorns: the next foe to hit you in melee takes ${1+E} and is pushed 1.` },
-    'Young in the middle, everyone else facing out.', 'Hoofed animals');
+    'Young in the middle, everyone else facing out.', 'Hoofed mammals and whales');
   K(HOOVED,'hoof_eyes','Wide Eyes','S',0,
     { n:'Look Around', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>2+P, dur:1},{v:'shield', val:(P,E)=>1+h(P), next:true},{v:'empower', val:1, uses:1, dur:1}],
@@ -1001,7 +1001,7 @@
     { n:'Nothing Behind Me', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:1},{v:'shield', val:(P,E)=>1+E, next:true, party:true}],
       txt:(P,E)=>`Reveal everything within ${1+E} this round; Shield: the next hit on each hero is ${1+E} less.` },
-    'Eyes on the sides of the head: it sees almost all the way round.', 'Hoofed animals');
+    'Eyes on the sides of the head: it sees almost all the way round.', 'Hoofed mammals and whales');
   K(HOOVED,'hoof_kick','Kick','M',0,
     { n:'Back Kick', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:2}],
@@ -1009,7 +1009,7 @@
     { n:'Double Barrel', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'force', kind:'push', n:(P,E)=>2+h(E)},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Melee ${3+E}, push it ${2+h(E)}, and it is Weakened 1 this round.` },
-    'Both hind feet, all at once.', 'Hoofed animals');
+    'Both hind feet, all at once.', 'Hoofed mammals and whales');
   K(HORNED,'hoof_horn','Horn Charge','M',0,
     { n:'Lower Horns', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
       fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true},{v:'force', kind:'push', n:1}],
@@ -1017,7 +1017,7 @@
     { n:'Gore', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E, pierce:true},{v:'force', kind:'push', n:2}],
       txt:(P,E)=>`Melee ${3+E} that ignores Shield, and push it 2.` },
-    'Head down, and go.', 'Hoofed animals');
+    'Head down, and go.', 'Bovids');
   K(HORNED,'hoof_chew','Ruminate','T',0,
     { n:'Chew the Cud', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'engine', kind:'regen', val:1, dur:(P,E)=>2+h(P)},{v:'haste', n:1}],
@@ -1025,7 +1025,7 @@
     { n:'Four Stomachs', ap:1, el:1, cd:4, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>2+E},{v:'cleanse'},{v:'engine', kind:'regen', val:1, dur:2}],
       txt:(P,E)=>`Heal ${2+E}, cleanse (Anchored, Weakened, Wounds), and heal 1 at the start of each turn for 2 rounds.` },
-    'It eats now and digests later.', 'Hoofed animals');
+    'It eats now and digests later.', 'Bovids');
   K(ANTLERED,'hoof_antlers','Antlers','M',0,
     { n:'Rake', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'weaken', val:1, dur:1}],
@@ -1033,7 +1033,7 @@
     { n:'Lock Antlers', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'anchor', who:'foe', dur:1},{v:'weaken', val:1, dur:(P,E)=>1+h(E)}],
       txt:(P,E)=>`Melee ${3+E}, and lock it in place: Anchored 1 and Weakened 1 for ${1+h(E)} ${1+h(E) > 1 ? 'rounds' : 'round'}.` },
-    'Grown fresh every year, and dropped every winter.', 'Hoofed animals');
+    'Grown fresh every year, and dropped every winter.', 'Deer');
   K(ANTLERED,'hoof_bound','Bound Away','S',0,
     { n:'Bound', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>1+P, ignoreFoes:true},{v:'shield', val:1, next:true}],
@@ -1041,7 +1041,7 @@
     { n:'Over the Fence', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'hidden', dur:1}],
       txt:(P,E)=>`Leap to anywhere within ${2+E}, height included, and you are Hidden 1.` },
-    'One spring and it is over the hedge.', 'Hoofed animals');
+    'One spring and it is over the hedge.', 'Deer');
 
   // Yak
   K(['yak'],'yak_coat','Thick Coat','T',0,
@@ -1244,14 +1244,13 @@
      mouse · porcupine · hare · black hare, with the jerboa. The jerboa's Gnawing Incisors are every
      gnawer's; its Vibrissae the mouse's and porcupine's; its Burrowing the mouse's; its Leap the hares';
      its Erratic Bounding the hares' and the mouse's. Long Ears, Boxing and Lie Low are both hares'. */
-  T.SPECIES.jerboa.branch = 'Gnawers';
-  S('mouse', { name: 'Field Mouse', lean: 'S/T', branch: 'Gnawers', icon: '🐭',
+  S('mouse', { name: 'Field Mouse', lean: 'S/T', icon: '🐭',
     tagline: 'Small, quick and everywhere. Through the gap before you saw the gap.' });
-  S('porcupine', { name: 'Porcupine', lean: 'M/T', branch: 'Gnawers', icon: '🦔',
+  S('porcupine', { name: 'Porcupine', lean: 'M/T', icon: '🦔',
     tagline: 'A slow climber in a coat of thirty thousand quills. Best left alone.' });
-  S('hare', { name: 'Brown Hare', lean: 'S/M', branch: 'Gnawers', icon: '🐇',
+  S('hare', { name: 'Brown Hare', lean: 'S/M', icon: '🐇',
     tagline: 'Long ears, long legs, and a temper in spring.' });
-  S('black_hare', { name: 'Black Hare', lean: 'S/C', branch: 'Gnawers', icon: '🐇',
+  S('black_hare', { name: 'Black Hare', lean: 'S/C', icon: '🐇',
     tagline: 'A night-coloured hare that runs where the moon doesn’t reach.' });
   T.shareTrait('jer_gnaw', 'mouse', 'porcupine', 'hare', 'black_hare');
   T.shareTrait('jer_vibrissae', 'mouse', 'porcupine');
@@ -1267,7 +1266,7 @@
     { n:'Ears Back', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'reveal', radius:(P,E)=>1+E, dur:1},{v:'move', n:(P,E)=>1+E, free:true},{v:'hidden', dur:1, canMove:true}],
       txt:(P,E)=>`Hear everything within ${1+E} this round, slip ${1+E}, and you are Hidden 1 even if you move.` },
-    'Each ear turns on its own.', 'Gnawers');
+    'Each ear turns on its own.', 'Hares');
   K(HARES,'har_box','Boxing','M',0,
     { n:'Jab', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>3+P},{v:'force', kind:'push', n:1}],
@@ -1275,7 +1274,7 @@
     { n:'Flurry', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
       fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'force', kind:'push', n:1}],
       txt:(P,E)=>`Melee ${2+E} twice, then shove it 1.` },
-    'Up on the hind legs, forepaws flying.', 'Gnawers');
+    'Up on the hind legs, forepaws flying.', 'Hares');
   K(HARES,'har_low','Lie Low','T',0,
     { n:'Form', ap:1, el:0, cd:2, dur:0, tgt:'self',
       fx:[{v:'hidden', dur:(P,E)=>1+h(P)},{v:'heal', n:1}],
@@ -1283,7 +1282,7 @@
     { n:'Still as Earth', ap:1, el:1, cd:4, dur:0, tgt:'party',
       fx:[{v:'hidden', dur:(P,E)=>1+E, party:true, radius:1},{v:'shield', val:1, dur:1, party:true}],
       txt:(P,E)=>`You and every ally beside you are Hidden ${1+E}; all heroes hold Shield 1 this round.` },
-    'Ears flat, eyes open, not a whisker moving.', 'Gnawers');
+    'Ears flat, eyes open, not a whisker moving.', 'Hares');
 
   // Mouse
   K(['mouse'],'mou_scurry','Scurry','S',0,
@@ -1441,13 +1440,13 @@
      Curl Up the three armoured ones'; Dig Claws and Long Tongue the armadillo's and pangolin's. */
   const ARMOURED = ['armadillo','pangolin','hedgehog'];
   const ANTEATERS = ['armadillo','pangolin'];
-  S('sloth', { name: 'Three-Toed Sloth', lean: 'T/C', branch: 'Armoured and slow', icon: '🦥',
+  S('sloth', { name: 'Three-Toed Sloth', lean: 'T/C', icon: '🦥',
     tagline: 'Hangs on, takes its time, and is never, ever in a hurry.' });
-  S('armadillo', { name: 'Armadillo', lean: 'M/S', branch: 'Armoured and slow', icon: '🦔',
+  S('armadillo', { name: 'Armadillo', lean: 'M/S', icon: '🦔',
     tagline: 'Banded armour, digging claws, and a startled leap straight up.' });
-  S('pangolin', { name: 'Pangolin', lean: 'M/T', branch: 'Armoured and slow', icon: '🦔',
+  S('pangolin', { name: 'Pangolin', lean: 'M/T', icon: '🦔',
     tagline: 'A walking pine cone of sharp scales that rolls into a fortress.' });
-  S('hedgehog', { name: 'Hedgehog', lean: 'T/M', branch: 'Armoured and slow', icon: '🦔',
+  S('hedgehog', { name: 'Hedgehog', lean: 'T/M', icon: '🦔',
     tagline: 'A snuffling night forager in a coat of spines. Curls up and waits.' });
 
   K(['sloth','armadillo','pangolin'],'arm_slow','Slow Metabolism','T',0,
@@ -1701,11 +1700,11 @@
   /* ───────────────────────── POUCHED AND EGG-LAYING ─────────────────────────
      kangaroo · opossum · platypus. Pouch is the two marsupials'; the opossum also shares the hedgehog's
      Venom Shrug, and the platypus the jerboa's Burrowing. */
-  S('kangaroo', { name: 'Red Kangaroo', lean: 'S/M', branch: 'Pouched and egg-laying', icon: '🦘',
+  S('kangaroo', { name: 'Red Kangaroo', lean: 'S/M', icon: '🦘',
     tagline: 'Tail like a third leg, legs like springs, and a boxer’s stance.' });
-  S('opossum', { name: 'Opossum', lean: 'T/C', branch: 'Pouched and egg-laying', icon: '🐀',
+  S('opossum', { name: 'Opossum', lean: 'T/C', icon: '🐀',
     tagline: 'A night wanderer that shrugs off venom and plays dead convincingly.' });
-  S('platypus', { name: 'Platypus', lean: 'C/T', branch: 'Pouched and egg-laying', icon: '🦫',
+  S('platypus', { name: 'Platypus', lean: 'C/T', icon: '🦫',
     tagline: 'Duck bill, otter feet, venom spurs. Hunts with its eyes shut.' });
   T.shareTrait('hed_venom', 'opossum');
   T.shareTrait('jer_burrow', 'platypus');
@@ -1717,7 +1716,7 @@
     { n:'Carry Them Out', ap:1, el:1, cd:4, dur:0, tgt:'ally',
       fx:[{v:'swap'},{v:'shield', val:(P,E)=>1+E, dur:1, party:true}],
       txt:(P,E)=>`Swap places with an ally, wherever they are; all heroes hold Shield ${1+E} this round.` },
-    'Somewhere warm and safe to be carried.', 'Pouched and egg-laying');
+    'Somewhere warm and safe to be carried.', 'Marsupials');
 
   // Kangaroo
   K(['kangaroo'],'kan_hop','Hop','S',0,
@@ -1911,10 +1910,9 @@
   /* ───────────────────────── BIRDS OF PREY AND OWLS ─────────────────────────
      bald eagle · red-tailed hawk, with the barn owl. Hollow Bones and Talon Strike are the owl's, and every raptor's;
      Keen Sight and Stoop are the day hunters'. The hawk's Sky Hyperspeed is the cheetah's run, taken to the air. */
-  T.SPECIES.owl.branch = 'Birds of prey and owls';
-  S('eagle', { name: 'Bald Eagle', lean: 'M/C', branch: 'Birds of prey and owls', icon: '🦅',
+  S('eagle', { name: 'Bald Eagle', lean: 'M/C', icon: '🦅',
     tagline: 'Broad wings, a voice like a rusty hinge, and a grip nothing breaks.' });
-  S('hawk', { name: 'Red-tailed Hawk', lean: 'S/M', branch: 'Birds of prey and owls', icon: '🦅',
+  S('hawk', { name: 'Red-tailed Hawk', lean: 'S/M', icon: '🦅',
     tagline: 'A brick-red tail and a long scream. Quick in the hedges, quicker in the open; hangs on the wind and drops.' });
   T.shareTrait('owl_bones', 'eagle', 'hawk');
   T.shareTrait('owl_talon', 'eagle', 'hawk');
@@ -1926,7 +1924,7 @@
     { n:'Eye of the Sky', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'reveal', radius:(P,E)=>2+E, dur:1},{v:'reveal', target:true, dur:(P,E)=>2+E},{v:'mark', n:(P,E)=>1+h(E), dur:3}],
       txt:(P,E)=>`See everything within ${2+E} this round; pick a foe: Revealed for ${2+E} rounds, and it is Marked +${1+h(E)} for 3 rounds.` },
-    'It reads a newspaper from a mile up, if it cared to.', 'Birds of prey and owls');
+    'It reads a newspaper from a mile up, if it cared to.', 'Raptors');
   K(['eagle','hawk'],'rap_stoop','Stoop','M',0,
     { n:'Drop', ap:1, el:0, cd:1, dur:0, tgt:'foe_r3',
       fx:[{v:'move', n:2, toward:true, free:true},{v:'strike', kind:'melee', dmg:(P,E)=>2+P, ifAdjacent:true}],
@@ -1934,7 +1932,7 @@
     { n:'Plummet', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
       fx:[{v:'blink', reach:(P,E)=>3+E, dest:'adjTarget', height:true},{v:'strike', kind:'melee', dmg:(P,E)=>3+E},{v:'weaken', val:1, dur:1}],
       txt:(P,E)=>`Fold the wings and fall beside a foe within ${3+E}, height included: melee ${3+E}, and it is Weakened 1 this round.` },
-    'Wings folded, and the whole sky behind it.', 'Birds of prey and owls');
+    'Wings folded, and the whole sky behind it.', 'Raptors');
 
   // Bald eagle: Hollow Bones, Talon Strike, Keen Sight, Stoop, and these five
   K(['eagle'],'eag_soar','Soar','S',0,
@@ -2026,17 +2024,17 @@
      pelican will). */
   const WADERS = ['crane','heron','egret','ibis','shoebill','flamingo'];
   const SPEARS = ['crane','heron','egret','ibis','shoebill'];
-  S('crane', { name: 'Crane', lean: 'S/C', branch: 'Waders', icon: '🪿',
+  S('crane', { name: 'Crane', lean: 'S/C', icon: '🪿',
     tagline: 'Tall, grey and patient, with a dance for every season and a voice that carries for miles.' });
-  S('heron', { name: 'Heron', lean: 'T/M', branch: 'Waders', icon: '🪿',
+  S('heron', { name: 'Heron', lean: 'T/M', icon: '🪿',
     tagline: 'A statue in the shallows until the moment it is not. Uses bait, on purpose.' });
-  S('egret', { name: 'Egret', lean: 'C/S', branch: 'Waders', icon: '🪿',
+  S('egret', { name: 'Egret', lean: 'C/S', icon: '🪿',
     tagline: 'White plumes, yellow feet, and a habit of riding on bigger animals.' });
-  S('ibis', { name: 'Ibis', lean: 'T/C', branch: 'Waders', icon: '🪿',
+  S('ibis', { name: 'Ibis', lean: 'T/C', icon: '🪿',
     tagline: 'A curved bill that finds what is buried, and a flock that flies in a line.' });
-  S('shoebill', { name: 'Shoebill', lean: 'M/T', branch: 'Waders', icon: '🪿',
+  S('shoebill', { name: 'Shoebill', lean: 'M/T', icon: '🪿',
     tagline: 'Stands still for an hour, then falls on its prey with its whole body. Its bill is a clog.' });
-  S('flamingo', { name: 'Flamingo', lean: 'T/C', branch: 'Waders', icon: '🦩',
+  S('flamingo', { name: 'Flamingo', lean: 'T/C', icon: '🦩',
     tagline: 'Pink from what it eats, at home in lakes that would burn anyone else. Never alone.' });
   T.shareTrait('owl_bones', ...WADERS);
   T.shareTrait('hum_tool', 'heron');
@@ -2289,11 +2287,11 @@
      puffin · pelican · blue-footed booby. Every bird's Hollow Bones; every seabird's Plunge Dive, Waterproof and
      Salt Gland. The puffin carries the jerboa's Burrowing, the pelican the shoebill's Big Bill. */
   const SEABIRDS = ['puffin','pelican','booby'];
-  S('puffin', { name: 'Atlantic Puffin', lean: 'S/C', branch: 'Seabirds', icon: '🐧',
+  S('puffin', { name: 'Atlantic Puffin', lean: 'S/C', icon: '🐧',
     tagline: 'Flies underwater, digs its own burrow, and carries ten fish at once.' });
-  S('pelican', { name: 'Pelican', lean: 'M/T', branch: 'Seabirds', icon: '🦤',
+  S('pelican', { name: 'Pelican', lean: 'M/T', icon: '🦤',
     tagline: 'A great glider with a bill that holds more than its belly. Fishes in a line with friends.' });
-  S('booby', { name: 'Blue-Footed Booby', lean: 'C/S', branch: 'Seabirds', icon: '🐦',
+  S('booby', { name: 'Blue-Footed Booby', lean: 'C/S', icon: '🐦',
     tagline: 'Clumsy on land, a dart from the sky. Shows off its bright blue feet.' });
   T.shareTrait('owl_bones', ...SEABIRDS);
   T.shareTrait('jer_burrow', 'puffin');
@@ -2439,15 +2437,15 @@
      tortoise and lobster will share it). The toucan carries the shoebill's Big Bill. Display Fan, Alarm Call
      and Spur are the peacock's, and the turkey will share them. */
   const BRIGHT = ['raven','parrot','toucan','hummingbird','peacock'];
-  S('raven', { name: 'Raven', lean: 'T/C', branch: 'Perching and bright birds', icon: '🐦‍⬛',
+  S('raven', { name: 'Raven', lean: 'T/C', icon: '🐦‍⬛',
     tagline: 'Clever, playful, never forgets a face. Hunts with wolves and slides down snow for fun.' });
-  S('parrot', { name: 'Parrot', lean: 'C/T', branch: 'Perching and bright birds', icon: '🦜',
+  S('parrot', { name: 'Parrot', lean: 'C/T', icon: '🦜',
     tagline: 'Loud, bright, long-lived, and holds its food in one foot while it talks back.' });
-  S('toucan', { name: 'Toucan', lean: 'S/C', branch: 'Perching and bright birds', icon: '🐦',
+  S('toucan', { name: 'Toucan', lean: 'S/C', icon: '🐦',
     tagline: 'All bill and bluff. The bill is light as foam and the croak carries a mile.' });
-  S('hummingbird', { name: 'Hummingbird', lean: 'S/T', branch: 'Perching and bright birds', icon: '🐦',
+  S('hummingbird', { name: 'Hummingbird', lean: 'S/T', icon: '🐦',
     tagline: 'The smallest bird there is, and the fiercest. Hovers, flies backwards, never stops.' });
-  S('peacock', { name: 'Peacock', lean: 'C/M', branch: 'Perching and bright birds', icon: '🦚',
+  S('peacock', { name: 'Peacock', lean: 'C/M', icon: '🦚',
     tagline: 'A hundred eyes in its tail and a scream like a cat. Eats snakes.' });
   T.shareTrait('owl_bones', ...BRIGHT);
   T.shareTrait('hum_pattern', 'raven', 'parrot');
@@ -2461,7 +2459,7 @@
     { n:'Its Own Voice', ap:2, el:1, cd:4, dur:0, tgt:'foe_r3',
       fx:[{v:'link', within:1, dur:2},{v:'weaken', val:1, dur:1},{v:'strike', kind:'los', dmg:(P,E)=>E}],
       txt:(P,E)=>`Call in a foe's own voice: Link a foe within 3 to a foe beside it for 2 rounds; it is Weakened 1 this round${E ? ` and takes ${E}, and so does the other` : ''}.` },
-    'It says your name better than you do.', 'Perching and bright birds');
+    'It says your name better than you do.', 'Parrots and songbirds');
   K(['parrot'],'bir_life','Long Life','T',0,
     { n:'Old Bird', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'cleanse'},{v:'shield', val:1, dur:1}],
@@ -2748,9 +2746,9 @@
      ostrich · wild turkey. Every bird's Hollow Bones; Ground Sprint is both of theirs. The turkey shares the
      peacock's Display Fan, Alarm Call and Spur. The ostrich carries the hoofed animals' Kick and Wide Eyes:
      not kin, but the same answer to the same open plain (a variant). */
-  S('ostrich', { name: 'Ostrich', lean: 'S/M', branch: 'Ground birds', variant: true, icon: '🐦',
+  S('ostrich', { name: 'Ostrich', lean: 'S/M', variant: true, icon: '🐦',
     tagline: 'The biggest bird alive. Cannot fly, does not need to. Outruns horses, kicks like one.' });
-  S('turkey', { name: 'Wild Turkey', lean: 'C/T', branch: 'Ground birds', icon: '🦃',
+  S('turkey', { name: 'Wild Turkey', lean: 'C/T', icon: '🦃',
     tagline: 'Wary, fast on foot, roosts high. Gobbles at thunder.' });
   T.shareTrait('owl_bones', 'ostrich', 'turkey');
   T.shareTrait('hoof_kick', 'ostrich');
@@ -2766,7 +2764,7 @@
     { n:'Flat Out', ap:1, el:1, cd:3, dur:0, tgt:'node_move',
       fx:[{v:'move', n:(P,E)=>2+E, ignoreFoes:true},{v:'haste', n:(P,E)=>1+h(E)},{v:'empower', val:1, uses:1, dur:1}],
       txt:(P,E)=>`Run ${2+E}, past foes; Haste: your track slides ${1+h(E)} extra, and your next hit this turn deals +1.` },
-    'Legs, and nothing but legs.', 'Ground birds');
+    'Legs, and nothing but legs.', 'Landfowl');
 
   // Ostrich: Hollow Bones, Ground Sprint, Kick, Wide Eyes, and these five
   K(['ostrich'],'ost_stride','Stride','S',0,
@@ -2846,12 +2844,11 @@
   /* ───────────────────────── LIZARDS ─────────────────────────
      gecko · chameleon · basilisk · horned lizard. The gecko's Tail Autotomy and Scaled Hide are every lizard's,
      and its Solar Basking every reptile's (the crocodile and the tortoise will share it). */
-  T.SPECIES.gecko.branch = 'Lizards';
-  S('chameleon', { name: 'Chameleon', lean: 'T/C', branch: 'Lizards', icon: '🦎',
+  S('chameleon', { name: 'Chameleon', lean: 'T/C', icon: '🦎',
     tagline: 'Two eyes that look two ways, a tongue longer than its body, and every colour it likes.' });
-  S('basilisk', { name: 'Basilisk', lean: 'S/M', branch: 'Lizards', icon: '🦎',
+  S('basilisk', { name: 'Basilisk', lean: 'S/M', icon: '🦎',
     tagline: 'Runs on two legs, and across water, faster than it can sink.' });
-  S('horned_lizard', { name: 'Horned Lizard', lean: 'M/T', branch: 'Lizards', icon: '🦎',
+  S('horned_lizard', { name: 'Horned Lizard', lean: 'M/T', icon: '🦎',
     tagline: 'A flat spiked crown, sand-coloured, and blood it can squirt from its eyes.' });
   T.shareTrait('gec_autotomy', 'chameleon', 'basilisk', 'horned_lizard');
   T.shareTrait('gec_hide', 'chameleon', 'basilisk', 'horned_lizard');
@@ -3009,9 +3006,9 @@
   /* ───────────────────────── CROCODILES AND TORTOISES ─────────────────────────
      crocodile · tortoise. Both carry the gecko's Solar Basking (every reptile's), and Armoured Hide and Slow
      Heart. The tortoise carries the parrot's Long Life. */
-  S('crocodile', { name: 'Crocodile', lean: 'M/T', branch: 'Crocodiles and tortoises', icon: '🐊',
+  S('crocodile', { name: 'Crocodile', lean: 'M/T', icon: '🐊',
     tagline: 'Two hundred million years of waiting under the surface. Then the roll.' });
-  S('tortoise', { name: 'Giant Tortoise', lean: 'T/M', branch: 'Crocodiles and tortoises', icon: '🐢',
+  S('tortoise', { name: 'Giant Tortoise', lean: 'T/M', icon: '🐢',
     tagline: 'Slow, steady, and older than anyone it meets. Its house goes where it goes.' });
   T.shareTrait('gec_basking', 'crocodile', 'tortoise');
   T.shareTrait('bir_life', 'tortoise');
@@ -3023,7 +3020,7 @@
     { n:'Osteoderms', ap:1, el:1, cd:3, dur:0, tgt:'self',
       fx:[{v:'shield', val:(P,E)=>2+E, dur:2},{v:'thorns', val:1, dur:2},{v:'heal', n:1}],
       txt:(P,E)=>`Shield ${2+E} for 2 rounds; anything that hits you in melee takes 1 meanwhile, and heal 1.` },
-    'Armour grown, not worn.', 'Crocodiles and tortoises');
+    'Armour grown, not worn.', 'Armoured reptiles');
   K(['crocodile','tortoise'],'rep_heart','Slow Heart','T',0,
     { n:'Slow Down', ap:1, el:0, cd:1, dur:0, tgt:'self',
       fx:[{v:'heal', n:(P,E)=>1+P},{v:'engine', kind:'ap', val:1, dur:1}],
@@ -3031,7 +3028,7 @@
     { n:'Two Beats a Minute', ap:1, el:1, cd:5, dur:1, tgt:'self',
       fx:[{v:'stasis', dur:1},{v:'heal', n:(P,E)=>2+E}],
       txt:(P,E)=>`Slow your heart almost to a stop: nothing can target you through the next enemy phase, and heal ${2+E}.` },
-    'A heart that can wait an hour between beats.', 'Crocodiles and tortoises');
+    'A heart that can wait an hour between beats.', 'Armoured reptiles');
 
   // Crocodile: Solar Basking, Armoured Hide, Slow Heart, and these six
   K(['crocodile'],'cro_roll','Death Roll','M',2,
@@ -3128,10 +3125,9 @@
      axolotl · newt · tree frog. The axolotl's Toxic Secretion and External Gills are every amphibian's; its
      Regeneration and Lateral Line the newt's too. The tree frog's sticky toes are the gecko's Adhesive Setae:
      not kin, the same answer to the same wall (a variant). */
-  T.SPECIES.axolotl.branch = 'Amphibians';
-  S('newt', { name: 'Newt', lean: 'T/C', branch: 'Amphibians', icon: '🦎',
+  S('newt', { name: 'Newt', lean: 'T/C', icon: '🦎',
     tagline: 'Wanders the woods as a bright red eft for years, then goes back to the water. Tastes terrible.' });
-  S('tree_frog', { name: 'Tree Frog', lean: 'S/C', branch: 'Amphibians', variant: true, icon: '🐸',
+  S('tree_frog', { name: 'Tree Frog', lean: 'S/C', variant: true, icon: '🐸',
     tagline: 'Sticky toes, red eyes, a glass belly, and a voice far too big for it.' });
   T.shareTrait('axo_toxic', 'newt', 'tree_frog');
   T.shareTrait('axo_gills', 'newt', 'tree_frog');
@@ -3235,14 +3231,13 @@
      axolotl's Lateral Line every new fish's. Koi and clownfish share Schooling; the koi carries Long Life. The
      seahorse's brood pouch and turret eyes are the kangaroo's Pouch and the chameleon's Turret Eyes, the same
      answers found again (a variant). */
-  T.SPECIES.eel.branch = 'Fish';
-  S('koi', { name: 'Koi', lean: 'T/C', branch: 'Fish', icon: '🐟',
+  S('koi', { name: 'Koi', lean: 'T/C', icon: '🐟',
     tagline: 'Gold and patient, lives for centuries. Swims upstream, and the story says it becomes a dragon.' });
-  S('clownfish', { name: 'Clownfish', lean: 'C/T', branch: 'Fish', icon: '🐠',
+  S('clownfish', { name: 'Clownfish', lean: 'C/T', icon: '🐠',
     tagline: 'Lives in a stinging anemone that never stings it, with a partner it never leaves.' });
-  S('lionfish', { name: 'Lionfish', lean: 'M/C', branch: 'Fish', icon: '🐡',
+  S('lionfish', { name: 'Lionfish', lean: 'M/C', icon: '🐡',
     tagline: 'All fans and venom spines. Corners its prey and swallows it whole.' });
-  S('seahorse', { name: 'Seahorse', lean: 'T/S', branch: 'Fish', variant: true, icon: '🐴',
+  S('seahorse', { name: 'Seahorse', lean: 'T/S', variant: true, icon: '🐴',
     tagline: 'Holds on with its tail, looks two ways at once, and the father carries the young.' });
   const NEW_FISH = ['koi','clownfish','lionfish','seahorse'];
   T.shareTrait('eel_buoyancy', ...NEW_FISH);
@@ -3258,7 +3253,7 @@
     { n:'Bait Ball', ap:1, el:1, cd:3, dur:0, tgt:'party',
       fx:[{v:'shield', val:(P,E)=>1+E, dur:1, party:true},{v:'shield', val:1, next:true, party:true}],
       txt:(P,E)=>`Close up tight: all heroes hold Shield ${1+E} this round, and Shield: each one's next hit taken is 1 less.` },
-    'A thousand fish, one mind.', 'Fish');
+    'A thousand fish, one mind.', 'Ray-finned fish');
 
   // Koi: Buoyancy Control, Lateral Line, Schooling, Long Life, and these five
   K(['koi'],'koi_gate','Dragon Gate','S',2,
@@ -3453,10 +3448,9 @@
     'The slowest fish in the sea, and it gets there anyway.');
   // ── Molluscs and jellies (2.64): the Mimic Octopus keeps its nine; the snail and jellyfish join it.
   // Boneless Squeeze is every soft body's; the snail also tastes with Chemo-Suckers and carries the tortoise's Shell.
-  T.SPECIES.octopus.branch = 'Molluscs and jellies';
-  S('snail', { name: 'Snail', lean: 'T/M', branch: 'Molluscs and jellies', icon: '🐌',
+  S('snail', { name: 'Snail', lean: 'T/M', icon: '🐌',
     tagline: 'Carries its house, climbs anything, and seals itself in to wait out the bad weather.' });
-  S('jellyfish', { name: 'Jellyfish', lean: 'C/T', branch: 'Molluscs and jellies', variant: true, icon: '🪼',
+  S('jellyfish', { name: 'Jellyfish', lean: 'C/T', variant: true, icon: '🪼',
     tagline: 'No brain, no bones, a bell full of stings, and one kind that turns young again instead of dying.' });
   T.shareTrait('oct_squeeze', 'snail', 'jellyfish');
   T.shareTrait('oct_chemo', 'snail');
@@ -3557,9 +3551,9 @@
     'One kind, when it is dying, simply starts over.');
   // ── Crustaceans (2.65): the lobster and the mantis shrimp. Both molt and wear a carapace;
   // the lobster also has the parrot's Long Life, and the mantis shrimp the chameleon's Turret Eyes.
-  S('lobster', { name: 'Lobster', lean: 'M/T', branch: 'Crustaceans', icon: '🦞',
+  S('lobster', { name: 'Lobster', lean: 'M/T', icon: '🦞',
     tagline: 'Two claws, one for crushing and one for cutting, and it never quite stops growing.' });
-  S('mantis_shrimp', { name: 'Mantis Shrimp', lean: 'M/C', branch: 'Crustaceans', icon: '🦐',
+  S('mantis_shrimp', { name: 'Mantis Shrimp', lean: 'M/C', icon: '🦐',
     tagline: 'Punches hard enough to boil the water, and sees colours nobody else has names for.' });
   const CRUST = ['lobster','mantis_shrimp'];
   T.shareTrait('bir_life', 'lobster');
@@ -3683,16 +3677,15 @@
     'They fight by taking turns to hit each other on the tail, and the tail can take it.');
   // ── Insects and arachnids (2.66): the Grasshopper (an unpainted clade) moves onto the branch and lends
   // its Exoskeleton, Compound Eyes, Molt and Glide Wings; every insect here also has Antennae.
-  T.SPECIES.hopper.branch = 'Insects and arachnids';
-  S('beetle', { name: 'Beetle', lean: 'M/T', branch: 'Insects and arachnids', icon: '🪲',
+  S('beetle', { name: 'Beetle', lean: 'M/T', icon: '🪲',
     tagline: 'Armoured wing cases, a horn for lifting, and strength far past its size.' });
-  S('butterfly', { name: 'Butterfly', lean: 'S/T', branch: 'Insects and arachnids', icon: '🦋',
+  S('butterfly', { name: 'Butterfly', lean: 'S/T', icon: '🦋',
     tagline: 'Eyes painted on its wings, dust that slips any grip, and a journey longer than its life.' });
-  S('firefly', { name: 'Firefly', lean: 'C/S', branch: 'Insects and arachnids', icon: '✨',
+  S('firefly', { name: 'Firefly', lean: 'C/S', icon: '✨',
     tagline: 'Cold light in the dark, flashing in time with the others, and bitter to anything that bites.' });
-  S('mantis', { name: 'Praying Mantis', lean: 'M/C', branch: 'Insects and arachnids', icon: '🦗',
+  S('mantis', { name: 'Praying Mantis', lean: 'M/C', icon: '🦗',
     tagline: 'Still as a leaf, turns its head to watch you, and strikes before you see it move.' });
-  S('scorpion', { name: 'Scorpion', lean: 'M/C', branch: 'Insects and arachnids', icon: '🦂',
+  S('scorpion', { name: 'Scorpion', lean: 'M/C', icon: '🦂',
     tagline: 'Pincers in front, a sting overhead, and it glows under the right light.' });
   const BUGS = ['beetle','butterfly','firefly','mantis'];
   T.shareTrait('hop_exo', 'beetle', 'firefly', 'mantis', 'scorpion');
@@ -3709,7 +3702,7 @@
     { n:'Scent Trail', ap:1, el:1, cd:3, dur:0, tgt:'foe_any',
       fx:[{v:'reveal', target:true, dur:2},{v:'mark', n:(P,E)=>1+h(E), dur:3},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
       txt:(P,E)=>`Smell out one foe: Revealed for 2 rounds, it is Marked +${1+h(E)} for 3 rounds, and an ally's next hit deals +1.` },
-    'Two feelers that taste, smell and listen all at once.', 'Insects and arachnids');
+    'Two feelers that taste, smell and listen all at once.', 'Insects');
 
   // Beetle: Exoskeleton, Compound Eyes, Antennae, and these six
   K(['beetle'],'btl_horn','Horn Lift','M',2,
@@ -3952,4 +3945,113 @@
       fx:[{v:'shield', val:(P,E)=>1+E, dur:2, party:true, allyRange:2},{v:'engine', kind:'regen', val:1, dur:2, party:true}],
       txt:(P,E)=>`Carry them on your back: for 2 rounds you and every ally within 2 hold Shield ${1+E}, and all heroes heal 1 at the start of each turn.` },
     'The young ride on their mother\'s back until their first molt.');
+
+  /* ───────────────────────── GREY WOLF AND RACCOON (2.139) ─────────────────────────
+     Garrett, 2026-11-24. The grey wolf is in the dog family: it runs with the pack runners (Keen Nose, Pack
+     Howl, Long Trot) and carries the dogs' Pin Down. The raccoon is weasel kin (Musteloidea): Dense Fur; it
+     climbs down headfirst like the ocelot and red panda (Headfirst Descent), and scavenges like the jackal
+     (Scavenger's Luck). Their places on the tree are in src/data/taxonomy.js. */
+  S('wolf', { name: 'Grey Wolf', lean: 'C/T', icon: '🐺',
+    tagline: 'Runs with the pack, sings with the pack, and can go a hundred kilometres alone.' });
+  S('raccoon', { name: 'Raccoon', lean: 'S/T', icon: '🦝',
+    tagline: 'Masked, nimble-fingered, and into everything you thought was shut.' });
+  T.shareTrait('dog_nose', 'wolf');
+  T.shareTrait('dog_howl', 'wolf');
+  T.shareTrait('dog_trot', 'wolf');
+  T.shareTrait('dog_pin', 'wolf');
+  T.shareTrait('wea_fur', 'raccoon');
+  T.shareTrait('oce_descent', 'raccoon');
+  T.shareTrait('jac_luck', 'raccoon');
+
+  // Grey wolf: Keen Nose, Pack Howl, Long Trot, Pin Down, and these five
+  K(['wolf'],'wol_relay','Relay Chase','T',2,
+    { n:'Take a Turn', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:2, target:'ally'}],
+      txt:(P,E)=>`Run ${1+P} to take up the chase; an ally's next strike deals +1.` },
+    { n:'Run in Shifts', ap:1, el:1, cd:3, dur:0, tgt:'ally_move',
+      fx:[{v:'guide', n:(P,E)=>1+E},{v:'haste', n:1}],
+      txt:(P,E)=>`Send the next runner in: Guide an ally ${1+E}, and Haste: every card on your track returns 1 column sooner.` },
+    'No one wolf runs it down. The pack takes turns.');
+  K(['wolf'],'wol_test','Test the Herd','S',0,
+    { n:'Cull', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'weaken', val:1, dur:1},{v:'strike', kind:'melee', dmg:(P,E)=>3+P, ifHpBelow:5, elseVal:(P,E)=>1+P}],
+      txt:(P,E)=>`Melee ${1+P}, or ${3+P} if it has 4 hp or fewer; either way it is Weakened 1 this round.` },
+    { n:'Find the Weak One', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+E, dur:2},{v:'mark', area:true, radius:2},{v:'empower', val:1, uses:1, dur:2, party:true}],
+      txt:(P,E)=>`Run at the herd and watch who stumbles: see everything within ${2+E} for 2 rounds, every foe within 2 is Marked, and all heroes' next strike deals +1.` },
+    'Chase them all a little, and see which one falls behind.');
+  K(['wolf'],'wol_scent','Territory','M',0,
+    { n:'Scent Post', ap:1, el:0, cd:2, dur:0, tgt:'node_r2',
+      fx:[{v:'field', radius:1, on:'enter', dur:(P,E)=>2+P, remote:2, fx:[{kw:'mark', n:1},{kw:'weaken', n:1}]},{v:'shield', val:1, next:true}],
+      txt:(P,E)=>`Mark a space within 2 as yours: for ${2+P} rounds a Field lies on it and its neighbours, and a foe that walks in is Marked +1 and Weakened 1. Shield: the next hit on you is 1 less.` },
+    { n:'Hold the Ground', ap:1, el:1, cd:4, dur:0, tgt:'self',
+      fx:[{v:'field', radius:1, on:'end', dur:(P,E)=>1+E, fx:[{kw:'weaken', n:1}]},{v:'shield', val:1, dur:(P,E)=>1+E, party:true, allyRange:1}],
+      txt:(P,E)=>`Claim the ground around you: for ${1+E} rounds a Field lies on and beside your space and foes ending the round there are Weakened 1, and you and every ally beside you hold Shield 1.` },
+    'Everything inside the scent line is spoken for.');
+  K(['wolf'],'wol_harry','Harry','S',0,
+    { n:'Snap and Fall Back', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+P},{v:'weaken', val:1, dur:1},{v:'move', n:1, free:true}],
+      txt:(P,E)=>`Melee ${1+P}; it is Weakened 1 this round, and you fall back 1.` },
+    { n:'Wear It Down', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+E},{v:'wound', n:(P,E)=>2+h(E), kind:'bite'},{v:'move', n:2, free:true}],
+      txt:(P,E)=>`Snap at its heels: melee ${1+E}, it is Wounded ${2+h(E)}, and you lope 2 away.` },
+    'Bite, back off, bite again. It tires before the wolf does.');
+  K(['wolf'],'wol_pair','Alpha Pair','C',0,
+    { n:'Lead Off', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', n:(P,E)=>1+h(P)},{v:'shield', val:1, dur:1, party:true, allyRange:1},{v:'empower', val:(P,E)=>1+h(P), uses:1, dur:1}],
+      txt:(P,E)=>`Lead off ${1+h(P)}: you and every ally then beside you hold Shield 1 this round, and your next strike this turn deals +${1+h(P)}.` },
+    { n:'The Pack Follows', ap:1, el:1, cd:4, dur:0, tgt:'party',
+      fx:[{v:'shield', val:1, dur:1, party:true},{v:'empower', val:(P,E)=>1+h(E), uses:1, dur:2, party:true}],
+      txt:(P,E)=>`All heroes hold Shield 1 this round, and their next strike deals +${1+h(E)}.` },
+    'Two lead. The rest follow them anywhere.');
+
+  // Raccoon: Dense Fur, Headfirst Descent, Scavenger's Luck, and these six
+  K(['raccoon'],'rac_paws','Feeling Paws','S',2,
+    { n:'Feel Around', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>1+P, dur:1},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Feel out everything within ${1+P} this round, hidden or not; your next strike this turn deals +1.` },
+    { n:'Wet Hands', ap:1, el:1, cd:3, dur:0, tgt:'self',
+      fx:[{v:'reveal', radius:(P,E)=>2+E, dur:2},{v:'mark', area:true, radius:1}],
+      txt:(P,E)=>`Wet paws feel twice as much: feel out everything within ${2+E} for 2 rounds, and every foe beside you is Marked.` },
+    'Its hands see better than its eyes do.');
+  K(['raccoon'],'rac_latch','Clever Latch','C',0,
+    { n:'Pick at It', ap:1, el:0, cd:1, dur:0, tgt:'node_r2',
+      fx:[{v:'interact', range:2},{v:'reveal', radius:(P,E)=>1+P, dur:1}],
+      txt:(P,E)=>`Reach a node within 2 and work an objective there as if you stood on it (not one up on a ledge), and see within ${1+P}.` },
+    { n:'Undo Anything', ap:1, el:1, cd:3, dur:0, tgt:'node_r3',
+      fx:[{v:'interact', range:(P,E)=>2+h(E)},{v:'cleanse', party:true},{v:'haste', n:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`Work an objective within ${2+h(E)} as if you stood on it (not one up on a ledge); all heroes shake off Anchored, Weakened and Wounds, and Haste: your track returns ${1+h(E)} ${1+h(E) > 1 ? 'columns' : 'column'} sooner.` },
+    'Latches, lids, knots and doors are suggestions.');
+  K(['raccoon'],'rac_mask','Bandit Mask','T',0,
+    { n:'Pilfer', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:(P,E)=>1+h(P)},{v:'strike', kind:'melee', dmg:1},{v:'shield', val:(P,E)=>1+h(P), dur:1}],
+      txt:(P,E)=>`Lift ${1+h(P)} off a foe's Shield and melee 1; you hold Shield ${1+h(P)} this round.` },
+    { n:'Heist', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'stripShield', amount:(P,E)=>1+E},{v:'mint', face:'O', n:1},{v:'move', n:2, free:true}],
+      txt:(P,E)=>`Lift ${1+E} off its Shield, pocket 1 temporary Omni, and slip 2 away.` },
+    'A mask, and nothing left where it was.');
+  K(['raccoon'],'rac_hands','Quick Hands','M',0,
+    { n:'Swipe Swipe', ap:1, el:0, cd:1, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>1+h(P)},{v:'strike', kind:'melee', dmg:(P,E)=>1+h(P+1)}],
+      txt:(P,E)=>`Melee ${1+h(P)}, then melee ${1+h(P+1)}.` },
+    { n:'Grab and Swap', ap:1, el:1, cd:3, dur:0, tgt:'foe_melee',
+      fx:[{v:'strike', kind:'melee', dmg:(P,E)=>2+E},{v:'swap', foe:true, reach:1}],
+      txt:(P,E)=>`Melee ${2+E}, then trade places with it.` },
+    'Two paws, both busy.');
+  K(['raccoon'],'rac_wash','Dousing','C',0,
+    { n:'Rinse', ap:1, el:0, cd:1, dur:0, tgt:'self',
+      fx:[{v:'cleanse', field:(P,E)=>h(P), states:true},{v:'heal', n:1}],
+      txt:(P,E)=>`Wash the ground ${h(P) ? `within ${h(P)}` : 'you stand on'}: hazards and foes' Fields there are cleared; shake off Anchored, Weakened and Wounds, and heal 1.` },
+    { n:'Douse', ap:1, el:1, cd:3, dur:0, tgt:'party',
+      fx:[{v:'cleanse', party:true},{v:'cleanse', field:(P,E)=>1+h(E)}],
+      txt:(P,E)=>`All heroes shake off Anchored, Weakened and Wounds, and the ground within ${1+h(E)} of you is washed clean of hazards and foes' Fields.` },
+    'Everything goes in the water first.');
+  K(['raccoon'],'rac_climb','Climb Anything','S',0,
+    { n:'Scramble', ap:1, el:0, cd:1, dur:0, tgt:'node_move',
+      fx:[{v:'move', climb:true, n:(P,E)=>1+P},{v:'empower', val:1, uses:1, dur:1}],
+      txt:(P,E)=>`Scramble ${1+P}, climbing as you go; your next strike this turn deals +1.` },
+    { n:'Rooftop Run', ap:1, el:1, cd:3, dur:0, tgt:'node_tele',
+      fx:[{v:'blink', reach:(P,E)=>2+E, height:true},{v:'hidden', dur:1}],
+      txt:(P,E)=>`Up a drainpipe and over: reach a node within ${2+E}, height included, and come down Hidden 1.` },
+    'Walls, trees, drainpipes, chimneys.');
 })(typeof window !== 'undefined' ? (window.T = window.T || {}) : (global.T = global.T || {}));

@@ -4221,3 +4221,101 @@ Each line shows the face at **P0 / E1** and, in italics, at **P3 / E3**. ★ = s
 
 - *Phys — Shelter* · 1 AP · CD 1 — Shelter what is close: you and every ally beside you hold Shield 1 this round. *(P3: Shelter what is close: you and every ally beside you hold Shield 2 this round.)*
 - *Eth — Carry Them* · 1 AP + 1 Time · CD 4 — Carry them on your back: for 2 rounds you and every ally within 2 hold Shield 2, and all heroes heal 1 at the start of each turn. *(P3/E3: Carry them on your back: for 2 rounds you and every ally within 2 hold Shield 4, and all heroes heal 1 at the start of each turn.)*
+
+## 86 · Grey Wolf — leans C/T
+
+*Runs with the pack, sings with the pack, and can go a hundred kilometres alone.*
+
+**Keen Nose** · Space · `dog_nose`
+
+- *Phys — Track* · 1 AP · CD 1 — Smell out everything within 2 this round; the nearest foe is Revealed for 2 rounds and is Marked (the next hit on it deals +2). *(P3: Smell out everything within 5 this round; the nearest foe is Revealed for 2 rounds and is Marked (the next hit on it deals +2).)*
+- *Eth — Scent Lock* · 1 AP + 1 Space · CD 3 — Lock onto a foe's scent: Revealed for 3 rounds, and it is Marked +1 for 3 rounds. *(P3/E3: Lock onto a foe's scent: Revealed for 5 rounds, and it is Marked +3 for 3 rounds.)*
+
+**Pack Howl** · Charge · `dog_howl`
+
+- *Phys — Howl* · 1 AP · CD 1 — Foes beside you are Weakened 1 this round; an ally's next strike deals +1. *(P3: Foes beside you are Weakened 1 this round; an ally's next strike deals +2.)*
+- *Eth — Chorus* · 1 AP + 1 Charge · CD 4 — For 2 rounds all heroes gain 1 AP at the start of each turn; all heroes' next strike deals +1. *(P3/E3: For 4 rounds all heroes gain 1 AP at the start of each turn; all heroes' next strike deals +1.)*
+
+**Long Trot** · Time · `dog_trot`
+
+- *Phys — Trot* · 1 AP · CD 1 — Move 1. *(P3: Move 4.)*
+- *Eth — Relay* · 1 AP + 1 Time · CD 3 — Move 2; Haste: every card on your track returns 2 columns sooner. *(P3/E3: Move 2; Haste: every card on your track returns 4 columns sooner.)*
+
+**Pin Down** · Mass · `dog_pin`
+
+- *Phys — Pin* · 1 AP · CD 1 — Melee 2, and it is Anchored 1. *(P3: Melee 5, and it is Anchored 1.)*
+- *Eth — Hold Down* · 1 AP + 1 Mass · CD 3 — Melee 2; hold it down: Anchored and Weakened 1, for 1 round. *(P3/E3: Melee 4; hold it down: Anchored and Weakened 1, for 2 rounds.)*
+
+**Relay Chase** ★ · Time · `wol_relay`
+
+- *Phys — Take a Turn* · 1 AP · CD 1 — Run 1 to take up the chase; an ally's next strike deals +1. *(P3: Run 4 to take up the chase; an ally's next strike deals +1.)*
+- *Eth — Run in Shifts* · 1 AP + 1 Time · CD 3 — Send the next runner in: Guide an ally 2, and Haste: every card on your track returns 1 column sooner. *(P3/E3: Send the next runner in: Guide an ally 4, and Haste: every card on your track returns 1 column sooner.)*
+
+**Test the Herd** · Space · `wol_test`
+
+- *Phys — Cull* · 1 AP · CD 1 — Melee 1, or 3 if it has 4 hp or fewer; either way it is Weakened 1 this round. *(P3: Melee 4, or 6 if it has 4 hp or fewer; either way it is Weakened 1 this round.)*
+- *Eth — Find the Weak One* · 1 AP + 1 Space · CD 3 — Run at the herd and watch who stumbles: see everything within 3 for 2 rounds, every foe within 2 is Marked, and all heroes' next strike deals +1. *(P3/E3: Run at the herd and watch who stumbles: see everything within 5 for 2 rounds, every foe within 2 is Marked, and all heroes' next strike deals +1.)*
+
+**Territory** · Mass · `wol_scent`
+
+- *Phys — Scent Post* · 1 AP · CD 2 — Mark a space within 2 as yours: for 2 rounds a Field lies on it and its neighbours, and a foe that walks in is Marked +1 and Weakened 1. Shield: the next hit on you is 1 less. *(P3: Mark a space within 2 as yours: for 5 rounds a Field lies on it and its neighbours, and a foe that walks in is Marked +1 and Weakened 1. Shield: the next hit on you is 1 less.)*
+- *Eth — Hold the Ground* · 1 AP + 1 Mass · CD 4 — Claim the ground around you: for 2 rounds a Field lies on and beside your space and foes ending the round there are Weakened 1, and you and every ally beside you hold Shield 1. *(P3/E3: Claim the ground around you: for 4 rounds a Field lies on and beside your space and foes ending the round there are Weakened 1, and you and every ally beside you hold Shield 1.)*
+
+**Harry** · Space · `wol_harry`
+
+- *Phys — Snap and Fall Back* · 1 AP · CD 1 — Melee 1; it is Weakened 1 this round, and you fall back 1. *(P3: Melee 4; it is Weakened 1 this round, and you fall back 1.)*
+- *Eth — Wear It Down* · 1 AP + 1 Space · CD 3 — Snap at its heels: melee 2, it is Wounded 2, and you lope 2 away. *(P3/E3: Snap at its heels: melee 4, it is Wounded 3, and you lope 2 away.)*
+
+**Alpha Pair** · Charge · `wol_pair`
+
+- *Phys — Lead Off* · 1 AP · CD 1 — Lead off 1: you and every ally then beside you hold Shield 1 this round, and your next strike this turn deals +1. *(P3: Lead off 2: you and every ally then beside you hold Shield 1 this round, and your next strike this turn deals +2.)*
+- *Eth — The Pack Follows* · 1 AP + 1 Charge · CD 4 — All heroes hold Shield 1 this round, and their next strike deals +1. *(P3/E3: All heroes hold Shield 1 this round, and their next strike deals +2.)*
+
+## 87 · Raccoon — leans S/T
+
+*Masked, nimble-fingered, and into everything you thought was shut.*
+
+**Headfirst Descent** · Space · `oce_descent`
+
+- *Phys — Descend* · 1 AP · CD 1 — Climb 1, and drop on every foe beside where you land for 1. *(P3: Climb 4, and drop on every foe beside where you land for 2.)*
+- *Eth — Branch Drop* · 1 AP + 1 Space · CD 3 — Drop beside a foe within 3, melee 4, and it is Weakened 1. *(P3/E3: Drop beside a foe within 5, melee 6, and it is Weakened 1.)*
+
+**Scavenger's Luck** · Time · `jac_luck`
+
+- *Phys — Scrounge* · 1 AP · CD 2 — Draw 1 pool die as AP, and reroll 1 banked die. *(P3: Draw 1 pool die as AP, and reroll 2 banked dice.)*
+- *Eth — Lucky Find* · 1 AP + 1 Time · CD 4 — Mint 1 temporary Omni, and heal 2. *(P3/E3: Mint 1 temporary Omni, and heal 4.)*
+
+**Dense Fur** · Mass · `wea_fur`
+
+- *Phys — Thick Coat* · 1 AP · CD 1 — Shield 1 this round, and hazards don't touch you. *(P3: Shield 4 this round, and hazards don't touch you.)*
+- *Eth — Weatherproof* · 1 AP + 1 Mass · CD 3 — Shield 2 for 2 rounds; hazards don't touch you for 2. *(P3/E3: Shield 4 for 2 rounds; hazards don't touch you for 4.)*
+
+**Feeling Paws** ★ · Space · `rac_paws`
+
+- *Phys — Feel Around* · 1 AP · CD 1 — Feel out everything within 1 this round, hidden or not; your next strike this turn deals +1. *(P3: Feel out everything within 4 this round, hidden or not; your next strike this turn deals +1.)*
+- *Eth — Wet Hands* · 1 AP + 1 Space · CD 3 — Wet paws feel twice as much: feel out everything within 3 for 2 rounds, and every foe beside you is Marked. *(P3/E3: Wet paws feel twice as much: feel out everything within 5 for 2 rounds, and every foe beside you is Marked.)*
+
+**Clever Latch** · Charge · `rac_latch`
+
+- *Phys — Pick at It* · 1 AP · CD 1 — Reach a node within 2 and work an objective there as if you stood on it (not one up on a ledge), and see within 1. *(P3: Reach a node within 2 and work an objective there as if you stood on it (not one up on a ledge), and see within 4.)*
+- *Eth — Undo Anything* · 1 AP + 1 Charge · CD 3 — Work an objective within 2 as if you stood on it (not one up on a ledge); all heroes shake off Anchored, Weakened and Wounds, and Haste: your track returns 1 column sooner. *(P3/E3: Work an objective within 3 as if you stood on it (not one up on a ledge); all heroes shake off Anchored, Weakened and Wounds, and Haste: your track returns 2 columns sooner.)*
+
+**Bandit Mask** · Time · `rac_mask`
+
+- *Phys — Pilfer* · 1 AP · CD 1 — Lift 1 off a foe's Shield and melee 1; you hold Shield 1 this round. *(P3: Lift 2 off a foe's Shield and melee 1; you hold Shield 2 this round.)*
+- *Eth — Heist* · 1 AP + 1 Time · CD 3 — Lift 2 off its Shield, pocket 1 temporary Omni, and slip 2 away. *(P3/E3: Lift 4 off its Shield, pocket 1 temporary Omni, and slip 2 away.)*
+
+**Quick Hands** · Mass · `rac_hands`
+
+- *Phys — Swipe Swipe* · 1 AP · CD 1 — Melee 1, then melee 1. *(P3: Melee 2, then melee 3.)*
+- *Eth — Grab and Swap* · 1 AP + 1 Mass · CD 3 — Melee 3, then trade places with it. *(P3/E3: Melee 5, then trade places with it.)*
+
+**Dousing** · Charge · `rac_wash`
+
+- *Phys — Rinse* · 1 AP · CD 1 — Wash the ground you stand on: hazards and foes' Fields there are cleared; shake off Anchored, Weakened and Wounds, and heal 1. *(P3: Wash the ground within 1: hazards and foes' Fields there are cleared; shake off Anchored, Weakened and Wounds, and heal 1.)*
+- *Eth — Douse* · 1 AP + 1 Charge · CD 3 — All heroes shake off Anchored, Weakened and Wounds, and the ground within 1 of you is washed clean of hazards and foes' Fields. *(P3/E3: All heroes shake off Anchored, Weakened and Wounds, and the ground within 2 of you is washed clean of hazards and foes' Fields.)*
+
+**Climb Anything** · Space · `rac_climb`
+
+- *Phys — Scramble* · 1 AP · CD 1 — Scramble 1, climbing as you go; your next strike this turn deals +1. *(P3: Scramble 4, climbing as you go; your next strike this turn deals +1.)*
+- *Eth — Rooftop Run* · 1 AP + 1 Space · CD 3 — Up a drainpipe and over: reach a node within 3, height included, and come down Hidden 1. *(P3/E3: Up a drainpipe and over: reach a node within 5, height included, and come down Hidden 1.)*

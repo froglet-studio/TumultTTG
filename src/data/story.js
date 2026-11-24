@@ -186,6 +186,20 @@
       onward: ['"{PLACE}," {A} says. "Long way. Fine. I walk."', '"{THREAT} will be tired by the end," {A} says. "I will not."'],
       reply: ['{A} giggles.', '"Hm," {A} says, chewing.', '{A} whoops softly.'],
     },
+    wolf: {
+      win: ['{A} lifts their head and howls once, long and low. Somewhere far off, something answers.', '"Together," {A} says. "That is the only way it ever goes down."'],
+      close: ['{A} walks the edge of camp twice before lying down, counting heads.', '"We split up," {A} says. "We do not split up again."'],
+      quiet: ['{A} sleeps with their back against {B}\'s, one ear always turning.', '{A} sits apart for a while, watching the dark, then comes back to the fire.'],
+      onward: ['"{PLACE}," {A} says, and sets a pace everyone can hold for days.', '"{THREAT} is big," {A} says. "So we tire it first. Then we take it."'],
+      reply: ['{A} huffs.', '"Agreed," {A} says, and means the whole pack.', '{A} bumps {B}\'s shoulder with theirs.'],
+    },
+    raccoon: {
+      win: ['{A} turns something shiny over and over in their fingers. "Mine now. Spoils."', '"Did you see how I opened that?" {A} asks. "Nobody else could have opened that."'],
+      close: ['{A} washes their hands in the nearest water, carefully, until they stop shaking.', '"Too many eyes on us," {A} says. "Next time, we come in from the roof."'],
+      quiet: ['{A} has the camp lockbox open again and swears they did not touch it.', '{A} rinses every bit of supper before eating it, one piece at a time.'],
+      onward: ['"{PLACE}," {A} says. "Good. New lids, new latches."', '"{THREAT}?" {A} pulls their mask down, so to speak. "Everything has a way in."'],
+      reply: ['{A} chitters.', '"Sure, sure," {A} says, fiddling with a buckle.', '{A} pockets something of {B}\'s, then hands it back.'],
+    },
     otter: {
       win: ['{A} floats on their back, pleased with themselves. "That went well."', '"Teamwork," {A} says, and holds out a paw for {B} to hold.'],
       close: ['{A} grooms the same patch of fur over and over. "I got cold."', '"It cracked me," {A} says. "I am the one who cracks things."'],

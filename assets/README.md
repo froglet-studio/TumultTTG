@@ -34,7 +34,7 @@ falls back to drawn art (an initial on a disc), so the game never ships with a h
 - **Clade portraits** were generated for this repository in Figma Weave (Nano Banana Pro, Garrett's workspace,
   2026-11-17), styled on a test sheet he approved, and approved by him before going in. Garrett chose generated
   sheets for clade art (2026-11-17). Each 2048 px sheet was cut into equal cells, trimmed 2.5% a side to drop the
-  grid lines, resized to 128 px and repacked four to a row; the scorpion was a single 1024 px image. Which clade
+  grid lines, resized to 128 px and repacked four to a row; the scorpion was a single 1024 px image, and the grey wolf and raccoon (2.139) came from one Nano Banana 2 Lite 2×2 sheet styled on sheet 2. Which clade
   sits in which tile is `U.PORTRAIT_SHEETS` in `src/ui/icons.js`.
 - **Ability paintings** (`ability-art/sheet-NNN.webp`) were generated for this repository in Figma Weave in Garrett's
   workspace (2026-11-22/23): the first two sheets with Nano Banana Pro, the rest with Nano Banana 2 Lite, which Garrett

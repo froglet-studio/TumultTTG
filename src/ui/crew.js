@@ -265,10 +265,18 @@
       .forEach((s) =>
         (groups[T.SPECIES[s].branch || 'Others'] = groups[T.SPECIES[s].branch || 'Others'] || []).push(s),
       );
+    // groups in the order of the tree (src/data/taxonomy.js), each headed by its common and scientific name
+    const order = (T.TAXON_ORDER || []).map((id) => T.TAXA[id]).filter((x) => x.show);
+    const sci = (br) => (order.find((x) => x.name === br) || {}).sci;
+    const rank = (br) => {
+      const i = order.findIndex((x) => x.name === br);
+      return i < 0 ? order.length : i;
+    };
     const grid = Object.entries(groups)
+      .sort((a, b) => rank(a[0]) - rank(b[0]))
       .map(
         ([br, list]) =>
-          `<div class="mk-branch"><span class="lab">${esc(br)}</span><div class="mk-grid">${list
+          `<div class="mk-branch"><span class="lab">${esc(br)}${sci(br) && sci(br) !== br ? ` <i class="dim">${esc(sci(br))}</i>` : ''}</span><div class="mk-grid">${list
             .map((s) => {
               const k = m.clades.indexOf(s);
               return `<button class="mk-clade${k === 0 ? ' head' : k === 1 ? ' feat' : ''}" data-act="makerClade" data-arg="${s}" aria-pressed="${k >= 0}">${U.icClade(s)} ${esc(cladeName(s))}${k === 0 ? ' <i>head</i>' : k === 1 ? ' <i>2nd</i>' : ''}</button>`;
