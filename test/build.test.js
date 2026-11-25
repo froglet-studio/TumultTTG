@@ -180,3 +180,23 @@ test('every trait face has one cell on an ability sheet, and every painted sheet
     assert.equal(beside.get('ability-art/' + f), path.join(dir, f), `${f} is published beside the playtest page`);
   }
 });
+
+test('phones and foldables: the small-screen sheet loads last and shapes the mission by orientation', () => {
+  const fs = require('node:fs');
+  const manifest = require(path.join(root, 'src', 'manifest.json'));
+  // it overrides the HUD and the shell at small sizes, so nothing may load after it
+  assert.equal(manifest.css[manifest.css.length - 1], 'ui/phone.css');
+  const css = fs.readFileSync(path.join(root, 'src', 'ui', 'phone.css'), 'utf8');
+  assert.match(
+    css,
+    /\(max-width: 980px\) and \(orientation: landscape\)/,
+    'a wide small screen puts the sheet beside the board',
+  );
+  assert.match(
+    css,
+    /\(max-width: 980px\) and \(orientation: portrait\)/,
+    'a tall small screen keeps the sheet under the board',
+  );
+  // the flown pilot's hand never folds away (docs/reference/OVERVIEW.md): no rule here hides the hand pane
+  assert.doesNotMatch(css, /\.dk-hand[^{]*\{[^}]*display:\s*none/);
+});
