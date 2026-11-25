@@ -19,8 +19,11 @@
    * `cards` names the trait cards a note is about; the panel says which pre-made hero carries them.
    */
   const NOTES = {
-    version: '2.145.0',
+    version: '2.146.0',
     items: [
+      {
+        text: 'Phones and foldables: the mission screen now shapes itself to the screen. Held sideways, or on an unfolded foldable, the board runs the full height on the left and your pilot, hand and actions sit down the right. Held upright, the mission bar is one line and the board keeps at least a third of the screen. The route map keeps its stop names readable and scrolls sideways under a finger. Play a mission on your phone both ways up: can you see the whole board and reach every card and action without hunting?',
+      },
       {
         text: 'Two new clades: the Grey Wolf and the Raccoon. Draft your own pilot and look for them in the clade picker. The wolf runs with the pack (Relay Chase, Test the Herd, Territory, Harry, Alpha Pair); the raccoon has quick hands (Feeling Paws, Clever Latch, Bandit Mask, Quick Hands, Dousing, Climb Anything). Does each play like itself? Six crew pilots with wolf in their pair can now be flown.',
         cards: ['wol_relay', 'wol_test', 'rac_paws', 'rac_mask'],

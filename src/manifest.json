@@ -79,7 +79,8 @@
     "ui/profile.css",
     "ui/audio.css",
     "ui/pick.css",
-    "ui/draft.css"
+    "ui/draft.css",
+    "ui/phone.css"
   ],
   "playtest": {
     "js": ["ui/playtest.js", "ui/net.js", "ui/canon-net.js", "ui/heroes-net.js"],

@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.146.0 — 2026-11-25 — Phones and foldables
+
+- **The mission screen takes its shape from the screen** (Garrett, 2026-11-25: on an unfolded Galaxy Fold "the map was occluded to the point of unplayable"; `src/ui/phone.css`). Under 981 px wide, a screen wider than it is tall (a phone on its side, an unfolded foldable, a small tablet) puts the board on the left at full height and the pilot's sheet down the right, the hand in rows of two that scroll inside it; on a short screen the mission bar keeps only its name and objective. A screen taller than it is wide keeps the board over the sheet, with a one-line mission bar (the clock and the Undo, sound and menu buttons in a column beside it), a tighter sheet whose actions wrap to fit, and the board kept to at least a third of the screen. The hint and forecast on the board's foot are smaller. The flown pilot's hand, AP and actions never fold away. Board space on a Fold held open: 291 → 389 px tall upright, 240 → 574 px sideways; a phone on its side, which had no room for the hand at all, now shows board and hand together.
+- **The route map stays readable on a small screen**: under 1101 px it keeps a 980 px width and scrolls sideways (it already opens on the squad), instead of shrinking until the stop names overlap.
+- **The top tabs fit between a phone and a laptop**: from 761 to 1100 px they tighten and scroll, rather than push the settings gear off screen.
+- Layout only: no rule, card, balance or save change.
 ## 2.145.0 — 2026-11-24 — Grey wolf, raccoon, and the tree of life
 
 - **Two new clades** (Garrett, 2026-11-24: "please add racoons and grey wolfs as a supported animal"). The **Grey Wolf** is in the dog family: Keen Nose, Pack Howl, Long Trot and Pin Down, and its own Relay Chase, Test the Herd, Territory, Harry and Alpha Pair. The **Raccoon** is weasel kin: Dense Fur, Headfirst Descent and Scavenger's Luck, and its own Feeling Paws, Clever Latch, Bandit Mask, Quick Hands, Dousing and Climb Anything. Both have painted heads, painted ability faces, an icon and a voice for the passages between stops. The six crew pilots who already had a wolf in their pair can now be flown as painted.
