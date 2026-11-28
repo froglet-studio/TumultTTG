@@ -452,7 +452,11 @@
     "docs/reference/RUN_AND_ECONOMY.md",
     "docs/reference/ABILITY_AUDIT.md Pass C",
     "docs/design/01-frame-and-campaign.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-22, from docs/reference/SCALING.md (2.110, PR #151) and FOE 180% (2.122): missions are sized by squad power and a full wipe ends the expedition. The stake hole's near-100% numbers predate both; re-measure with tools/sim.js 40 before tuning."
+   }
   },
   {
    "id": "draft",
@@ -507,7 +511,11 @@
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md",
     "docs/design/06-pilots-and-backstory.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-22, from PR #158 (2.122): every clade now has an instinct, one always-on rule. The draft can show a pilot's instincts beside its keyword chips, so a two-clade pick reads as two animals before any card."
+   }
   },
   {
    "id": "route",
@@ -544,7 +552,11 @@
    },
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md The route"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from RUN_AND_ECONOMY.md (2.132, PR #179): the route is now a map of Tumult, camp on the left, the threat far right, branching paths across a landscape. Now still says stop cards since 2.70; refresh it and ask whether the map's distance to the threat can carry the expedition's stake."
+   }
   },
   {
    "id": "haven",
@@ -582,7 +594,11 @@
    },
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md Omnicrystals and gear"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-22, from docs/reference/PETS.md and RUN_AND_ECONOMY.md (2.107-2.119): a haven now offers strays, gear cards paid in banked Omni and the nine-of-the-collection loadout; Now still says gear only since 2.89."
+   }
   },
   {
    "id": "event",
@@ -713,7 +729,11 @@
    "src": [
     "docs/reference/ATLAS.md",
     "docs/reference/MISSIONS_AND_BESTIARY.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-22, from docs/reference/VEHICLES.md (2.104, PR #147): the Crossing, the big-map mission with pocket vehicles, is the one mission kind with no loop beside m.swarm..m.heart. Add m.crossing."
+   }
   },
   {
    "id": "round",
@@ -774,7 +794,11 @@
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md The round",
     "docs/design/10-dice.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from MISSIONS_AND_BESTIARY.md (2.134, PR #180): every foe is a triple hybrid with a hybrid card and a level, and telegraphs a face instead of its role's move. Now says only the forecast; the telegraph can name the face's keywords, so reading the round's intents is reading three animals."
+   }
   },
   {
    "id": "turn",
@@ -912,7 +936,7 @@
    },
    "prop": {
     "s": "change",
-    "note": "Every face says which line it is (body, magic, tech) by its keywords alone (P3)."
+    "note": "Steward 2026-11-22, from KEYWORDS.md and PRs #143-#156: Now says twelve keywords landed at 2.98; since then Hover, Move/Guide, Trample, Aimed, Pre-empt, At dusk, Flanked, Resonance and Burn have too. Refresh Now and count what of P2 is left."
    },
    "src": [
     "docs/reference/CARDS.md"
@@ -958,7 +982,11 @@
    ],
    "src": [
     "src/ui/keywords.js"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from AUDIO.md (2.130, PR #174): Cosmic Shore's music and effects are in, with an Audio studio. Now names only chips and tips; check that every keyword landing has a sound of its own, so a pulse reads by ear as well as by eye."
+   }
   },
   {
    "id": "m.swarm",
@@ -1203,7 +1231,11 @@
    },
    "src": [
     "docs/reference/MISSIONS_AND_BESTIARY.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from MISSIONS_AND_BESTIARY.md (2.135, PR #181): an elite stop may be held by a rival pilot, human and two clades, under a name. A rival is a character, so it can feed arc.canon: one question about who it was and why it was on that stretch."
+   }
   },
   {
    "id": "m.heart",
@@ -1292,7 +1324,11 @@
    "src": [
     "docs/reference/RUN_AND_ECONOMY.md Pilots keep their growth",
     "docs/design/06-pilots-and-backstory.md"
-   ]
+   ],
+   "prop": {
+    "s": "change",
+    "note": "Steward 2026-11-23, from PETS.md (2.133, PR #178): upgrade points now also awaken a pet's Ethereal faces, so a pilot's growth is split between its traits and its pets. Measure how often the look-ahead player spends on the pet (tools/sim.js 40) before calling it a real choice."
+   }
   },
   {
    "id": "arc.canon",
