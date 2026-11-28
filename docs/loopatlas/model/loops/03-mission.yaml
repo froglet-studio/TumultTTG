@@ -25,12 +25,16 @@
     s: built
   holes:
   - 'on': np
-    q: 'With no cards at all a squad still wins most missions, but kill missions are all but unwinnable (audit Pass C:
-      the Heart 0%).'
+    q: 'With no cards at all a squad still wins most missions, but kill missions are all but unwinnable (audit Pass C: the
+      Heart 0%).'
     fill: The basic Strike is the floor; under P2 a basic action may also Mark or Push, so a kill is never impossible.
   src:
   - docs/reference/ATLAS.md
   - docs/reference/MISSIONS_AND_BESTIARY.md
+  prop:
+    s: change
+    note: 'Steward 2026-11-22, from docs/reference/VEHICLES.md (2.104, PR #147): the Crossing, the big-map mission with
+      pocket vehicles, is the one mission kind with no loop beside m.swarm..m.heart. Add m.crossing.'
 - id: round
   parent: mission
   at: 1
@@ -56,7 +60,7 @@
   repsOf: rounds per mission
   now:
     s: built
-    note: 'The forecast says exactly what ending the round now costs (T.forecast).'
+    note: The forecast says exactly what ending the round now costs (T.forecast).
   plan:
     note: 'Dice rework: 3 AP dice and 1 element die of the player''s choice each turn (Garrett, 2026-11-21).'
   holes:
@@ -92,8 +96,8 @@
     s: built
   prop:
     s: change
-    note: 'With 22 keywords (P2), every chain a turn can build is a pair of keywords from section 2 of the review doc;
-      the hint bar can name the pair it sees.'
+    note: With 22 keywords (P2), every chain a turn can build is a pair of keywords from section 2 of the review doc; the
+      hint bar can name the pair it sees.
   src:
   - docs/reference/OVERVIEW.md
 - id: duet
@@ -113,8 +117,8 @@
   drivers: [crew, toy, break]
   now:
     s: built
-    note: 'Duet moves since 2.28, and Link since 2.87, the keyword that reaches across the board. Deterministic for the
-      acting player, so a turn never waits on the partner.'
+    note: Duet moves since 2.28, and Link since 2.87, the keyword that reaches across the board. Deterministic for the acting
+      player, so a turn never waits on the partner.
   src:
   - docs/design/two-player memory, 2026-11-14
   - src/data/world.js BASIC
@@ -143,9 +147,10 @@
       Blink, Haste, Cleanse, Reveal), each in one sentence in docs/reference/KEYWORDS.md; gear became the tech line in 2.89.'
   prop:
     s: change
-    note: Every face says which line it is (body, magic, tech) by its keywords alone (P3).
-  src:
-  - docs/reference/CARDS.md
+    note: 'Steward 2026-11-22, from KEYWORDS.md and PRs #143-#156: Now says twelve keywords landed at 2.98; since then Hover,
+      Move/Guide, Trample, Aimed, Pre-empt, At dusk, Flanked, Resonance and Burn have too. Refresh Now and count what of
+      P2 is left.'
+  src: [docs/reference/CARDS.md]
 - id: pulse
   parent: face
   at: 0
@@ -167,5 +172,4 @@
   - 'on': npx
     q: No hover on a phone.
     fill: A long press is the hover.
-  src:
-  - src/ui/keywords.js
+  src: [src/ui/keywords.js]
